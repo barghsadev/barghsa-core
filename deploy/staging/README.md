@@ -302,10 +302,11 @@ python3 deploy/staging/release-queue.py enqueue --commit "$CANDIDATE_SHA" \
 ```
 
 The worker verifies the selected manifest, archive and image evidence without
-using local Docker or contacting CI. The server verifies the transferred
-archive before loading it. The existing health, migration, image readback and
-Telegram checks apply. Keep the retained database and scanner scan receipts
-with the same release evidence.
+using local Docker or contacting CI. The license reports must include the
+written review reference for each approved package exception. The server
+verifies the transferred archive before loading it. The existing health,
+migration, image readback and Telegram checks apply. Keep the retained database
+and scanner scan receipts with the same release evidence.
 
 Redis and object-store images are pinned by digest. Already installed exact
 images are reused with Compose's `--policy missing`; missing images are still

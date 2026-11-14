@@ -13137,7 +13137,7 @@
             878789146717865,
             680981381061175,
             3513479427036515,
-            4271266705454270,
+            77356163763801,
             2577092342995346,
             2645740275209480
           ],
@@ -13191,7 +13191,8 @@
             3429571547885509,
             3499934746180282,
             1608220146988446,
-            638491568431204
+            638491568431204,
+            3181386224650582
           ]
         }
       }
@@ -14615,7 +14616,8 @@
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
-        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate."
+        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -14689,7 +14691,8 @@
           "release-0.6-nodemailer-moderate-advisories",
           "release-0.6-hosted-image-scan-8436b628a",
           "release-0.6-license-review-refresh-f7fc00b88",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-license-receipt-reference"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -14922,7 +14925,8 @@
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
-        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -15014,7 +15018,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-first-announcement-runtime",
           "release-0.6-staging-service-health",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-license-receipt-reference"
         ],
         "current_acceptance": null
       }
@@ -15289,7 +15294,7 @@
             3664960298222868,
             2719536177275900,
             1537323190863352,
-            4271266705454270,
+            77356163763801,
             2865001578239068,
             2506773297712354,
             753281310031346,
@@ -15342,7 +15347,8 @@
             2656745043791838,
             3499934746180282,
             1608220146988446,
-            3703417886993783
+            3703417886993783,
+            3181386224650582
           ]
         }
       }
@@ -19757,7 +19763,7 @@
             1599047804612857,
             3779379415145857,
             2091941185117249,
-            4271266705454270,
+            77356163763801,
             4257944719117123,
             2485658752816053,
             4363839482195469,
@@ -19824,7 +19830,8 @@
             3499934746180282,
             2253619526350552,
             1608220146988446,
-            638491568431204
+            638491568431204,
+            3181386224650582
           ]
         }
       }
@@ -21202,7 +21209,7 @@
             2014961454363098,
             1220101825772327,
             1599047804612857,
-            4271266705454270,
+            77356163763801,
             4257944719117123,
             2485658752816053,
             3917170407626177,
@@ -21313,7 +21320,8 @@
             1517466181062246,
             3012903276163328,
             1608220146988446,
-            638491568431204
+            638491568431204,
+            3181386224650582
           ]
         }
       }
@@ -97629,7 +97637,7 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4271266705454270,
+            77356163763801,
             4257944719117123,
             3667823558989007,
             1537323190863352,
@@ -98055,7 +98063,8 @@
             1774011102101374,
             3454701496299565,
             1345081247258369,
-            1816270634520707
+            1816270634520707,
+            3181386224650582
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -371669,7 +371678,7 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4271266705454270,
+            77356163763801,
             4257944719117123,
             3667823558989007,
             1537323190863352,
@@ -372116,7 +372125,8 @@
             1774011102101374,
             3454701496299565,
             1345081247258369,
-            1816270634520707
+            1816270634520707,
+            3181386224650582
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -385080,7 +385090,7 @@
           "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
           "source_evidence": [
             878789146717865,
-            4271266705454270,
+            77356163763801,
             680981381061175,
             2577092342995346,
             3513479427036515,
@@ -385137,7 +385147,8 @@
             3429571547885509,
             3499934746180282,
             1608220146988446,
-            638491568431204
+            638491568431204,
+            3181386224650582
           ]
         }
       }
@@ -388712,7 +388723,8 @@
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
         "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open.",
-        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate."
+        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -388791,7 +388803,8 @@
           "release-0.6-hosted-image-scan-8436b628a",
           "release-0.6-license-review-refresh-f7fc00b88",
           "release-0.6-staging-scanner-gate-readback",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-license-receipt-reference"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -551571,9 +551584,9 @@
           ],
           "source_evidence": [
             2235556992526387,
-            2322349636027605,
+            4306434327613320,
             2211072514436837,
-            4400728953982417
+            1870514664343367
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
           "source_renewals": [
@@ -551609,7 +551622,8 @@
             3078739081942428,
             746929167541550,
             3734989252994684,
-            4385682974065792
+            4385682974065792,
+            3144948353375356
           ]
         },
         "batches": [
@@ -557084,12 +557098,12 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            4271266705454270,
+            77356163763801,
             4257944719117123,
             1916129011609021,
             3667823558989007,
             2235556992526387,
-            2322349636027605,
+            4306434327613320,
             1537323190863352,
             3000609939829148,
             1479851929840785,
@@ -558030,7 +558044,8 @@
             3894223882865081,
             3842280649162748,
             1816270634520707,
-            3287616644835669
+            3287616644835669,
+            1897851227767987
           ],
           "presentation_renewals": [
             {
@@ -559079,12 +559094,12 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            4271266705454270,
+            77356163763801,
             4257944719117123,
             1916129011609021,
             3667823558989007,
             2235556992526387,
-            2322349636027605,
+            4306434327613320,
             1537323190863352,
             3000609939829148,
             1479851929840785,
@@ -559928,7 +559943,8 @@
             3894223882865081,
             3842280649162748,
             1816270634520707,
-            3287616644835669
+            3287616644835669,
+            1897851227767987
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -562468,7 +562484,8 @@
         "The Resend connection tester discards HTTP failure bodies before publishing an operation and status diagnostic. Unrecognized domain status strings cannot enter the saved test result. Fixed endpoint, authorization-before-send, verified recipient, receipt bounds, provider status classification and activation rules are preserved. All 128 related unit and compiled API cases passed. The final focused tester run passed 26 cases. Read back the exact candidate on the protected deployed sink.",
         "Local API run at 4e4e428b7 passed 8,355 tests with three failures and one skip. Its independent per-file evaluation met the unchanged floors across 199 changed API paths. The slot and CRM positive step-up fixtures now pass all 20 related HTTP cases. Require a passing native and combined-coverage run on exact final release source.",
         "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
-        "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open."
+        "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open.",
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -562900,7 +562917,8 @@
           "release-0.6-resend-provider-diagnostics",
           "release-0.6-api-step-up-fixtures",
           "release-0.6-smtp-test-diagnostics",
-          "release-0.6-payment-recovery-response"
+          "release-0.6-payment-recovery-response",
+          "release-0.6-license-receipt-reference"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -762262,6 +762280,72 @@
           "sha256": "4578ea1cb11bd402e52a9375f42ae78752b412a4c2f9a07fa29c23b1cd0de9fa"
         }
       ]
+    },
+    "release-0.6-license-receipt-reference": {
+      "batch": "release-0.6-license-receipt-reference",
+      "base_commit": "0a919901fbc03832c2514f2cfa6a1efa62a9f39d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/README.md"
+      ],
+      "checks": [
+        "The new regression first reproduced acceptance for eight invalid references. It now passes for valid and rejected application and retained package receipts.",
+        "The staging queue validates the written review reference already emitted by the strict license audit. The fix covers application bundles and retained image receipts. All 30 queue, 21 rollback and 11 license-audit tests passed.",
+        "Python compilation and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "A receipt reference is required for an approved row. The separate strict audit still requires the named exact package approval and evidence of its conditions."
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "d2e0f6deb94268394886905e8a9d88b8dc8095a4d155d8f9132572fc72c3a57d"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "06d1bfaf642c8ae33a1ac7bd84e5488dd1156719a3c10dbbc4d20546d6439c48"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "6c4e4e2bc997e3f7dac33ea55e741328cb545299ac65fdc81e40305b0855da65"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-receipt-reference",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "3b6b2151d0569eea4218b9549ed46f625917ee6dccaaec5ae4b441f558d44d70"
+        },
+        {
+          "file": "queue.log",
+          "sha256": "3afb8fba410ec943152addef924da2f396c97de24b60ed0cffd92360b90765b4"
+        },
+        {
+          "file": "rollback.log",
+          "sha256": "37875ffcf304128ffb7f73ba1cc44606b84b4815a819cdc476ea1b25bb8f7e57"
+        },
+        {
+          "file": "auditor.log",
+          "sha256": "71bbaea0532f246a89ede4fe472d7ebc204cb03951df786fe15ead871255756e"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -767100,9 +767184,9 @@
         "path": "scripts/check-staging-proxy.mjs",
         "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
       },
-      "4271266705454270": {
+      "77356163763801": {
         "path": "deploy/staging/README.md",
-        "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
+        "sha256": "6c4e4e2bc997e3f7dac33ea55e741328cb545299ac65fdc81e40305b0855da65"
       },
       "3837771807479024": {
         "path": "apps/api/src/common/etag.interceptor.ts",
@@ -781020,13 +781104,13 @@
         "path": "deploy/staging/notify-release.py",
         "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
       },
-      "2322349636027605": {
+      "4306434327613320": {
         "path": "deploy/staging/release-queue.py",
-        "sha256": "0b4a1d7dde17e6715803be7203bc726ce1d6960bef260552ab3a338c47894bed"
+        "sha256": "d2e0f6deb94268394886905e8a9d88b8dc8095a4d155d8f9132572fc72c3a57d"
       },
-      "4400728953982417": {
+      "1870514664343367": {
         "path": "deploy/staging/test_release_queue.py",
-        "sha256": "e125d98370f6e7e9d33b94e9811d2de4a7480df9054d951260f3242fbf33582c"
+        "sha256": "06d1bfaf642c8ae33a1ac7bd84e5488dd1156719a3c10dbbc4d20546d6439c48"
       },
       "2176669155858087": {
         "path": "apps/api/src/electricity/electricity-staff-review.service.test.ts",
@@ -784744,6 +784828,14 @@
           "deploy/staging/README.md"
         ],
         "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
+      },
+      "3181386224650582": {
+        "batch": "release-0.6-license-receipt-reference",
+        "base_commit": "0a919901fbc03832c2514f2cfa6a1efa62a9f39d",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "The staging queue validates the written review reference already emitted by the strict license audit. The fix covers application bundles and retained image receipts. All 30 queue, 21 rollback and 11 license-audit tests passed."
       },
       "632352904530847": {
         "batch": "release-0.6-environment-indicator",
@@ -810943,6 +811035,15 @@
         ],
         "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
       },
+      "3144948353375356": {
+        "batch": "release-0.6-license-receipt-reference",
+        "base_commit": "0a919901fbc03832c2514f2cfa6a1efa62a9f39d",
+        "paths": [
+          "deploy/staging/release-queue.py",
+          "deploy/staging/test_release_queue.py"
+        ],
+        "scope": "The staging queue validates the written review reference already emitted by the strict license audit. The fix covers application bundles and retained image receipts. All 30 queue, 21 rollback and 11 license-audit tests passed."
+      },
       "1216374754964730": {
         "batch": "release-0.5-expanded-verification-settings",
         "base_commit": "0c57434b96bd44e6bb0043bd7728bb874cb549f4",
@@ -813245,6 +813346,15 @@
           "apps/api/src/storage/storage-record-http.integration.test.ts"
         ],
         "scope": "Only upload-verify request shape changed to preserve the optional legacy category hint. Current ownership, upload scope, trusted byte and size verification, successful response, status codes and unrelated OpenAPI operations retain their tests and contract."
+      },
+      "1897851227767987": {
+        "batch": "release-0.6-license-receipt-reference",
+        "base_commit": "0a919901fbc03832c2514f2cfa6a1efa62a9f39d",
+        "paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/release-queue.py"
+        ],
+        "scope": "The staging queue validates the written review reference already emitted by the strict license audit. The fix covers application bundles and retained image receipts. All 30 queue, 21 rollback and 11 license-audit tests passed."
       },
       "3249115021798317": {
         "batch": "release-0.6-dev-restart-and-preflight-refs",

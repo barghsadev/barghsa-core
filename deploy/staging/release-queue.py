@@ -215,6 +215,11 @@ def verify_license_report(path, commit, image_ids, *, browser):
             or not expected_scopes <= {row["scope"] for row in packages}
             or any(row["status"] not in {"allowed", "approved"} for row in packages)):
         raise ValueError("Expected passing license evidence for the exact commit and images")
+    for row in packages:
+        if row["status"] == "approved":
+            reference = row.get("approval")
+            if not isinstance(reference, str) or not reference.strip():
+                raise ValueError("Expected passing license evidence with a review reference for every exception")
     if not browser and (licenses["images"] != image_ids or {row["scope"] for row in packages} != expected_scopes):
         raise ValueError("Retained license report must cover exactly the retained images")
     return hashlib.sha256(license_bytes).hexdigest()

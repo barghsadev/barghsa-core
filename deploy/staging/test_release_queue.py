@@ -391,6 +391,24 @@ if __name__ == '__main__':
             with self.assertRaisesRegex(ValueError, "passing license evidence"):
                 queue.verify_image_licenses(self.root, self.commit, ids)
 
+    def test_approved_license_exception_requires_its_review_reference(self):
+        path = self.root / "release-licenses.json"
+        for ids, browser in (({"app": "sha256:" + "a" * 64}, True),
+                             ({"clamav": "sha256:" + "b" * 64}, False)):
+            scope = next(iter(ids))
+            package = {"scope": scope, "status": "approved", "approval": "Reviewed package record"}
+            packages = [package, {"scope": "browser", "status": "allowed"}] if browser else [package]
+            report = {"commit": self.commit, "images": ids, "packages": packages}
+            path.write_text(json.dumps(report))
+            self.assertEqual(queue.verify_license_report(path, self.commit, ids, browser=browser),
+                             hashlib.sha256(path.read_bytes()).hexdigest())
+            for reference in (None, "", " ", 1):
+                with self.subTest(scope=scope, reference=reference):
+                    package["approval"] = reference
+                    path.write_text(json.dumps(report))
+                    with self.assertRaisesRegex(ValueError, "passing license evidence"):
+                        queue.verify_license_report(path, self.commit, ids, browser=browser)
+
     def test_pushed_unaccepted_release_cannot_use_working_tree_acceptance(self):
         commit = self.publish("0.1.4", "in_progress")
         self.write_ledger("0.1.4", "accepted")
