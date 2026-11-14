@@ -292,6 +292,11 @@ print("BARGHSA_STAGING_SCANNER_V1", match[1], match[2], int(built.timestamp()))
   echo 'Staging ClamAV verification failed before migration' >&2
   exit 1
 fi
+if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
+  backup_options=(--env-file "$backup_env" --env BACKUP_ALLOW_HTTP=false
+    --env BACKUP_GPG_PASSPHRASE_FILE=/run/secrets/backup-key
+    --mount "type=bind,src=$backup_key,dst=/run/secrets/backup-key,readonly")
+fi
 if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
   archive_settings=$("${dc[@]}" exec -T --user postgres postgres psql -XAt -v ON_ERROR_STOP=1 \
     -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c 'SHOW archive_mode' -c 'SHOW archive_command')
@@ -299,6 +304,35 @@ if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
     echo 'Staging PostgreSQL is not running with the encrypted WAL archiver' >&2
     false
   }
+  # Compare the effective settings as the same OS user in each container.
+  # Never log store settings, credentials, or the passphrase digest.
+  recovery_fingerprint_script='
+import hashlib, json, os, re
+from pathlib import Path
+from urllib.parse import urlsplit
+
+endpoint = os.environ["BACKUP_S3_ENDPOINT"]
+url = urlsplit(endpoint)
+bucket = os.environ.get("BACKUP_S3_BUCKET", "barghsa-backups")
+region = os.environ.get("BACKUP_S3_REGION", "us-east-1")
+cluster = os.environ["BACKUP_CLUSTER_ID"]
+key = Path(os.environ["BACKUP_GPG_PASSPHRASE_FILE"]).read_bytes()
+if (url.scheme != "https" or not url.hostname or url.username is not None
+        or not bucket or not region or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}", cluster)
+        or not key.strip() or len(key.splitlines()) != 1):
+    raise SystemExit(1)
+settings = json.dumps([endpoint, bucket, region, cluster, hashlib.sha256(key).hexdigest()])
+print(hashlib.sha256(settings.encode()).hexdigest())
+'
+  if ! archive_fingerprint=$("${dc[@]}" exec -T --user postgres postgres \
+      python3 -c "$recovery_fingerprint_script" 2>/dev/null) ||
+    ! backup_fingerprint=$(docker run --rm --user postgres --network none "${backup_options[@]}" \
+      --entrypoint python3 "$postgres_id" -c "$recovery_fingerprint_script" 2>/dev/null) ||
+    [[ ! "$archive_fingerprint" =~ ^[0-9a-f]{64}$ || "$archive_fingerprint" != "$backup_fingerprint" ]]; then
+    echo 'Staging WAL and migration backup recovery configuration differs or cannot be read' >&2
+    exit 1
+  fi
+  unset recovery_fingerprint_script archive_fingerprint backup_fingerprint
 fi
 
 # Host NGINX enters the API through the Docker bridge gateway.
@@ -316,9 +350,7 @@ else
   database_system_id=$("${dc[@]}" exec -T --user postgres postgres psql -XAt -v ON_ERROR_STOP=1 \
     -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c 'SELECT system_identifier FROM pg_control_system()')
   backup_manifest=$(docker run --rm --user postgres --network barghsa-staging-private \
-    --env-file "$backup_env" --env BACKUP_ALLOW_HTTP=false \
-    --env BACKUP_GPG_PASSPHRASE_FILE=/run/secrets/backup-key \
-    --mount "type=bind,src=$backup_key,dst=/run/secrets/backup-key,readonly" \
+    "${backup_options[@]}" \
     --entrypoint /opt/backup/backup-pg.sh "$postgres_id" --label "$backup_label")
   printf '%s\n' "$backup_manifest" | python3 -c '
 import json, re, sys

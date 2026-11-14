@@ -508,10 +508,78 @@ echo compose-admitted
             'target': '/run/secrets/backup-key', 'read_only': True,
         })
 
+    def test_wal_and_migration_backup_must_use_the_same_recovery_configuration(self):
+        text = RELEASE.read_text()
+        start = text.index('if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then\n  backup_options=(')
+        end = text.index('\n# Host NGINX', start)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archiver_key = root / 'archiver-key'
+            backup_key = root / 'backup-key'
+            archiver_key.write_text('fixture-archiver-key\n')
+            backup_key.write_text('fixture-other-key\n')
+            script = '''set -euo pipefail
+mode=$1
+BARGHSA_STAGING_WAL_ARCHIVE=true
+BARGHSA_DISPOSABLE=false
+dc=(compose)
+POSTGRES_USER=fixture
+POSTGRES_DB=fixture
+backup_env=/fixture/secrets/backup.env
+backup_key=/fixture/secrets/backup-key
+postgres_id=sha256:fixture
+export BACKUP_S3_ENDPOINT=https://backup.fixture.invalid
+export BACKUP_CLUSTER_ID=staging
+export BACKUP_S3_ACCESS_KEY=fixture-archiver-credential
+unset BACKUP_S3_BUCKET BACKUP_S3_REGION
+compose() {
+  [[ $1 == exec && $2 == -T && $3 == --user && $4 == postgres && $5 == postgres ]] || return 22
+  if [[ $6 == psql ]]; then
+    printf 'on\\n/opt/backup/archive-wal.sh %%f %%p\\n'
+    return
+  fi
+  [[ $6 == python3 && $7 == -c ]] || return 23
+  BACKUP_GPG_PASSPHRASE_FILE="$ARCHIVER_KEY" "${@:6}"
+}
+docker() {
+  [[ "$*" == 'run --rm --user postgres --network none --env-file /fixture/secrets/backup.env '* &&
+     "$*" == *'dst=/run/secrets/backup-key,readonly --entrypoint python3 sha256:fixture -c '* ]] || return 24
+  export BACKUP_S3_ACCESS_KEY=fixture-distinct-backup-credential
+  export BACKUP_S3_BUCKET=barghsa-backups BACKUP_S3_REGION=us-east-1
+  export BACKUP_GPG_PASSPHRASE_FILE="$ARCHIVER_KEY"
+  case "$mode" in
+    endpoint) export BACKUP_S3_ENDPOINT=https://other.fixture.invalid ;;
+    http) export BACKUP_S3_ENDPOINT=http://backup.fixture.invalid ;;
+    bucket) export BACKUP_S3_BUCKET=other-bucket ;;
+    region) export BACKUP_S3_REGION=other-region ;;
+    cluster) export BACKUP_CLUSTER_ID=other-staging ;;
+    key) export BACKUP_GPG_PASSPHRASE_FILE="$BACKUP_KEY" ;;
+    missing) unset BACKUP_CLUSTER_ID ;;
+    unreadable) export BACKUP_GPG_PASSPHRASE_FILE="$BACKUP_KEY.missing" ;;
+  esac
+  python3 "${@: -2}"
+}
+trap 'echo rollback; exit 40' ERR
+''' + text[start:end] + '\necho writes-still-available\n'
+            for mode in ('matching', 'endpoint', 'http', 'bucket', 'region', 'cluster', 'key', 'missing', 'unreadable'):
+                with self.subTest(mode=mode):
+                    result = subprocess.run(
+                        ['bash', '-c', script, 'wal-fixture', mode], timeout=10,
+                        env={**os.environ, 'ARCHIVER_KEY': str(archiver_key), 'BACKUP_KEY': str(backup_key)},
+                        capture_output=True, text=True, check=False,
+                    )
+                    self.assertEqual(result.returncode, int(mode != 'matching'), result.stderr)
+                    self.assertEqual(result.stdout, 'writes-still-available\n' if mode == 'matching' else '')
+                    if mode != 'matching':
+                        self.assertIn('WAL and migration backup recovery configuration differs or cannot be read', result.stderr)
+                    self.assertNotIn('fixture-', result.stdout + result.stderr)
+
     def test_migrations_wait_for_a_successful_writer_stop(self):
         text = RELEASE.read_text()
         start = text.index('# Quiesce the previous API and worker')
         end = text.index('\n"${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference', start)
+        options_start = text.index('if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then\n  backup_options=(')
+        backup_options = text[options_start:text.index('\nif [[ "${BARGHSA_STAGING_WAL_ARCHIVE', options_start)]
         script = f'''set -euo pipefail
 mode=$1
 dc=(compose)
@@ -523,6 +591,7 @@ backup_key=/fixture/secrets/backup-key
 postgres_id=sha256:{'b' * 64}
 BARGHSA_DISPOSABLE=false
 if [[ "$mode" == disposable || "$mode" == stop-failed ]]; then BARGHSA_DISPOSABLE=true; fi
+{backup_options}
 compose() {{
   if [[ $1 == exec ]]; then printf '%s\\n' '123456'; return; fi
   printf '%s\\n' "$*"
@@ -829,6 +898,7 @@ BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-fixture
 BARGHSA_POSTGRES_VOLUME={RESTORED_VOLUME}
 BARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-fixture
 BARGHSA_STAGING_WAL_ARCHIVE=false
+BARGHSA_DISPOSABLE=true
 BARGHSA_APP_IMAGE_ID=sha256:{'a' * 64}
 BARGHSA_WEB_IMAGE_ID=sha256:{'b' * 64}
 if [[ "$1" == bootstrap || "$1" == wrong-bootstrap-image ]]; then

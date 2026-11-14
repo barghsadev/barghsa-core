@@ -17949,7 +17949,8 @@
         "Verify new encrypted WAL bytes on the approved off-server target before acknowledging each segment. The isolated PostgreSQL archiver and PITR cases passed. Same-size corruption and failed readback keep the operation retryable, and a matching stored ciphertext is preserved. Verify deployed archive throughput, backlog and RPO after provisioning.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "At 17:32 UTC on November 14, live staging still reported archive_mode=off. The protected backup.env, backup-key and wal-archive.env were absent. The Docker filesystem was 93% used with 6,262,157,312 bytes available. Provision the approved off-server destination and key and retain actual backup, restore and staged cutover receipts.",
-        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -18061,7 +18062,8 @@
           "release-0.6-wal-upload-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-staging-scanner-gate-readback",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -21559,7 +21561,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-first-announcement-runtime"
+          "release-0.6-first-announcement-runtime",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21579,7 +21582,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21953,6 +21956,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ]
         }
@@ -25994,7 +26005,8 @@
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
-        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts."
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -26085,7 +26097,8 @@
           "release-0.6-receiver-version-backup",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-staging-service-health"
+          "release-0.6-staging-service-health",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": null
       }
@@ -26349,7 +26362,8 @@
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-first-announcement-runtime"
+          "release-0.6-first-announcement-runtime",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -26369,15 +26383,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "fceec8a920af93072e48b541ffbbbca9b66ee3f1abfa06583ce268c4334f5611"
+              "sha256": "a62b93dab6e606a8b8f8ceb9596a0fabfc394eb16e9d5ab8b13c212180e1bab2"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -26751,6 +26765,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ]
         }
@@ -35153,7 +35177,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -35209,7 +35234,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35706,6 +35731,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ]
         }
@@ -38874,7 +38907,8 @@
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
           "release-0.6-production-telemetry-labels",
-          "release-0.6-promotion-staged-ancestor"
+          "release-0.6-promotion-staged-ancestor",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38905,7 +38939,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -39774,6 +39808,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ]
         }
@@ -108068,7 +108110,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -108216,7 +108259,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -109890,6 +109933,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -176269,7 +176320,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-receiver-version-backup",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -176641,7 +176693,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -176653,7 +176705,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -178197,6 +178249,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The three commands now reject undeclared request fields. Prior status codes, valid request paths and authorization, redemptions, team transactions and wallet SQL remain in effect. Other API operations are byte-identical in the generated contract. Compiled PostgreSQL and staff-team caller cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -651572,7 +651633,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -651744,7 +651806,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -652488,6 +652550,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -673351,7 +673421,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -673591,7 +673662,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -674215,6 +674286,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -674352,7 +674431,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -674592,7 +674672,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -675216,6 +675296,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -675351,7 +675439,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -675591,7 +675680,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -676215,6 +676304,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -676350,7 +676447,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -676590,7 +676688,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -677238,6 +677336,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -677867,7 +677973,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -678107,7 +678214,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -678731,6 +678838,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -678948,7 +679063,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-receiver-version-backup",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -679320,7 +679436,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -679332,7 +679448,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -680900,6 +681016,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The three commands now reject undeclared request fields. Prior status codes, valid request paths and authorization, redemptions, team transactions and wallet SQL remain in effect. Other API operations are byte-identical in the generated contract. Compiled PostgreSQL and staff-team caller cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -681190,7 +681315,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -681430,7 +681556,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -682054,6 +682180,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -682188,7 +682322,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -682428,7 +682563,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -683052,6 +683187,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -683187,7 +683330,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -683427,7 +683571,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -684051,6 +684195,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -684187,7 +684339,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -684427,7 +684580,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -685075,6 +685228,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -685209,7 +685370,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -685449,7 +685611,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -686073,6 +686235,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -686207,7 +686377,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "status": "done",
@@ -686447,7 +686618,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -687071,6 +687242,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -715449,7 +715628,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-first-announcement-runtime"
+          "release-0.6-first-announcement-runtime",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -715461,7 +715641,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -715844,6 +716024,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ]
         }
@@ -748762,7 +748950,8 @@
         "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
-        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts."
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -748835,7 +749024,8 @@
           "release-0.6-linux-recovery-readback",
           "release-0.6-receiver-version-backup",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-staging-service-health"
+          "release-0.6-staging-service-health",
+          "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": null
       }
@@ -1144006,7 +1144196,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1144030,7 +1144220,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1147809,6 +1147999,15 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The three commands now reject undeclared request fields. Prior status codes, valid request paths and authorization, redemptions, team transactions and wallet SQL remain in effect. Other API operations are byte-identical in the generated contract. Compiled PostgreSQL and staff-team caller cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "presentation_renewals": [
@@ -1148276,7 +1148475,8 @@
           "release-0.6-solar-guidance-authority",
           "release-0.6-first-announcement-runtime",
           "release-0.6-async-retry-command-body",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wal-recovery-config"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1150445,7 +1150645,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+              "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1150469,7 +1150669,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+              "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1154176,6 +1154376,15 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The three commands now reject undeclared request fields. Prior status codes, valid request paths and authorization, redemptions, team transactions and wallet SQL remain in effect. Other API operations are byte-identical in the generated contract. Compiled PostgreSQL and staff-team caller cases passed."
+            },
+            {
+              "batch": "release-0.6-wal-recovery-config",
+              "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1154660,7 +1154869,8 @@
           "release-0.6-solar-guidance-authority",
           "release-0.6-first-announcement-runtime",
           "release-0.6-async-retry-command-body",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wal-recovery-config"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1160906,7 +1161116,8 @@
         "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open.",
-        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts."
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1161002,7 +1161213,8 @@
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
           "release-0.6-promotion-staged-ancestor",
-          "release-0.6-staging-service-health"
+          "release-0.6-staging-service-health",
+          "release-0.6-wal-recovery-config"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1357781,6 +1357993,84 @@
         {
           "file": "static-final.log",
           "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f"
+        }
+      ]
+    },
+    "release-0.6-wal-recovery-config": {
+      "batch": "release-0.6-wal-recovery-config",
+      "base_commit": "6c95cd16867fa25d40a719a4facd14f493ae5a18",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "01a0660a87a3d7368e113a2cc70966bcb2a955fd794521e04f85ec36f46b407e"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "a62b93dab6e606a8b8f8ceb9596a0fabfc394eb16e9d5ab8b13c212180e1bab2"
+        }
+      ],
+      "checks": [
+        "Before the change, the cutover fixture accepted seven mismatched or unreadable recovery configurations. The final 21 release and rollback tests pass, including missing settings, HTTP, mismatched endpoint/bucket/region/namespace/key, and matching settings with separate credentials.",
+        "The exact prepared PostgreSQL image 88dbfd4a2cfca7c58ef87f8df96db3558e232eabcd52b991ca63c3ccf1d17fcb ran both configuration reads as postgres in isolated offline containers. Matching configuration passed. Stale running-container bucket configuration and a replaced passphrase bind mount each failed before writer stop.",
+        "Bash syntax, ShellCheck, Git whitespace and Markdown format checks passed."
+      ],
+      "limitations": [
+        "The Docker fixture used synthetic configuration and replaced the SQL archive settings read with a fixture. It made no live storage requests and does not certify WAL archival, restore, staging release or Telegram delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-wal-recovery-config",
+      "execution_receipts": [
+        {
+          "file": "container-check.py",
+          "sha256": "8764b4ce4ee4f0a40e63ad7f3ab81443fa62ecd41f8b6484b9f4aa39c05d4a6f"
+        },
+        {
+          "file": "container.log",
+          "sha256": "745c0fa724f5d14d6db0bf6f75f1366cfbc91c75815aae3db77633ce27f5b5c7"
+        },
+        {
+          "file": "rollback.log",
+          "sha256": "0f2a787036303afbb8679dfe3520c3d79269bf7bbbbfae3662571eaf5f297868"
+        },
+        {
+          "file": "static.log",
+          "sha256": "963a227cd2fab5e6d86e147333be66dcb528b31024463684fe4291d52d93cd95"
         }
       ]
     }

@@ -404,6 +404,12 @@ recoverable keys. Use the same cluster namespace and key in the full backup
 configuration, with separate credentials where supported. The app and
 database container do not need the full-backup replication URL.
 
+The release compares the effective HTTPS endpoint, bucket, region, namespace
+and mounted passphrase between the running PostgreSQL archiver and the backup
+container before stopping writers. Use identical endpoint strings in both
+configurations. If the check fails, inspect those settings and the key mounts
+privately before retrying.
+
 During the approved database cutover, add `compose.wal-archive.yml` to
 both the cutover and subsequent manual Compose commands. Start PostgreSQL
 with the prepared image and restored volume while writes are paused. Read
