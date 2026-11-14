@@ -288,6 +288,45 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
         self.store.client.delete_object(Bucket=self.store.bucket,
             Key=self.store.prefix + f"wal/{self.base['system_id']}/00000002.history.gpg")
 
+    def test_new_wal_rejects_acknowledged_same_size_corruption(self):
+        source = self.root / 'corrupt-history-source'
+        source.write_bytes(b'1\t0/1000000\tfixture\n')
+        filename = '00000003.history'
+        key = f"wal/{self.base['system_id']}/{filename}.gpg"
+        put = self.store.put
+
+        def write_corrupt(name, body, **kwargs):
+            self.assertEqual(name, key)
+            ciphertext = body.read()
+            return put(name, ciphertext[:-1] + bytes([ciphertext[-1] ^ 1]), **kwargs)
+
+        self.addCleanup(self.store.client.delete_object, Bucket=self.store.bucket, Key=self.store.prefix + key)
+        with patch.object(self.store, 'put', side_effect=write_corrupt):
+            with self.assertRaisesRegex(backup.BackupError, 'Uploaded WAL checksum mismatch'):
+                backup.archive_wal(self.store, filename, source)
+        self.assertEqual(source.read_bytes(), b'1\t0/1000000\tfixture\n')
+        with self.assertRaisesRegex(backup.BackupError, 'gpg failed'):
+            backup.archive_wal(self.store, filename, source)
+
+    def test_unavailable_wal_readback_can_retry_without_replacing_stored_bytes(self):
+        source = self.root / 'retry-history-source'
+        source.write_bytes(b'1\t0/1000000\tretry fixture\n')
+        filename = '00000004.history'
+        key = f"wal/{self.base['system_id']}/{filename}.gpg"
+        self.addCleanup(self.store.client.delete_object, Bucket=self.store.bucket, Key=self.store.prefix + key)
+        with patch.object(self.store, 'get', side_effect=OSError('fixture readback unavailable')):
+            with self.assertRaises(OSError):
+                backup.archive_wal(self.store, filename, source)
+        before = self.root / 'wal-before-retry.gpg'
+        after = self.root / 'wal-after-retry.gpg'
+        backup.download(self.store, key, before)
+        backup.archive_wal(self.store, filename, source)
+        backup.download(self.store, key, after)
+        self.assertEqual(before.read_bytes(), after.read_bytes())
+        recovered = self.root / 'wal-after-retry.history'
+        self.assertTrue(backup.fetch_wal(self.store, self.base['system_id'], filename, recovered))
+        self.assertEqual(recovered.read_bytes(), source.read_bytes())
+
     def test_fetch_distinguishes_missing_from_authentication_failure(self):
         args = ['python3', backup.__file__, 'fetch-wal', self.base['system_id'],
                 'FFFFFFFF.history', str(self.root / 'missing')]

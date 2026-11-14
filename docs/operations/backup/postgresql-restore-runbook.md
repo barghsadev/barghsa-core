@@ -69,8 +69,11 @@ the encrypted metadata must match it during restore. Legacy plaintext `full/` an
 `wal/` objects are not accepted or deleted by these commands.
 
 PostgreSQL continuously invokes `/opt/backup/archive-wal.sh %f %p`. Objects live at
-`postgres/<cluster>/wal/<system-id>/<filename>.gpg`. Retries accept an existing
-object only when decryption yields the same bytes. Conflicting content fails.
+`postgres/<cluster>/wal/<system-id>/<filename>.gpg`. The archiver reads back new
+objects and verifies encrypted size and SHA-256 before it reports success to
+PostgreSQL. If readback fails, PostgreSQL retains the local WAL for retry. Retries
+accept an existing object only when decryption yields the same bytes. Investigate
+mismatches and keep the original WAL available until the archive is verified.
 Never use a no-op archive command to clear an archival backlog.
 
 After a successful daily backup, run `python3 /opt/backup/physical_backup.py prune`.

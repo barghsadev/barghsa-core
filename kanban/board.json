@@ -17538,7 +17538,8 @@
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The v0.6.0 worker checks backup mode, archiving and the three protected files before image or remote configuration work. The read-only preflight refused live staging. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover.",
-        "The daily job checks verified ciphertext and manifest readback before pruning and emits the canonical digest of that exact manifest. The live configured daily schedule, approved off-server storage and WAL/PITR evidence remain open."
+        "The daily job checks verified ciphertext and manifest readback before pruning and emits the canonical digest of that exact manifest. The live configured daily schedule, approved off-server storage and WAL/PITR evidence remain open.",
+        "Verify new encrypted WAL bytes on the approved off-server target before acknowledging each segment. The isolated PostgreSQL archiver and PITR cases passed. Same-size corruption and failed readback keep the operation retryable, and a matching stored ciphertext is preserved. Verify deployed archive throughput, backlog and RPO after provisioning."
       ],
       "owner": null,
       "depends_on": [],
@@ -17646,7 +17647,8 @@
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-protected-staging-migration",
           "release-0.6-backup-config-preflight",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-wal-upload-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -22046,7 +22048,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-configuration-backup-readback"
+          "release-0.6-configuration-backup-readback",
+          "release-0.6-wal-upload-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -22082,7 +22085,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "d3598d64adf9c1b9a6306cd65d4f60053b0c4ab4e69d02089c79549945f1cf9c"
+              "sha256": "70d83afebb43b4482544f4556474aca16bc119569273d67e83cd55b240275431"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -22180,6 +22183,14 @@
                 "packages/db/scripts/backup/physical_backup.py"
               ],
               "scope": "The existing encrypted PostgreSQL publication path now calls the shared readback function. Native WAL replay, tablespaces, corrupt uploads and mismatched manifests passed with the same receipt format. Prior Compose, TLS and deployment-isolation evidence applies to its original scope."
+            },
+            {
+              "batch": "release-0.6-wal-upload-readback",
+              "base_commit": "bae0a1406e9924b20065af7f7818bfedd27f3e1d",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "Fresh WAL uploads now verify encrypted storage readback. The existing full backup uses the same checksum rule and unchanged manifest and receipt formats. Native WAL replay, PITR, corruption and retry checks passed. Restore procedures, deployment topology and RPO/RTO targets keep their existing definitions."
             }
           ]
         }
@@ -37580,7 +37591,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-wal-upload-readback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37627,7 +37639,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "2a864bd7fb4fd9ffab1fcbc89f1e691c1e046982c8ffd54aa8cb4c7c3a63b79c"
+              "sha256": "145b5d06f91059cd3a725318bc330c25c2162872468cc0041d5e28cbe3e95474"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -38358,6 +38370,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-wal-upload-readback",
+              "base_commit": "bae0a1406e9924b20065af7f7818bfedd27f3e1d",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Fresh WAL uploads now verify encrypted storage readback. The existing full backup uses the same checksum rule and unchanged manifest and receipt formats. Native WAL replay, PITR, corruption and retry checks passed. Restore procedures, deployment topology and RPO/RTO targets keep their existing definitions."
             }
           ]
         }
@@ -753223,7 +753243,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-backup-target-monitoring",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-wal-upload-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -753239,7 +753260,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "2a864bd7fb4fd9ffab1fcbc89f1e691c1e046982c8ffd54aa8cb4c7c3a63b79c"
+              "sha256": "145b5d06f91059cd3a725318bc330c25c2162872468cc0041d5e28cbe3e95474"
             }
           ],
           "checks": [
@@ -753398,6 +753419,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-wal-upload-readback",
+              "base_commit": "bae0a1406e9924b20065af7f7818bfedd27f3e1d",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Fresh WAL uploads now verify encrypted storage readback. The existing full backup uses the same checksum rule and unchanged manifest and receipt formats. Native WAL replay, PITR, corruption and retry checks passed. Restore procedures, deployment topology and RPO/RTO targets keep their existing definitions."
             }
           ]
         }
@@ -1142712,7 +1142741,8 @@
         "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
         "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report.",
         "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open.",
-        "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required."
+        "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required.",
+        "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1142797,7 +1142827,8 @@
           "release-0.6-staging-knowledge-preview-readback",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-configuration-backup-readback"
+          "release-0.6-configuration-backup-readback",
+          "release-0.6-wal-upload-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1334317,6 +1334348,77 @@
         {
           "file": "scoped-checks.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-wal-upload-readback": {
+      "batch": "release-0.6-wal-upload-readback",
+      "base_commit": "bae0a1406e9924b20065af7f7818bfedd27f3e1d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/physical_backup.py",
+        "packages/db/scripts/backup/test_physical_backup.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "145b5d06f91059cd3a725318bc330c25c2162872468cc0041d5e28cbe3e95474"
+        },
+        {
+          "path": "packages/db/scripts/backup/archive-wal.sh",
+          "sha256": "5d9a44852eb48ee03b8777059dd54e2bd05b6d3b50fcfe775aa61f6c1cc95d9a"
+        },
+        {
+          "path": "packages/db/scripts/backup/config_backup.py",
+          "sha256": "b3b7ce15a3ba9c086e4cd1c335f569f579b7f814bc55f8877baad5f5c0e7bbbf"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "70d83afebb43b4482544f4556474aca16bc119569273d67e83cd55b240275431"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "196c7b9be270d821feb01fdb9c1aa7172735d0a38e3a20f609bf31d8605d36eb"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "e4d757c4a1afecb19ec564b396ccd776970159881af6e130ff860568391e9df0"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "31452bb926f34d78e14e53e5edd96510725591ad81fc2010a405202ce6d4292f"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "87d6730283a64759d9f02bef93c51a0b6dde5df605986680e5a35fa7881609a0"
+        }
+      ],
+      "checks": [
+        "Six native PostgreSQL and SeaweedFS cases passed. Matching WAL restored and replayed, a later transaction was excluded at the requested point in time, and corrupt full backup upload remained rejected. A successful PUT with same-size corrupt WAL fails readback. An unavailable GET fails the operation, and an idempotent retry verifies the stored plaintext without replacing ciphertext. Eighteen archive and restore unit cases passed. Markdown formatting and Git diff validation passed."
+      ],
+      "limitations": [
+        "The native case used isolated synthetic PostgreSQL and storage on the staging host. Measure the actual approved storage throughput, archived WAL age, periodic backup and live recovery before release acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-wal-upload-readback",
+      "execution_receipts": [
+        {
+          "file": "native-wal-tests.log",
+          "sha256": "1c7f2fcd728661263585bec8de0f34ed228f17ac917771a4e64ef4335bda2def"
+        },
+        {
+          "file": "backup-unit-tests.log",
+          "sha256": "7ec77f062edbeaaf2db6cd4b7ce5ff48a7cc97488c9e60705a66dfa336bdcb0d"
+        },
+        {
+          "file": "fixture-cleanup.txt",
+          "sha256": "b990663ca9e479f53a555f189b8b8b8600493b71ff414bd8432a7148f001a5d4"
         }
       ]
     }

@@ -177,23 +177,27 @@ def validate_manifest(value, key):
     timestamp(value["completed_at"])
 
 
-def publish_verified_backup(store, key, encrypted, manifest):
-    blob = manifest["blob"]
-    store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
-    body = store.get(blob)["Body"]
+def verify_stored_bytes(store, key, expected_size, expected_digest, error):
+    body = store.get(key)["Body"]
     received = hashlib.sha256()
     size = 0
     try:
         for block in body.iter_chunks(chunk_size=1024 * 1024):
             size += len(block)
-            if size > manifest["size"]:
-                raise BackupError("Uploaded backup checksum mismatch")
+            if size > expected_size:
+                raise BackupError(error)
             received.update(block)
     finally:
         body.close()
-    if size != manifest["size"] or received.hexdigest() != manifest["sha256"]:
-        raise BackupError("Uploaded backup checksum mismatch")
+    if size != expected_size or received.hexdigest() != expected_digest:
+        raise BackupError(error)
 
+
+def publish_verified_backup(store, key, encrypted, manifest):
+    blob = manifest["blob"]
+    store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
+    verify_stored_bytes(store, blob, manifest["size"], manifest["sha256"],
+                        "Uploaded backup checksum mismatch")
     manifest_bytes = json.dumps(manifest).encode()
     store.put(key, manifest_bytes, ContentType="application/json")
     body = store.get(key)["Body"]
@@ -281,6 +285,9 @@ def archive_wal(store, filename, source):
             crypt(encrypted, old, decrypt=True)
             if digest(old) != checksum:
                 raise BackupError("Refusing to replace a different archived WAL file") from None
+        else:
+            verify_stored_bytes(store, key, encrypted.stat().st_size, digest(encrypted),
+                                "Uploaded WAL checksum mismatch")
 
 
 def download(store, key, destination):
