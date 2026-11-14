@@ -4,7 +4,10 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ServiceSettingsEditor } from './ServiceSettingsEditor.js';
 import Page from './AdminServiceTargetsPage.js';
+import AdminOperationalRetentionPage from './AdminOperationalRetentionPage.js';
 import { tServiceSettings as text } from '@barghsa/i18n/service-settings';
+import { retentionText } from '@barghsa/i18n/operational-retention';
+import { defaultOperationalRetention } from '@barghsa/shared/admin';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 
 interface Confirmation {
@@ -142,6 +145,87 @@ it.each(cases.slice(0, 2))('$kind reviews and activates an exact recovery draft'
   expect(input(item.selector).value).toBe('72');
   expect(button('Activate recovery draft')).toBeUndefined();
 });
+
+it.each(['en', 'fa'] as const)(
+  'restores monitoring retention as a new exportable revision (%s)',
+  async (locale) => {
+    harness.locale = locale;
+    const path = '/api/admin/config/operational-retention';
+    const sourceId = '0199f2eb-de42-78d9-8ba7-1afedd591be1';
+    const config = { ...defaultOperationalRetention, searchableLogsDays: 45 };
+    const draft = {
+      id: '0199f2eb-de42-78d9-8ba7-1afedd591be2',
+      baseVersion: 2,
+      sourceId,
+      sourceVersion: 1,
+      config,
+    };
+    let active = { version: 2, canEdit: true, policy: defaultOperationalRetention };
+    const revision = { id: sourceId, version: 1, config };
+    let history = {
+      baseVersion: 2,
+      items: [revision],
+      draft: null as typeof draft | null,
+      nextBeforeVersion: null,
+    };
+    vi.mocked(fetch).mockImplementation(async (url) =>
+      Response.json(url === `${path}/rollback-history` ? history : active)
+    );
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AdminOperationalRetentionPage />
+        </QueryProvider>
+      )
+    );
+    const button = (name: string) =>
+      Array.from(host.querySelectorAll('button')).find((node) => node.textContent?.trim() === name);
+    const recoveryButton = (id: string) => button(retentionText(id, locale));
+    const selector = '#retention-searchableLogsDays';
+    expect(input(selector).value).toBe('30');
+    expect(fetch).not.toHaveBeenCalledWith(`${path}/rollback-history`, expect.anything());
+    await act(async () => recoveryButton('recoveryTitle')!.click());
+    const review = () =>
+      button(
+        retentionText('recoveryStage', locale).replace('{version}', locale === 'fa' ? '۱' : '1')
+      );
+    await vi.waitFor(() => expect(review()).toBeDefined());
+    await act(async () => review()!.click());
+    expect(harness.command?.action).toMatchObject({
+      path: `${path}/rollback-draft`,
+      body: { sourceId, expectedVersion: 2 },
+    });
+    history = { ...history, draft };
+    await act(async () => {
+      await harness.command?.onSuccess(draft);
+    });
+    expect(input(selector).value).toBe('30');
+    await act(async () => recoveryButton('recoveryActivate')!.click());
+    expect(harness.command?.action).toMatchObject({
+      path: `${path}/rollback-activate`,
+      body: { draftId: draft.id, expectedVersion: 2 },
+      description: retentionText('recoveryActivateConfirm', locale),
+    });
+    await act(async () => {
+      await expect(
+        harness.command?.onSuccess({
+          version: 3,
+          draftId: draft.id,
+          config: defaultOperationalRetention,
+        })
+      ).rejects.toThrow();
+    });
+    expect(input(selector).value).toBe('30');
+    active = { ...active, version: 3, policy: config };
+    history = { ...history, baseVersion: 3, draft: null };
+    await act(async () => {
+      await harness.command?.onSuccess({ version: 3, draftId: draft.id, config });
+    });
+    await vi.waitFor(() => expect(input(selector).value).toBe('45'));
+    expect(recoveryButton('recoveryActivate')).toBeUndefined();
+    expect(host.querySelector(`a[href="${path}/export"]`)).not.toBeNull();
+  }
+);
 
 async function fill(selector: string, raw: string) {
   await act(async () => {

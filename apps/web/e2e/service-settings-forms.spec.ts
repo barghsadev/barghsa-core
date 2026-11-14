@@ -1,7 +1,10 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { tServiceSettings as t } from '@barghsa/i18n/service-settings';
+import { retentionText } from '@barghsa/i18n/operational-retention';
+import { defaultOperationalRetention } from '@barghsa/shared/admin';
 import AxeBuilder from '@axe-core/playwright';
+import { fullNavigation } from './navigation-fixture';
 
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'] as const)
@@ -270,3 +273,104 @@ test('a recovery draft stays separate from the live service target', async ({ pa
   await expect(target).toHaveValue('24');
   await expect(section.getByRole('button', { name: 'Activate recovery draft' })).toHaveCount(0);
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`monitoring retention restores an earlier policy after staff verification (${locale})`, async ({
+    page,
+  }, info) => {
+    await setupCatalogueForms(page, locale, false);
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'monitoring-editor',
+          isStaff: true,
+          operatingContext: 'staff',
+          canSwitchContext: true,
+          requiresTosAcceptance: false,
+          navigation: fullNavigation('staff'),
+        },
+      })
+    );
+    const path = '**/api/admin/config/operational-retention';
+    const sourceId = '0199f2eb-de42-78d9-8ba7-1afedd591be1';
+    const draftId = '0199f2eb-de42-78d9-8ba7-1afedd591be2';
+    const previous = { ...defaultOperationalRetention, searchableLogsDays: 45 };
+    const revision = { id: sourceId, version: 1, config: previous };
+    const draft = { id: draftId, sourceId, sourceVersion: 1, baseVersion: 2, config: previous };
+    let active = { version: 2, policy: defaultOperationalRetention, canEdit: true };
+    let staged = false;
+    let verified = false;
+    const stepUpRequired = { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } };
+    await page.route(path, (route) => route.fulfill({ json: active }));
+    await page.route(`${path}/rollback-history`, (route) =>
+      route.fulfill({
+        json: {
+          baseVersion: active.version,
+          items: [revision],
+          nextBeforeVersion: null,
+          draft: staged && active.version === 2 ? draft : null,
+        },
+      })
+    );
+    await page.route(`${path}/rollback-draft`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ sourceId, expectedVersion: 2 });
+      staged = true;
+      return route.fulfill({ status: 201, json: draft });
+    });
+    await page.route(`${path}/rollback-activate`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ draftId, expectedVersion: 2 });
+      if (!verified) return route.fulfill({ status: 403, json: stepUpRequired });
+      active = { ...active, version: 3, policy: previous };
+      return route.fulfill({ json: { version: 3, draftId, config: previous } });
+    });
+    await page.route('**/api/auth/step-up', (route) => {
+      verified = true;
+      return route.fulfill({ json: { verified: true } });
+    });
+    await page.goto('/admin/operational-retention');
+    const input = page.getByLabel(retentionText('searchableLogsDays', locale), { exact: true });
+    const toggle = page.getByRole('button', {
+      name: retentionText('recoveryTitle', locale),
+      exact: true,
+    });
+    await expect(input).toHaveValue('30');
+    await toggle.focus();
+    await toggle.press('Enter');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    const region = page.getByRole('region', { name: retentionText('recoveryTitle', locale) });
+    await region
+      .getByRole('button', {
+        name: retentionText('recoveryStage', locale).replace(
+          '{version}',
+          locale === 'fa' ? '۱' : '1'
+        ),
+      })
+      .click();
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.locator('button[type=submit]');
+    await expect(dialog).toContainText(locale === 'fa' ? '۴۵' : '45');
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(input).toHaveValue('30');
+    const activate = region.getByRole('button', {
+      name: retentionText('recoveryActivate', locale),
+    });
+    await expect(activate).toBeEnabled();
+    const accessibility = await new AxeBuilder({ page }).include('#retention-recovery').analyze();
+    expect(accessibility.violations).toEqual([]);
+    await region.screenshot({ path: info.outputPath(`retention-recovery-${locale}.png`) });
+    await activate.click();
+    await expect(dialog).toContainText(retentionText('recoveryActivateConfirm', locale));
+    await confirm.click();
+    await expect(input).toHaveValue('30');
+    await dialog.locator('input[type=password]').fill('synthetic-password');
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(input).toHaveValue('45');
+    await expect(activate).toHaveCount(0);
+    await expect(page.getByRole('link', { name: retentionText('export', locale) })).toHaveAttribute(
+      'href',
+      '/api/admin/config/operational-retention/export'
+    );
+  });
+}

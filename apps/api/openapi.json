@@ -4413,6 +4413,386 @@
         ]
       }
     },
+    "/api/admin/config/operational-retention/rollback-activate": {
+      "post": {
+        "operationId": "OperationalRetentionController_activate",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "config": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "metricsArchiveDays": {
+                          "maximum": 730,
+                          "minimum": 400,
+                          "type": "integer"
+                        },
+                        "ordinaryTracesDays": {
+                          "maximum": 90,
+                          "minimum": 7,
+                          "type": "integer"
+                        },
+                        "priorityTracesDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        },
+                        "searchableLogsDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "searchableLogsDays",
+                        "metricsArchiveDays",
+                        "ordinaryTracesDays",
+                        "priorityTracesDays"
+                      ],
+                      "type": "object"
+                    },
+                    "draftId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "version": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "config",
+                    "draftId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Activate the reviewed monitoring retention recovery draft as a new revision",
+        "tags": [
+          "Admin operational retention"
+        ]
+      }
+    },
+    "/api/admin/config/operational-retention/rollback-draft": {
+      "post": {
+        "operationId": "OperationalRetentionController_stage",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "baseVersion": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "config": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "metricsArchiveDays": {
+                          "maximum": 730,
+                          "minimum": 400,
+                          "type": "integer"
+                        },
+                        "ordinaryTracesDays": {
+                          "maximum": 90,
+                          "minimum": 7,
+                          "type": "integer"
+                        },
+                        "priorityTracesDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        },
+                        "searchableLogsDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "searchableLogsDays",
+                        "metricsArchiveDays",
+                        "ordinaryTracesDays",
+                        "priorityTracesDays"
+                      ],
+                      "type": "object"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "sourceId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "sourceVersion": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "baseVersion",
+                    "sourceId",
+                    "sourceVersion",
+                    "config"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Prepare a recovery draft from a superseded monitoring retention revision",
+        "tags": [
+          "Admin operational retention"
+        ]
+      }
+    },
+    "/api/admin/config/operational-retention/rollback-history": {
+      "get": {
+        "operationId": "OperationalRetentionController_history",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "baseVersion": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "draft": {
+                      "nullable": true,
+                      "properties": {
+                        "baseVersion": {
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "config": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "metricsArchiveDays": {
+                              "maximum": 730,
+                              "minimum": 400,
+                              "type": "integer"
+                            },
+                            "ordinaryTracesDays": {
+                              "maximum": 90,
+                              "minimum": 7,
+                              "type": "integer"
+                            },
+                            "priorityTracesDays": {
+                              "maximum": 365,
+                              "minimum": 30,
+                              "type": "integer"
+                            },
+                            "searchableLogsDays": {
+                              "maximum": 365,
+                              "minimum": 30,
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "searchableLogsDays",
+                            "metricsArchiveDays",
+                            "ordinaryTracesDays",
+                            "priorityTracesDays"
+                          ],
+                          "type": "object"
+                        },
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "sourceId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "sourceVersion": {
+                          "minimum": 1,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "baseVersion",
+                        "sourceId",
+                        "sourceVersion",
+                        "config"
+                      ],
+                      "type": "object"
+                    },
+                    "items": {
+                      "items": {
+                        "properties": {
+                          "config": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "metricsArchiveDays": {
+                                "maximum": 730,
+                                "minimum": 400,
+                                "type": "integer"
+                              },
+                              "ordinaryTracesDays": {
+                                "maximum": 90,
+                                "minimum": 7,
+                                "type": "integer"
+                              },
+                              "priorityTracesDays": {
+                                "maximum": 365,
+                                "minimum": 30,
+                                "type": "integer"
+                              },
+                              "searchableLogsDays": {
+                                "maximum": 365,
+                                "minimum": 30,
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "searchableLogsDays",
+                              "metricsArchiveDays",
+                              "ordinaryTracesDays",
+                              "priorityTracesDays"
+                            ],
+                            "type": "object"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "version": {
+                            "minimum": 1,
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "config"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "nextBeforeVersion": {
+                      "minimum": 1,
+                      "nullable": true,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "baseVersion",
+                    "items",
+                    "nextBeforeVersion",
+                    "draft"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review superseded monitoring retention revisions and the current recovery draft",
+        "tags": [
+          "Admin operational retention"
+        ]
+      }
+    },
     "/api/admin/config/otp": {
       "get": {
         "operationId": "OtpConfigController_get",

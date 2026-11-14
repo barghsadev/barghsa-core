@@ -6,7 +6,8 @@ import {
   type OperationalRetention,
   type OperationalRetentionView,
 } from '@barghsa/shared/admin';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
+import { lazy, Suspense, useState } from 'react';
 import {
   CatalogueEditorStatus,
   CatalogueSaveButton,
@@ -20,6 +21,12 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { boundedCatalogueInteger, record } from '../lib/catalogue-form.js';
 
 const path = '/api/admin/config/operational-retention';
+const ConfigRecovery = lazy(async () => {
+  const { default: Recovery } = await import('../components/ConfigRecovery.js');
+  return { default: Recovery<OperationalRetention> };
+});
+const policyBasis = (policy: OperationalRetention) =>
+  operationalRetentionFields.map(({ key }) => policy[key]).join(':');
 type Draft = Record<keyof OperationalRetention, string>;
 const values = (policy: OperationalRetention): Draft =>
   Object.fromEntries(
@@ -38,6 +45,8 @@ export default function AdminOperationalRetentionPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => retentionText(key, locale);
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
   const messages = Object.fromEntries(
     operationalRetentionFields.map(({ key, min, max }) => [
       key,
@@ -45,6 +54,7 @@ export default function AdminOperationalRetentionPage() {
     ])
   ) as Draft;
   const editor = useCatalogueEditor<OperationalRetentionView, Draft>({
+    disabled: recoveryBusy,
     identity: 'operational-retention',
     path,
     validate,
@@ -77,6 +87,21 @@ export default function AdminOperationalRetentionPage() {
   const error = catalogueRootMessage(editor.errors);
   const body = editor.action?.body;
   const proposed = record(body) && isOperationalRetention(body.policy) ? body.policy : null;
+  const hasChanges =
+    saved &&
+    operationalRetentionFields.some(({ key }) => editor.values[key] !== String(saved.policy[key]));
+  const policySummary = (policy: OperationalRetention) => (
+    <dl className="grid gap-2 rounded-md border p-3 sm:grid-cols-2">
+      {operationalRetentionFields.map(({ key }) => (
+        <div key={key}>
+          <dt className="text-sm text-muted-foreground">{label(key)}</dt>
+          <dd>
+            <bdi>{numbers.number(policy[key])}</bdi>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
   return (
     <section className="max-w-3xl space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -86,7 +111,7 @@ export default function AdminOperationalRetentionPage() {
         </div>
         <Button
           variant="outline"
-          disabled={editor.resource.loading || editor.commandPending}
+          disabled={editor.resource.loading || editor.commandPending || recoveryBusy}
           onClick={editor.refresh}
         >
           {label('refresh')}
@@ -176,6 +201,50 @@ export default function AdminOperationalRetentionPage() {
           <Alert className="mt-4">{label('legal')}</Alert>
         </SettingsFormSection>
       )}
+      {saved?.canEdit && (
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            aria-expanded={showRecovery}
+            aria-controls={showRecovery ? 'retention-recovery' : undefined}
+            disabled={editor.busy || recoveryBusy || !!editor.action}
+            onClick={() => setShowRecovery((current) => !current)}
+          >
+            {label('recoveryTitle')}
+          </Button>
+          {showRecovery && (
+            <div id="retention-recovery">
+              <p className="mb-3 text-sm text-muted-foreground">{label('applyHelp')}</p>
+              <Suspense fallback={<LoadingStatus>{label('recoveryLoading')}</LoadingStatus>}>
+                <ConfigRecovery
+                  key={saved.version}
+                  path={path}
+                  valid={isOperationalRetention}
+                  basis={policyBasis}
+                  renderValues={policySummary}
+                  label={label}
+                  disabled={
+                    editor.busy ||
+                    editor.uncertain ||
+                    editor.resource.loading ||
+                    !!editor.resource.error ||
+                    !!editor.action ||
+                    !!hasChanges
+                  }
+                  onBusyChange={setRecoveryBusy}
+                  onDenied={() => {
+                    setShowRecovery(false);
+                    setRecoveryBusy(false);
+                    editor.onDenied();
+                  }}
+                  onActivated={editor.refresh}
+                />
+              </Suspense>
+            </div>
+          )}
+        </>
+      )}
       {editor.action && (
         <TeamActionDialog
           action={editor.action}
@@ -185,20 +254,7 @@ export default function AdminOperationalRetentionPage() {
           onPendingChange={editor.onPendingChange}
           onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
-          summary={
-            proposed && (
-              <dl className="grid gap-2 rounded-md border p-3 sm:grid-cols-2">
-                {operationalRetentionFields.map(({ key }) => (
-                  <div key={key}>
-                    <dt className="text-sm text-muted-foreground">{label(key)}</dt>
-                    <dd>
-                      <bdi>{numbers.number(proposed[key])}</bdi>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            )
-          }
+          summary={proposed && policySummary(proposed)}
           onSuccess={async (result) => {
             const matches =
               validate(result) &&

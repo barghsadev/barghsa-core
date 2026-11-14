@@ -54,6 +54,15 @@ function save(user: string, body: object, includeCsrf = true) {
     body: JSON.stringify(body),
   });
 }
+function recover(user: string, action: 'draft' | 'activate', body: object, includeCsrf = true) {
+  const requestHeaders = new Headers(headers.get(user));
+  if (!includeCsrf) requestHeaders.delete('X-CSRF-Token');
+  return fetch(`${http.base}${path}/rollback-${action}`, {
+    method: 'POST',
+    headers: requestHeaders,
+    body: JSON.stringify(body),
+  });
+}
 
 it('restricts access, validates legal boundaries and serializes audited policy saves', async () => {
   expect((await read('anonymous')).status).toBe(401);
@@ -105,7 +114,91 @@ it('restricts access, validates legal boundaries and serializes audited policy s
       next: { version: 1, policy },
     },
   });
+
+  expect((await read('reader', '/rollback-history')).status).toBe(403);
+  expect((await read('editor', '/rollback-history?beforeVersion=0')).status).toBe(400);
+  const laterPolicy = { ...policy, searchableLogsDays: 60 };
+  expect((await save('editor', { expectedVersion: 1, policy: laterPolicy })).status).toBe(200);
+  const history = await read('editor', '/rollback-history');
+  expect(history.status).toBe(200);
+  expect(history.headers.get('cache-control')).toContain('no-store');
+  const body = (await history.json()) as { items: { id: string }[] };
+  expect(body).toEqual({
+    baseVersion: 2,
+    items: [{ id: expect.any(String), version: 1, config: policy }],
+    draft: null,
+    nextBeforeVersion: null,
+  });
+  expect(await (await read('editor', '/rollback-history?beforeVersion=1')).json()).toMatchObject({
+    items: [],
+  });
+  const sourceId = body.items[0]!.id;
+  const stage = { expectedVersion: 2, sourceId };
+  expect((await recover('reader', 'draft', stage)).status).toBe(403);
+  expect((await recover('stale', 'draft', stage)).status).toBe(403);
+  expect((await recover('editor', 'draft', stage, false)).status).toBe(403);
+  expect((await recover('editor', 'draft', { ...stage, policy })).status).toBe(400);
+  expect((await recover('editor', 'draft', { ...stage, sourceId: randomUUID() })).status).toBe(404);
+  const staged = await recover('editor', 'draft', stage);
+  expect(staged.status).toBe(201);
+  const draft = (await staged.json()) as { id: string };
+  expect(draft).toEqual({
+    id: expect.any(String),
+    baseVersion: 2,
+    sourceId,
+    sourceVersion: 1,
+    config: policy,
+  });
+  expect(await (await recover('editor', 'draft', stage)).json()).toEqual(draft);
+  expect(await (await read('editor')).json()).toEqual({
+    version: 2,
+    policy: laterPolicy,
+    canEdit: true,
+  });
+  expect(await (await read('editor', '/rollback-history')).json()).toMatchObject({ draft });
+
+  const activation = { expectedVersion: 2, draftId: draft.id };
+  expect((await recover('stale', 'activate', activation)).status).toBe(403);
+  expect((await recover('editor', 'activate', activation, false)).status).toBe(403);
+  expect(
+    (await recover('editor', 'activate', { ...activation, draftId: randomUUID() })).status
+  ).toBe(409);
+  const activations = await Promise.all([
+    recover('editor', 'activate', activation),
+    recover('editor', 'activate', activation),
+  ]);
+  expect(activations.map((result) => result.status).sort()).toEqual([200, 409]);
+  expect(await activations.find((result) => result.ok)!.json()).toEqual({
+    version: 3,
+    config: policy,
+    draftId: draft.id,
+  });
+  expect(await (await read('editor', '/export')).json()).toEqual({
+    version: 3,
+    policy,
+    canEdit: true,
+  });
+  expect(await (await read('editor', '/rollback-history')).json()).toMatchObject({ draft: null });
+  const audits = await http.pool.query(
+    `SELECT event,metadata::jsonb AS data FROM audit_log WHERE metadata IS JSON OBJECT
+     AND metadata::jsonb->>'key'=$1 AND event IN ('config_change','operational_retention.rollback_draft')
+     ORDER BY created_at,id`,
+    [key]
+  );
+  expect(audits.rows.map((row) => row.event)).toEqual([
+    'config_change',
+    'config_change',
+    'operational_retention.rollback_draft',
+    'config_change',
+  ]);
+  expect(audits.rows[3].data).toMatchObject({
+    action: 'activate',
+    draftId: draft.id,
+    restoredFrom: { id: sourceId, version: 1 },
+    previous: { version: 2, policy: laterPolicy },
+    next: { version: 3, policy },
+  });
   await http.pool.query("UPDATE app_config SET value='{}'::jsonb WHERE key=$1", [key]);
   expect((await read('editor')).status).toBe(503);
-  expect((await save('editor', { ...input, expectedVersion: 1 })).status).toBe(503);
+  expect((await save('editor', { ...input, expectedVersion: 3 })).status).toBe(503);
 });

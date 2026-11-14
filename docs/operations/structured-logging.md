@@ -63,6 +63,12 @@ controls searchable operational logs, the downsampled metrics archive, and
 the two operational trace tiers. The legal retention policy for audit,
 security and financial records is separate.
 
+To restore a previous revision, open **Restore previous settings**, review the
+saved values and prepare a recovery draft. Activate the draft with staff
+verification to record a new revision. Check any intervening changes before
+creating another draft. The same download and infrastructure steps apply to
+the new revision.
+
 To apply a revision, download the latest saved policy from the admin page.
 On the monitoring host, render it from the same reviewed checkout that
 supplies the Compose files. The output directory must be new.

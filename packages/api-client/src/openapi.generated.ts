@@ -1060,6 +1060,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/operational-retention/rollback-activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate the reviewed monitoring retention recovery draft as a new revision */
+        post: operations["OperationalRetentionController_activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/operational-retention/rollback-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare a recovery draft from a superseded monitoring retention revision */
+        post: operations["OperationalRetentionController_stage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/operational-retention/rollback-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Review superseded monitoring retention revisions and the current recovery draft */
+        get: operations["OperationalRetentionController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/otp": {
         parameters: {
             query?: never;
@@ -14059,6 +14110,132 @@ export interface operations {
                             searchableLogsDays: number;
                         };
                         version: number;
+                    };
+                };
+            };
+        };
+    };
+    OperationalRetentionController_activate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    draftId: string;
+                    expectedVersion: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        config: {
+                            metricsArchiveDays: number;
+                            ordinaryTracesDays: number;
+                            priorityTracesDays: number;
+                            searchableLogsDays: number;
+                        };
+                        /** Format: uuid */
+                        draftId: string;
+                        version: number;
+                    };
+                };
+            };
+        };
+    };
+    OperationalRetentionController_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        baseVersion: number;
+                        config: {
+                            metricsArchiveDays: number;
+                            ordinaryTracesDays: number;
+                            priorityTracesDays: number;
+                            searchableLogsDays: number;
+                        };
+                        /** Format: uuid */
+                        id: string;
+                        /** Format: uuid */
+                        sourceId: string;
+                        sourceVersion: number;
+                    };
+                };
+            };
+        };
+    };
+    OperationalRetentionController_history: {
+        parameters: {
+            query?: {
+                beforeVersion?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        baseVersion: number;
+                        draft: {
+                            baseVersion: number;
+                            config: {
+                                metricsArchiveDays: number;
+                                ordinaryTracesDays: number;
+                                priorityTracesDays: number;
+                                searchableLogsDays: number;
+                            };
+                            /** Format: uuid */
+                            id: string;
+                            /** Format: uuid */
+                            sourceId: string;
+                            sourceVersion: number;
+                        } | null;
+                        items: {
+                            config: {
+                                metricsArchiveDays: number;
+                                ordinaryTracesDays: number;
+                                priorityTracesDays: number;
+                                searchableLogsDays: number;
+                            };
+                            /** Format: uuid */
+                            id: string;
+                            version: number;
+                        }[];
+                        nextBeforeVersion: number | null;
                     };
                 };
             };
