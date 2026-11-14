@@ -1,4 +1,5 @@
 import { rejectContentFields } from '../admin/content-input-fields.js';
+import { recheckStaffAuthorityAfter } from '../admin/staff-read-authority.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -193,7 +194,7 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 200, description: 'All KBs, newest first, with document + group counts.' })
   async list(@Req() req: AuthenticatedRequest): Promise<KbDto[]> {
     this.assertKbPermission(req);
-    return this.service.listKbs();
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () => this.service.listKbs());
   }
 
   @Get('documents/available')
@@ -206,7 +207,9 @@ export class KnowledgeBasesController {
     this.assertKbPermission(req);
     const parsed = z.string().trim().max(200).optional().safeParse(raw);
     if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid document search');
-    return this.service.availableDocuments(req.session.userId, parsed.data ?? '');
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () =>
+      this.service.availableDocuments(req.session.userId, parsed.data ?? '')
+    );
   }
 
   @Post(':id/query')
@@ -220,7 +223,9 @@ export class KnowledgeBasesController {
     this.assertKbPermission(req);
     const parsed = QueryKnowledgeBaseSchema.safeParse(body);
     if (!parsed.success) rejectContentFields(parsed.error.issues, ['query']);
-    return this.service.queryKb(id, parsed.data.query, parsed.data.limit);
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () =>
+      this.service.queryKb(id, parsed.data.query, parsed.data.limit)
+    );
   }
 
   @Post(':id/reprocess')
@@ -246,7 +251,7 @@ export class KnowledgeBasesController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<KbDetailDto> {
     this.assertKbPermission(req);
-    return this.service.getKb(id);
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () => this.service.getKb(id));
   }
 
   @Post()
@@ -416,7 +421,7 @@ export class KbGroupsController {
   @ApiResponse({ status: 200, description: 'All groups, newest first, with member counts.' })
   async list(@Req() req: AuthenticatedRequest): Promise<KbGroupDto[]> {
     this.assertKbPermission(req);
-    return this.service.listGroups();
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () => this.service.listGroups());
   }
 
   @Post(':id/query')
@@ -430,7 +435,9 @@ export class KbGroupsController {
     this.assertKbPermission(req);
     const parsed = QueryKnowledgeBaseSchema.safeParse(body);
     if (!parsed.success) rejectContentFields(parsed.error.issues, ['query']);
-    return this.service.queryGroup(id, parsed.data.query, parsed.data.limit);
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () =>
+      this.service.queryGroup(id, parsed.data.query, parsed.data.limit)
+    );
   }
 
   @Get(':id')
@@ -441,7 +448,7 @@ export class KbGroupsController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<KbGroupDetailDto> {
     this.assertKbPermission(req);
-    return this.service.getGroup(id);
+    return recheckStaffAuthorityAfter(req.session, 'admin:ai:kb', () => this.service.getGroup(id));
   }
 
   @Post()

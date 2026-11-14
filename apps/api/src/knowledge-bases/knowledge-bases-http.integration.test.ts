@@ -109,7 +109,7 @@ it('keeps existing knowledge bases admin-only and audits explicit audience publi
   ).toMatchObject([{ metadata: { audienceBefore: 'admin', audienceAfter: 'public' } }]);
 });
 
-it('returns ranked passage excerpts for a KB and an enabled group member', async () => {
+async function seedSearchPassage() {
   const vector = [1, ...Array(1535).fill(0)];
   await http.pool.query(
     "UPDATE knowledge_bases SET content_state='ready',is_enabled=true,vector_embedding_model='embed-1536' WHERE id=$1",
@@ -124,6 +124,10 @@ it('returns ranked passage excerpts for a KB and an enabled group member', async
       JSON.stringify({ sourceType: 'document' }),
     ]
   );
+}
+
+it('returns ranked passage excerpts for a KB and an enabled group member', async () => {
+  await seedSearchPassage();
   for (const path of [`knowledge-bases/${ids.kb}/query`, `kb-groups/${ids.group}/query`]) {
     const response = await fetch(`${http.base}/api/admin/${path}`, {
       method: 'POST',
@@ -145,6 +149,64 @@ it('returns ranked passage excerpts for a KB and an enabled group member', async
     ).status
   ).toBe(400);
 });
+
+it.each([
+  { path: () => 'knowledge-bases', table: 'knowledge_bases' },
+  { path: () => `knowledge-bases/${ids.kb}`, table: 'knowledge_bases' },
+  { path: () => 'knowledge-bases/documents/available', table: 'storage_records' },
+  { path: () => 'kb-groups', table: 'kb_groups' },
+  { path: () => `kb-groups/${ids.group}`, table: 'kb_groups' },
+  { path: () => `knowledge-bases/${ids.kb}/query`, table: 'kb_chunks' },
+  { path: () => `kb-groups/${ids.group}/query`, table: 'kb_chunks' },
+])(
+  'withholds knowledge reads after in-flight grant revocation on $table',
+  async ({ path, table }) => {
+    const route = path();
+    const search = route.endsWith('/query');
+    if (search) await seedSearchPassage();
+    const read = () =>
+      fetch(`${http.base}/api/admin/${route}`, {
+        headers,
+        signal: AbortSignal.timeout(10_000),
+        ...(search ? { method: 'POST', body: JSON.stringify({ query: 'meter charge' }) } : {}),
+      });
+    expect((await read()).status).toBe(200);
+
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+      const { pid } = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid'))
+        .rows[0]!;
+      pending = read();
+      await expect
+        .poll(async () => {
+          const result = await http.pool.query<{ waiting: boolean }>(
+            'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid)) AND query LIKE $2) AS waiting',
+            [pid, `%${table}%`]
+          );
+          return result.rows[0]!.waiting;
+        })
+        .toBe(true);
+      await http.pool.query(
+        "DELETE FROM user_roles WHERE user_id='kb-admin' AND role_id='kb-editor'"
+      );
+      await blocker.query('ROLLBACK');
+      const response = await pending;
+      expect(response.status).toBe(403);
+      expect(await response.json()).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending?.catch(() => undefined);
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('kb-admin','kb-editor') ON CONFLICT DO NOTHING"
+      );
+    }
+    expect((await read()).status).toBe(200);
+  }
+);
 
 it('requeues a failed KB through an audited staff action', async () => {
   expect(

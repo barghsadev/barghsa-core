@@ -2,6 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { KnowledgeBasesController, KbGroupsController } from './knowledge-bases.controller.js';
 import type { KnowledgeBasesService } from './knowledge-bases.service.js';
 
+vi.mock('../admin/staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (_actor: unknown, _permission: string, read: () => unknown) => read(),
+}));
+
 // ─── Mock service ─────────────────────────────────────────────────────────
 
 const mockListKbs = vi.fn();

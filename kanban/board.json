@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T10:27:29+00:00",
+  "updated": "2026-11-14T10:32:21+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -168064,7 +168064,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "status": "done",
@@ -168076,15 +168077,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -168639,6 +168640,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -598314,7 +598325,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -598526,7 +598538,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -600567,6 +600579,14 @@
                 "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -645150,7 +645170,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645162,15 +645183,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -645725,6 +645746,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -645850,7 +645881,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645862,15 +645894,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -646425,6 +646457,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -646552,7 +646594,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "status": "done",
@@ -646564,15 +646607,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -647127,6 +647170,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -647253,7 +647306,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "status": "done",
@@ -647265,15 +647319,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -647828,6 +647882,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -679688,7 +679752,8 @@
           "release-0.6-central-authorization",
           "release-0.6-web-server-tracing",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "batch": "release-0.6-central-authorization",
@@ -679876,7 +679941,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -680289,6 +680354,14 @@
                 "apps/api/src/admin/staff-audit.controller.test.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ]
         }
@@ -684019,7 +684092,8 @@
         "Reconciled five staff CRM GET routes for the directory, profile detail, profile records, legal documents and pending verification. The profile records route has separate native agent and verification history cases. Responses recheck current staff context, grant and session. Verification decisions and sealed links require the appropriate additional grant. Continue the remaining route inventory.",
         "The three staff verification-case GET routes now recheck the live verification grant and staff session after database and evidence work. Native tests cover retained access and revoked grants before results are returned. Continue the remaining route inventory.",
         "Reviewed the four staff terms and notification-template list/detail routes. Native HTTP checks now verify that a grant revoked during the pending database read prevents disclosure of the draft or template. Continue the remaining route inventory and renew evidence on the exact staging candidate.",
-        "Reviewed the staff directory and permission-audit GETs. Both now recheck current session, staff context and staff:view authority before responding. Native cases proved retained access and refusal after in-flight revocation. The remaining route inventory and exact candidate checks stay open."
+        "Reviewed the staff directory and permission-audit GETs. Both now recheck current session, staff context and staff:view authority before responding. Native cases proved retained access and refusal after in-flight revocation. The remaining route inventory and exact candidate checks stay open.",
+        "The seven staff knowledge-base and group reads now recheck the current session, staff context and admin:ai:kb grant after database and embedding work. Native PostgreSQL tests verified authorized results, refusal after the grant was revoked while each read was waiting, and successful reads after restoring permission. The wider route inventory and exact staged release evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -684248,7 +684322,8 @@
           "release-0.6-crm-read-authority",
           "release-0.6-verification-case-read-authority",
           "release-0.6-staff-content-read-authority",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": null
       }
@@ -684640,7 +684715,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_acceptance": {
           "kind": "source-bound-profile-and-staff-capability-scope",
@@ -684860,7 +684936,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -685535,6 +685611,14 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ]
         }
@@ -1100891,7 +1100975,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -1103884,6 +1103968,14 @@
                 "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -1104350,7 +1104442,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ]
       }
     },
@@ -1104950,15 +1105043,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.module.ts",
@@ -1110034,6 +1110127,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "presentation_renewals": [
@@ -1110477,7 +1110580,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1111086,15 +1111190,15 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+              "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
-              "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+              "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+              "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.module.ts",
@@ -1116055,6 +1116159,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
+            },
+            {
+              "batch": "release-0.6-kb-read-authority",
+              "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1116516,7 +1116630,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-telegram-unlink-validation",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-kb-read-authority"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1308955,6 +1309070,113 @@
         {
           "file": "contract.log",
           "sha256": "b1b58de4c8548e1753d88207e1cf96692c9080b99c3d21a4575733712ddac834"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-kb-read-authority": {
+      "batch": "release-0.6-kb-read-authority",
+      "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.02",
+        "03-core-business.md#T-03.90.03",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+        "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+        "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+          "sha256": "f7679386710652e940a32cd703ce844650e0d0930c24aae3348eff228e38013c"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "75c3daa97e512589c47d92c0bb18d16ce54f315bdc0f8faa155a905e5c8a0fdc"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "6d28b33f7d71600cc8b0f283c1a7c8bf59f3ae0ec2089cd4ab385a3dbe588e22"
+        },
+        {
+          "path": "apps/api/src/admin/staff-read-authority.ts",
+          "sha256": "678b8facd9a23040ef339f81784f2e51f64f7db487a8577106d51ee83c57d07b"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-documents.test.tsx",
+          "sha256": "82410f89c9522f5441714b2b7d3d3575e7ab5d387448cfd313d01c28ddb1e256"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
+          "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
+        },
+        {
+          "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
+          "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
+        },
+        {
+          "path": "apps/web/src/pages/catalogue-confirmation-query.test.tsx",
+          "sha256": "7c91cb78f8a90fb820564511e91f827f2cead0e407defef3eadd5a10172c1b31"
+        }
+      ],
+      "checks": [
+        "The seven staff knowledge-base and group reads now recheck the current session, staff context and admin:ai:kb grant after database and embedding work. Native PostgreSQL tests verified authorized results, refusal after the grant was revoked while each read was waiting, and successful reads after restoring permission. The wider route inventory and exact staged release evidence remain open.",
+        "102 controller and migrated HTTP tests and 72 affected web tests passed. API build, typecheck, ESLint, Prettier and exact OpenAPI contract checks passed."
+      ],
+      "limitations": [
+        "Local results cover the seven staff knowledge reads and their affected callers. Exact candidate staging proof and the wider authority review remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-kb-read-authority",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "2886567c3e730e7ace099f608c301db3d8742a11eb7703de9b92475af1b75586"
+        },
+        {
+          "file": "web-callers.log",
+          "sha256": "07a03d90449b8eab89ed4219e0fa3ce5dc38b89a3c8815c960b317c794424f8f"
+        },
+        {
+          "file": "build.log",
+          "sha256": "5982d48ddcf668054ccbcc55e317de3583462d5adf943040c95caf5c9734c553"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "1264e6c7c6705b7f21b89c10933c3b765cf36b16dff968507a356d2ea08d6c40"
         },
         {
           "file": "typecheck.log",
