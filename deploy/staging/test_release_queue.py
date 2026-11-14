@@ -1,5 +1,6 @@
 import importlib.util
 import hashlib
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import io
 import json
 import os
@@ -7,6 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from threading import Thread
 import time
 import unittest
 from unittest.mock import patch
@@ -17,6 +19,46 @@ spec.loader.exec_module(queue)
 
 
 class RuntimeImageReceiptTests(unittest.TestCase):
+    def test_staging_readback_rejects_redirect_and_bounds_response(self):
+        requests = []
+        expected = b'{"status":"ok"}'
+        limit = queue.RELEASE_RESPONSE_LIMIT
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                requests.append((self.path, self.headers.get("Cache-Control")))
+                if self.path == "/redirect":
+                    self.send_response(307)
+                    self.send_header("Location", "/unexpected")
+                    self.end_headers()
+                    return
+                size = limit + int(self.path == "/oversized")
+                body = expected.ljust(size)
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *_):
+                pass
+
+        with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
+            server_thread = Thread(target=server.serve_forever, daemon=True)
+            server_thread.start()
+            try:
+                with patch.object(queue, "STAGING_ORIGIN", f"http://127.0.0.1:{server.server_port}"):
+                    with self.assertRaisesRegex(ValueError, "HTTP 307"):
+                        queue.read_staging_json("/redirect")
+                    self.assertEqual(queue.read_staging_json("/limit"), {"status": "ok"})
+                    with self.assertRaisesRegex(ValueError, "exceeded its size limit"):
+                        queue.read_staging_json("/oversized")
+            finally:
+                server.shutdown()
+                server_thread.join()
+        self.assertEqual(requests, [
+            ("/redirect", "no-cache"), ("/limit", "no-cache"), ("/oversized", "no-cache"),
+        ])
+
     def test_migration_backup_distinguishes_verified_upload_and_disposable_staging(self):
         commit = "a" * 40
         marker = "BARGHSA_STAGING_MIGRATION_BACKUP_V1 "
@@ -217,7 +259,7 @@ if __name__ == '__main__':
         return queue.command(self.repo, "git", "rev-parse", "HEAD", capture=True)
 
     def live(self, commit=None):
-        return patch.object(queue.urllib.request, "urlopen", return_value=io.BytesIO(json.dumps({
+        return patch.object(queue.release_opener, "open", return_value=io.BytesIO(json.dumps({
             "version": "0.1.3", "commit": commit or self.commit,
         }).encode()))
 
@@ -549,8 +591,10 @@ if __name__ == '__main__':
                 with patch.object(sys, "argv", argv), patch.object(queue, "start_worker", return_value=1):
                     self.assertEqual(queue.main(), 0)
 
-                def fetch(url, **kwargs):
-                    body = ready_body if url.endswith("/api/health/ready") else live_body
+                def fetch(request, **kwargs):
+                    self.assertEqual(kwargs["timeout"], 30)
+                    self.assertEqual(request.get_header("Cache-control"), "no-cache")
+                    body = ready_body if request.full_url.endswith("/api/health/ready") else live_body
                     return io.BytesIO(json.dumps(body).encode())
 
                 def invoke(repo, *args, **kwargs):
@@ -560,7 +604,7 @@ if __name__ == '__main__':
                         return remote_images
                     return original_command(repo, *args, **kwargs)
 
-                with patch.object(queue.urllib.request, "urlopen", side_effect=fetch), \
+                with patch.object(queue.release_opener, "open", side_effect=fetch), \
                         patch.object(queue, "command", side_effect=invoke) as command:
                     self.assertEqual(queue.work(self.state), int(error is not None))
                 commands = [call.args[1:] for call in command.call_args_list]
@@ -596,7 +640,7 @@ if __name__ == '__main__':
             return io.BytesIO(json.dumps({
                 "commit": deployed, "version": "0.1.3" if deployed == self.commit else "0.1.4",
             }).encode())
-        with patch.object(queue, "command", side_effect=invoke), patch.object(queue.urllib.request, "urlopen", side_effect=live):
+        with patch.object(queue, "command", side_effect=invoke), patch.object(queue.release_opener, "open", side_effect=live):
             self.assertEqual(queue.work(self.state), 0)
         jobs = queue.jobs(self.state)
         self.assertEqual([job["phase"] for job in jobs], ["completed", "completed"])

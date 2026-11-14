@@ -13,10 +13,22 @@ import runpy
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 
 
 RELEASE_CHAT_ID = -1004467450624
+STAGING_ORIGIN = "https://stg.barghsa.com"
+RELEASE_RESPONSE_LIMIT = 256 * 1024
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, msg, headers, newurl):
+        return None
+
+
+# This file is copied into the queue state as a standalone runner.
+release_opener = urllib.request.build_opener(NoRedirect)
 
 
 def command(repo, *args, capture=False, umask=-1):
@@ -335,9 +347,26 @@ def verified_notifications(checkout, path, job):
     return {"summary": summary, **({"album": album} if album is not None else {})}
 
 
+def read_staging_json(path):
+    request = urllib.request.Request(f"{STAGING_ORIGIN}{path}", headers={"Cache-Control": "no-cache"})
+    try:
+        with release_opener.open(request, timeout=30) as response:
+            body = response.read(RELEASE_RESPONSE_LIMIT + 1)
+    except urllib.error.HTTPError as error:
+        error.close()
+        raise ValueError(f"Staging readback rejected with HTTP {error.code}") from None
+    except OSError:
+        raise ValueError("Staging readback did not return a verifiable JSON response") from None
+    if len(body) > RELEASE_RESPONSE_LIMIT:
+        raise ValueError("Staging readback exceeded its size limit")
+    try:
+        return json.loads(body)
+    except (UnicodeError, ValueError):
+        raise ValueError("Staging readback did not return a verifiable JSON response") from None
+
+
 def verify_live_release(job):
-    with urllib.request.urlopen("https://stg.barghsa.com/release.json", timeout=30) as response:
-        live = json.load(response)
+    live = read_staging_json("/release.json")
     if (not isinstance(live, dict) or live.get("commit") != job["commit"]
             or live.get("version") != job["version"]):
         raise ValueError("Live release does not match the queued version and commit")
@@ -432,8 +461,7 @@ def deploy(job, state):
         if not re.match(r"^0\.[0-5]\.", job["version"]):
             verify_saved_image_evidence(job, runtime)
         verify_live_release(job)
-        with urllib.request.urlopen("https://stg.barghsa.com/api/health/ready", timeout=30) as response:
-            readiness = json.load(response)
+        readiness = read_staging_json("/api/health/ready")
         checks = readiness.get("checks") if isinstance(readiness, dict) else None
         if (not isinstance(checks, dict) or readiness.get("status") != "ok"
                 or readiness.get("commit") != job["commit"] or readiness.get("warnings", []) != []

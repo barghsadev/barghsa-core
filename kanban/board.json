@@ -24631,7 +24631,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-native-coverage-rehearsal-81d4381e9"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -24871,7 +24872,8 @@
         "The staging notifier rejects redirect responses and caps staging and Telegram JSON replies. The live v0.5.1 version and configured Telegram channel returned directly through the verified HTTPS endpoints. The exact accepted v0.6.0 send and delivery receipts remain required.",
         "The official v0.6.0 worker checks protected backup configuration before image work and repeats the check under the release lock. Fixtures verify zero image or configuration changes after an early refusal and no announcement if runtime becomes disposable before rollout. Exact staged backup and delivery receipts remain required.",
         "The v0.6.0 worker now refuses an absent, disposable or mismatched migration checkpoint before a Telegram send, including on notification retry. The actual protected staging backup and announcement are still required.",
-        "The v0.6.0 notification retry rechecks the saved runtime image scans, SBOM checksums and exact license reports before contacting staging or Telegram. The initialized fixture rejects changed app or retained evidence after deployment. Actual v0.6.0 deployment and Telegram receipts remain required."
+        "The v0.6.0 notification retry rechecks the saved runtime image scans, SBOM checksums and exact license reports before contacting staging or Telegram. The initialized fixture rejects changed app or retained evidence after deployment. Actual v0.6.0 deployment and Telegram receipts remain required.",
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection."
       ],
       "owner": null,
       "depends_on": [],
@@ -24949,7 +24951,8 @@
           "release-0.6-protected-staging-migration",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-bound-staging-worker-readbacks"
         ],
         "current_acceptance": null
       }
@@ -692698,7 +692701,8 @@
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
         "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
         "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open.",
-        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open."
+        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open.",
+        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps."
       ],
       "owner": null,
       "depends_on": [],
@@ -692810,7 +692814,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-content-command-validation",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-protected-main-9bfba918c"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -696020,7 +696025,8 @@
       "launch_required": true,
       "remaining": [
         "Verify deployed provider and proxy behavior on the accepted runtime, including the protected OTLP transport. Implemented HTTP provider paths refuse redirects and the S3 client explicitly disables SDK region redirect retries. Confirm the existing storage origin controls with the selected endpoints.",
-        "The release notification client rejects every tested HTTP redirect status on staging reads and Telegram requests. The loopback fixture verified that no redirected endpoint received a request. Continue the remaining outbound transport inventory."
+        "The release notification client rejects every tested HTTP redirect status on staging reads and Telegram requests. The loopback fixture verified that no redirected endpoint received a request. Continue the remaining outbound transport inventory.",
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection."
       ],
       "owner": null,
       "depends_on": [],
@@ -696051,7 +696057,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-s3-response-limits",
-          "release-0.6-telegram-receipt-transport"
+          "release-0.6-telegram-receipt-transport",
+          "release-0.6-bound-staging-worker-readbacks"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -696159,7 +696166,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP closes a continuously streaming connection within its configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and both an idle timeout and a two-minute total body deadline for successful object downloads. Repeat the deployed file-size and byte-verification rehearsal.",
-        "The release notification client bounds the JSON response read to 256 KiB plus one boundary byte and retains a 30-second socket timeout. The fixture accepted the exact boundary and rejected an oversized reply before parsing. Verify deployment and finish the remaining outbound inventory."
+        "The release notification client bounds the JSON response read to 256 KiB plus one boundary byte and retains a 30-second socket timeout. The fixture accepted the exact boundary and rejected an oversized reply before parsing. Verify deployment and finish the remaining outbound inventory.",
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection."
       ],
       "owner": null,
       "depends_on": [],
@@ -696195,7 +696203,8 @@
           "release-0.6-s3-response-limits",
           "release-0.6-otlp-connection-deadline",
           "release-0.6-storage-body-deadline",
-          "release-0.6-telegram-receipt-transport"
+          "release-0.6-telegram-receipt-transport",
+          "release-0.6-bound-staging-worker-readbacks"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -726443,7 +726452,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-native-coverage-rehearsal-81d4381e9"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -1100841,7 +1100851,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
+              "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -1100849,7 +1100859,7 @@
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "6e2e7dc160e60becff55ee5bdac00420ad7f3dcc65f79eeb7a2cdcd632cc77f3"
+              "sha256": "0b4a9bd7297a0204a5e473427ea9a544015f781edfd24d597a69c8834d119146"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1101083,6 +1101093,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-bound-staging-worker-readbacks",
+              "base_commit": "4385409d7951368624a69240419febf2e22a465c",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The staging queue now reads the same fixed HTTPS paths with a bounded response reader and refuses redirects. The normal notes, image checks and recovery assertions passed in staging fixtures. The v0.5.1 live smoke covers transport only. It does not establish a v0.6.0 deployment or notification."
             }
           ]
         },
@@ -1101104,7 +1101123,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-bound-staging-worker-readbacks"
         ]
       }
     },
@@ -1114597,7 +1114617,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
+              "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1118096,6 +1118116,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-bound-staging-worker-readbacks",
+              "base_commit": "4385409d7951368624a69240419febf2e22a465c",
+              "paths": [
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The staging queue now reads the same fixed HTTPS paths with a bounded response reader and refuses redirects. The normal notes, image checks and recovery assertions passed in staging fixtures. The v0.5.1 live smoke covers transport only. It does not establish a v0.6.0 deployment or notification."
             }
           ],
           "presentation_renewals": [
@@ -1120730,7 +1120758,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
+              "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1124139,6 +1124167,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-bound-staging-worker-readbacks",
+              "base_commit": "4385409d7951368624a69240419febf2e22a465c",
+              "paths": [
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The staging queue now reads the same fixed HTTPS paths with a bounded response reader and refuses redirects. The normal notes, image checks and recovery assertions passed in staging fixtures. The v0.5.1 live smoke covers transport only. It does not establish a v0.6.0 deployment or notification."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1129944,7 +1129980,9 @@
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
         "Under the live v0.5.1 staging bucket policy, a create-only synthetic probe seeded four tmp keys with ten exact versions on November 14. The baseline retained every version and both legal-hold and unclassified controls. Read back elapsed provider expiry and five-version retention after November 15 at 10:39 UTC.",
         "Hosted rehearsal 43583704822 at 81d4381e9 passed all 12 mobile Chromium cases on its first attempt. Login and all four service histories had Persian and English samples. Maximum LCP was 1,652 ms, populated render 1,659.4 ms, CLS 0.0478 and blocking time 0 ms.",
-        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version."
+        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
+        "Full CI rehearsal 43583704822 completed the native test job successfully on 81d4381e9. The 127,506,800-byte original archive matched its GitHub checksum and contained nonempty Istanbul data for all eight expected workspaces. The browser run and combined gate were still pending.",
+        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps."
       ],
       "owner": null,
       "depends_on": [],
@@ -1130294,7 +1130332,9 @@
           "release-0.6-strict-license-and-grafana-proof",
           "release-0.6-staging-storage-lifecycle-baseline",
           "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
-          "release-0.6-nodemailer-moderate-advisories"
+          "release-0.6-nodemailer-moderate-advisories",
+          "release-0.6-native-coverage-rehearsal-81d4381e9",
+          "release-0.6-protected-main-9bfba918c"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1317504,6 +1317544,151 @@
         {
           "file": "worker-typecheck.log",
           "sha256": "ff101ebdc0497a9798cba987e0facbb584080d270029b650be048816839e9530"
+        }
+      ]
+    },
+    "release-0.6-bound-staging-worker-readbacks": {
+      "batch": "release-0.6-bound-staging-worker-readbacks",
+      "base_commit": "4385409d7951368624a69240419febf2e22a465c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "release-readiness#R-01.05"
+      ],
+      "changed_paths": [
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "0b4a9bd7297a0204a5e473427ea9a544015f781edfd24d597a69c8834d119146"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+        }
+      ],
+      "checks": [
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
+        "All 73 staging checks and 17 promotion-verifier checks passed. The existing readiness and image receipt gates still run before the notification-only retry. The worker remains standalone when frozen outside the checkout.",
+        "A live read-only v0.5.1 smoke returned matching web metadata and healthy PostgreSQL, Redis and storage checks. That readiness body has no API commit field."
+      ],
+      "limitations": [
+        "The current live v0.5.1 response cannot verify protected retry identity. The accepted v0.6.0 deployment and Telegram receipts remain open. No deploy or Telegram post was attempted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-release-worker-readbacks",
+      "execution_receipts": [
+        {
+          "file": "staging-tests.log",
+          "sha256": "78bd00b902df4aec08ab9a6f5a5137d1184afa7d6a0b7d18204e97b0b055e2d8"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "4a83a14ba9eff017d8a7cae238596e39a2c38477e7e92fa26bd54cef2089f7c4"
+        },
+        {
+          "file": "live-v0.5.1-readback.json",
+          "sha256": "729b9c7a056221c1f84f03e4147405ba096a46bc7833365a83639baacf175c15"
+        }
+      ]
+    },
+    "release-0.6-native-coverage-rehearsal-81d4381e9": {
+      "batch": "release-0.6-native-coverage-rehearsal-81d4381e9",
+      "base_commit": "81d4381e928ab4678b06e33cf1bc1c05f2c0500e",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "package.json",
+          "sha256": "45e46ca6a5f74163c90d79e0f86529f71c720a75d94c574938584cf6a7fb3c5d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        }
+      ],
+      "checks": [
+        "Full CI rehearsal 43583704822 completed the native test job successfully on 81d4381e9. The 127,506,800-byte original archive matched its GitHub checksum and contained nonempty Istanbul data for all eight expected workspaces. The browser run and combined gate were still pending.",
+        "Native line coverage measured 95.75% for API, 93.63% for worker and 85.37% for web. The receipt records independently calculated statements, branches, functions and lines for each workspace."
+      ],
+      "limitations": [
+        "Native-only results at the rehearsal SHA. The separate strict image license job failed and the final release candidate still requires exact combined evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-ci-gate-readback-81d4381e9",
+      "execution_receipts": [
+        {
+          "file": "native-coverage-readback-81d4381e9.json",
+          "sha256": "730a31fcb045b433664ea5f78bbb3bf2a8303cf35e38604534d3d23dc7280066"
+        },
+        {
+          "file": "native-coverage-81d4381e9.zip",
+          "sha256": "69d6b92f89b889344b50a51742c552968de3a92a9b4407cbeea6b73205862e8e"
+        }
+      ]
+    },
+    "release-0.6-protected-main-9bfba918c": {
+      "batch": "release-0.6-protected-main-9bfba918c",
+      "base_commit": "9bfba918c8407e32bef3ebac846940f7b3d60bf6",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "06-security-testing-observability.md#T-06.04.01.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "scripts/ci_preflight_receipt.py",
+          "sha256": "7c980c777ce1dc0c0ec4a90b6771e18f7e23a5c7f90f2ce7d8bedb95d451d12f"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+        }
+      ],
+      "checks": [
+        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps."
+      ],
+      "limitations": [
+        "This records verified development publication and its affected checks. Final coverage, the strict license gate, staging and Telegram remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence",
+      "execution_receipts": [
+        {
+          "file": "protected-main-9bfba918c.json",
+          "sha256": "f16ad576246f71817d665f3c4f7766bde0a0d6a92373a9256eba23ab72961f35"
+        },
+        {
+          "file": "affected-test-9bfba918c.zip",
+          "sha256": "5b4a0f12113d88785cc90837946413c214c1dabdaa14386fbe5f8ea9c80198c9"
         }
       ]
     }
