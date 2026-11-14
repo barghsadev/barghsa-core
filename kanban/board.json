@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T12:32:21+00:00",
+  "updated": "2026-11-14T12:41:43+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20725,7 +20725,8 @@
         "Review the required live CSP report window and prove enforcement. Verify HSTS at the selected production-equivalent ingress with its approved TLS and subdomain scope.",
         "On live v0.5.1, / and /release.json emit duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options. The installed NGINX file lacks the three proxy_hide_header directives already verified in protected main. Read back the reviewed configuration and singular headers on the accepted staging SHA.",
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
-        "Live v0.5.1 still emits three duplicate baseline headers on the web routes. The release smoke now requires a single exact value for all four baseline headers on the web root and API readiness before recording an active candidate. Receipt from the accepted v0.6.0 staging deployment remains required."
+        "Live v0.5.1 still emits three duplicate baseline headers on the web routes. The release smoke now requires a single exact value for all four baseline headers on the web root and API readiness before recording an active candidate. Receipt from the accepted v0.6.0 staging deployment remains required.",
+        "The dedicated staging proxy installer now preserves the existing config set and restores it on failed validation or reload. Ubuntu 24.04 verified file and symlink restoration and Certbot lock contention. Verify actual edge headers after the accepted release."
       ],
       "owner": null,
       "depends_on": [],
@@ -20835,7 +20836,8 @@
           "release-0.6-single-edge-security-headers",
           "release-0.6-staging-edge-live-readback",
           "release-0.6-csp-window-followup",
-          "release-0.6-staging-edge-smoke"
+          "release-0.6-staging-edge-smoke",
+          "release-0.6-staging-nginx-recovery"
         ],
         "current_acceptance": null
       }
@@ -20956,7 +20958,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21266,6 +21268,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -25283,11 +25293,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "5ff22bc983439b46b09c3017a3fd45fabe427f93e39adcb836c50cc5fd143824"
+              "sha256": "a7c097d581413db830fa3d75638c5ca0964272a620b64aed905847d88faf414a"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -25552,6 +25562,15 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -33799,7 +33818,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34224,6 +34243,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -34482,7 +34509,8 @@
         "Email, SMS, capability maintenance, mandatory green-electricity rules and regular security rate limits have tested recovery drafts and separate activation. Branding uses versioned restore and activation. Profile verification requirements now restore audited activations as reviewed drafts with separate step-up activation. Verification mode also restores audited activations into new drafts and refuses the unavailable API mode. Expanded workflow targets and routing can now restore a reviewed audited policy as a new activation. Contract electricity limits now restore a reviewed audit revision as a separate, step-up-guarded activation. Wizard draft retention and preliminary electricity contract template selections now have separate audited draft and activation steps. Verify the electricity settings recovery on the exact staged candidate. Legacy service response targets and escalation policies now restore audited revisions through a separate recovery draft and step-up activation. Storage connection settings now recover from an audited superseded revision through a separate version-bound draft and a fresh connection probe using current credentials. History starts with subsequent revisions and excludes both credentials. Verify this and the service-settings recovery on the exact staged candidate. Reconcile remaining security recovery criteria and verify multipart-cleanup recovery on staging.",
         "Storage recovery activation shares the version-aware probe and fails closed when ownership or cleanup is unconfirmed. Current credentials and existing location and version guards remain in effect.",
         "Multipart cleanup age now restores a prior audited revision through a separate review draft and recent staff verification. Concurrent activation and normal settings saves use one version guard. Verify the staged workflow and reconcile remaining security recovery criteria.",
-        "Monitoring retention restores an audited superseded version through a separately reviewed draft and recent staff verification. Restoring creates a new exportable revision and keeps previous audit entries. Exact deployed verification and infrastructure application remain open."
+        "Monitoring retention restores an audited superseded version through a separately reviewed draft and recent staff verification. Restoring creates a new exportable revision and keeps previous audit entries. Exact deployed verification and infrastructure application remain open.",
+        "NGINX configuration changes now restore the previous config set on syntax or reload failure and retain the backup with an explicit recovery error if rollback cannot be verified. The staged infrastructure recovery receipt remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -34582,7 +34610,8 @@
           "release-0.6-storage-settings-recovery",
           "release-0.6-admin-probe-cleanup",
           "release-0.6-multipart-cleanup-recovery",
-          "release-0.6-operational-retention-recovery"
+          "release-0.6-operational-retention-recovery",
+          "release-0.6-staging-nginx-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-provider-restore-scope",
@@ -37254,7 +37283,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -37968,6 +37997,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -172219,7 +172256,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -173657,6 +173694,14 @@
                 "deploy/telegram/README.md"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -663158,7 +663203,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -664620,6 +664665,14 @@
                 "deploy/telegram/README.md"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -697818,7 +697871,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -698137,6 +698190,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -729467,7 +729528,8 @@
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The staged migration rehearsal now has an explicit official release boundary for protected storage and encrypted WAL. Verify the actual archive settings, off-server checkpoint and readback during the accepted candidate rollout.",
         "The staging receiver still requires protected storage and encrypted WAL before running migrations. The worker also refuses a disposable checkpoint at receipt verification and on notification retries. Verify the real archive settings, the off-server checkpoint and its readback during the accepted candidate rollout.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
+        "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -729529,7 +729591,8 @@
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-protected-staging-migration",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-complete-staging-checkpoint-receipt"
+          "release-0.6-complete-staging-checkpoint-receipt",
+          "release-0.6-staging-nginx-recovery"
         ],
         "current_acceptance": null
       }
@@ -740866,7 +740929,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "5262dc6ee56bb3bacd806bc8ce6e63cddfe27c0bc673e2db2fce1665113fd476"
+              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -741269,6 +741332,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -750255,7 +750326,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "5262dc6ee56bb3bacd806bc8ce6e63cddfe27c0bc673e2db2fce1665113fd476"
+              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -751116,6 +751187,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -754678,7 +754757,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "5262dc6ee56bb3bacd806bc8ce6e63cddfe27c0bc673e2db2fce1665113fd476"
+              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -755029,6 +755108,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ]
         }
@@ -1115541,7 +1115628,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1115549,7 +1115636,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "5262dc6ee56bb3bacd806bc8ce6e63cddfe27c0bc673e2db2fce1665113fd476"
+              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1119090,6 +1119177,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ],
           "presentation_renewals": [
@@ -1121705,7 +1121801,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1121713,7 +1121809,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "5262dc6ee56bb3bacd806bc8ce6e63cddfe27c0bc673e2db2fce1665113fd476"
+              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1125173,6 +1125269,15 @@
                 "apps/api/src/telegram/telegram-runtime.service.ts"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-recovery",
+              "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1319328,6 +1319433,79 @@
         {
           "file": "live-readback.json",
           "sha256": "11bc0228cb1d40c54345ac725d96969ce64033874fc2d70e59317f020253a932"
+        }
+      ]
+    },
+    "release-0.6-staging-nginx-recovery": {
+      "batch": "release-0.6-staging-nginx-recovery",
+      "base_commit": "10c6f3311f9e7e861a0f4101bef62fb75d7de5fb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.02.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/certbot-reload-nginx.sh",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/install-nginx.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+        },
+        {
+          "path": "deploy/staging/certbot-reload-nginx.sh",
+          "sha256": "369d56dc1cb0727cf04a9091d92171ae3db5368c24941bc0edcec162a8ea411d"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/install-nginx.sh",
+          "sha256": "5239fdc3b1a8d7879435304cc18a72ada0891dd32a0f2c685d0c97bf8c1a19f7"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "a7c097d581413db830fa3d75638c5ca0964272a620b64aed905847d88faf414a"
+        }
+      ],
+      "checks": [
+        "All 43 related staging release tests passed. The proxy fixture covered successful installation, syntax failure, reload failure, and recovery reload failure with retained backup files.",
+        "A network-isolated Ubuntu 24.04 amd64 container exercised the exact installer and Certbot hook with native file and flock commands and controlled NGINX/systemctl fixtures. It verified preserved mode and symlink, absent-file cleanup, both rollback paths, successful install and shared-lock behavior.",
+        "Bash syntax, ShellCheck, Markdown formatting and git diff checks passed. No staging proxy changes were applied."
+      ],
+      "limitations": [
+        "The Ubuntu fixture controls NGINX validation and systemctl results. Use the actual NGINX service and candidate edge health in the final rehearsal and release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-nginx-recovery",
+      "execution_receipts": [
+        {
+          "file": "staging-release-tests.log",
+          "sha256": "572ca4a86e439ec8db4c832a40e256f47e6d30da312d0ece1d1009a7302afcb8"
+        },
+        {
+          "file": "linux-nginx-install.log",
+          "sha256": "5fe6aa0df68b48e5e28cb48f09e9b8c54ef33085ef6b61c44d203432cb99b2d8"
+        },
+        {
+          "file": "shell.log",
+          "sha256": "8608e778ff803c71973de2531b8da29ce05e8d49348482b1ff04bf1e28e96fb9"
         }
       ]
     }

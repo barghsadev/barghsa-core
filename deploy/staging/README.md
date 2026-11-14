@@ -37,6 +37,13 @@ The automatic Certbot timer and `certbot-reload-nginx.sh` renewal hook keep
 the certificate current. DNS challenge is not required while port 80 reaches
 the host.
 
+The release uploads the proxy files to a private temporary directory. The
+installer saves the previous files, installs the new set, and validates it
+before reloading NGINX. If syntax validation or reload fails, it restores the
+previous files and exits before application rollout. The Certbot reload hook
+uses the same lock. If recovery fails, use the previous files retained in the
+directory named by the installer and verify NGINX before resuming rollout.
+
 ## Integrated QA preview
 
 Use the commit in `/release.json` to identify the preview. The login footer

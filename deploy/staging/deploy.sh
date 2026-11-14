@@ -164,12 +164,18 @@ ssh "${ssh_args[@]}" "$remote" 'mkdir -p /opt/barghsa/staging /etc/barghsa/stagi
 scp "${scp_args[@]}" deploy/staging/compose.yml deploy/staging/compose.wal-archive.yml deploy/staging/postgres.conf deploy/staging/freshclam.conf deploy/staging/check-s3.py "$remote:/opt/barghsa/staging/"
 scp "${scp_args[@]}" deploy/staging/release.sh "$remote:/usr/local/sbin/barghsa-staging-release"
 scp "${scp_args[@]}" deploy/staging/init-runtime.sh "$remote:/usr/local/sbin/barghsa-staging-init-runtime"
-scp "${scp_args[@]}" deploy/staging/nginx-api-proxy.conf "$remote:/etc/nginx/snippets/barghsa-api-proxy.conf"
-scp "${scp_args[@]}" deploy/staging/nginx-s3-proxy.conf "$remote:/etc/nginx/snippets/barghsa-s3-proxy.conf"
-scp "${scp_args[@]}" deploy/staging/nginx.conf "$remote:/etc/nginx/conf.d/barghsa-staging.conf"
 scp "${scp_args[@]}" deploy/staging/certbot-reload-nginx.sh "$remote:/etc/letsencrypt/renewal-hooks/deploy/barghsa-reload-nginx"
 ssh "${ssh_args[@]}" "$remote" 'chmod 750 /usr/local/sbin/barghsa-staging-release /usr/local/sbin/barghsa-staging-init-runtime /etc/letsencrypt/renewal-hooks/deploy/barghsa-reload-nginx'
-ssh "${ssh_args[@]}" "$remote" 'nginx -t && systemctl reload nginx'
+nginx_stage=$(ssh "${ssh_args[@]}" "$remote" 'mktemp -d /tmp/barghsa-staging-nginx.XXXXXXXX')
+[[ $nginx_stage =~ ^/tmp/barghsa-staging-nginx\.[A-Za-z0-9]{8}$ ]]
+if ! scp "${scp_args[@]}" deploy/staging/nginx-api-proxy.conf deploy/staging/nginx-s3-proxy.conf \
+  deploy/staging/nginx.conf "$remote:$nginx_stage/"; then
+  # shellcheck disable=SC2029 # The path is restricted to the temporary directory above.
+  ssh "${ssh_args[@]}" "$remote" "rm -rf -- $nginx_stage"
+  exit 1
+fi
+# shellcheck disable=SC2029 # The path is restricted to the temporary directory above.
+ssh "${ssh_args[@]}" "$remote" "bash -s -- $nginx_stage" < deploy/staging/install-nginx.sh
 ssh "${ssh_args[@]}" "$remote" '/usr/local/sbin/barghsa-staging-init-runtime'
 
 release_tmp="$(mktemp -d)"

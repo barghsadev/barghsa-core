@@ -10,6 +10,7 @@ import unittest
 RELEASE = Path(__file__).with_name("release.sh")
 DEPLOY = RELEASE.with_name("deploy.sh")
 STAGING_COMPOSE = RELEASE.with_name("compose.yml")
+INSTALL_NGINX = RELEASE.with_name("install-nginx.sh")
 DEFAULT_VOLUME = "barghsa-staging_pgdata"
 RESTORED_VOLUME = "barghsa-staging_pgdata-restore-1"
 
@@ -17,6 +18,78 @@ RESTORED_VOLUME = "barghsa-staging_pgdata-restore-1"
 class ReleaseRollbackTests(unittest.TestCase):
     app_id = f"sha256:{'a' * 64}"
     web_id = f"sha256:{'b' * 64}"
+
+    def test_nginx_install_restores_all_files_on_validation_or_reload_failure(self):
+        for failure in ('none', 'validate', 'reload', 'recovery'):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                stage = root / 'barghsa-staging-nginx.Abc123xy'
+                stage.mkdir()
+                nginx = root / 'nginx'
+                (nginx / 'snippets').mkdir(parents=True)
+                (nginx / 'conf.d').mkdir()
+                previous_site = nginx / 'conf.d/barghsa-staging.conf'
+                previous_site.write_text('previous site')
+                previous_site.chmod(0o640)
+                previous_api = nginx / 'snippets/barghsa-api-proxy.conf'
+                previous_api.symlink_to('previous-api.conf')
+                previous_api.resolve().write_text('previous API')
+                previous_s3 = nginx / 'snippets/barghsa-s3-proxy.conf'
+                for source in ('nginx.conf', 'nginx-api-proxy.conf', 'nginx-s3-proxy.conf'):
+                    (stage / source).write_text('candidate ' + source)
+
+                # Use fixture-owned paths and substitute the Ubuntu rename and lock commands.
+                installer = INSTALL_NGINX.read_text().replace('^/tmp/', f'^{root}/').replace(
+                    '/etc/nginx/', f'{nginx}/',
+                ).replace('/run/lock/', f'{root}/')
+                script = '''
+flock() { [[ $* == '-n 9' ]]; }
+mv() { [[ $1 == -fT && $2 == -- ]] && command mv -f -- "$3" "$4"; }
+nginx() {
+  local state=previous
+  [[ $1 == -t ]]
+  if grep -q '^candidate' "$SITE"; then state=candidate; fi
+  echo "validate $state"
+  [[ $FAILURE != validate || $state != candidate ]]
+}
+systemctl() {
+  local state=previous
+  [[ $* == 'reload nginx' ]]
+  if grep -q '^candidate' "$SITE"; then state=candidate; fi
+  echo "reload $state"
+  [[ $FAILURE != recovery && ( $FAILURE != reload || $state != candidate ) ]]
+}
+'''
+                # Keep Bash's production option handling and traps in the exercised script.
+                installer = installer.replace('umask 077\n', 'umask 077\n' + script, 1)
+                result = subprocess.run(
+                    ['bash', '-s', '--', str(stage)], input=installer,
+                    env={**os.environ, 'FAILURE': failure, 'SITE': str(previous_site)},
+                    capture_output=True, text=True, timeout=10, check=False,
+                )
+                self.assertEqual(result.returncode, int(failure != 'none'), result.stderr)
+                self.assertEqual(result.stdout.splitlines(), {
+                    'none': ['validate candidate', 'reload candidate'],
+                    'validate': ['validate candidate'],
+                    'reload': ['validate candidate', 'reload candidate', 'validate previous', 'reload previous'],
+                    'recovery': ['validate candidate', 'reload candidate', 'validate previous', 'reload previous'],
+                }[failure])
+                if failure == 'none':
+                    self.assertEqual(previous_api.read_text(), 'candidate nginx-api-proxy.conf')
+                    self.assertFalse(previous_api.is_symlink())
+                    self.assertEqual(previous_s3.read_text(), 'candidate nginx-s3-proxy.conf')
+                    self.assertEqual(previous_site.read_text(), 'candidate nginx.conf')
+                    self.assertEqual(previous_site.stat().st_mode & 0o777, 0o644)
+                else:
+                    self.assertEqual(previous_api.readlink(), Path('previous-api.conf'))
+                    self.assertFalse(previous_s3.exists())
+                    self.assertEqual(previous_site.read_text(), 'previous site')
+                    self.assertEqual(previous_site.stat().st_mode & 0o777, 0o640)
+                if failure == 'recovery':
+                    self.assertIn(f'Previous files retained in {stage}/original', result.stderr)
+                    self.assertEqual((stage / 'original/barghsa-staging.conf').read_text(), 'previous site')
+                else:
+                    self.assertFalse(stage.exists())
 
     def test_official_milestone_refuses_disposable_or_non_archiving_runtime(self):
         text = RELEASE.read_text()
