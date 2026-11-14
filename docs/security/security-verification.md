@@ -38,11 +38,12 @@ supported fields. Stored provider configuration continues to use its existing
 read parser.
 
 The Resend connection test uses the fixed API origin and refuses redirects.
-Resend and SMS.ir receipts and error diagnostics are capped at 64 KiB before
-JSON parsing. The Resend domain list has a 2 MiB cap, and Sentry's matching
-event receipt has a 4 KiB cap. These limits apply to decoded bytes. An
-oversized or unreadable delivery receipt leaves the send outcome uncertain
-and subject to the existing reconciliation rules.
+It discards HTTP failure bodies and records the operation and status.
+Resend and SMS.ir delivery receipts and parsed error responses
+are capped at 64 KiB. The Resend domain list has a 2 MiB cap, and Sentry's
+matching event receipt has a 4 KiB cap. These limits apply to decoded bytes.
+An oversized or unreadable delivery receipt leaves the send outcome
+uncertain and subject to the existing reconciliation rules.
 
 For customer Telegram replies, the queue retries only an explicit HTTP 429
 with a matching integer Bot API error code and a valid retry delay. An
@@ -201,11 +202,12 @@ free-form CRM reasons remain available through their authorized response and
 audit paths.
 Dual-approval creation logs retain the approval ID, actor and action. Exact
 amounts remain available through the authorized approval record and audit.
-SMTP and Resend connection-test logs identify the failed operation. Their
-restricted test results mask configured credentials and contacts when a
-provider echoes them. Verification adapter retries keep the provider and
-timing without exception text. The development stub omits submitted identity
-numbers from its diagnostics.
+SMTP and Resend connection-test logs identify the failed operation. The
+restricted test results mask configured credentials and contacts. Resend
+domain verification failures use a fixed diagnostic with DNS instructions.
+Verification adapter retries keep the provider and timing without exception
+text. The development stub omits submitted identity numbers from its
+diagnostics.
 Notification delivery, dead-letter and job errors remove quoted credentials,
 authorization and cookie headers, session cookies and OTP values before
 persisting diagnostic text. Verify these sinks with synthetic credentials.

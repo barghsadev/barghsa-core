@@ -30,7 +30,7 @@ export interface ResendDomainRecord {
 export interface ResendEmailResponse {
   /** Present on success. */
   id?: string;
-  /** Provider error message (Resend returns `message`, sometimes nested). */
+  /** Safe connection-test diagnostic on failure. */
   message?: string;
   httpStatus?: number;
 }
@@ -100,17 +100,10 @@ const defaultApiClient: ResendApiClientLike = {
   },
 };
 
-/** Extract a safe error message from a non-2xx Resend response. */
-async function safeApiError(res: Response, action?: string): Promise<string> {
-  let detail = '';
-  try {
-    const body = (await readCappedJson(res, MAX_RECEIPT_BYTES)) as { message?: unknown } | null;
-    detail = typeof body?.message === 'string' ? body.message : '';
-  } catch {
-    /* non-JSON error body */
-  }
-  const prefix = action ? `${action}` : 'Resend request';
-  return `${prefix} failed (HTTP ${res.status})${detail ? `: ${detail}` : ''}`;
+/** Connection diagnostics are stored in staff-visible provider history. */
+async function safeApiError(res: Response, action: string): Promise<string> {
+  await res.body?.cancel().catch(() => {});
+  return `${action} failed (HTTP ${res.status})`;
 }
 
 /** Strip credentials and contacts that Resend may echo. */
@@ -182,7 +175,7 @@ export class ResendConnectionTesterService {
     if (match.status !== 'verified') {
       return {
         ok: false,
-        error: `Sending domain "${domain}" is not verified yet (status: ${match.status}). Complete DNS verification in Resend first.`,
+        error: `Sending domain "${domain}" is not verified yet. Complete DNS verification in Resend first.`,
       };
     }
 

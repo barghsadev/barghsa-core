@@ -54,7 +54,9 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
   it.each([
     [false, { ...verifiedDomains, padding: 'x'.repeat(2 * 1024 * 1024) }, 200, 'size limit'],
     [false, { data: [null] }, 200, 'invalid domain list'],
+    [false, { message: 'private-diagnostic' }, 401, 'HTTP 401'],
     [true, { id: 'valid-looking', padding: 'x'.repeat(64 * 1024) }, 200, 'size limit'],
+    [true, { message: 'private-diagnostic' }, 422, 'HTTP 422'],
     [true, { message: 'private-diagnostic'.repeat(8192) }, 503, 'HTTP 503'],
   ] as const)(
     'rejects untrusted Resend response %# without another send',
@@ -87,6 +89,26 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
       );
       expect(result).toMatchObject({ ok: false, error: expect.stringContaining('valid JSON') });
       expect(result.error).not.toContain('private-malformed-body');
+      expect(request).toHaveBeenCalledOnce();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('keeps an unrecognized domain status out of the connection diagnostic', async () => {
+    const request = vi.fn<typeof fetch>().mockResolvedValueOnce(
+      Response.json({
+        data: [{ id: 'domain', name: 'example.com', status: 'private-diagnostic' }],
+      })
+    );
+    vi.stubGlobal('fetch', request);
+    try {
+      const result = await new ResendConnectionTesterService().test(
+        baseConfig,
+        'staff@example.com'
+      );
+      expect(result).toMatchObject({ ok: false, error: expect.stringContaining('not verified') });
+      expect(result.error).not.toContain('private-diagnostic');
       expect(request).toHaveBeenCalledOnce();
     } finally {
       vi.unstubAllGlobals();
