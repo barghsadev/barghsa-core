@@ -361,10 +361,11 @@ The initial runtime sets `BARGHSA_DISPOSABLE=true`. Docker volumes survive
 container and image releases. The official staging worker for v0.6.0 and later
 checks `BARGHSA_DISPOSABLE=false`, `BARGHSA_STAGING_WAL_ARCHIVE=true` and the
 protected backup, key and WAL files before building or transferring images
-or updating server configuration. The release repeats the check under its
-lock before starting containers or stopping writers. Provision an approved off-server
-backup destination and test recovery before changing those settings. Place
-the backup tool's `BACKUP_S3_*`, `BACKUP_CLUSTER_ID` and
+or updating server configuration. The release receiver also requires a candidate
+commit and version in the manifest. It enforces the backup requirement from that
+version under the release lock, including when invoked directly. Provision an
+approved off-server backup destination and test recovery before changing those
+settings. Place the backup tool's `BACKUP_S3_*`, `BACKUP_CLUSTER_ID` and
 replication-authorized direct `PGDIRECT_URL` in root-owned
 `/etc/barghsa/staging/backup.env`. Allow the dedicated backup role's
 replication connection from the staging Docker network. Mount the recoverable,

@@ -149,6 +149,50 @@ echo backup-settings-admitted
                     elif missing:
                         self.assertIn('protected off-server backup configuration and key', result.stderr)
 
+    def test_release_requires_protected_backup_from_candidate_version(self):
+        with tempfile.TemporaryDirectory(prefix='barghsa-version-backup-') as directory:
+            root = Path(directory)
+            runtime = root / 'runtime.env'
+            candidate = root / 'candidate.env'
+            commit = 'a' * 40
+            script = RELEASE.read_text().replace('/etc/barghsa/staging', str(root))
+            script = script.replace('$(id -u)', '0').replace('/run/lock/barghsa-staging-release.lock', str(root / 'lock'))
+            script = script.replace('umask 077\n', 'umask 077\nflock() { [[ $* == "-n 9" ]]; }\n'
+                                    'docker() { echo unexpected-docker >&2; return 99; }\n', 1)
+            protected = 'requires non-disposable storage and encrypted WAL archiving'
+            missing_db = 'Missing runtime value: POSTGRES_DB'
+            for version, revision, flag, archive, runtime_metadata, diagnostic in (
+                ('0.6.0', commit, '', False, '', protected),
+                ('0.9.0', commit, '', False, '', protected),
+                ('1.0.0', commit, '', False, '', protected),
+                ('0.6.0', commit, '', True, '', missing_db),
+                ('0.5.1', commit, '--require-protected-backup', False, '', protected),
+                ('0.5.1', commit, '', False, '', missing_db),
+                ('0.06.0', commit, '', False, '', 'Invalid release version'),
+                ('', commit, '', False, 'BARGHSA_STAGING_RELEASE_VERSION=0.5.1\n', 'Invalid release version'),
+                ('0.6.0', '', '', False, f'BARGHSA_STAGING_RELEASE_COMMIT={commit}\n', 'Invalid release commit'),
+            ):
+                with self.subTest(version=version, revision=revision, flag=flag, archive=archive):
+                    disposable = 'false' if archive else 'true'
+                    wal = 'true' if archive else 'false'
+                    runtime.write_text(f'BARGHSA_DISPOSABLE={disposable}\nBARGHSA_STAGING_WAL_ARCHIVE={wal}\n'
+                                       + runtime_metadata)
+                    for name in ('backup.env', 'backup-key', 'wal-archive.env'):
+                        (root / name).write_text('fixture' if archive else '')
+                    candidate.write_text(
+                        (f'BARGHSA_STAGING_RELEASE_VERSION={version}\n' if version else '')
+                        + (f'BARGHSA_STAGING_RELEASE_COMMIT={revision}\n' if revision else '')
+                    )
+                    arguments = ['bash', '-s', '--', str(candidate)]
+                    if flag:
+                        arguments.append(flag)
+                    env = {key: value for key, value in os.environ.items() if key != 'POSTGRES_DB'}
+                    result = subprocess.run(arguments, input=script, env=env, capture_output=True,
+                                            text=True, timeout=10, check=False)
+                    self.assertEqual(result.returncode, 1, result.stderr)
+                    self.assertIn(diagnostic, result.stderr)
+                    self.assertNotIn('unexpected-docker', result.stderr)
+
     def run_rollback(self, simulate_failure=False, schema_ready=True, postgres_ready=True,
                      identities=True, available=True, running_mismatch="", signal=None,
                      migration_in_progress=False):
@@ -764,7 +808,9 @@ verify_public_json "$1" live || false
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()
         loaded = text[text.index('commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}'):
-                      text.index('\nif [[ -e "$active" ]]')]
+                      text.index('\nbackup_requirement=')]
+        loaded += text[text.index('\nfor key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE'):
+                       text.index('\nif [[ -e "$active" ]]')]
         verify = text[text.index("verify_postgres_mount() {"):text.index("\nrollback() {")]
         before_start = text[text.index('# Check an existing container'):text.index('\ntrap rollback ERR')]
         stateful = text[text.index('\nverify_running_image postgres "$postgres_id"\n'):

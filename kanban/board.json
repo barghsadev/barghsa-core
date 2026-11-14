@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:00:23+00:00",
+  "updated": "2026-11-14T18:11:19+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17714,7 +17714,8 @@
         "The daily job checks verified ciphertext and manifest readback before pruning and emits the canonical digest of that exact manifest. The live configured daily schedule, approved off-server storage and WAL/PITR evidence remain open.",
         "Verify new encrypted WAL bytes on the approved off-server target before acknowledging each segment. The isolated PostgreSQL archiver and PITR cases passed. Same-size corruption and failed readback keep the operation retryable, and a matching stored ciphertext is preserved. Verify deployed archive throughput, backlog and RPO after provisioning.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
-        "At 17:32 UTC on November 14, live staging still reported archive_mode=off. The protected backup.env, backup-key and wal-archive.env were absent. The Docker filesystem was 93% used with 6,262,157,312 bytes available. Provision the approved off-server destination and key and retain actual backup, restore and staged cutover receipts."
+        "At 17:32 UTC on November 14, live staging still reported archive_mode=off. The protected backup.env, backup-key and wal-archive.env were absent. The Docker filesystem was 93% used with 6,262,157,312 bytes available. Provision the approved off-server destination and key and retain actual backup, restore and staged cutover receipts.",
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -17825,7 +17826,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-wal-upload-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-staging-scanner-gate-readback"
+          "release-0.6-staging-scanner-gate-readback",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -21302,7 +21304,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21322,7 +21325,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21672,6 +21675,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ]
         }
@@ -25537,7 +25548,8 @@
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
-        "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open."
+        "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open.",
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25623,7 +25635,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-linux-recovery-readback"
+          "release-0.6-linux-recovery-readback",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": null
       }
@@ -25874,7 +25887,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-production-marker-wiring",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25894,15 +25908,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "ddb7e42b47172f34ad1c529ff9d828862644d3b48b063e3a5b9379b23df003b2"
+              "sha256": "fceec8a920af93072e48b541ffbbbca9b66ee3f1abfa06583ce268c4334f5611"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -26232,6 +26246,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ]
         }
@@ -34539,7 +34563,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -34595,7 +34620,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35060,6 +35085,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ]
         }
@@ -38164,7 +38197,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38195,7 +38229,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -38998,6 +39032,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ]
         }
@@ -106745,7 +106787,8 @@
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -106893,7 +106936,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -108559,6 +108602,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -174339,7 +174390,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-profile-export-validation",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -174711,7 +174763,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -174723,7 +174775,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -176218,6 +176270,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -646537,7 +646598,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -646709,7 +646771,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -647445,6 +647507,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -668307,7 +668377,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -668547,7 +668618,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -669163,6 +669234,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -669299,7 +669378,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -669539,7 +669619,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -670155,6 +670235,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -670289,7 +670377,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -670529,7 +670618,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -671145,6 +671234,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -671279,7 +671376,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -671519,7 +671617,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -672159,6 +672257,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -672787,7 +672893,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -673027,7 +673134,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -673643,6 +673750,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -673857,7 +673972,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-profile-export-validation",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -674229,7 +674345,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -674241,7 +674357,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -675760,6 +675876,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -676049,7 +676174,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -676289,7 +676415,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -676905,6 +677031,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -677038,7 +677172,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -677278,7 +677413,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -677894,6 +678029,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -678028,7 +678171,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -678268,7 +678412,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -678884,6 +679028,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -679019,7 +679171,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -679259,7 +679412,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -679899,6 +680052,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -680032,7 +680193,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -680272,7 +680434,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -680888,6 +681050,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -681021,7 +681191,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -681261,7 +681432,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -681877,6 +682048,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -709738,7 +709917,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -709750,7 +709930,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -710109,6 +710289,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ]
         }
@@ -742451,7 +742639,8 @@
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
-        "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts."
+        "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts.",
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -742521,7 +742710,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-linux-recovery-readback"
+          "release-0.6-linux-recovery-readback",
+          "release-0.6-receiver-version-backup"
         ],
         "current_acceptance": null
       }
@@ -1134284,7 +1134474,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1134308,7 +1134498,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1138006,6 +1138196,15 @@
                 "apps/api/src/notifications/unified-inbox.integration.test.ts"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -1138467,7 +1138666,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-receiver-version-backup"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1140636,7 +1140836,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1140660,7 +1140860,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+              "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1144286,6 +1144486,15 @@
                 "apps/api/src/notifications/unified-inbox.integration.test.ts"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-receiver-version-backup",
+              "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1144764,7 +1144973,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-receiver-version-backup"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1150205,7 +1150415,8 @@
         "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
         "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
-        "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate."
+        "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate.",
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1150610,7 +1150821,8 @@
           "release-0.6-browser-coverage-mapping",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-csp-enforced-feedback"
+          "release-0.6-csp-enforced-feedback",
+          "release-0.6-receiver-version-backup"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1150913,7 +1151125,8 @@
         "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required.",
         "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
-        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open."
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1151001,7 +1151214,8 @@
           "release-0.6-configuration-backup-readback",
           "release-0.6-wal-upload-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-receiver-version-backup"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1344886,6 +1345100,112 @@
         {
           "file": "scoped-coverage-readback.json",
           "sha256": "be71e0e5478fb767f7e2b4440c0dd657bc9d9744d555456a27128b02e07b722c"
+        }
+      ]
+    },
+    "release-0.6-receiver-version-backup": {
+      "batch": "release-0.6-receiver-version-backup",
+      "base_commit": "ce07c4185677bfb5dd209121c8495981dabccd1a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+        },
+        {
+          "path": "deploy/staging/compose.wal-archive.yml",
+          "sha256": "509e9233ba683589906f05102464ddffc45e8e6308f74c365fc655326baf0ae4"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/install-nginx.sh",
+          "sha256": "5239fdc3b1a8d7879435304cc18a72ada0891dd32a0f2c685d0c97bf8c1a19f7"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "fceec8a920af93072e48b541ffbbbca9b66ee3f1abfa06583ce268c4334f5611"
+        }
+      ],
+      "checks": [
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
+        "Bash syntax, ShellCheck, Prettier and whitespace checks passed."
+      ],
+      "limitations": [
+        "The staging Linux rehearsal executed the checked source in a temporary fixture directory. Live containers, the database and Telegram were outside the fixture."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-receiver-version-backup",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "4b62384d11d1b77362c906cfb92f45410bdbaa9bec961c58e0db8e6aaf514cd7"
+        },
+        {
+          "file": "rollback.log",
+          "sha256": "80f455db5f23ebe705109c4e407ce7275c7cbb47e1ef2f3d84389f811e5566a3"
+        },
+        {
+          "file": "linux-fixture.log",
+          "sha256": "a31a723c6cdf80dfaf223985e0d69b67bcff1b8361bd40e63331d582b6e142af"
+        },
+        {
+          "file": "queue.log",
+          "sha256": "f247a43bece5d648f4dcb593293b645bfc8653d416dcba91419a241dce302ca7"
+        },
+        {
+          "file": "notifier.log",
+          "sha256": "c3ddd83973a3fb8d6bf220f31e78ff3e6c5d482117c11ffcb0e6031cc546f53e"
+        },
+        {
+          "file": "static.log",
+          "sha256": "2f082ff8db2595a531bbfff9c802066fa2c5cecd1286ec379503afdba3eee6b8"
         }
       ]
     }

@@ -49,11 +49,24 @@ if [[ "${1:-}" == --check-protected-backup ]]; then
   exit 0
 fi
 BARGHSA_POSTGRES_VOLUME=barghsa-staging_pgdata
+unset BARGHSA_STAGING_RELEASE_COMMIT BARGHSA_STAGING_RELEASE_VERSION
 # shellcheck source=/dev/null
 source "$candidate"
 set +a
 
-check_backup_config "${2:-}"
+commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}
+version=${BARGHSA_STAGING_RELEASE_VERSION:-}
+[[ "$commit" =~ ^[0-9a-f]{40}$ ]] || {
+  echo 'Invalid release commit in the candidate manifest' >&2; exit 1;
+}
+[[ "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
+  echo 'Invalid release version in the candidate manifest' >&2; exit 1;
+}
+backup_requirement=${2:-}
+if [[ ! "$version" =~ ^0\.[0-5]\. ]]; then
+  backup_requirement=--require-protected-backup
+fi
+check_backup_config "$backup_requirement"
 if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
   compose_files+=(-f /opt/barghsa/staging/compose.wal-archive.yml)
 fi
@@ -69,14 +82,6 @@ done
 }
 [[ "$S3_PUBLIC_ENDPOINT" == "$APP_PUBLIC_URL" && "$S3_ENDPOINT" == http://objectstore:8333 && "$S3_PRIVATE_ENDPOINT" == "$S3_ENDPOINT" && "$S3_FORCE_PATH_STYLE" == true ]] || {
   echo 'S3 settings must match the single-domain path-style gateway' >&2; exit 1;
-}
-commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}
-version=${BARGHSA_STAGING_RELEASE_VERSION:-}
-[[ -z "$commit" || "$commit" =~ ^[0-9a-f]{40}$ ]] || {
-  echo 'Invalid release commit in the candidate manifest' >&2; exit 1;
-}
-[[ -z "$commit" || "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
-  echo 'Invalid release version in the candidate manifest' >&2; exit 1;
 }
 for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE; do
   [[ "${!key:-}" =~ ^barghsa-(app|web|postgres|clamav):vps-[a-z0-9._-]+$ ]] || {
