@@ -5,6 +5,7 @@ import { FailedNotificationsService } from '../admin/failed-notifications.servic
 import { runOutboxPoll } from '../../../worker/dist/notifications/outbox-runner.js';
 import { deriveChannelIdempotencyKey } from '../../../worker/dist/notifications/outbox-writer.js';
 import { durableDelivery } from '../../../worker/dist/notifications/send-receipt.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }));
 vi.mock('@barghsa/db', async (original) => ({
   ...(await original<typeof import('@barghsa/db')>()),
@@ -898,6 +899,25 @@ for (const prefix of prefixes) {
   for (const action of ['retry', 'resolve', 'dismiss'] as const) {
     const request = (id: string) =>
       fetch(`${fixture.base}${prefix}/${id}/${action}`, { method: 'POST', headers });
+    it(`${prefix} ${action} rejects extra fields without changing delivery state or audit`, async () => {
+      const row = await seed();
+      const before = await snapshot(row);
+      const url = `${fixture.base}${prefix}/${row.dead}/${action}`;
+      const jsonHeaders = { ...headers, 'Content-Type': 'application/json' };
+      const invalid = await fetch(url, {
+        method: 'POST',
+        headers: jsonHeaders,
+        body: JSON.stringify({ unexpected: 'private fixture value' }),
+      });
+      expect(invalid.status).toBe(400);
+      const error = await invalid.json();
+      expect(error).toMatchObject({ error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code } });
+      expect(JSON.stringify(error)).not.toContain('private fixture value');
+      expect(await snapshot(row)).toEqual(before);
+      expect((await fetch(url, { method: 'POST', headers: jsonHeaders, body: '{}' })).status).toBe(
+        200
+      );
+    });
     it(`${prefix} ${action} binds current session and request correlation to its atomic audit`, async () => {
       const row = await seed();
       const before = await snapshot(row);

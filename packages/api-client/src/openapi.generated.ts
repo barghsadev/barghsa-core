@@ -19988,6 +19988,13 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
+            /** @description Invalid job ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -20038,6 +20045,13 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+            /** @description Invalid job ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {
@@ -20240,6 +20254,13 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
+            /** @description Invalid notification ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -20291,6 +20312,13 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
+            /** @description Invalid notification ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -20341,6 +20369,13 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+            /** @description Invalid notification ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {
@@ -22330,6 +22365,13 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
+            /** @description Invalid notification ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -22381,6 +22423,13 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
+            /** @description Invalid notification ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -22431,6 +22480,13 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+            /** @description Invalid notification ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {

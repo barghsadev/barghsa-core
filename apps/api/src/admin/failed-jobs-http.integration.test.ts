@@ -3,6 +3,7 @@ import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { FailedJobDto } from './failed-jobs.service.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
@@ -168,6 +169,23 @@ it('retries failed and exhausted jobs, resolves with actor attribution, and reje
     ).rows
   ).toHaveLength(4);
 });
+it.each(['retry', 'resolve'])(
+  'rejects extra %s fields without changing the job or audit',
+  async (action) => {
+    const id = await seed();
+    const before = await row(id);
+    const response = await request(`/${id}/${action}`, 'POST', {
+      unexpected: 'private fixture value',
+    });
+    expect(response.status).toBe(400);
+    const error = await response.json();
+    expect(error).toMatchObject({ error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code } });
+    expect(JSON.stringify(error)).not.toContain('private fixture value');
+    expect(await row(id)).toEqual(before);
+    expect((await auditWindow.query('SELECT id FROM audit_log')).rows).toHaveLength(0);
+    expect((await request(`/${id}/${action}`, 'POST')).status).toBe(200);
+  }
+);
 it('deduplicates bulk retry, skips missing/terminal jobs, and rolls the entire batch back on audit failure', async () => {
   const first = await seed('storage_cleanup', 'failed', '10000000-0000-4000-8000-000000000001');
   const second = await seed('auth_delivery', 'dead_letter', '10000000-0000-4000-8000-000000000002');

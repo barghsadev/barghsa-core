@@ -23005,6 +23005,9 @@
             },
             "description": "Job resolved"
           },
+          "400": {
+            "description": "Invalid job ID or unexpected request body"
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -23048,6 +23051,9 @@
               }
             },
             "description": "Job moved to retrying"
+          },
+          "400": {
+            "description": "Invalid job ID or unexpected request body"
           },
           "401": {
             "description": "Not authenticated"
@@ -23335,6 +23341,9 @@
             },
             "description": "Notification dismissed"
           },
+          "400": {
+            "description": "Invalid notification ID or unexpected request body"
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -23379,6 +23388,9 @@
             },
             "description": "Notification resolved"
           },
+          "400": {
+            "description": "Invalid notification ID or unexpected request body"
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -23422,6 +23434,9 @@
               }
             },
             "description": "Notification marked retried"
+          },
+          "400": {
+            "description": "Invalid notification ID or unexpected request body"
           },
           "401": {
             "description": "Not authenticated"
@@ -26413,6 +26428,9 @@
             },
             "description": "Notification dismissed"
           },
+          "400": {
+            "description": "Invalid notification ID or unexpected request body"
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -26457,6 +26475,9 @@
             },
             "description": "Notification resolved"
           },
+          "400": {
+            "description": "Invalid notification ID or unexpected request body"
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -26500,6 +26521,9 @@
               }
             },
             "description": "Notification marked retried"
+          },
+          "400": {
+            "description": "Invalid notification ID or unexpected request body"
           },
           "401": {
             "description": "Not authenticated"

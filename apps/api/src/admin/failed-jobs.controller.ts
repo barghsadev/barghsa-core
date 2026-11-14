@@ -23,6 +23,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { FailedJobsService, type FailedJobDto } from './failed-jobs.service.js';
 import { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = offsetPaginationQuerySchema(200);
@@ -184,15 +185,18 @@ export class FailedJobsController {
   @ApiOperation({ summary: 'Retry a failed background job (admin)' })
   @ApiParam({ name: 'id', description: 'Background job ID' })
   @ApiResponse({ status: 200, description: 'Job moved to retrying', type: Object })
+  @ApiResponse({ status: 400, description: 'Invalid job ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Job not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async retryJob(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<FailedJobDto> {
     this.assertRetryPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.failedJobsService.retryFailedJob(id, req.session, ip);
   }
@@ -253,15 +257,18 @@ export class FailedJobsController {
   @ApiOperation({ summary: 'Resolve a failed background job (admin)' })
   @ApiParam({ name: 'id', description: 'Background job ID' })
   @ApiResponse({ status: 200, description: 'Job resolved', type: Object })
+  @ApiResponse({ status: 400, description: 'Invalid job ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Job not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async resolveJob(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<FailedJobDto> {
     this.assertRetryPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.failedJobsService.resolveFailedJob(id, req.session, ip);
   }

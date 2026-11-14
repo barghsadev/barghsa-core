@@ -21,6 +21,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import {
   FailedNotificationsService,
   DEAD_LETTER_STATUSES,
@@ -255,15 +256,18 @@ export class FailedNotificationsController {
   @ApiOperation({ summary: 'Retry a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
   @ApiResponse({ status: 200, description: 'Notification marked retried', type: Object })
+  @ApiResponse({ status: 400, description: 'Invalid notification ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async retry(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.failedNotificationsService.retryFailedNotification(id, req.session, ip);
   }
@@ -280,15 +284,18 @@ export class FailedNotificationsController {
   @ApiOperation({ summary: 'Resolve a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
   @ApiResponse({ status: 200, description: 'Notification resolved', type: Object })
+  @ApiResponse({ status: 400, description: 'Invalid notification ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async resolve(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.failedNotificationsService.resolveFailedNotification(id, req.session, ip);
   }
@@ -305,15 +312,18 @@ export class FailedNotificationsController {
   @ApiOperation({ summary: 'Dismiss a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
   @ApiResponse({ status: 200, description: 'Notification dismissed', type: Object })
+  @ApiResponse({ status: 400, description: 'Invalid notification ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async dismiss(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.failedNotificationsService.dismissFailedNotification(id, req.session, ip);
   }
