@@ -26,6 +26,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import { parseSolarContractInput } from './solar-contract-input-fields.js';
 
 const close = z.object({ reason: z.string().trim().min(1).max(1000) }).strict();
+const startReviewInput = z.strictObject({}).optional();
 const reviewHash = z.string().regex(/^[a-f0-9]{64}$/);
 const confirmedClose = close.safeExtend({ expectedReviewHash: reviewHash });
 const confirmedApproval = z.object({ expectedReviewHash: reviewHash }).strict();
@@ -151,7 +152,13 @@ export class StaffSolarFinalController {
   @Post('start-final-review')
   @HttpCode(200)
   @ApiOperation({ summary: 'Begin final review after confirmed solar postal receipt' })
-  startReview(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+  startReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!startReviewInput.safeParse(body).success)
+      throw new BadRequestException('Invalid solar final review command');
     return this.service.beginReview(req.session, id, req.ip ?? '127.0.0.1');
   }
 

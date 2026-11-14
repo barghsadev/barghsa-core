@@ -134,6 +134,31 @@ it('refuses absent CSRF, foreign ownership, invalid mode and expired session wit
     [session]
   );
 });
+it('rejects unexpected discard bodies without changing the saved progress or revision', async () => {
+  await seed();
+  const before = await readGuarded('simple', profileId);
+  const candidates = [
+    `${http.base}/api/electricity/drafts/simple?profileId=${profileId}`,
+    guardedUrl('simple', profileId),
+  ];
+  for (const url of candidates) {
+    const reply = await fetch(url, {
+      method: 'DELETE',
+      headers: { ...versionHeaders(before.revision), 'content-type': 'application/json' },
+      body: JSON.stringify({ confirmed: true }),
+    });
+    expect(reply.status, http.logs()).toBe(400);
+    expect(await reply.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT_INVALID' } });
+  }
+  expect(await readGuarded('simple', profileId)).toEqual(before);
+  const discarded = await fetch(guardedUrl('simple', profileId), {
+    method: 'DELETE',
+    headers: { ...versionHeaders(before.revision), 'content-type': 'application/json' },
+    body: '{}',
+  });
+  expect(discarded.status, http.logs()).toBe(200);
+  expect(await discarded.json()).toMatchObject({ discarded: true, profileId, mode: 'simple' });
+});
 it('rolls back deletion if its mandatory audit cannot commit', async () => {
   await seed();
   await http.pool

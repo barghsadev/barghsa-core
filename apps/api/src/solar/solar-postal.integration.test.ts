@@ -2131,6 +2131,13 @@ it('keeps the specified staff postal and final routes bound to current shipment 
       409
     );
   }
+  const unexpected = await send('postal-reviewer', `${base}/start-final-review`, 'POST', {
+    confirmed: true,
+  });
+  expect(unexpected.status, http.logs()).toBe(400);
+  expect(await (await send('postal-buyer', `solar/requests/${target}`)).json()).toMatchObject({
+    request: { status: 'postal_documents_received' },
+  });
   expect((await send('postal-reviewer', `${base}/start-final-review`, 'POST', {})).status).toBe(
     200
   );

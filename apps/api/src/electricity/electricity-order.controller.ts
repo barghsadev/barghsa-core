@@ -124,6 +124,7 @@ const draftInput = z
   .strict();
 const draftMode = z.enum(['simple', 'advanced']);
 const draftRevision = z.union([z.literal('initial'), z.string().uuid()]);
+const discardInput = z.strictObject({}).optional();
 
 function requireDraftScope(mode: string, revision?: string) {
   const parsedMode = draftMode.safeParse(mode);
@@ -316,11 +317,13 @@ export class ElectricityOrderController {
   discardDraft(
     @Param('mode') mode: string,
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    if (mode !== 'simple' && mode !== 'advanced')
+    const parsed = draftMode.safeParse(mode);
+    if (!parsed.success || !discardInput.safeParse(body).success)
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.drafts.discard(req.session, profileId, mode);
+    return this.drafts.discard(req.session, profileId, parsed.data);
   }
 
   @Get('drafts/:mode/guarded')
@@ -377,9 +380,12 @@ export class ElectricityOrderController {
     @Param('mode') requestedMode: string,
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Headers('x-draft-revision') expected: string | undefined,
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     const { mode, revision } = requireDraftScope(requestedMode, expected);
+    if (!discardInput.safeParse(body).success)
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     return this.drafts.discard(req.session, profileId, mode, revision);
   }
 
