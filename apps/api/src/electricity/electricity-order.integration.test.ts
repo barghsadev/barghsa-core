@@ -21,6 +21,7 @@ import { expireDueElectricityIncreases } from '@barghsa/db/electricity-increase-
 import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
 import type { ElectricityPriceAdjustmentReview } from '@barghsa/shared/finance';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { loadElectricityInitialInvoice } from './electricity-contract-invoice.js';
 import { expectSubmissionAudit } from '../test/submission-audit.js';
 import {
   expectOrderSubmitted,
@@ -6010,4 +6011,36 @@ it('rejects legacy cancellation of a native submitted order without bypassing it
     (await http.pool.query('SELECT status FROM electricity_orders WHERE id=$1', [order.orderId]))
       .rows[0].status
   ).toBe('awaiting_staff_review');
+});
+
+it('does not treat an unrelated contract invoice as the order’s initial funding evidence', async () => {
+  const submitted = await post('orders/simple', input);
+  expect(submitted.status, http.logs()).toBe(201);
+  const result = (await submitted.json()) as { contractId: string; invoiceId: string };
+  const scope = (
+    await http.pool.query(
+      'SELECT id,profile_id,order_id,current_version_id AS version_id FROM contracts WHERE id=$1',
+      [result.contractId]
+    )
+  ).rows[0];
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    expect(await loadElectricityInitialInvoice(client, scope, 'SHARE')).toMatchObject({
+      id: result.invoiceId,
+      state: 'Unpaid',
+      paid_amount: '0',
+      refunded_amount: '0',
+    });
+    expect(
+      await loadElectricityInitialInvoice(client, { ...scope, profile_id: randomUUID() }, 'UPDATE')
+    ).toBeNull();
+    expect(
+      await loadElectricityInitialInvoice(client, { ...scope, version_id: randomUUID() })
+    ).toBeNull();
+    expect(await loadElectricityInitialInvoice(client, { ...scope, id: randomUUID() })).toBeNull();
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
 });

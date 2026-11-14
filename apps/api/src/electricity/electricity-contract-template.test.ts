@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import type { PoolClient } from 'pg';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import {
@@ -91,4 +91,67 @@ it('rejects an unsupported placeholder instead of saving an incomplete contract'
 it('keeps existing order submission available while no template is selected', async () => {
   const { client } = fixture(null, '', []);
   await expect(snapshot(client, null, 'profile-1', 1n, new Date())).resolves.toBeNull();
+});
+
+it.each([
+  [100, undefined, undefined, 'Invalid contract template configuration'],
+  ['version-1', null, undefined, 'Selected contract template is unavailable'],
+  [
+    'version-1',
+    { placeholders: ['other'] },
+    undefined,
+    'Selected contract template is unavailable',
+  ],
+  [
+    'version-1',
+    { placeholders: ['amount'], file_size: 10 * 1024 * 1024 + 1 },
+    undefined,
+    'Selected contract template is too large',
+  ],
+  [
+    'version-1',
+    { placeholders: ['amount'], file_size: 12 },
+    null,
+    'Contract customer is unavailable',
+  ],
+])(
+  'rejects an ineligible template or customer before accessing storage',
+  async (value, version, customer, message) => {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [{ value }] })
+      .mockResolvedValueOnce({ rows: version ? [version] : [] })
+      .mockResolvedValueOnce({ rows: customer ? [customer] : [] });
+    await expect(readElectricityContractTemplate({ query }, 'profile-1')).rejects.toMatchObject({
+      status: 503,
+      message,
+    });
+    expect(query).toHaveBeenNthCalledWith(1, 'LOCK TABLE app_config IN SHARE MODE');
+  }
+);
+
+it('fails closed when storage is absent, a file exceeds the cap, or bytes are not valid UTF-8', async () => {
+  const { client } = fixture('version-1', '{{amount}}', ['amount']);
+  const source = (await readElectricityContractTemplate(client, 'profile-1'))!;
+  await expect(fetchElectricityContractTemplate(null, source)).rejects.toMatchObject({
+    status: 503,
+  });
+  for (const bytes of [new Uint8Array(10 * 1024 * 1024 + 1), new Uint8Array([0xff])]) {
+    const getObject = vi.fn().mockResolvedValue({
+      body: new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(bytes);
+          controller.close();
+        },
+      }),
+    });
+    await expect(
+      fetchElectricityContractTemplate({ getObject } as unknown as StorageProvider, source)
+    ).rejects.toMatchObject({
+      status: 503,
+      message: 'Selected contract template could not be read',
+    });
+    expect(getObject).toHaveBeenCalledExactlyOnceWith('template-key');
+  }
 });
