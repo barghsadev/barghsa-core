@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:56:17+00:00",
+  "updated": "2026-11-14T14:02:10+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -254933,7 +254933,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -254957,7 +254958,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -256175,7 +256176,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -256199,7 +256201,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -257420,7 +257422,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -257444,7 +257447,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -258663,7 +258666,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -258687,7 +258691,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -259905,7 +259909,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -259929,7 +259934,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -261147,7 +261152,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -261171,7 +261177,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -262388,7 +262394,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -262412,7 +262419,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -263632,7 +263639,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -263656,7 +263664,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -264874,7 +264882,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -264898,7 +264907,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -266116,7 +266125,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -266140,7 +266150,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -267359,7 +267369,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -267383,7 +267394,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -268601,7 +268612,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -268625,7 +268637,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -269842,7 +269854,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -269866,7 +269879,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -271084,7 +271097,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -271108,7 +271122,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -273422,7 +273436,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -575029,7 +575044,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -575061,7 +575077,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -576974,7 +576990,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -577006,7 +577023,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -578920,7 +578937,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -578952,7 +578970,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -580865,7 +580883,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -580897,7 +580916,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -582810,7 +582829,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -582842,7 +582862,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -584756,7 +584776,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -584788,7 +584809,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -586703,7 +586724,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -586735,7 +586757,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -588651,7 +588673,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -588683,7 +588706,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -590607,7 +590630,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -590639,7 +590663,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -592551,7 +592575,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -592583,7 +592608,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -594496,7 +594521,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -594528,7 +594554,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -596450,7 +596476,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -596482,7 +596509,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -598404,7 +598431,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -598436,7 +598464,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -685921,7 +685949,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-kb-read-authority",
-          "release-0.6-contract-template-coverage"
+          "release-0.6-contract-template-coverage",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "batch": "release-0.6-central-authorization",
@@ -686085,7 +686114,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -722114,7 +722143,8 @@
         "batches": [
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contract-operation-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-contract-amendment-adjustment-invoice-browser-journey",
@@ -1104844,7 +1104874,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -1108600,7 +1108630,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-contract-operation-coverage"
         ]
       }
     },
@@ -1110580,7 +1110611,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
-              "sha256": "525ac157775bba89c21ca7fc574a84968117c4c1b4f203c7805d6aa631bce706"
+              "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
             },
             {
               "path": "apps/api/src/contract/contract-authoring.ts",
@@ -1114627,7 +1114658,8 @@
           "release-0.6-kb-read-authority",
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-contract-template-coverage"
+          "release-0.6-contract-template-coverage",
+          "release-0.6-contract-operation-coverage"
         ]
       }
     },
@@ -1132306,7 +1132338,8 @@
         "Five API configuration-recovery files now meet the original critical coverage thresholds. Green rollback pagination was fixed and regression-tested. Run the exact full combined coverage gate after the remaining API gaps are resolved.",
         "The 122 operator queue cases passed with the compiled API and native PostgreSQL. The replay date regression preserved queue and audit state. All three controller thresholds passed at 214/214 lines and 110/110 branches. The full exact combined and live replay gates remain open.",
         "All three session and device API files passed the unchanged scoped critical coverage gate with 54 passing tests and a compiled PostgreSQL-backed HTTP fixture. The final exact combined release run remains open.",
-        "The contract-template controller and service pass the original critical thresholds, with compiled PostgreSQL checks for invalid upload names, immutable storage, audit rollback and affected electricity template callers. The full exact combined gate is still required."
+        "The contract-template controller and service pass the original critical thresholds, with compiled PostgreSQL checks for invalid upload names, immutable storage, audit rollback and affected electricity template callers. The full exact combined gate is still required.",
+        "The three contract cancellation, PDF and authoring API files pass the scoped critical coverage gate. Seventy-seven selected cases passed, with retained hosted coverage bound to byte-identical source. The local Docker MinIO setup timed out before the 14-case signature suite could run, so verify it on the exact hosted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132676,7 +1132709,8 @@
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
           "release-0.6-session-read-coverage",
-          "release-0.6-contract-template-coverage"
+          "release-0.6-contract-template-coverage",
+          "release-0.6-contract-operation-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1322022,6 +1322056,127 @@
         {
           "file": "scoped-gate.json",
           "sha256": "55a2f2ac58c5965fdff368e8bba091017ee81ad0e7b40bcd668a71276ec7bff6"
+        }
+      ]
+    },
+    "release-0.6-contract-operation-coverage": {
+      "batch": "release-0.6-contract-operation-coverage",
+      "base_commit": "8001b03d014211e613364843ea8120c951a6ee01",
+      "task_keys": [
+        "03-core-business.md#T-03.12.03.01",
+        "03-core-business.md#T-03.12.03.02",
+        "03-core-business.md#T-03.12.03.03",
+        "03-core-business.md#T-03.12.03.04",
+        "03-core-business.md#T-03.12.03.05",
+        "03-core-business.md#T-03.12.03.06",
+        "03-core-business.md#T-03.13.01.01",
+        "03-core-business.md#T-03.13.01.02",
+        "03-core-business.md#T-03.13.01.03",
+        "03-core-business.md#T-03.13.01.04",
+        "03-core-business.md#T-03.13.02.01",
+        "03-core-business.md#T-03.13.02.02",
+        "03-core-business.md#T-03.13.02.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.04",
+        "04-invoices-wallet-contracts.md#T-04.5.01.05",
+        "04-invoices-wallet-contracts.md#T-04.5.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.01.07",
+        "04-invoices-wallet-contracts.md#T-04.5.02.01",
+        "04-invoices-wallet-contracts.md#T-04.5.02.02",
+        "04-invoices-wallet-contracts.md#T-04.5.02.03",
+        "04-invoices-wallet-contracts.md#T-04.5.02.04",
+        "04-invoices-wallet-contracts.md#T-04.5.03.01",
+        "04-invoices-wallet-contracts.md#T-04.5.03.02",
+        "04-invoices-wallet-contracts.md#T-04.5.03.03",
+        "04-invoices-wallet-contracts.md#T-04.5.04.02",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.10.03.11",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/contract/contract-authoring-input-fields.test.ts",
+        "apps/api/src/contract/contract-cancellation-queue.test.ts",
+        "apps/api/src/contract/contract-pdf-recovery.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
+          "sha256": "39b87f3c6fb79458b12dca19ec3f09074dbd25d576d90d2fc3efe9e158d7c43f"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-queue.test.ts",
+          "sha256": "565814c3c2caa98b440dc181956b16f2103c9381de72d8d38a5f1536e4825cc4"
+        },
+        {
+          "path": "apps/api/src/contract/contract-pdf-recovery.test.ts",
+          "sha256": "f443f737a858710e1dc4d47fb7149543cd9758d06a7f7e8e9f79f2bdd3eddb25"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request.service.ts",
+          "sha256": "b4ca3a865b5490d7d8bb6ad1cbfe76dd55abc72369595778f7005a190318e607"
+        },
+        {
+          "path": "apps/api/src/contract/contract-pdf.service.ts",
+          "sha256": "d1b146432126a055561c79466c680f74d1eea21c733336dfc54b73907d774982"
+        },
+        {
+          "path": "apps/api/src/contract/contract.controller.ts",
+          "sha256": "061f53c218fcd8d8cd23574c5c846dfb2584febd2a18fc1eae70b6517a4c2a1a"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
+          "sha256": "399868fc1b64b8316edab40b14fddeedb67e6bf7543cac72047ded1090f25fab"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
+          "sha256": "554da3bebca49779e77ebb4cf5b9b2ade47663dc0a4340869d357c30cf98831d"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+          "sha256": "ea9b76f85e3cccda84b074a88897a2322d06519529dd164633261e0570189304"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "Seventy-seven targeted tests passed, including compiled contract cancellation and electricity template HTTP against a native PostgreSQL 17.9 fixture with production migrations. New tests cover cancellation cursor and target isolation, exact PDF retries and storage errors, and fallback staff audit attribution.",
+        "The unchanged scoped critical gate passed at 231/236 lines and 130/144 branches. Retained coverage came from the checksum-verified native artifact for run 43583704822 with byte-identical source verified for each file.",
+        "The separate local contract-signature suite could not start its Docker MinIO container and its 14 tests did not run. Current API type checking, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The scoped results do not certify the exact combined hosted gate, the 14-case signature suite or live staging."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-contract-operation-coverage",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "9296b59f408ef5025b15eb682de84b407683fa92c2f190054381a59a2dc45b49"
+        },
+        {
+          "file": "minio-fixture-timeout.log",
+          "sha256": "5e7acdc1e10d806f738b9935694113c74a2ffed40fc24893e0c1406f1a08dbf1"
+        },
+        {
+          "file": "static.log",
+          "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f"
+        },
+        {
+          "file": "postgres-init.log",
+          "sha256": "2ee6817bac7edb158e71e0e6538ad7d1a73881ca9ed3f270531bd4235d1315a6"
+        },
+        {
+          "file": "scoped-gate.json",
+          "sha256": "48ab755c61b578ac2e72dde650dbbab9a66c554913b6b640b545fe9c4f4a5db9"
         }
       ]
     }

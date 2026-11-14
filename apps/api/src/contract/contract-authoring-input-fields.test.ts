@@ -69,6 +69,20 @@ it.each(routes)(
   }
 );
 it.each(routes)(
+  '%s preserves staff audit attribution when no request IP is available',
+  async (route) => {
+    const f = fixture(route);
+    const request = { session: req.session } as AuthenticatedRequest;
+    await expect(f.invoke(f.body, request)).resolves.toBe(f.saved);
+    expect(f.work).toHaveBeenCalledExactlyOnceWith(
+      ...(route === 'create' ? [] : [id]),
+      expect.objectContaining({ changeDescription: 'Captured revision' }),
+      req.session,
+      '127.0.0.1'
+    );
+  }
+);
+it.each(routes)(
   '%s projects only an invalid description after current authority',
   async (route) => {
     const f = fixture(route);
