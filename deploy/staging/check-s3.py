@@ -15,33 +15,57 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
+def remove_probe(private, object_ref, nonce, versioned, uploaded):
+    version = (uploaded or {}).get("VersionId")
+    etag = (uploaded or {}).get("ETag")
+    if not version or version == "null":
+        # Some providers omit VersionId. A lost PUT response also needs
+        # readback before any cleanup can be authorized.
+        try:
+            metadata = private.head_object(**object_ref)
+        except ClientError as error:
+            code = error.response.get("Error", {}).get("Code")
+            if uploaded is None and code in ("404", "NotFound", "NoSuchKey"):
+                return
+            raise
+        if (metadata.get("Metadata", {}).get("barghsa-probe") != nonce
+                or (etag and metadata.get("ETag") != etag)
+                or (version and metadata.get("VersionId") != version)):
+            raise ValueError("Storage did not confirm ownership of the probe object")
+        version = metadata.get("VersionId")
+        etag = metadata.get("ETag")
+    if versioned and not version:
+        raise ValueError("Versioned storage did not identify the probe object version")
+    cleanup_ref = {**object_ref, "VersionId": version} if version else object_ref
+    if not version or version == "null":
+        if not etag:
+            raise ValueError("Storage did not identify the mutable probe object")
+        cleanup_ref = {**cleanup_ref, "IfMatch": etag}
+    removed = private.delete_object(**cleanup_ref)
+    if removed.get("DeleteMarker") or removed.get("VersionId", version) != version:
+        raise ValueError("S3 cleanup did not confirm the intended object deletion")
+
+
 def verify_storage(private, public, bucket):
-    key = f"deployment-check/{uuid4().hex}.txt"
-    object_ref = {"Bucket": bucket, "Key": key}
-    body = b"barghsa staging S3 check\n"
+    nonce = uuid4().hex
+    object_ref = {"Bucket": bucket, "Key": f"deployment-check/{nonce}.txt"}
+    body = f"barghsa staging S3 check {nonce}\n".encode()
     opener = build_opener(NoRedirect())
 
     private.head_bucket(Bucket=bucket)
     versioned = private.get_bucket_versioning(Bucket=bucket).get("Status") in ("Enabled", "Suspended")
-    uploaded = private.put_object(**object_ref, Body=body, ContentType="text/plain")
-    version = uploaded.get("VersionId")
-    if versioned and not version:
-        # Some compatible stores omit VersionId from PUT. Only recover the
-        # current version when its ETag matches this exact successful write.
-        metadata = private.head_object(**object_ref)
-        version = metadata.get("VersionId")
-        if not version or not uploaded.get("ETag") or metadata.get("ETag") != uploaded["ETag"]:
-            raise ValueError("Versioned storage did not identify the probe object version")
-    cleanup_ref = {**object_ref, "VersionId": version} if version else object_ref
+    uploaded = None
     try:
+        uploaded = private.put_object(
+            **object_ref, Body=body, ContentType="text/plain",
+            Metadata={"barghsa-probe": nonce}, IfNoneMatch="*",
+        )
         signed_url = public.generate_presigned_url("get_object", Params=object_ref, ExpiresIn=60)
         with opener.open(signed_url, timeout=20) as response:
             if response.status != 200 or response.read(len(body) + 1) != body:
                 raise ValueError("Signed S3 download did not match the probe bytes")
     finally:
-        removed = private.delete_object(**cleanup_ref)
-        if removed.get("DeleteMarker") or (version and removed.get("VersionId", version) != version):
-            raise ValueError("S3 cleanup did not confirm the intended object deletion")
+        remove_probe(private, object_ref, nonce, versioned, uploaded)
 
 
 def main():

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T02:05:23+00:00",
+  "updated": "2026-11-14T02:13:41+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -19061,7 +19061,8 @@
         "Authenticated staging v0.5.1 readback confirmed enabled versioning and all five expected policy rules on the running object-store image. All four expiration rules require legal-hold=false and retain the five newest noncurrent versions. The seven-day bucket abort fallback remains enabled alongside the default 24-hour application worker. Verify the selected production storage policy, propagated rules, actual expiry and safe ownership of preview and superseded-file classification.",
         "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
         "The pinned staging object-store image verified exact cleanup in versioned and unversioned buckets with no probe bytes or markers left. Live production lifecycle and object hold checks remain open.",
-        "The admin storage configuration probe now checks versioning and deletes the exact version of its generated key. The staging SeaweedFS image verified signed downloads, no retained probe bytes or markers, and an unchanged unrelated object in both disposable bucket modes. Actual deployed policy and expiry remain open."
+        "The admin storage configuration probe now checks versioning and deletes the exact version of its generated key. The staging SeaweedFS image verified signed downloads, no retained probe bytes or markers, and an unchanged unrelated object in both disposable bucket modes. Actual deployed policy and expiry remain open.",
+        "The staging smoke now uses a create-only probe and cleans up a lost PUT acknowledgement only with proven object ownership. The pinned SeaweedFS image verified exact version deletion, suspended null-version cleanup and conditional unversioned deletion. Verify the selected live storage policies and actual candidate receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -19155,7 +19156,8 @@
         "batches": [
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-admin-probe-cleanup"
+          "release-0.6-admin-probe-cleanup",
+          "release-0.6-staging-probe-uncertain-write"
         ],
         "current_acceptance": null
       }
@@ -20324,7 +20326,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20569,6 +20571,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ]
         }
@@ -24295,7 +24305,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -24475,6 +24485,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ]
         }
@@ -32256,7 +32274,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -32617,6 +32635,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ]
         }
@@ -35510,7 +35536,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -36110,6 +36136,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ]
         }
@@ -165165,7 +165199,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -166411,6 +166445,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -644935,7 +644977,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -646205,6 +646247,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -677516,7 +677566,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -677770,6 +677820,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ]
         }
@@ -707796,7 +707854,8 @@
         "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open.",
         "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open.",
         "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open.",
-        "The pre-promotion web smoke now verifies the package version and commit together. Missing or invalid manifest versions fail before startup, and stale or absent public versions enter rollback. Repeat on the exact isolated and deployed candidate."
+        "The pre-promotion web smoke now verifies the package version and commit together. Missing or invalid manifest versions fail before startup, and stale or absent public versions enter rollback. Repeat on the exact isolated and deployed candidate.",
+        "The exact SeaweedFS rehearsal recovered probe cleanup after an unacknowledged PUT, preserved unrelated data and still failed the staging gate. Rehearse the complete smoke on the accepted immutable images and retain the live receipt."
       ],
       "owner": null,
       "depends_on": [],
@@ -707847,7 +707906,8 @@
           "release-0.6-retained-scan-binding",
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-probe-uncertain-write"
         ],
         "current_acceptance": null
       }
@@ -1077528,7 +1077588,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1080828,6 +1080888,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ],
           "presentation_renewals": [
@@ -1083424,7 +1083492,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1086625,6 +1086693,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-staging-probe-uncertain-write",
+              "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the staging smoke probe and its runbook changed. Existing signed byte read and exact version cleanup passed with the current staging object-store image. Release and notification controller tests passed independently."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1092256,7 +1092332,8 @@
         "Local staging tests now verify the expected release version alongside the exact SHA before the active manifest is updated. The final exact candidate, live deployment and Telegram receipts remain open.",
         "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release.",
         "Multipart cleanup recovery passed the migrated HTTP and Persian/English Chromium and WebKit checks. The source-bound evidence covers version conflicts, superseded drafts, step-up, CSRF and audit linkage. Repeat on the final deployed candidate.",
-        "Native CRM authority checks cover loss of the required staff grant while the response data is still pending. The profile detail and verification history preserve the existing CRM-only view. Verify the final accepted staging candidate."
+        "Native CRM authority checks cover loss of the required staff grant while the response data is still pending. The profile detail and verification history preserve the existing CRM-only view. Verify the final accepted staging candidate.",
+        "The staging storage check now fails closed on a lost PUT acknowledgement and cleans up only the owned probe, with no unguarded delete. Native pinned-image and staging rollback/notification checks passed. Verify the exact final candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1092568,7 +1092645,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-telegram-receipt",
           "release-0.6-multipart-cleanup-recovery",
-          "release-0.6-crm-read-authority"
+          "release-0.6-crm-read-authority",
+          "release-0.6-staging-probe-uncertain-write"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1272445,6 +1272523,68 @@
         {
           "file": "contract-final.log",
           "sha256": "08ae5bf5f5da5e4ff08b9b1cf6861b58b26703671a7b02b488995ec368b23e0a"
+        }
+      ]
+    },
+    "release-0.6-staging-probe-uncertain-write": {
+      "batch": "release-0.6-staging-probe-uncertain-write",
+      "base_commit": "4e7c7f2cb0354b8c6c61b79eaaae9f15c3134660",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.03",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/check-s3.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+        },
+        {
+          "path": "deploy/staging/check-s3.py",
+          "sha256": "0741086ad5f50a701d09df6b79f69281e262d4ffd7d2ac51f90c41ae85528cc6"
+        }
+      ],
+      "checks": [
+        "The pinned staging SeaweedFS image ce9e796f1fe6 and packaged backup client image dbb54d6c8c53 verified versioned/unversioned signed reads, cleanup on signed-byte mismatch, missing VersionId readback, lost acknowledgement cleanup in both modes, unrelated object preservation, absent writes, rejected conditional deletes with a different ETag and deletion of the suspended null version without a marker.",
+        "The staging queue and rollback suite passed 36 tests and the notifier suite passed 16 tests. The test used a disposable local object-store volume and network, both removed after verification."
+      ],
+      "limitations": [
+        "The native verification uses isolated storage. It supplies no v0.6.0 acceptance, deployment or Telegram receipt."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-probe-uncertain-write",
+      "execution_receipts": [
+        {
+          "file": "exact-seaweedfs.log",
+          "sha256": "a8abd660b43a737edb105d4d4517012784b64237d9d391dd7752f6d3dee43f00"
+        },
+        {
+          "file": "release-controls.log",
+          "sha256": "6e72e3df132ddd8bc594d0d5f1b842769c8328007bf1be8e752e53a2cb83e395"
+        },
+        {
+          "file": "notification-controls.log",
+          "sha256": "d16ad9034a79a56d7ebc5e0bc2eb0552f49e9b331699acd4e0ca182e3552e9a8"
+        },
+        {
+          "file": "verify-seaweedfs.py",
+          "sha256": "70defb3076a550f8eab2dc327395311b71012e5ab85d66c6990c67f0d35b29dc"
+        },
+        {
+          "file": "run-fixture.sh",
+          "sha256": "b9c11138e5f56040c131c71d8e3772e7d29e1a68ea24a0e58b6e6dce66687fd8"
         }
       ]
     }

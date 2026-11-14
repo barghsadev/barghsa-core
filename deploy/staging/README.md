@@ -198,8 +198,10 @@ and all Docker volumes. The script transfers images over SSH, uploads
 Compose and NGINX configuration, initializes root-only random staging secrets
 on first deployment, runs the release script, and checks HTTPS plus a private
 S3 write and public signed read. The probe deletes its exact uploaded version
-and fails on a byte mismatch or cleanup failure. If storage gives an uncertain
-result, inspect the dedicated `deployment-check/` prefix before retrying.
+and uses conditional deletion for unversioned objects. An uncertain write
+blocks the rollout even when the probe recovers and deletes its own object.
+If storage cannot confirm ownership or cleanup, inspect the dedicated
+`deployment-check/` prefix before retrying.
 Before transferring newly built images, the
 worker uses the high and critical vulnerability gate, generates a CycloneDX
 SBOM for each exact image, and runs the strict license policy against those
