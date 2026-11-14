@@ -34392,6 +34392,9 @@
           "200": {
             "description": "Session revoked."
           },
+          "400": {
+            "description": "Unexpected request body"
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -34575,6 +34578,9 @@
             },
             "description": ""
           },
+          "400": {
+            "description": "Unexpected request body"
+          },
           "401": {
             "description": "Session is no longer active"
           },
@@ -34680,6 +34686,9 @@
               }
             },
             "description": ""
+          },
+          "400": {
+            "description": "Invalid device trust reference or unexpected body"
           },
           "401": {
             "description": "Session is no longer active"
@@ -42617,7 +42626,7 @@
             "description": "Default profile saved for the authenticated user."
           },
           "400": {
-            "description": "Invalid profile identifier."
+            "description": "Invalid profile identifier or unexpected body."
           },
           "401": {
             "description": "Not authenticated."
@@ -42677,7 +42686,7 @@
             "description": "Active profile switched."
           },
           "400": {
-            "description": "Invalid profile identifier."
+            "description": "Invalid profile identifier or unexpected body."
           },
           "401": {
             "description": "Not authenticated"
@@ -42929,7 +42938,7 @@
             "description": "Profile set as default."
           },
           "400": {
-            "description": "Invalid profile identifier."
+            "description": "Invalid profile identifier or unexpected body."
           },
           "401": {
             "description": "Not authenticated"

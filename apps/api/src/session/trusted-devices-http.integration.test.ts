@@ -118,6 +118,35 @@ it('requires authentication, CSRF and fresh step-up, with no cross-user or nonex
   ).toBe(0);
 });
 
+it.each(['selected device', 'all devices'] as const)(
+  'rejects extra fields before revoking trust for %s',
+  async (scope) => {
+    const path = scope === 'selected device' ? endpoint() : `${http.base}/api/auth/trusted-devices`;
+    const revoke = (body: unknown) =>
+      fetch(path, {
+        method: 'DELETE',
+        headers: { ...headers(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    const auditCount = async () =>
+      (
+        await http.pool.query(
+          "SELECT count(*)::int AS count FROM audit_log WHERE event='device_trust_revoked'"
+        )
+      ).rows[0].count;
+    const rejected = await revoke({ scope: 'unexpected' });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect((await http.pool.query('SELECT id FROM device_trusts')).rows).toEqual(
+      expect.arrayContaining([{ id: own }, { id: other }])
+    );
+    expect(await auditCount()).toBe(0);
+    expect((await revoke({})).status).toBe(200);
+    expect((await http.pool.query('SELECT id FROM device_trusts')).rows).toEqual([{ id: other }]);
+    expect(await auditCount()).toBe(1);
+  }
+);
+
 it('revokes durably, audits once without secrets and requires OTP on the next login while retaining sessions', async () => {
   const verifiedAt = (
     await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [session])

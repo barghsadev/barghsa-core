@@ -1,6 +1,7 @@
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import {
   Body,
   Controller,
@@ -160,14 +161,16 @@ export class ProfilesController {
     description: 'Active profile switched.',
     schema: { type: 'object', properties: { activeProfileId: { type: 'string', nullable: true } } },
   })
-  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier or unexpected body.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Invalid CSRF token' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async switchProfile(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ activeProfileId: string | null }> {
+    assertEmptyCommandBody(body);
     const userId = req.session.userId;
 
     await this.profilesService.setDefaultProfile(req.session, profileId);
@@ -192,13 +195,15 @@ export class ProfilesController {
     description: 'Default profile saved for the authenticated user.',
     schema: { type: 'object', properties: { activeProfileId: { type: 'string' } } },
   })
-  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier or unexpected body.' })
   @ApiResponse({ status: 401, description: 'Not authenticated.' })
   @ApiResponse({ status: 404, description: 'Profile is unavailable to this user.' })
   async chooseDefaultProfile(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ activeProfileId: string }> {
+    assertEmptyCommandBody(body);
     await this.profilesService.setDefaultProfile(req.session, profileId);
     return { activeProfileId: profileId };
   }
@@ -209,13 +214,15 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:set-default:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Set a profile as default' })
   @ApiResponse({ status: 200, description: 'Profile set as default.' })
-  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier or unexpected body.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async setDefaultProfile(
     @Param('id', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ message: string }> {
+    assertEmptyCommandBody(body);
     const userId = req.session.userId;
 
     await this.profilesService.setDefaultProfile(req.session, profileId, true);

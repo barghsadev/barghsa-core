@@ -328,10 +328,11 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
     'Content-Type': 'application/json',
     'X-CSRF-Token': auth.token,
   };
-  const revoke = (reference = sessionReference(target.sessionId)) =>
+  const revoke = (reference = sessionReference(target.sessionId), body?: unknown) =>
     fetch(`${base}/api/auth/sessions/${encodeURIComponent(reference)}`, {
       method: 'DELETE',
       headers,
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
   for (const verifiedAt of [null, new Date(Date.now() - 16 * 60_000)]) {
     await pool.query('UPDATE sessions SET step_up_verified_at=$1 WHERE session_id=$2', [
@@ -395,6 +396,12 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
     'http-user',
     target.sessionId,
   ]);
+  const rejected = await revoke(undefined, { revokeAll: true });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: target.cookie } })).status
+  ).toBe(200);
   expect((await revoke()).status).toBe(200);
   expect(
     (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: target.cookie } })).status

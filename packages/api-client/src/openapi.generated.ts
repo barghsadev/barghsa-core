@@ -27663,6 +27663,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -27835,6 +27842,13 @@ export interface operations {
                     };
                 };
             };
+            /** @description Unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Session is no longer active */
             401: {
                 headers: {
@@ -27872,6 +27886,13 @@ export interface operations {
                         revoked: true;
                     };
                 };
+            };
+            /** @description Invalid device trust reference or unexpected body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Session is no longer active */
             401: {
@@ -32292,7 +32313,7 @@ export interface operations {
                     };
                 };
             };
-            /** @description Invalid profile identifier. */
+            /** @description Invalid profile identifier or unexpected body. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -32354,7 +32375,7 @@ export interface operations {
                     };
                 };
             };
-            /** @description Invalid profile identifier. */
+            /** @description Invalid profile identifier or unexpected body. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -32557,7 +32578,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid profile identifier. */
+            /** @description Invalid profile identifier or unexpected body. */
             400: {
                 headers: {
                     [name: string]: unknown;

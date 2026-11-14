@@ -88,6 +88,37 @@ it('resolves owner and delegated capabilities through the same current profile s
     { id: legal, is_owner: false, roles: ['Legal'] },
   ]);
 });
+it.each([
+  ['switch', (id: string) => `profiles/switch/${id}`, false],
+  ['default', (id: string) => `profiles/default/${id}`, false],
+  ['legacy default', (id: string) => `profiles/${id}/set-default`, true],
+] as const)(
+  'rejects extra fields for %s before changing profile context',
+  async (_name, path, legacy) => {
+    const target = legacy
+      ? (
+          await http.pool.query<{ id: string }>(
+            "INSERT INTO profiles(user_id,status) VALUES ('viewer','ACTIVE') RETURNING id"
+          )
+        ).rows[0]!.id
+      : finance;
+    const auditCount = async () =>
+      (
+        await http.pool.query(
+          "SELECT count(*)::int AS n FROM audit_log WHERE user_id='viewer' AND event='profile_context_changed'"
+        )
+      ).rows[0].n;
+    const response = await request(path(target), 'POST', { scope: 'unexpected' });
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: owned });
+    expect(await auditCount()).toBe(0);
+    expect((await request(path(target), 'POST', {})).status).toBe(200);
+    expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: target });
+    expect(await auditCount()).toBe(1);
+  }
+);
+
 it('saves the required default endpoint for owner and agent profiles across sessions', async () => {
   for (const id of [owned, finance, legal]) {
     const response = await request(`profiles/default/${id}`, 'POST');

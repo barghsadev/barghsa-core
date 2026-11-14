@@ -24,6 +24,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
 import { setCsrfCookie, setRefreshCookie, setSessionCookie } from './cookie.helper.js';
 import { SESSION_REFERENCE_PATTERN, sessionReference } from './session-reference.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 // ─── Zod schemas ──────────────────────────────────────────────────────
 
@@ -159,12 +160,15 @@ export class SessionController {
     schema: { type: 'string', pattern: SESSION_REFERENCE_PATTERN.source },
   })
   @ApiResponse({ status: 200, description: 'Session revoked.' })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Session not found' })
   async revokeSession(
     @Param('id') sessionRef: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ message: string }> {
+    assertEmptyCommandBody(body);
     await this.sessionService.revokeOwnSessions(
       req.session,
       { targetSessionRef: sessionRef },

@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, HttpException, Param, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  Param,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { createHash } from 'node:crypto';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -7,6 +16,7 @@ import { readDeviceCookie } from './cookie.helper.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from './session.guard.js';
 import { SessionService } from './session.service.js';
 import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 @ApiTags('Sessions')
 @Controller('api/auth/trusted-devices')
@@ -57,9 +67,11 @@ export class TrustedDevicesController {
       properties: { revoked: { type: 'boolean', enum: [true] } },
     },
   })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
   @ApiResponse({ status: 401, description: 'Session is no longer active' })
   @ApiResponse({ status: 403, description: 'CSRF or recent step-up required' })
-  revokeAll(@Req() req: AuthenticatedRequest) {
+  revokeAll(@Req() req: AuthenticatedRequest, @Body() body?: unknown) {
+    assertEmptyCommandBody(body);
     return this.sessions.revokeDeviceTrust(
       req.session.userId,
       req.session.sessionId,
@@ -83,10 +95,12 @@ export class TrustedDevicesController {
       properties: { revoked: { type: 'boolean', enum: [true] } },
     },
   })
+  @ApiResponse({ status: 400, description: 'Invalid device trust reference or unexpected body' })
   @ApiResponse({ status: 401, description: 'Session is no longer active' })
   @ApiResponse({ status: 403, description: 'CSRF or recent step-up required' })
   @ApiResponse({ status: 404, description: 'Device trust not found for this user' })
-  revoke(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+  revoke(@Param('id') id: string, @Req() req: AuthenticatedRequest, @Body() body?: unknown) {
+    assertEmptyCommandBody(body);
     if (!id || id.length > 128)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     return this.sessions.revokeDeviceTrust(
