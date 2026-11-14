@@ -200255,7 +200255,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -200319,7 +200320,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -200327,7 +200328,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -201584,6 +201585,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -201911,7 +201921,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -201975,7 +201986,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -201983,7 +201994,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -203240,6 +203251,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -203567,7 +203587,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -203631,7 +203652,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -203639,7 +203660,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -204896,6 +204917,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -205223,7 +205253,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -205287,7 +205318,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -205295,7 +205326,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -206552,6 +206583,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -206879,7 +206919,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -206943,7 +206984,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -206951,7 +206992,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -208208,6 +208249,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -208535,7 +208585,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -208599,7 +208650,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -208607,7 +208658,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -209864,6 +209915,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -210278,7 +210338,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -210342,7 +210403,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -210350,7 +210411,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -211764,6 +211825,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -212101,7 +212171,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -212165,7 +212236,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -212173,7 +212244,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -213430,6 +213501,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -213844,7 +213924,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -213908,7 +213989,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -213916,7 +213997,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -215330,6 +215411,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -215667,7 +215757,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -215731,7 +215822,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -215739,7 +215830,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -216996,6 +217087,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -217306,7 +217406,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -217342,7 +217443,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
@@ -217354,7 +217455,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
@@ -218206,6 +218307,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.test.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -218425,7 +218535,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -218465,7 +218576,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -218473,7 +218584,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -219377,6 +219488,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.test.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -219580,7 +219700,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -219616,7 +219737,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -219624,7 +219745,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -220490,6 +220611,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.test.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -233384,7 +233514,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -233436,7 +233567,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -233924,6 +234055,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -234150,7 +234289,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -234222,7 +234362,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -234737,6 +234877,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -234964,7 +235112,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -235044,7 +235193,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -235588,6 +235737,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -235848,7 +236005,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -235928,7 +236086,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -236700,6 +236858,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -236925,7 +237091,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -237005,7 +237172,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -237549,6 +237716,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -237689,7 +237864,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -237741,7 +237917,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -238225,6 +238401,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -238365,7 +238549,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -238417,7 +238602,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -238901,6 +239086,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -239042,7 +239235,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -239094,7 +239288,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -239578,6 +239772,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -239720,7 +239922,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -239772,7 +239975,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -240256,6 +240459,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -240406,7 +240617,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -240458,7 +240670,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -240942,6 +241154,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -241084,7 +241304,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -241136,7 +241357,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -241620,6 +241841,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -287529,7 +287758,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -287569,7 +287799,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -288386,6 +288616,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -288501,7 +288739,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -288541,7 +288780,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -289358,6 +289597,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -289473,7 +289720,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -289513,7 +289761,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -290330,6 +290578,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -290445,7 +290701,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -290485,7 +290742,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -291302,6 +291559,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -291417,7 +291682,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -291457,7 +291723,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -292274,6 +292540,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -498922,7 +499196,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -498970,7 +499245,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -499579,6 +499854,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -500265,7 +500548,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -500305,7 +500589,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -501122,6 +501406,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -501237,7 +501529,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -501277,7 +501570,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -502094,6 +502387,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -502210,7 +502511,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-invoice-review-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -502250,7 +502552,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -503067,6 +503369,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1109279,7 +1109589,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+              "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -1109287,7 +1109597,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -1110115,7 +1110425,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+              "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
@@ -1113943,6 +1114253,16 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1114286,7 +1114606,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-contract-operation-coverage"
+          "release-0.6-contract-operation-coverage",
+          "release-0.6-invoice-review-boundaries"
         ]
       }
     },
@@ -1115634,7 +1115955,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-              "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+              "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
@@ -1119892,6 +1120213,14 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-review-boundaries",
+              "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
+              ],
+              "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1120363,7 +1120692,8 @@
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
           "release-0.6-contract-template-coverage",
-          "release-0.6-contract-operation-coverage"
+          "release-0.6-contract-operation-coverage",
+          "release-0.6-invoice-review-boundaries"
         ]
       }
     },
@@ -1138142,7 +1138472,8 @@
         "The two previously flagged provider callback services pass the original scoped critical thresholds. Focused cases cover exact stored payment context, fail-closed claim recovery and chargeback reversal provenance. Enforced full candidate coverage and actual provider receipts remain open.",
         "The four flagged staff finance controllers for wallet and invoice receipt decisions, dual approval and wallet refunds pass the scoped critical gate. The full combined coverage and final staged financial journeys remain open.",
         "Storage administration, verification policy and verification provider configuration passed the native scoped critical thresholds. Verify the final hosted coverage and deployed provider and configuration receipts.",
-        "The security rate-limit configuration controller passed the scoped critical checker at 31/32 lines and 9/10 branches. This verifies actor provenance for regular changes and staged recovery when no request address is available. Retain native recovery tests in the final full run."
+        "The security rate-limit configuration controller passed the scoped critical checker at 31/32 lines and 9/10 branches. This verifies actor provenance for regular changes and staged recovery when no request address is available. Retain native recovery tests in the final full run.",
+        "All 51 focused invoice cases passed. Create-adjustment, cancellation/replacement and bank-receipt upload pass the unchanged critical source thresholds. The instrumented selection did not reach the full package statement floor. Complete the exact hosted coverage and staged financial rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -1138524,7 +1138855,8 @@
           "release-0.6-wallet-provider-verification",
           "release-0.6-staff-financial-command-boundaries",
           "release-0.6-config-authority-readback",
-          "release-0.6-rate-limit-audit-provenance"
+          "release-0.6-rate-limit-audit-provenance",
+          "release-0.6-invoice-review-boundaries"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1329294,6 +1329626,109 @@
         {
           "file": "scoped-gate-final.json",
           "sha256": "6119859091e0a5d61d0a0af159aaeff7782c5abe82856faa3d23a6e9772d11f5"
+        }
+      ]
+    },
+    "release-0.6-invoice-review-boundaries": {
+      "batch": "release-0.6-invoice-review-boundaries",
+      "base_commit": "5a3516a73493ef168654f72b3533997a9bcdc392",
+      "task_keys": [
+        "03-core-business.md#T-03.08.02.01",
+        "03-core-business.md#T-03.08.02.02",
+        "03-core-business.md#T-03.08.02.03",
+        "03-core-business.md#T-03.08.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.02",
+        "04-invoices-wallet-contracts.md#T-04.6.02.03",
+        "04-invoices-wallet-contracts.md#T-04.6.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+        "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "sha256": "87fc2c725a0950bfaf448a7609b961c01f3b824ec659a1b659795e7bf4a742d2"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+          "sha256": "3bc2930d9dbe3bf770391995be77410c0fe5555d4733758345dfb3fac8404972"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+          "sha256": "ff62f182a025116a43157e2761650e3dc0905f975c6af1642153c3403ce1ac68"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "330fee14bfba0bf62bc9647a1535cdd5524975973268491d216a7eb3ae74a89a"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "94d089a7efde2fe948aa2270e72fddf5d58d180f4f08d1689938b0d862a6a406"
+        }
+      ],
+      "checks": [
+        "All 51 invoice unit checks passed. The new cases verify amount and due-date guards, current actor and profile checks, electricity invoice terms, metadata preservation and legacy receipt review without writes.",
+        "All three byte-identical services passed unchanged critical coverage at 440/464 lines and 302/353 branches, using checksum-verified historical native coverage. API types, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "An initial attachment fixture incorrectly expected a matching profile to lose access after an uploader change. The corrected fixture denies a different uploader and profile. The replacement test UUID generator now resets per case. The scoped instrumented selection reached 78.52% statements against the unmodified 80% package floor. The final hosted and actual staging gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-invoice-review-boundaries",
+      "execution_receipts": [
+        {
+          "file": "final-unit-tests.log",
+          "sha256": "8895c0010df2a458feb727fc8515b12506bdc8046aa38f01d308532e41cf6389"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "cc33139aa4a87a0a6da73dc57ce40bd9af86e01bb959cc849f263838e39698ce"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "0fa9a50fd1612f5a7766d5277aca2cbf2edfe2d614bf4dc8903104a22791c2a4"
+        },
+        {
+          "file": "initial-coverage.log",
+          "sha256": "3f2bbafdae2b13e8471218da904a5eaae354e65dd12618d99890cdf157095aa4"
+        },
+        {
+          "file": "initial-uuid-fixture.log",
+          "sha256": "9ddcd35b54695c7fc5717bdc5aa53ff9b139b39a47e53152417fdb2c96f08384"
         }
       ]
     }

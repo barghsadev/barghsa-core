@@ -37,13 +37,9 @@ vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
 }));
 
+const ids = vi.hoisted(() => ({ next: 0 }));
 vi.mock('uuid', () => ({
-  v7: vi.fn(
-    (() => {
-      let n = 0;
-      return () => `00000000-0000-7000-8000-00000000000${n++}`;
-    })()
-  ),
+  v7: vi.fn(() => `00000000-0000-7000-8000-00000000000${ids.next++}`),
 }));
 
 function mockQuery(handler: (sql: string, params?: unknown[]) => unknown) {
@@ -124,6 +120,7 @@ describe('CancelAndReplaceInvoiceService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    ids.next = 0;
     service = new CancelAndReplaceInvoiceService(
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
       new DueAtCalculationService(new DueAtCalculationRepository())
@@ -132,13 +129,16 @@ describe('CancelAndReplaceInvoiceService', () => {
     mockClient.release.mockImplementation(() => {});
   });
 
-  it('cancels the original and issues a linked replacement atomically', async () => {
+  it.each([
+    [{ source: 'auto' }, { source: 'auto' }],
+    ['{"source":"auto","legacyBatch":"A-42"}', { source: 'auto', legacyBatch: 'A-42' }],
+  ])('replaces an unpaid invoice atomically', async (metadata, preserved) => {
     const calls: string[] = [];
     let lockCount = 0;
     mockQuery((sql) => {
       calls.push(sql.trim().split(/\s+/)[0]!.toUpperCase());
       if (sql.includes('paid_amount') && sql.includes('FOR UPDATE')) {
-        return { rows: [originalRow()] };
+        return { rows: [originalRow({ metadata })] };
       }
       if (sql.includes('FROM service_due_periods')) return { rows: [] };
       if (sql.startsWith('INSERT INTO invoices')) return { rows: [] };
@@ -228,6 +228,15 @@ describe('CancelAndReplaceInvoiceService', () => {
     expect(snapshot.source).toBe('manual');
     expect(snapshot.totals.totalAmount).toBe('2180000');
 
+    const originalUpdate = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('SET metadata = $1::jsonb')
+    );
+    expect(JSON.parse(originalUpdate?.[1]?.[0] as string)).toEqual({
+      ...preserved,
+      replacedByInvoiceId: params[0],
+      replacementReason: 'Wrong quantity on the issued lines',
+    });
+
     const readIdx = mockClient.query.mock.calls.findIndex(
       (c) =>
         (c[0] as string).includes('replaces_invoice_id') &&
@@ -255,6 +264,100 @@ describe('CancelAndReplaceInvoiceService', () => {
     ).rejects.toThrow(BadRequestException);
     expect(mockPool.connect).not.toHaveBeenCalled();
   });
+
+  it('rejects non-representable replacement totals in review and execution', async () => {
+    const oversized = command({
+      newLines: [
+        {
+          description: 'Large invoice',
+          quantity: 2,
+          unitPrice: 5_000_000_000_000_000_000n,
+          vatRate: 0,
+        },
+      ],
+    });
+    await expect(service.cancelAndReplaceInvoice(oversized)).rejects.toThrow(
+      'Invoice total exceeds int8 IRR'
+    );
+    await expect(
+      service.review({
+        ...oversized,
+        actor: { userId: 'staff-001', sessionId: 'observed-session', csrfToken: 'fixture-csrf' },
+      })
+    ).rejects.toThrow('Invoice total exceeds int8 IRR');
+    expect(mockPool.connect).not.toHaveBeenCalled();
+  });
+
+  it('rejects a past replacement due date before locking the original', async () => {
+    await expect(
+      service.cancelAndReplaceInvoice(
+        command({
+          dueAt: new Date('2026-07-31T09:00:00.000Z'),
+        })
+      )
+    ).rejects.toThrow('dueAt cannot be in the past');
+    expect(mockPool.connect).not.toHaveBeenCalled();
+  });
+
+  it('rolls back for mismatched staff sessions or an invoice whose profile changed', async () => {
+    mockQuery((sql) => {
+      if (sql.startsWith('SELECT profile_id')) return { rows: [{ profile_id: 'profile-001' }] };
+      if (sql.includes('paid_amount') && sql.includes('FOR UPDATE')) {
+        return { rows: [originalRow({ profile_id: 'different-profile' })] };
+      }
+      return { rows: [] };
+    });
+    await expect(
+      service.cancelAndReplaceInvoice(
+        command({
+          actorSession: { userId: 'different-staff', sessionId: 'session', csrfToken: 'csrf' },
+        })
+      )
+    ).rejects.toThrow('Invoice actor does not match the session');
+    await expect(service.cancelAndReplaceInvoice(command())).rejects.toThrow(
+      'Invoice profile changed; retry'
+    );
+    const writes = mockClient.query.mock.calls.map(([sql]) => String(sql));
+    expect(writes.filter((sql) => sql === 'ROLLBACK')).toHaveLength(2);
+    expect(writes.some((sql) => /^(UPDATE|INSERT|COMMIT)\b/.test(sql))).toBe(false);
+  });
+
+  it.each([
+    [{ order_profile_id: 'different-profile' }, {}, 'Electricity invoice order linkage'],
+    [{}, { adjustment_for_invoice_id: 'parent-invoice' }, 'require a contract change'],
+    [{}, {}, 'financial lines must match the submitted order'],
+  ])(
+    'blocks unsafe corrections to electricity invoices before any writes',
+    async (order, invoice, reason) => {
+      mockQuery((sql) => {
+        if (sql.includes('paid_amount') && sql.includes('FOR UPDATE')) {
+          return { rows: [originalRow({ total_amount: '2180000', ...invoice })] };
+        }
+        if (sql.includes('FROM electricity_orders')) {
+          return {
+            rows: [
+              {
+                profile_id: 'profile-001',
+                order_profile_id: 'profile-001',
+                order_type: 'electricity',
+                ...order,
+              },
+            ],
+          };
+        }
+        if (sql.includes('FROM invoice_lines')) {
+          return {
+            rows: [{ quantity: 2, unit_price: '1000000', vat_rate: 900, is_taxable: false }],
+          };
+        }
+        return { rows: [] };
+      });
+      await expect(service.cancelAndReplaceInvoice(command())).rejects.toThrow(reason);
+      const statements = mockClient.query.mock.calls.map(([sql]) => String(sql));
+      expect(statements).toContain('ROLLBACK');
+      expect(statements.some((sql) => /^(UPDATE|INSERT|COMMIT)\b/.test(sql))).toBe(false);
+    }
+  );
 
   it('throws NotFoundException when the original is missing and rolls back', async () => {
     mockQuery((sql) => {

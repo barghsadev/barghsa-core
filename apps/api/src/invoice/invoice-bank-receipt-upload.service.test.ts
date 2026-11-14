@@ -439,6 +439,78 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
     ).toBe(false);
   });
 
+  it('keeps the reviewed settlement terms on replay and refuses corrupt stored evidence', async () => {
+    const read = vi.spyOn(storage, 'getObject');
+    scriptClient({ fileSize: null, fileName: null });
+    const review = await service.review(submitInput());
+    expect(review.data).toMatchObject({
+      fileName: ATTACHMENT.split('/').at(-1),
+      fileSizeBytes: null,
+      invoiceRemainingIrR: AMOUNT.toString(),
+      stateAfterSubmission: 'Submitted',
+    });
+    scriptClient({ existing: makeReceiptRow({ submission_review: review }) });
+    await expect(service.review(submitInput())).resolves.toEqual(review);
+    for (const stored of [
+      { invalid: true },
+      { ...review, data: { ...review.data, customerNote: 'Unexpected change' } },
+    ]) {
+      scriptClient({ existing: makeReceiptRow({ submission_review: stored }) });
+      await expect(service.review(submitInput())).rejects.toThrow(
+        'Stored receipt review requires reconciliation'
+      );
+    }
+    expect(read).not.toHaveBeenCalled();
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts'))
+    ).toBe(false);
+  });
+
+  it('rejects a receipt review if the active profile or sealed attachment authority is gone', async () => {
+    customerInvoices.resolveActiveProfileId.mockResolvedValueOnce(null);
+    await expect(service.review(submitInput())).rejects.toMatchObject({ status: 404 });
+    for (const opts of [
+      { storageStatus: 'removed' },
+      { storageStatus: 'pending' },
+      {
+        storageMetadata: {
+          ...VALID_STORAGE_METADATA,
+          uploadedBy: 'another-owner',
+          profileId: 'another-profile',
+        },
+      },
+    ]) {
+      scriptClient(opts);
+      await expect(service.review(submitInput())).rejects.toMatchObject({ status: 400 });
+    }
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts'))
+    ).toBe(false);
+  });
+
+  it('reviews a legacy receipt after settlement without reopening it or reporting a negative balance', async () => {
+    const paidInvoice = {
+      id: INVOICE_ID,
+      profile_id: PROFILE_ID,
+      state: 'Paid',
+      adjustment_kind: null,
+      total_amount: AMOUNT.toString(),
+      paid_amount: AMOUNT.toString(),
+    };
+    scriptClient({ invoice: paidInvoice, existing: makeReceiptRow() });
+    const review = await service.review(submitInput());
+    expect(review.data).toMatchObject({
+      invoiceState: 'Paid',
+      invoicePaidIrR: AMOUNT.toString(),
+      invoiceRemainingIrR: '0',
+    });
+    scriptClient({ invoice: paidInvoice, existing: makeReceiptRow({ state: 'Confirmed' }) });
+    await expect(service.review(submitInput())).rejects.toMatchObject({ status: 409 });
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => /^(UPDATE|INSERT)\b/.test(String(sql)))
+    ).toBe(false);
+  });
+
   it('conflicts when the same attachment was used with different details', async () => {
     scriptClient({ existing: makeReceiptRow({ amount: '1' }) });
     await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException);

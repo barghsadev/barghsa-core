@@ -345,6 +345,38 @@ describe('CreateAdjustmentInvoiceService', () => {
     expect(mockPool.connect).not.toHaveBeenCalled();
   });
 
+  it.each([
+    [{ amount: 9_223_372_036_854_775_808n }, 'Adjustment exceeds int8 IRR'],
+    [{ amount: -9_223_372_036_854_775_808n }, 'Adjustment exceeds int8 IRR'],
+    [{ dueAt: new Date('2026-07-31T09:00:00.000Z') }, 'dueAt cannot be in the past'],
+    [{ reason: null }, CREATE_ADJUSTMENT_ERRORS.REASON_REQUIRED()],
+  ] as const)(
+    'rejects invalid adjustment terms before acquiring a financial lock',
+    async (input, reason) => {
+      await expect(service.createAdjustmentInvoice(command(input))).rejects.toThrow(reason);
+      expect(mockPool.connect).not.toHaveBeenCalled();
+    }
+  );
+
+  it('cannot issue an adjustment when the bound staff actor differs from its session', async () => {
+    mockQuery(() => ({ rows: [] }));
+    await expect(
+      service.createAdjustmentInvoice(
+        command({
+          actorSession: {
+            userId: 'different-staff',
+            sessionId: 'observed-session',
+            csrfToken: 'fixture-csrf',
+          },
+        })
+      )
+    ).rejects.toThrow('Invoice actor does not match the session');
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).startsWith('INSERT INTO invoices'))
+    ).toBe(false);
+  });
+
   it('throws NotFoundException when the original is missing and rolls back', async () => {
     mockQuery((sql) => {
       if (sql.includes('FOR UPDATE')) return { rows: [] };
