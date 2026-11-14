@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T09:21:18+00:00",
+  "updated": "2026-11-14T09:44:30+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -25260,7 +25260,8 @@
         "Hosted Mobile Safari shard 6 hit the combined customer comment deadline. Split electricity and saving while preserving the original assertions. A targeted saving detail run also found the 44 px back link could render fractionally short. The pointer-coarse 45 px minimum, 20 browser executions without retries, and all 103 gzip budgets passed. Complete the next exact hosted rollup.",
         "Hosted run 43555617831 exposed geography server field feedback being cleared and a separate Firefox recovery request-observation timeout. The shared blur binding now preserves unchanged server rejections and ignores blur during submission. The recovery test now uses the persisted locale selected before boot. Complete the clean hosted rollup on the exact successor.",
         "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
-        "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open."
+        "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
+        "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25379,7 +25380,8 @@
           "release-0.6-comment-journey-isolation",
           "release-0.6-wizard-server-feedback",
           "release-0.6-browser-43561500300",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-scheduled-browser-43576703292"
         ],
         "current_acceptance": null
       }
@@ -677673,7 +677675,8 @@
         "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
         "At 04:21 UTC on November 14, the live v0.5.1 branding endpoint returned the exact same-origin PNG and the login response stayed report-only. The complete observation and candidate style fix still need live proof.",
-        "The November 14 readback verified the exact 3,415-byte published same-origin PNG and private no-store response. The login remained report-only on v0.5.1. The accepted candidate, representative window and enforcement journeys are still required."
+        "The November 14 readback verified the exact 3,415-byte published same-origin PNG and private no-store response. The login remained report-only on v0.5.1. The accepted candidate, representative window and enforcement journeys are still required.",
+        "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -677696,7 +677699,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-csp-window-followup",
           "release-0.6-staging-favicon-confirmed-readback",
-          "release-0.6-staging-edge-smoke"
+          "release-0.6-staging-edge-smoke",
+          "release-0.6-scheduled-browser-43576703292"
         ],
         "current_acceptance": null
       }
@@ -1121725,7 +1121729,8 @@
         "Financial approval and reconciliation investigation now reject unexpected bodies before changing the decision, assignment, audit or notice. Native finance, refund and electricity/saving callers passed. Complete the remaining application-wide validation inventory and final staged release evidence.",
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
         "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts.",
-        "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open."
+        "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
+        "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1122070,7 +1122075,8 @@
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-scheduled-browser-43576703292"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1308621,6 +1308627,64 @@
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
+    },
+    "release-0.6-scheduled-browser-43576703292": {
+      "batch": "release-0.6-scheduled-browser-43576703292",
+      "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
+        },
+        {
+          "path": "scripts/browser_workflow_identity.py",
+          "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        }
+      ],
+      "checks": [
+        "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open.",
+        "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks."
+      ],
+      "limitations": [
+        "The scheduled run and favicon readback are from different commits. Full release checks, external report delivery and the live CSP rollout remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence",
+      "execution_receipts": [
+        {
+          "file": "scheduled-browser-readback-43576703292.json",
+          "sha256": "750e15ca8d2c27a8e328286c33f1dbf9fda39d3e31270a306b9acafa3a2a1acf"
+        },
+        {
+          "file": "scheduled-browser-summary-43576703292.zip",
+          "sha256": "6e2ecb8a00a8131a0156d0a7ab1820e412360659925624e3ec072adc1463b5f5"
+        },
+        {
+          "file": "scheduled-browser-shards-43576703292.json",
+          "sha256": "d81bb31e83aa325ad292d14d3030ae8daad64e87663665f1f7d73d0d7cec17ca"
+        },
+        {
+          "file": "staging-favicon-readback.json",
+          "sha256": "4406be35ddb6e65920748e243a33dea4e664b84bdc73c8487b53acd86d490447"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -1308670,12 +1308734,12 @@
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify protected preflights and the nightly browser schedule, finish synthetic alert delivery, and retain licensing and operational prerequisites."
+    "goal": "Verify the final v0.6.0 preflights, obtain scheduled email delivery, and finish independent synthetic alert delivery, license review and protected backup prerequisites."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
-    "method": "v0.5.1 staging and Telegram receipts are confirmed. Exact protected preflight 43555538867 and manual browser run 43555617831 for 7b62b875c are underway. The report-only inventory confirms 386 license entries require named dispositions. The November 9 target passed. Final strict acceptance, scheduled report delivery, representative CSP observation, external on-call monitoring and production-equivalent TLS, providers, backup, recovery and load evidence remain open."
+    "next_update_after": "Complete final v0.6.0 coverage and scheduled delivery, CSP observation, package license dispositions, and production-equivalent environment evidence.",
+    "method": "v0.5.1 staging and Telegram receipts are confirmed. Protected main passed the development integrity check at 4b6580f7c. Scheduled browser run 43576703292 at 1784f6161 passed all 40 shards. The exact report-only inventory still has 386 package entries needing named dispositions. The November 9 target passed. Final strict acceptance, scheduled report delivery, representative CSP observation, external on-call monitoring and production-equivalent TLS, providers, backup, recovery and load evidence remain open."
   },
   "capabilities": [
     {

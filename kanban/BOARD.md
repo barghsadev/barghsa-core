@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-14T09:21:18+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-14T09:44:30+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify protected preflights and the nightly browser schedule, finish synthetic alert delivery, and retain licensing and operational prerequisites.
+Verify the final v0.6.0 preflights, obtain scheduled email delivery, and finish independent synthetic alert delivery, license review and protected backup prerequisites.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 - `06-security-testing-observability.md#T-06.15.02.02`: Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2
