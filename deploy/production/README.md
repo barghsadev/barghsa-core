@@ -354,7 +354,9 @@ and signs out. The fixture checks that the API revoked the session.
 
 ```sh
 pnpm exec turbo run build --filter=@barghsa/web --filter=@barghsa/api --filter=@barghsa/worker
-BARGHSA_TEST_PREBUILT=1 BARGHSA_TEST_POSTGRES_COMPOSE=1 \
+rollout_tsx_loader=$(pnpm --filter @barghsa/db exec node -p 'require.resolve("tsx")')
+NODE_OPTIONS="--import=$rollout_tsx_loader" \
+  BARGHSA_TEST_PREBUILT=1 BARGHSA_TEST_POSTGRES_COMPOSE=1 \
   BARGHSA_BROWSER_FIXTURE_LOOPBACK=1 BARGHSA_NATIVE_ROLLOUT_SMOKE=1 \
   node scripts/run-production-browser.mjs e2e/rollout-smoke.spec.ts --project=chromium
 ```

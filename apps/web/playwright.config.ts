@@ -25,6 +25,9 @@ const firefoxExecutable = process.env['BARGHSA_FIREFOX_EXECUTABLE'];
 
 export default defineConfig({
   testDir: './e2e',
+  // The native rollout runner supplies its own PostgreSQL-backed API fixture.
+  testIgnore:
+    process.env['BARGHSA_NATIVE_ROLLOUT_SMOKE'] === '1' ? undefined : '**/rollout-smoke.spec.ts',
   globalSetup: './e2e/global-setup.ts',
   fullyParallel: false,
   forbidOnly: !!process.env['CI'],

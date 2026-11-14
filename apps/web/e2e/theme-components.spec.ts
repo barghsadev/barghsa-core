@@ -48,56 +48,61 @@ test.afterAll(async () => {
     await rm(outDir, { recursive: true, force: true });
 });
 
-for (const locale of ['en', 'fa'] as const) {
-  test(`popup actions have full touch targets (${locale})`, async ({ page }, info) => {
-    test.skip(!info.project.use.hasTouch, 'Requires a coarse pointer');
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto(`${url}?${locale}`);
-    expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+test.describe('touch popup targets', () => {
+  test.use({ hasTouch: true });
 
-    const checkTargets = async (targets: Locator) => {
-      for (const target of await targets.all()) {
-        const { width, height, scale, name } = await target.evaluate((node) => {
-          const { width, height } = node.getBoundingClientRect();
-          return { width, height, scale: devicePixelRatio, name: node.textContent?.trim() };
-        });
-        expect.soft(Math.round(width * scale), `${name} width`).toBeGreaterThanOrEqual(44 * scale);
-        expect
-          .soft(Math.round(height * scale), `${name} height`)
-          .toBeGreaterThanOrEqual(44 * scale);
-      }
-    };
+  for (const locale of ['en', 'fa'] as const) {
+    test(`popup actions have full touch targets (${locale})`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(`${url}?${locale}`);
+      expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
 
-    const select = page.getByRole('combobox', { name: 'Category', exact: true });
-    await select.tap();
-    const list = page.locator('[data-slot=select-content]').getByRole('listbox');
-    await expect(list.getByRole('option')).toHaveCount(2);
-    await checkTargets(list.getByRole('option'));
-    await list.getByRole('option', { name: 'Beta', exact: true }).tap();
-    await expect(select).toContainText(/beta/i);
+      const checkTargets = async (targets: Locator) => {
+        for (const target of await targets.all()) {
+          const { width, height, scale, name } = await target.evaluate((node) => {
+            const { width, height } = node.getBoundingClientRect();
+            return { width, height, scale: devicePixelRatio, name: node.textContent?.trim() };
+          });
+          expect
+            .soft(Math.round(width * scale), `${name} width`)
+            .toBeGreaterThanOrEqual(44 * scale);
+          expect
+            .soft(Math.round(height * scale), `${name} height`)
+            .toBeGreaterThanOrEqual(44 * scale);
+        }
+      };
 
-    const actions = page.getByRole('button', { name: 'Actions', exact: true });
-    await actions.tap();
-    const menu = page.getByRole('menu');
-    const checkbox = menu.getByRole('menuitemcheckbox', { name: 'Selected action', exact: true });
-    await expect(checkbox).toBeChecked();
-    await expect(menu.getByRole('menuitem')).toHaveCount(2);
-    await checkTargets(checkbox);
-    await checkTargets(menu.getByRole('menuitem'));
-    await checkbox.tap();
-    await expect(checkbox).not.toBeChecked();
-    await page.keyboard.press('Escape');
+      const select = page.getByRole('combobox', { name: 'Category', exact: true });
+      await select.tap();
+      const list = page.locator('[data-slot=select-content]').getByRole('listbox');
+      await expect(list.getByRole('option')).toHaveCount(2);
+      await checkTargets(list.getByRole('option'));
+      await list.getByRole('option', { name: 'Beta', exact: true }).tap();
+      await expect(select).toContainText(/beta/i);
 
-    const dialogTrigger = page.getByRole('button', { name: 'Open commands', exact: true });
-    await dialogTrigger.tap();
-    const dialog = page.getByRole('dialog');
-    const command = dialog.getByRole('option', { name: 'Run', exact: true });
-    await expect(command).toBeVisible();
-    await checkTargets(command);
-    await command.tap();
-    await expect(dialog).toBeHidden();
-  });
-}
+      const actions = page.getByRole('button', { name: 'Actions', exact: true });
+      await actions.tap();
+      const menu = page.getByRole('menu');
+      const checkbox = menu.getByRole('menuitemcheckbox', { name: 'Selected action', exact: true });
+      await expect(checkbox).toBeChecked();
+      await expect(menu.getByRole('menuitem')).toHaveCount(2);
+      await checkTargets(checkbox);
+      await checkTargets(menu.getByRole('menuitem'));
+      await checkbox.tap();
+      await expect(checkbox).not.toBeChecked();
+      await page.keyboard.press('Escape');
+
+      const dialogTrigger = page.getByRole('button', { name: 'Open commands', exact: true });
+      await dialogTrigger.tap();
+      const dialog = page.getByRole('dialog');
+      const command = dialog.getByRole('option', { name: 'Run', exact: true });
+      await expect(command).toBeVisible();
+      await checkTargets(command);
+      await command.tap();
+      await expect(dialog).toBeHidden();
+    });
+  }
+});
 
 for (const locale of ['en', 'fa'] as const)
   for (const darkMode of [false, true])

@@ -14,11 +14,6 @@ const requireApi = createRequire(new URL('../../api/package.json', import.meta.u
 const locale = 'fa';
 const fixtureName = 'کاربر آزمایشی';
 
-test.skip(
-  process.env['BARGHSA_NATIVE_ROLLOUT_SMOKE'] !== '1',
-  'Run the native rollout rehearsal with its isolated PostgreSQL fixture'
-);
-
 test('a fresh customer OTP session renders the owned dashboard and wallet, then signs out', async ({
   page,
 }, info) => {
