@@ -217,21 +217,22 @@ it('rolls back audit failure, then commits only one concurrent change and invali
 it.each(['account', 'session'] as const)(
   'rolls back if the password-change token expires while waiting for %s',
   async (resource) => {
-    await http.pool.query(
-      "UPDATE users SET password_change_token_expires_at=clock_timestamp()+INTERVAL '3 seconds' WHERE user_id='forced-user'"
-    );
-    const before = await state();
     const lock = await http.pool.connect();
     let changing: Promise<Response> | undefined;
     try {
       await lock.query('BEGIN');
       const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
-      if (resource === 'account')
+      if (resource === 'account') {
         await lock.query("SELECT user_id FROM users WHERE user_id='forced-user' FOR UPDATE");
-      else
+      } else {
         await lock.query('SELECT session_id FROM sessions WHERE session_id=$1 FOR UPDATE', [
           sessionId,
         ]);
+        await http.pool.query(
+          "UPDATE users SET password_change_token_expires_at=clock_timestamp()+INTERVAL '3 seconds' WHERE user_id='forced-user'"
+        );
+      }
+      const before = await state();
       changing = change();
       await expect
         .poll(
@@ -244,17 +245,26 @@ it.each(['account', 'session'] as const)(
             ).rows[0].count
         )
         .toBe(1);
-      await expect
-        .poll(
-          async () =>
-            (
-              await http.pool.query(
-                "SELECT password_change_token_expires_at<=clock_timestamp() AS expired FROM users WHERE user_id='forced-user'"
-              )
-            ).rows[0].expired,
-          { timeout: 6000 }
-        )
-        .toBe(true);
+      if (resource === 'account') {
+        // Expire the token while the request is blocked on this row. The
+        // update is visible to the waiting transaction only after release.
+        const expired = await lock.query(
+          "UPDATE users SET password_change_token_expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='forced-user' RETURNING password_change_token_expires_at,updated_at"
+        );
+        Object.assign(before.users[0], expired.rows[0]);
+      } else {
+        await expect
+          .poll(
+            async () =>
+              (
+                await http.pool.query(
+                  "SELECT password_change_token_expires_at<=clock_timestamp() AS expired FROM users WHERE user_id='forced-user'"
+                )
+              ).rows[0].expired,
+            { timeout: 6000 }
+          )
+          .toBe(true);
+      }
       await lock.query('COMMIT');
       const response = await changing;
       expect(response.status, await response.clone().text()).toBe(400);

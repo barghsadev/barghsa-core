@@ -13657,7 +13657,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13694,7 +13695,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -13801,6 +13802,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ]
         }
@@ -27055,7 +27064,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-shared-package-and-password-policy",
@@ -27079,7 +27089,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -27556,6 +27566,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ]
         }
@@ -51237,7 +51255,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -51265,7 +51284,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -51928,6 +51947,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -86447,7 +86474,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-coverage-browser-selection",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-saving-quote-fixture-isolation"
+          "release-0.6-saving-quote-fixture-isolation",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -86463,7 +86491,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -87731,6 +87759,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "All 11 native cases passed after isolating the quote rate-limit fixture. Monetary, cross-service abuse, no-side-effect and eligibility assertions still run. Runtime unchanged."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -119510,7 +119546,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-saving-quote-fixture-isolation"
+          "release-0.6-saving-quote-fixture-isolation",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -120086,7 +120123,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -122772,6 +122809,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "All 11 native cases passed after isolating the quote rate-limit fixture. Monetary, cross-service abuse, no-side-effect and eligibility assertions still run. Runtime unchanged."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -958935,7 +958980,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -958999,7 +959045,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -960159,6 +960205,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -960393,7 +960447,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -960457,7 +960512,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -961617,6 +961672,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -961851,7 +961914,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -961915,7 +961979,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -963075,6 +963139,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -963309,7 +963381,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -963373,7 +963446,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -964533,6 +964606,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -964767,7 +964848,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -964831,7 +964913,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -965991,6 +966073,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -983848,7 +983938,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -983912,7 +984003,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -985072,6 +985163,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -985306,7 +985405,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -985370,7 +985470,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -986530,6 +986630,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -986764,7 +986872,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -986828,7 +986937,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -987988,6 +988097,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -988222,7 +988339,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -988286,7 +988404,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -989446,6 +989564,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -989680,7 +989806,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -989744,7 +989871,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -990904,6 +991031,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -991138,7 +991273,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -991202,7 +991338,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -992362,6 +992498,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -992596,7 +992740,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -992660,7 +992805,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -993820,6 +993965,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -994054,7 +994207,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -994118,7 +994272,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -995278,6 +995432,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -995512,7 +995674,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -995576,7 +995739,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -996736,6 +996899,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -996970,7 +997141,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -997034,7 +997206,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -998194,6 +998366,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -998428,7 +998608,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -998492,7 +998673,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -999652,6 +999833,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -999886,7 +1000075,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -999950,7 +1000140,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/index.ts",
@@ -1001110,6 +1001300,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -1122542,7 +1122740,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -1128024,6 +1128222,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "All 11 native cases passed after isolating the quote rate-limit fixture. Monetary, cross-service abuse, no-side-effect and eligibility assertions still run. Runtime unchanged."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -1128473,7 +1128679,8 @@
           "release-0.6-ai-admin-command-validation",
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-saving-quote-fixture-isolation"
+          "release-0.6-saving-quote-fixture-isolation",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1128798,7 +1129005,7 @@
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
-              "sha256": "f1e9a5db162a6cbd4a20bcbcb729828fedb94d11a90bee8700e58d3765faee9e"
+              "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -1134175,6 +1134382,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "All 11 native cases passed after isolating the quote rate-limit fixture. Monetary, cross-service abuse, no-side-effect and eligibility assertions still run. Runtime unchanged."
+            },
+            {
+              "batch": "release-0.6-forced-password-expiry-fixture",
+              "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+              "paths": [
+                "apps/api/src/auth/force-password-http.integration.test.ts"
+              ],
+              "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1134640,7 +1134855,8 @@
           "release-0.6-kb-read-authority",
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-saving-quote-fixture-isolation"
+          "release-0.6-saving-quote-fixture-isolation",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1140027,7 +1140243,8 @@
         "All 51 focused invoice cases passed. Create-adjustment, cancellation/replacement and bank-receipt upload pass the unchanged critical source thresholds. The instrumented selection did not reach the full package statement floor. Complete the exact hosted coverage and staged financial rehearsal.",
         "Adjustment approval passed 46 native checks and the critical file gate at 138/141 lines and 115/125 branches. Verify full exact hosted coverage and staged financial approval before closing the release.",
         "Eight native contact HTTP tests passed. They verify a wrong destination preserves the OTP counter, a wrong code durably consumes one attempt, and duplicate contact issuance writes no challenge or outbox record. Full exact API coverage remains open.",
-        "Hosted affected preflight 43607767584 failed one of 460 API cases when the saving eligibility fixture inherited an intentionally depleted gift-code window. The fixture now resets its exact counters at exit. All 11 saving integration cases passed on compiled HTTP and migrated PostgreSQL. Verify the successor protected-main preflight and full release coverage."
+        "Hosted affected preflight 43607767584 failed one of 460 API cases when the saving eligibility fixture inherited an intentionally depleted gift-code window. The fixture now resets its exact counters at exit. All 11 saving integration cases passed on compiled HTTP and migrated PostgreSQL. Verify the successor protected-main preflight and full release coverage.",
+        "A broader auth run completed 92 of 93 cases, with the forced-password account-lock fixture returning 500 at database lock timeout. Both corrected contention cases passed on migrated PostgreSQL, with exact failed-request rollback checks. Full exact API coverage remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1140413,7 +1140630,8 @@
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-saving-quote-fixture-isolation"
+          "release-0.6-saving-quote-fixture-isolation",
+          "release-0.6-forced-password-expiry-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1331587,6 +1331805,71 @@
         {
           "file": "release-0.6-invoice-review-boundaries/hosted-tests-failure.log",
           "sha256": "a76d918bf432c7134325b1469dd971d8c8ddf22bdda30249c6816ab534d32ed3"
+        }
+      ]
+    },
+    "release-0.6-forced-password-expiry-fixture": {
+      "batch": "release-0.6-forced-password-expiry-fixture",
+      "base_commit": "70e0c3f7dbde440b9f67a91475a4dd81000eae89",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-06.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-05.02.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/force-password-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "469352cfee84668cc73a4246ccad7d6b6fdb249569657ae82c8a64544e1bdc46"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "799ac28b57f9336ea96d6b1872e267fbf930734f377c4b2b4e6ced3ddcbe3411"
+        }
+      ],
+      "checks": [
+        "Two selected compiled PostgreSQL cases passed. Each observes the blocked request, expires its credential while blocked, receives normal 400 and checks the complete prior state apart from the fixture mutation. The other 21 cases are outside the targeted rerun. API types, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The broader run first lost disk capacity and then reported one lock-timeout failure after cleanup, with 92 other passes. The later fixture sets the invalid account-lock deadline in the lock holder transaction and retains its returned trigger timestamp. Full exact release coverage still needs a current passing run."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-forced-password-expiry-fixture",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests.log",
+          "sha256": "5bba173abc07a7837e6e9a4354beed7766e2b12c9854a7fc74ee4ad51727ec81"
+        },
+        {
+          "file": "release-0.6-auth-session-coverage/coverage.log",
+          "sha256": "803a1931416da683bbf2bb519401607678d38f3d7768e1cbc61e10807f2e40b6"
         }
       ]
     }
