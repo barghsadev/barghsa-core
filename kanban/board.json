@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:42:33+00:00",
+  "updated": "2026-11-14T18:56:23+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -121534,7 +121534,8 @@
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -121882,7 +121883,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -121894,7 +121895,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
@@ -124832,6 +124833,15 @@
                 "apps/api/src/notifications/unified-inbox.integration.test.ts"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -189524,7 +189534,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -189636,7 +189647,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -190816,6 +190827,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -191110,7 +191129,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -191222,7 +191242,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -192403,6 +192423,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -193330,7 +193358,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -193442,7 +193471,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -194622,6 +194651,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -194915,7 +194952,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -195027,7 +195065,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -196208,6 +196246,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -196501,7 +196547,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -196613,7 +196660,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -197793,6 +197840,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -198086,7 +198141,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -198198,7 +198254,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -199378,6 +199434,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -199681,7 +199745,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -199801,7 +199866,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -200990,6 +201055,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -201283,7 +201356,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -201395,7 +201469,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -202575,6 +202649,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -559376,7 +559458,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -559388,7 +559471,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -559400,7 +559483,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -560218,6 +560301,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -560366,7 +560458,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -560378,7 +560471,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -560390,7 +560483,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -561208,6 +561301,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -561356,7 +561458,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -561368,7 +561471,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -561380,7 +561483,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -562198,6 +562301,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -562348,7 +562460,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -562360,7 +562473,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -562372,7 +562485,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -563190,6 +563303,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -565111,7 +565233,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -565123,7 +565246,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -565135,7 +565258,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -565953,6 +566076,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -566101,7 +566233,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -566113,7 +566246,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -566125,7 +566258,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -566943,6 +567076,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -567091,7 +567233,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -567103,7 +567246,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -567115,7 +567258,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -567933,6 +568076,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -568082,7 +568234,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -568094,7 +568247,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -568106,7 +568259,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -568924,6 +569077,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -569073,7 +569235,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -569085,7 +569248,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -569097,7 +569260,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -569915,6 +570078,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -570065,7 +570237,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -570077,7 +570250,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -570089,7 +570262,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -570907,6 +571080,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -571061,7 +571243,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -571073,7 +571256,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -571085,7 +571268,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -571903,6 +572086,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -572051,7 +572243,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -572063,7 +572256,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -572075,7 +572268,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -572893,6 +573086,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -573042,7 +573244,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -573054,7 +573257,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -573066,7 +573269,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -573885,6 +574088,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -574051,7 +574263,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -574083,7 +574296,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -574091,7 +574304,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -574938,6 +575151,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -575093,7 +575315,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -575125,7 +575348,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -575133,7 +575356,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -575980,6 +576203,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -576135,7 +576367,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -576167,7 +576400,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -576175,7 +576408,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -577022,6 +577255,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -577178,7 +577420,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -577210,7 +577453,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -577218,7 +577461,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -578065,6 +578308,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -578224,7 +578476,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -578256,7 +578509,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -578264,7 +578517,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -579111,6 +579364,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -579266,7 +579528,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -579298,7 +579561,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -579306,7 +579569,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -580153,6 +580416,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -580309,7 +580581,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -580341,7 +580614,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -580349,7 +580622,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -581196,6 +581469,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -581353,7 +581635,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -581385,7 +581668,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -581393,7 +581676,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -582240,6 +582523,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -582395,7 +582687,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -582427,7 +582720,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -582435,7 +582728,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -583282,6 +583575,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -583437,7 +583739,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -583469,7 +583772,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -583477,7 +583780,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -584324,6 +584627,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -584496,7 +584808,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -584732,7 +585045,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -584740,7 +585053,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -584776,7 +585089,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -584784,7 +585097,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -586250,6 +586563,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -586460,7 +586784,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -586696,7 +587021,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -586704,7 +587029,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -586740,7 +587065,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -586748,7 +587073,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -588214,6 +588539,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -588425,7 +588761,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -588661,7 +588998,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -588669,7 +589006,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -588705,7 +589042,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -588713,7 +589050,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -590179,6 +590516,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -590389,7 +590737,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -590625,7 +590974,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -590633,7 +590982,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -590669,7 +591018,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -590677,7 +591026,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -592143,6 +592492,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -592353,7 +592713,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -592589,7 +592950,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -592597,7 +592958,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -592633,7 +592994,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -592641,7 +593002,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -594107,6 +594468,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -594318,7 +594690,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -594554,7 +594927,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -594562,7 +594935,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -594598,7 +594971,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -594606,7 +594979,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -596072,6 +596445,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -596284,7 +596668,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -596520,7 +596905,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -596528,7 +596913,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -596564,7 +596949,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -596572,7 +596957,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -598038,6 +598423,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -598251,7 +598647,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -598471,7 +598868,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -598479,7 +598876,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -598515,7 +598912,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -598523,7 +598920,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -600047,6 +600444,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -600226,7 +600634,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -600462,7 +600871,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -600470,7 +600879,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -600506,7 +600915,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -600514,7 +600923,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -601980,6 +602389,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -602189,7 +602609,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -602425,7 +602846,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -602433,7 +602854,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -602469,7 +602890,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -602477,7 +602898,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -603943,6 +604364,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -604153,7 +604585,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -604373,7 +604806,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -604381,7 +604814,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -604417,7 +604850,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -604425,7 +604858,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -605949,6 +606382,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -606126,7 +606570,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -606346,7 +606791,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -606354,7 +606799,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -606390,7 +606835,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -606398,7 +606843,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -607922,6 +608367,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -608099,7 +608555,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-contract-operation-coverage",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -608319,7 +608776,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -608327,7 +608784,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -608363,7 +608820,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -608371,7 +608828,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -609895,6 +610352,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.controller.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -613110,7 +613578,8 @@
           "release-0.6-contract-template-coverage",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-expiry",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -613506,7 +613975,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-progress.integration.test.ts",
@@ -615440,6 +615909,14 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -701632,7 +702109,8 @@
         "Reviewed the staff directory and permission-audit GETs. Both now recheck current session, staff context and staff:view authority before responding. Native cases proved retained access and refusal after in-flight revocation. The remaining route inventory and exact candidate checks stay open.",
         "The seven staff knowledge-base and group reads now recheck the current session, staff context and admin:ai:kb grant after database and embedding work. Native PostgreSQL tests verified authorized results, refusal after the grant was revoked while each read was waiting, and successful reads after restoring permission. The wider route inventory and exact staged release evidence remain open.",
         "Consultation customer history and detail now check the current session after loading records and permitted related data. Both native HTTP cases observed expiry during a blocked database read and now return 401 without the consultation ID. Complete the remaining route review and exact staging checks.",
-        "The consultation catalogue and staff assignment team list now check the current session after the read. Both proved expiry during the actual PostgreSQL wait and now return 401 without the product ID or team name. Authorized responses and both staff aliases passed. The wider inventory and live proof remain open."
+        "The consultation catalogue and staff assignment team list now check the current session after the read. Both proved expiry during the actual PostgreSQL wait and now return 401 without the product ID or team name. Authorized responses and both staff aliases passed. The wider inventory and live proof remain open.",
+        "Solar document and postal guidance reads now keep the caller session current through the database read. Both administrative routes also require the existing catalogue edit grant in staff mode. The six native HTTP regressions cover authorized output, denial to read-only staff, context isolation and expiry during actual PostgreSQL waits. The full resource inventory and exact staging evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -701821,7 +702299,12 @@
           "packages/db/src/refund-processing.ts",
           "packages/db/src/saving-system-audit.migrated.test.ts",
           "packages/shared/src/storage/index.ts",
-          "packages/shared/src/storage/profile-export-archive.ts"
+          "packages/shared/src/storage/profile-export-archive.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-guidance.integration.test.ts",
+          "apps/api/src/solar/solar-postal.controller.ts",
+          "apps/api/src/solar/solar-postal.service.ts",
+          "packages/eslint-config/reviewed-postgres-sql.json"
         ],
         "batches": [
           "release-0.6-consultation-invoice-authority",
@@ -701864,7 +702347,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-kb-read-authority",
           "release-0.6-consultation-read-expiry",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": null
       }
@@ -702258,7 +702742,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-kb-command-validation",
           "release-0.6-kb-read-authority",
-          "release-0.6-contract-template-coverage"
+          "release-0.6-contract-template-coverage",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "kind": "source-bound-profile-and-staff-capability-scope",
@@ -702530,7 +703015,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -702538,7 +703023,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-progress.controller.ts",
@@ -703181,6 +703666,15 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-postal.controller.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ]
         }
@@ -707341,7 +707835,8 @@
           "release-0.6-consultation-read-authority",
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -707382,7 +707877,7 @@
             },
             {
               "path": "packages/eslint-config/reviewed-postgres-sql.json",
-              "sha256": "13eeba7ac10f4b2a3d8f4ddadbce3a651e1da68d26c959030e9b4062ef362329"
+              "sha256": "9813248d5d255e4344982be29447b9ee27c642bc286fc45d7c8d8a956a98b81a"
             }
           ],
           "source_renewals": [
@@ -707521,6 +708016,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "packages/eslint-config/reviewed-postgres-sql.json"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ]
         }
@@ -743360,7 +743863,8 @@
         "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
         "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
         "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
-        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
+        "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -743380,7 +743884,13 @@
           "scripts/ci_preflight_receipt.py",
           "scripts/test_ci_preflight_receipt.py",
           "deploy/production/check-promotion.py",
-          "deploy/production/test_check_promotion.py"
+          "deploy/production/test_check_promotion.py",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.service.ts",
+          "apps/api/src/solar/solar-guidance.integration.test.ts",
+          "apps/api/src/solar/solar-postal.controller.ts",
+          "apps/api/src/solar/solar-postal.service.ts",
+          "packages/eslint-config/reviewed-postgres-sql.json"
         ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
@@ -743409,7 +743919,8 @@
           "release-0.6-hosted-native-timeouts",
           "release-0.6-browser-coverage-mapping",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1122227,7 +1122738,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -1127070,6 +1127581,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -1127419,7 +1127938,8 @@
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ]
       }
     },
@@ -1129255,7 +1129775,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -1129267,7 +1129787,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -1129335,7 +1129855,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -1129535,7 +1130055,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.controller.ts",
-              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+              "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -1133087,6 +1133607,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts",
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-postal.controller.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -1133565,7 +1134096,8 @@
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
           "release-0.6-profile-export-validation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-solar-guidance-authority"
         ]
       }
     },
@@ -1134477,7 +1135009,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -1134489,7 +1135021,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -1139488,6 +1140020,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "presentation_renewals": [
@@ -1139951,7 +1140492,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-receiver-version-backup",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-solar-guidance-authority"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1140868,7 +1141410,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -1140880,7 +1141422,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5"
+              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -1145787,6 +1146329,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.service.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1146267,7 +1146818,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-receiver-version-backup",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-solar-guidance-authority"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1150017,11 +1150569,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.controller.ts",
-              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+              "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "c53457821e43f57f943bdb06abf13939589015b86643419f8a5fc2f61cb608fd"
+              "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
@@ -1151202,6 +1151754,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-solar-guidance-authority",
+              "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+              "paths": [
+                "apps/api/src/solar/solar-documents.controller.ts",
+                "apps/api/src/solar/solar-documents.service.ts"
+              ],
+              "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
             }
           ]
         },
@@ -1151378,7 +1151939,8 @@
           "release-0.6-hosted-native-timeouts",
           "release-0.6-browser-coverage-mapping",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-solar-guidance-authority"
         ]
       }
     },
@@ -1151722,7 +1152284,8 @@
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
         "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open.",
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
-        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
+        "Solar administrative guidance now uses the live catalogue authority, and all four reads stop if the session expires during a database wait. All six compiled HTTP regressions, 93 related API cases and 86 web caller cases passed. The older full Chromium rehearsal passed all 2,976 cases. Its combined job failed on the missing web report from native timeouts. Exact deployed candidate evidence remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1152132,7 +1152695,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-journey-source-pairing",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-solar-guidance-authority"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1152377,7 +1152941,13 @@
           "deploy/monitoring/journey-slo-alerts.test.yml",
           "deploy/monitoring/journey-slo-alerts.yml",
           "packages/db/scripts/backup/test_verify_restore.py",
-          "packages/db/scripts/backup/verify_restore.py"
+          "packages/db/scripts/backup/verify_restore.py",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.service.ts",
+          "apps/api/src/solar/solar-guidance.integration.test.ts",
+          "apps/api/src/solar/solar-postal.controller.ts",
+          "apps/api/src/solar/solar-postal.service.ts",
+          "packages/eslint-config/reviewed-postgres-sql.json"
         ]
       }
     },
@@ -1346985,6 +1347555,176 @@
         {
           "file": "static.log",
           "sha256": "75a3a6db1b5f58f364bf932895fd6a083cbb9ffe1188f3e63d6b8f962f2f21bd"
+        }
+      ]
+    },
+    "release-0.6-solar-guidance-authority": {
+      "batch": "release-0.6-solar-guidance-authority",
+      "base_commit": "876bd24352eeb61bf411e8ebb1ad231d7601fadb",
+      "task_keys": [
+        "03-core-business.md#T-03.11.01.01",
+        "03-core-business.md#T-03.11.01.02",
+        "03-core-business.md#T-03.11.01.03",
+        "03-core-business.md#T-03.11.02.01",
+        "03-core-business.md#T-03.11.02.04",
+        "03-core-business.md#T-03.11.02.05",
+        "03-core-business.md#T-03.11.02.06",
+        "03-core-business.md#T-03.11.03.01",
+        "03-core-business.md#T-03.11.03.02",
+        "03-core-business.md#T-03.11.03.03",
+        "03-core-business.md#T-03.11.04.01",
+        "03-core-business.md#T-03.11.04.02",
+        "03-core-business.md#T-03.11.04.03",
+        "03-core-business.md#T-03.12.01.01",
+        "03-core-business.md#T-03.12.01.02",
+        "03-core-business.md#T-03.12.01.03",
+        "03-core-business.md#T-03.12.01.04",
+        "03-core-business.md#T-03.12.02.01",
+        "03-core-business.md#T-03.12.02.02",
+        "03-core-business.md#T-03.12.02.03",
+        "03-core-business.md#T-03.12.02.04",
+        "03-core-business.md#T-03.12.02.05",
+        "03-core-business.md#T-03.12.02.06",
+        "03-core-business.md#T-03.12.03.01",
+        "03-core-business.md#T-03.12.03.02",
+        "03-core-business.md#T-03.12.03.03",
+        "03-core-business.md#T-03.12.03.04",
+        "03-core-business.md#T-03.12.03.05",
+        "03-core-business.md#T-03.12.03.06",
+        "03-core-business.md#T-03.13.01.01",
+        "03-core-business.md#T-03.13.01.02",
+        "03-core-business.md#T-03.13.01.03",
+        "03-core-business.md#T-03.13.01.04",
+        "03-core-business.md#T-03.13.02.01",
+        "03-core-business.md#T-03.13.02.02",
+        "03-core-business.md#T-03.13.02.03",
+        "03-core-business.md#T-03.90.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/solar/solar-documents.controller.ts",
+        "apps/api/src/solar/solar-documents.service.ts",
+        "apps/api/src/solar/solar-guidance.integration.test.ts",
+        "apps/api/src/solar/solar-postal.controller.ts",
+        "apps/api/src/solar/solar-postal.service.ts",
+        "packages/eslint-config/reviewed-postgres-sql.json"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-read-authority.ts",
+          "sha256": "678b8facd9a23040ef339f81784f2e51f64f7db487a8577106d51ee83c57d07b"
+        },
+        {
+          "path": "apps/api/src/session/account-session-read.ts",
+          "sha256": "c090ae58fd0c27345eda01376f6482fc0bfc73bb9880cd90a6c6714630425c1e"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/solar/solar-documents.controller.ts",
+          "sha256": "3b1ad90dc5bde1cdeec7c470ad2e8d1bac563adfa73ae06a4f2996a1e1449358"
+        },
+        {
+          "path": "apps/api/src/solar/solar-documents.service.ts",
+          "sha256": "30d66aaff45a650a6dc77fa5d97baa0dc3e8dd2e5716cc50749682f01f363f10"
+        },
+        {
+          "path": "apps/api/src/solar/solar-guidance.integration.test.ts",
+          "sha256": "f0e538423f005de23026a646ec6b40becc47d1a7a609b1fecbca0ede8260dff1"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.controller.ts",
+          "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.service.ts",
+          "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+          "sha256": "cb2fd0117f8e190f0bc1fbbd2a3ccb7d93a6f80ccc692cf110f75bf5479fa102"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+          "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+        },
+        {
+          "path": "packages/eslint-config/reviewed-postgres-sql.json",
+          "sha256": "9813248d5d255e4344982be29447b9ee27c642bc286fc45d7c8d8a956a98b81a"
+        }
+      ],
+      "checks": [
+        "The original API returned HTTP 200 for both admin guidance routes to review-only staff and both customer routes after observed session expiry. The fixed API passed six native cases, including staff and customer expiry on both endpoints, and 93 additional related API cases. All 86 affected web caller cases passed.",
+        "API type check, ESLint, Prettier, Git diff and regenerated OpenAPI comparison passed. Both original pairs of SQL lock-clause interpolations were checked against their prior bytes."
+      ],
+      "limitations": [
+        "Disposable PostgreSQL kept the verification scoped to these reads and affected callers. The exact staging candidate, full authorization audit and the complete release checks remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-solar-guidance-authority",
+      "execution_receipts": [
+        {
+          "file": "baseline-build.log",
+          "sha256": "970c7861d5e40b87cc2cfa694ee5beecc698046dd9df073d5a911a7575e0eec7"
+        },
+        {
+          "file": "before.log",
+          "sha256": "279a98a9a58184e2197bcb8ae57d9312acb8670fba7ee81c0c18a992c8e2be64"
+        },
+        {
+          "file": "fixed-build.log",
+          "sha256": "9f71901c7715674912cc02bfcf92ce7e4f0aa6cca088ccc21079d8758a64192f"
+        },
+        {
+          "file": "final-native.log",
+          "sha256": "6ce55e035aff2b14f5d7be8c6f7cecea96ed87b099b0c342943ed1b9351837b3"
+        },
+        {
+          "file": "related-native.log",
+          "sha256": "180fa97f5d7feb9b50ddafc1f3a38aaa9db87751a3218dfa1a07920fa1cc6e69"
+        },
+        {
+          "file": "web-callers.log",
+          "sha256": "7363d6eab14106a26fb4b2189d66ef5fea817563566ccbb739041551f492b836"
+        },
+        {
+          "file": "static.log",
+          "sha256": "214221fdfa487505be3c6e1be7d6d8c42b70df1389a347d601bcab3f6eff594e"
+        },
+        {
+          "file": "types.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "sql-review.log",
+          "sha256": "a7a06940509e5631a870a5470ecc2abf5e10988a4bd0256d8e156e7a9c1560ea"
+        },
+        {
+          "file": "openapi.log",
+          "sha256": "4cdf5cab3a9eed7b0c60c84dde394b2b0f236df2acec79c66c11a081e3caf213"
         }
       ]
     }

@@ -119,8 +119,8 @@ export class SolarPostalController {
 
   @Get('postal-guidance')
   @ApiOperation({ summary: 'Read postal destination and original-document guidance' })
-  guidance() {
-    return this.service.guidance();
+  guidance(@Req() req: AuthenticatedRequest) {
+    return this.service.guidance(req.session);
   }
 
   @Get('requests/:id/postal')
@@ -217,8 +217,8 @@ export class StaffSolarPostalController {
 
   @Get('postal-guidance')
   @ApiOperation({ summary: 'Read editable postal guidance' })
-  guidance() {
-    return this.service.guidance();
+  guidance(@Req() req: AuthenticatedRequest) {
+    return this.service.staffGuidance(req.session);
   }
 
   @Put('postal-guidance')

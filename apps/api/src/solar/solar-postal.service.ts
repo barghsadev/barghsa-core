@@ -10,6 +10,8 @@ import { v7 as uuidv7 } from 'uuid';
 import { OrdersService } from '../orders/orders.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { notifySolarStatus } from './solar-status-notifications.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -60,12 +62,21 @@ export class SolarPostalService {
   constructor(private readonly orders: OrdersService) {}
   private readonly reviews = new ReviewSnapshotService();
 
-  async guidance(): Promise<PostalGuidance> {
+  guidance(actor: Actor): Promise<PostalGuidance> {
+    return readWithCurrentAccount(actor, (client) => this.readGuidance(client));
+  }
+
+  staffGuidance(actor: Actor): Promise<PostalGuidance> {
+    return withStaffReadAuthority(actor, 'admin:catalogue:edit', (client) =>
+      this.readGuidance(client)
+    );
+  }
+
+  private async readGuidance(client: PoolClient): Promise<PostalGuidance> {
     const row = (
-      await getDbPool().query<{ value: PostalGuidance }>(
-        'SELECT value FROM app_config WHERE key=$1',
-        [GUIDANCE_KEY]
-      )
+      await client.query<{ value: PostalGuidance }>('SELECT value FROM app_config WHERE key=$1', [
+        GUIDANCE_KEY,
+      ])
     ).rows[0];
     return row?.value ?? defaultGuidance;
   }

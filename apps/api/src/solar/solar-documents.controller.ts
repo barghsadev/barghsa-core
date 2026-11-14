@@ -113,8 +113,8 @@ export class SolarDocumentsController {
 
   @Get('document-guidance')
   @ApiOperation({ summary: 'Read solar document guidance and suggested file list' })
-  guidance() {
-    return this.service.guidance();
+  guidance(@Req() req: AuthenticatedRequest) {
+    return this.service.guidance(req.session);
   }
 
   @Get('requests/:id/documents')
@@ -147,8 +147,8 @@ export class StaffSolarDocumentsController {
 
   @Get('document-guidance')
   @ApiOperation({ summary: 'Read editable solar document guidance' })
-  guidance() {
-    return this.service.guidance();
+  guidance(@Req() req: AuthenticatedRequest) {
+    return this.service.staffGuidance(req.session);
   }
 
   @Put('document-guidance')

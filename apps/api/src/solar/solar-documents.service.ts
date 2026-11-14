@@ -11,6 +11,8 @@ import { OrdersService } from '../orders/orders.service.js';
 import { idempotentMutation } from '../database/idempotency.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { notifySolarStatus } from './solar-status-notifications.js';
 import { DocumentService } from '../documents/document.service.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
@@ -58,12 +60,21 @@ export class SolarDocumentsService {
   ) {}
   private readonly reviews = new ReviewSnapshotService();
 
-  async guidance(): Promise<SolarGuidance> {
+  guidance(actor: Actor): Promise<SolarGuidance> {
+    return readWithCurrentAccount(actor, (client) => this.readGuidance(client));
+  }
+
+  staffGuidance(actor: Actor): Promise<SolarGuidance> {
+    return withStaffReadAuthority(actor, 'admin:catalogue:edit', (client) =>
+      this.readGuidance(client)
+    );
+  }
+
+  private async readGuidance(client: PoolClient): Promise<SolarGuidance> {
     const row = (
-      await getDbPool().query<{ value: SolarGuidance }>(
-        'SELECT value FROM app_config WHERE key=$1',
-        [GUIDANCE_KEY]
-      )
+      await client.query<{ value: SolarGuidance }>('SELECT value FROM app_config WHERE key=$1', [
+        GUIDANCE_KEY,
+      ])
     ).rows[0];
     return row?.value ?? defaultGuidance;
   }
