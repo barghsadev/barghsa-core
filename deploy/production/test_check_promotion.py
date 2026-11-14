@@ -411,6 +411,14 @@ class StructuredReceiptTest(unittest.TestCase):
                         {'label': f'release-{"d" * 12}-20261112T065800Z-123'}):
             with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'off-server manifest'):
                 check({**bundle, 'checkpoint_manifest': {**manifest, **changed}})
+        for changed in ({'wal_ranges': []}, {'wal_ranges': [{'Timeline': 2}]},
+                        {'tablespaces': [123]}, {'tablespaces': {'123': '/backup/other'}}):
+            incomplete = {**manifest, **changed}
+            matching_checkpoint = {**checkpoint, 'manifest_sha256': hashlib.sha256(
+                json.dumps(incomplete, sort_keys=True).encode()).hexdigest()}
+            matching_job = {**job, 'runtime_images': {'commit': SHA, 'migration_backup': matching_checkpoint}}
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'off-server manifest'):
+                check({**bundle, 'checkpoint_manifest': incomplete}, matching_job)
         with self.assertRaisesRegex(ValueError, 'checkpoint timing'):
             check(bundle, {**job, 'completed_at': '2026-11-12T06:00:00Z'})
         with self.assertRaisesRegex(ValueError, 'identify the candidate and strategy'):

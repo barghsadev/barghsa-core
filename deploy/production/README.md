@@ -113,7 +113,8 @@ Paths in these indexes are relative to the same protected approval package.
   check matches it against the candidate's completed staging job, including its
   database system, backup label, ciphertext object, byte length and checksum.
   A canonical SHA-256 also binds the complete manifest, including WAL ranges,
-  tablespaces and backup timestamps, to the staging checkpoint.
+  tablespaces and backup timestamps, to the staging checkpoint. The approval
+  check applies the same manifest format validation as the staging queue.
   Point `migration_rehearsal` to a JSON object with `candidate_sha`, `scope` set
   to `migration_and_rollback`, `strategy` set to `rollback` or `roll_forward`,
   and `evidence` and `evidence_sha256` for the separate rehearsal output.

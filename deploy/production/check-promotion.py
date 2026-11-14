@@ -458,6 +458,7 @@ def verify_migration_receipts(index_path, path, fingerprint, job, sha):
     checkpoint = runtime.get('migration_backup') if isinstance(runtime, dict) else None
     manifest = data['checkpoint_manifest']
     manifest_digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
+    queue = runpy.run_path(str(ROOT / 'deploy/staging/release-queue.py'))
     if (not isinstance(checkpoint, dict) or checkpoint.get('status') != 'verified'
             or checkpoint.get('manifest_readback_verified') is not True
             or runtime.get('commit') != sha or type(manifest.get('version')) is not int
@@ -468,6 +469,7 @@ def verify_migration_receipts(index_path, path, fingerprint, job, sha):
             or not matches(r'[0-9]+', manifest.get('system_id'))
             or not matches(r'blobs/[a-f0-9]{32}\.tar\.gpg', manifest.get('blob'))
             or not matches(r'[a-f0-9]{64}', manifest.get('sha256'))
+            or not queue['verified_manifest_details'](manifest)
             or any(checkpoint.get(field) != manifest[field]
                    for field in ('label', 'system_id', 'blob', 'sha256', 'size'))
             or checkpoint.get('manifest_sha256') != manifest_digest):

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T11:46:59+00:00",
+  "updated": "2026-11-14T11:54:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8975,7 +8975,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9342,6 +9342,14 @@
                 "apps/web/playwright.config.ts"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -13603,7 +13611,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13726,6 +13734,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -13829,7 +13845,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14246,6 +14262,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -22025,7 +22049,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22293,6 +22317,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -22377,7 +22409,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22645,6 +22677,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -24988,7 +25028,8 @@
         "The approval gate now compares original hosted load artifact bytes for the exact candidate, verifies the seven strict budgets and durable outcomes, and binds separate production-equivalent evidence. Obtain both receipts for the accepted launch candidate.",
         "The promotion gate now rejects disposable or mismatched staging migration checkpoints and binds separate recovery rehearsal evidence. Use the actual accepted candidate and production-equivalent rehearsal.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
+        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -25042,7 +25083,8 @@
           "release-0.6-promotion-load-receipt",
           "release-0.6-promotion-migration-receipt",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-complete-staging-checkpoint-receipt"
+          "release-0.6-complete-staging-checkpoint-receipt",
+          "release-0.6-promotion-checkpoint-parity"
         ],
         "current_acceptance": null
       }
@@ -37184,7 +37226,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -37898,6 +37940,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -40449,7 +40499,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             }
           ],
           "checks": [
@@ -40729,6 +40779,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -704403,7 +704461,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -704563,6 +704621,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -729453,11 +729519,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "dd2a0cebaeecfa981bf262cb92d653ebfb4757257b0faa2006fd25ff91e46287"
+              "sha256": "e4d5088e2e9cece0fbf552eee19282c20e7780a950efde74308c442f94205775"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -729891,6 +729957,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -730432,15 +730507,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "dd2a0cebaeecfa981bf262cb92d653ebfb4757257b0faa2006fd25ff91e46287"
+              "sha256": "e4d5088e2e9cece0fbf552eee19282c20e7780a950efde74308c442f94205775"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -731000,6 +731075,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -731161,7 +731246,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -731554,6 +731639,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -732178,7 +732271,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -732542,6 +732635,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -732616,7 +732717,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -732980,6 +733081,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -740216,7 +740325,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -740539,6 +740648,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -752584,7 +752701,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -752924,6 +753041,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -753285,7 +753410,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "46ce7c761a93792f2c84de45bb5256283082383efbf7533f835a923f3569ad81"
+              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -753630,6 +753755,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -754969,7 +755102,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -755246,6 +755379,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board reuses each source file digest within one validation. Every task still compares its own expected hash. Subsequent validations reread the source files."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -755380,7 +755521,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -755657,6 +755798,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board reuses each source file digest within one validation. Every task still compares its own expected hash. Subsequent validations reread the source files."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -755729,7 +755878,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -756006,6 +756155,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board reuses each source file digest within one validation. Every task still compares its own expected hash. Subsequent validations reread the source files."
+            },
+            {
+              "batch": "release-0.6-promotion-checkpoint-parity",
+              "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
             }
           ]
         }
@@ -1130649,7 +1130806,8 @@
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
         "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
+        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131006,7 +1131164,8 @@
           "release-0.6-hosted-image-scan-8436b628a",
           "release-0.6-ai-admin-command-validation",
           "release-0.6-complete-staging-checkpoint-receipt",
-          "release-0.6-license-review-refresh-f7fc00b88"
+          "release-0.6-license-review-refresh-f7fc00b88",
+          "release-0.6-promotion-checkpoint-parity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1131300,7 +1131459,8 @@
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The read-only official release preflight refused live v0.5.1 because the runtime lacks non-disposable mode and encrypted WAL archiving. No deploy or notification was attempted. The approved backup destination, key recovery, backup and restore receipts, and cutover remain required.",
         "The deployment worker now independently validates the commit-bound encrypted migration checkpoint before accepting a protected release receipt or resuming its notice. The approved off-server destination and recovery-key custody, live cutover, and exact backup/restore and release receipts remain required.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
+        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131379,7 +1131539,8 @@
           "release-0.6-protected-staging-migration",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-complete-staging-checkpoint-receipt"
+          "release-0.6-complete-staging-checkpoint-receipt",
+          "release-0.6-promotion-checkpoint-parity"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1318704,6 +1318865,76 @@
         {
           "file": "v0.6-license-review-packet-f7fc00b88.zip",
           "sha256": "41602f3b21e7895351c48901a13c0df18b6ede90b10de93bb4a4ea290a2bd2a0"
+        }
+      ]
+    },
+    "release-0.6-promotion-checkpoint-parity": {
+      "batch": "release-0.6-promotion-checkpoint-parity",
+      "base_commit": "908c6280791a54deec1e2e05aee081a63668d182",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/production/README.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "e4d5088e2e9cece0fbf552eee19282c20e7780a950efde74308c442f94205775"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
+        }
+      ],
+      "checks": [
+        "Reproduced four accepted malformed manifest cases before the fix. The matching canonical digest and deployment metadata did not require native WAL ranges or valid tablespace IDs.",
+        "The shared staging validator rejects all four cases after the fix. All 17 production approval and 27 staging queue tests passed with the existing exact binding and recovery assertions.",
+        "Compiled the changed Python files and checked Markdown formatting and whitespace."
+      ],
+      "limitations": [
+        "The tests use disposable receipts. Actual approved staging backup, point-in-time restore and candidate rollout rehearsal remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-checkpoint-parity",
+      "execution_receipts": [
+        {
+          "file": "promotion-tests.log",
+          "sha256": "b24d0fdf0813726549c06d9015fefc5a5cc02db76e5ac3355af4981bbaa62777"
+        },
+        {
+          "file": "queue-tests.log",
+          "sha256": "1326d66d9df187f5fafe6f799b5d842e760ff2f8f22c0ccaf3b6a968c2797430"
         }
       ]
     }
