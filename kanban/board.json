@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T00:26:35+00:00",
+  "updated": "2026-11-14T00:37:08+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16860,7 +16860,8 @@
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
         "Live v0.5.1 readback at 23:50 UTC found no protected backup environment, key or WAL environment, and the backup staleness rule was absent. Verify the approved off-server storage, recoverable key and actual backup/restore before live cutover.",
         "The existing EU host had 99.3 GB available and no backup service in the checked Barghsa scope. Staging has 6.25 GB available on the active database volume filesystem. Owner approval for a private off-site staging destination on the EU host was requested. Protected storage and a recoverable key remain required.",
-        "The private mTLS backup scrape and independently declared staging/core target now have an isolated configuration proof. Enable them after the approved off-server backup and exporter are provisioned, and read back the actual job result."
+        "The private mTLS backup scrape and independently declared staging/core target now have an isolated configuration proof. Enable them after the approved off-server backup and exporter are provisioned, and read back the actual job result.",
+        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -16948,7 +16949,8 @@
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-live-operational-gate-readback",
           "release-0.6-existing-offsite-capacity",
-          "release-0.6-backup-target-monitoring"
+          "release-0.6-backup-target-monitoring",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -23355,7 +23357,8 @@
         "Hosted 43497840080 on 840325e7d verified the same 859 exact inventory rows, including the same 387 pending dispositions. Complete package-specific sign-off and run the strict gate on the final immutable images.",
         "Protected preflight 43510245617 at d19812d0a reproduced all 859 exact package and scope rows and the same 387 pending dispositions. Obtain named approval and run the final strict check.",
         "Initialized staging now applies the strict policy to the exact retained PostgreSQL and ClamAV images before transfer and binds the result to the deployed receipt. Native execution found the existing 244 retained-image dispositions in the 387-entry packet. Named approval and the final strict candidate gates remain open.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
+        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23419,7 +23422,8 @@
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-published-d19812d0a",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-license-inventory-465def304"
+          "release-0.6-exact-license-inventory-465def304",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -23810,7 +23814,8 @@
         "The worker requires current signatures on the exact retained ClamAV image before migration and records the daemon version in the release receipt. Complete the live accepted rollout.",
         "The protected quality job now runs the existing staging release, rollback and notification fixtures. The extracted workflow step passed locally. Verify the hosted step on the exact candidate and the live rollout.",
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
-        "The normal staging worker now validates the exact signed bytes and deletes the probe version. The isolated pinned image passed. Hosted run 43529357035 passed the corrected release-control step. The complete hosted check and actual accepted staging rollout remain open."
+        "The normal staging worker now validates the exact signed bytes and deletes the probe version. The isolated pinned image passed. Hosted run 43529357035 passed the corrected release-control step. The complete hosted check and actual accepted staging rollout remain open.",
+        "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23872,7 +23877,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-protected-rollout-tests",
           "release-0.6-hosted-compose-fixtures",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": null
       }
@@ -24083,7 +24089,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-hosted-compose-fixtures",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -681731,7 +681738,8 @@
         "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet.",
         "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open.",
         "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
+        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -681791,7 +681799,8 @@
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-license-inventory-465def304"
+          "release-0.6-exact-license-inventory-465def304",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -681945,7 +681954,8 @@
         "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open.",
         "Rebuilt PostgreSQL image dbb54d6c8c53 has exact scan and SBOM evidence with zero high or critical findings. Complete authorized cutover and the exact deployed and registry receipts.",
         "The worker pins the exact retained license report alongside the retained scans. The approval package verifier checks both against the deployed image IDs. Actual staging and registry receipts remain open.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
+        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -682003,7 +682013,8 @@
           "release-0.6-published-d19812d0a",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-license-inventory-465def304"
+          "release-0.6-exact-license-inventory-465def304",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -682047,7 +682058,8 @@
         "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed.",
         "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
         "The release now checks the private scanner response before stopping writers and requires one scanner receipt before announcement. Verify actual candidate scans, image identities and signed feed in the live release.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
+        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -682081,7 +682093,8 @@
           "release-0.6-postgres-restore-readback",
           "release-0.6-license-candidate-39619e439",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-exact-license-inventory-465def304"
+          "release-0.6-exact-license-inventory-465def304",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -716525,7 +716538,8 @@
         "Verify exact-candidate firing and recovery for backup failure, a stale verified backup and unavailable backup reports on the approved host, with native PostgreSQL and actual on-call receipts.",
         "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope. Verify the barghsa_role label on all monitored API targets and the rollout guard response.",
         "Verify live P1 firing and resolved PostgreSQL collection, connection, deadlock and replica-lag receipts from the deployed candidate, including the approved on-call route.",
-        "Backup monitoring now raises the existing P1 when the expected staging/core target disappears from discovery. All seven pinned rule suites passed. Verify the exact deployed exporter, Alertmanager and approved on-call firing and recovery."
+        "Backup monitoring now raises the existing P1 when the expected staging/core target disappears from discovery. All seven pinned rule suites passed. Verify the exact deployed exporter, Alertmanager and approved on-call firing and recovery.",
+        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -716557,7 +716571,8 @@
           "release-0.6-authentication-failure-alert",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-postgres-alert-wiring",
-          "release-0.6-backup-target-monitoring"
+          "release-0.6-backup-target-monitoring",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "current_acceptance": null
       }
@@ -1083178,7 +1083193,8 @@
         "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open.",
         "Run the new protected release-controls step on the exact v0.6.0 candidate. Local execution of the literal step passed all 79 staging and production fixture tests.",
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
-        "Preflight 43523386018 passed the required integrity check and all four affected test tasks on 465def304. The exact SHA reached main and its push reused the affected-test receipt. Full candidate checks remain open."
+        "Preflight 43523386018 passed the required integrity check and all four affected test tasks on 465def304. The exact SHA reached main and its push reused the affected-test receipt. Full candidate checks remain open.",
+        "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1083485,7 +1083501,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-hosted-compose-fixtures"
+          "release-0.6-hosted-compose-fixtures",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1083754,7 +1083771,8 @@
         "The exact staging S3 probe path passed isolated testing with the deployed SeaweedFS image on an empty test volume. Actual candidate staging, approved storage, backup and recovery receipts remain pending.",
         "Read-only v0.5.1 monitoring at 23:50 UTC showed seven loaded rules. None was the required watchdog, burn-rate, scanner staleness or backup staleness rule, and no synthetic or scanner signature sample was present. The storage credentials and key paths were absent. The release queue contained no v0.6.0 deployment.",
         "Verified the candidate off-site host and the live PostgreSQL mount read-only at 23:56 UTC. The EU HTTPS probe from staging returned no response before its timeout. The existing mirror host may be considered for isolated backups and monitoring, subject to host approval and verified private reachability, key recovery and receipts.",
-        "The staging backup-monitoring overlay now declares the expected target independently of discovery and validates in isolation. Live protected mTLS exporter, backup, measured restore and actual paging receipts remain open."
+        "The staging backup-monitoring overlay now declares the expected target independently of discovery and validates in isolation. Live protected mTLS exporter, backup, measured restore and actual paging receipts remain open.",
+        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1083821,7 +1083839,8 @@
           "release-0.6-probe-object-cleanup",
           "release-0.6-live-operational-gate-readback",
           "release-0.6-existing-offsite-capacity",
-          "release-0.6-backup-target-monitoring"
+          "release-0.6-backup-target-monitoring",
+          "release-0.6-verified-main-and-backup-scrape"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1261414,6 +1261433,93 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-verified-main-and-backup-scrape": {
+      "batch": "release-0.6-verified-main-and-backup-scrape",
+      "base_commit": "b7d998142717a69ec3e2a6083027ba3b137be63b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.15.01.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "f2afd321a8becb7328bdab11a2d0454dccbe6a66e220f3479bad9bbe80b22953"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-backup.yml",
+          "sha256": "f60336f5f8cdc44d5b1ae5e19d935c6ba5f4a497395bd8c8ad5c389e97947a59"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-backup-scrape.yml",
+          "sha256": "466b433129c6715ace8a2df5779f2ff71b95b482da00fa06cfe36f18837a0501"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-backup-expectation.yml",
+          "sha256": "d7ac6045709116d7b0cfe2401a5bbdf0d25b0b9fdb796c826ca8474988cf696a"
+        },
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.yml",
+          "sha256": "cbf8dcc771183b793f7a3aa7c8195fe9e45231f0ebc055b772053b23ba0c02a5"
+        }
+      ],
+      "checks": [
+        "Protected preflight 43529357035 passed Verify monorepo integrity, all three affected test tasks and the staging release, rollback and approval controls. The exact df4b7639c SHA reached main. Main run 43534386280 reused the matching affected-test receipt and skipped duplicate tests.",
+        "The image jobs for 43529357035 and successor 43534426032 verified all five image IDs, SBOMs and scan outputs. All 859 scoped package rows match the prior inventory with zero additions or removals. The same 387 package dispositions and strict final license checks remain open.",
+        "Pinned Linux amd64 Prometheus scraped the three exact backup metrics from a local TLS fixture that required its client certificate. Hostname verification rejected a mismatched destination, the endpoint refused an unauthenticated client, and unrelated samples were dropped. File discovery could not override the configured staging and core scope."
+      ],
+      "limitations": [
+        "Protected affected tests and report-only inventories do not certify the final milestone. The successor preflight's final result was pending when the image results were read back.",
+        "The backup scrape used an isolated HTTPS fixture and did not provision a live destination, perform a backup or restore, or send an operator alert."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-verified-main-and-backup-scrape",
+      "execution_receipts": [
+        {
+          "file": "preflight.json",
+          "sha256": "be4e5b26fee6c949959a585182c6756fce42c6bd6d381ab545df94a5cbd6b6e3"
+        },
+        {
+          "file": "main-reuse.json",
+          "sha256": "d8a19ca8f1f67735eb07be57b8d36f2b5c179bfe15433ef3f8597c9cf4ce097f"
+        },
+        {
+          "file": "main-ref.txt",
+          "sha256": "96ae0acacfd28ea77886b0d8bd39850664cb9a05bd3705485caaf80ffd9eaa2f"
+        },
+        {
+          "file": "first-image-comparison.json",
+          "sha256": "858041c0ea15b0f5267254e36063d66e37e0a542d18e55376269c2391c7c275a"
+        },
+        {
+          "file": "successor-image-comparison.json",
+          "sha256": "a09f1db6beaaa2489ed3354353265124acdd1eb49b348c492395d99dcdcbf72a"
+        },
+        {
+          "file": "mtls-readback.json",
+          "sha256": "a9894fc03199f742a2d8b8b018484fd9ea701bb28114608552a44dec744d60ba"
         }
       ]
     }
