@@ -444,7 +444,7 @@ it.each(['change', 'remove'])('invalidates old credentials on profile role %s', 
     {
       method: action === 'change' ? 'PUT' : 'DELETE',
       headers: headers.owner!,
-      body: JSON.stringify({ roles: ['Legal'] }),
+      ...(action === 'change' ? { body: JSON.stringify({ roles: ['Legal'] }) } : {}),
     }
   );
   expect(response.status, await response.clone().text()).toBe(200);

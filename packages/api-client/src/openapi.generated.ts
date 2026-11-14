@@ -12110,7 +12110,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Request approved */
             200: {
@@ -12120,6 +12124,13 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+            /** @description Unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {
@@ -23499,7 +23510,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Exception marked investigating */
             200: {
@@ -23509,6 +23524,13 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+            /** @description Invalid exception ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {

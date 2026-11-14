@@ -780,6 +780,17 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "content": {
@@ -790,6 +801,9 @@
               }
             },
             "description": "Request approved"
+          },
+          "400": {
+            "description": "Unexpected request body"
           },
           "401": {
             "description": "Not authenticated"
@@ -27970,6 +27984,17 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "content": {
@@ -27980,6 +28005,9 @@
               }
             },
             "description": "Exception marked investigating"
+          },
+          "400": {
+            "description": "Invalid exception ID or unexpected request body"
           },
           "401": {
             "description": "Not authenticated"

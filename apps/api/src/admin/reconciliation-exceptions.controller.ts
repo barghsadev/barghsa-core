@@ -26,6 +26,7 @@ import {
 } from './reconciliation-exceptions.service.js';
 import { RECONCILIATION_STATUSES, RECONCILIATION_SEVERITIES } from '@barghsa/shared/admin';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 /** Zod schema for the resolution/close note body (mandatory, bounded). */
 export const ResolutionNoteSchema = z
@@ -193,16 +194,20 @@ export class ReconciliationExceptionsController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark a reconciliation exception as investigating' })
   @ApiParam({ name: 'id', description: 'Reconciliation exception ID' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Exception marked investigating', type: Object })
+  @ApiResponse({ status: 400, description: 'Invalid exception ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Exception not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async investigateItem(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<ReconciliationExceptionDto> {
     this.assertResolvePermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.reconciliationService.investigateReconciliationException(id, req.session, ip);
   }

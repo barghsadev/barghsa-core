@@ -72,6 +72,15 @@ it('enforces view and mutation permissions and records the full lifecycle withou
   expect((await request('?status=open&severity=high', 'GET', undefined, 'viewer')).status).toBe(
     200
   );
+  const before = await row(id);
+  const invalid = await request(`/${id}/investigate`, 'POST', { assignedToId: 'viewer' });
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(await row(id)).toEqual(before);
+  const auditAfterInvalid = await auditWindow.query(
+    "SELECT id FROM audit_log WHERE event='reconciliation_status_changed'"
+  );
+  expect(auditAfterInvalid.rows).toHaveLength(0);
   const investigation = await request(`/${id}/investigate`, 'POST', {});
   expect(investigation.status).toBe(200);
   expect(await investigation.json()).toMatchObject({
@@ -138,7 +147,11 @@ it.each(['investigate', 'resolve', 'close'])(
     try {
       await client.query('BEGIN');
       await client.query("SELECT user_id FROM users WHERE user_id='operator' FOR UPDATE");
-      pending = request(`/${id}/${action}`, 'POST', { note: 'Reviewed' });
+      pending = request(
+        `/${id}/${action}`,
+        'POST',
+        action === 'investigate' ? undefined : { note: 'Reviewed' }
+      );
       await expect
         .poll(async () =>
           Number(

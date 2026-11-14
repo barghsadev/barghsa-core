@@ -20,6 +20,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import {
   DualApprovalService,
   DUAL_APPROVAL_ACTION_TYPES,
@@ -181,16 +182,20 @@ export class DualApprovalController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Approve a pending dual-approval request' })
   @ApiParam({ name: 'id', description: 'Approval request ID' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Request approved', type: Object })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required or self-approval attempt' })
   @ApiResponse({ status: 404, description: 'Request not found' })
   @ApiResponse({ status: 409, description: 'Request already resolved' })
   async approveApprovalRequest(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<ApprovalRequestDto> {
     this.assertFinancialEditPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.dualApprovalService.approveApprovalRequest(id, req.session, ip);
   }

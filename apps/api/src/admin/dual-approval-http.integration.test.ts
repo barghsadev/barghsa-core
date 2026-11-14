@@ -42,11 +42,16 @@ async function seed() {
   VALUES ('bank_payment_confirmation',100000,'initiator','Verified bank deposit') RETURNING id`)
   ).rows[0].id as string;
 }
-async function decide(user: string, id: string, action = 'approve') {
+async function decide(
+  user: string,
+  id: string,
+  action = 'approve',
+  body: unknown = action === 'reject' ? { reason: 'Rejected after review' } : undefined
+) {
   return fetch(`${http.base}/api/admin/approval-requests/${id}/${action}`, {
     method: 'POST',
     headers: headers[user]!,
-    body: JSON.stringify({ reason: 'Rejected after review' }),
+    body: JSON.stringify(body),
   });
 }
 
@@ -1204,7 +1209,36 @@ async function expectStaffDelivery(requestId: string, phase: string, userId: str
 it('commits bilingual private approval notices with the decision and rolls back on notice failure', async () => {
   await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW()');
   const id = await seed();
-  expect((await decide('reviewer', id)).status).toBe(200);
+  const request = await decide('reviewer', id, 'approve', { reason: 'Ignored review field' });
+  expect(request.status).toBe(400);
+  expect(await request.json()).toMatchObject({
+    error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,reviewer_id,review_reason FROM approval_requests WHERE id=$1',
+        [id]
+      )
+    ).rows
+  ).toEqual([{ status: 'pending', reviewer_id: null, review_reason: null }]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='approval_request_approved' AND metadata::jsonb->>'requestId'=$1",
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT id FROM in_app_notifications WHERE localized_content::text LIKE $1',
+        [`%${id}%`]
+      )
+    ).rows
+  ).toHaveLength(0);
+  expect((await decide('reviewer', id, 'approve', {})).status).toBe(200);
   const notice = (
     await http.pool.query(
       `SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications
