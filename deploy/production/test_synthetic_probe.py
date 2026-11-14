@@ -37,6 +37,9 @@ class SyntheticProbeTests(unittest.TestCase):
         self.fault = ''
         self.issue_otp = False
         self.csrf_counter = 0
+        self.session_revoked = False
+        self.logout_readback_used_session = False
+        self.logout_requested = False
         fixture = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -80,6 +83,12 @@ class SyntheticProbeTests(unittest.TestCase):
                         {'csrfToken': str(fixture.csrf_counter) * 64},
                         cookies=(f'barghsa_preauth=attempt{fixture.csrf_counter}; Path=/; HttpOnly',),
                     )
+                if path == '/api/auth/user' and fixture.logout_requested:
+                    fixture.logout_readback_used_session = cookie == f'barghsa_session={BEARER}'
+                    if fixture.fault == 'logout_readback_unavailable':
+                        return self.response({}, 503)
+                    if fixture.session_revoked:
+                        return self.response({}, 401)
                 if f'barghsa_session={BEARER}' not in cookie:
                     return self.response({}, 401)
                 if path == '/api/auth/user':
@@ -115,6 +124,8 @@ class SyntheticProbeTests(unittest.TestCase):
                 if self.path == '/api/auth/logout':
                     if token != CSRF or f'barghsa_session={BEARER}' not in cookies or body:
                         return self.response({}, 403)
+                    fixture.logout_requested = True
+                    fixture.session_revoked = fixture.fault != 'logout_cookies_only'
                     return self.response({}, cookies=(
                         'barghsa_session=; Path=/; Max-Age=0',
                         'barghsa_refresh=; Path=/api/auth; Max-Age=0',
@@ -135,6 +146,8 @@ class SyntheticProbeTests(unittest.TestCase):
                         return self.response({}, 401)
                 else:
                     return self.response({}, 404)
+                fixture.logout_requested = False
+                fixture.session_revoked = False
                 return self.response({
                     'requiresOtp': False,
                     'userId': PROFILE if fixture.fault == 'wrong_login' else USER,
@@ -222,8 +235,9 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
             ('GET', '/api/auth/csrf'), ('POST', '/api/auth/login'),
             ('GET', '/api/auth/user'), ('GET', '/api/profiles'),
             *(('GET', f'{route[0]}/{FIXTURES[name]}') for name, route in JOURNEYS.items()),
-            ('POST', '/api/auth/logout'),
+            ('POST', '/api/auth/logout'), ('GET', '/api/auth/user'),
         ])
+        self.assertTrue(self.logout_readback_used_session)
         self.assertIn('barghsa_synthetic_probe_success{check="solar"} 1', self.metrics.read_text())
         self.assertNotIn('certificate_expiry', self.metrics.read_text())
 
@@ -288,7 +302,7 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
                 checks = self.check_report(result)
                 self.assertEqual(checks['electricity']['status'], 'skipped')
                 self.assertEqual(checks['logout']['status'], 'passed')
-                self.assertEqual(self.calls[-1], ('POST', '/api/auth/logout'))
+                self.assertEqual(self.calls[-2:], [('POST', '/api/auth/logout'), ('GET', '/api/auth/user')])
                 for route, *_ in JOURNEYS.values():
                     self.assertFalse(any(path.startswith(route) for _, path in self.calls))
                 self.assertNotIn('check="electricity"', self.metrics.read_text())
@@ -304,7 +318,9 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
                 self.assertEqual(checks['account']['reason'], 'fixture_profile_not_isolated')
                 self.assertTrue(all(checks[name]['status'] == 'skipped' for name in JOURNEYS))
                 self.assertEqual(checks['logout']['status'], 'passed')
-                self.assertEqual(self.calls[-2:], [('GET', '/api/profiles'), ('POST', '/api/auth/logout')])
+                self.assertEqual(self.calls[-3:], [
+                    ('GET', '/api/profiles'), ('POST', '/api/auth/logout'), ('GET', '/api/auth/user'),
+                ])
                 self.assertNotIn('check="electricity"', self.metrics.read_text())
 
     def test_read_failure_does_not_hide_other_journeys_or_skip_logout(self):
@@ -322,6 +338,18 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
                 self.assertEqual(checks['consultation']['status'], 'passed')
                 self.assertEqual(checks['logout']['status'], 'passed')
                 self.assertIn('barghsa_synthetic_probe_success{check="solar"} 0', self.metrics.read_text())
+
+    def test_logout_requires_the_server_to_reject_the_prior_session(self):
+        for fault, reason in (('logout_cookies_only', 'session_still_active_after_logout'),
+                              ('logout_readback_unavailable', 'http_failure')):
+            with self.subTest(fault=fault):
+                self.fault = fault
+                self.logout_readback_used_session = False
+                result = self.probe()
+                self.assertEqual(result.returncode, 1)
+                self.assertEqual(self.check_report(result)['logout']['reason'], reason)
+                self.assertTrue(self.logout_readback_used_session)
+                self.assertIn('barghsa_synthetic_probe_success{check="logout"} 0', self.metrics.read_text())
 
     def test_failed_health_and_login_redirect_do_not_send_follow_up_authentication(self):
         for fault in ('health', 'redirect'):

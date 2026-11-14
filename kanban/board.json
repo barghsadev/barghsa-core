@@ -13430,7 +13430,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13443,7 +13444,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13550,6 +13551,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -13639,7 +13648,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13651,7 +13661,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14052,6 +14062,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -21681,7 +21699,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21693,7 +21712,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21945,6 +21964,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -22015,7 +22042,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22027,7 +22055,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22279,6 +22307,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -36385,7 +36421,8 @@
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36408,7 +36445,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -37074,6 +37111,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -39552,7 +39597,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -39580,7 +39626,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             }
           ],
           "checks": [
@@ -39844,6 +39890,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -693889,7 +693943,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -693901,7 +693956,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -694045,6 +694100,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -719292,7 +719355,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -719314,7 +719378,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -719850,6 +719914,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -719998,7 +720070,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -720009,7 +720082,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -720386,6 +720459,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -728922,7 +729003,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -728946,11 +729028,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "1ff74e144512413d207ba574a7a7b9e0e5c548b81dca00911c40a9d794330cb7"
+              "sha256": "12dce1ecec6721a5824d03297dbf040013eb56bc6a71328f3c49784e2a643130"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -729252,6 +729334,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -741048,7 +741139,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-empty-command-validation",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -741096,11 +741188,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "1ff74e144512413d207ba574a7a7b9e0e5c548b81dca00911c40a9d794330cb7"
+              "sha256": "12dce1ecec6721a5824d03297dbf040013eb56bc6a71328f3c49784e2a643130"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
@@ -741411,6 +741503,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -741713,7 +741814,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -741761,7 +741863,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+              "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -742090,6 +742192,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-logout-readback",
+              "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The independent synthetic probe checks both local cookie clearing and API rejection of its prior dedicated session. The guarded canary mode and the synthetic metric schema are unchanged. The native fixture verifies a read-only same-origin check and bounded, credential-free results."
             }
           ]
         }
@@ -742117,7 +742227,8 @@
         "The EU host reached v0.5.1 public health and metadata over verified TLS 1.3. Its protected synthetic configuration is absent. The dedicated runner scope, verified-contact authentication, timer, private scrape and actual pager receipts remain open.",
         "The independent probe now records dependency degradation as readiness failure and skips authentication. All nine local cases passed. Install on the approved runner and verify live observations.",
         "The running v0.5.1 Prometheus had exactly the API and worker targets and no synthetic completion time series. Approved runner and authenticated fixture provisioning remain open.",
-        "A trusted SSH readback confirmed the existing EU host has capacity and no configured synthetic service. Host reuse is awaiting owner approval. The dedicated account, private exporter and on-call destination also require provisioned evidence."
+        "A trusted SSH readback confirmed the existing EU host has capacity and no configured synthetic service. Host reuse is awaiting owner approval. The dedicated account, private exporter and on-call destination also require provisioned evidence.",
+        "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -742155,7 +742266,8 @@
           "release-0.6-rollout-api-revision",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-live-operational-gate-readback",
-          "release-0.6-existing-offsite-capacity"
+          "release-0.6-existing-offsite-capacity",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": null
       }
@@ -742177,7 +742289,8 @@
       "remaining": [
         "The probe now requires the configured fixture to be the only accessible profile and the owned active default. An additional owned or delegated profile stops all service reads and retains logout.",
         "On the approved independent runner, configure the dedicated non-staff account, protected normal trusted-device or verified-contact OTP path and its four existing records. The documented protected config was absent on the staging and EU hosts at readback. Verify native live identity, scoped GETs and logout before accepting this task.",
-        "The scheduled probe and guarded rollout smoke both require a single accessible owned active default profile. An additional or delegated profile stops business reads. The four detail GETs verify record and profile IDs. Local checks verified that a missing or mismatched record fails its journey and the scheduled probe still logs out."
+        "The scheduled probe and guarded rollout smoke both require a single accessible owned active default profile. An additional or delegated profile stops business reads. The four detail GETs verify record and profile IDs. Local checks verified that a missing or mismatched record fails its journey and the scheduled probe still logs out.",
+        "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -742194,7 +742307,8 @@
         "batches": [
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-profile-isolation",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": null
       }
@@ -742219,7 +742333,8 @@
         "Local Prometheus rules now page for fresh timestamps with missing check results or incomplete successes, and recover when complete results return. Explicit failures retain the six-minute check alert. Verify on the deployed runner and pager route.",
         "The protected CI check now includes synthetic failure, incomplete reporting and recovery rule tests. Local workflow-step execution passed. The live target and pager rehearsal remain required.",
         "The priority routing layer now accepts an approved HTTPS P1 receiver for staging/core synthetic alerts while preserving the private operations route. Verify the real independent runner, Alertmanager and pager with a controlled firing and recovery.",
-        "The affected native test job 132178297496 at d19812d0a passed 46 operations alert tests. The independent staged runner, Alertmanager and pager rehearsal remain open."
+        "The affected native test job 132178297496 at d19812d0a passed 46 operations alert tests. The independent staged runner, Alertmanager and pager rehearsal remain open.",
+        "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -742238,6 +742353,8 @@
           "deploy/monitoring/synthetic-probe-alerts.test.yml",
           "deploy/monitoring/synthetic-probe-alerts.yml",
           "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_synthetic_probe.py",
           "docs/operations/notification-monitoring.md",
           "docs/runbooks/journey-availability.md",
           "packages/shared/src/notifications/operations-alert-links.ts"
@@ -742250,7 +742367,8 @@
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-priority-routing",
-          "release-0.6-published-d19812d0a"
+          "release-0.6-published-d19812d0a",
+          "release-0.6-synthetic-logout-readback"
         ],
         "current_acceptance": null
       }
@@ -1111558,7 +1111676,8 @@
         "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "Financial approval and reconciliation investigation now reject unexpected bodies before changing the decision, assignment, audit or notice. Native finance, refund and electricity/saving callers passed. Complete the remaining application-wide validation inventory and final staged release evidence.",
-        "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required."
+        "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
+        "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1111901,7 +1112020,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-clamav-mirror-recurring",
           "release-0.6-packaged-backup-manifest-rehearsal",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-synthetic-logout-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1112057,8 +1112177,10 @@
           "deploy/production/record-release-annotation.py",
           "deploy/production/record-sentry-deploy.py",
           "deploy/production/release_evidence.py",
+          "deploy/production/rollout-observer.py",
           "deploy/production/test_check_promotion.py",
           "deploy/production/test_sentry_deploy.py",
+          "deploy/production/test_synthetic_probe.py",
           "deploy/single/nginx.conf",
           "deploy/staging/Dockerfile.postgres",
           "deploy/staging/README.md",
@@ -1296376,6 +1296498,72 @@
         {
           "path": "packages/api-client/src/openapi.generated.ts",
           "sha256": "c7f39f46c3a0dce1d988a57b8ba098242ab72bac14dfe6ed17f22fae015e6b1f"
+        }
+      ]
+    },
+    "release-0.6-synthetic-logout-readback": {
+      "batch": "release-0.6-synthetic-logout-readback",
+      "base_commit": "1784f61611414907a75d453834ec02bdfe47f162",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.03",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_synthetic_probe.py"
+      ],
+      "checks": [
+        "All 10 independent synthetic and 13 guarded rollout observer cases passed. The pinned Prometheus synthetic alert rule fixtures, Markdown formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "Local HTTP/TLS and rule checks. The independent deployed runner, actual fixture, scrape and authorized delivery remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-logout-readback",
+      "execution_receipts": [
+        {
+          "file": "synthetic.log",
+          "sha256": "ed9225a20ca3f1c9c4aca76d67279f0e419fffc81ea9b9400c31f402fbab2433"
+        },
+        {
+          "file": "rollout.log",
+          "sha256": "423074c7393dda448e514e725efb9987f1bbc503e0d851f4877a740d1ca1764b"
+        },
+        {
+          "file": "promtool.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "quality.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "913d7ef0a5b38eaa9502c06e9f5b5d94af15a8926b4f38d15b8ce19b70e5627d"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "12dce1ecec6721a5824d03297dbf040013eb56bc6a71328f3c49784e2a643130"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "31660d682e7887145ca19fcfffa89b7a90df29527ce5739e739c221e6ee48a20"
         }
       ]
     }

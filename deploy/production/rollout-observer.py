@@ -209,12 +209,14 @@ class SyntheticBrowser:
         reference = headers.get('X-Correlation-Id', '')
         self.correlation_id = reference if re.fullmatch(UUID, reference) else None
 
-    def request(self, path, data=None, csrf=None):
+    def request(self, path, data=None, csrf=None, *, session_cookie=None):
         headers = {
             'Accept': 'application/json', 'Cache-Control': 'no-cache',
             'User-Agent': 'BarghsaSynthetic/1.0',
         }
         body = None
+        if session_cookie is not None:
+            headers['Cookie'] = 'barghsa_session=' + session_cookie
         if data is not None:
             headers.update({
                 'Content-Type': 'application/json', 'Origin': self.base, 'X-CSRF-Token': csrf,
@@ -268,9 +270,20 @@ class SyntheticBrowser:
                 'unexpected_session_identity')
 
     def logout(self):
+        sessions = [cookie.value for cookie in self.cookies
+                    if cookie.name == 'barghsa_session' and not cookie.is_expired()]
         self.request('/api/auth/logout', {}, self.session_csrf or self.csrf_token())
         require(not any(cookie.name in ('barghsa_session', 'barghsa_refresh') and not cookie.is_expired()
                         for cookie in self.cookies), 'session_cookies_not_cleared')
+        require(len(sessions) == 1 and re.fullmatch(r'[A-Za-z0-9._~-]{1,4096}', sessions[0]),
+                'unexpected_session_cookie')
+        try:
+            self.request('/api/auth/user', session_cookie=sessions[0])
+        except HTTPError as error:
+            if error.code == 401:
+                return
+            raise
+        raise ObservationError('session_still_active_after_logout')
 
 
 def synthetic_otp(reader, challenge, started):
