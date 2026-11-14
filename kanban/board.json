@@ -26450,7 +26450,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "verified-shared-username-normalization",
@@ -26466,7 +26467,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/dto/change-username.dto.ts",
@@ -26959,6 +26960,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ]
         }
@@ -67986,7 +67995,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -68002,7 +68012,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -68560,6 +68570,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -698720,7 +698738,8 @@
           "release-0.6-telegram-unlink-validation",
           "release-0.6-kb-command-validation",
           "release-0.6-protected-main-9bfba918c",
-          "release-0.6-ai-admin-command-validation"
+          "release-0.6-ai-admin-command-validation",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -698740,7 +698759,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/dto/add-contact.dto.ts",
@@ -698821,6 +698840,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ]
         }
@@ -957863,7 +957890,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -957911,7 +957939,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -959079,6 +959107,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -959312,7 +959348,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -959360,7 +959397,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -960528,6 +960565,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -960761,7 +960806,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -960809,7 +960855,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -961977,6 +962023,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -962210,7 +962264,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -962258,7 +962313,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -963426,6 +963481,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -963659,7 +963722,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -963707,7 +963771,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -964875,6 +964939,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -982731,7 +982803,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -982779,7 +982852,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -983947,6 +984020,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -984180,7 +984261,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -984228,7 +984310,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -985396,6 +985478,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -985629,7 +985719,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -985677,7 +985768,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -986845,6 +986936,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -987078,7 +987177,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -987126,7 +987226,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -988294,6 +988394,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -988527,7 +988635,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -988575,7 +988684,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -989743,6 +989852,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -989976,7 +990093,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -990024,7 +990142,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -991192,6 +991310,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -991425,7 +991551,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -991473,7 +991600,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -992641,6 +992768,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -992874,7 +993009,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -992922,7 +993058,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -994090,6 +994226,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -994323,7 +994467,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -994371,7 +994516,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -995539,6 +995684,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -995772,7 +995925,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -995820,7 +995974,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -996988,6 +997142,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -997221,7 +997383,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -997269,7 +997432,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -998437,6 +998600,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -998670,7 +998841,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-contact-otp-ownership"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -998718,7 +998890,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
-              "sha256": "dc7e7024945e42407d4482315bc04b2f9553301180fc2f797f24db8e6eb00517"
+              "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -999886,6 +1000058,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-contact-otp-ownership",
+              "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+              "paths": [
+                "apps/api/src/auth/contact-session-http.integration.test.ts"
+              ],
+              "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
             }
           ],
           "presentation_renewals": [
@@ -1138738,7 +1138918,8 @@
         "Storage administration, verification policy and verification provider configuration passed the native scoped critical thresholds. Verify the final hosted coverage and deployed provider and configuration receipts.",
         "The security rate-limit configuration controller passed the scoped critical checker at 31/32 lines and 9/10 branches. This verifies actor provenance for regular changes and staged recovery when no request address is available. Retain native recovery tests in the final full run.",
         "All 51 focused invoice cases passed. Create-adjustment, cancellation/replacement and bank-receipt upload pass the unchanged critical source thresholds. The instrumented selection did not reach the full package statement floor. Complete the exact hosted coverage and staged financial rehearsal.",
-        "Adjustment approval passed 46 native checks and the critical file gate at 138/141 lines and 115/125 branches. Verify full exact hosted coverage and staged financial approval before closing the release."
+        "Adjustment approval passed 46 native checks and the critical file gate at 138/141 lines and 115/125 branches. Verify full exact hosted coverage and staged financial approval before closing the release.",
+        "Eight native contact HTTP tests passed. They verify a wrong destination preserves the OTP counter, a wrong code durably consumes one attempt, and duplicate contact issuance writes no challenge or outbox record. Full exact API coverage remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1139122,7 +1139303,8 @@
           "release-0.6-config-authority-readback",
           "release-0.6-rate-limit-audit-provenance",
           "release-0.6-invoice-review-boundaries",
-          "release-0.6-invoice-approval-recovery"
+          "release-0.6-invoice-approval-recovery",
+          "release-0.6-contact-otp-ownership"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1330075,6 +1330257,63 @@
         {
           "file": "initial-postgres-path.log",
           "sha256": "ce4b6103932cbb0b7f7737ada3974b0376a7bde754776c66e20d459905d4e034"
+        }
+      ]
+    },
+    "release-0.6-contact-otp-ownership": {
+      "batch": "release-0.6-contact-otp-ownership",
+      "base_commit": "62cdfccecda8b3037e0bbe7befd0b09fb2344b8a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.01.02",
+        "02-auth-users-admin.md#T-03.03.04",
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/contact-session-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
+          "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "469352cfee84668cc73a4246ccad7d6b6fdb249569657ae82c8a64544e1bdc46"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "1209131040f80775e663d54a1a7a45316fb95204e4a2e741a1b52ba0838428aa"
+        }
+      ],
+      "checks": [
+        "All eight compiled HTTP cases passed against a disposable PostgreSQL 17 cluster using the production migrations. Request checks cover verified contact ownership, unchanged cross-session state, challenge destination binding and persistent attempt accounting. API typecheck, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The PostgreSQL client emitted its shared concurrent query deprecation from the fixture. This test run did not measure combined release coverage."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-contact-otp-ownership",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "8abb0a4bddb641e6ce4c7c39d60fd0ee50a015acc1e4a007adc52f925e3f6521"
         }
       ]
     }

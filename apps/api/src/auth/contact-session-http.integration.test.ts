@@ -179,3 +179,88 @@ it.each(['change-username', 'add-contact'])(
     expect((await post(operation, body)).status).toBe(409);
   }
 );
+
+it('makes a failed code attempt durable while keeping the issued contact and session unchanged', async () => {
+  const destination = '+989120007777';
+  const challengeId = randomUUID();
+  const digest = createHash('sha256').update('123456').digest('hex');
+  await http.pool.query(
+    `INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at,purpose,user_id,auth_version)
+     SELECT $1,$2,$3,NOW()+INTERVAL '5 minutes','add_mobile',user_id,auth_version FROM users WHERE user_id='contact-owner'`,
+    [challengeId, destination, digest]
+  );
+  const challenge = () =>
+    http.pool.query(
+      'SELECT attempts_remaining,consumed_at FROM otp_challenges WHERE challenge_id=$1',
+      [challengeId]
+    );
+  const initial = (await challenge()).rows[0].attempts_remaining;
+  const finish = (contactValue: string, otp: string) =>
+    fetch(`${http.base}/api/auth/add-contact`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        contactType: 'mobile',
+        contactValue,
+        otpChallengeId: challengeId,
+        otp,
+      }),
+    });
+  const wrongDestination = await finish('+989120007778', '123456');
+  expect(wrongDestination.status).toBe(400);
+  expect((await challenge()).rows).toEqual([{ attempts_remaining: initial, consumed_at: null }]);
+  const wrongCode = await finish(destination, '654321');
+  expect(wrongCode.status).toBe(401);
+  expect((await challenge()).rows).toEqual([
+    { attempts_remaining: initial - 1, consumed_at: null },
+  ]);
+  expect(
+    (await http.pool.query("SELECT mobile FROM users WHERE user_id='contact-owner'")).rows
+  ).toEqual([{ mobile: null }]);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='contact_added'")).rows
+  ).toEqual([]);
+  expect((await finish(destination, '123456')).status).toBe(200);
+  expect((await challenge()).rows[0].consumed_at).toBeInstanceOf(Date);
+  expect(
+    (await http.pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [sessionId])).rows
+  ).toEqual([{ revoked_at: null }]);
+});
+
+it('leaves verification challenges and the outbox untouched for occupied contact destinations', async () => {
+  const mobile = '+989120007777';
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,mobile,password_hash) VALUES ('another-owner',$1,$1,'test-only')",
+    [mobile]
+  );
+  const post = (operation: string, body: unknown) =>
+    fetch(`${http.base}/api/auth/${operation}/send-otp`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+  expect((await post('change-username', { newUsername: 'old-contact@example.test' })).status).toBe(
+    400
+  );
+  expect((await post('change-username', { newUsername: mobile })).status).toBe(409);
+  expect((await post('add-contact', { contactType: 'mobile', contactValue: mobile })).status).toBe(
+    409
+  );
+  expect(
+    (await post('add-contact', { contactType: 'email', contactValue: 'new-contact@example.test' }))
+      .status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query('SELECT user_id FROM account_login_identifiers WHERE destination=$1', [
+        mobile,
+      ])
+    ).rows
+  ).toEqual([{ user_id: 'another-owner' }]);
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows).toEqual(
+    [{ count: 0 }]
+  );
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM auth_delivery_outbox')).rows
+  ).toEqual([{ count: 0 }]);
+});
