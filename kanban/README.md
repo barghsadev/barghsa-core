@@ -15,6 +15,13 @@ python3 kanban/scripts/board.py evidence 2026-10-06-customer-consultation-histor
 python3 kanban/scripts/board.py render
 ```
 
+The board stores repeated current acceptance evidence once under
+`acceptance_evidence`. `board.py show` displays the full evidence for a task.
+For scripted updates, use `read()` and `write()` from `kanban/scripts/board.py`
+to edit and save expanded records. `board.py compact` converts a legacy board
+to the shared representation. Release records remain directly readable in the
+JSON file.
+
 The first production launch includes electricity, energy saving, solar and consultation. Batches implement coherent parts of a milestone. Only accepted releases get a version, staging deployment and release announcement.
 
 The old queue, audit execution ledgers, continuation diary and automated dispatcher are retired. Evidence was reconciled into the board and remains recoverable from Git history. See [reconciliation notes](RECONCILIATION.md). Do not restart the old scheduler or dispatch from historical completion lists.

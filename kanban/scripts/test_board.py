@@ -4,8 +4,43 @@ from io import StringIO
 import unittest
 from unittest.mock import patch
 
-from board import ROOT, blocking_defects, main, read, render, sha, validate
+from board import ROOT, blocking_defects, main, pack_acceptance, read, render, sha, unpack_acceptance, validate
 from test_definition_of_done import record
+
+
+class AcceptanceStorageTests(unittest.TestCase):
+    def setUp(self):
+        self.source = {'path': 'source.py', 'sha256': '1' * 64}
+        self.acceptance = {'checks': ['Verified'], 'source_evidence': [self.source],
+                           'source_renewals': [{'paths': ['source.py']}]}
+        self.board = {
+            'schema_version': 1,
+            'releases': [{'version': '0.6.0', 'status': 'in_progress'}],
+            'tasks': [{'key': str(i), 'evidence': {'current_acceptance': copy.deepcopy(self.acceptance)}}
+                      for i in range(2)],
+        }
+
+    def test_shared_values_round_trip_and_edits_are_independent(self):
+        self.assertEqual(unpack_acceptance(copy.deepcopy(self.board)), self.board)
+        packed = pack_acceptance(self.board)
+        self.assertEqual(packed['releases'], self.board['releases'])
+        self.assertEqual([len(table) for table in packed['acceptance_evidence'].values()], [1, 1, 1])
+        self.assertEqual(packed['tasks'][0]['evidence'], packed['tasks'][1]['evidence'])
+        unpacked = unpack_acceptance(packed)
+        self.assertEqual(unpacked, self.board)
+        unpacked['tasks'][0]['evidence']['current_acceptance']['source_evidence'][0]['sha256'] = '2' * 64
+        self.assertEqual(unpacked['tasks'][1]['evidence']['current_acceptance'], self.acceptance)
+
+    def test_invalid_reference_and_modified_entry_fail_closed(self):
+        packed = pack_acceptance(self.board)
+        packed['tasks'][0]['evidence']['current_acceptance']['checks'] = [0]
+        with self.assertRaisesRegex(ValueError, 'Invalid acceptance evidence reference'):
+            unpack_acceptance(packed)
+        packed = copy.deepcopy(pack_acceptance(self.board))
+        source = next(iter(packed['acceptance_evidence']['source_evidence'].values()))
+        source['sha256'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'Invalid acceptance evidence entry'):
+            unpack_acceptance(packed)
 
 
 class BoardIntegrityTests(unittest.TestCase):

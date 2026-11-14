@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from copy import deepcopy
 from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
 import sys
+from tempfile import NamedTemporaryFile
 
 from specs import HEADING_RE, parse_epic
 from definition_of_done import exception_state, latest_exceptions, scope, validate_exceptions, verify_pull_request
@@ -17,14 +19,88 @@ import re
 ROOT = Path(__file__).resolve().parents[2]
 STATES = {'todo', 'in_progress', 'partial', 'blocked', 'verify', 'done', 'superseded'}
 DEFECT_SEVERITIES = ('P0', 'P1', 'P2', 'P3')
+ACCEPTANCE_FIELDS = {'checks': str, 'source_evidence': dict, 'source_renewals': dict}
 
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def evidence_id(value):
+    canonical = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+    return int(hashlib.sha256(canonical.encode()).hexdigest()[:13], 16)
+
+
+def unpack_acceptance(board):
+    if 'acceptance_evidence' not in board:
+        return board
+    tables = board.pop('acceptance_evidence')
+    if not isinstance(tables, dict) or tables.keys() != ACCEPTANCE_FIELDS.keys():
+        raise ValueError('Invalid acceptance evidence tables')
+    for field, table in tables.items():
+        if not isinstance(table, dict) or any(
+            not isinstance(value, ACCEPTANCE_FIELDS[field]) or str(evidence_id(value)) != key
+            for key, value in table.items()
+        ):
+            raise ValueError(f'Invalid acceptance evidence entry for {field}')
+    for task in board['tasks']:
+        acceptance = task['evidence'].get('current_acceptance')
+        if acceptance is None:
+            continue
+        for field, table in tables.items():
+            if field not in acceptance:
+                continue
+            refs = acceptance[field]
+            if not isinstance(refs, list) or any(type(ref) is not int or str(ref) not in table for ref in refs):
+                raise ValueError(f"Invalid acceptance evidence reference for {task['key']} ({field})")
+            acceptance[field] = [deepcopy(table[str(ref)]) for ref in refs]
+    return board
+
+
+def pack_acceptance(board):
+    tables = {field: {} for field in ACCEPTANCE_FIELDS}
+    if 'acceptance_evidence' in board:
+        raise ValueError('Read the expanded board before writing')
+    tasks = []
+    for task in board['tasks']:
+        tasks.append(task)
+        acceptance = task['evidence'].get('current_acceptance')
+        if acceptance is None:
+            continue
+        packed = dict(acceptance)
+        for field, table in tables.items():
+            if field not in acceptance:
+                continue
+            if not isinstance(acceptance[field], list):
+                raise ValueError(f"Invalid acceptance evidence for {task['key']} ({field})")
+            packed[field] = []
+            for value in acceptance[field]:
+                if not isinstance(value, ACCEPTANCE_FIELDS[field]):
+                    raise ValueError(f"Invalid acceptance evidence for {task['key']} ({field})")
+                ref = evidence_id(value)
+                if table.setdefault(str(ref), value) != value:
+                    raise ValueError(f'Acceptance evidence ID collision for {field}')
+                packed[field].append(ref)
+        tasks[-1] = {**task, 'evidence': {**task['evidence'], 'current_acceptance': packed}}
+    return {**board, 'tasks': tasks, 'acceptance_evidence': tables}
+
+
 def read(root=ROOT):
-    return json.loads((root / 'kanban/board.json').read_text())
+    return unpack_acceptance(json.loads((root / 'kanban/board.json').read_text(encoding='utf-8')))
+
+
+def write(board, root=ROOT):
+    path = root / 'kanban/board.json'
+    with NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent, delete=False) as output:
+        temporary = Path(output.name)
+        try:
+            json.dump(pack_acceptance(board), output, ensure_ascii=False, indent=2)
+            output.write('\n')
+            output.close()
+            temporary.chmod(path.stat().st_mode & 0o777)
+            temporary.replace(path)
+        finally:
+            temporary.unlink(missing_ok=True)
 
 
 def blocking_defects(tasks, releases):
@@ -222,7 +298,7 @@ def render(board):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['check','render','list','show','evidence','next','ready'])
+    parser.add_argument('action', choices=['check','render','list','show','evidence','next','ready','compact'])
     parser.add_argument('key', nargs='?')
     parser.add_argument('--release')
     parser.add_argument('--status', choices=sorted(STATES))
@@ -236,7 +312,9 @@ def main():
         validate(board, now=now)
         exceptions = board.get('dod_exceptions', [])
         latest = latest_exceptions(exceptions)
-        if args.action == 'render':
+        if args.action == 'compact':
+            write(board)
+        elif args.action == 'render':
             (ROOT / 'kanban/BOARD.md').write_text(render(board))
         elif args.action == 'check':
             if (ROOT / 'kanban/BOARD.md').read_text() != render(board):
