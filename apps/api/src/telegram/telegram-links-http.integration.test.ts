@@ -24,7 +24,7 @@ const envKeys = [
 ] as const;
 const prior = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
 const sends: Array<{ chat_id: string; text: string; protect_content: boolean }> = [];
-let mode: 'success' | 'unknown' | 'rate' = 'success';
+let mode: 'success' | 'unknown' | 'rate' | 'inconsistent-rate' = 'success';
 let aiWorker: ChildProcess,
   modelCalls = 0,
   modelMessages: unknown[] = [];
@@ -61,9 +61,9 @@ beforeAll(async () => {
     }
     sends.push(body);
     if (mode === 'unknown') return void res.end('not-json');
-    if (mode === 'rate') {
+    if (mode === 'rate' || mode === 'inconsistent-rate') {
+      res.statusCode = mode === 'rate' ? 429 : 502;
       mode = 'success';
-      res.statusCode = 429;
       return void res.end(
         JSON.stringify({ ok: false, error_code: 429, parameters: { retry_after: 1 } })
       );
@@ -590,39 +590,42 @@ it('commits failed confirmation attempts and permanently cancels at five guesses
   );
 });
 
-it('does not replay a send whose provider outcome is unknown, even on a duplicate webhook', async () => {
-  const f = await owner(),
-    intent = await create(f);
-  mode = 'unknown';
-  const update = await webhook('/start ' + new URL(intent.url).searchParams.get('start')!);
-  expect(update.response.status).toBe(200);
-  await expect
-    .poll(
-      async () =>
-        (
-          await http.pool.query('SELECT status FROM telegram_updates WHERE update_id=$1', [
-            update.id,
-          ])
-        ).rows[0]?.status,
-      { timeout: 10000 }
-    )
-    .toBe('unknown');
-  mode = 'success';
-  expect((await webhook(update.body.message.text, update.chat, update.id)).response.status).toBe(
-    200
-  );
-  await new Promise((resolve) => setTimeout(resolve, 1200));
-  expect(sends.filter((s) => s.chat_id === String(update.chat))).toHaveLength(1);
-  const row = (
-    await http.pool.query('SELECT * FROM telegram_updates WHERE update_id=$1', [update.id])
-  ).rows[0];
-  expect(row.sent_message_id).toBeNull();
-  expect(row.last_error).toBe('delivery_unknown');
-  expect(await (await send(f)).json()).toMatchObject({ latestDelivery: { status: 'unknown' } });
-  await expect(
-    http.pool.query("UPDATE telegram_updates SET status='ready' WHERE id=$1", [row.id])
-  ).rejects.toThrow('terminal delivery');
-});
+it.each(['unknown', 'inconsistent-rate'] as const)(
+  'does not replay a send with %s provider evidence, even on a duplicate webhook',
+  async (outcome) => {
+    const f = await owner(),
+      intent = await create(f);
+    mode = outcome;
+    const update = await webhook('/start ' + new URL(intent.url).searchParams.get('start')!);
+    expect(update.response.status).toBe(200);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query('SELECT status FROM telegram_updates WHERE update_id=$1', [
+              update.id,
+            ])
+          ).rows[0]?.status,
+        { timeout: 10000 }
+      )
+      .toBe('unknown');
+    mode = 'success';
+    expect((await webhook(update.body.message.text, update.chat, update.id)).response.status).toBe(
+      200
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    expect(sends.filter((s) => s.chat_id === String(update.chat))).toHaveLength(1);
+    const row = (
+      await http.pool.query('SELECT * FROM telegram_updates WHERE update_id=$1', [update.id])
+    ).rows[0];
+    expect(row.sent_message_id).toBeNull();
+    expect(row.last_error).toBe('delivery_unknown');
+    expect(await (await send(f)).json()).toMatchObject({ latestDelivery: { status: 'unknown' } });
+    await expect(
+      http.pool.query("UPDATE telegram_updates SET status='ready' WHERE id=$1", [row.id])
+    ).rejects.toThrow('terminal delivery');
+  }
+);
 
 it('retries only an explicit rate-limit rejection, preserving one actual successful receipt', async () => {
   const f = await owner(),

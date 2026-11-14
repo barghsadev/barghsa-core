@@ -195,3 +195,25 @@ it('bounds malformed/oversized responses and preserves explicit safe rejection/r
   });
   expect(request).toHaveBeenCalledTimes(4);
 });
+
+it.each([
+  [200, 429],
+  [502, 429],
+  [429, '429'],
+  [403, 429],
+])(
+  'holds a send with HTTP %s and inconsistent provider code %s for reconciliation',
+  async (status, code) => {
+    const request = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({ ok: false, error_code: code, parameters: { retry_after: 30 } }),
+        {
+          status,
+        }
+      )
+    );
+    const client = new TelegramClient(token, request, 'external-eu');
+    expect(await client.sendPrivateMessage('12', 'text')).toEqual({ status: 'unknown' });
+    expect(request).toHaveBeenCalledTimes(1);
+  }
+);

@@ -165,14 +165,18 @@ export class TelegramClient {
         protect_content: true,
         link_preview_options: { is_disabled: true },
       });
-      if (body.ok === false && [400, 401, 403, 429].includes(Number(body.error_code))) {
+      if (
+        body.ok === false &&
+        body.error_code === response.status &&
+        [400, 401, 403, 429].includes(response.status)
+      ) {
         const parameters = record(body.parameters);
         const retry = parameters?.retry_after;
         return {
           status: 'rejected',
-          code: Number(body.error_code),
+          code: response.status,
           retryAfterSeconds:
-            body.error_code === 429 &&
+            response.status === 429 &&
             typeof retry === 'number' &&
             Number.isInteger(retry) &&
             retry > 0 &&

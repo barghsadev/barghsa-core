@@ -44,6 +44,11 @@ event receipt has a 4 KiB cap. These limits apply to decoded bytes. An
 oversized or unreadable delivery receipt leaves the send outcome uncertain
 and subject to the existing reconciliation rules.
 
+For customer Telegram replies, the queue retries only an explicit HTTP 429
+with a matching integer Bot API error code and a valid retry delay. An
+inconsistent HTTP status and error body leaves the send outcome unknown.
+[Telegram Bot API response format](https://core.telegram.org/bots/api#making-requests).
+
 ## Operator log privacy
 
 API and worker diagnostics use keyed references for actor, profile, challenge

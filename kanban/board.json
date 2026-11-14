@@ -34947,7 +34947,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-storage-provider-circuit",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
@@ -34967,7 +34968,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -35067,6 +35068,14 @@
                 "packages/shared/src/storage/runtime-config.test.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -172560,7 +172569,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -172764,7 +172774,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
@@ -172776,11 +172786,11 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.test.ts",
-              "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
+              "sha256": "f04d8585b8f59f3e4354c58171cc1ec843f0dea0b6386d60102f67215296e809"
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.ts",
-              "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+              "sha256": "98153e0d9ed8dfca96ab850ab34505108bd0a32a68da0799f304fca243f36196"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -174378,6 +174388,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+                "apps/api/src/telegram/telegram-protocol.test.ts",
+                "apps/api/src/telegram/telegram-protocol.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -669112,7 +669132,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -669316,7 +669337,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
@@ -669328,11 +669349,11 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.test.ts",
-              "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
+              "sha256": "f04d8585b8f59f3e4354c58171cc1ec843f0dea0b6386d60102f67215296e809"
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.ts",
-              "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+              "sha256": "98153e0d9ed8dfca96ab850ab34505108bd0a32a68da0799f304fca243f36196"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -670954,6 +670975,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+                "apps/api/src/telegram/telegram-protocol.test.ts",
+                "apps/api/src/telegram/telegram-protocol.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -694781,7 +694812,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -694821,7 +694853,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -695085,6 +695117,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -695179,7 +695219,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -695235,7 +695276,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -695683,6 +695724,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -698465,7 +698514,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -698555,7 +698605,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "source_renewals": [
@@ -698801,6 +698851,14 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -698842,7 +698900,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -698932,7 +698991,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "source_renewals": [
@@ -699178,6 +699237,14 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -699219,7 +699286,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -699309,7 +699377,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "source_renewals": [
@@ -699555,6 +699623,14 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -701012,7 +701088,8 @@
           "release-0.6-crm-page-before-profile-summaries",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-async-job-tracing"
+          "release-0.6-async-job-tracing",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -701096,7 +701173,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "checks": [
@@ -701276,6 +701353,14 @@
                 "apps/api/src/crm/crm.controller.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -703208,7 +703293,8 @@
       "remaining": [
         "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP closes a continuously streaming connection within its configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and both an idle timeout and a two-minute total body deadline for successful object downloads. Repeat the deployed file-size and byte-verification rehearsal.",
         "The release notification client bounds the JSON response read to 256 KiB plus one boundary byte and retains a 30-second socket timeout. The fixture accepted the exact boundary and rejected an oversized reply before parsing. Verify deployment and finish the remaining outbound inventory.",
-        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection."
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
+        "The private Telegram transport retains its 10-second deadline, 64 KiB response cap and redirect rejection. An inconsistent HTTP and Bot API status cannot authorize a retry. Actual candidate and the remaining outbound inventory remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -703245,7 +703331,8 @@
           "release-0.6-otlp-connection-deadline",
           "release-0.6-storage-body-deadline",
           "release-0.6-telegram-receipt-transport",
-          "release-0.6-bound-staging-worker-readbacks"
+          "release-0.6-bound-staging-worker-readbacks",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -706932,7 +707019,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-web-admin-coverage"
+          "release-0.6-web-admin-coverage",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-action-rate-limit-native-cases",
@@ -707008,7 +707096,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             }
           ],
           "checks": [
@@ -707081,6 +707169,14 @@
                 "apps/api/src/telegram/telegram-runtime.service.ts"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -708246,7 +708342,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -708374,7 +708471,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -709044,6 +709141,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -710155,7 +710260,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -710215,7 +710321,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -710357,6 +710463,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -710404,7 +710518,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -710453,7 +710568,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -710522,6 +710637,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.test.ts"
               ],
               "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -710784,7 +710907,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-structured-release-log-marker",
           "release-0.6-process-error-reporting",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -710865,7 +710989,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -711019,6 +711143,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.test.ts"
               ],
               "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -711419,7 +711551,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-provider-lifecycle-input",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
@@ -711460,7 +711593,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -711651,6 +711784,14 @@
                 "apps/api/src/storage/storage-config-http.integration.test.ts"
               ],
               "scope": "Additive coverage of invalid recovery commands, current verification read authority and disabled or mismatched encrypted adapter settings. The existing runtime policies remain verified by matching source and the native suite."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -715999,7 +716140,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -716007,7 +716149,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "docs/threat-model.md",
@@ -716069,6 +716211,14 @@
                 "docs/threat-model.md"
               ],
               "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -716255,7 +716405,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -716263,7 +716414,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -716357,6 +716508,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -716471,7 +716630,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -716479,7 +716639,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -716573,6 +716733,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -716632,7 +716800,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -716648,7 +716817,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "checks": [
@@ -716699,6 +716868,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -716773,7 +716950,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-web-server-tracing",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -716833,7 +717011,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -717040,6 +717218,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -729905,7 +730091,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -729921,7 +730108,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "checks": [
@@ -729972,6 +730159,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -730038,7 +730233,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -730046,7 +730242,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -730302,6 +730498,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.test.ts"
               ],
               "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -758862,7 +759066,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -758910,7 +759115,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -759091,6 +759296,14 @@
                 "apps/api/src/telegram/telegram-runtime.service.ts"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -759128,7 +759341,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -759176,7 +759390,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -759357,6 +759571,14 @@
                 "apps/api/src/telegram/telegram-runtime.service.ts"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -759396,7 +759618,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-web-admin-coverage"
+          "release-0.6-web-admin-coverage",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -759444,7 +759667,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -759625,6 +759848,14 @@
                 "apps/api/src/telegram/telegram-runtime.service.ts"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -760109,7 +760340,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -760157,7 +760389,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -760338,6 +760570,14 @@
                 "apps/api/src/telegram/telegram-runtime.service.ts"
               ],
               "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -761981,7 +762221,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-document-template-verification",
@@ -761997,7 +762238,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "source_renewals": [
@@ -762017,6 +762258,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -762122,7 +762371,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -762146,7 +762396,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -762435,6 +762685,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -762462,7 +762720,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-document-template-verification",
@@ -762478,7 +762737,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             }
           ],
           "source_renewals": [
@@ -762498,6 +762757,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -762549,7 +762816,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -762573,7 +762841,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -762862,6 +763130,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -762914,7 +763190,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -762938,7 +763215,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "d43c0387f38dabb85a354d1d0db89aa4988a1cc6b63cc52641a88572a398bd3c"
+              "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -763227,6 +763504,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ]
         }
@@ -1131693,7 +1131978,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.ts",
-              "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+              "sha256": "98153e0d9ed8dfca96ab850ab34505108bd0a32a68da0799f304fca243f36196"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
@@ -1131717,7 +1132002,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+              "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
             },
             {
               "path": "package.json",
@@ -1134390,6 +1134675,15 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-telegram-rejection-receipts",
+              "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+              "paths": [
+                "apps/api/src/telegram/telegram-protocol.ts",
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1134856,7 +1135150,8 @@
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1140244,7 +1140539,8 @@
         "Adjustment approval passed 46 native checks and the critical file gate at 138/141 lines and 115/125 branches. Verify full exact hosted coverage and staged financial approval before closing the release.",
         "Eight native contact HTTP tests passed. They verify a wrong destination preserves the OTP counter, a wrong code durably consumes one attempt, and duplicate contact issuance writes no challenge or outbox record. Full exact API coverage remains open.",
         "Hosted affected preflight 43607767584 failed one of 460 API cases when the saving eligibility fixture inherited an intentionally depleted gift-code window. The fixture now resets its exact counters at exit. All 11 saving integration cases passed on compiled HTTP and migrated PostgreSQL. Verify the successor protected-main preflight and full release coverage.",
-        "A broader auth run completed 92 of 93 cases, with the forced-password account-lock fixture returning 500 at database lock timeout. Both corrected contention cases passed on migrated PostgreSQL, with exact failed-request rollback checks. Full exact API coverage remains open."
+        "A broader auth run completed 92 of 93 cases, with the forced-password account-lock fixture returning 500 at database lock timeout. Both corrected contention cases passed on migrated PostgreSQL, with exact failed-request rollback checks. Full exact API coverage remains open.",
+        "The private Telegram queue now requires matching HTTP and integer Bot API rejection status. All 21 compiled PostgreSQL cases and 33 focused protocol/runtime cases passed. A relay 502 with a 429 body stays unknown and does not replay. Rehearse the selected relay on the immutable staging release."
       ],
       "owner": null,
       "depends_on": [],
@@ -1140631,7 +1140927,8 @@
           "release-0.6-invoice-approval-recovery",
           "release-0.6-contact-otp-ownership",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-telegram-rejection-receipts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1331870,6 +1332167,99 @@
         {
           "file": "release-0.6-auth-session-coverage/coverage.log",
           "sha256": "803a1931416da683bbf2bb519401607678d38f3d7768e1cbc61e10807f2e40b6"
+        }
+      ]
+    },
+    "release-0.6-telegram-rejection-receipts": {
+      "batch": "release-0.6-telegram-rejection-receipts",
+      "base_commit": "103de49a7ac29ec1044883d6e098be5a863d75f3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.02.04",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.03.01.09",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.05.02.11",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.08",
+        "06-security-testing-observability.md#T-06.06.02.01",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.08.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.11.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "06-security-testing-observability.md#T-06.19.01.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.04",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/telegram/telegram-protocol.ts",
+        "apps/api/src/telegram/telegram-protocol.test.ts",
+        "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.ts",
+          "sha256": "98153e0d9ed8dfca96ab850ab34505108bd0a32a68da0799f304fca243f36196"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.test.ts",
+          "sha256": "f04d8585b8f59f3e4354c58171cc1ec843f0dea0b6386d60102f67215296e809"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "28ec16d8385447230659b075915fd4515c9ccbad22d5f213f94033ba093e74a0"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "8b8794b3d16b9cf874ae92ffd189aa3433db5e850575c1cbac615c72ff7c8323"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.test.ts",
+          "sha256": "aa70909d869343296582bd3de2ae10b89f9c408466d28f55eff8f32d61a56c1d"
+        },
+        {
+          "path": "deploy/telegram/nginx.conf",
+          "sha256": "78ea447acb717b16cf5393d28896b75d8e199cd1fb9abd3ae9d9dd72aa625122"
+        }
+      ],
+      "checks": [
+        "All 33 targeted unit checks passed for the protocol and runtime. All 21 migrated PostgreSQL HTTP cases passed against the compiled API and isolated Telegram and AI fixtures. HTTP 502 carrying a 429 error body leaves a single unknown attempt with no receipt or automatic replay. Matching HTTP and Bot API 429 still schedules one bounded retry and records one successful receipt. API types, ESLint, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "The provider replies were from a loopback fixture. Final hosted coverage, the actual candidate Telegram relay and staging release worker receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-telegram-rejection-receipts",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests.log",
+          "sha256": "e12f570caeb7b734e1530084bbb3ae06163063b15563f44ae6614f6796042173"
+        },
+        {
+          "file": "compiled-tests.log",
+          "sha256": "7d34ad339aefaa6bb35298eb74c5ad3858fbbbeccfef14e8afc1bb29e240367a"
         }
       ]
     }
