@@ -114,4 +114,24 @@ describe('dueAt override permission gate (T-04.1.03.03)', () => {
       correlationId: 'corr-1',
     });
   });
+
+  it.each([
+    [{ remoteAddress: '127.0.0.2' }, '127.0.0.2'],
+    [undefined, 'unknown'],
+  ])(
+    'audits a due-date override without a normalized address or correlation ID (%j)',
+    async (socket, ip) => {
+      const { controller, service, correlationId } = makeController();
+      correlationId.getCorrelationId.mockReturnValue(undefined);
+      const req = { session: adminReq.session, socket } as AuthenticatedRequest;
+      await controller.override(req, INVOICE_ID, BODY);
+      expect(service.override).toHaveBeenCalledWith({
+        invoiceId: INVOICE_ID,
+        raw: BODY,
+        actorUserId: 'admin-1',
+        actorSession: adminReq.session,
+        ip,
+      });
+    }
+  );
 });

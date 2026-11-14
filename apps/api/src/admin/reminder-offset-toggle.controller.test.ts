@@ -87,6 +87,21 @@ describe('reminder offset toggle permission gate (T-04.1.04.05)', () => {
     });
   });
 
+  it.each([
+    [{ remoteAddress: '127.0.0.2' }, '127.0.0.2'],
+    [undefined, 'unknown'],
+  ])('audits a toggle when the request has no normalized IP (%j)', async (socket, ip) => {
+    const { controller, service } = makeController();
+    const req = { session: adminReq.session, socket } as AuthenticatedRequest;
+    await controller.set(req, BODY);
+    expect(service.set).toHaveBeenCalledWith({
+      raw: BODY,
+      actorUserId: 'admin-1',
+      actorSession: adminReq.session,
+      ip,
+    });
+  });
+
   it('protects the controller with StepUpGuard and requires step-up on set only', () => {
     const guards = Reflect.getMetadata(
       GUARDS_METADATA,

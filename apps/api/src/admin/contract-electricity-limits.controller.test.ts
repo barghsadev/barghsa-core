@@ -29,7 +29,13 @@ const VALID_BODY = {
 function makeController() {
   const get = vi.fn().mockResolvedValue(DEFAULT_DTO);
   const update = vi.fn().mockResolvedValue(DEFAULT_DTO);
-  const service = { get, update };
+  const service = {
+    get,
+    update,
+    recoveryHistory: vi.fn(),
+    stageRecovery: vi.fn(),
+    activateRecovery: vi.fn(),
+  };
   const controller = new ContractElectricityLimitsController(service as never);
   return { controller, service };
 }
@@ -101,5 +107,53 @@ describe('contract electricity limits permission gate (T-09.12.06)', () => {
     expect(rejectionBody(rejection)).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
     });
+  });
+
+  it('binds a bounded history cursor and exact recovery revisions to the current staff session', async () => {
+    const { controller, service } = makeController();
+    const sourceId = '11111111-1111-7111-8111-111111111111';
+    const draftId = '22222222-2222-7222-8222-222222222222';
+    const fromSocket = {
+      ...adminReq,
+      ip: undefined,
+      socket: { remoteAddress: '127.0.0.2' },
+    } as unknown as AuthenticatedRequest;
+    const noAddress = { session: adminReq.session } as AuthenticatedRequest;
+    await controller.recoveryHistory(adminReq, { beforeVersion: '12' });
+    await controller.stageRecovery(fromSocket, { sourceId, expectedVersion: 12 });
+    await controller.activateRecovery(noAddress, { draftId, expectedVersion: 12 });
+    expect(service.recoveryHistory).toHaveBeenCalledWith(adminReq.session, 12);
+    expect(service.stageRecovery).toHaveBeenCalledWith(
+      { sourceId, expectedVersion: 12 },
+      adminReq.session,
+      '127.0.0.2'
+    );
+    expect(service.activateRecovery).toHaveBeenCalledWith(
+      { draftId, expectedVersion: 12 },
+      adminReq.session,
+      'unknown'
+    );
+  });
+
+  it('rejects unauthorized history and malformed restoration commands before delegation', async () => {
+    const { controller, service } = makeController();
+    await expect(controller.recoveryHistory(nonAdminReq, {})).rejects.toMatchObject({
+      status: 403,
+    });
+    await expect(
+      controller.recoveryHistory(adminReq, { beforeVersion: '2147483648' })
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.stageRecovery(adminReq, { sourceId: 'invalid', expectedVersion: 12 })
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.activateRecovery(adminReq, {
+        draftId: '22222222-2222-7222-8222-222222222222',
+        expectedVersion: 0,
+      })
+    ).rejects.toMatchObject({ status: 400 });
+    expect(service.recoveryHistory).not.toHaveBeenCalled();
+    expect(service.stageRecovery).not.toHaveBeenCalled();
+    expect(service.activateRecovery).not.toHaveBeenCalled();
   });
 });

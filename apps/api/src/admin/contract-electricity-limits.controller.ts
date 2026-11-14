@@ -34,13 +34,6 @@ import {
   stageContractLimitRecovery,
 } from './contract-limit-recovery.js';
 
-function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
-  throw new HttpException(
-    { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode
-  );
-}
-
 function requestIp(req: AuthenticatedRequest): string {
   return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
@@ -86,9 +79,12 @@ export class ContractElectricityLimitsController {
   /** Single enforcement point for the `admin:catalogue:edit` capability. */
   private assertElectricitySettingsPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:catalogue:edit')) {
-      httpError(
-        ErrorCodes.AUTHZ_FORBIDDEN.code,
-        'Admin role required to manage contract electricity limits',
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.FORBIDDEN,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage contract electricity limits',
+        },
         HttpStatus.FORBIDDEN
       );
     }

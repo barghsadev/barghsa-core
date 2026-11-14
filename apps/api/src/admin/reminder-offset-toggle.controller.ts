@@ -20,13 +20,6 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js';
 
-function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
-  throw new HttpException(
-    { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode
-  );
-}
-
 function requestIp(req: AuthenticatedRequest): string {
   return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
@@ -53,9 +46,12 @@ export class ReminderOffsetToggleController {
 
   private assertTogglePermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:finance:invoices:reminder-offsets')) {
-      httpError(
-        ErrorCodes.AUTHZ_FORBIDDEN.code,
-        `Admin role required (${REMINDER_OFFSET_TOGGLE_PERMISSION})`,
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.FORBIDDEN,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: `Admin role required (${REMINDER_OFFSET_TOGGLE_PERMISSION})`,
+        },
         HttpStatus.FORBIDDEN
       );
     }

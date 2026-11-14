@@ -30,21 +30,18 @@ import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 import { DueAtOverrideService, type InvoiceDueAtDto } from '../invoice/due-at-override.service.js';
 
-function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
-  throw new HttpException(
-    { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode
-  );
+function httpError(code: string, message: string, statusCode: number): never {
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 function requestIp(req: AuthenticatedRequest): string {
   return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
-function assertUuid(id: string, label = 'invoiceId'): void {
+function assertInvoiceId(id: string): void {
   const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid invoiceId: expected a UUID', 400);
   }
 }
 
@@ -98,7 +95,7 @@ export class DueAtOverrideController {
     @Param('invoiceId') invoiceId: string
   ): Promise<InvoiceDueAtDto> {
     this.assertOverridePermission(req);
-    assertUuid(invoiceId);
+    assertInvoiceId(invoiceId);
     return this.service.get(invoiceId, req.session);
   }
 
@@ -144,7 +141,7 @@ export class DueAtOverrideController {
     @Body() body: Record<string, unknown>
   ): Promise<InvoiceDueAtDto> {
     this.assertOverridePermission(req);
-    assertUuid(invoiceId);
+    assertInvoiceId(invoiceId);
     const correlationId = this.correlationId.getCorrelationId();
     return this.service.override({
       invoiceId,
