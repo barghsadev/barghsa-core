@@ -23817,7 +23817,8 @@
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
         "Confirmed the local Alpine runtime SBOM differs from hosted 43552412387 by two removed glibc Sharp rows and no additions. One pending exception falls outside this runtime. Reconcile the 386 remaining rows with the final hosted images and obtain the required approvals.",
-        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open."
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23884,7 +23885,8 @@
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-sharp-runtime-platform",
-          "release-0.6-image-and-scanner-receipt-readback"
+          "release-0.6-image-and-scanner-receipt-readback",
+          "release-0.6-browser-43561500300"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -24825,7 +24827,8 @@
         "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts.",
         "Hosted diagnostic 43555617831 WebKit shard 1 recorded a combobox trigger flake while the preceding popup was still closing. Scoped test synchronization passed 50 executions across five browser projects with zero retries. Recheck the hosted candidate rollup.",
         "Hosted Mobile Safari shard 6 hit the combined customer comment deadline. Split electricity and saving while preserving the original assertions. A targeted saving detail run also found the 44 px back link could render fractionally short. The pointer-coarse 45 px minimum, 20 browser executions without retries, and all 103 gzip budgets passed. Complete the next exact hosted rollup.",
-        "Hosted run 43555617831 exposed geography server field feedback being cleared and a separate Firefox recovery request-observation timeout. The shared blur binding now preserves unchanged server rejections and ignores blur during submission. The recovery test now uses the persisted locale selected before boot. Complete the clean hosted rollup on the exact successor."
+        "Hosted run 43555617831 exposed geography server field feedback being cleared and a separate Firefox recovery request-observation timeout. The shared blur binding now preserves unchanged server rejections and ignores blur during submission. The recovery test now uses the persisted locale selected before boot. Complete the clean hosted rollup on the exact successor.",
+        "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt."
       ],
       "owner": null,
       "depends_on": [],
@@ -24942,7 +24945,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-combobox-popup-transition",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-browser-43561500300"
         ],
         "current_acceptance": null
       }
@@ -693178,7 +693182,8 @@
         "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
         "The Alpine runtime SBOM removes the glibc Sharp addon and one LGPL libvips review row. Reconcile the remaining 386 rows against the final five-image inventory and verify conditions and named dispositions. A separate glibc deployment still needs its own review.",
         "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate.",
-        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open."
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -693247,7 +693252,8 @@
           "release-0.6-sharp-modified-musl-proof",
           "release-0.6-sharp-runtime-platform",
           "release-0.6-hosted-alpine-inventory-readback",
-          "release-0.6-image-and-scanner-receipt-readback"
+          "release-0.6-image-and-scanner-receipt-readback",
+          "release-0.6-browser-43561500300"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -693405,7 +693411,8 @@
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
         "The exact local Linux amd64 app image ce2980001a9e has a verified CycloneDX receipt, 315 package rows, 12 medium findings and zero high or critical findings. Collect final staging and production registry receipts.",
         "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs.",
-        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open."
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -693467,7 +693474,8 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-sharp-runtime-platform",
           "release-0.6-hosted-alpine-inventory-readback",
-          "release-0.6-image-and-scanner-receipt-readback"
+          "release-0.6-image-and-scanner-receipt-readback",
+          "release-0.6-browser-43561500300"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -707378,7 +707386,8 @@
       "remaining": [
         "Verify the expanded fast Axe gate and critical journey states on the exact accepted staging candidate. The local production browser evidence covers both languages and includes intake, final review and confirmation states. The solar detail back link passed the existing 44 px minimum and the affected recovery and Axe checks in Persian and English on mobile Chromium and WebKit.",
         "Complete and record the manual keyboard and screen-reader review of final submission, payment and staff approval on the exact candidate, including actual staging workflow boundaries.",
-        "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate."
+        "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
+        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -707406,7 +707415,8 @@
           "release-0.6-critical-intake-accessibility",
           "release-0.6-critical-review-accessibility",
           "release-0.6-solar-back-touch-target",
-          "release-0.6-nightly-shared-build"
+          "release-0.6-nightly-shared-build",
+          "release-0.6-browser-43561500300"
         ],
         "current_acceptance": null
       }
@@ -714457,7 +714467,9 @@
       "launch_required": true,
       "remaining": [
         "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. The previous full workflow failed the image license gate; its branding setup and Persian storage receipt fixtures now have focused passing checks.",
-        "Run 43143811872 passed protected monorepo integrity and the five-image build, scan and report-only inventory. The final strict license and full release coverage gates still require their own exact candidate evidence."
+        "Run 43143811872 passed protected monorepo integrity and the five-image build, scan and report-only inventory. The final strict license and full release coverage gates still require their own exact candidate evidence.",
+        "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
+        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -714489,7 +714501,8 @@
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-reuse-affected-preflight",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-browser-43561500300"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1104247,7 +1104260,10 @@
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
         "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys.",
         "Three profile selection commands, single-session revocation and both trusted-device revocation commands reject undeclared fields before the service runs. Migrated HTTP checks verify rejection before changing the selected profile, session or device trust, and check the normal command behavior. The remaining command inventory and exact live candidate evidence are open.",
-        "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts."
+        "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts.",
+        "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
+        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1104582,7 +1104598,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-browser-43561500300"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1287473,6 +1287490,89 @@
         {
           "file": "running-v0.5.1-readback.json",
           "sha256": "fac46ba0c63b29ac4ad74e7b7dc3263a7ee2fa116155f2cc76d9f140b07a45ad"
+        }
+      ]
+    },
+    "release-0.6-browser-43561500300": {
+      "batch": "release-0.6-browser-43561500300",
+      "base_commit": "4cecd844b3cf9c8cd873e5a342f2e78e61a215c1",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.11.01.01",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
+        },
+        {
+          "path": "scripts/browser_workflow_identity.py",
+          "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        }
+      ],
+      "checks": [
+        "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
+        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required."
+      ],
+      "limitations": [
+        "The hosted receipts cover different exact development SHAs. The final frozen candidate, scheduled delivery, enforced licenses and actual deployment remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-43561500300",
+      "execution_receipts": [
+        {
+          "file": "nightly-browser-summary-attempt-1.zip",
+          "sha256": "5ec3d1b0f1daa1a73fcdfefe6beab563b8d24b7d18a6b1bd920031ff69e519e6"
+        },
+        {
+          "file": "verified-browser-readback.json",
+          "sha256": "549d407c552a2601c1c5704c9e8a4f2565fd94a56b1b8f5ee31e3cac195bcf6d"
+        },
+        {
+          "file": "shard-artifacts.json",
+          "sha256": "53c4b4cc4ec89135b82a75b63b15f80c0202e4d6e635c3b2689f4f86b0c5f18c"
+        },
+        {
+          "file": "workflow-readback.json",
+          "sha256": "b2f41b2a5ce30fa764a014ba6487ae3ff3197dc63d8aeffb2c2692a14bc71f7a"
+        },
+        {
+          "file": "hosted-image-readback.json",
+          "sha256": "dce141ad913eacc33b845d86b8b0de4a5abe2ae0208b45e3f22d4509c2272a52"
+        },
+        {
+          "file": "hosted-image-43564160393.zip",
+          "sha256": "218e9a9e546bdb62b29737e481425ae2a08f24165bca8105944696f0b68be9c6"
+        },
+        {
+          "file": "hosted-browser-focused-readback.json",
+          "sha256": "2448904670be4d9d1a2d93b5e9593b140fdaa24655ee9935a37b1df00ccf05ed"
+        },
+        {
+          "file": "primary-mobile-performance.zip",
+          "sha256": "1638b9638a8f0deaa843b60f06fa36bc495d59b63834539f302190ac8abc3cb1"
+        },
+        {
+          "file": "accessibility-advisories.zip",
+          "sha256": "151563cb06dbd43c18034331cdd019a05ebb1db419b483caefb206d4bd651326"
         }
       ]
     }
