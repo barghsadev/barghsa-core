@@ -9,7 +9,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { InputFieldException } from '../common/input-field.exception.js';
@@ -121,12 +129,20 @@ export class AdminSavingCatalogueController {
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiParam({ name: 'versionId', format: 'uuid' })
   @ApiOperation({ summary: 'Activate an agreement draft and supersede the old version' })
+  @ApiResponse({ status: 201, description: 'Agreement version activated.' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid agreement or product ID, or unexpected request body',
+  })
   activate(
     @Param('id') id: string,
     @Param('versionId') versionId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
     this.authorize(req);
+    assertEmptyCommandBody(body);
     return this.service.activate(
       parse(idSchema, id),
       parse(idSchema, versionId),

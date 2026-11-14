@@ -141,3 +141,21 @@ it.each([
   ).rejects.toMatchObject({ status: 400 });
   expect(service.verify).not.toHaveBeenCalled();
 });
+
+it('rejects undeclared breaker reset input without resetting the provider', async () => {
+  const { controller, service } = fixture();
+  const req = request(['admin:config:write']);
+  for (const invalid of [{ extra: true }, []]) {
+    await expect(
+      controller.resetCircuitBreaker(config.providerId, req, invalid)
+    ).rejects.toMatchObject({
+      status: 400,
+      response: { error: 'VALIDATION:INPUT:INVALID' },
+    });
+  }
+  expect(service.resetCircuitBreaker).not.toHaveBeenCalled();
+  await expect(controller.resetCircuitBreaker(config.providerId, req, {})).resolves.toMatchObject({
+    providerId: config.providerId,
+  });
+  expect(service.resetCircuitBreaker).toHaveBeenCalledExactlyOnceWith(config.providerId);
+});

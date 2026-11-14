@@ -17,7 +17,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { z } from 'zod';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -361,10 +369,20 @@ export class CatalogueProductsController {
       'order references are FK-protected and must stay valid. System products ' +
       'cannot be archived.',
   })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 204, description: 'Catalogue product archived.' })
-  async archive(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid catalogue product ID or unexpected request body',
+  })
+  async archive(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body?: unknown
+  ): Promise<void> {
     this.assertCataloguePermission(req);
     assertUuid(id);
+    assertEmptyCommandBody(body);
     return this.service.archive(id, req.session.userId, requestIp(req), req.session);
   }
 

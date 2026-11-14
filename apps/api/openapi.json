@@ -1462,9 +1462,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "204": {
             "description": "Catalogue product archived."
+          },
+          "400": {
+            "description": "Invalid catalogue product ID or unexpected request body"
           }
         },
         "security": [
@@ -1672,9 +1686,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Agreement version activated."
+          },
+          "400": {
+            "description": "Invalid agreement or product ID, or unexpected request body"
           }
         },
         "security": [
@@ -23920,9 +23948,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Province deactivated."
+          },
+          "400": {
+            "description": "Invalid province ID or unexpected request body"
           },
           "404": {
             "description": "Province not found."
@@ -24129,9 +24171,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "City deactivated."
+          },
+          "400": {
+            "description": "Invalid city or province ID, or unexpected request body"
           },
           "404": {
             "description": "City not found."
@@ -32578,9 +32634,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Circuit breaker reset."
+          },
+          "400": {
+            "description": "Unexpected request body"
           },
           "403": {
             "description": "Admin role required"
@@ -34048,9 +34118,23 @@
       "post": {
         "operationId": "AuthController_logout",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Logged out successfully."
+          },
+          "400": {
+            "description": "Unexpected request body"
           }
         },
         "summary": "Log out the current user",
@@ -34110,6 +34194,17 @@
       "post": {
         "operationId": "AuthController_refresh",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "content": {
@@ -34132,6 +34227,9 @@
               }
             },
             "description": "Session refreshed. New cookies set."
+          },
+          "400": {
+            "description": "Unexpected request body"
           },
           "401": {
             "description": "Invalid or expired refresh token"
@@ -42749,9 +42847,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Order cancelled."
+          },
+          "400": {
+            "description": "Invalid order ID or unexpected request body"
           },
           "404": {
             "description": "Order not found"
@@ -52804,9 +52916,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Uploaded object verified."
+          },
+          "400": {
+            "description": "Unexpected request body"
           }
         },
         "tags": [

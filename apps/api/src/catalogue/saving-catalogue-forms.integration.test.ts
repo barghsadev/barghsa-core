@@ -119,6 +119,27 @@ it('same draft returns its persisted text and identity without another version o
       )
     ).rows
   ).toHaveLength(1);
+  for (const invalid of [{ extra: true }, []]) {
+    const rejected = await request(`${path}/agreements/${receipt.id}/activate`, 'POST', invalid);
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  }
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,effective_from FROM saving_plan_agreement_versions WHERE id=$1',
+        [receipt.id]
+      )
+    ).rows
+  ).toEqual([{ status: 'draft', effective_from: null }]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE user_id=$1 AND event='saving_plan_agreement_activated'",
+        [userId]
+      )
+    ).rows
+  ).toEqual([]);
   const activated = await request(`${path}/agreements/${receipt.id}/activate`, 'POST');
   expect(activated.status).toBe(201);
   const published = (await activated.json()) as { effective_from: string };

@@ -214,6 +214,23 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
       })
     ).status
   ).toBe(404);
+  for (const invalid of [{ extra: true }, []]) {
+    const rejected = await fetch(`${base}/api/auth/logout`, {
+      method: 'POST',
+      headers: {
+        Cookie: auth.cookie,
+        'X-CSRF-Token': auth.token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(invalid),
+    });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(rejected.headers.has('Set-Cookie')).toBe(false);
+  }
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status
+  ).toBe(200);
   expect(
     (
       await fetch(`${base}/api/auth/logout`, {
@@ -265,6 +282,23 @@ it('requires CSRF for refresh, rejects idle expiry, and retains refresh reuse re
   ).toEqual([{ consumed_at: null }]);
   const fresh = await login();
   const headers = { Cookie: fresh.cookie, 'X-CSRF-Token': fresh.token };
+  for (const invalid of [{ extra: true }, []]) {
+    const rejected = await fetch(`${base}/api/auth/refresh`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(invalid),
+    });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(rejected.headers.has('Set-Cookie')).toBe(false);
+  }
+  expect(
+    (
+      await pool!.query('SELECT consumed_at FROM refresh_tokens WHERE session_id=$1', [
+        fresh.sessionId,
+      ])
+    ).rows
+  ).toEqual([{ consumed_at: null }]);
   const refreshed = await fetch(`${base}/api/auth/refresh`, { method: 'POST', headers });
   expect(refreshed.status, await refreshed.clone().text()).toBe(200);
   const refreshReceipt = await refreshed.json();

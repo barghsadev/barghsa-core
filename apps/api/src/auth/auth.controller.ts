@@ -15,7 +15,8 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -691,14 +692,18 @@ export class AuthController {
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Log out the current user' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
   @ApiResponse({
     status: 200,
     description: 'Logged out successfully.',
   })
   async logout(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
+    @Body() body?: unknown
   ): Promise<{ message: string }> {
+    assertEmptyCommandBody(body);
     const sessionId = req.cookies?.[SESSION_COOKIE_NAME];
 
     if (sessionId && typeof sessionId === 'string') {
@@ -733,6 +738,8 @@ export class AuthController {
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Refresh the session' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
   @ApiResponse({
     status: 200,
     description: 'Session refreshed. New cookies set.',
@@ -749,7 +756,8 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async refresh(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
+    @Body() body?: unknown
   ): Promise<{ sessionId: string; csrfToken: string; expiresAt: string }> {
     const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
 
@@ -759,6 +767,8 @@ export class AuthController {
         HttpStatus.UNAUTHORIZED
       );
     }
+
+    assertEmptyCommandBody(body);
 
     // Redeem the refresh token (rotation + family check)
     const { sessionId, refreshToken: newRefreshToken } =

@@ -21,6 +21,7 @@ import { VerificationProviderService } from './verification-provider.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 /**
  * Zod schema for the provider config update request body.
@@ -230,13 +231,16 @@ export class VerificationProviderController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Reset circuit breaker for a provider' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
   @ApiParam({ name: 'providerId', description: 'Provider identifier' })
   @ApiResponse({ status: 200, description: 'Circuit breaker reset.' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Provider not found' })
   async resetCircuitBreaker(
     @Param('providerId') providerId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
     const isAdmin = hasStaffPermission(req, 'admin:config:write');
     if (!isAdmin) {
@@ -246,6 +250,7 @@ export class VerificationProviderController {
       );
     }
 
+    assertEmptyCommandBody(body);
     const reset = this.verificationProviderService.resetCircuitBreaker(providerId);
     if (!reset) {
       throw new HttpException(

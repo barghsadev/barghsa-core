@@ -433,11 +433,17 @@ it('authenticates every upload step and requires CSRF before storage access', as
   expect(upload.key).toMatch(/^uploads\/document\/[a-f0-9-]+\.pdf$/);
   expect(upload.expiresIn).toBe(900);
   objects.set(upload.key, bytes);
-  const verify = await fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`, {
-    method: 'POST',
-    headers,
-    body: '{}',
-  });
+  const verifyPath = `${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`;
+  for (const invalid of [{ extra: true }, []]) {
+    const rejected = await fetch(verifyPath, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(invalid),
+    });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  }
+  const verify = await fetch(verifyPath, { method: 'POST', headers, body: '{}' });
   expect(verify.status).toBe(200);
   expect(await verify.json()).toMatchObject({ status: 'confirmed' });
   const record = await fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/record`, {

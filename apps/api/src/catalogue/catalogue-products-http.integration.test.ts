@@ -155,6 +155,18 @@ it('creates exact large prices, adds price history and archives without deleting
       ])
     ).rows
   ).toHaveLength(2);
+  for (const invalid of [{ extra: true }, []]) {
+    const rejected = await request(`/${product.id}`, 'DELETE', invalid);
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  }
+  expect(
+    (await http.pool.query('SELECT status FROM products WHERE id=$1', [product.id])).rows[0].status
+  ).toBe('active');
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
+      .rows
+  ).toEqual([]);
   expect((await request(`/${product.id}`, 'DELETE')).status).toBe(204);
   expect(
     (await http.pool.query('SELECT status FROM products WHERE id=$1', [product.id])).rows[0].status

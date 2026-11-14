@@ -240,6 +240,10 @@ it('rejects extra geography fields before creating, editing or importing rows', 
     [`/${target}`, 'PATCH', { ...names, ...extra }, undefined],
     [cities, 'POST', { ...names, ...extra }, undefined],
     [`${cities}/${city}`, 'PATCH', { ...names, ...extra }, undefined],
+    [`/${target}`, 'DELETE', extra, undefined],
+    [`/${target}`, 'DELETE', [], undefined],
+    [`${cities}/${city}`, 'DELETE', extra, undefined],
+    [`${cities}/${city}`, 'DELETE', [], undefined],
     [
       `${cities}/import`,
       'POST',
@@ -262,11 +266,11 @@ it('rejects extra geography fields before creating, editing or importing rows', 
   expect(await counts(current.userId)).toEqual(before);
   expect((await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows).toEqual(config);
   expect(
-    (await http.pool.query('SELECT name_en FROM provinces WHERE id=$1', [target])).rows
-  ).toEqual([{ name_en: 'Validation Province' }]);
-  expect((await http.pool.query('SELECT name_en FROM cities WHERE id=$1', [city])).rows).toEqual([
-    { name_en: 'Validation City' },
-  ]);
+    (await http.pool.query('SELECT name_en,status FROM provinces WHERE id=$1', [target])).rows
+  ).toEqual([{ name_en: 'Validation Province', status: 'active' }]);
+  expect(
+    (await http.pool.query('SELECT name_en,status FROM cities WHERE id=$1', [city])).rows
+  ).toEqual([{ name_en: 'Validation City', status: 'active' }]);
 });
 
 it('acknowledges the complete successful import in the selected province', async () => {

@@ -301,6 +301,17 @@ it('allows the owner and Manager while excluding financial, legal and stale Owne
     [profileId]
   );
   expect((await request('finance', 'GET', `/${id}`)).status).toBe(200);
+  const orderBefore = (await http.pool.query('SELECT status FROM orders WHERE id=$1', [id])).rows;
+  const notificationsBefore = await electricityDeliverySnapshot(http.pool, id);
+  for (const invalid of [{ extra: true }, []]) {
+    const rejected = await request('owner', 'POST', `/${id}/cancel`, invalid);
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  }
+  expect((await http.pool.query('SELECT status FROM orders WHERE id=$1', [id])).rows).toEqual(
+    orderBefore
+  );
+  expect(await electricityDeliverySnapshot(http.pool, id)).toEqual(notificationsBefore);
   await expectElectricityStatusRollback(http.pool, id, 'cancelled', () =>
     request('owner', 'POST', `/${id}/cancel`)
   );

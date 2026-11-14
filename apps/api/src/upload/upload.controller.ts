@@ -26,6 +26,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { UploadService } from './upload.service.js';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 @Controller('api/upload')
 @UseGuards(SessionAuthGuard)
@@ -103,7 +104,15 @@ export class UploadController {
 
   @Post(':key/verify')
   @HttpCode(HttpStatus.OK)
-  verifyUpload(@Param('key') key: string, @Req() actor: AuthenticatedRequest) {
+  @ApiResponse({ status: 200, description: 'Uploaded object verified.' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 400, description: 'Unexpected request body' })
+  verifyUpload(
+    @Param('key') key: string,
+    @Req() actor: AuthenticatedRequest,
+    @Body() body?: unknown
+  ) {
+    assertEmptyCommandBody(body);
     return this.uploads.verifyUpload(key, actor);
   }
 

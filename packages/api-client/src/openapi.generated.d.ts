@@ -12652,10 +12652,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Catalogue product archived. */
             204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid catalogue product ID or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -12738,9 +12749,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
+            /** @description Agreement version activated. */
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid agreement or product ID, or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -20870,10 +20893,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Province deactivated. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid province ID or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -21063,10 +21097,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description City deactivated. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid city or province ID, or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -26432,10 +26477,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Circuit breaker reset. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -27499,10 +27555,21 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Logged out successfully. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -27544,7 +27611,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Session refreshed. New cookies set. */
             200: {
@@ -27558,6 +27629,13 @@ export interface operations {
                         sessionId?: string;
                     };
                 };
+            };
+            /** @description Unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Invalid or expired refresh token */
             401: {
@@ -32498,10 +32576,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Order cancelled. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid order ID or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -38070,9 +38159,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
+            /** @description Uploaded object verified. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -14,7 +14,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { z } from 'zod';
 import { AdminGeographyService } from './admin-geography.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
@@ -270,12 +271,19 @@ export class AdminGeographyController {
   @Delete('provinces/:id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Delete (deactivate) province (admin)' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 400, description: 'Invalid province ID or unexpected request body' })
   @ApiResponse({ status: 200, description: 'Province deactivated.' })
   @ApiResponse({ status: 404, description: 'Province not found.' })
   @ApiResponse({ status: 409, description: 'Province has cities.' })
-  async deleteProvince(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  async deleteProvince(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body?: unknown
+  ) {
     this.requireAdmin(req);
     requireGeographyIds(id);
+    assertEmptyCommandBody(body);
     const deleted = await this.adminGeographyService.deleteProvince(
       id,
       req.session,
@@ -453,15 +461,22 @@ export class AdminGeographyController {
   @Delete('provinces/:provinceId/cities/:id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Delete (deactivate) city (admin)' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid city or province ID, or unexpected request body',
+  })
   @ApiResponse({ status: 200, description: 'City deactivated.' })
   @ApiResponse({ status: 404, description: 'City not found.' })
   async deleteCity(
     @Req() req: AuthenticatedRequest,
     @Param('provinceId') provinceId: string,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ) {
     this.requireAdmin(req);
     requireGeographyIds(provinceId, id);
+    assertEmptyCommandBody(body);
     const deleted = await this.adminGeographyService.deleteCity(
       provinceId,
       id,

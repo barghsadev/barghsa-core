@@ -15,7 +15,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { OrdersService } from './orders.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -143,12 +144,16 @@ export class OrdersController {
   @ApiOperation({
     summary: 'Cancel an order (restores its gift-code slot before payment)',
   })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Order cancelled.' })
+  @ApiResponse({ status: 400, description: 'Invalid order ID or unexpected request body' })
   @ApiResponse({ status: 404, description: 'Order not found' })
   async cancelOrder(
     @Param('id', new ParseUUIDPipe()) orderId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     const order = await this.ordersService.cancelOrder(req.session, orderId, req.ip ?? 'unknown');
     if (!order) {
       throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
