@@ -446,6 +446,25 @@ it('projects selected revision fields without financial side effects and preserv
     address: input.address,
     responseNote: `  ${'n'.repeat(1000)}  `,
   };
+  const wrongProfile = randomUUID();
+  for (const attempt of [
+    { path: 'revision-preview', body: { ...terms, profileId: wrongProfile }, status: 400 },
+    { path: 'revision-preview', body: { ...terms, expectedVersionId: randomUUID() }, status: 409 },
+    { path: 'resubmit', body: { ...command, profileId: wrongProfile }, status: 400 },
+    { path: 'resubmit', body: { ...command, expectedQuoteDigest: 'f'.repeat(64) }, status: 409 },
+  ]) {
+    const failure = await post(`orders/${order.orderId}/${attempt.path}`, attempt.body);
+    expect(failure.status, http.logs()).toBe(attempt.status);
+  }
+  for (const [path, body] of [
+    ['revision-preview', terms],
+    ['resubmit', command],
+    ['cancel-review', { reason: 'Unknown order' }],
+  ] as const) {
+    const missing = await post(`orders/${randomUUID()}/${path}`, body);
+    expect(missing.status, http.logs()).toBe(404);
+  }
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
   await rejected(
     'resubmit',
     {
@@ -4678,6 +4697,19 @@ it.each(['charge', 'credit'] as const)(
         )
       ).rows[0],
     });
+    const staffHistory = async () => {
+      const response = await fetch(staffPath, { headers: staffHeaders });
+      expect(response.status, http.logs()).toBe(200);
+      return response.json();
+    };
+    expect(await staffHistory()).toMatchObject({
+      contractId: order.contractId,
+      profileId: input.profileId,
+      versionId: contract.current_version_id,
+      canPropose: true,
+      blockedByIncrease: false,
+      adjustments: [],
+    });
     if (kind === 'charge') {
       const invalidNoWrite = async (
         endpoint: string,
@@ -4705,6 +4737,23 @@ it.each(['charge', 'credit'] as const)(
         expect(await priceSnapshot()).toEqual(before);
       };
       const reviewPath = `${staffPath}/review`;
+      const pricedState = await priceSnapshot();
+      for (const quote of [
+        { ...proposalInput, expectedVersionId: randomUUID() },
+        { ...proposalInput, effectiveFrom: period.period_end.toISOString() },
+      ]) {
+        const rejected = await fetch(reviewPath, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify(quote),
+        });
+        expect(rejected.status, http.logs()).toBe(409);
+      }
+      expect(
+        (await fetch(staffPath.replace(order.contractId, randomUUID()), { headers: staffHeaders }))
+          .status
+      ).toBe(404);
+      expect(await priceSnapshot()).toEqual(pricedState);
       await invalidNoWrite(reviewPath, { ...proposalInput, effectiveFrom: 'PRIVATE' }, [
         'effectiveFrom',
       ]);
@@ -4779,6 +4828,11 @@ it.each(['charge', 'credit'] as const)(
       calculation: ElectricityPriceAdjustmentReview['data']['calculation'];
     };
     expect(proposed.calculation).toEqual(proposalReview.data.calculation);
+    expect(await staffHistory()).toMatchObject({
+      canPropose: false,
+      blockedByIncrease: false,
+      adjustments: [{ adjustmentId: proposed.adjustmentId, status: 'proposed' }],
+    });
     expect(proposed).toMatchObject({
       contractId: order.contractId,
       status: 'proposed',
@@ -4843,6 +4897,39 @@ it.each(['charge', 'credit'] as const)(
     await http.pool.query(
       "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-finance')"
     );
+    if (kind === 'charge') {
+      const beforeLockedFinalize = await priceSnapshot();
+      const lock = await http.pool.connect();
+      try {
+        await lock.query('BEGIN');
+        await lock.query('SELECT id FROM contracts WHERE id=$1 FOR UPDATE', [order.contractId]);
+        const locked = await fetch(finalizePath, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify(finalizeBody),
+        });
+        expect(locked.status, http.logs()).toBe(409);
+      } finally {
+        await lock.query('ROLLBACK');
+        lock.release();
+      }
+      expect(await priceSnapshot()).toEqual(beforeLockedFinalize);
+      const missingAdjustment = randomUUID();
+      for (const operation of ['finalize', 'cancel'] as const) {
+        const missing = await fetch(
+          `${http.base}/api/staff/electricity/price-adjustments/${missingAdjustment}/${operation}`,
+          {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify(
+              operation === 'finalize' ? finalizeBody : { idempotencyKey: randomUUID() }
+            ),
+          }
+        );
+        expect(missing.status, http.logs()).toBe(404);
+      }
+      expect(await priceSnapshot()).toEqual(beforeLockedFinalize);
+    }
     expect(
       (
         await fetch(finalizePath, {
@@ -5005,6 +5092,17 @@ it.each(['charge', 'credit'] as const)(
     });
     expect(increaseResponse.status, http.logs()).toBe(201);
     const increaseId = ((await increaseResponse.json()) as { requestId: string }).requestId;
+    expect(await staffHistory()).toMatchObject({ canPropose: false, blockedByIncrease: true });
+    if (kind === 'charge') {
+      const pendingPriceBasis = await priceSnapshot();
+      const blocked = await fetch(`${staffPath}/review`, {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify(proposalInput),
+      });
+      expect(blocked.status, http.logs()).toBe(409);
+      expect(await priceSnapshot()).toEqual(pendingPriceBasis);
+    }
     const increaseApprovePath = `${http.base}/api/staff/electricity/increase-requests/${increaseId}/approve`;
     const increaseApprovalReviewResponse = await fetch(`${increaseApprovePath}/review`, {
       method: 'POST',
@@ -6043,4 +6141,60 @@ it('does not treat an unrelated contract invoice as the order’s initial fundin
     await client.query('ROLLBACK');
     client.release();
   }
+});
+
+it('returns the ordered delivery periods and advanced settings through the authenticated API', async () => {
+  const periods = `${http.base}/api/electricity/periods`;
+  const read = (mode: string) => fetch(`${periods}/${mode}`, { headers });
+  const result = await read('simple');
+  expect(result.status, http.logs()).toBe(200);
+  const { periods: choices } = (await result.json()) as {
+    periods: { key: string; start: string; end: string }[];
+  };
+  expect(choices.map(({ key }) => key)).toEqual([
+    'current_month',
+    'next_month',
+    'current_week',
+    'next_week',
+    'week_after_next',
+  ]);
+  expect(choices[0]?.end).toBe(choices[1]?.start);
+  expect(choices[2]?.end).toBe(choices[3]?.start);
+  expect(choices[3]?.end).toBe(choices[4]?.start);
+  const valid = await read('advanced');
+  expect(valid.status, http.logs()).toBe(200);
+  expect(await valid.json()).toEqual({
+    limits: { leadTimeDays: expect.any(Number), maxContractDuration: expect.any(Number) },
+    mandatoryGreenEnabled: expect.any(Boolean),
+  });
+  await http.pool.query(
+    "INSERT INTO app_config(key,value) VALUES('electricity.contract_limits','42') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value"
+  );
+  expect((await read('advanced')).status).toBe(503);
+});
+
+it('rejects electricity previews outside the owned legal profile and accepted delivery period', async () => {
+  const basic = { profileId: input.profileId, period: 'next_week', totalKwh: '10' };
+  const wrongProfile = await post('preview/simple', { ...basic, profileId: randomUUID() });
+  expect(wrongProfile.status, http.logs()).toBe(404);
+  const { id: person } = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO profiles(user_id,profile_type,status) VALUES('buyer','INDIVIDUAL','ACTIVE') RETURNING id`
+    )
+  ).rows[0]!;
+  const wrongKind = await post('preview/simple', { ...basic, profileId: person });
+  expect(wrongKind.status, http.logs()).toBe(400);
+  const wrongPeriod = await post('preview/advanced', {
+    profileId: input.profileId,
+    startAt: new Date(Date.now() + 3 * 86_400_000).toISOString(),
+    endAt: new Date(Date.now() + 2 * 86_400_000).toISOString(),
+    quantities: { thermal: '10' },
+  });
+  expect(wrongPeriod.status, http.logs()).toBe(400);
+  const counts = await http.pool.query(
+    `SELECT (SELECT count(*)::int FROM orders) AS orders,
+      (SELECT count(*)::int FROM invoices) AS invoices,
+      (SELECT count(*)::int FROM electricity_order_submissions) AS submissions`
+  );
+  expect(counts.rows).toEqual([{ orders: 0, invoices: 0, submissions: 0 }]);
 });
