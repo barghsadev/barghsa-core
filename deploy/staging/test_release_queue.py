@@ -216,7 +216,11 @@ if __name__ == '__main__':
     parser.add_argument('--commit', required=True)
     parser.add_argument('--receipt', required=True, type=pathlib.Path)
     parser.add_argument('--screenshot', action='append', type=pathlib.Path, default=[])
+    parser.add_argument('--screenshot-sha256', action='append', default=[])
     args = parser.parse_args()
+    if args.screenshot_sha256:
+        if [hashlib.sha256(path.read_bytes()).hexdigest() for path in args.screenshot] != args.screenshot_sha256:
+            sys.exit(1)
     identity, text = release_details(pathlib.Path.cwd(), args.commit)
     receipt = {**identity, 'status': 'sent', 'chat_id': -1004467450624}
     data = {'summary': {**receipt, 'message_id': 100, 'text_sha256': hashlib.sha256(text.encode()).hexdigest()}}
@@ -659,6 +663,32 @@ if __name__ == '__main__':
         self.assertEqual(sum("--screenshot" in call for call in calls), 1)
         self.assertFalse(any("--retry-unknown" in call for call in calls))
         self.assertEqual((self.capture / "deployed-head").read_text().strip(), newer)
+
+    def test_replaced_queued_screenshot_sends_no_album(self):
+        job = queue.enqueue(self.repo, self.state, self.commit, [self.image])
+        stored = self.state / "jobs" / self.commit / job["screenshots"][0]
+        stored.write_bytes(b"\x89PNG\r\n\x1a\nreplacement content")
+        original = queue.command
+        uploads = []
+
+        def invoke(repo, *args, **kwargs):
+            if "--screenshot" in args:
+                uploads.append(args)
+            return original(repo, *args, **kwargs)
+
+        with patch.object(queue, "command", side_effect=invoke), self.live():
+            self.assertEqual(queue.work(self.state), 0)
+        self.assertEqual(len(uploads), 1)
+        command = uploads[0]
+        self.assertIn("--screenshot-sha256", command)
+        self.assertEqual(command[command.index("--screenshot-sha256") + 1], stored.stem)
+        confirmed = queue.jobs(self.state)[0]
+        self.assertEqual(confirmed["phase"], "completed")
+        self.assertEqual(set(confirmed["telegram"]), {"summary"})
+        self.assertIn("screenshot_warning", confirmed)
+        calls = (self.capture / "notifications").read_text().splitlines()
+        self.assertTrue(calls)
+        self.assertFalse(any("--screenshot" in call for call in calls))
 
     def test_optional_failure_cannot_bypass_required_announcement_confirmation(self):
         queue.enqueue(self.repo, self.state, self.commit, [self.image])

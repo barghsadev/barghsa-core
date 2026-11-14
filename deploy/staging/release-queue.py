@@ -281,12 +281,13 @@ def enqueue(repo, state, commit, screenshots, image_bundle=None, retained_scans=
     retained = retained_scan_selection(retained_scans) if retained_scans is not None else None
     images = {}
     for path in screenshots:
-        data = Path(path).read_bytes()
+        with Path(path).open("rb") as source:
+            data = source.read(10 * 1024 * 1024 + 1)
         if not data.startswith(b"\x89PNG\r\n\x1a\n") or len(data) > 10 * 1024 * 1024:
             raise ValueError("Release screenshots must be PNG files no larger than 10 MiB")
         images[hashlib.sha256(data).hexdigest() + ".png"] = data
-    if len(images) > 10:
-        raise ValueError("At most ten screenshots can accompany one release album")
+        if len(images) > 10:
+            raise ValueError("At most ten screenshots can accompany one release album")
     with locked(state, "queue.lock"):
         directory = state / "jobs" / commit
         path = directory / "job.json"
@@ -506,7 +507,7 @@ def deploy(job, state):
                   "--receipt", str(notification_receipt)]
         args = list(notify)
         for name in job["screenshots"]:
-            args.extend(["--screenshot", str(directory / name)])
+            args.extend(["--screenshot", str(directory / name), "--screenshot-sha256", name[:-4]])
         job.pop("screenshot_warning", None)
         try:
             command(checkout, *args)

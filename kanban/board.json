@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:49:36+00:00",
+  "updated": "2026-11-14T16:40:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21111,7 +21111,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21131,7 +21132,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21457,6 +21458,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         }
@@ -25200,7 +25209,8 @@
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The release notifier persists the unknown delivery marker before sending and replaces it atomically on confirmation. The summary, album and verified queue receipt fixtures pass. Verify the actual worker receipts on the accepted candidate.",
-        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required."
+        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25282,7 +25292,8 @@
           "release-0.6-bound-staging-worker-readbacks",
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-release-notification-durability",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": null
       }
@@ -25522,7 +25533,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25546,7 +25558,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -25834,6 +25846,14 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         }
@@ -34073,7 +34093,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -34129,7 +34150,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34570,6 +34591,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         }
@@ -37619,7 +37648,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-wal-upload-readback"
+          "release-0.6-wal-upload-readback",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37650,7 +37680,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -38405,6 +38435,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Fresh WAL uploads now verify encrypted storage readback. The existing full backup uses the same checksum rule and unchanged manifest and receipt formats. Native WAL replay, PITR, corruption and retry checks passed. Restore procedures, deployment topology and RPO/RTO targets keep their existing definitions."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         }
@@ -173124,7 +173162,8 @@
           "release-0.6-telegram-unlink-validation",
           "release-0.6-notification-scan-recheck",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -173496,7 +173535,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -174961,6 +175000,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -671193,7 +671240,8 @@
           "release-0.6-telegram-unlink-validation",
           "release-0.6-notification-scan-recheck",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -671565,7 +671613,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -673054,6 +673102,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -706686,7 +706742,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -706698,7 +706755,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -707033,6 +707090,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         }
@@ -738925,7 +738990,8 @@
         "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal.",
         "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram.",
         "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts.",
-        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required."
+        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -738991,7 +739057,8 @@
           "release-0.6-staging-nginx-recovery",
           "release-0.6-staging-nginx-fixture",
           "release-0.6-release-notification-durability",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": null
       }
@@ -759906,7 +759973,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-release-notification-durability"
+          "release-0.6-release-notification-durability",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -759926,7 +759994,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "6344a513ab8f3c752b733889725f587cbd3404086bf75c5a549a138d3cc62eb8"
+              "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -760815,6 +760883,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Only Telegram receipt persistence changed. All notifier and queue fixtures passed. Renames, sync failure, duplicate prevention and staged identity gates preserve previous evidence on unaffected paths."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         }
@@ -1114019,19 +1114095,19 @@
           "source_evidence": [
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
+              "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
+              "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "6344a513ab8f3c752b733889725f587cbd3404086bf75c5a549a138d3cc62eb8"
+              "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "a5544ac915edcd9f65ec84d780a29ee4e5c982285360528a5259ed3778eb0df1"
+              "sha256": "726519e4aef61ab0d633375a44efe6a2568b0d88258f24ab434e2b553afb9be3"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1114301,6 +1114377,17 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Only Telegram receipt persistence changed. All notifier and queue fixtures passed. Renames, sync failure, duplicate prevention and staged identity gates preserve previous evidence on unaffected paths."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/notify-release.py",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ]
         },
@@ -1114324,7 +1114411,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
           "release-0.6-bound-staging-worker-readbacks",
-          "release-0.6-release-notification-durability"
+          "release-0.6-release-notification-durability",
+          "release-0.6-reviewed-album-bytes"
         ]
       }
     },
@@ -1128033,7 +1128121,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1128049,11 +1128137,11 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
+              "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
+              "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1131692,6 +1131780,16 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/notify-release.py",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ],
           "presentation_renewals": [
@@ -1132146,7 +1132244,8 @@
           "release-0.6-release-notification-durability",
           "release-0.6-consultation-read-expiry",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-reviewed-album-bytes"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1134315,7 +1134414,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1134331,11 +1134430,11 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
+              "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
+              "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1137902,6 +1138001,16 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
+            },
+            {
+              "batch": "release-0.6-reviewed-album-bytes",
+              "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/notify-release.py",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1138373,7 +1138482,8 @@
           "release-0.6-release-notification-durability",
           "release-0.6-consultation-read-expiry",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-reviewed-album-bytes"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1143768,7 +1143878,8 @@
         "The restored-application recovery probe now verifies the exact API and web revision before sign-in, then requires the owned dashboard, wallet, all four service reads and logout. The promotion verifier binds one original probe report to the recovery timeline. Forty-seven focused checks passed. Run the probe during the approved, measured restore.",
         "The consultation history and detail read checks now fail closed if their session expires while waiting on PostgreSQL. Both regressions rejected the current baseline, and all five compiled native consultation request checks passed after the correction. Deployed candidate evidence remains open.",
         "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
-        "Both new consultation catalogue and staff team-read expiry regressions rejected the previous compiled baseline. The two fixes passed 25 compiled consultation, workflow and assignment tests and the selected wallet-funded payment and completion journey. Exact staged evidence remains open."
+        "Both new consultation catalogue and staff team-read expiry regressions rejected the previous compiled baseline. The two fixes passed 25 compiled consultation, workflow and assignment tests and the selected wallet-funded payment and completion journey. Exact staged evidence remains open.",
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1144163,7 +1144274,8 @@
           "release-0.6-consultation-read-expiry",
           "release-0.6-auth-contact-coverage-closure",
           "release-0.6-auth-credential-races",
-          "release-0.6-consultation-read-authority"
+          "release-0.6-consultation-read-authority",
+          "release-0.6-reviewed-album-bytes"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1336610,6 +1336722,91 @@
         {
           "file": "scoped-checks.log",
           "sha256": "9e8c3b30078bd67ad924deaaf80c1125240da7c1a5cafe3db7696132f707eaab"
+        }
+      ]
+    },
+    "release-0.6-reviewed-album-bytes": {
+      "batch": "release-0.6-reviewed-album-bytes",
+      "base_commit": "508ebb331f7d30140721c39affd08726cd8f1fc7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/notify-release.py",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "726519e4aef61ab0d633375a44efe6a2568b0d88258f24ab434e2b553afb9be3"
+        }
+      ],
+      "checks": [
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
+        "The enqueue and upload paths bound PNG reads at 10 MiB. The notifier rejects a count, order or byte mismatch before accessing Telegram configuration, and hands the exact validated bytes to the uploader.",
+        "Changed-document formatting, Python syntax and git diff checks passed."
+      ],
+      "limitations": [
+        "One assertion from the multipart test was initially placed in the new test. It was restored to its original location and both affected cases passed on retry. The other 19 cases passed in the original run.",
+        "Fixture evidence. The live staging release and Telegram receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-reviewed-album-bytes",
+      "execution_receipts": [
+        {
+          "file": "regression-before.log",
+          "sha256": "cd230f76b693065e5b59590c881ec63de1161dca83138813e88ffa91236fc143"
+        },
+        {
+          "file": "queue.log",
+          "sha256": "11bed4ad2f063896a5b4b3dcae9cd2610025cf23aa5e4a5f539e4cf9b3d94ba9"
+        },
+        {
+          "file": "notifier-initial.log",
+          "sha256": "63ac07f76d5e50deef05e815efa737fdeaeaed5021eed77954719c2470514084"
+        },
+        {
+          "file": "notifier-retry.log",
+          "sha256": "feaca45306a2e1c7ed4e95afb8c9eac9c41d9e6d45885aebe314fa6a3bdefd4a"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

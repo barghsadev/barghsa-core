@@ -184,6 +184,39 @@ class ReleaseNotificationTests(unittest.TestCase):
         self.assertIn(b'name="photo"; filename="screenshot.png"', request.data)
         self.assertTrue(request.get_header("Content-type").startswith("multipart/form-data; boundary="))
 
+    def test_expected_album_digest_binds_bytes_and_order_before_any_notification(self):
+        first = self.root / "first.png"
+        second = self.root / "second.png"
+        first.write_bytes(b"\x89PNG\r\n\x1a\nreviewed first")
+        second.write_bytes(b"\x89PNG\r\n\x1a\nreviewed second")
+        args = ["notify-release.py", "--commit", self.metadata["commit"]]
+        for path in (first, second):
+            args.extend(["--screenshot", str(path), "--screenshot-sha256",
+                         hashlib.sha256(path.read_bytes()).hexdigest()])
+        expected_images = [first.read_bytes(), second.read_bytes()]
+        with patch.object(sys, "argv", args), \
+                patch.object(release, "release_details", return_value=(self.metadata, self.text)), \
+                patch.object(release.subprocess, "check_output", side_effect=[self.metadata["commit"], ""] * 3), \
+                patch.object(release, "telegram_config") as config, \
+                patch.object(release, "announce") as summary, \
+                patch.object(release, "announce_screenshots") as album, \
+                patch.object(release, "telegram_call") as telegram:
+            for replacement in (b"\x89PNG\r\n\x1a\nreplacement content", expected_images[0]):
+                second.write_bytes(replacement)
+                with self.assertRaisesRegex(ValueError, "Queued screenshot bytes differ"):
+                    release.main()
+            config.assert_not_called()
+            summary.assert_not_called()
+            album.assert_not_called()
+            telegram.assert_not_called()
+            second.write_bytes(expected_images[1])
+            config.return_value = "synthetic", str(self.channel["id"])
+            release.main()
+            self.assertEqual(album.call_args.args[4], expected_images)
+            config.assert_called_once()
+            summary.assert_called_once()
+            album.assert_called_once()
+
     def test_screenshots_confirm_once_and_reject_a_wrong_receipt(self):
         data = b"\x89PNG\r\n\x1a\n" + b"synthetic image bytes"
         def send(token, method, payload, photo=None):

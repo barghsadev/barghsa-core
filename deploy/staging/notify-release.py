@@ -173,7 +173,8 @@ def announce(metadata, text, token, destination, state_dir, retry_unknown=False)
 
 
 def screenshot_bytes(path):
-    data = path.read_bytes()
+    with path.open("rb") as source:
+        data = source.read(10 * 1024 * 1024 + 1)
     if not data.startswith(b"\x89PNG\r\n\x1a\n") or len(data) > 10 * 1024 * 1024:
         raise ValueError("Screenshots must be PNG images no larger than 10 MB")
     return data
@@ -240,16 +241,22 @@ def main():
     parser.add_argument("--retry-unknown", action="store_true", help="Retry only after manually checking the channel for a prior message")
     parser.add_argument("--receipt", type=Path, help="Write confirmed notification results to the private release job directory")
     parser.add_argument("--screenshot", action="append", type=Path, default=[], help="Attach a PNG screenshot after the Persian release notes; repeat for multiple images")
+    parser.add_argument("--screenshot-sha256", action="append", default=[],
+                        help="Expected SHA-256 for each queued screenshot, in attachment order")
     args = parser.parse_args()
     metadata, text = release_details(ROOT, args.commit)
     current = subprocess.check_output(["rtk", "proxy", "git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     dirty = subprocess.check_output(["rtk", "proxy", "git", "status", "--porcelain"], cwd=ROOT, text=True)
     if current != args.commit or dirty:
         raise ValueError("Release checkout changed; commit the batch and retry from its exact HEAD")
-    token, destination = telegram_config()
-    images = [screenshot_bytes(path) for path in args.screenshot]
-    if len(images) > 10:
+    if len(args.screenshot) > 10:
         raise ValueError("At most ten screenshots can accompany one release update")
+    images = [screenshot_bytes(path) for path in args.screenshot]
+    if args.screenshot_sha256 and args.screenshot_sha256 != [
+        hashlib.sha256(image).hexdigest() for image in images
+    ]:
+        raise ValueError("Queued screenshot bytes differ from the reviewed release captures")
+    token, destination = telegram_config()
     if args.check:
         verify_release_channel(telegram_call(token, "getChat", {"chat_id": destination}), destination)
         print(f"Release preflight passed for v{metadata['version']}")

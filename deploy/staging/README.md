@@ -116,7 +116,10 @@ The job directory stays private. Git creates tracked files with their usual
 read and execute permissions so the non-root container user can load them.
 
 Queue jobs, frozen screenshots, worker code and logs live outside the checkout in
-`~/.local/state/barghsa-staging-queue`. Run `python3 deploy/staging/release-queue.py status`
+`~/.local/state/barghsa-staging-queue`. The notifier checks the exact attachment
+bytes against the reviewed SHA-256 values from enqueue before contacting Telegram.
+A changed or missing capture follows the existing optional screenshot warning path.
+Run `python3 deploy/staging/release-queue.py status`
 to inspect them. A failed or interrupted job stops the deployment queue while building
 can continue. Inspect that job's `deploy.log`, resolve the failure and explicitly run
 `python3 deploy/staging/release-queue.py retry --commit <full-sha>`. If the
