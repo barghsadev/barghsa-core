@@ -276,7 +276,7 @@ class ReleaseNotificationTests(unittest.TestCase):
         # Execute the real deployment script against subprocess stubs, with no network or Docker writes.
         staging = self.root / "deploy/staging"
         staging.mkdir(parents=True)
-        for script in ("deploy.sh", "build-postgres-image.sh", "release-queue.py"):
+        for script in ("deploy.sh", "build-postgres-image.sh", "release-queue.py", "release.sh"):
             shutil.copy(Path(__file__).with_name(script), staging / script)
         bins = self.root / "bin"
         bins.mkdir()
@@ -341,6 +341,11 @@ elif name=='scan-runtime':
         (root/f'{index}-vulnerabilities.json').write_bytes(payload)
         (root/f'{index}-sbom.cdx.json').write_bytes(payload)
         (root/f'{index}-image.json').write_text(json.dumps({'image_id':identity(tag),'blocked':False,'report_sha256':sha,'sbom_sha256':sha}))
+elif name=='ssh' and args[-1]=='bash -s -- --check-protected-backup':
+    assert sys.stdin.buffer.read()==pathlib.Path('deploy/staging/release.sh').read_bytes()
+    if os.environ.get('DISPOSABLE_MILESTONE'):
+        print('Staging milestone requires non-disposable storage and encrypted WAL archiving', file=sys.stderr)
+        sys.exit(1)
 elif name=='ssh' and args[-1]=='gzip -d | docker load': sys.stdin.buffer.read()
 elif name=='ssh' and args[-1].startswith('bash -c '):
     archive=sys.stdin.buffer.read()
@@ -358,7 +363,7 @@ elif name=='scp' and pathlib.Path(args[-2]).name=='candidate.env':
     assert manifest['BARGHSA_CLAMAV_IMAGE_ID']=='sha256:'+'e'*64
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):
     assert args[-1].endswith(' --require-protected-backup')
-    if os.environ.get('DISPOSABLE_MILESTONE'):
+    if os.environ.get('RUNTIME_BECAME_DISPOSABLE'):
         print('Staging milestone requires non-disposable storage and encrypted WAL archiving', file=sys.stderr)
         sys.exit(1)
     if not os.environ.get('MISSING_SCANNER'):
@@ -408,7 +413,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         scenarios = [(failure, False, False) for failure in (
             "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", "MISSING_BACKUP", "MISSING_SCANNER", None,
             "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
-            "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER", "DISPOSABLE_MILESTONE",
+            "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER",
+            "DISPOSABLE_MILESTONE", "RUNTIME_BECAME_DISPOSABLE",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True), ("FAIL_RETAINED_LICENSE", False, True)]:
@@ -492,6 +498,14 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     self.assertLess(calls.index(readiness), calls.index(preflight))
                 if failure in {"FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
+                elif failure == "DISPOSABLE_MILESTONE":
+                    self.assertIn("requires non-disposable storage and encrypted WAL archiving", result.stderr)
+                    self.assertEqual(len([line for line in calls if line.startswith("ssh ")]), 1)
+                    self.assertTrue(calls[-1].endswith("bash -s -- --check-protected-backup"))
+                    self.assertFalse(any(line.startswith(("docker ", "scp ", "scan-runtime ")) for line in calls))
+                elif failure == "RUNTIME_BECAME_DISPOSABLE":
+                    self.assertIn("requires non-disposable storage and encrypted WAL archiving", result.stderr)
+                    self.assertTrue(calls[-1].endswith(" --require-protected-backup"))
                 elif failure == "INVALID_RETAINED_ID":
                     self.assertIn("Invalid PostgreSQL or ClamAV image ID", result.stderr)
                     self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))

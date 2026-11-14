@@ -20,30 +20,59 @@ class ReleaseRollbackTests(unittest.TestCase):
 
     def test_official_milestone_refuses_disposable_or_non_archiving_runtime(self):
         text = RELEASE.read_text()
-        check = text[text.index('if [[ "${2:-}" == --require-protected-backup'):
-                     text.index('\nbackup_env=')]
+        check = text[text.index('check_backup_config() {'):text.index('\nif [[ "${1:-}" !=')]
         script = f'''set -euo pipefail
+backup_env=/dev/null
+backup_key=/dev/null
+wal_archive_env=/dev/null
 {check}
+check_backup_config "$1"
 echo backup-settings-admitted
 '''
-        for flag, disposable, wal, allowed in (
-            ('--require-protected-backup', 'false', 'true', True),
-            ('--require-protected-backup', 'true', 'true', False),
-            ('--require-protected-backup', 'true', 'false', False),
-            ('--require-protected-backup', 'false', 'false', False),
-            ('--require-protected-backup', 'false', '', False),
-            ('', 'true', 'false', True),
+        for flag, disposable, wal, expected_error in (
+            ('--require-protected-backup', 'true', 'true', 'encrypted WAL archiving'),
+            ('--require-protected-backup', 'true', 'false', 'encrypted WAL archiving'),
+            ('--require-protected-backup', 'false', 'false', 'encrypted WAL archiving'),
+            ('--require-protected-backup', 'false', '', 'encrypted WAL archiving'),
+            ('', 'true', 'false', ''),
         ):
             with self.subTest(flag=flag, disposable=disposable, wal=wal):
                 result = subprocess.run(
-                    ['bash', '-c', script, 'backup-fixture', 'candidate.env', flag],
+                    ['bash', '-c', script, 'backup-fixture', flag],
                     env={**os.environ, 'BARGHSA_DISPOSABLE': disposable, 'BARGHSA_STAGING_WAL_ARCHIVE': wal},
                     capture_output=True, text=True, check=False,
                 )
-                self.assertEqual(result.returncode, 0 if allowed else 1)
-                self.assertEqual(result.stdout.strip(), 'backup-settings-admitted' if allowed else '')
-                if not allowed:
-                    self.assertIn('requires non-disposable storage and encrypted WAL archiving', result.stderr)
+                self.assertEqual(result.returncode, 1 if expected_error else 0)
+                self.assertEqual(result.stdout.strip(), '' if expected_error else 'backup-settings-admitted')
+                if expected_error:
+                    self.assertIn(expected_error, result.stderr)
+
+    def test_read_only_preflight_requires_all_protected_backup_files(self):
+        with tempfile.TemporaryDirectory(prefix='barghsa-backup-preflight-') as directory:
+            root = Path(directory)
+            config = root / 'config'
+            config.mkdir()
+            marker = root / 'lock'
+            script = RELEASE.read_text().replace('/etc/barghsa/staging', str(config))
+            script = script.replace('$(id -u)', '0').replace('/run/lock/barghsa-staging-release.lock', str(marker))
+            runtime = config / 'runtime.env'
+            runtime.write_text('BARGHSA_DISPOSABLE=false\nBARGHSA_STAGING_WAL_ARCHIVE=true\n')
+            names = ('backup.env', 'backup-key', 'wal-archive.env')
+            for missing in (*names, None):
+                with self.subTest(missing=missing):
+                    for name in names:
+                        (config / name).write_text('' if name == missing else 'fixture')
+                    result = subprocess.run(
+                        ['bash', '-s', '--', '--check-protected-backup'],
+                        input=script, capture_output=True, text=True, check=False,
+                    )
+                    self.assertEqual(result.returncode, int(missing is not None), result.stderr)
+                    self.assertEqual(result.stdout, '')
+                    self.assertFalse(marker.exists())
+                    if missing == 'wal-archive.env':
+                        self.assertIn('protected archiver configuration', result.stderr)
+                    elif missing:
+                        self.assertIn('protected off-server backup configuration and key', result.stderr)
 
     def run_rollback(self, simulate_failure=False, schema_ready=True, postgres_ready=True,
                      identities=True, available=True, running_mismatch=""):

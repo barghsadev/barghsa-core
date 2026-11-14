@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T08:33:03+00:00",
+  "updated": "2026-11-14T08:40:14+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17161,7 +17161,7 @@
         "The prepared PostgreSQL image with a 197 MB synthetic data directory peaked at 407 MB of allocated backup scratch during verified encrypted upload. Repeat on the approved off-server destination while budgeting the retained volume, candidate images, transfer archive, and logical restore.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The v0.6.0 and later worker now requires protected staging mode and encrypted WAL archiving before starting services or stopping writers. Live v0.5.1 still declares disposable mode and lacks the three protected backup inputs. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover."
+        "The v0.6.0 worker checks backup mode, archiving and the three protected files before image or remote configuration work. The read-only preflight refused live staging. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -17267,7 +17267,8 @@
           "release-0.6-measured-cutover-scratch",
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
-          "release-0.6-protected-staging-migration"
+          "release-0.6-protected-staging-migration",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -20626,7 +20627,8 @@
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20646,7 +20648,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20932,6 +20934,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -24541,7 +24551,7 @@
         "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
         "The staging rollout now checks exact edge header values through the public origin before recording the active candidate. Staging release and rollback fixtures passed. Verify the resulting live release log with the exact accepted v0.6.0 SHA.",
         "The staging notifier rejects redirect responses and caps staging and Telegram JSON replies. The live v0.5.1 version and configured Telegram channel returned directly through the verified HTTPS endpoints. The exact accepted v0.6.0 send and delivery receipts remain required.",
-        "The official v0.6.0 worker passes the protected backup requirement to the remote release script. The fixture refuses an unprotected staging runtime before migration and verifies that no announcement follows that failure. Exact staged backup and delivery receipts remain required."
+        "The official v0.6.0 worker checks protected backup configuration before image work and repeats the check under the release lock. Fixtures verify zero image or configuration changes after an early refusal and no announcement if runtime becomes disposable before rollout. Exact staged backup and delivery receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -24616,7 +24626,8 @@
           "release-0.6-staging-storage-policy-readback",
           "release-0.6-staging-edge-smoke",
           "release-0.6-telegram-receipt-transport",
-          "release-0.6-protected-staging-migration"
+          "release-0.6-protected-staging-migration",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": null
       }
@@ -24846,7 +24857,8 @@
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24866,15 +24878,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "4c0a03c1029735d178b4903f66084d4b8643604a897ce9dbd964a349eb408b14"
+              "sha256": "5fe2b2ac660eed58c90ccb7663aa6d828da03ec7796a348e42341e1d36abba5b"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -25104,6 +25116,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -33101,7 +33123,8 @@
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -33157,7 +33180,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -33558,6 +33581,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -36526,7 +36557,8 @@
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-synthetic-logout-readback"
+          "release-0.6-synthetic-logout-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36557,7 +36589,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -37231,6 +37263,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -103434,7 +103474,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -103582,7 +103623,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -105168,6 +105209,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -169535,7 +169584,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -169907,7 +169957,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -169919,7 +169969,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -171276,6 +171326,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -629205,7 +629264,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-upload-command-validation",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -629377,7 +629437,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -630065,6 +630125,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -650495,7 +650563,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -650735,7 +650804,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -651294,6 +651363,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -651426,7 +651503,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -651666,7 +651744,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -652225,6 +652303,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -652355,7 +652441,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -652595,7 +652682,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -653154,6 +653241,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -653284,7 +653379,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -653524,7 +653620,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -654107,6 +654203,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -654731,7 +654835,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -654971,7 +655076,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -655530,6 +655635,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -655733,7 +655846,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -656105,7 +656219,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -656117,7 +656231,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -657498,6 +657612,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -657783,7 +657906,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -658023,7 +658147,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -658582,6 +658706,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -658711,7 +658843,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -658951,7 +659084,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -659510,6 +659643,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -659640,7 +659781,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -659880,7 +660022,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -660439,6 +660581,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -660570,7 +660720,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -660810,7 +660961,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -661393,6 +661544,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -661522,7 +661681,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -661762,7 +661922,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -662321,6 +662481,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -662450,7 +662618,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -662690,7 +662859,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -663249,6 +663418,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -690065,7 +690242,8 @@
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -690077,7 +690255,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -690372,6 +690550,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -732130,7 +732316,8 @@
           "release-0.6-clamav-missing-metric",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -732174,7 +732361,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f89e8a1504e624a64f54a1d37262e7f7eb025d732b69de26d8020ed2b2332f72"
+              "sha256": "bdf52b30125f83d035f945c7c0c01096bca822fba089b1bfd89adef03887057f"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -732561,6 +732748,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -741479,7 +741674,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -741495,11 +741691,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f89e8a1504e624a64f54a1d37262e7f7eb025d732b69de26d8020ed2b2332f72"
+              "sha256": "bdf52b30125f83d035f945c7c0c01096bca822fba089b1bfd89adef03887057f"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "b3ddcebb27ca8666c9ca252879a483b610cce6f421b1f74323ac0e6e19e80570"
+              "sha256": "a783c3f62a26c497feba9c85ddcc82114f930ae34134ae560718a6fa2b4164c6"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -742322,6 +742518,15 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -745740,7 +745945,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-image-license-policy",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-config-preflight"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -745772,7 +745978,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f89e8a1504e624a64f54a1d37262e7f7eb025d732b69de26d8020ed2b2332f72"
+              "sha256": "bdf52b30125f83d035f945c7c0c01096bca822fba089b1bfd89adef03887057f"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -746107,6 +746313,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         }
@@ -1087182,7 +1087396,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "b3ddcebb27ca8666c9ca252879a483b610cce6f421b1f74323ac0e6e19e80570"
+              "sha256": "a783c3f62a26c497feba9c85ddcc82114f930ae34134ae560718a6fa2b4164c6"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1087393,6 +1087607,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ]
         },
@@ -1087411,7 +1087633,8 @@
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-config-preflight"
         ]
       }
     },
@@ -1100821,7 +1101044,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1100829,7 +1101052,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f89e8a1504e624a64f54a1d37262e7f7eb025d732b69de26d8020ed2b2332f72"
+              "sha256": "bdf52b30125f83d035f945c7c0c01096bca822fba089b1bfd89adef03887057f"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1100845,7 +1101068,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1104275,6 +1104498,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "presentation_renewals": [
@@ -1104713,7 +1104946,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-backup-config-preflight"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1106882,7 +1107116,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d8e408754e2040569781336f3252986fc983f520b0d10cbd9d9176ab209defad"
+              "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1106890,7 +1107124,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f89e8a1504e624a64f54a1d37262e7f7eb025d732b69de26d8020ed2b2332f72"
+              "sha256": "bdf52b30125f83d035f945c7c0c01096bca822fba089b1bfd89adef03887057f"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1106906,7 +1107140,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "f13f72639c18ce75a099befba20eac13999fcfe5429cf7e086ac270fa6a6adba"
+              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1110237,6 +1110471,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Renewed staging rollout bindings for the protected backup setting passed by the official v0.6.0 worker. The 14 rollback and 18 notification fixture cases passed. Isolated rehearsal and historical release evidence retains its scope."
+            },
+            {
+              "batch": "release-0.6-backup-config-preflight",
+              "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Read-only backup configuration preflight before image work and the same checks under the release lock. All 70 staging release checks passed. Earlier evidence retains its original execution scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1110692,7 +1110936,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-backup-config-preflight"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1116622,7 +1116867,7 @@
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The November 14 readback reconfirmed disposable staging mode, disabled WAL archiving configuration, and missing backup environment, key and WAL environment. Official v0.6.0 deployment now refuses that mode before changing the database. The approved destination, key recovery, backup/restore receipts and cutover remain required."
+        "The read-only official release preflight refused live v0.5.1 because the runtime lacks non-disposable mode and encrypted WAL archiving. No deploy or notification was attempted. The approved backup destination, key recovery, backup and restore receipts, and cutover remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1116698,7 +1116943,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-clamav-mirror-recurring",
           "release-0.6-packaged-backup-manifest-rehearsal",
-          "release-0.6-protected-staging-migration"
+          "release-0.6-protected-staging-migration",
+          "release-0.6-backup-config-preflight"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1301870,6 +1302116,93 @@
         {
           "file": "single-check.log",
           "sha256": "3acf20ed1ed3b2acae964ee6169549c5715ef9968d7807c144d2492f74f293f4"
+        }
+      ]
+    },
+    "release-0.6-backup-config-preflight": {
+      "batch": "release-0.6-backup-config-preflight",
+      "base_commit": "5b3ad5d0e835dc24cc71f0da6f53bfea38c62042",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "b1f9797fb262ece4c11d9097b6ac9aa129d7a02a318064eb318137e83afb4cfa"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "bdf52b30125f83d035f945c7c0c01096bca822fba089b1bfd89adef03887057f"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "a783c3f62a26c497feba9c85ddcc82114f930ae34134ae560718a6fa2b4164c6"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "5fe2b2ac660eed58c90ccb7663aa6d828da03ec7796a348e42341e1d36abba5b"
+        }
+      ],
+      "checks": [
+        "The official v0.6.0 worker runs the exact candidate release script in read-only configuration mode before bundle hashing, image work or server configuration changes. The release repeats the same protected backup checks under its lock before starting services or stopping writers.",
+        "All 70 staging Python tests passed. The real Bash preflight rejected each missing or empty configuration file and left no lock file. Deployment fixtures verify no image, transfer or configuration calls after an early refusal and no Telegram send after a late refusal. ShellCheck, Bash parsing, runbook formatting and git diff checks passed.",
+        "Trusted read-only SSH ran the candidate preflight against staging and confirmed exit 1 with the protected mode and archive diagnostic."
+      ],
+      "limitations": [
+        "The configuration preflight does not certify backup recovery or a staging release. Approved configuration, the cutover and the exact rollout and Telegram receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-config-preflight",
+      "execution_receipts": [
+        {
+          "file": "staging-tests.log",
+          "sha256": "f8b1a0d969f14ede36943d6feacb37a771cdaac775030e46d768ba6b3c182026"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "live-config-refusal.log",
+          "sha256": "f97878efee7845ebd5793f6bc6f30dc7573c496cee67db0257a3d5e87b6d804b"
         }
       ]
     }

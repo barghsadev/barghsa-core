@@ -18,17 +18,23 @@ version=$(python3 deploy/staging/release-queue.py check-release --commit "$commi
 python3 kanban/scripts/board.py ready --release "$version"
 # Validate notes and Telegram channel before spending time building images.
 python3 deploy/staging/notify-release.py --check --commit "$commit"
-if [[ -n "$bundle_dir" ]]; then
-  bundle=$(python3 deploy/staging/release-queue.py verify-image-bundle "$bundle_dir" "$commit" "$bundle_manifest_sha")
-  read -r app_id web_id archive_sha <<< "$bundle"
-fi
-
 host="${BARGHSA_VPS_HOST:-89.42.199.13}"
 port="${BARGHSA_VPS_SSH_PORT:-30222}"
 tag="vps-$commit"
 remote="root@$host"
 ssh_args=(-p "$port" -o BatchMode=yes)
 scp_args=(-P "$port" -o BatchMode=yes)
+
+release_flag=''
+# The production-readiness milestone and its successors require a recoverable staging database.
+if [[ ! "$version" =~ ^0\.[0-5]\. ]]; then
+  release_flag=' --require-protected-backup'
+  ssh "${ssh_args[@]}" "$remote" 'bash -s -- --check-protected-backup' < deploy/staging/release.sh
+fi
+if [[ -n "$bundle_dir" ]]; then
+  bundle=$(python3 deploy/staging/release-queue.py verify-image-bundle "$bundle_dir" "$commit" "$bundle_manifest_sha")
+  read -r app_id web_id archive_sha <<< "$bundle"
+fi
 
 images=()
 postgres_volume=barghsa-staging_pgdata
@@ -186,11 +192,7 @@ candidate="/etc/barghsa/staging/candidate-$tag-${app_id#sha256:}-${web_id#sha256
 scp "${scp_args[@]}" "$manifest" "$remote:$candidate"
 # shellcheck disable=SC2029 # The fixed candidate path is intentionally expanded locally.
 ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"
-release_command="/usr/local/sbin/barghsa-staging-release $candidate"
-# The production-readiness milestone and its successors require a recoverable staging database.
-if [[ ! "$version" =~ ^0\.[0-5]\. ]]; then
-  release_command+=' --require-protected-backup'
-fi
+release_command="/usr/local/sbin/barghsa-staging-release $candidate$release_flag"
 # shellcheck disable=SC2029 # The manifest path and optional flag are constructed locally.
 ssh "${ssh_args[@]}" "$remote" "$release_command" | tee "$release_tmp/release.log"
 verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id"

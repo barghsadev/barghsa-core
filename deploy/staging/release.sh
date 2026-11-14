@@ -5,42 +5,56 @@ umask 077
 [[ $(id -u) -eq 0 ]] || { echo 'Run as root' >&2; exit 1; }
 runtime=/etc/barghsa/staging/runtime.env
 active=/etc/barghsa/staging/active-images.env
-candidate="${1:?Usage: release.sh /etc/barghsa/staging/candidate-images.env}"
 compose=/opt/barghsa/staging/compose.yml
 compose_files=(-f "$compose")
-exec 9>/run/lock/barghsa-staging-release.lock
-flock -n 9 || { echo 'Another release is running' >&2; exit 1; }
-[[ -r "$runtime" && -r "$candidate" ]] || { echo 'Runtime or image manifest missing' >&2; exit 1; }
+backup_env=/etc/barghsa/staging/backup.env
+backup_key=/etc/barghsa/staging/backup-key
+wal_archive_env=/etc/barghsa/staging/wal-archive.env
 
-set -a
+check_backup_config() {
+  if [[ "${1:-}" == --require-protected-backup ]]; then
+    [[ "${BARGHSA_DISPOSABLE:-false}" == false && "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]] || {
+      echo 'Staging milestone requires non-disposable storage and encrypted WAL archiving' >&2
+      exit 1
+    }
+  fi
+  if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
+    [[ -s "$backup_env" && -r "$backup_env" && -s "$backup_key" && -r "$backup_key" ]] || {
+      echo 'Non-disposable staging requires protected off-server backup configuration and key' >&2
+      exit 1
+    }
+  fi
+  if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
+    [[ "${BARGHSA_DISPOSABLE:-false}" != true && -s "$wal_archive_env" && -r "$wal_archive_env" ]] || {
+      echo 'Staging WAL archiving requires non-disposable storage and protected archiver configuration' >&2
+      exit 1
+    }
+  fi
+}
+
+if [[ "${1:-}" != --check-protected-backup ]]; then
+  candidate="${1:?Usage: release.sh /etc/barghsa/staging/candidate-images.env}"
+  exec 9>/run/lock/barghsa-staging-release.lock
+  flock -n 9 || { echo 'Another release is running' >&2; exit 1; }
+  [[ -r "$candidate" ]] || { echo 'Image manifest missing' >&2; exit 1; }
+  set -a
+fi
+[[ -r "$runtime" ]] || { echo 'Staging runtime is missing' >&2; exit 1; }
+
 # Root-owned configuration only.
 # shellcheck source=/dev/null
 source "$runtime"
+if [[ "${1:-}" == --check-protected-backup ]]; then
+  check_backup_config --require-protected-backup
+  exit 0
+fi
 BARGHSA_POSTGRES_VOLUME=barghsa-staging_pgdata
 # shellcheck source=/dev/null
 source "$candidate"
 set +a
 
-if [[ "${2:-}" == --require-protected-backup ]]; then
-  [[ "${BARGHSA_DISPOSABLE:-false}" == false && "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]] || {
-    echo 'Staging milestone requires non-disposable storage and encrypted WAL archiving' >&2
-    exit 1
-  }
-fi
-
-backup_env=/etc/barghsa/staging/backup.env
-backup_key=/etc/barghsa/staging/backup-key
-if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
-  [[ -s "$backup_env" && -r "$backup_env" && -s "$backup_key" && -r "$backup_key" ]] || {
-    echo 'Non-disposable staging requires protected off-server backup configuration and key' >&2
-    exit 1
-  }
-fi
+check_backup_config "${2:-}"
 if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
-  [[ "${BARGHSA_DISPOSABLE:-false}" != true && -s /etc/barghsa/staging/wal-archive.env ]] || {
-    echo 'Staging WAL archiving requires non-disposable storage and protected archiver configuration' >&2
-    exit 1
-  }
   compose_files+=(-f /opt/barghsa/staging/compose.wal-archive.yml)
 fi
 
