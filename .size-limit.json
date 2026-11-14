@@ -106,6 +106,12 @@
     "limitKB": 15
   },
   {
+    "name": "Wallet receipt timeline on disclosure",
+    "phase": "interaction",
+    "entries": ["src/components/WalletReceiptTimeline.tsx"],
+    "limitKB": 10
+  },
+  {
     "name": "Wallet top-up review on demand",
     "phase": "interaction",
     "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],

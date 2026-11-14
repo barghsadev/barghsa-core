@@ -5,10 +5,12 @@ import { t as appText, type Locale } from '@barghsa/i18n/workspace';
 import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
-import { WalletReceiptTimeline } from './WalletReceiptTimeline.js';
 
 const ReceiptAttachmentPreview = lazy(async () => ({
   default: (await import('./ReceiptAttachmentPreview.js')).ReceiptAttachmentPreview,
+}));
+const WalletReceiptTimeline = lazy(async () => ({
+  default: (await import('./WalletReceiptTimeline.js')).WalletReceiptTimeline,
 }));
 
 export function WalletReceiptHistoryDetails({
@@ -93,11 +95,15 @@ export function WalletReceiptHistoryDetails({
         >
           {appText('invoices.activity.viewReceiptAttachment', locale)}
         </a>
-        <WalletReceiptTimeline
-          timeline={receipt.timeline}
-          locale={locale}
-          formatTime={formatTime}
-        />
+        {open && (
+          <Suspense fallback={<LoadingStatus>{word('timeline')}</LoadingStatus>}>
+            <WalletReceiptTimeline
+              timeline={receipt.timeline}
+              locale={locale}
+              formatTime={formatTime}
+            />
+          </Suspense>
+        )}
       </div>
     </details>
   );

@@ -439,7 +439,12 @@ it.each(['en', 'fa'] as const)(
     expect(host.querySelector('summary')?.textContent).toBe(word('details'));
     const details = host.querySelector('details')!;
     expect(details.open).toBe(false);
-    details.open = true;
+    expect(details.querySelector('section')).toBeNull();
+    await act(async () => {
+      details.open = true;
+      details.dispatchEvent(new Event('toggle'));
+      await import('./WalletReceiptTimeline.js');
+    });
     expect(details.textContent).toContain('TRK-123');
     expect(details.textContent).toContain('بانک ملی');
     expect(details.textContent).toContain(tx.id);
