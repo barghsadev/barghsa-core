@@ -51768,9 +51768,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "202": {
             "description": "Owner-scoped export job created or reused"
+          },
+          "400": {
+            "description": "Invalid ticket identifier or unexpected body"
           }
         },
         "summary": "Queue an export for an owned privacy request",

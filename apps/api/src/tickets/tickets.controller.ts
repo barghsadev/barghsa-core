@@ -27,6 +27,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { z } from 'zod';
 
@@ -261,11 +262,15 @@ export class TicketsController {
   @HttpCode(202)
   @RateLimit({ namespace: 'tickets:lifecycle:export', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Queue an export for an owned privacy request' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 202, description: 'Owner-scoped export job created or reused' })
+  @ApiResponse({ status: 400, description: 'Invalid ticket identifier or unexpected body' })
   startProfileExport(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     return this.ticketsService.startProfileExport(req.session, id);
   }
 

@@ -37260,10 +37260,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Owner-scoped export job created or reused */
             202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid ticket identifier or unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

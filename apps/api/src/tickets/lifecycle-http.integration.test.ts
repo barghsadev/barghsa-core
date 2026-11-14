@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
@@ -75,10 +76,11 @@ const create = (body: unknown, headers = ownerHeaders) =>
     headers,
     body: JSON.stringify(body),
   });
-const startExport = (ticketId: string, headers = ownerHeaders) =>
+const startExport = (ticketId: string, headers = ownerHeaders, body?: unknown) =>
   fetch(`${http.base}/api/tickets/lifecycle-requests/${ticketId}/export`, {
     method: 'POST',
     headers,
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 const responseBody = async (response: Response): Promise<Record<string, unknown>> =>
   (await response.json()) as Record<string, unknown>;
@@ -128,8 +130,24 @@ it('shows active-profile closure blockers and routes each type to one audited su
     type: 'export',
     created: false,
   });
+  const ticketId = exportRequest.ticketId as string;
+  const invalidExport = await startExport(ticketId, ownerHeaders, { profileId: otherProfileId });
+  expect(invalidExport.status, http.logs()).toBe(400);
+  expect(await responseBody(invalidExport)).toMatchObject({
+    error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+  });
+  expect(
+    (
+      await http.pool.query(
+        `SELECT
+           (SELECT count(*)::int FROM async_jobs WHERE created_by='lifecycle-owner') AS jobs,
+           (SELECT count(*)::int FROM audit_log
+             WHERE event='profile_export_queued' AND user_id='lifecycle-owner') AS audits`
+      )
+    ).rows[0]
+  ).toEqual({ jobs: 0, audits: 0 });
   const traceId = '71'.repeat(16);
-  const queued = await startExport(exportRequest.ticketId as string, {
+  const queued = await startExport(ticketId, {
     ...ownerHeaders,
     traceparent: `00-${traceId}-${'72'.repeat(8)}-01`,
   });
@@ -139,7 +157,7 @@ it('shows active-profile closure blockers and routes each type to one audited su
     /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
   );
   expect(queuedBody).toMatchObject({ ticketId: exportRequest.ticketId, created: true });
-  const replayedJob = await startExport(exportRequest.ticketId as string);
+  const replayedJob = await startExport(ticketId, ownerHeaders, {});
   expect(await responseBody(replayedJob)).toMatchObject({
     jobId: queuedBody.jobId,
     created: false,
