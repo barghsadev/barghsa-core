@@ -79,7 +79,7 @@ async function scenario(operation: Operation, self = false) {
 }
 type Scenario = Awaited<ReturnType<typeof scenario>>;
 
-function perform(s: Scenario) {
+function perform(s: Scenario, request?: { body: string | null }) {
   const path =
     s.operation === 'roles'
       ? `/api/admin/users/${s.targetId}/roles`
@@ -92,6 +92,7 @@ function perform(s: Scenario) {
     body: JSON.stringify(
       s.operation === 'roles' ? { roleIds: ['role-finance'], reason: 'New finance duties' } : {}
     ),
+    ...request,
   });
 }
 
@@ -135,6 +136,26 @@ async function snapshot(s: Scenario) {
     ).rows,
   };
 }
+
+it.each(['disable', 'activation'] as const)(
+  '%s refuses undeclared JSON before account state, credentials or delivery change',
+  async (operation) => {
+    const s = await scenario(operation);
+    const before = await snapshot(s);
+    for (const body of ['{"unexpected":"private-submitted-value"}', '[]']) {
+      const response = await perform(s, { body });
+      const responseBody = await response.text();
+      expect(response.status).toBe(400);
+      expect(JSON.parse(responseBody)).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID' },
+      });
+      expect(responseBody).not.toContain('private-submitted-value');
+      expect(await snapshot(s)).toEqual(before);
+    }
+    const accepted = await perform(s, { body: null });
+    expect(accepted.status, await accepted.clone().text()).toBe(200);
+  }
+);
 
 async function auditBoundary(
   s: Scenario,

@@ -31157,6 +31157,17 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "content": {
@@ -31189,7 +31200,7 @@
             "description": "Staff account disabled."
           },
           "400": {
-            "description": "Cannot disable own account"
+            "description": "Self-disablement or unexpected request body"
           },
           "401": {
             "description": "Not authenticated or step-up needed"
@@ -32120,9 +32131,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Replacement activation queued."
+          },
+          "400": {
+            "description": "Invalid staff user ID or unexpected body"
           }
         },
         "summary": "Replace a pending staff activation link",

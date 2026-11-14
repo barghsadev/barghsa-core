@@ -493,14 +493,19 @@ export class AdminController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Replace a pending staff activation link' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 200, description: 'Replacement activation queued.' })
+  @ApiResponse({ status: 400, description: 'Invalid staff user ID or unexpected body' })
   async resendStaffActivation(
     @Param('userId') userId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ deliveryStatus: 'queued' }> {
     if (!hasStaffPermission(req, 'admin:users:create'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     if (!z.string().uuid().safeParse(userId).success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    assertEmptyCommandBody(body);
     return this.adminService.resendStaffActivation(userId, req.session, req.ip ?? 'unknown');
   }
 
@@ -816,6 +821,7 @@ export class AdminController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Disable a staff account (requires step-up)' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiParam({ name: 'userId', description: 'Staff user UUID' })
   @ApiResponse({
     status: 200,
@@ -831,13 +837,14 @@ export class AdminController {
       },
     },
   })
-  @ApiResponse({ status: 400, description: 'Cannot disable own account' })
+  @ApiResponse({ status: 400, description: 'Self-disablement or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated or step-up needed' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Staff user not found' })
   async disableStaff(
     @Param('userId') userId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<DisableStaffResult> {
     // ── Permission check: admin only ─────────────────────────────
     const isAdmin = hasStaffPermission(req, 'admin:staff:edit');
@@ -852,6 +859,7 @@ export class AdminController {
       );
     }
 
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.disableStaff({
       userId,

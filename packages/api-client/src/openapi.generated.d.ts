@@ -25177,7 +25177,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Staff account disabled. */
             200: {
@@ -25195,7 +25199,7 @@ export interface operations {
                     };
                 };
             };
-            /** @description Cannot disable own account */
+            /** @description Self-disablement or unexpected request body */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -25992,9 +25996,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
+            /** @description Replacement activation queued. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid staff user ID or unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
