@@ -44,6 +44,18 @@ Named dispositions and the strict check on the final immutable images are
 required for release.
 [Hosted image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43299081923) · [Ubuntu source archive](https://security.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39-0ubuntu8.12.dsc)
 
+The retained Linux amd64 PostgreSQL image `dbb54d6c8c53` contains readable
+notices for all 217 entries awaiting review. The readback matched 216 binary
+packages by version, epoch and architecture and verified pgvector 0.8.6
+through its extension control file. The supplement records the full installed
+Debian source versions for 196 rows where the workbook lists the upstream
+version, and includes 144 distinct notice files. Nine GnuPG notices point to
+`GPL-2.0` and the gzip notice points to `GFDL-3`. The image contains the
+specified versions under `GPL-2` and `GFDL-1.3`, respectively. The receipt
+records both sets of paths and the texts' checksums for review. Repeat the
+readback on the final release image and verify how the approved notices will
+accompany distribution.
+
 ## Web telemetry supplement
 
 The hosted image job at `b11f41263` produced five image-bound reports. Its

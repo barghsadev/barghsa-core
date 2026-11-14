@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T03:15:52+00:00",
+  "updated": "2026-11-14T03:28:32+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -50946,7 +50946,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "97a553ba09c600ddd61714211e69db01c135a8fe2238ce338f4b5a9b8ff84028"
+              "sha256": "d408e2b177271362c874dc13006903a7ae2a5bc99c84c038fb085d3e1dbde55e"
             }
           ],
           "checks": [
@@ -51486,6 +51486,14 @@
                 "docs/security/release-license-review.md"
               ],
               "scope": "The Sharp attestation and build input evidence are additive. The session decision and its source text are unchanged."
+            },
+            {
+              "batch": "release-0.6-postgres-notice-readback",
+              "base_commit": "c1f38876e395350c06d12ef11ac5afe075590433",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "The PostgreSQL supplement is additive. The session location policy and decision are byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -687804,7 +687812,8 @@
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
         "Verified five image and SBOM identities in hosted report-only preflight 43546424873 on bf319cdcb. All 859 exact package entries match the preceding preflight and the same 387 require sign-off. The strict candidate gate remains open.",
         "Both locked Sharp libvips 1.3.4 Linux x64 binaries match the publisher workspace archive byte for byte. The review packet now includes eight exact upstream source archives and three build patches. Complete corresponding build input and replacement evidence, final image notice readback and named disposition.",
-        "Both Sharp npm package signatures and provenance attestations verified. The publisher job identifies 105 matching Rust crate archives and retains a log of removed features and static link options. The receipt packet includes all 33 direct build inputs and a non-root prior-image checksum readback. Complete the modified rebuild, verify actual candidate notices and obtain the named package dispositions."
+        "Both Sharp npm package signatures and provenance attestations verified. The publisher job identifies 105 matching Rust crate archives and retains a log of removed features and static link options. The receipt packet includes all 33 direct build inputs and a non-root prior-image checksum readback. Complete the modified rebuild, verify actual candidate notices and obtain the named package dispositions.",
+        "Read back all 217 package-specific notices in retained PostgreSQL image dbb54d6c8c53. The supplement maps 216 installed Debian packages to full source versions and identifies both common-license path mismatches. Obtain reviewer dispositions and verify the final immutable image."
       ],
       "owner": null,
       "depends_on": [],
@@ -687868,7 +687877,8 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-cutover-capacity-and-image-readback",
           "release-0.6-sharp-binary-origin",
-          "release-0.6-sharp-attestations-and-build-inputs"
+          "release-0.6-sharp-attestations-and-build-inputs",
+          "release-0.6-postgres-notice-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -1094659,7 +1094669,8 @@
         "Hosted report-only preflight 43546424873 on bf319cdcb has verified reports and SBOMs for all five exact image IDs, with zero high or critical findings. The final strict package gate and production-equivalent image receipts remain open.",
         "The monitoring retention recovery path passed targeted PostgreSQL, component, two-engine browser and unchanged bundle budget checks. Verify the staged workflow and operator application of the exported revision before acceptance.",
         "The two Sharp native dependency exceptions now have exact publisher and npm byte comparisons, signed tag and upstream source receipts. Package sign-off, full build input and final strict gate remain open.",
-        "Report-only preflight 43549222626 supplied five exact scan and SBOM receipts for 7138669f5 and matched all 859 inventory rows. Sharp publisher provenance and prior-image checks passed. The strict package gate and accepted deployment are open."
+        "Report-only preflight 43549222626 supplied five exact scan and SBOM receipts for 7138669f5 and matched all 859 inventory rows. Sharp publisher provenance and prior-image checks passed. The strict package gate and accepted deployment are open.",
+        "The PostgreSQL supplement verifies notices for all 217 review rows in the retained image. The strict final image gate and accepted deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1094978,7 +1094989,8 @@
           "release-0.6-cutover-capacity-and-image-readback",
           "release-0.6-operational-retention-recovery",
           "release-0.6-sharp-binary-origin",
-          "release-0.6-sharp-attestations-and-build-inputs"
+          "release-0.6-sharp-attestations-and-build-inputs",
+          "release-0.6-postgres-notice-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1275666,6 +1275678,52 @@
         {
           "file": "hosted-inventory-7138669f5.json",
           "sha256": "945e184fc4b0a0a55ba0ae7978e50d6cddf338e8ef018bb6c5719dbdec7f4e04"
+        }
+      ]
+    },
+    "release-0.6-postgres-notice-readback": {
+      "batch": "release-0.6-postgres-notice-readback",
+      "base_commit": "c1f38876e395350c06d12ef11ac5afe075590433",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "d408e2b177271362c874dc13006903a7ae2a5bc99c84c038fb085d3e1dbde55e"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "96ab21e4e52f225b37cbac044190fa769e53916411af8e934675720477a83ca7"
+        },
+        {
+          "path": "deploy/staging/build-postgres-image.sh",
+          "sha256": "2ee9bd18c788b9c70123ad452ab177b598eb6eeb3b6d59018634d8ddf648b834"
+        }
+      ],
+      "checks": [
+        "Ran the retained Linux amd64 image read-only as postgres with networking disabled. Verified all 217 workbook notices, including 144 distinct files.",
+        "Matched 216 installed binary packages by exact package, epoch, version and architecture. Recorded full installed Debian source versions and verified pgvector 0.8.6 extension control and library.",
+        "Identified two absent upstream notice paths referenced by ten packages. Verified the specified license texts by installed filename, version header and exact byte checksum.",
+        "Verified the 162-file review archive and its notice, package inventory and pgvector control checksums."
+      ],
+      "limitations": [
+        "The receipt covers the retained local replacement image, sha256:dbb54d6c8c5341dd279eb9fad3fb45f015c7b6e16c7ee17200e9c112d9d04d14. Named reviewer dispositions, corresponding source obligations and final image readback remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-notice-readback",
+      "execution_receipts": [
+        {
+          "file": "validated-notice-readback.json",
+          "sha256": "9d7765490d82fef6110045dda2d9862019c580ead7a9e1de527b69f9c6ae7d18"
+        },
+        {
+          "file": "postgres-notice-supplement.zip",
+          "sha256": "671128367c1f698ce0aedace50473f19b5ded784367a5a03c5e39033b1ce0c45"
         }
       ]
     }
