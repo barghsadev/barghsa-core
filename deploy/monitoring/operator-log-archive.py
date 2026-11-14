@@ -21,6 +21,7 @@ LOKI = "http://loki:3100"
 PAGE_SIZE = 1000
 MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 MAX_ARCHIVE_BYTES = 64 * 1024 * 1024
+MAX_HEADER_BYTES = 1024
 LABELS = {"environment", "level", "origin", "service"}
 READABLE_STORAGE_CLASSES = {"STANDARD", "STANDARD_IA", "ONEZONE_IA", "INTELLIGENT_TIERING", "GLACIER_IR"}
 
@@ -131,12 +132,22 @@ def main():
                 archive(store, key, day, environment, now, work)
             else:
                 download(store, key, work / "logs.gpg")
-                crypt(work / "logs.gpg", work / "logs.jsonl.gz", decrypt=True)
-                with (work / "logs.jsonl.gz").open("rb") as source:
+                plain = work / "logs.jsonl.gz"
+                crypt(work / "logs.gpg", plain, decrypt=True)
+                with gzip.open(plain, "rb") as restored:
+                    header = restored.readline(MAX_HEADER_BYTES + 1)
+                if len(header) > MAX_HEADER_BYTES or not header.endswith(b"\n"):
+                    raise BackupError("Invalid operator log archive header")
+                identity = json.loads(header)
+                expected = {"version": 1, "environment": environment, "day": day.isoformat()}
+                if (not isinstance(identity, dict) or type(identity.get("version")) is not int
+                        or identity != expected):
+                    raise BackupError("Archive does not match the requested environment and UTC day")
+                with plain.open("rb") as source:
                     shutil.copyfileobj(source, sys.stdout.buffer)
     except BackupError as error:
         parser.exit(1, f"Operator log archive failed: {error}\n")
-    except (BotoCoreError, ClientError, OSError, ValueError, KeyError, TypeError) as error:
+    except (BotoCoreError, ClientError, OSError, EOFError, ValueError, KeyError, TypeError) as error:
         parser.exit(1, f"Operator log archive failed ({type(error).__name__})\n")
 
 

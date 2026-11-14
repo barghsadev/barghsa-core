@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T16:40:28+00:00",
+  "updated": "2026-11-14T16:46:13+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -743014,7 +743014,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-domain-postgresql-tracing",
@@ -743045,7 +743046,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             }
           ],
           "source_renewals": [
@@ -743172,6 +743173,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -743295,7 +743304,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -743342,7 +743352,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -743596,6 +743606,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -743873,7 +743891,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -743920,7 +743939,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -744174,6 +744193,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -744250,7 +744277,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -744386,7 +744414,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -744663,6 +744691,14 @@
                 "packages/shared/src/operator-logging.test.ts"
               ],
               "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -744739,7 +744775,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -744875,7 +744912,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -745152,6 +745189,14 @@
                 "packages/shared/src/operator-logging.test.ts"
               ],
               "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -745703,7 +745748,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -745839,7 +745885,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -746116,6 +746162,14 @@
                 "packages/shared/src/operator-logging.test.ts"
               ],
               "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -746153,7 +746207,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-loki-shipping",
@@ -746165,7 +746220,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "deploy/monitoring/operator-logs.alloy",
@@ -746293,6 +746348,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -758430,7 +758493,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-redis-command-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-grafana-trace-search",
@@ -758442,7 +758506,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3d2c3a293b3e3599a0368f64fcb800f00fece2e49483c819f0a150914cbf81d2"
+              "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -758569,6 +758633,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-operator-archive-restore-identity",
+              "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The archive recovery reads a bounded gzip header after GPG decryption and validates the selected archive identity before output. The archive writer, Loki retention and storage policy retain their previous evidence."
             }
           ]
         }
@@ -763947,7 +764019,8 @@
       "launch_required": true,
       "remaining": [
         "Apply the verified configuration to the approved persistent Loki instance. Verify the live compactor and 30-day setting, then record the scheduled encrypted archive write and independent restore from the approved off-host cold storage tier.",
-        "The admin revision renderer and Compose path override change only the operational Loki period and preserve the existing default, archive bounds and deletion controls. Verify on the approved persistent Loki instance."
+        "The admin revision renderer and Compose path override change only the operational Loki period and preserve the existing default, archive bounds and deletion controls. Verify on the approved persistent Loki instance.",
+        "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -763968,7 +764041,8 @@
         ],
         "batches": [
           "release-0.6-loki-retention",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "current_acceptance": null
       }
@@ -1143879,7 +1143953,8 @@
         "The consultation history and detail read checks now fail closed if their session expires while waiting on PostgreSQL. Both regressions rejected the current baseline, and all five compiled native consultation request checks passed after the correction. Deployed candidate evidence remains open.",
         "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
         "Both new consultation catalogue and staff team-read expiry regressions rejected the previous compiled baseline. The two fixes passed 25 compiled consultation, workflow and assignment tests and the selected wallet-funded payment and completion journey. Exact staged evidence remains open.",
-        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open."
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
+        "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1144275,7 +1144350,8 @@
           "release-0.6-auth-contact-coverage-closure",
           "release-0.6-auth-credential-races",
           "release-0.6-consultation-read-authority",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-operator-archive-restore-identity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1336803,6 +1336879,81 @@
         {
           "file": "notifier-retry.log",
           "sha256": "feaca45306a2e1c7ed4e95afb8c9eac9c41d9e6d45885aebe314fa6a3bdefd4a"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-operator-archive-restore-identity": {
+      "batch": "release-0.6-operator-archive-restore-identity",
+      "base_commit": "a827f61961080e6c9fb5e568ed05523c9f3a3211",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.16.01.04",
+        "06-security-testing-observability.md#T-06.18.01.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/operator-log-archive.py",
+        "deploy/monitoring/test_operator_log_archive.py",
+        "docs/operations/structured-logging.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/operator-log-archive.py",
+          "sha256": "a9204cd47329a0427be6c6ad7cb3dd35e7899f2dab7b843bc29e6220d13901e7"
+        },
+        {
+          "path": "deploy/monitoring/operator-log-archive.yml",
+          "sha256": "2749c23cfe615d34dc564f9f33b05bc9aa1f1ba81decd5633d99ce2f0505e3af"
+        },
+        {
+          "path": "deploy/monitoring/test_operator_log_archive.py",
+          "sha256": "c669ad8d6a8782a5176154a2204021193a2d27686f46a1b7e09ceeddb5221baf"
+        },
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "1cef8676da2c8dfbf701d533344110be1a25bb27f240dbd531fb4a26a56db030"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "70d83afebb43b4482544f4556474aca16bc119569273d67e83cd55b240275431"
+        },
+        {
+          "path": "packages/db/scripts/backup/requirements.txt",
+          "sha256": "567d9945ba9211aa142388fa2522a07bb16721c1a99cc4e8df107a6283507e9e"
+        }
+      ],
+      "checks": [
+        "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open.",
+        "The actual restore command decrypted synthetic archives with GPG. The old build emitted all three wrongly attributed or invalid archives. The corrected build emitted zero bytes for all four rejected inputs and byte-identical gzip for the accepted input.",
+        "Prometheus dashboard fixture, changed-document formatting, Python syntax and git diff checks passed."
+      ],
+      "limitations": [
+        "The archive fixture supplied the S3 response body locally and exercised the actual GPG process. Live operator storage and schedule evidence remain open.",
+        "Initial monitoring test discovery could not find promtool. The unchanged dashboard test passed when pointed at the existing pinned binary."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-operator-archive-restore-identity",
+      "execution_receipts": [
+        {
+          "file": "regression-before.log",
+          "sha256": "0bf94a0c2fa371cbdc6e64562ea7a8c35a83c236a66f76bffb3a00b58a965bd4"
+        },
+        {
+          "file": "monitoring-tests.log",
+          "sha256": "f4fc3d590bb4f1cded551af200ed5bda1c9745ed0bc16c1a888389f00ed1aeed"
+        },
+        {
+          "file": "dashboard-retry.log",
+          "sha256": "70a93bb06822e870b0dce11819a4321dcf57d9b0ba50385c53e1b9376842ef82"
         },
         {
           "file": "scoped-checks.log",

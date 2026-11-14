@@ -145,7 +145,8 @@ Check observed volume before activation and investigate a bound failure
 while the affected range is still searchable.
 
 Restore into a private operator directory with the approved credential and
-key. The restore command reads from the bucket while Loki is offline.
+key. The restore command reads from the bucket while Loki is offline. It checks
+the decrypted archive's environment and UTC day before writing gzip bytes.
 
 ```sh
 umask 077
