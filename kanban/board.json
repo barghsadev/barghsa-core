@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:37:18+00:00",
+  "updated": "2026-11-14T13:46:47+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -27939,7 +27939,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-shared-bounded-pagination",
@@ -27951,7 +27952,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
@@ -55549,7 +55550,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -55897,7 +55899,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -82842,7 +82844,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -82978,7 +82981,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -84746,7 +84749,8 @@
           "release-0.6-operational-retention",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -84826,7 +84830,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -86250,7 +86254,8 @@
           "release-0.6-operational-retention",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -86342,7 +86347,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -89942,7 +89947,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -90050,7 +90056,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -91029,7 +91035,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -91113,7 +91120,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -99908,7 +99915,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100316,7 +100324,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -101364,7 +101372,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -101772,7 +101781,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -102820,7 +102829,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -103228,7 +103238,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -104213,7 +104223,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
@@ -104277,7 +104288,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -105051,7 +105062,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -105207,7 +105219,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -110920,7 +110932,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -111148,7 +111161,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -112160,7 +112173,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -112388,7 +112402,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -113400,7 +113414,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -113628,7 +113643,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -114639,7 +114654,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -114867,7 +114883,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -116750,7 +116766,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -116826,7 +116843,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -117398,7 +117415,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -117438,7 +117456,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -119224,7 +119242,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -119276,7 +119295,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -122659,7 +122678,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -122703,7 +122723,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -124611,7 +124631,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -124675,7 +124696,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -126315,7 +126336,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-web-server-tracing",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "status": "done",
@@ -152069,7 +152091,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -152337,7 +152360,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -154042,7 +154065,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -154310,7 +154334,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -155964,7 +155988,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -156372,7 +156397,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -157352,7 +157377,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -157760,7 +157786,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -158746,7 +158772,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -159154,7 +159181,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -160214,7 +160241,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -162871,7 +162899,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -162903,7 +162932,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -162915,7 +162944,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -163428,7 +163457,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -163460,7 +163490,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -163472,7 +163502,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -164002,7 +164032,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -164270,7 +164301,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -165920,7 +165951,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -166200,7 +166232,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -167183,7 +167215,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -167463,7 +167496,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -177744,7 +177777,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -178024,7 +178058,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -180246,7 +180280,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -180350,7 +180385,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -181299,7 +181334,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -181375,7 +181411,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -226757,7 +226793,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -226841,7 +226878,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -291977,7 +292014,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -292193,7 +292231,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -293358,7 +293396,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -293574,7 +293613,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -294741,7 +294780,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -294977,7 +295017,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -296288,7 +296328,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -296704,7 +296745,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -298878,7 +298919,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -299294,7 +299336,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -301435,7 +301477,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -301651,7 +301694,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -393930,7 +393973,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -394194,7 +394238,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -395396,7 +395440,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -395660,7 +395705,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -396862,7 +396907,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -397126,7 +397172,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -398328,7 +398374,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -398592,7 +398639,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -399794,7 +399841,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -400058,7 +400106,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -401260,7 +401308,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -401524,7 +401573,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -402726,7 +402775,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -402990,7 +403040,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -404192,7 +404242,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -404456,7 +404507,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -405658,7 +405709,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -405922,7 +405974,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -407124,7 +407176,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -407388,7 +407441,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -408590,7 +408643,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -408854,7 +408908,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -410056,7 +410110,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -410320,7 +410375,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -411523,7 +411578,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -411787,7 +411843,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -412989,7 +413045,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -413253,7 +413310,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -414455,7 +414512,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -414719,7 +414777,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -415921,7 +415979,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -416185,7 +416244,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -417387,7 +417446,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -417651,7 +417711,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -694473,7 +694533,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-shared-bounded-pagination",
@@ -694497,7 +694558,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
@@ -694993,7 +695054,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-shared-bounded-pagination",
@@ -695017,7 +695079,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
@@ -719497,7 +719559,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-staff-queue-command-validation",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-source-matching-native-postgresql-tests",
@@ -719513,7 +719576,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/test/order-submission-notifications.ts",
@@ -727157,7 +727220,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-staff-queue-command-validation",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-process-recovery-tests",
@@ -727174,7 +727238,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -739555,7 +739619,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-staff-queue-command-validation",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -739611,7 +739676,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             }
           ],
           "checks": [
@@ -740928,7 +740993,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-staff-queue-command-validation",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -740984,7 +741050,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             }
           ],
           "checks": [
@@ -748654,7 +748720,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-confirmed-date-range-replay-and-provider-idempotency",
@@ -748666,7 +748733,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
@@ -748674,7 +748741,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -749138,7 +749205,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-confirmed-date-range-replay-and-provider-idempotency",
@@ -749150,7 +749218,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "6d5de4355ee5363fd3f88a4309f73955d7bb8dc04ad309a8d0d63f23ce6b4727"
+              "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
@@ -749158,7 +749226,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -1105537,7 +1105605,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -1108520,7 +1108588,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ]
       }
     },
@@ -1111144,7 +1111213,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -1114545,7 +1114614,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-kb-command-validation",
           "release-0.6-kb-read-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ]
       }
     },
@@ -1115181,7 +1115251,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -1120742,7 +1120812,8 @@
           "release-0.6-kb-read-authority",
           "release-0.6-nodemailer-moderate-advisories",
           "release-0.6-ai-admin-command-validation",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1121387,7 +1121458,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "68bed656a4fb73a840bad5e2863f21aaa693a23664ce2d5966e245d47fc11c93"
+              "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -1126859,7 +1126930,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-kb-command-validation",
           "release-0.6-kb-read-authority",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1132219,7 +1132291,8 @@
         "The scoped release coverage check resolved five named admin and staff read authority file deficits. The affected 55 cases passed, including PostgreSQL integrations. The exact combined release and license gates remain open.",
         "Both shared coverage groups from the failed hosted rehearsal pass the unchanged release checker locally. Exact combined coverage and staged operational evidence remain open.",
         "All four previously failing web files passed the scoped combined 90/85 critical thresholds. Run the full combined and release-control gates on the exact candidate after resolving the remaining API files.",
-        "Five API configuration-recovery files now meet the original critical coverage thresholds. Green rollback pagination was fixed and regression-tested. Run the exact full combined coverage gate after the remaining API gaps are resolved."
+        "Five API configuration-recovery files now meet the original critical coverage thresholds. Green rollback pagination was fixed and regression-tested. Run the exact full combined coverage gate after the remaining API gaps are resolved.",
+        "All three operator queue controllers passed the scoped critical thresholds. Compiled HTTP verified safe notification replay date validation; rerun the additive PostgreSQL regression and final combined coverage on the exact candidate. The local Docker image store returned a blob I/O failure before the final PostgreSQL run."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132586,7 +1132659,8 @@
           "release-0.6-staff-control-coverage",
           "release-0.6-provider-coverage",
           "release-0.6-web-admin-coverage",
-          "release-0.6-api-config-history"
+          "release-0.6-api-config-history",
+          "release-0.6-operator-queue-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1321589,6 +1321663,163 @@
         {
           "file": "admin-service-scope.json",
           "sha256": "8bc6936675097e1716e7f8a40c0cc435ff09407f3c24589eff2e1c14d2ed89fa"
+        }
+      ]
+    },
+    "release-0.6-operator-queue-coverage": {
+      "batch": "release-0.6-operator-queue-coverage",
+      "base_commit": "d5b1140ab932da3d2c0cf567e08d1ca92cbaa57b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.01.05",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.05.01",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "06-security-testing-observability.md#T-06.04.01.03",
+        "06-security-testing-observability.md#T-06.04.01.05",
+        "06-security-testing-observability.md#T-06.10.02.07",
+        "06-security-testing-observability.md#T-06.11.04.02",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.15.03.06",
+        "06-security-testing-observability.md#T-06.15.03.07",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/operator-queue-boundaries.test.ts",
+        "apps/api/src/admin/failed-notifications.controller.ts",
+        "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/failed-jobs.controller.test.ts",
+          "sha256": "a5d7e096175e31004d5ae08d8174b539512d3868cc8769a0b27bb49c32de4244"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.controller.ts",
+          "sha256": "5cc23b93ca33f3778aa4a0a2e82c172d586297fbf03fe19aeb889fa8ec233c51"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
+          "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.ts",
+          "sha256": "af229b2a95952e7aab7f4250ea094ecf591fbfc6200264b4a105834791ab9ccf"
+        },
+        {
+          "path": "apps/api/src/admin/operator-queue-boundaries.test.ts",
+          "sha256": "49f9388426b4ecdd84443255308b64c841c9aa7f11aa42990c33ca44b580cd7e"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+          "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+          "sha256": "65a2792307f796f0858c44e981619380da080d83ebfc67dfcff7641daf30c4d7"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "cf7a8890c6962762dae1cf9c5b211a5c6d23568bbd762e08325876ad9417bbc3"
+        },
+        {
+          "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+          "sha256": "091587bf43b7a34f3684bfea5a5e2332b338080519622f4dffe70ad234aeaa61"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "Malformed replay timestamps now return the localized 400 validation contract. Range validation works on ISO strings; controllers construct Date values only after success. UTC, precision, range, permission and exact revision constraints remain in effect.",
+        "The focused run passed 38 unit tests and the unchanged three-file coverage gate at 181/181 lines and 109/110 branches. Fourteen compiled loopback HTTP cases passed against both aliases using the production exception filter and mocked auth/queue. Type checking, ESLint and formatting passed.",
+        "The new PostgreSQL test asserts equal queue and audit snapshots for rejected dates. Every existing assertion in the PostgreSQL suite is byte-identical. Docker failed before the final full integration run with a containerd blob read I/O error."
+      ],
+      "limitations": [
+        "The final PostgreSQL integration run, combined exact-candidate coverage and live operational replay readback remain open. The separate loopback HTTP fixture used mocked guards and queue."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-operator-queue-coverage",
+      "execution_receipts": [
+        {
+          "sha256": "169e17064ce337e5ff864e0455794e5bcdbbc976e8c963c44ee4e03cd78a3f8f",
+          "file": "unit-only.log"
+        },
+        {
+          "sha256": "31b2ed31a36dd9d1a8d965ff3ba4ef0b3c36c4785a6c7be26a24248769839c97",
+          "file": "compiled-http-smoke.log"
+        },
+        {
+          "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f",
+          "file": "static.log"
+        },
+        {
+          "sha256": "e7b48bf69e2d0e8107dd62352f473e48e3ada2164cac8b10fe78ffa5318b463f",
+          "file": "scoped-gate.json"
+        },
+        {
+          "sha256": "b745f808a89f3cc480239c9d775d30ed3d82a760d5d6384f4d364bf3a17f4c43",
+          "file": "coverage.log"
         }
       ]
     }

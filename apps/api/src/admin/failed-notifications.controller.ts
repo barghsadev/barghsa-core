@@ -34,14 +34,14 @@ import {
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = offsetPaginationQuerySchema(200);
 
-const replayDate = z.iso
-  .datetime()
-  .refine((value) => !/\.\d{4}/.test(value))
-  .transform((value) => new Date(value));
+const replayDate = z.iso.datetime().refine((value) => !/\.\d{4}/.test(value));
 const replayDates = { from: replayDate, to: replayDate };
-function validReplayRange({ from, to }: { from: Date; to: Date }): boolean {
-  const duration = to.getTime() - from.getTime();
+function validReplayRange({ from, to }: { from: string; to: string }): boolean {
+  const duration = Date.parse(to) - Date.parse(from);
   return duration > 0 && duration <= 31 * 24 * 60 * 60 * 1000;
+}
+function replayRange({ from, to }: { from: string; to: string }) {
+  return { from: new Date(from), to: new Date(to) };
 }
 const ReplayPreviewSchema = z.strictObject(replayDates).refine(validReplayRange);
 const ReplayBodySchema = z
@@ -190,7 +190,10 @@ export class FailedNotificationsController {
     const parsed = ReplayPreviewSchema.safeParse(query);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    return this.failedNotificationsService.previewOutboxReplay(parsed.data, req.session);
+    return this.failedNotificationsService.previewOutboxReplay(
+      replayRange(parsed.data),
+      req.session
+    );
   }
 
   @Post('replay')
@@ -228,9 +231,13 @@ export class FailedNotificationsController {
     const parsed = ReplayBodySchema.safeParse(body);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    const { from, to, selection } = parsed.data;
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedNotificationsService.replayOutbox({ from, to }, selection, req.session, ip);
+    return this.failedNotificationsService.replayOutbox(
+      replayRange(parsed.data),
+      parsed.data.selection,
+      req.session,
+      ip
+    );
   }
 
   @Get(':id')

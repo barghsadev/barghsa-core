@@ -297,6 +297,26 @@ it('requires current staff grants and recent step-up for the bounded replay', as
   expect((await snapshot(target)).audits).toHaveLength(0);
 });
 
+it('rejects non-UTC and sub-millisecond replay dates without changing the queue', async () => {
+  const target = await seed(replayRange.from);
+  const before = await snapshot(target);
+  const valid = await previewReplay();
+  expect(valid.status).toBe(200);
+  const { entries } = (await valid.json()) as { entries: { id: string; revision: string }[] };
+  const { id, revision } = entries.find((entry) => entry.id === target.dead)!;
+  for (const from of ['2025-11-01T00:00:00.0001Z', '2025-11-01T03:30:00+03:30']) {
+    const range = { ...replayRange, from };
+    for (const response of [
+      await previewReplay(range),
+      await submitReplay({ ...range, confirm: true, selection: [{ id, revision }] }),
+    ]) {
+      expect(response.status).toBe(400);
+      expect(await response.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    }
+  }
+  expect(await snapshot(target)).toEqual(before);
+});
+
 it.each(['revocation', 'expiry'] as const)(
   'withdraws delivery history after a blocked read encounters %s',
   async (change) => {
