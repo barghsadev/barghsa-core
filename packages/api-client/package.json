@@ -14,10 +14,10 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && cp src/openapi.generated.d.ts dist/openapi.generated.d.ts",
     "typecheck": "tsc --noEmit",
-    "generate": "openapi-typescript ../../apps/api/openapi.json --output src/openapi.generated.ts",
-    "check": "openapi-typescript ../../apps/api/openapi.json --output src/openapi.generated.ts --check"
+    "generate": "openapi-typescript ../../apps/api/openapi.json --output src/openapi.generated.d.ts",
+    "check": "openapi-typescript ../../apps/api/openapi.json --output src/openapi.generated.d.ts --check"
   },
   "devDependencies": {
     "openapi-typescript": "7.13.0",

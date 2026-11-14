@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:12:10+00:00",
+  "updated": "2026-11-14T13:18:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -19024,7 +19024,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -19172,6 +19172,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -19379,7 +19387,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -19629,6 +19637,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -19907,7 +19923,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -20087,6 +20103,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -32183,7 +32207,7 @@
               "sha256": "47abd0602377d682fdccc03897e035dbfa82dab6739ea616278ff66fa9edbd41"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -32652,6 +32676,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -35077,7 +35109,7 @@
               "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -35522,6 +35554,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Renewed the staff content command and generated API contract bindings. The only runtime deltas are empty-body validation on five staff mutations. Permission, revision, concurrency and audit safeguards passed in the same focused suites. Existing source-bound evidence covers unchanged callers and behavior."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -36015,7 +36055,7 @@
             },
             {
               "path": ".prettierignore",
-              "sha256": "52ca23b549523bcba2124b3ced5976680bd682ed57e52cba21e23ff60eeaa04a"
+              "sha256": "337d561d6fffaafc45bb79bf31c70b6986aa632b7e422bd51e98eee54afc9bc6"
             },
             {
               "path": ".prettierrc.json",
@@ -36277,6 +36317,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                ".prettierignore"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -36378,7 +36426,7 @@
             },
             {
               "path": ".prettierignore",
-              "sha256": "52ca23b549523bcba2124b3ced5976680bd682ed57e52cba21e23ff60eeaa04a"
+              "sha256": "337d561d6fffaafc45bb79bf31c70b6986aa632b7e422bd51e98eee54afc9bc6"
             },
             {
               "path": ".prettierrc.json",
@@ -36718,6 +36766,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                ".prettierignore"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -39790,7 +39846,7 @@
             },
             {
               "path": ".prettierignore",
-              "sha256": "52ca23b549523bcba2124b3ced5976680bd682ed57e52cba21e23ff60eeaa04a"
+              "sha256": "337d561d6fffaafc45bb79bf31c70b6986aa632b7e422bd51e98eee54afc9bc6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -39810,14 +39866,14 @@
             },
             {
               "path": "packages/api-client/package.json",
-              "sha256": "30e09e7e1457ab6206b278f204cfdca9b480081a4c91e9f3d9ebcf687b320b7c"
+              "sha256": "b89fa7a74c95fbedea2b8e0fc08357f4628d6ff1d964e0028568633f8897d707"
             },
             {
               "path": "packages/api-client/src/index.ts",
               "sha256": "40c4a5a856e7f9cbc09770a4f935d1a034d4e7892b985a1081470b2646d71d20"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -40459,6 +40515,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                ".prettierignore",
+                "packages/api-client/package.json",
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -628410,7 +628476,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -628736,6 +628802,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -628836,7 +628910,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -629162,6 +629236,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -629280,7 +629362,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -629770,6 +629852,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -629902,7 +629992,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -630363,6 +630453,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -701573,7 +701671,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -701830,6 +701928,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -702680,7 +702786,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -703330,6 +703436,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -703462,7 +703576,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -703718,6 +703832,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -714125,7 +714247,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -714259,6 +714381,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -729550,10 +729680,10 @@
             },
             {
               "path": "packages/api-client/package.json",
-              "sha256": "30e09e7e1457ab6206b278f204cfdca9b480081a4c91e9f3d9ebcf687b320b7c"
+              "sha256": "b89fa7a74c95fbedea2b8e0fc08357f4628d6ff1d964e0028568633f8897d707"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -730112,6 +730242,15 @@
                 "package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/api-client/package.json",
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -730203,7 +730342,9 @@
         "Hosted run 43583704822 belongs to 81d4381e9, attempt 1. All 2,976 Chromium tests passed with no flakes, skips or runner errors. Mapped coverage completed, but combined coverage failed with 63 file errors. The two telemetry files now pass the unchanged changed-source threshold locally at 55/55 lines and 59/61 branches.",
         "Six further shared finance, verification and admin files from the hosted failure now pass the original critical coverage gate locally. Verified 161/161 lines and 130/133 branches for these six; rerun the full final candidate gate after fixing the other deficits.",
         "All three previously failing worker notification files now pass the existing critical per-file coverage gate in a focused five-file unit and PostgreSQL run. The exact immutable release gate and the other package gaps remain open.",
-        "Five additional critical admin and staff authority files from the hosted coverage failure pass the original release per-file gate in a targeted run. Native HTTP, authorization and finance assertions passed. Exact combined release coverage remains open."
+        "Five additional critical admin and staff authority files from the hosted coverage failure pass the original release per-file gate in a targeted run. Native HTTP, authorization and finance assertions passed. Exact combined release coverage remains open.",
+        "The hosted API-client coverage error was a generated file containing only declarations. It now uses the existing declaration extension and the generator reproduces the same bytes. Coverage thresholds and drift checks are unchanged.",
+        "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches."
       ],
       "owner": null,
       "depends_on": [],
@@ -730242,7 +730383,9 @@
           "release-0.6-telemetry-source-coverage",
           "release-0.6-shared-critical-coverage",
           "release-0.6-worker-notification-coverage",
-          "release-0.6-staff-control-coverage"
+          "release-0.6-staff-control-coverage",
+          "release-0.6-openapi-declarations",
+          "release-0.6-provider-coverage"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -735612,7 +735755,7 @@
             },
             {
               "path": "packages/shared/src/operator-logging.test.ts",
-              "sha256": "c765fb94081d6d1cd1f280b00a2e13e3102537886a5d7496b27db54287b13eee"
+              "sha256": "a975c5d33a4bd78c58fabd10167b5771e610065a2a507711b47109d84c1b37e3"
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
@@ -735861,6 +736004,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/operator-logging.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -736093,7 +736244,7 @@
             },
             {
               "path": "packages/shared/src/operator-logging.test.ts",
-              "sha256": "c765fb94081d6d1cd1f280b00a2e13e3102537886a5d7496b27db54287b13eee"
+              "sha256": "a975c5d33a4bd78c58fabd10167b5771e610065a2a507711b47109d84c1b37e3"
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
@@ -736342,6 +736493,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/operator-logging.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -737049,7 +737208,7 @@
             },
             {
               "path": "packages/shared/src/operator-logging.test.ts",
-              "sha256": "c765fb94081d6d1cd1f280b00a2e13e3102537886a5d7496b27db54287b13eee"
+              "sha256": "a975c5d33a4bd78c58fabd10167b5771e610065a2a507711b47109d84c1b37e3"
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
@@ -737298,6 +737457,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/operator-logging.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ]
         }
@@ -749935,7 +750102,7 @@
               "sha256": "b6d3f45ed25f35789aeed1428b46f06622d3e689933c0f3b2807b6fe9718613f"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -750375,6 +750542,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -750506,7 +750681,7 @@
               "sha256": "b6d3f45ed25f35789aeed1428b46f06622d3e689933c0f3b2807b6fe9718613f"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -750946,6 +751121,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -751163,7 +751346,7 @@
               "sha256": "b6d3f45ed25f35789aeed1428b46f06622d3e689933c0f3b2807b6fe9718613f"
             },
             {
-              "path": "packages/api-client/src/openapi.generated.ts",
+              "path": "packages/api-client/src/openapi.generated.d.ts",
               "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
             },
             {
@@ -751973,6 +752156,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Add the proxy staging SSH and SCP contract and failed install ordering to the existing release fixture. Existing acceptance, backup, image and notification assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-openapi-declarations",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/api-client/src/openapi.generated.d.ts"
+              ],
+              "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
             }
           ]
         }
@@ -1117194,7 +1117385,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -1120012,6 +1120203,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -1123363,7 +1123562,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+              "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -1126104,6 +1126303,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-provider-coverage",
+              "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Additive tests verify version-scoped storage probe cleanup, profile export ownership, trace correlation and provider lease controls. Existing shared cases passed and the runtime source remains byte-identical."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1131923,7 +1132130,8 @@
         "The hosted full rehearsal passed 2,976 browser cases with zero failures, skips and flakes. Combined coverage failed across seven groups with 63 file errors. The telemetry package now emits coverage and passes the existing threshold locally. Preserve the full file report, address remaining errors and run the final enforced gates.",
         "The shared critical coverage batch closes six specific previously reported file gaps in its scoped check. The full rehearsal still has other coverage failures, plus the strict license and exact operational release checks.",
         "The scoped release coverage check resolved the three recorded worker file deficits for OTP notices and invoice reminders. Ninety-three affected cases passed, including native migrated PostgreSQL. The final combined and license checks still need exact release evidence.",
-        "The scoped release coverage check resolved five named admin and staff read authority file deficits. The affected 55 cases passed, including PostgreSQL integrations. The exact combined release and license gates remain open."
+        "The scoped release coverage check resolved five named admin and staff read authority file deficits. The affected 55 cases passed, including PostgreSQL integrations. The exact combined release and license gates remain open.",
+        "Both shared coverage groups from the failed hosted rehearsal pass the unchanged release checker locally. Exact combined coverage and staged operational evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132287,7 +1132495,8 @@
           "release-0.6-telemetry-source-coverage",
           "release-0.6-shared-critical-coverage",
           "release-0.6-worker-notification-coverage",
-          "release-0.6-staff-control-coverage"
+          "release-0.6-staff-control-coverage",
+          "release-0.6-provider-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1320819,6 +1321028,169 @@
         {
           "file": "scoped-gate.json",
           "sha256": "7daa3a4f392d75eec96c046a7a661b629f19be856a0f33bc7087ffe32147c4f6"
+        }
+      ]
+    },
+    "release-0.6-openapi-declarations": {
+      "batch": "release-0.6-openapi-declarations",
+      "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.16.02.02",
+        "06-security-testing-observability.md#T-06.16.02.03",
+        "06-security-testing-observability.md#T-06.16.02.06"
+      ],
+      "changed_paths": [
+        ".prettierignore",
+        "packages/api-client/package.json",
+        "packages/api-client/src/openapi.generated.ts",
+        "packages/api-client/src/openapi.generated.d.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": ".prettierignore",
+          "sha256": "337d561d6fffaafc45bb79bf31c70b6986aa632b7e422bd51e98eee54afc9bc6"
+        },
+        {
+          "path": "packages/api-client/package.json",
+          "sha256": "b89fa7a74c95fbedea2b8e0fc08357f4628d6ff1d964e0028568633f8897d707"
+        },
+        {
+          "path": "packages/api-client/src/openapi.generated.d.ts",
+          "sha256": "00c9e1b86f8c1d841c8c407f194892efd16dfd9749a4712ccad60276ca33d9ed"
+        },
+        {
+          "path": "packages/api-client/src/index.ts",
+          "sha256": "40c4a5a856e7f9cbc09770a4f935d1a034d4e7892b985a1081470b2646d71d20"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "6b92082127ce7216e75fe5a067b5eaeae61dca6f867b0af5cb7da068609f6f1a"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "OpenAPI schema and client drift checks passed. Fresh openapi-typescript generation matched the previous tracked file byte for byte.",
+        "The API client build copies the declaration into dist and produces no generated runtime module. Client and web typechecks passed. Existing coverage eligibility recognizes declarations and retains executable client paths."
+      ],
+      "limitations": [
+        "This evidence covers only the identified inputs and groups. The full hosted release gates and live receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-openapi-declarations",
+      "execution_receipts": [
+        {
+          "file": "contract.log",
+          "sha256": "6f1a2ca03acd8bfbcfac6ec8bd0d81bf4a4cb5af1efe2b3f6391751ec32c5f0e"
+        },
+        {
+          "file": "build-and-consumer.log",
+          "sha256": "84e2c3ae8fc8b3fbb3556965f834760405c73da629c4e3080cfbca497e7e9042"
+        },
+        {
+          "file": "generate.log",
+          "sha256": "7a0f74ac5ad0467d3555560b51421e960498e485c5ed1c456e13275ae691ae98"
+        }
+      ]
+    },
+    "release-0.6-provider-coverage": {
+      "batch": "release-0.6-provider-coverage",
+      "base_commit": "ff4c457b67eb931a5acddf086a5f1a714a596ac8",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "packages/shared/src/storage/storage.test.ts",
+        "packages/shared/src/operator-logging.test.ts",
+        "packages/shared/src/notification-delivery/email-breaker.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "52e5142b83a9e3cdda3f34e7d2d392c56adde241bf29c2fd5779320405382f6e"
+        },
+        {
+          "path": "packages/shared/src/operator-logging.test.ts",
+          "sha256": "a975c5d33a4bd78c58fabd10167b5771e610065a2a507711b47109d84c1b37e3"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-breaker.test.ts",
+          "sha256": "6075ba15cb2ed28c8fbe144a7267fc58bb5ab2fe8bf2025383406c39be11373e"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
+        },
+        {
+          "path": "packages/shared/src/storage/profile-export-archive.ts",
+          "sha256": "a258d7f2957ce465d33f968ec09cc101fd2c67e4df714f7fa5408113cc6f4507"
+        },
+        {
+          "path": "packages/shared/src/operator-logging.ts",
+          "sha256": "a7a955e742b289f0e72f66bd2109fad944d195ff6377f83dd25cc2f41f0ccf49"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-breaker.ts",
+          "sha256": "e6e385e169bf01ed6fa272737279eba7fb171e230b8788fc563f6198bdc48d62"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "All 1,353 shared tests passed in 95 files. The unchanged coverage checker passed both groups from the last released baseline, including every critical file.",
+        "Two compiled API storage-probe cleanup cases passed against migrated PostgreSQL. The 30 other cases in that file were filtered out. Shared types, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "This evidence covers only the identified inputs and groups. The full hosted release gates and live receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-provider-coverage",
+      "execution_receipts": [
+        {
+          "file": "baseline-shared.log",
+          "sha256": "f5f626126ac7a621f182336fbf4e0693783239b89e192c9969680b90522e48ea"
+        },
+        {
+          "file": "before.json",
+          "sha256": "554d1cb4067d162216418d56a041a15eb7d72c0807a26e0a2cceea3dac055377"
+        },
+        {
+          "file": "shared.log",
+          "sha256": "b22f498853be755096df6ee5ffc89f442784a07c92cadc3b500aed68e925593d"
+        },
+        {
+          "file": "shared-coverage-gate.json",
+          "sha256": "f89ac1acba8b338a7f578a2efe20819fc32f20d65a1ec828d35a5d10aea3920d"
+        },
+        {
+          "file": "affected-api.log",
+          "sha256": "580db3a79fca284e7c10458ebbc58aa3f723ff5a917d486a65c7a573a5e73eb4"
         }
       ]
     }

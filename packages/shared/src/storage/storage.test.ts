@@ -5,6 +5,7 @@ import { StorageObjectNotFound, StorageProviderError } from './storage-provider.
 import { S3StorageProvider, type S3StorageProviderConfig } from './s3-storage-provider.js';
 import { createStorageProvider } from './storage-factory.js';
 import { storageCircuitMetrics } from './storage-circuit.js';
+import { isProfileExportArchive } from './profile-export-archive.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -37,6 +38,124 @@ function createMockedProvider(
   (provider as unknown as { client: { send: ReturnType<typeof vi.fn> } }).client.send = send;
   return [provider, send];
 }
+
+describe('disposable storage probes', () => {
+  const nonce = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+  const key = `_storage_probes/${nonce}`;
+
+  it.each([
+    [undefined, false],
+    ['Enabled', true],
+    ['Suspended', true],
+  ] as const)('distinguishes unversioned and versioned buckets (%s)', async (Status, expected) => {
+    const [provider, send] = createMockedProvider();
+    send.mockResolvedValue({ Status });
+    await expect(provider.probeBucketVersioned()).resolves.toBe(expected);
+  });
+
+  it('fails closed on an unknown versioning state or a key outside the disposable namespace', async () => {
+    const [provider, send] = createMockedProvider();
+    send.mockResolvedValue({ Status: 'Unknown' });
+    await expect(provider.probeBucketVersioned()).rejects.toThrow(
+      'could not identify bucket versioning'
+    );
+    send.mockClear();
+    await expect(
+      provider.putConnectionProbe('uploads/file', Buffer.from('fixture'))
+    ).rejects.toThrow('Invalid disposable storage probe key');
+    await expect(provider.removeConnectionProbe('uploads/file', false)).rejects.toThrow(
+      'Invalid disposable storage probe key'
+    );
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('uses a conditional put and deletes only the exact provider version', async () => {
+    const [provider, send] = createMockedProvider();
+    const payload = Buffer.from('fixture');
+    send
+      .mockResolvedValueOnce({ VersionId: 'probe-version', ETag: 'probe-etag' })
+      .mockResolvedValueOnce({ VersionId: 'probe-version' });
+    const identity = await provider.putConnectionProbe(key, payload);
+    expect(identity).toEqual({ versionId: 'probe-version', etag: 'probe-etag' });
+    expect(send.mock.calls[0]?.[0].input).toMatchObject({
+      Key: key,
+      IfNoneMatch: '*',
+      Metadata: { 'barghsa-probe': nonce },
+      Body: payload,
+    });
+    await provider.removeConnectionProbe(key, true, identity);
+    expect(send).toHaveBeenCalledTimes(2);
+    expect(send.mock.calls[1]?.[0].input).toMatchObject({ Key: key, VersionId: 'probe-version' });
+  });
+
+  it.each([
+    [
+      { Metadata: { 'barghsa-probe': 'wrong' }, ETag: 'probe-etag', VersionId: 'v1' },
+      'could not prove object ownership',
+    ],
+    [
+      { Metadata: { 'barghsa-probe': nonce }, ETag: 'different', VersionId: 'v1' },
+      'could not prove object ownership',
+    ],
+    [
+      { Metadata: { 'barghsa-probe': nonce }, ETag: 'probe-etag' },
+      'could not identify the object version',
+    ],
+  ])('refuses to delete an unverified probe %#', async (metadata, error) => {
+    const [provider, send] = createMockedProvider();
+    send.mockResolvedValue(metadata);
+    await expect(provider.removeConnectionProbe(key, true, { etag: 'probe-etag' })).rejects.toThrow(
+      error
+    );
+    expect(send).toHaveBeenCalledOnce();
+  });
+
+  it('handles an absent unacknowledged probe and propagates other metadata errors', async () => {
+    const [provider, send] = createMockedProvider();
+    send.mockRejectedValueOnce(Object.assign(new Error('missing probe'), { name: 'NoSuchKey' }));
+    await expect(provider.removeConnectionProbe(key, true)).resolves.toBeUndefined();
+    expect(send).toHaveBeenCalledOnce();
+    send.mockRejectedValueOnce(
+      Object.assign(new Error('metadata unavailable'), { name: 'ServiceUnavailable' })
+    );
+    await expect(provider.removeConnectionProbe(key, true)).rejects.toThrow('metadata unavailable');
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([{ DeleteMarker: true }, { VersionId: 'unexpected' }])(
+    'rejects an invalid deletion receipt (%j)',
+    async (receipt) => {
+      const [provider, send] = createMockedProvider();
+      send.mockResolvedValue(receipt);
+      await expect(provider.removeConnectionProbe(key, true, { versionId: 'v1' })).rejects.toThrow(
+        'receipt did not match'
+      );
+      expect(send).toHaveBeenCalledOnce();
+    }
+  );
+
+  it('identifies an unacknowledged unversioned probe by its nonce before cleanup', async () => {
+    const [provider, send] = createMockedProvider();
+    send.mockResolvedValueOnce({ Metadata: { 'barghsa-probe': nonce } }).mockResolvedValueOnce({});
+    await provider.removeConnectionProbe(key, false);
+    expect(send).toHaveBeenCalledTimes(2);
+    expect(send.mock.calls[1]?.[0].input).toMatchObject({ Key: key, VersionId: undefined });
+  });
+});
+
+it('only accepts profile-export ZIP archives from the exact ticket namespace', () => {
+  const ticket = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+  const other = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
+  expect(
+    isProfileExportArchive(ticket, `tmp/profile-exports/${ticket.toUpperCase()}/${other}.zip`)
+  ).toBe(true);
+  expect(isProfileExportArchive(ticket, `tmp/profile-exports/${other}/${ticket}.zip`)).toBe(false);
+  expect(isProfileExportArchive(ticket, `tmp/profile-exports/${ticket}/nested/${other}.zip`)).toBe(
+    false
+  );
+  expect(isProfileExportArchive(ticket, `tmp/profile-exports/${ticket}/${other}.pdf`)).toBe(false);
+  expect(isProfileExportArchive(ticket, null)).toBe(false);
+});
 
 it('guards S3 requests without turning storage outages into missing objects', async () => {
   let calls = 0;
