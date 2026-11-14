@@ -23,3 +23,9 @@ For a packaged runtime, mount the script read-only beside the API's package mani
 The isolated staging runtime measured 365 ms p95 verification at the default settings and 663 ms at the upper configuration bounds. Peak process memory was roughly 179 MiB and 308 MiB respectively across the sequential and concurrent tests. These measurements cover the hashing process with synthetic input. The production login request budget is checked separately.
 
 The explicit staff temporary-password flow shows the generated password once to the authorized, recently verified creator. The create response is private and uncached, and staff readback omits the credential. The password hash is stored and the recipient must replace the password before a session can be issued. The activation-link flow uses the restricted delivery queue.
+
+## Credential imports
+
+Run the [count-only password inventory](../operations/preflight/password-import-review.sql) against the authorized Barghsa-format import snapshot or target. Keep the report with the import review. The query reports counts for current credentials and password history without returning hashes, account IDs or contact details.
+
+The Argon2id v19 count checks encoding shape. Verify the imported format with synthetic credentials created using the same source policy, including a wrong-password check and an attempt to reuse a historical password. Confirm the source's parameter bounds and login compatibility before importing. If any row is missing, malformed or uses another format, review its source and sign off on the verified-contact recovery plan before enabling affected accounts. Reconcile password history as part of that review to preserve the reuse policy. A staging inventory covers only the observed staging data.

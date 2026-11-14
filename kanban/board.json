@@ -24397,7 +24397,8 @@
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
-        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version."
+        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
       ],
       "owner": null,
       "depends_on": [],
@@ -24468,7 +24469,8 @@
           "release-0.6-browser-43561500300",
           "release-0.6-cumulative-image-receipts",
           "release-0.6-strict-license-and-grafana-proof",
-          "release-0.6-nodemailer-moderate-advisories"
+          "release-0.6-nodemailer-moderate-advisories",
+          "release-0.6-hosted-image-scan-8436b628a"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -672847,7 +672849,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-structured-release-log-marker",
           "release-0.6-process-error-reporting",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-password-import-format-inventory"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -672867,7 +672870,7 @@
             },
             {
               "path": "docs/security/password-hashing.md",
-              "sha256": "68d3b596f898b37c1f1e5fa16f568aabfe2485784ffe6e8b589741d61d1a9f0d"
+              "sha256": "17b86ab5ade3ae1b6287a1a742737c63f02ed7984b0c047e6b1224027d28560e"
             },
             {
               "path": "packages/shared/src/password-hash.test.ts",
@@ -673024,6 +673027,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-password-import-format-inventory",
+              "base_commit": "db91d3bf36da0285247027adbe45b7f2cd48558c",
+              "paths": [
+                "docs/security/password-hashing.md"
+              ],
+              "scope": "Only the credential import review section was added to the document. The hashing defaults, cost bounds, benchmark and prior calibration evidence retain their source bytes."
             }
           ]
         }
@@ -673067,7 +673078,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-password-import-format-inventory"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -673103,7 +673115,7 @@
             },
             {
               "path": "docs/security/password-hashing.md",
-              "sha256": "68d3b596f898b37c1f1e5fa16f568aabfe2485784ffe6e8b589741d61d1a9f0d"
+              "sha256": "17b86ab5ade3ae1b6287a1a742737c63f02ed7984b0c047e6b1224027d28560e"
             },
             {
               "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
@@ -673335,6 +673347,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-password-import-format-inventory",
+              "base_commit": "db91d3bf36da0285247027adbe45b7f2cd48558c",
+              "paths": [
+                "docs/security/password-hashing.md"
+              ],
+              "scope": "Only the credential import review section was added to the document. The hashing defaults, cost bounds, benchmark and prior calibration evidence retain their source bytes."
             }
           ]
         }
@@ -673484,7 +673504,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Confirm the inventory of any production import. Encoded compatible Argon2 hashes verify in place. Any other imported credential format needs an explicit conversion or forced-reset plan with populated upgrade evidence."
+        "Confirm the inventory of any production import. Encoded compatible Argon2 hashes verify in place. Any other imported credential format needs an explicit conversion or forced-reset plan with populated upgrade evidence.",
+        "The read-only credential-format inventory on live staging v0.5.1 counted two current Argon2id v19-shaped rows and no password-history rows. It returned aggregate counts only. Obtain and review the actual production import snapshot before accepting migration compatibility."
       ],
       "owner": null,
       "depends_on": [],
@@ -673492,7 +673513,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-password-import-format-inventory"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -706863,7 +706885,8 @@
         "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
-        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version."
+        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
       ],
       "owner": null,
       "depends_on": [],
@@ -706938,7 +706961,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-strict-license-and-grafana-proof",
-          "release-0.6-nodemailer-moderate-advisories"
+          "release-0.6-nodemailer-moderate-advisories",
+          "release-0.6-hosted-image-scan-8436b628a"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -707214,7 +707238,8 @@
         "The release now checks the private scanner response before stopping writers and requires one scanner receipt before announcement. Verify actual candidate scans, image identities and signed feed in the live release.",
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "Hosted rehearsal 43583704822 at 81d4381e9 passed all 12 mobile Chromium cases on its first attempt. Login and all four service histories had Persian and English samples. Maximum LCP was 1,652 ms, populated render 1,659.4 ms, CLS 0.0478 and blocking time 0 ms."
+        "Hosted rehearsal 43583704822 at 81d4381e9 passed all 12 mobile Chromium cases on its first attempt. Login and all four service histories had Persian and English samples. Maximum LCP was 1,652 ms, populated render 1,659.4 ms, CLS 0.0478 and blocking time 0 ms.",
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
       ],
       "owner": null,
       "depends_on": [],
@@ -707250,7 +707275,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-hosted-mobile-and-source-scans-81d4381e9"
+          "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
+          "release-0.6-hosted-image-scan-8436b628a"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -1129982,7 +1130008,9 @@
         "Hosted rehearsal 43583704822 at 81d4381e9 passed all 12 mobile Chromium cases on its first attempt. Login and all four service histories had Persian and English samples. Maximum LCP was 1,652 ms, populated render 1,659.4 ms, CLS 0.0478 and blocking time 0 ms.",
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
         "Full CI rehearsal 43583704822 completed the native test job successfully on 81d4381e9. The 127,506,800-byte original archive matched its GitHub checksum and contained nonempty Istanbul data for all eight expected workspaces. The browser run and combined gate were still pending.",
-        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps."
+        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps.",
+        "The read-only credential-format inventory on live staging v0.5.1 counted two current Argon2id v19-shaped rows and no password-history rows. It returned aggregate counts only. Obtain and review the actual production import snapshot before accepting migration compatibility.",
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
       ],
       "owner": null,
       "depends_on": [],
@@ -1130334,7 +1130362,9 @@
           "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
           "release-0.6-nodemailer-moderate-advisories",
           "release-0.6-native-coverage-rehearsal-81d4381e9",
-          "release-0.6-protected-main-9bfba918c"
+          "release-0.6-protected-main-9bfba918c",
+          "release-0.6-password-import-format-inventory",
+          "release-0.6-hosted-image-scan-8436b628a"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1317689,6 +1317719,110 @@
         {
           "file": "affected-test-9bfba918c.zip",
           "sha256": "5b4a0f12113d88785cc90837946413c214c1dabdaa14386fbe5f8ea9c80198c9"
+        }
+      ]
+    },
+    "release-0.6-password-import-format-inventory": {
+      "batch": "release-0.6-password-import-format-inventory",
+      "base_commit": "db91d3bf36da0285247027adbe45b7f2cd48558c",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.01.05",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/password-hashing.md",
+        "docs/operations/preflight/password-import-review.sql"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/password-hashing.md",
+          "sha256": "17b86ab5ade3ae1b6287a1a742737c63f02ed7984b0c047e6b1224027d28560e"
+        },
+        {
+          "path": "docs/operations/preflight/password-import-review.sql",
+          "sha256": "8ee96e2e4d96259298102e9ab2ec48cfc621393250fa359a89110151e475ede9"
+        },
+        {
+          "path": "packages/db/src/schema/users.ts",
+          "sha256": "e2fb93f93c0b6a40ecbd5fa3080714f608a2cc22f9e9c0f07b720cccd1cdd399"
+        },
+        {
+          "path": "packages/db/src/schema/password-history.ts",
+          "sha256": "b68f55602c4950eb03460f6071a995abddce0c23cf7d60b963c38725eee619ee"
+        },
+        {
+          "path": "apps/api/test/password-hash-policy.spec.ts",
+          "sha256": "afd78f19d4e33a08f67596a113a512355e982dfbb82779c867cea6fd61a95b32"
+        }
+      ],
+      "checks": [
+        "The read-only credential-format inventory on live staging v0.5.1 counted two current Argon2id v19-shaped rows and no password-history rows. It returned aggregate counts only. Obtain and review the actual production import snapshot before accepting migration compatibility.",
+        "Disposable PostgreSQL checked empty and populated cases, including a current shape, a legacy-shaped cost, another Argon2 form, malformed encoding, missing values and an unknown format. The report contained no row identifiers or credential values. Two native Argon2 checks passed, including verification of a compatible older cost."
+      ],
+      "limitations": [
+        "Staging only. Format-shape counts do not prove imported credentials verify. The production import, source policy and any verified-contact recovery decision are open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-password-import-review",
+      "execution_receipts": [
+        {
+          "file": "staging-credential-shapes.json",
+          "sha256": "27a48e810ee4855501fae00208e8e0f07f88b9f4215a672787e8ad613f56aebf"
+        },
+        {
+          "file": "postgres-fixture.json",
+          "sha256": "9584c4074e2ce4f6df2de13b55ebe6f2697df8792d5e19f0fc1e1baac2aef099"
+        },
+        {
+          "file": "native-hash-compatibility.log",
+          "sha256": "a89122befe4395f4b537a37caf00c574e5ec48594528b4d61d677ee4691df175"
+        }
+      ]
+    },
+    "release-0.6-hosted-image-scan-8436b628a": {
+      "batch": "release-0.6-hosted-image-scan-8436b628a",
+      "base_commit": "8436b628a3f136a74f0f59007395c83d09440ded",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.08"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f3f174f59be1eeccdc7ea44f67130eea453371bc366043a07d23440ed29272c8"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
+      ],
+      "limitations": [
+        "Report-only image evidence on the predecessor with Nodemailer 10.0.12. The changed Nodemailer row still needs exact image and license readback, and the enforced license check remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-storage-lifecycle",
+      "execution_receipts": [
+        {
+          "file": "image-scan-readback-8436b628a.json",
+          "sha256": "9793c9516356c41a37344d70c9ce680a0269da9d8abca446b4c2b3e093a482f8"
+        },
+        {
+          "file": "image-scan-8436b628a.zip",
+          "sha256": "12483fa15e57cc88f49aa7048c8d29178ae8f8e541e10c83bbe4e241946f2f84"
         }
       ]
     }
