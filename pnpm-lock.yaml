@@ -54,9 +54,9 @@ patchedDependencies:
   gel@2.2.0:
     hash: b14523c4aa2b3fe1e68869d1efe8a8b51c532adc5c3bd289db41cbbb9af2f7d5
     path: patches/gel@2.2.0.patch
-  nodemailer@10.0.12:
-    hash: 4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8
-    path: patches/nodemailer@10.0.12.patch
+  nodemailer@10.1.4:
+    hash: 8ef1f53c349e2d38a5398818dd4279af559c435a76aa7801b61bab75696550a8
+    path: patches/nodemailer@10.1.4.patch
   nodemon@3.1.14:
     hash: b2939beef73b52c91982aea76a7e7742fe6341b2780bca270c50d761a3dba87f
     path: patches/nodemon@3.1.14.patch
@@ -198,8 +198,8 @@ importers:
         specifier: ^5.11.1
         version: 5.11.1
       nodemailer:
-        specifier: 10.0.12
-        version: 10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8)
+        specifier: 10.1.4
+        version: 10.1.4(patch_hash=8ef1f53c349e2d38a5398818dd4279af559c435a76aa7801b61bab75696550a8)
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -416,8 +416,8 @@ importers:
         specifier: 1.9.1
         version: 1.9.1
       nodemailer:
-        specifier: 10.0.12
-        version: 10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8)
+        specifier: 10.1.4
+        version: 10.1.4(patch_hash=8ef1f53c349e2d38a5398818dd4279af559c435a76aa7801b61bab75696550a8)
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -572,8 +572,8 @@ importers:
         specifier: ^5.11.1
         version: 5.11.1
       nodemailer:
-        specifier: 10.0.12
-        version: 10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8)
+        specifier: 10.1.4
+        version: 10.1.4(patch_hash=8ef1f53c349e2d38a5398818dd4279af559c435a76aa7801b61bab75696550a8)
       pino:
         specifier: 10.4.0
         version: 10.4.0
@@ -6715,8 +6715,8 @@ packages:
     resolution: {integrity: sha512-D9UOmYG3UH1V+ENW56t5QXBwJw1YEY18ruVeus89Rw+SyIgjPkCO84bRzO3uNIYosJbNwiabWVn48o3uJLjxFQ==}
     engines: {node: '>=18'}
 
-  nodemailer@10.0.12:
-    resolution: {integrity: sha512-PQ46oNbNMuH/Sno7B5IWIU9etytwrO0xdTFvWXpIQFRXhBAXtzD48243AS+BCbQQTPD8y3fqUrgLn0tSo77gvg==}
+  nodemailer@10.1.4:
+    resolution: {integrity: sha512-EsMnOR2oRv4LGnWvHgcVYkkQ4O2j8KO4WTw6l+PHR4sOXo8SAgIraxtEnGDmotjbhv0hDsu3IuDIFZm8iXwO4A==}
     engines: {node: '>=20.0.0'}
 
   nodemon@3.1.14:
@@ -15165,7 +15165,7 @@ snapshots:
 
   node-releases@2.0.53: {}
 
-  nodemailer@10.0.12(patch_hash=4f3694f1fd49a004da9af805855c1426602fedbba7ec738c7be67ff46c0743f8): {}
+  nodemailer@10.1.4(patch_hash=8ef1f53c349e2d38a5398818dd4279af559c435a76aa7801b61bab75696550a8): {}
 
   nodemon@3.1.14(patch_hash=b2939beef73b52c91982aea76a7e7742fe6341b2780bca270c50d761a3dba87f):
     dependencies:

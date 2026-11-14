@@ -33,7 +33,7 @@
     "cookie": "0.7.2",
     "file-type": "21.3.4",
     "ioredis": "^5.11.1",
-    "nodemailer": "10.0.12",
+    "nodemailer": "10.1.4",
     "pdfjs-dist": "6.3.289",
     "pdfkit": "0.20.2",
     "prom-client": "15.1.3",

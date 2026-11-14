@@ -1,0 +1,24 @@
+diff --git a/dist/cjs/errors.d.ts b/dist/cjs/errors.d.ts
+--- a/dist/cjs/errors.d.ts
++++ b/dist/cjs/errors.d.ts
+@@ -82,7 +82,7 @@
+  * inherited from ErrnoException, not redeclared, so it follows the
+  * consumer's @types/node.
+  */
+-export interface NodemailerError extends NodeJS.ErrnoException {
++export interface NodemailerError extends Omit<NodeJS.ErrnoException, 'code'> {
+     /** SMTP command that was in flight when the server replied with an error */
+     command?: string | undefined;
+     /** Raw SMTP server response */
+diff --git a/dist/esm/errors.d.ts b/dist/esm/errors.d.ts
+--- a/dist/esm/errors.d.ts
++++ b/dist/esm/errors.d.ts
+@@ -82,7 +82,7 @@
+  * inherited from ErrnoException, not redeclared, so it follows the
+  * consumer's @types/node.
+  */
+-export interface NodemailerError extends NodeJS.ErrnoException {
++export interface NodemailerError extends Omit<NodeJS.ErrnoException, 'code'> {
+     /** SMTP command that was in flight when the server replied with an error */
+     command?: string | undefined;
+     /** Raw SMTP server response */

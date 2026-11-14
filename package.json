@@ -108,7 +108,7 @@
       "@tanstack/router-core@1.171.27": "patches/@tanstack__router-core@1.171.27.patch",
       "vite@6.4.4": "patches/vite@6.4.4.patch",
       "gel@2.2.0": "patches/gel@2.2.0.patch",
-      "nodemailer@10.0.12": "patches/nodemailer@10.0.12.patch",
+      "nodemailer@10.1.4": "patches/nodemailer@10.1.4.patch",
       "nodemon@3.1.14": "patches/nodemon@3.1.14.patch",
       "@swc/cli@0.8.1": "patches/@swc__cli@0.8.1.patch",
       "@base-ui/react@1.7.0": "patches/@base-ui__react@1.7.0.patch",

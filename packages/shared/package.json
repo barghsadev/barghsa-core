@@ -374,7 +374,7 @@
     "@aws-sdk/s3-request-presigner": "^3.700.0",
     "@barghsa/telemetry": "workspace:*",
     "ioredis": "^5.11.1",
-    "nodemailer": "10.0.12",
+    "nodemailer": "10.1.4",
     "pino": "10.4.0",
     "zod": "4.6.6"
   },
