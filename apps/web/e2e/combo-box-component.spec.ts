@@ -95,6 +95,10 @@ for (const locale of ['en', 'fa'])
       await category.fill(billing);
       await category.press('ArrowDown');
       await category.press('Enter');
+      await expect(category).toHaveValue(billing);
+      const popup = page.locator('[data-slot="combobox-popup"]');
+      // Base UI keeps the closing popup mounted until its exit animation completes.
+      await expect(popup).toHaveCount(0);
       const trigger = page.getByRole('button', { name: fa ? 'نمایش دسته‌ها' : 'Show categories' });
       await expect(trigger).toHaveAttribute('data-custom-trigger', 'true');
       await expect(trigger).toContainText(billing);
@@ -103,7 +107,7 @@ for (const locale of ['en', 'fa'])
       else await trigger.click();
       await expect(category).toHaveAttribute('aria-expanded', 'true');
       await expect(page.getByRole('listbox')).toBeVisible();
-      await expect(page.locator('[data-slot="combobox-popup"]')).toHaveCSS('opacity', '1');
+      await expect(popup).toHaveCSS('opacity', '1');
       expect(
         (await new AxeBuilder({ page }).include('[data-slot="combobox-popup"]').analyze())
           .violations

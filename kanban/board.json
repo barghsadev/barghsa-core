@@ -24726,7 +24726,8 @@
         "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
         "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open.",
         "The nightly delivery script binds the rendered email summary to the rollup checksum and the scheduled commit, run and attempt. Wrong identity or mismatched bytes are omitted from the email and cannot report success. Verify the actual approved mailbox delivery and the clean scheduled candidate run.",
-        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts."
+        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts.",
+        "Hosted diagnostic 43555617831 WebKit shard 1 recorded a combobox trigger flake while the preceding popup was still closing. Scoped test synchronization passed 50 executions across five browser projects with zero retries. Recheck the hosted candidate rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -24840,7 +24841,8 @@
           "release-0.6-registration-request-observation",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-nightly-report-identity",
-          "release-0.6-storage-browser-probe"
+          "release-0.6-storage-browser-probe",
+          "release-0.6-combobox-popup-transition"
         ],
         "current_acceptance": null
       }
@@ -748449,7 +748451,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-combobox-popup-transition"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -748457,7 +748460,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
+              "sha256": "d60e74ecbb45a403903704265c04161d44a92dcad005a5ac91a34c3750b18dca"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -748563,7 +748566,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain."
+            "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain.",
+            "Renewed only the combobox browser test binding for an explicit prior-popup unmount wait. The same component and fixture passed fifty cases across five browser projects. Existing source-bound evidence for unrelated interactions is retained."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-interaction-current-acceptance",
@@ -748722,7 +748726,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-combobox-popup-transition"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -748730,7 +748735,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
+              "sha256": "d60e74ecbb45a403903704265c04161d44a92dcad005a5ac91a34c3750b18dca"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -748836,7 +748841,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain."
+            "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain.",
+            "Renewed only the combobox browser test binding for an explicit prior-popup unmount wait. The same component and fixture passed fifty cases across five browser projects. Existing source-bound evidence for unrelated interactions is retained."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-interaction-current-acceptance",
@@ -748995,7 +749001,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-combobox-popup-transition"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -749003,7 +749010,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
+              "sha256": "d60e74ecbb45a403903704265c04161d44a92dcad005a5ac91a34c3750b18dca"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -749109,7 +749116,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain."
+            "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain.",
+            "Renewed only the combobox browser test binding for an explicit prior-popup unmount wait. The same component and fixture passed fifty cases across five browser projects. Existing source-bound evidence for unrelated interactions is retained."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-interaction-current-acceptance",
@@ -785508,7 +785516,8 @@
           "release-0.6-service-workflow-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-combobox-popup-transition"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -785520,7 +785529,7 @@
             },
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
+              "sha256": "d60e74ecbb45a403903704265c04161d44a92dcad005a5ac91a34c3750b18dca"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -786007,7 +786016,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed only the combobox browser test binding for an explicit prior-popup unmount wait. The same component and fixture passed fifty cases across five browser projects. Existing source-bound evidence for unrelated interactions is retained."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
           "scope_dispositions": [
@@ -1095429,7 +1095439,8 @@
         "Production promotion verification matches the staged migration checkpoint label, system ID, encrypted object size and checksum to the off-server manifest. Separate candidate rehearsal evidence is required. Final live evidence remains open.",
         "Hosted report-only 43555538867 verified five exact image identities, SBOMs and scans for 7b62b875c. Package review comprises 386 entries. Final strict acceptance and deployed receipts remain open.",
         "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts.",
-        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts."
+        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts.",
+        "Hosted diagnostic 43555617831 WebKit shard 1 recorded a combobox trigger flake while the preceding popup was still closing. Scoped test synchronization passed 50 executions across five browser projects with zero retries. Recheck the hosted candidate rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095758,7 +1095769,8 @@
           "release-0.6-promotion-migration-receipt",
           "release-0.6-hosted-alpine-inventory-readback",
           "release-0.6-staging-notification-resume",
-          "release-0.6-storage-browser-probe"
+          "release-0.6-storage-browser-probe",
+          "release-0.6-combobox-popup-transition"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1277127,6 +1277139,57 @@
         {
           "file": "affected-browser.log",
           "sha256": "c8461e54cb6376f80d22786ae900abb3e5e80087b960584acbe0355c5dad5e2f"
+        }
+      ]
+    },
+    "release-0.6-combobox-popup-transition": {
+      "batch": "release-0.6-combobox-popup-transition",
+      "base_commit": "69be928c544b99c081ae1df3a4f2cc19e18e27f9",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "07-ui-ux-design.md#T-07.01.03.06",
+        "07-ui-ux-design.md#T-07.01.03.07",
+        "07-ui-ux-design.md#T-07.01.03.08",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/combo-box-component.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/combo-box-component.spec.ts",
+          "sha256": "d60e74ecbb45a403903704265c04161d44a92dcad005a5ac91a34c3750b18dca"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/main.tsx",
+          "sha256": "fe4da29978a6b15ca7700e78dda8d989a0a6c3d88860b6b771aeb903082dbdbf"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+          "sha256": "924dccb237bd2f3aaedd05bc9d7aead0798d4f0b5815d3d8cd96f4145648e115"
+        }
+      ],
+      "checks": [
+        "Hosted WebKit shard 1 trace at exact 7b62b875c captured the custom-trigger click during the closing popup state after selecting the category.",
+        "The test waits for the preceding popup to unmount and then clicks once. Popup reopening, focus, native validation, touch targets, contrast and Axe assertions remain. Fifty scoped passes across all five browser projects exercised this test file with zero retries or skips."
+      ],
+      "limitations": [
+        "The local run covers the scoped combobox and shared-font browser fixture. The scheduled and final hosted v0.6.0 rollups are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-combobox-popup-transition",
+      "execution_receipts": [
+        {
+          "file": "combobox.json",
+          "sha256": "61525c6a60883cfe91bc36c022010e87f914134d4fc0cd1126d80df95423a165"
+        },
+        {
+          "file": "combobox.log",
+          "sha256": "1e040e84e2c7b2bfa41203a983c48b2779b87c9ba180d682114b2edd4d2aa3ba"
+        },
+        {
+          "file": "hosted-webkit-shard-1-readback.json",
+          "sha256": "b162d2893023140db5ac9a2dbabd0b069821d6d420847bfb3c31f27aca16cffc"
         }
       ]
     }
