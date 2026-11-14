@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T03:52:04+00:00",
+  "updated": "2026-11-14T04:00:56+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8803,7 +8803,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9130,6 +9130,14 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -13338,7 +13346,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13421,6 +13429,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -13521,7 +13537,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13898,6 +13914,14 @@
                 "Dockerfile.base"
               ],
               "scope": "The Alpine package stage removes only glibc Sharp files. The general build, runtime commands and configuration are unchanged. The exact Linux amd64 app SBOM shows no other package changes and installed document previews passed."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -21441,7 +21465,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21669,6 +21693,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -21750,7 +21782,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21978,6 +22010,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -24198,7 +24238,8 @@
         "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks.",
         "The protected quality job now runs production approval and guarded-rollout fixtures. The exact step passed locally. Retain the hosted candidate run, independent review and real approved rehearsal.",
         "The exact rollout pools require healthy PostgreSQL, Redis and object storage without warnings before authenticated smoke. Tested locally. Verify the production-equivalent canary and compatible restoration on the approved topology.",
-        "The promotion checker validates the original authenticated DAST receipt against the staged candidate, pinned scanner and eight expected probe outcomes. A stale or incomplete report and high findings block approval. Use the exact deployed candidate and retain finding dispositions with the security review."
+        "The promotion checker validates the original authenticated DAST receipt against the staged candidate, pinned scanner and eight expected probe outcomes. A stale or incomplete report and high findings block approval. Use the exact deployed candidate and retain finding dispositions with the security review.",
+        "The approval gate now compares original hosted load artifact bytes for the exact candidate, verifies the seven strict budgets and durable outcomes, and binds separate production-equivalent evidence. Obtain both receipts for the accepted launch candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -24244,7 +24285,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-promotion-receipt-order",
-          "release-0.6-promotion-dast-receipt"
+          "release-0.6-promotion-dast-receipt",
+          "release-0.6-promotion-load-receipt"
         ],
         "current_acceptance": null
       }
@@ -35693,7 +35735,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -36317,6 +36359,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -38735,7 +38785,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             }
           ],
           "checks": [
@@ -38975,6 +39025,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -685115,7 +685173,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -685235,6 +685293,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -704495,7 +704561,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Prove the strict rehearsal targets, declared dataset and index cardinality, and capacity on the production-equivalent environment. The isolated hosted run met every strict target with verified durable counts."
+        "Prove the strict rehearsal targets, declared dataset and index cardinality, and capacity on the production-equivalent environment. The isolated hosted run met every strict target with verified durable counts.",
+        "The existing hosted isolated load artifact from 43169513624 passed exact SHA, artifact, dataset, strict latency, and durable-count verification. An actual production-equivalent load run remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -704514,7 +704581,8 @@
           "release-0.6-crm-page-before-profile-summaries",
           "release-0.6-load-regression-and-durable-count-receipt",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-exact-hosted-load-receipt"
+          "release-0.6-exact-hosted-load-receipt",
+          "release-0.6-promotion-load-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-isolated-load",
@@ -709292,11 +709360,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "b428b4b4be03fec1ae78ac6599c3dcba11b05aee9cc3b9d27c15263eb1ac5495"
+              "sha256": "e1cd5a9ed86ebe92baf2873154af3e7016f630c7aedd1604f96e2f2d754ff108"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -709677,6 +709745,15 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -710204,15 +710281,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "b428b4b4be03fec1ae78ac6599c3dcba11b05aee9cc3b9d27c15263eb1ac5495"
+              "sha256": "e1cd5a9ed86ebe92baf2873154af3e7016f630c7aedd1604f96e2f2d754ff108"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -710701,6 +710778,16 @@
                 "scripts/report-nightly-browser.py"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -710849,7 +710936,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -711202,6 +711289,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -711789,7 +711884,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -712121,6 +712216,14 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -712193,7 +712296,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -712525,6 +712628,14 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -719657,7 +719768,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -719939,6 +720050,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -731447,7 +731566,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -731738,6 +731857,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -732086,7 +732213,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ded6d2305fc828c5298478f6e349186dfb8ef2f20ec2bd23ccb6b9863310f2bc"
+              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -732382,6 +732509,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -733685,7 +733820,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -733921,6 +734056,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -734053,7 +734196,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -734289,6 +734432,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -734359,7 +734510,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f5c1d5515cfa6144f5d6acd61427b56699ce57a1ccbb35df26deaa464b572ccf"
+              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -734595,6 +734746,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-promotion-load-receipt",
+              "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
             }
           ]
         }
@@ -1094925,7 +1095084,8 @@
         "The PostgreSQL supplement verifies notices for all 217 review rows in the retained image. The strict final image gate and accepted deployment remain open.",
         "The global and profile verification queues and case detail passed current staff-grant rechecks in the native PostgreSQL HTTP suite. Verify the accepted candidate and remaining operational gates.",
         "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
-        "The exact Linux amd64 app fixture ships the active musl Sharp variant and both original libvips notices. The local SBOM loses two unused glibc rows, including one pending exception. Verify the exact final images and the strict gate."
+        "The exact Linux amd64 app fixture ships the active musl Sharp variant and both original libvips notices. The local SBOM loses two unused glibc rows, including one pending exception. Verify the exact final images and the strict gate.",
+        "The promotion checker verifies all seven operations from the original hosted load report and requires separate measured topology evidence. Exact accepted candidate and real production-equivalent load receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095248,7 +1095408,8 @@
           "release-0.6-postgres-notice-readback",
           "release-0.6-verification-case-read-authority",
           "release-0.6-sharp-modified-musl-proof",
-          "release-0.6-sharp-runtime-platform"
+          "release-0.6-sharp-runtime-platform",
+          "release-0.6-promotion-load-receipt"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1276196,6 +1276357,88 @@
         {
           "file": "preview-tests.log",
           "sha256": "d5958e85a85ffb6dca71103f9a83516520800248bb9a80bc12b7b38b038157fb"
+        }
+      ]
+    },
+    "release-0.6-promotion-load-receipt": {
+      "batch": "release-0.6-promotion-load-receipt",
+      "base_commit": "0f521e1388cd84379e76bd8b430dda1b95df74fc",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/load-weekly.yml",
+          "sha256": "66a220a676f5c742302c66be6db4bf7c3980ecaa82f2958147b597df528e9815"
+        },
+        {
+          "path": "apps/api/performance/weekly.k6.mjs",
+          "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
+        },
+        {
+          "path": "apps/api/performance/weekly.perf.ts",
+          "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "e1cd5a9ed86ebe92baf2873154af3e7016f630c7aedd1604f96e2f2d754ff108"
+        }
+      ],
+      "checks": [
+        "All 16 final promotion verifier tests passed. Changed evidence, incomplete workloads, latency violations, missing durable writes, and reuse of the isolated artifact as topology evidence fail the gate.",
+        "Verified original GitHub artifact from successful manually dispatched run 43169513624 on 8917024e673d4e5c833a1017eef799c33ed6e66b. All seven operation budgets and required writes passed for 1,000 samples each.",
+        "The adjacent production suite ran 75 tests with four Linux credential integration skips. The final targeted verifier suite passed after adding a test for duplicate isolated and topology evidence. README formatting and diff checks passed."
+      ],
+      "limitations": [
+        "The hosted artifact covers an earlier isolated run. The separate rehearsal fixture verified file binding only. The accepted candidate needs exact isolated measurements and reviewed production-equivalent traffic and capacity evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-load-binding",
+      "execution_receipts": [
+        {
+          "file": "promotion-final.log",
+          "sha256": "a0f57ed4a0170c4bbd82687ba4aa014fbb08fe809186981d9b99476d21f3c20a"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "296b69f5cce4b618055febba4adf2c4c153d7fdcd714aef21b3e6f90e629ebbe"
+        },
+        {
+          "file": "hosted-load-final.json",
+          "sha256": "14dd018d091b9afe1d2ab6d7dde83308bf113dffae3a20e23e6a9b9895a79a69"
         }
       ]
     }

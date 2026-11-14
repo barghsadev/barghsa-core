@@ -70,7 +70,11 @@ Use the [service objectives](../../docs/operations/service-objectives.md), [inci
 
 ## First-launch promotion check
 
-Use a clean checkout of the exact v0.9.0 staging candidate and the full manual CI and browser run IDs for that commit. The check queries the launch board, strict quarantine, hosted workflows, 40-shard browser rollup and live staging readiness. The same hosted CI run must pass the enforced license and combined coverage gates.
+Use a clean checkout of the exact v0.9.0 staging candidate and the full manual
+CI, browser and weekly load run IDs for that commit. The check queries the
+launch board, strict quarantine, hosted workflows, 40-shard browser rollup and
+live staging readiness. The same hosted CI run must pass the enforced license
+and combined coverage gates.
 
 Keep `receipt-index.json` in the protected approval package. Set `candidate_sha` to the full candidate SHA. Under `receipts`, map each key below to a nonempty evidence file in the same protected directory or one of its subdirectories.
 
@@ -87,14 +91,23 @@ Keep `receipt-index.json` in the protected approval package. Set `candidate_sha`
 | `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                            |
 | `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                 |
 
-Use JSON indexes for `backup_and_restore`, `image_digests_and_scans` and
-`staging_and_telegram`. The paths
-inside both indexes are relative to the same protected approval package.
+Use JSON indexes for `performance_and_load`, `backup_and_restore`,
+`image_digests_and_scans` and `staging_and_telegram`. Paths in these indexes
+are relative to the same protected approval package.
 
 - Put the original `deploy/staging/authenticated-dast.py` JSON output under
   `authenticated_dast`. The approval check verifies the exact staging version,
   SHA, pinned scanner, all eight probe outcomes and absence of high findings.
   Record the disposition of any remaining findings under `security_and_incident_review`.
+- Under `performance_and_load`, point `isolated_load_report` to the original
+  `barghsa-performance.json` from the candidate's successful manual weekly load
+  run. The check downloads the hosted artifact and compares the exact bytes.
+  It requires 1,000 samples for all seven operations, their strict p95 budgets,
+  and verified durable writes. Point `production_equivalent_report` to a JSON
+  object with `candidate_sha`, `scope` set to `production_equivalent_load`,
+  and `evidence` and `evidence_sha256` for the original measured report.
+  The verifier binds that rehearsal file to the package. The reviewer checks
+  its environment, representative data and indexes, measured load and budgets.
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
   job result, `backup_manifest` to its off-server encrypted manifest,
   `restore_report` to the verified database exercise result, and `restore_manifest`
@@ -145,7 +158,8 @@ with the package for owner review.
 
 ```sh
 python3 deploy/production/check-promotion.py --ci-run "$CI_RUN" \
-  --browser-run "$BROWSER_RUN" --receipt-index /protected/release-evidence/receipt-index.json
+  --browser-run "$BROWSER_RUN" --load-run "$LOAD_RUN" \
+  --receipt-index /protected/release-evidence/receipt-index.json
 ```
 
 The report records the SHA-256 of each evidence file and the checked backup and Telegram details. Review the underlying receipts and collect explicit owner authorization for the version, commit and production target before deployment.

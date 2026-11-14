@@ -26,6 +26,7 @@ class PromotionEvidenceTest(unittest.TestCase):
             root = Path(temporary)
             (root / 'package.json').write_text('{"version":"0.6.0"}')
             argv = ['check-promotion.py', '--ci-run', '1', '--browser-run', '2',
+                    '--load-run', '3',
                     '--receipt-index', str(root / 'receipt-index.json')]
             errors = io.StringIO()
             with patch.object(promotion, 'ROOT', root), patch.object(sys, 'argv', argv), \
@@ -77,6 +78,92 @@ class PromotionEvidenceTest(unittest.TestCase):
         with patch.object(promotion, 'command', return_value=json.dumps({'jobs': jobs})):
             with self.assertRaisesRegex(ValueError, 'enforced licenses'):
                 promotion.verify_ci_checks(1)
+
+    @staticmethod
+    def load_report():
+        return {
+            'source': SHA, 'environment': 'isolated-load', 'concurrency': 8,
+            'requestedSamples': 1000, 'warmupIterations': 0, 'failedChecks': 0,
+            'dataset': {'customerAccounts': 1000, 'backgroundProfiles': 5000,
+                        'seededInvoices': 13000, 'operationsRecipients': 3, 'clientAddresses': 50},
+            'operations': [
+                {'operation': name, 'completed': 1000, 'budgetP95Ms': budget,
+                 'regressionThresholdMs': budget * 1.2, 'p50Ms': 50, 'p95Ms': 100, 'p99Ms': 160,
+                 'withinBudget': True, 'regression': False}
+                for name, budget in promotion.LOAD_P95_BUDGETS.items()
+            ],
+            'durableCounts': {'orders': 1000, 'paid': 1000, 'debits': 1000, 'reservations': 1000,
+                              'alerts': 1000, 'alerts_enqueued': 3000, 'invoice_client_addresses': 50},
+        }
+
+    def test_load_receipt_requires_full_candidate_run_and_database_outcomes(self):
+        report = self.load_report()
+        self.assertEqual(promotion.verify_load_report(report, SHA)['samples_per_operation'], 1000)
+        for changed, reason in (
+            ({'source': 'b' * 40}, 'match the candidate'),
+            ({'requestedSamples': 4}, 'full isolated workload'),
+            ({'dataset': {**report['dataset'], 'backgroundProfiles': 12}}, 'full isolated workload'),
+            ({'failedChecks': False}, 'full isolated workload'),
+            ({'operations': report['operations'][:-1]}, 'all seven'),
+            ({'operations': [report['operations'][0], *report['operations'][:-1]]}, 'all seven'),
+            ({'durableCounts': {**report['durableCounts'], 'debits': 999}}, 'durable database outcomes'),
+        ):
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, reason):
+                promotion.verify_load_report({**report, **changed}, SHA)
+        for changed in ({'completed': 999}, {'p95Ms': 300, 'p99Ms': 400},
+                        {'p99Ms': None}, {'p99Ms': float('inf')}, {'withinBudget': False}):
+            invalid = deepcopy(report)
+            invalid['operations'][0].update(changed)
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'strict latency'):
+                promotion.verify_load_report(invalid, SHA)
+
+    def test_performance_receipt_requires_original_hosted_bytes_and_separate_rehearsal(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            downloads = root / 'download'
+            downloads.mkdir()
+            report = json.dumps(self.load_report())
+            (root / 'isolated.json').write_text(report)
+            artifact = downloads / 'barghsa-performance.json'
+            artifact.write_text(report)
+            evidence = root / 'measured-rehearsal.json'
+            evidence.write_text('{"fixture":"production-equivalent"}')
+            rehearsal = root / 'rehearsal.json'
+            details = {'scope': 'production_equivalent_load', 'candidate_sha': SHA,
+                       'evidence': evidence.name, 'evidence_sha256': promotion.file_digest(evidence)}
+            rehearsal.write_text(json.dumps(details))
+            index = root / 'performance.json'
+            index.write_text(json.dumps({'isolated_load_report': 'isolated.json',
+                                         'production_equivalent_report': rehearsal.name}))
+
+            def check():
+                return promotion.verify_performance_receipts(
+                    root / 'receipt-index.json', index, promotion.file_digest(index), SHA, 3, downloads)
+
+            run_url = 'https://github.com/barghsadev/barghsa-core/actions/runs/3'
+            with patch.object(promotion, 'verify_workflow', return_value={'html_url': run_url}) as workflow, \
+                    patch.object(promotion, 'command') as command:
+                verified = check()
+                self.assertEqual(verified['hosted_run'], run_url)
+                self.assertEqual(verified['sha256']['production_equivalent_evidence'], details['evidence_sha256'])
+                workflow.assert_called_once_with(3, '.github/workflows/load-weekly.yml', SHA)
+                self.assertIn('weekly-load-report', command.call_args.args)
+                artifact.write_text(report + '\n')
+                with self.assertRaisesRegex(ValueError, 'differs from the hosted run'):
+                    check()
+                artifact.write_text(report)
+                for changed in ({'candidate_sha': 'b' * 40}, {'scope': 'isolated-load'}):
+                    rehearsal.write_text(json.dumps({**details, **changed}))
+                    with self.assertRaisesRegex(ValueError, 'must identify the candidate'):
+                        check()
+                rehearsal.write_text(json.dumps(details))
+                evidence.write_text('{"fixture":"different"}')
+                with self.assertRaisesRegex(ValueError, 'load evidence changed'):
+                    check()
+                evidence.write_text(report)
+                rehearsal.write_text(json.dumps({**details, 'evidence_sha256': promotion.file_digest(evidence)}))
+                with self.assertRaisesRegex(ValueError, 'requires independent evidence'):
+                    check()
 
     def test_requires_every_browser_shard_without_unexplained_flakes(self):
         with tempfile.TemporaryDirectory() as temporary, patch.object(promotion, 'command') as command:

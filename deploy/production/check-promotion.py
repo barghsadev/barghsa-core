@@ -45,6 +45,15 @@ DAST_PROBES = {
     'solar_requests': 200,
     'consultation_requests': 200,
 }
+LOAD_P95_BUDGETS = {
+    'electricity_preview': 300,
+    'order_submission': 500,
+    'wallet_payment': 500,
+    'invoice_list': 300,
+    'crm_search': 300,
+    'upload_authorization': 500,
+    'notification_fanout': 500,
+}
 
 
 def command(label, *args):
@@ -215,6 +224,70 @@ def verify_dast_receipt(path, fingerprint, version, sha):
         raise ValueError('Authenticated DAST report contains high-severity findings')
     return {'scanner': report['scanner'], 'image': report['image'], 'probes': dict(DAST_PROBES),
             'findings': [{field: item[field] for field in ('rule', 'risk', 'count')} for item in findings]}
+
+
+def verify_load_report(report, sha):
+    samples = 1000
+    fixture_counts = {'requestedSamples': samples, 'concurrency': 8,
+                      'warmupIterations': 0, 'failedChecks': 0}
+    dataset = report.get('dataset')
+    expected_dataset = {'customerAccounts': samples, 'backgroundProfiles': 5000,
+                        'seededInvoices': 13 * samples, 'operationsRecipients': 3,
+                        'clientAddresses': 50}
+    if (report.get('source') != sha or report.get('environment') != 'isolated-load'
+            or any(type(report.get(key)) is not int or report[key] != count
+                   for key, count in fixture_counts.items())
+            or dataset != expected_dataset or any(type(value) is not int for value in dataset.values())):
+        raise ValueError('Load report must match the candidate and full isolated workload')
+    operations = report.get('operations')
+    if (not isinstance(operations, list) or len(operations) != len(LOAD_P95_BUDGETS)
+            or any(not isinstance(row, dict) or not isinstance(row.get('operation'), str)
+                   for row in operations)
+            or {row['operation'] for row in operations} != set(LOAD_P95_BUDGETS)):
+        raise ValueError('Load report must include all seven measured operations')
+    p95_by_operation = {}
+    for row in operations:
+        name = row['operation']
+        budget = LOAD_P95_BUDGETS[name]
+        p50, p95, p99 = (row.get(field) for field in ('p50Ms', 'p95Ms', 'p99Ms'))
+        if (type(row.get('completed')) is not int or row['completed'] != samples
+                or row.get('budgetP95Ms') != budget
+                or row.get('regressionThresholdMs') != budget * 1.2
+                or row.get('withinBudget') is not True or row.get('regression') is not False
+                or any(type(value) not in (int, float) for value in (p50, p95, p99))
+                or not 0 < p50 <= p95 <= p99 < float('inf') or p95 >= budget):
+            raise ValueError('Load report is incomplete or exceeds a strict latency budget')
+        p95_by_operation[name] = p95
+    durable = report.get('durableCounts')
+    if durable != {
+        'orders': samples, 'paid': samples, 'debits': samples, 'reservations': samples,
+        'alerts': samples, 'alerts_enqueued': 3 * samples, 'invoice_client_addresses': 50,
+    } or any(type(value) is not int for value in durable.values()):
+        raise ValueError('Load report must verify durable database outcomes')
+    return {'samples_per_operation': samples, 'p95_ms': p95_by_operation}
+
+
+def verify_performance_receipts(index_path, path, fingerprint, sha, run_id, directory):
+    data, digests = receipt_bundle(index_path, path, fingerprint,
+                                  ('isolated_load_report', 'production_equivalent_report'))
+    run = verify_workflow(run_id, '.github/workflows/load-weekly.yml', sha)
+    command('Hosted load report download', 'gh', 'run', 'download', str(run_id), '--repo', REPO,
+            '--name', 'weekly-load-report', '--dir', str(directory))
+    if file_digest(directory / 'barghsa-performance.json') != digests['isolated_load_report']:
+        raise ValueError('Isolated load report differs from the hosted run')
+    measurements = verify_load_report(data['isolated_load_report'], sha)
+    rehearsal = data['production_equivalent_report']
+    if rehearsal.get('candidate_sha') != sha or rehearsal.get('scope') != 'production_equivalent_load':
+        raise ValueError('Production-equivalent load evidence must identify the candidate')
+    evidence = receipt_path(index_path.resolve().parent, rehearsal.get('evidence'),
+                            'production-equivalent load evidence')
+    evidence_digest = file_digest(evidence)
+    if evidence_digest != rehearsal.get('evidence_sha256'):
+        raise ValueError('Production-equivalent load evidence changed')
+    if evidence_digest == digests['isolated_load_report']:
+        raise ValueError('Production-equivalent load requires independent evidence')
+    digests['production_equivalent_evidence'] = evidence_digest
+    return {'hosted_run': run['html_url'], 'isolated_measurements': measurements, 'sha256': digests}
 
 
 def receipt_time(value):
@@ -457,6 +530,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--ci-run', required=True, type=int)
     parser.add_argument('--browser-run', required=True, type=int)
+    parser.add_argument('--load-run', required=True, type=int)
     parser.add_argument('--receipt-index', required=True, type=Path)
     args = parser.parse_args()
     try:
@@ -477,6 +551,9 @@ def main():
             command('Strict quarantine', sys.executable, 'scripts/check-flaky-tests.py',
                     '--promotion', '--report', str(directory / 'quarantine.json'))
             counts = verify_browser_rollup(args.browser_run, directory, sha, browser_run.get('run_attempt'))
+            performance = verify_performance_receipts(
+                args.receipt_index, paths['performance_and_load'], hashes['performance_and_load'],
+                sha, args.load_run, directory)
         verify_staging(version, sha)
         checked_at = time.time()
         backup = verify_backup_receipts(args.receipt_index, paths['backup_and_restore'],
@@ -499,6 +576,7 @@ def main():
                       'checked_at': checked_at,
                       'ci': ci_run['html_url'], 'browser': browser_run['html_url'], 'browser_counts': counts,
                       'operational_receipt_sha256': hashes, 'verified_authenticated_dast': dast,
+                      'verified_performance': performance,
                       'verified_backup': backup,
                       'verified_staging_images': images,
                       'verified_staging_and_telegram': release}, indent=2))
