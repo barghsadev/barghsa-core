@@ -16,7 +16,8 @@ x-node-service: &node-service
 
 x-app-image: &app-image '${BARGHSA_APP_REPOSITORY:?Set the app image repository}@sha256:${BARGHSA_APP_DIGEST:?Set the verified app image digest}'
 
-x-db-environment: &db-environment
+x-runtime-environment: &runtime-environment
+  BARGHSA_DEPLOYMENT_ENV: production
   NODE_ENV: production
   NODE_OPTIONS: --max-old-space-size=512 --no-deprecation
   DATABASE_SSL_ENABLED: 'true'
@@ -27,7 +28,7 @@ x-app-runtime: &app-runtime
   <<: *node-service
   image: *app-image
   env_file: ${BARGHSA_RUNTIME_ENV_FILE:?Set the protected runtime environment file}
-  environment: *db-environment
+  environment: *runtime-environment
   secrets: [database-ca.pem]
 
 x-app-health: &app-health
@@ -43,7 +44,7 @@ services:
     image: *app-image
     env_file: ${BARGHSA_MIGRATION_ENV_FILE:?Set the separate migration environment file}
     environment:
-      <<: *db-environment
+      <<: *runtime-environment
       DATABASE_URL: ''
       PGBOUNCER_URL: ''
     secrets: [database-ca.pem]
@@ -70,7 +71,7 @@ services:
     <<: *app-runtime
     command: [node, worker/dist/ai-inference/main.js]
     environment:
-      <<: *db-environment
+      <<: *runtime-environment
       AI_INFERENCE_HOST: 0.0.0.0
       AI_INFERENCE_PORT: '9091'
       WORKER_PORT: '9091'
@@ -83,8 +84,7 @@ services:
   api:
     <<: *app-runtime
     environment:
-      <<: *db-environment
-      BARGHSA_DEPLOYMENT_ENV: production
+      <<: *runtime-environment
       PORT: '4000'
       AI_INFERENCE_URL: http://ai-inference:9091
       DOCUMENT_CLAMAV_HOST: clamav
@@ -100,7 +100,7 @@ services:
     <<: *app-runtime
     command: [node, worker/dist/main.js]
     environment:
-      <<: *db-environment
+      <<: *runtime-environment
       WORKER_PORT: '9090'
       DOCUMENT_CLAMAV_HOST: clamav
       DOCUMENT_CLAMAV_PORT: '3310'

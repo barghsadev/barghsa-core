@@ -51,6 +51,10 @@ The launcher resolves the files into private, read-only memory for the local Com
 
 Docker Engine stores the resolved container environment. Limit Docker access to authorized operators, use encrypted Docker storage and encrypted swap or disable swap, and keep full Compose configuration and container inspect output out of logs and release evidence. Apply rotations by replacing the protected source and recreating the affected services using the existing key-overlap procedure.
 
+The production manifest sets `BARGHSA_DEPLOYMENT_ENV=production` for the
+API, worker, inference process and web. Logs, traces and error reports use
+that label even if a protected runtime file still contains a staging value.
+
 ## Production release notes template
 
 Copy this outline into the protected production approval package for the exact candidate. Keep customer-facing release notes separate from protected links, contact details and evidence.

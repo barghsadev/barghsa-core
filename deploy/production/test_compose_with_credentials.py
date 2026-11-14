@@ -44,6 +44,10 @@ class CredentialInputTest(unittest.TestCase):
     'requires Linux, systemd-creds and Docker Compose',
 )
 class ComposeIntegrationTest(unittest.TestCase):
+    @staticmethod
+    def fixture_env(role):
+        return f'REHEARSAL_ROLE={role}\nBARGHSA_DEPLOYMENT_ENV=staging\n'
+
     def setUp(self):
         directory = Path(self.enterContext(tempfile.TemporaryDirectory()))
         self.enterContext(patch.dict(os.environ, {'SYSTEMD_CREDENTIAL_SECRET': str(directory / 'host-key')}))
@@ -59,7 +63,7 @@ class ComposeIntegrationTest(unittest.TestCase):
             path = directory / f'{role}.cred'
             subprocess.run(
                 ['systemd-creds', 'encrypt', '--with-key=host', f'--name=barghsa-{role}', '-', str(path)],
-                input=f'REHEARSAL_ROLE={role}\n'.encode(), capture_output=True, check=True,
+                input=self.fixture_env(role).encode(), capture_output=True, check=True,
             )
             path.chmod(0o600)
         self.options = SimpleNamespace(
@@ -74,6 +78,9 @@ class ComposeIntegrationTest(unittest.TestCase):
         services = json.loads(config)['services']
         for name, expected in expected_roles.items():
             self.assertEqual(services[name].get('environment', {}).get('REHEARSAL_ROLE'), expected)
+        for name in ('api', 'worker', 'ai-inference', 'web'):
+            with self.subTest(service=name):
+                self.assertEqual(services[name]['environment']['BARGHSA_DEPLOYMENT_ENV'], 'production')
 
     def test_compose_resolves_distinct_roles_and_closes_memory_files(self):
         actual_run = subprocess.run
@@ -99,7 +106,7 @@ class ComposeIntegrationTest(unittest.TestCase):
         env = os.environ.copy()
         for role in ('runtime', 'migration'):
             path = Path(self.options.env_file).with_name(f'{role}.env')
-            path.write_text(f'REHEARSAL_ROLE={role}\n', encoding='utf-8')
+            path.write_text(self.fixture_env(role), encoding='utf-8')
             path.chmod(0o600)
             env[f'BARGHSA_{role.upper()}_ENV_FILE'] = str(path)
         result = subprocess.run(
