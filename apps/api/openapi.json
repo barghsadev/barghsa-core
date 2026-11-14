@@ -40982,9 +40982,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "202": {
-            "description": ""
+            "description": "Failed job queued for retry"
+          },
+          "400": {
+            "description": "Unexpected body"
           }
         },
         "security": [

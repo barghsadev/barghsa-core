@@ -31422,9 +31422,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
+            /** @description Failed job queued for retry */
             202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

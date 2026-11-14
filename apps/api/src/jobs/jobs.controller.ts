@@ -1,8 +1,9 @@
-import { Controller, Get, HttpCode, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { relativeLinkRoute } from '@barghsa/shared/notifications';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { JobService } from './jobs.service.js';
 
 @ApiTags('Jobs')
@@ -56,7 +57,11 @@ export class JobsController {
   @Post(':id/retry')
   @HttpCode(202)
   @ApiOperation({ summary: 'Retry your failed async job' })
-  retry(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 202, description: 'Failed job queued for retry' })
+  @ApiResponse({ status: 400, description: 'Unexpected body' })
+  retry(@Param('id') id: string, @Req() req: AuthenticatedRequest, @Body() body?: unknown) {
+    assertEmptyCommandBody(body);
     return this.jobs.retry(id, req.session);
   }
 }

@@ -109,6 +109,42 @@ it('redirects only a completed owner result and lets the owner retry a failed jo
   ).toMatchObject([{ user_id: 'job-owner', metadata: { jobId: id, type: 'test-export' } }]);
 });
 
+it('rejects undeclared retry input without changing the job or its audit history', async () => {
+  const jobId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO async_jobs(id,type,payload,created_by,status,error_message,attempts,completed_at)
+     VALUES ($1,'test-export','{}','job-owner','failed','JOB_FAILED',3,NOW())`,
+    [jobId]
+  );
+  const state = async () =>
+    (await http.pool.query('SELECT * FROM async_jobs WHERE id=$1', [jobId])).rows;
+  const audits = async () =>
+    (
+      await http.pool.query(
+        "SELECT user_id,metadata::jsonb AS metadata FROM audit_log WHERE event='async_job_retried' AND metadata::jsonb->>'jobId'=$1",
+        [jobId]
+      )
+    ).rows;
+  const retry = (body: unknown) =>
+    fetch(`${http.base}/api/jobs/${jobId}/retry`, {
+      method: 'POST',
+      headers: { ...headers['job-owner'], 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  const before = await state();
+  for (const body of [{ jobId: id, priority: 'unexpected' }, []]) {
+    const rejected = await retry(body);
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(await state()).toEqual(before);
+    expect(await audits()).toEqual([]);
+  }
+  const accepted = await retry({});
+  expect(accepted.status).toBe(202);
+  expect(await accepted.json()).toMatchObject({ id: jobId, status: 'queued' });
+  expect(await audits()).toMatchObject([{ user_id: 'job-owner', metadata: { jobId } }]);
+});
+
 it('rolls back a retry when the session expires while waiting for its job lock', async () => {
   const sessionId = headers['job-owner'].cookie!.split('=')[1]!;
   const beforeAudit = (
