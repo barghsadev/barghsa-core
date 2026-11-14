@@ -152,6 +152,23 @@ it('shares failed-login counters across aliases and clears them after successful
   expect(response.status, http.logs()).toBe(200);
   expect(await count()).toBe(0);
 });
+
+it('rejects a disabled account before creating a session or sending a login code', async () => {
+  await http.pool.query(
+    "UPDATE users SET disabled_at=clock_timestamp() WHERE user_id='contact-user'"
+  );
+  const invalid = await login(primary, 'wrong-password');
+  expect(invalid.status).toBe(401);
+  expect(await invalid.json()).toMatchObject({ error: { code: 'AUTH:LOGIN:INVALID_CREDENTIALS' } });
+  const disabled = await login(primary);
+  expect(disabled.status).toBe(403);
+  expect(await disabled.json()).toMatchObject({ error: { code: 'AUTH:ACCOUNT:DISABLED' } });
+  expect(disabled.headers.get('Set-Cookie') ?? '').not.toContain('barghsa_session=');
+  expect((await http.pool.query('SELECT session_id FROM sessions')).rowCount).toBe(1);
+  expect((await http.pool.query('SELECT challenge_id FROM otp_challenges')).rows).toEqual([]);
+  expect((await http.pool.query('SELECT id FROM auth_delivery_outbox')).rows).toEqual([]);
+});
+
 it('rolls back OTP consumption and contact changes when a primary account wins the destination', async () => {
   const challengeId = await contactChallenge();
   await http.pool.query(
@@ -175,6 +192,61 @@ it('rolls back OTP consumption and contact changes when a primary account wins t
     ).rows[0].user_id
   ).toBe('competing-account');
 });
+
+it.each([
+  { type: 'email', first: secondary, second: 'another-alias@example.test' },
+  { type: 'mobile', first: '+989120000011', second: '+989120000012' },
+] as const)(
+  'keeps the first verified $type when a second valid challenge is pending',
+  async ({ type, first, second }) => {
+    if (type === 'mobile') {
+      await http.pool.query(
+        "UPDATE users SET username='fixture-primary@example.test',email='fixture-primary@example.test',mobile=NULL WHERE user_id='contact-user'"
+      );
+    }
+    const firstChallenge = await contactChallenge(first);
+    const secondChallenge = await contactChallenge(second);
+    expect((await complete(firstChallenge, first)).status).toBe(200);
+
+    const rejected = await complete(secondChallenge, second);
+    const expected =
+      type === 'email'
+        ? 'AUTH:CHANGE_USERNAME:ALREADY_HAS_EMAIL'
+        : 'AUTH:CHANGE_USERNAME:ALREADY_HAS_MOBILE';
+    // Claiming a previously empty slot also invalidates an old auth-version proof.
+    expect(rejected.status).toBe(type === 'email' ? 409 : 401);
+    expect(await rejected.json()).toMatchObject({
+      error: { code: type === 'email' ? expected : 'AUTH:TOKEN_INVALID' },
+    });
+    const later = await post('add-contact/send-otp', { contactType: type, contactValue: second });
+    expect(later.status).toBe(409);
+    expect(await later.json()).toMatchObject({ error: { code: expected } });
+    expect(
+      (
+        await http.pool.query(
+          'SELECT destination FROM account_login_identifiers WHERE destination=ANY($1::text[])',
+          [[first, second]]
+        )
+      ).rows
+    ).toEqual([{ destination: first }]);
+    const outcomes = await http.pool.query(
+      'SELECT destination,consumed_at FROM otp_challenges WHERE challenge_id=ANY($1::text[]) ORDER BY destination',
+      [[firstChallenge, secondChallenge]]
+    );
+    expect(outcomes.rows).toHaveLength(2);
+    expect(outcomes.rows).toEqual(
+      expect.arrayContaining([
+        { destination: first, consumed_at: expect.any(Date) },
+        { destination: second, consumed_at: null },
+      ])
+    );
+    expect(
+      (await http.pool.query("SELECT metadata::jsonb FROM audit_log WHERE event='contact_added'"))
+        .rows
+    ).toEqual([{ metadata: { contactType: type, contactValue: first } }]);
+  }
+);
+
 it('does not retain proof after a contact changes and never grants an alias after audit rollback', async () => {
   const challengeId = await contactChallenge();
   await http.pool.query(

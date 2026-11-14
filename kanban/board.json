@@ -26613,7 +26613,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-contact-otp-ownership"
+          "release-0.6-contact-otp-ownership",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-shared-username-normalization",
@@ -26625,7 +26626,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -27130,6 +27131,14 @@
                 "apps/api/src/auth/contact-session-http.integration.test.ts"
               ],
               "scope": "The full native contact session file passed after adding tests for wrong codes and occupied destinations. No runtime changes."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ]
         }
@@ -48410,7 +48419,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -48422,7 +48432,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -49047,6 +49057,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -49394,7 +49412,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -49410,7 +49429,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -50151,6 +50170,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -50487,7 +50514,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -50503,7 +50531,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -51156,6 +51184,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -51482,7 +51518,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -51498,7 +51535,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/dto/force-change-password.dto.ts",
@@ -52181,6 +52218,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -62011,7 +62056,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -62027,7 +62073,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -62777,6 +62823,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -682774,7 +682828,8 @@
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-pointer-after-strength",
           "release-0.6-registration-consent-timing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-public-registration-privacy",
@@ -682830,7 +682885,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -682910,6 +682965,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ]
         }
@@ -737525,7 +737588,8 @@
         "All three previously failing worker notification files now pass the existing critical per-file coverage gate in a focused five-file unit and PostgreSQL run. The exact immutable release gate and the other package gaps remain open.",
         "Five additional critical admin and staff authority files from the hosted coverage failure pass the original release per-file gate in a targeted run. Native HTTP, authorization and finance assertions passed. Exact combined release coverage remains open.",
         "The hosted API-client coverage error was a generated file containing only declarations. It now uses the existing declaration extension and the generator reproduces the same bytes. Coverage thresholds and drift checks are unchanged.",
-        "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches."
+        "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches.",
+        "The eight compiled contact-login cases passed, including blocking double contact replacement and disabled password login. The scoped auth service now has 565/581 lines and 302/370 branches after comparing byte-identical hosted and local source maps. The unchanged 85% branch threshold requires 315/370. Close the remaining branches and run the exact candidate coverage gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -737566,7 +737630,8 @@
           "release-0.6-worker-notification-coverage",
           "release-0.6-staff-control-coverage",
           "release-0.6-openapi-declarations",
-          "release-0.6-provider-coverage"
+          "release-0.6-provider-coverage",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -960666,7 +960731,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -960710,7 +960776,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -961898,6 +961964,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -962133,7 +962207,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -962177,7 +962252,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -963365,6 +963440,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -963600,7 +963683,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -963644,7 +963728,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -964832,6 +964916,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -965067,7 +965159,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -965111,7 +965204,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -966299,6 +966392,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -966534,7 +966635,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -966578,7 +966680,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -967766,6 +967868,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -985624,7 +985734,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -985668,7 +985779,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -986856,6 +986967,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -987091,7 +987210,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -987135,7 +987255,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -988323,6 +988443,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -988558,7 +988686,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -988602,7 +988731,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -989790,6 +989919,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -990025,7 +990162,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -990069,7 +990207,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -991257,6 +991395,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -991492,7 +991638,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -991536,7 +991683,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -992724,6 +992871,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -992959,7 +993114,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -993003,7 +993159,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -994191,6 +994347,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -994426,7 +994590,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -994470,7 +994635,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -995658,6 +995823,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -995893,7 +996066,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -995937,7 +996111,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -997125,6 +997299,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -997360,7 +997542,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -997404,7 +997587,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -998592,6 +998775,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -998827,7 +999018,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -998871,7 +999063,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -1000059,6 +1000251,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1000294,7 +1000494,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -1000338,7 +1000539,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -1001526,6 +1001727,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1001761,7 +1001970,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -1001805,7 +1002015,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+              "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -1002993,6 +1003203,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-contact-coverage-closure",
+              "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1142049,7 +1142267,8 @@
         "The release notifier now atomically syncs the unknown and confirmed summary and album receipts. All 20 notifier and 27 queue checks passed, including blocked send when the unknown receipt cannot sync and persisted unknown after confirmed receipt replacement fails. Actual staged worker and Telegram receipts remain required.",
         "Daily backup and isolated restore reports now identify the exact off-server manifests by canonical SHA-256. The promotion verifier rejects a substituted manifest under the same label. All 19 promotion and 18 backup unit checks passed, as did the isolated native restore on the retained staging PostgreSQL and SeaweedFS images. The actual approved off-server deployment and production-equivalent recovery remain open.",
         "The restored-application recovery probe now verifies the exact API and web revision before sign-in, then requires the owned dashboard, wallet, all four service reads and logout. The promotion verifier binds one original probe report to the recovery timeline. Forty-seven focused checks passed. Run the probe during the approved, measured restore.",
-        "The consultation history and detail read checks now fail closed if their session expires while waiting on PostgreSQL. Both regressions rejected the current baseline, and all five compiled native consultation request checks passed after the correction. Deployed candidate evidence remains open."
+        "The consultation history and detail read checks now fail closed if their session expires while waiting on PostgreSQL. Both regressions rejected the current baseline, and all five compiled native consultation request checks passed after the correction. Deployed candidate evidence remains open.",
+        "The eight compiled contact-login cases passed, including blocking double contact replacement and disabled password login. The scoped auth service now has 565/581 lines and 302/370 branches after comparing byte-identical hosted and local source maps. The unchanged 85% branch threshold requires 315/370. Close the remaining branches and run the exact candidate coverage gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1142441,7 +1142660,8 @@
           "release-0.6-release-notification-durability",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-consultation-read-expiry"
+          "release-0.6-consultation-read-expiry",
+          "release-0.6-auth-contact-coverage-closure"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1334419,6 +1334639,124 @@
         {
           "file": "fixture-cleanup.txt",
           "sha256": "b990663ca9e479f53a555f189b8b8b8600493b71ff414bd8432a7148f001a5d4"
+        }
+      ]
+    },
+    "release-0.6-auth-contact-coverage-closure": {
+      "batch": "release-0.6-auth-contact-coverage-closure",
+      "base_commit": "670d11cbe09ce275e95a6fbc24c80c2f7107ff12",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.01.02",
+        "02-auth-users-admin.md#T-02.01.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-02.04.01",
+        "06-security-testing-observability.md#T-06.01.02.06",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/contact-login-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "799ac28b57f9336ea96d6b1872e267fbf930734f377c4b2b4e6ced3ddcbe3411"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "469352cfee84668cc73a4246ccad7d6b6fdb249569657ae82c8a64544e1bdc46"
+        },
+        {
+          "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
+          "sha256": "69ab5946461da148b26e3b1f09e2c8256a7f5d8a604cf04dda777ea22746e80a"
+        },
+        {
+          "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
+          "sha256": "41a42d36932b719f1172dcfe4154deb8af8432c3ae3e524d39e0f669eeb7ced5"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "4f83fe2188a4be794f3b81b62d14f6deeaf4015f35a83fbe56fbf36166056a51"
+        },
+        {
+          "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+          "sha256": "b285cc551e05b964d0c25de29ded11c29a1784783d25a9674fe5485bca9ac686"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "1209131040f80775e663d54a1a7a45316fb95204e4a2e741a1b52ba0838428aa"
+        },
+        {
+          "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+          "sha256": "4a0a22a80e389bd2db7b48da37aed3396f22390202cbb665891af05d19eb7003"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0088_staff_activation_delivery.sql",
+          "sha256": "5f10b88715c5bd338a76843c5e5f4cf4020e410eda34df385cd7a96583e2cb6c"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "All eight contact-login cases passed on the compiled API and disposable migrated PostgreSQL. The separate four-file run had 55 test passes. Pending email and mobile challenges preserved the original verified contact, the rejected proof and exact audit count. Disabled login created neither session, OTP nor outbound delivery and wrong credentials returned the existing generic error. ESLint, Prettier and diff checks passed."
+      ],
+      "limitations": [
+        "The instrumented narrow runs returned nonzero for standalone package coverage. The combined byte-identical auth.service.ts scoped check remained below its branch minimum at 302/370, with 565/581 lines. The exact frozen release gate remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-auth-contact-coverage-closure",
+      "execution_receipts": [
+        {
+          "file": "contact-login-final.log",
+          "sha256": "f08513940cef1f0e7ba03891542be14a9db1edba367eab2cf629c2b41f4b61a7"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "648f2b9dffc7593a970a3159fc96aeec8bc8a9d1cd6ede2cfb478d9d1011759c"
+        },
+        {
+          "file": "contact-login-coverage.log",
+          "sha256": "838cf1140977aa50e596b5bc098fb2714af303f027f277365f22b3a1aa140214"
+        },
+        {
+          "file": "disabled-login-coverage.log",
+          "sha256": "4a20ae9495638462bd3e2e7f76c9457a3d64348db68d76ca87c309d9dccd9d93"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "567fda8d342a1148f700617a2d9ae3e0361c695b84c96cbc025d237caa7439b2"
+        },
+        {
+          "file": "build.log",
+          "sha256": "b2d26cadebb117cf054f209e6656f958077b1161c2160518983d1b4029b5664c"
         }
       ]
     }
