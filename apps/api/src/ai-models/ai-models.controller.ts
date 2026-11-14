@@ -18,6 +18,7 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -288,9 +289,11 @@ export class AiModelsController {
   @ApiResponse({ status: 204, description: 'AI model deleted.' })
   async remove(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertAiModelsPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.remove(id, req.session.userId, requestIp(req), req.session);
   }
 
@@ -309,9 +312,11 @@ export class AiModelsController {
   @ApiResponse({ status: 200, description: 'Test outcome + refreshed model.' })
   async test(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<TestAiModelResult> {
     this.assertAiModelsPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.test(id, req.session.userId, requestIp(req), req.session);
   }
 }

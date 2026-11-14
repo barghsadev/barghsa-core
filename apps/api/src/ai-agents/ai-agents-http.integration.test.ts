@@ -304,6 +304,26 @@ async function unchangedLink(entry: (typeof linkCases)[number]) {
     (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
   ).toHaveLength(0);
 }
+
+it('rejects unexpected agent delete and unlink fields before touching records', async () => {
+  const kb = { kind: 'kb', action: 'remove' } as const;
+  const policy = { kind: 'policy', action: 'remove' } as const;
+  const kbId = await prepareLink(kb);
+  const policyId = await prepareLink(policy);
+  const path = `${http.base}/api/admin/agents/${agentId}`;
+  for (const url of [path, `${path}/kbs/${kbId}`, `${path}/policies/${policyId}`]) {
+    expect(
+      (await fetch(url, { method: 'DELETE', headers, body: '{"unexpected":true}' })).status
+    ).toBe(400);
+  }
+  expect((await http.pool.query('SELECT id FROM ai_agents')).rows).toEqual([{ id: agentId }]);
+  await unchangedLink(kb);
+  await unchangedLink(policy);
+  for (const url of [`${path}/kbs/${kbId}`, `${path}/policies/${policyId}`, path]) {
+    expect((await fetch(url, { method: 'DELETE', headers, body: '{}' })).status).toBe(204);
+  }
+});
+
 it.each(linkCases)('rolls back agent $kind $action links on audit failure', async (entry) => {
   const id = await prepareLink(entry);
   await http.pool.query(

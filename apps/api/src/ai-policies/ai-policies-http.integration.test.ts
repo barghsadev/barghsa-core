@@ -399,6 +399,30 @@ it('rejects malformed and unknown membership payload fields', async () => {
   ).toHaveLength(0);
 });
 
+it('rejects unexpected policy delete fields before cascading or removing membership', async () => {
+  const policy = `${http.base}/api/admin/policies/${ids.policy}`;
+  const group = `${http.base}/api/admin/policy-groups/${ids.group}`;
+  const member = `${group}/members/${ids.policy}`;
+  for (const url of [policy, group, member]) {
+    expect(
+      (await fetch(url, { method: 'DELETE', headers, body: '{"unexpected":true}' })).status
+    ).toBe(400);
+  }
+  expect((await http.pool.query('SELECT id FROM ai_policies')).rows).toEqual([{ id: ids.policy }]);
+  expect((await http.pool.query('SELECT id FROM ai_policy_groups')).rows).toEqual([
+    { id: ids.group },
+  ]);
+  expect(
+    (await http.pool.query('SELECT group_id,policy_id FROM ai_policy_group_members')).rows
+  ).toEqual([{ group_id: ids.group, policy_id: ids.policy }]);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+  ).toHaveLength(0);
+  for (const url of [member, policy, group]) {
+    expect((await fetch(url, { method: 'DELETE', headers, body: '{}' })).status).toBe(204);
+  }
+});
+
 const ruleCases = [
   {
     policyType: 'allowed_topics',

@@ -168336,7 +168336,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.ts",
@@ -168360,7 +168360,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -168965,6 +168965,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -170156,7 +170165,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.rules.ts",
@@ -170168,7 +170177,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
@@ -170549,6 +170558,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -170864,11 +170882,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
@@ -171293,6 +171311,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -171753,7 +171780,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -171761,7 +171788,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -173493,6 +173520,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -602379,15 +602415,15 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -604464,6 +604500,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -646360,7 +646406,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.ts",
@@ -646384,7 +646430,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -646989,6 +647035,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -647130,7 +647185,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-ai-admin-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -647154,7 +647210,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.ts",
@@ -647178,7 +647234,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -647783,6 +647839,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -647950,7 +648015,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.ts",
@@ -647974,7 +648039,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -648579,6 +648644,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -648744,7 +648818,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.ts",
@@ -648768,7 +648842,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -649373,6 +649447,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -652374,7 +652457,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-knowledge-query-error",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-ai-admin-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -652386,7 +652470,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.rules.ts",
@@ -652398,7 +652482,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
@@ -652778,6 +652862,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -652899,7 +652992,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-knowledge-query-error",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-ai-admin-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -652911,7 +653005,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.rules.ts",
@@ -652923,7 +653017,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
@@ -653304,6 +653398,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -653432,7 +653535,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.rules.ts",
@@ -653444,7 +653547,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
@@ -653824,6 +653927,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -653989,11 +654101,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
@@ -654418,6 +654530,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -654560,7 +654681,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-process-error-reporting",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ai-admin-command-validation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -654604,11 +654726,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
@@ -655057,6 +655179,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -655245,11 +655376,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
@@ -655674,6 +655805,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -655859,11 +655999,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
@@ -656312,6 +656452,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -656498,11 +656647,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
@@ -656927,6 +657076,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -657113,7 +657271,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -657121,7 +657279,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -657896,6 +658054,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -658061,7 +658228,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -658069,7 +658236,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -658844,6 +659011,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -659007,7 +659183,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -659015,7 +659191,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -659790,6 +659966,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -659953,7 +660138,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -659961,7 +660146,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -660760,6 +660945,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -661417,7 +661611,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -661425,7 +661619,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -662200,6 +662394,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -662451,7 +662654,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -662459,7 +662662,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -664215,6 +664418,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -664533,7 +664745,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -664541,7 +664753,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -665316,6 +665528,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -665478,7 +665699,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -665486,7 +665707,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -666261,6 +666482,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -666424,7 +666654,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -666432,7 +666662,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -667207,6 +667437,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -667371,7 +667610,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -667379,7 +667618,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -668178,6 +668417,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -668340,7 +668588,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -668348,7 +668596,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -669123,6 +669371,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -669285,7 +669542,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -669293,7 +669550,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -670068,6 +670325,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -689517,7 +689783,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
@@ -689525,11 +689791,11 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/auth/otp-config.controller.ts",
@@ -690308,6 +690574,16 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
               ],
               "scope": "Seven staff reads now revalidate the existing grant before responding. The prior command assertions ran intact. Native and web checks renew these changed sources within their existing acceptance scope."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents.controller.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ]
         }
@@ -692611,7 +692887,8 @@
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
         "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
         "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open.",
-        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open."
+        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open.",
+        "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -692687,7 +692964,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-content-command-validation",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-kb-command-validation"
+          "release-0.6-kb-command-validation",
+          "release-0.6-ai-admin-command-validation"
         ],
         "current_acceptance": null
       }
@@ -692724,7 +693002,8 @@
         "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
         "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open.",
         "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open.",
-        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps."
+        "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps.",
+        "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -692837,7 +693116,8 @@
           "release-0.6-staff-content-command-validation",
           "release-0.6-telegram-unlink-validation",
           "release-0.6-kb-command-validation",
-          "release-0.6-protected-main-9bfba918c"
+          "release-0.6-protected-main-9bfba918c",
+          "release-0.6-ai-admin-command-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -704298,7 +704578,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -704501,6 +704781,14 @@
                 "apps/api/src/storage/storage-config-http.integration.test.ts"
               ],
               "scope": "OpenAPI is additive for the three cleanup recovery routes. The storage settings page adds a lazy localized recovery panel. Migrated HTTP and focused web and browser suites renewed ordinary storage settings, current authority and related form behavior. Runtime worker policy and provider configuration contracts retain their existing scope."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ]
         }
@@ -1023894,7 +1024182,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1023902,7 +1024190,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1024909,6 +1025197,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1025136,7 +1025433,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1025144,7 +1025441,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1026151,6 +1026448,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1026380,7 +1026686,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1026388,7 +1026694,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1027395,6 +1027701,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1027622,7 +1027937,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1027630,7 +1027945,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1028637,6 +1028952,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1028863,7 +1029187,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1028871,7 +1029195,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1029878,6 +1030202,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1030631,7 +1030964,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1030639,7 +1030972,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1031646,6 +1031979,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1031873,7 +1032215,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1031881,7 +1032223,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1032888,6 +1033230,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1033116,7 +1033467,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1033124,7 +1033475,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1034132,6 +1034483,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1034358,7 +1034718,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1034366,7 +1034726,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1035373,6 +1035733,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1035598,7 +1035967,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1035606,7 +1035975,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1036613,6 +1036982,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1036838,7 +1037216,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1036846,7 +1037224,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1037853,6 +1038231,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1038078,7 +1038465,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1038086,7 +1038473,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1039094,6 +1039481,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1108942,15 +1109338,15 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -1111972,6 +1112368,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1112551,7 +1112957,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1112559,7 +1112965,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1112699,7 +1113105,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.test.ts",
@@ -1112707,7 +1113113,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.test.ts",
@@ -1112719,7 +1113125,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.test.ts",
@@ -1112727,7 +1113133,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.module.ts",
@@ -1118150,6 +1118556,19 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "The staging queue now reads the same fixed HTTPS paths with a bounded response reader and refuses redirects. The normal notes, image checks and recovery assertions passed in staging fixtures. The v0.5.1 live smoke covers transport only. It does not establish a v0.6.0 deployment or notification."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts",
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts",
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "presentation_renewals": [
@@ -1118595,7 +1119014,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-kb-command-validation",
           "release-0.6-kb-read-authority",
-          "release-0.6-nodemailer-moderate-advisories"
+          "release-0.6-nodemailer-moderate-advisories",
+          "release-0.6-ai-admin-command-validation"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1118732,7 +1119152,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-              "sha256": "5ce8b1d4061effd615b71f2dec4453a4b852777582aee5be5b700e6dbe1f2c17"
+              "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -1118740,7 +1119160,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
-              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+              "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
@@ -1118864,7 +1119284,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
-              "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+              "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.test.ts",
@@ -1118872,7 +1119292,7 @@
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
-              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+              "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.service.test.ts",
@@ -1118884,7 +1119304,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
-              "sha256": "bcb2434f742ee6536a527deebb536e4a0131bfa774559b5df09380f5562ffd87"
+              "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.test.ts",
@@ -1118892,7 +1119312,7 @@
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
-              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+              "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
             },
             {
               "path": "apps/api/src/ai-policies/ai-policies.module.ts",
@@ -1124201,6 +1124621,19 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "The staging queue now reads the same fixed HTTPS paths with a bounded response reader and refuses redirects. The normal notes, image checks and recovery assertions passed in staging fixtures. The v0.5.1 live smoke covers transport only. It does not establish a v0.6.0 deployment or notification."
+            },
+            {
+              "batch": "release-0.6-ai-admin-command-validation",
+              "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+              "paths": [
+                "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+                "apps/api/src/ai-agents/ai-agents.controller.ts",
+                "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+                "apps/api/src/ai-models/ai-models.controller.ts",
+                "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+                "apps/api/src/ai-policies/ai-policies.controller.ts"
+              ],
+              "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1130010,7 +1130443,8 @@
         "Full CI rehearsal 43583704822 completed the native test job successfully on 81d4381e9. The 127,506,800-byte original archive matched its GitHub checksum and contained nonempty Istanbul data for all eight expected workspaces. The browser run and combined gate were still pending.",
         "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps.",
         "The read-only credential-format inventory on live staging v0.5.1 counted two current Argon2id v19-shaped rows and no password-history rows. It returned aggregate counts only. Obtain and review the actual production import snapshot before accepting migration compatibility.",
-        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
+        "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -1130364,7 +1130798,8 @@
           "release-0.6-native-coverage-rehearsal-81d4381e9",
           "release-0.6-protected-main-9bfba918c",
           "release-0.6-password-import-format-inventory",
-          "release-0.6-hosted-image-scan-8436b628a"
+          "release-0.6-hosted-image-scan-8436b628a",
+          "release-0.6-ai-admin-command-validation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1317823,6 +1318258,120 @@
         {
           "file": "image-scan-8436b628a.zip",
           "sha256": "12483fa15e57cc88f49aa7048c8d29178ae8f8e541e10c83bbe4e241946f2f84"
+        }
+      ]
+    },
+    "release-0.6-ai-admin-command-validation": {
+      "batch": "release-0.6-ai-admin-command-validation",
+      "base_commit": "e1bad7332f238258c624c2075210ea7ead8110d7",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.01.01",
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.18.01",
+        "05-notifications-documents-ai.md#T-05.18.02",
+        "05-notifications-documents-ai.md#T-05.19.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/ai-agents/ai-agents.controller.ts",
+        "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+        "apps/api/src/ai-models/ai-models.controller.ts",
+        "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+        "apps/api/src/ai-policies/ai-policies.controller.ts",
+        "apps/api/src/ai-policies/ai-policies-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
+          "sha256": "c77bd95f839080fd5ac118d61e2cb971091a0cc5a0c0b25421744e445554c6a3"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+          "sha256": "4cac10e2b24f1727de012447ec2b62d67ecd6c9f7d215433f11cf0a2f4ddbb77"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "f287e0cf7759487c7c3620b5485a151a031894a134a4d09e80ae916c6ba4fa23"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+          "sha256": "8e4ea9d604ba1fbbfd854e0d47be75e0a36afbd373c22e1ef3c7e8329f9abe8e"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+          "sha256": "788496f17ae3f28c2b2daeab5860d4cea5df69d4bc1ce31d00e2e7114d06850d"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+          "sha256": "9320b9409d06869b255b7c4c161fd8910c9e0d2df7e247a43e9b8d6f6dff2b7a"
+        },
+        {
+          "path": "apps/api/src/common/empty-command-body.ts",
+          "sha256": "95f24304a521b2e7491e63a5f8c75f66a75b74f718106506e49c39e2e29cb339"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
+          "sha256": "805bba15067cbb047ea04dc36d99943885b47b6437db920a12b3af75e7393cd5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
+          "sha256": "15c271ba03fed2396c87f75f6d9e1381c6dea6f2b68e0f419e5990fc75c3dac1"
+        },
+        {
+          "path": "apps/web/src/components/AdminAiSections.test.tsx",
+          "sha256": "1b56847403e9aa02fb178c5d0b36f0e15ecb4afd68d734bc25e5c038b52f7efd"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "6b92082127ce7216e75fe5a067b5eaeae61dca6f867b0af5cb7da068609f6f1a"
+        }
+      ],
+      "checks": [
+        "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification.",
+        "All 182 API cases and seven existing web caller cases passed. API typecheck and changed-file lint passed. Generated OpenAPI and committed client types matched."
+      ],
+      "limitations": [
+        "Native and web fixture evidence only. No external provider call, deployment or Telegram send was performed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-ai-admin-command-validation",
+      "execution_receipts": [
+        {
+          "file": "native-http.log",
+          "sha256": "12197834e48f23b9ef23d62f1c8578efc319fb99f47f606a0d30834729788ae9"
+        },
+        {
+          "file": "web-callers.log",
+          "sha256": "c9e2cd8e6ac4865df6bdeb5946d1dfe0b9ae5f310f1f5d991b1738d94f0bb3cc"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "openapi-generate.log",
+          "sha256": "2d04b7f7adc1f9b510d6915d89531ee752808c86fa0d47b0a38f8f839f081ef2"
+        },
+        {
+          "file": "openapi-contract.log",
+          "sha256": "7976029a1f2308c12d59d3ac7b9431279cb2bf50fe7b245806dad75a513ce462"
         }
       ]
     }

@@ -342,6 +342,28 @@ it('preserves models referenced by an agent and records no deletion audit', asyn
   }
 });
 
+it('rejects unexpected model command fields without deleting or testing the model', async () => {
+  const id = await seed();
+  await http.pool.query('UPDATE ai_models SET base_url=$1 WHERE id=$2', [providerBase, id]);
+  const replies = providerReplies.length;
+  for (const [suffix, method] of [
+    [`/${id}`, 'DELETE'],
+    [`/${id}/test`, 'POST'],
+  ] as const) {
+    const response = await request(suffix, method, { unexpected: true });
+    expect(response.status).toBe(400);
+  }
+  expect(providerReplies).toHaveLength(replies);
+  expect((await http.pool.query('SELECT id FROM ai_model_test_jobs')).rows).toHaveLength(0);
+  expect((await http.pool.query('SELECT id,last_test_status FROM ai_models')).rows).toEqual([
+    { id, last_test_status: 'pending' },
+  ]);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+  ).toHaveLength(0);
+  expect((await request(`/${id}`, 'DELETE', {})).status).toBe(204);
+});
+
 it.each(['edit', 'delete', 'revoke', 'audit failure', 'success'] as const)(
   'binds connection results to current model and authority: %s',
   async (action) => {
@@ -350,7 +372,7 @@ it.each(['edit', 'delete', 'revoke', 'audit failure', 'success'] as const)(
     const count = providerReplies.length;
     let pending: Promise<Response> | undefined;
     try {
-      pending = request(`/${id}/test`, 'POST');
+      pending = request(`/${id}/test`, 'POST', action === 'success' ? {} : undefined);
       await expect.poll(() => providerReplies.length).toBe(count + 1);
       // The slow provider must not keep a database transaction open.
       expect(

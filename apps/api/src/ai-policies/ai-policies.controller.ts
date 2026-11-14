@@ -18,6 +18,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import {
@@ -296,9 +297,11 @@ export class PoliciesController {
   @ApiResponse({ status: 204, description: 'AI policy deleted (memberships cascaded).' })
   async remove(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertPolicyPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.removePolicy(id, req.session.userId, requestIp(req), req.session);
   }
 }
@@ -400,9 +403,11 @@ export class PolicyGroupsController {
   @ApiResponse({ status: 204, description: 'AI policy group deleted (memberships cascaded).' })
   async remove(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertPolicyPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.removeGroup(id, req.session.userId, requestIp(req), req.session);
   }
 
@@ -452,9 +457,11 @@ export class PolicyGroupsController {
   async removeMember(
     @Req() req: AuthenticatedRequest,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Param('policyId', new ParseUUIDPipe()) policyId: string
+    @Param('policyId', new ParseUUIDPipe()) policyId: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertPolicyPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.removeGroupMember(
       id,
       policyId,

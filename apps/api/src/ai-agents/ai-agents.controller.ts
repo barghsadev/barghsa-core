@@ -17,6 +17,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { AiAgentsService, type AgentDto, type AgentDetailDto } from './ai-agents.service.js';
@@ -266,9 +267,14 @@ export class AgentsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete an AI agent (admin)' })
   @ApiResponse({ status: 204, description: 'AI agent deleted (KB/policy links cascaded).' })
-  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  async remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body?: unknown
+  ): Promise<void> {
     this.assertAgentPermission(req);
     assertUuid(id);
+    assertEmptyCommandBody(body);
     return this.service.remove(id, req.session.userId, requestIp(req), req.session);
   }
 
@@ -320,11 +326,13 @@ export class AgentsController {
   async removeKb(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('kbId') kbId: string
+    @Param('kbId') kbId: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertAgentPermission(req);
     assertUuid(id);
     assertUuid(kbId, 'kbId');
+    assertEmptyCommandBody(body);
     return this.service.removeKb(id, kbId, req.session.userId, requestIp(req), req.session);
   }
 
@@ -376,11 +384,13 @@ export class AgentsController {
   async removePolicy(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('policyId') policyId: string
+    @Param('policyId') policyId: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertAgentPermission(req);
     assertUuid(id);
     assertUuid(policyId, 'policyId');
+    assertEmptyCommandBody(body);
     return this.service.removePolicy(id, policyId, req.session.userId, requestIp(req), req.session);
   }
 }
