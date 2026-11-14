@@ -311,6 +311,7 @@ export class ConsultationRequestService {
         client,
         page.map((request) => request.staff_owner_id as string | null)
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
         requests: page.map((request) => ({
@@ -386,6 +387,7 @@ export class ConsultationRequestService {
         request.staff_owner_id as string | null,
         ...history.map((event) => event.actor_user_id as string),
       ]);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
         request: {
