@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:51:36+00:00",
+  "updated": "2026-11-14T18:00:23+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -694500,7 +694500,8 @@
         "At 04:21 UTC on November 14, the live v0.5.1 branding endpoint returned the exact same-origin PNG and the login response stayed report-only. The complete observation and candidate style fix still need live proof.",
         "The November 14 readback verified the exact 3,415-byte published same-origin PNG and private no-store response. The login remained report-only on v0.5.1. The accepted candidate, representative window and enforcement journeys are still required.",
         "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks.",
-        "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only."
+        "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only.",
+        "The published v0.5.1 icon matched the exact same-origin PNG. The retained API window from 12:03 to 17:55 UTC on November 14 held two style-element reports and zero image reports, and login retained Report-Only. All 16 Chromium and WebKit checks passed on the compiled a1264d2d5 build, including registration feedback in both languages and themes, native browser reports, untrusted style blocking and the compiled validator. Complete the representative observation and staff and customer enforcement journeys on the deployed candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -694525,7 +694526,8 @@
           "release-0.6-staging-favicon-confirmed-readback",
           "release-0.6-staging-edge-smoke",
           "release-0.6-scheduled-browser-43576703292",
-          "release-0.6-staging-favicon-owner-reactivation-readback"
+          "release-0.6-staging-favicon-owner-reactivation-readback",
+          "release-0.6-csp-enforced-feedback"
         ],
         "current_acceptance": null
       }
@@ -1150202,7 +1150204,8 @@
         "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
         "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
-        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open."
+        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
+        "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1150606,7 +1150609,8 @@
           "release-0.6-hosted-native-timeouts",
           "release-0.6-browser-coverage-mapping",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-csp-enforced-feedback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1344781,6 +1344785,107 @@
         {
           "file": "static.log",
           "sha256": "9e8c3b30078bd67ad924deaaf80c1125240da7c1a5cafe3db7696132f707eaab"
+        }
+      ]
+    },
+    "release-0.6-csp-enforced-feedback": {
+      "batch": "release-0.6-csp-enforced-feedback",
+      "base_commit": "a1264d2d55fd98edceb937741eef0228e4fb5d50",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "6590ebfcc9d3a49261bff5e0352c1c777bca0762d96b460ec0b474d8c9b3e884"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "2488ddece147ef43e920624e5905a24b60c7164c54aa39ae5f6921d406a67f54"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "4059d8c4520ad2fbf498ca8d17b0d902cc2378ce701e62ab46d7ecf51b6bd9a4"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/inbox-notice.integration.test.ts",
+          "sha256": "05e354affae268ba4629fe9cbe00939548ddcfe777e333f0510cc83a93537822"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/inbox-notice.ts",
+          "sha256": "f7961bd8e7924b49602e2059e9956635cbfc4821e3ac89ba12ef7d3bcd1d3d54"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "c17e1ea30902fa7bde0a0f4a275dc62033c91f294a400f499f61bc656ccddbf1"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.test.ts",
+          "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "8f7cbc05a6ff2516d8a1dd2c36211bcae88b8a7cf7919ca365703d88112a521e"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+          "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
+        },
+        {
+          "path": "packages/shared/src/finance/receipt-rejection-fields.ts",
+          "sha256": "8d2aeabe8cae8587984b27de6f2b841e8e1812f194e958b4c9c489d8de2d5b79"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-bank-receipt-confirmation.test.ts",
+          "sha256": "be624fb8ce617390cf01fc1c01b786e0cb1dc6cf7226054853570e0b815f2fbd"
+        },
+        {
+          "path": "packages/shared/src/verification/circuit-breaker.test.ts",
+          "sha256": "dbb1ed63370bb4b3bcfd57f484e59b88e2ddca9021d58b6cc093413243533fc1"
+        },
+        {
+          "path": "packages/shared/src/verification/circuit-breaker.ts",
+          "sha256": "dfa81af62c5efe5a04cc0f4a4b371314007f273e1da70186e19ea8922b559377"
+        },
+        {
+          "path": "patches/sonner@2.0.8.patch",
+          "sha256": "e66affd664aebf3e7022a96effc6abc59a8c86b468d88a45bf72f7e49c838824"
+        }
+      ],
+      "checks": [
+        "The published v0.5.1 icon matched the exact same-origin PNG. The retained API window from 12:03 to 17:55 UTC on November 14 held two style-element reports and zero image reports, and login retained Report-Only. All 16 Chromium and WebKit checks passed on the compiled a1264d2d5 build, including registration feedback in both languages and themes, native browser reports, untrusted style blocking and the compiled validator. Complete the representative observation and staff and customer enforcement journeys on the deployed candidate.",
+        "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate."
+      ],
+      "limitations": [
+        "Live metrics cover the retained v0.5.1 API container. Browser enforcement used an isolated compiled server with registration fixtures. The full release gates and staging promotion remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-csp-enforced-feedback",
+      "execution_receipts": [
+        {
+          "file": "live-readback.json",
+          "sha256": "7ec43bca210dd4a054e98876ba91114e6b4423c00eaf0dd21159c5b91e242122"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "434074fa9dc188af6a48317a31064e4fb0456fdc893d0ad1c3e77b5fd275e9fc"
+        },
+        {
+          "file": "build.log",
+          "sha256": "56be5872905fe00cdf89ddc4493174bc8b375361b6d6c8d1fbc6962aa92093df"
+        },
+        {
+          "file": "shared-baseline.log",
+          "sha256": "ade366abf162e018995be857babd86fbf2f58365812d3357a8ba09de1493a719"
+        },
+        {
+          "file": "worker-baseline.log",
+          "sha256": "fb09191a4cb4652c832f248abb4cf5c4247612a9e24eca206084354aac9c2dd8"
+        },
+        {
+          "file": "scoped-coverage-readback.json",
+          "sha256": "be71e0e5478fb767f7e2b4440c0dd657bc9d9744d555456a27128b02e07b722c"
         }
       ]
     }
