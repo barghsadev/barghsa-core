@@ -4,7 +4,7 @@ import { resolve, sep, join } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { parse } from 'acorn';
-import { mergeProcessCovs } from '@bcoe/v8-coverage';
+import { mergeProcessCovs, mergeScriptCovs } from '@bcoe/v8-coverage';
 import { convert } from 'ast-v8-to-istanbul';
 import coverageLibrary from 'istanbul-lib-coverage';
 import remapping from '@jridgewell/remapping';
@@ -43,6 +43,7 @@ export async function collectBrowserCoverage({
   if (!Number.isSafeInteger(minimumRecords) || minimumRecords < 0 || files.length < minimumRecords)
     throw new Error('Missing coverage records for completed browser tests');
   const scripts = new Map();
+  const mergedByAsset = new Map();
   const headSha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], {
     encoding: 'utf8',
   }).trim();
@@ -50,7 +51,6 @@ export async function collectBrowserCoverage({
   let ignoredScripts = 0;
   let missingSources = 0;
   const componentAssets = new Set();
-  let merged = { result: [] };
   for (const name of files) {
     const record = JSON.parse(await readFile(join(rawDir, name), 'utf8'));
     if (
@@ -92,7 +92,7 @@ export async function collectBrowserCoverage({
     recordedDirty ||= record.working_tree_dirty;
     const entries = record.entries;
     if (!Array.isArray(entries)) throw new Error('Invalid browser coverage records');
-    const result = [];
+    const coveredAssets = new Map();
     for (const entry of entries) {
       const url = new URL(entry.url);
       const assetRoot = roots.get(url.origin);
@@ -103,7 +103,9 @@ export async function collectBrowserCoverage({
       if (!/^\/(?:auth\/)?assets\/.+\.js$/.test(url.pathname)) continue;
       const filename = resolve(assetRoot, '.' + decodeURIComponent(url.pathname));
       if (!filename.startsWith(resolve(assetRoot) + sep)) throw new Error('Invalid asset path');
-      const code = await readFile(filename, 'utf8');
+      const scriptUrl = pathToFileURL(filename).href;
+      if (!scripts.has(scriptUrl)) scripts.set(scriptUrl, await readFile(filename, 'utf8'));
+      const code = scripts.get(scriptUrl);
       // Chromium may discard source text after navigation. Such ranges cannot
       // prove execution against this build, so they contribute no coverage.
       if (entry.source === undefined) {
@@ -126,18 +128,26 @@ export async function collectBrowserCoverage({
             throw new Error('Invalid V8 range');
         }
       }
-      const scriptUrl = pathToFileURL(filename).href;
       if (url.origin !== record.application_origin) componentAssets.add(scriptUrl);
-      scripts.set(scriptUrl, code);
-      result.push({ ...entry, url: scriptUrl });
+      if (!coveredAssets.has(scriptUrl)) {
+        const previous = mergedByAsset.get(scriptUrl);
+        coveredAssets.set(scriptUrl, previous ? [previous] : []);
+      }
+      coveredAssets.get(scriptUrl).push({ ...entry, url: scriptUrl });
     }
-    merged = mergeProcessCovs([merged, { result }]);
+    // Later tests usually touch only a subset of the compiled assets.
+    for (const [url, entries] of coveredAssets) {
+      mergedByAsset.set(url, mergeScriptCovs(entries));
+    }
   }
+  const merged = mergeProcessCovs([{ result: [...mergedByAsset.values()] }]);
   if (!merged.result.length) throw new Error('No application assets in browser coverage');
   const coverage = coverageLibrary.createCoverageMap({});
   for (const entry of merged.result) {
     const filename = fileURLToPath(entry.url);
     const code = scripts.get(entry.url);
+    if ((await readFile(filename, 'utf8')) !== code)
+      throw new Error(`Built asset changed during coverage collection: ${filename}`);
     const sourceMap = JSON.parse(await readFile(filename + '.map', 'utf8'));
     if (sourceMap.version !== 3 || !Array.isArray(sourceMap.sources))
       throw new Error('Invalid asset source map');

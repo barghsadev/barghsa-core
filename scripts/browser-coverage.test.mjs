@@ -311,6 +311,30 @@ test('counts registered component production assets only after exact source veri
   });
 });
 
+test('retains previously measured assets across records with different script sets', async () => {
+  await fixture(async (options) => {
+    await componentFixture(options);
+    const first = await collectBrowserCoverage(options);
+    const laterRecord = structuredClone(options.record);
+    laterRecord.entries = [laterRecord.entries[0], structuredClone(laterRecord.entries[0])];
+    const later = join(options.rawDir, 'later.json');
+    await writeFile(later, JSON.stringify(laterRecord));
+    const combined = await collectBrowserCoverage({ ...options, minimumRecords: 2 });
+    assert.equal(combined.browser_record_count, 2);
+    assert.equal(combined.asset_count, 2);
+    assert.equal(combined.component_asset_count, 1);
+    assert.deepEqual(
+      Object.values(combined.coverage[options.source].s),
+      Object.values(first.coverage[options.source].s).map((hits) => hits * 2)
+    );
+
+    laterRecord.entries[1].source = 'mismatched source';
+    await writeFile(later, JSON.stringify(laterRecord));
+    await assert.rejects(collectBrowserCoverage(options), /differs from built asset/);
+    assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+  });
+});
+
 test('rejects malformed component registries, escaped paths, foreign origins and absent maps', async () => {
   for (const failure of [
     'registry',

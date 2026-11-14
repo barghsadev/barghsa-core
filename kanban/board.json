@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:18:06+00:00",
+  "updated": "2026-11-14T17:25:10+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -25095,7 +25095,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-native-coverage-rehearsal-81d4381e9"
+          "release-0.6-native-coverage-rehearsal-81d4381e9",
+          "release-0.6-browser-coverage-mapping"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -25119,7 +25120,7 @@
             },
             {
               "path": "scripts/browser-coverage.test.mjs",
-              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+              "sha256": "5341c2036c99b6c0eafc55db2fd250b3417f820161243734da4633dc873ed7d4"
             },
             {
               "path": "scripts/merge-browser-coverage.mjs",
@@ -25289,6 +25290,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-coverage-mapping",
+              "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+              "paths": [
+                "scripts/browser-coverage.test.mjs"
+              ],
+              "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
             }
           ]
         }
@@ -737054,7 +737063,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-native-coverage-rehearsal-81d4381e9"
+          "release-0.6-native-coverage-rehearsal-81d4381e9",
+          "release-0.6-browser-coverage-mapping"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -737099,7 +737109,7 @@
             },
             {
               "path": "scripts/browser-coverage.test.mjs",
-              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+              "sha256": "5341c2036c99b6c0eafc55db2fd250b3417f820161243734da4633dc873ed7d4"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -737107,7 +737117,7 @@
             },
             {
               "path": "scripts/collect-browser-coverage.mjs",
-              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+              "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
             },
             {
               "path": "scripts/merge-browser-coverage.mjs",
@@ -737286,6 +737296,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-coverage-mapping",
+              "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+              "paths": [
+                "scripts/browser-coverage.test.mjs",
+                "scripts/collect-browser-coverage.mjs"
+              ],
+              "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
             }
           ]
         }
@@ -737324,7 +737343,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-browser-coverage-mapping"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -737368,7 +737388,7 @@
             },
             {
               "path": "scripts/browser-coverage.test.mjs",
-              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+              "sha256": "5341c2036c99b6c0eafc55db2fd250b3417f820161243734da4633dc873ed7d4"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -737376,7 +737396,7 @@
             },
             {
               "path": "scripts/collect-browser-coverage.mjs",
-              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+              "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
             },
             {
               "path": "scripts/merge-browser-coverage.mjs",
@@ -737555,6 +737575,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-coverage-mapping",
+              "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+              "paths": [
+                "scripts/browser-coverage.test.mjs",
+                "scripts/collect-browser-coverage.mjs"
+              ],
+              "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
             }
           ]
         }
@@ -737593,7 +737622,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-browser-coverage-mapping"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -737639,7 +737669,7 @@
             },
             {
               "path": "scripts/browser-coverage.test.mjs",
-              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+              "sha256": "5341c2036c99b6c0eafc55db2fd250b3417f820161243734da4633dc873ed7d4"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -737647,7 +737677,7 @@
             },
             {
               "path": "scripts/collect-browser-coverage.mjs",
-              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+              "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
             },
             {
               "path": "scripts/merge-browser-coverage.mjs",
@@ -737826,6 +737856,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-coverage-mapping",
+              "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+              "paths": [
+                "scripts/browser-coverage.test.mjs",
+                "scripts/collect-browser-coverage.mjs"
+              ],
+              "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
             }
           ]
         }
@@ -737864,7 +737903,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-browser-coverage-mapping"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -737907,7 +737947,7 @@
             },
             {
               "path": "scripts/browser-coverage.test.mjs",
-              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+              "sha256": "5341c2036c99b6c0eafc55db2fd250b3417f820161243734da4633dc873ed7d4"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -737915,7 +737955,7 @@
             },
             {
               "path": "scripts/collect-browser-coverage.mjs",
-              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+              "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
             },
             {
               "path": "scripts/merge-browser-coverage.mjs",
@@ -738094,6 +738134,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-coverage-mapping",
+              "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+              "paths": [
+                "scripts/browser-coverage.test.mjs",
+                "scripts/collect-browser-coverage.mjs"
+              ],
+              "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
             }
           ]
         }
@@ -739391,7 +739440,8 @@
         "The hosted API-client coverage error was a generated file containing only declarations. It now uses the existing declaration extension and the generator reproduces the same bytes. Coverage thresholds and drift checks are unchanged.",
         "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches.",
         "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
-        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts."
+        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
+        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -739435,7 +739485,8 @@
           "release-0.6-provider-coverage",
           "release-0.6-auth-contact-coverage-closure",
           "release-0.6-auth-credential-races",
-          "release-0.6-hosted-native-timeouts"
+          "release-0.6-hosted-native-timeouts",
+          "release-0.6-browser-coverage-mapping"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1143360,7 +1143411,7 @@
             },
             {
               "path": "scripts/collect-browser-coverage.mjs",
-              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+              "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
             },
             {
               "path": "scripts/merge-browser-coverage.mjs",
@@ -1144749,6 +1144800,14 @@
                 "apps/web/src/pages/AdminGiftCodesPage.tsx"
               ],
               "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
+            },
+            {
+              "batch": "release-0.6-browser-coverage-mapping",
+              "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+              "paths": [
+                "scripts/collect-browser-coverage.mjs"
+              ],
+              "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
             }
           ]
         },
@@ -1144922,7 +1144981,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-hosted-native-timeouts"
+          "release-0.6-hosted-native-timeouts",
+          "release-0.6-browser-coverage-mapping"
         ]
       }
     },
@@ -1145257,7 +1145317,8 @@
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
-        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts."
+        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
+        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1145658,7 +1145719,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-hosted-native-timeouts"
+          "release-0.6-hosted-native-timeouts",
+          "release-0.6-browser-coverage-mapping"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1338777,6 +1338839,96 @@
         {
           "file": "final-static.log",
           "sha256": "3ba3fa8a185a01cadb41bb193322841e61b6b5faaf3bd45aa59f111203e3b340"
+        }
+      ]
+    },
+    "release-0.6-browser-coverage-mapping": {
+      "batch": "release-0.6-browser-coverage-mapping",
+      "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "scripts/browser-coverage.test.mjs",
+        "scripts/collect-browser-coverage.mjs"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "0157a19660c4eff58eb388396211c192b1b106e86ad73d08b2e8478dc4cec21c"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "f801183cb947de4dfd3d4e9e463779d2c42ddd4a49f4eaa74fa897a2edae1aab"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/browser-coverage.test.mjs",
+          "sha256": "5341c2036c99b6c0eafc55db2fd250b3417f820161243734da4633dc873ed7d4"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        }
+      ],
+      "checks": [
+        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
+        "The local 64-record comparison measured 1955 ms and 1627 ms. ESLint, changed-file formatting and Git diff checks passed."
+      ],
+      "limitations": [
+        "The local comparison repeated the four captured cases to exercise mapping. Their working tree was dirty and those reports cannot be merged as release evidence. The change only affects the mapper after the browser suite and does not establish why a previous hosted test timed out."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-coverage-mapping",
+      "execution_receipts": [
+        {
+          "file": "final-tests.log",
+          "sha256": "f1f0471e7d3430c8e304ec8ffe39e3f030ec8de41e9616a848305110eef08b95"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "coverage-build.log",
+          "sha256": "b7ebeb0e4fc643060939708518472615ae8b489c9cdfe037966da43b1f8b3fb2"
+        },
+        {
+          "file": "coverage-browser.log",
+          "sha256": "5c0eee806ca7d45833a3556cc9a5755dc76f2716b2a603d0e28528c9259e5922"
+        },
+        {
+          "file": "focused-mapping.log",
+          "sha256": "73384802f23dfec3518cf02e0b976daad29a966e044ab2d3573ed62eda863475"
+        },
+        {
+          "file": "before.log",
+          "sha256": "b3a82bd98800845e6d0f0628246bb0cc87626a867d44b9ff42931234382337e3"
+        },
+        {
+          "file": "after.log",
+          "sha256": "b74167e6626122949efb72db1262fb638818957f8bb5564ad16d7058e1609db9"
         }
       ]
     }
