@@ -51,8 +51,9 @@ dedicated recipient as `NIGHTLY_BROWSER_EMAIL_FROM` and
 `NIGHTLY_BROWSER_EMAIL_ENABLED=true`.
 
 Only the first attempt of a scheduled run sends email. The email includes the
-commit, run link, job outcomes and seven-day browser summary. A missing
-summary or unsuccessful check requires review. Read
+commit, run link, job outcomes and seven-day browser summary. The sender checks
+the rollup's commit, run, attempt and summary checksum. An unavailable or
+mismatched report, incomplete browser matrix or unsuccessful job requires review. Read
 `nightly-browser-email-receipt` for the provider acceptance ID and confirm
 receipt in the approved mailbox. If acceptance is unconfirmed, inspect the
 provider before attempting any resend. Manual dispatch still produces the

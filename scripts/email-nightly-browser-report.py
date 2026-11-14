@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Email the first attempt of a scheduled browser report and retain its provider receipt."""
 import argparse
+import hashlib
 from http.client import HTTPSConnection, HTTPException
 import json
 import os
 from pathlib import Path
 import re
+
+from browser_workflow_identity import PROJECTS, SHARDS, run_identity as browser_run_identity
 
 
 MAX_MESSAGE = 24_000
@@ -30,15 +33,46 @@ def run_identity(env):
     return repository, run_id, commit
 
 
-def report_text(directory):
+def verified_report(directory, identity):
     try:
+        with (directory / "nightly-browser-summary.json").open("rb") as handle:
+            raw = handle.read(MAX_MESSAGE + 1)
+        if len(raw) > MAX_MESSAGE:
+            raise ValueError("Invalid report")
+        report = json.loads(raw)
         with (directory / "nightly-browser-summary.md").open("rb") as handle:
             summary = handle.read(MAX_MESSAGE + 1)
-        if not summary.startswith(b"### Nightly browser outcomes\n") or len(summary) > MAX_MESSAGE:
+        if (
+            not isinstance(report, dict)
+            or any(type(report.get(key)) is not type(value) or report[key] != value
+                   for key, value in identity.items())
+            or type(report.get("schema_version")) is not int or report["schema_version"] != 1
+            or report.get("status") not in ("passed", "failed", "incomplete")
+            or not summary.startswith(b"### Nightly browser outcomes\n")
+            or len(summary) > MAX_MESSAGE
+            or hashlib.sha256(summary).hexdigest() != report.get("summary_sha256")
+        ):
             raise ValueError("Invalid report")
-        return summary.decode("utf-8")
+        return report, summary.decode("utf-8")
     except (OSError, ValueError):
-        return None
+        return {}, None
+
+
+def report_passed(report):
+    expected_shards = len(PROJECTS) * len(SHARDS)
+    counts = report.get("counts")
+    return (
+        report.get("status") == "passed"
+        and all(type(report.get(key)) is int and report[key] == expected_shards
+                for key in ("expected_shards", "reported_shards"))
+        and report.get("missing_or_invalid_shards") == []
+        and report.get("failed_shards") == []
+        and isinstance(counts, dict)
+        and type(counts.get("expected")) is int and counts["expected"] > 0
+        and type(counts.get("skipped")) is int and counts["skipped"] >= 0
+        and all(type(counts.get(key)) is int and counts[key] == 0
+                for key in ("unexpected", "flaky", "runner_errors"))
+    )
 
 
 def send(directory, receipt_file, env):
@@ -60,8 +94,11 @@ def send(directory, receipt_file, env):
         or any(result not in CONCLUSIONS for result in jobs.values())
     ):
         raise ValueError("Configure the dedicated sender, recipient and key, and verify job results")
-    summary = report_text(directory)
-    passed = summary is not None and all(result == "success" for result in jobs.values())
+    report, summary = verified_report(directory, browser_run_identity(env))
+    browser_passed = report_passed(report)
+    if report.get("status") == "passed" and not browser_passed:
+        report, summary = {}, None
+    passed = browser_passed and all(result == "success" for result in jobs.values())
     outcome = "passed" if passed else "requires review"
     run_url = f"https://github.com/{repository}/actions/runs/{run_id}"
     body = json.dumps({
@@ -85,6 +122,7 @@ def send(directory, receipt_file, env):
         "commit": commit,
         "outcome": outcome,
         "status": "unconfirmed",
+        "summary_sha256": report.get("summary_sha256"),
     }
 
     def persist():

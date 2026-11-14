@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Summarize current browser shards and the previous seven days of scheduled runs."""
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -121,7 +122,6 @@ def main():
     except ValueError as error:
         parser.error(str(error))
     current = summarize_shards(args.outcomes, identity)
-    args.report.write_text(json.dumps(current, indent=2) + "\n")
     coverage = f"{current['reported_shards']} of {current['expected_shards']} shards reported."
     observed = (
         ", ".join(f"{current['counts'][name]} {name.replace('_', ' ')}" for name in COUNTS)
@@ -140,9 +140,11 @@ def main():
         *history_lines(read_json(args.history / "runs.json"), args.history),
     ]
     message = "\n".join(lines) + "\n"
+    current["summary_sha256"] = hashlib.sha256(message.encode("utf-8")).hexdigest()
+    args.report.write_text(json.dumps(current, indent=2) + "\n")
     print(message, end="")
     if args.message:
-        args.message.write_text(message)
+        args.message.write_text(message, encoding="utf-8")
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as output:
             output.write(message)

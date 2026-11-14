@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T02:18:28+00:00",
+  "updated": "2026-11-14T02:24:01+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8823,7 +8823,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             },
             {
               "path": "scripts/test-browser-flake-gate.mjs",
@@ -8839,7 +8839,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
+              "sha256": "aca231b1169254b26fd595cb8bd1bfb85a884c5b74d61396965b18e615a8e49c"
             }
           ],
           "checks": [
@@ -9113,6 +9113,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -22358,7 +22367,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "AGENTS.md",
@@ -22641,6 +22650,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -24565,7 +24582,8 @@
         "Hosted diagnostic 43504566627 reported one WebKit solar queue test flake from synchronously inspecting the request log after URL navigation. The test now starts an exact GET request observer before typing and still checks its search, cleared cursor and selection. Thirty focused Chromium, WebKit and Mobile Safari cases passed without retries. The full final scheduled run and actual report delivery remain open.",
         "Hosted diagnostic 43504566627 completed with all 40 attributable shards. It recorded 14,792 expected, 20 unexpected, one flaky, 27 skipped and zero runner errors. The five shard-1 failures contain only the old settings selector count. WebKit shard 7 contains the solar queue timing failure. Both targeted corrections passed locally. A clean final scheduled run and verified report delivery remain required.",
         "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
-        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open."
+        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open.",
+        "The nightly delivery script binds the rendered email summary to the rollup checksum and the scheduled commit, run and attempt. Wrong identity or mismatched bytes are omitted from the email and cannot report success. Verify the actual approved mailbox delivery and the clean scheduled candidate run."
       ],
       "owner": null,
       "depends_on": [],
@@ -24677,7 +24695,8 @@
           "release-0.6-solar-queue-browser",
           "release-0.6-published-d19812d0a",
           "release-0.6-registration-request-observation",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-nightly-report-identity"
         ],
         "current_acceptance": null
       }
@@ -33956,7 +33975,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "eslint.config.mjs",
@@ -34259,6 +34278,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -34710,7 +34737,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "eslint.config.mjs",
@@ -35021,6 +35048,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -37931,7 +37966,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "package.json",
@@ -38499,6 +38534,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "OpenAPI is additive for the three cleanup recovery routes. The storage settings page adds a lazy localized recovery panel. Migrated HTTP and focused web and browser suites renewed ordinary storage settings, current authority and related form behavior. Runtime worker policy and provider configuration contracts retain their existing scope."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -38920,7 +38963,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -39031,6 +39074,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -690180,7 +690231,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "vitest.config.ts",
@@ -690491,6 +690542,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -691052,7 +691111,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "scripts/ci_preflight_receipt.py",
@@ -691117,6 +691176,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -694819,7 +694886,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -695057,6 +695124,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -695107,7 +695182,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -695240,6 +695315,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -695290,7 +695373,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -695423,6 +695506,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -695508,7 +695599,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -695746,6 +695837,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -698198,7 +698297,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -698437,6 +698536,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -698521,7 +698628,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -698626,6 +698733,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -699672,7 +699787,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -699745,6 +699860,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -700068,7 +700191,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -700319,6 +700442,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -700449,7 +700580,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -700577,6 +700708,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -706749,7 +706888,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -706885,6 +707024,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -708073,7 +708220,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             },
             {
               "path": "scripts/test_check_browser_results.py",
@@ -708085,7 +708232,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
+              "sha256": "aca231b1169254b26fd595cb8bd1bfb85a884c5b74d61396965b18e615a8e49c"
             }
           ],
           "source_renewals": [
@@ -708417,6 +708564,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -708968,7 +709124,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             }
           ],
           "source_renewals": [
@@ -709433,6 +709589,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -710066,7 +710230,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             },
             {
               "path": "scripts/web-navigation-paths.mjs",
@@ -710183,6 +710347,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -710537,7 +710709,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -710545,7 +710717,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
+              "sha256": "aca231b1169254b26fd595cb8bd1bfb85a884c5b74d61396965b18e615a8e49c"
             }
           ],
           "source_renewals": [
@@ -710836,6 +711008,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -710932,7 +711113,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+              "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -710940,7 +711121,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
+              "sha256": "aca231b1169254b26fd595cb8bd1bfb85a884c5b74d61396965b18e615a8e49c"
             }
           ],
           "source_renewals": [
@@ -711231,6 +711412,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion evidence requires the original candidate-bound authenticated scan report and keeps its parsed probe outcomes and findings in the owner review report. Existing publication, guarded rollout and owner authorization boundaries retain their checks."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ]
         }
@@ -1042926,7 +1043116,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1043338,6 +1043528,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1043901,7 +1044099,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1044313,6 +1044511,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1044876,7 +1045082,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1045288,6 +1045494,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1045852,7 +1046066,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1046264,6 +1046478,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1046827,7 +1047049,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1047239,6 +1047461,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1047802,7 +1048032,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1048214,6 +1048444,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1048777,7 +1049015,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1049189,6 +1049427,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1049753,7 +1049999,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1050165,6 +1050411,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1050728,7 +1050982,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1051140,6 +1051394,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1051703,7 +1051965,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1052115,6 +1052377,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-report-identity",
+              "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
             }
           ],
           "presentation_renewals": [
@@ -1092491,7 +1092761,8 @@
         "Multipart cleanup recovery passed the migrated HTTP and Persian/English Chromium and WebKit checks. The source-bound evidence covers version conflicts, superseded drafts, step-up, CSRF and audit linkage. Repeat on the final deployed candidate.",
         "Native CRM authority checks cover loss of the required staff grant while the response data is still pending. The profile detail and verification history preserve the existing CRM-only view. Verify the final accepted staging candidate.",
         "The staging storage check now fails closed on a lost PUT acknowledgement and cleans up only the owned probe, with no unguarded delete. Native pinned-image and staging rollback/notification checks passed. Verify the exact final candidate.",
-        "Promotion receipt validation accepts the original staged DAST report only for its exact version and commit. The earlier v0.5.0 report passed format validation for its own scope and failed when evaluated as the launch candidate. Obtain the distinct final reports on the corresponding staging releases."
+        "Promotion receipt validation accepts the original staged DAST report only for its exact version and commit. The earlier v0.5.0 report passed format validation for its own scope and failed when evaluated as the launch candidate. Obtain the distinct final reports on the corresponding staging releases.",
+        "Nightly email fixtures verify exact report identity and require the complete 40-shard outcome before a passed email. The provider acceptance receipt retains the summary checksum. Actual scheduled run, protected mailbox configuration and recipient delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1092805,7 +1093076,8 @@
           "release-0.6-multipart-cleanup-recovery",
           "release-0.6-crm-read-authority",
           "release-0.6-staging-probe-uncertain-write",
-          "release-0.6-promotion-dast-receipt"
+          "release-0.6-promotion-dast-receipt",
+          "release-0.6-nightly-report-identity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1272824,6 +1273096,102 @@
         {
           "file": "historical-scope.log",
           "sha256": "593a48c0f2efaa8fd26cff8ab20881318c9ed6c24db8384df9b5225bea511a52"
+        }
+      ]
+    },
+    "release-0.6-nightly-report-identity": {
+      "batch": "release-0.6-nightly-report-identity",
+      "base_commit": "5658afb6a366952ccb63f91d7ae35274f30050bd",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/development/ci.md",
+        "scripts/email-nightly-browser-report.py",
+        "scripts/report-nightly-browser.py",
+        "scripts/test_email_nightly_browser_report.py",
+        "scripts/test_report_nightly_browser.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+        },
+        {
+          "path": "scripts/browser_workflow_identity.py",
+          "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+        },
+        {
+          "path": "scripts/email-nightly-browser-report.py",
+          "sha256": "25d791014ee81296a358c243a9db8ac1ca97a84fd41b62127d6acf7b602f12bb"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "5b55cc0ce5d8d5a9d47b74804039c268ff39d09e3af3945209cafa19e61a8298"
+        },
+        {
+          "path": "scripts/test_email_nightly_browser_report.py",
+          "sha256": "23bdf8beaa348007db57be9b3cd2b3c2e136da9cb98df4fdb5dd50d30c3bb08c"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "aca231b1169254b26fd595cb8bd1bfb85a884c5b74d61396965b18e615a8e49c"
+        }
+      ],
+      "checks": [
+        "Fifteen nightly rollup and delivery tests and three underlying shard result tests passed. The SMTP-independent provider fixture preserves the scheduled first-attempt boundary and distinguishes provider acceptance from recipient delivery.",
+        "The sender rejects mismatched commits, runs, attempt types or summary hashes, withholds misleading pass text for incomplete or flaky outcomes, and preserves the checked summary hash in the acceptance receipt."
+      ],
+      "limitations": [
+        "The approved mailbox, protected sender/key and clean final scheduled run are still required. No email was sent."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-report-identity",
+      "execution_receipts": [
+        {
+          "file": "nightly-final.log",
+          "sha256": "517029a87131f696ae4bc8b1c3fe912fcca17fb1e21bece19ae20a0f1b86a841"
+        },
+        {
+          "file": "shards.log",
+          "sha256": "28e92dcccc510b44db57360ff271146ccdfd8206eb2518deb2cac070e8eba513"
         }
       ]
     }

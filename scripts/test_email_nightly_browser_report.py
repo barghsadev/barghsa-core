@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -38,6 +39,15 @@ class NightlyBrowserEmailTests(unittest.TestCase):
             "NIGHTLY_BROWSERS_RESULT": "success",
             "NIGHTLY_REPORT_RESULT": "success",
         }
+        self.rollup = self.root / "nightly-browser-summary.json"
+        self.report = {
+            "commit": "a" * 40, "run_id": 12345, "run_attempt": 1, "schema_version": 1,
+            "status": "passed", "expected_shards": 40, "reported_shards": 40,
+            "missing_or_invalid_shards": [], "failed_shards": [],
+            "counts": {"expected": 80, "unexpected": 0, "flaky": 0, "skipped": 0, "runner_errors": 0},
+            "summary_sha256": hashlib.sha256(self.summary.read_bytes()).hexdigest(),
+        }
+        self.rollup.write_text(json.dumps(self.report))
 
     def provider(self, response_status=200, data=b'{"id":"01900000-0000-7000-8000-000000000001"}'):
         patcher = patch.object(nightly, "HTTPSConnection")
@@ -68,6 +78,7 @@ class NightlyBrowserEmailTests(unittest.TestCase):
         self.assertEqual(receipt["status"], "accepted")
         self.assertEqual(receipt["provider_email_id"], "01900000-0000-7000-8000-000000000001")
         self.assertEqual(receipt["commit"], "a" * 40)
+        self.assertEqual(receipt["summary_sha256"], self.report["summary_sha256"])
         self.assertNotIn("re_fixture", self.receipt.read_text())
         self.assertNotIn("operations@example.test", self.receipt.read_text())
         factory.return_value.close.assert_called_once()
@@ -100,6 +111,33 @@ class NightlyBrowserEmailTests(unittest.TestCase):
         payload = json.loads(factory.return_value.request.call_args.args[2])
         self.assertIn("requires review", payload["subject"])
         self.assertIn("Dependency, security and contract checks · failure", payload["text"])
+
+    def test_mismatched_rollup_never_sends_the_stale_summary(self):
+        factory = self.provider()
+        for field, value in (
+            ("commit", "b" * 40), ("run_id", 12346), ("run_attempt", True),
+            ("summary_sha256", "c" * 64),
+        ):
+            with self.subTest(field=field):
+                self.rollup.write_text(json.dumps({**self.report, field: value}))
+                self.assertTrue(nightly.send(self.root, self.receipt, self.env))
+                payload = json.loads(factory.return_value.request.call_args.args[2])
+                self.assertIn("requires review", payload["subject"])
+                self.assertNotIn("Current result is **passed**", payload["text"])
+                self.assertIsNone(json.loads(self.receipt.read_text())["summary_sha256"])
+
+    def test_incomplete_or_flaky_rollup_cannot_report_passed(self):
+        factory = self.provider()
+        for change in (
+            {"reported_shards": 39},
+            {"counts": {**self.report["counts"], "flaky": 1}},
+        ):
+            with self.subTest(change=change):
+                self.rollup.write_text(json.dumps({**self.report, **change}))
+                self.assertTrue(nightly.send(self.root, self.receipt, self.env))
+                payload = json.loads(factory.return_value.request.call_args.args[2])
+                self.assertIn("requires review", payload["subject"])
+                self.assertNotIn("Current result is **passed**", payload["text"])
 
     def test_redirect_is_unconfirmed_without_following_or_retrying(self):
         factory = self.provider(302, b'{"location":"https://another.example"}')

@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -131,6 +132,8 @@ class NightlyBrowserReportTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertEqual(json.loads(report.read_text())["status"], "incomplete")
         self.assertEqual(json.loads(report.read_text())["run_attempt"], 1)
+        self.assertEqual(json.loads(report.read_text())["summary_sha256"],
+                         hashlib.sha256(message.read_bytes()).hexdigest())
         self.assertEqual(message.read_text(), result.stdout)
         self.assertEqual(summary.read_text(), result.stdout)
         self.assertIn("Current result is **incomplete**. 1 of 40 shards reported.", result.stdout)
