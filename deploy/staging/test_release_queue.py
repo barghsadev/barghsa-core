@@ -33,7 +33,8 @@ class RuntimeImageReceiptTests(unittest.TestCase):
         accepted = line(backup)
         manifest = {key: value for key, value in backup.items()
                     if key not in ("upload_verified", "manifest_readback_verified")}
-        self.assertEqual(queue.verify_migration_backup(accepted, commit), {
+        checkpoint = queue.verify_migration_backup(accepted, commit)
+        self.assertEqual(checkpoint, {
             "status": "verified",
             "manifest_sha256": hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest(),
             "manifest_readback_verified": True,
@@ -42,6 +43,15 @@ class RuntimeImageReceiptTests(unittest.TestCase):
         })
         self.assertEqual(queue.verify_migration_backup(line({"disposable": True}), commit),
                          {"status": "disposable"})
+        for version in ("0.6.0", "0.9.0", "1.0.0"):
+            queue.require_migration_checkpoint(version, checkpoint, commit)
+            for bad_checkpoint in (None, {"status": "disposable"},
+                                   {**checkpoint, "manifest_sha256": None},
+                                   {**checkpoint, "label": checkpoint["label"].replace(commit[:12], "d" * 12)}):
+                with self.subTest(version=version, checkpoint=bad_checkpoint):
+                    with self.assertRaisesRegex(ValueError, "verified encrypted migration checkpoint"):
+                        queue.require_migration_checkpoint(version, bad_checkpoint, commit)
+        queue.require_migration_checkpoint("0.5.1", {"status": "disposable"}, commit)
         for output in ("", accepted + "\n" + line({"disposable": True})):
             with self.assertRaisesRegex(ValueError, "exactly one"):
                 queue.verify_migration_backup(output, commit)
@@ -404,6 +414,23 @@ if __name__ == '__main__':
         self.assertEqual(queue.jobs(self.state)[0]["runtime_images"], receipt)
         receipt_path = self.state / "jobs" / self.commit / "runtime-images.json"
         self.assertEqual(json.loads(receipt_path.read_text()), receipt)
+
+    def test_protected_retry_refuses_disposable_checkpoint_before_notification(self):
+        commit = self.publish("0.6.0")
+        queue.enqueue(self.repo, self.state, commit, [])
+        path = self.state / "jobs" / commit / "runtime-images.json"
+        queue.save(path, {"schema_version": 1, "commit": commit, "image_ids": {
+            name: "sha256:" + character * 64 for name, character in
+            zip(("app", "web", "postgres", "clamav"), "bcde")
+        }, "migration_backup": {"status": "disposable"}})
+        with patch.object(queue, "verify_live_release") as live:
+            self.assertEqual(queue.work(self.state), 1)
+            live.assert_not_called()
+        job = queue.jobs(self.state)[0]
+        self.assertEqual(job["phase"], "failed")
+        self.assertIn("verified encrypted migration checkpoint", job["error"])
+        self.assertFalse((self.capture / "notifications").exists())
+        self.assertFalse((self.capture / "deployed-head").exists())
 
     def test_retry_after_verified_deployment_rechecks_live_health_and_only_notifies(self):
         receipt = {"schema_version": 1, "commit": self.commit, "image_ids": {

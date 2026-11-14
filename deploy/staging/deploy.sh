@@ -195,7 +195,7 @@ ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"
 release_command="/usr/local/sbin/barghsa-staging-release $candidate$release_flag"
 # shellcheck disable=SC2029 # The manifest path and optional flag are constructed locally.
 ssh "${ssh_args[@]}" "$remote" "$release_command" | tee "$release_tmp/release.log"
-verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id"
+verify=(verify-images --commit "$commit" --version "$version" --app-id "$app_id" --web-id "$web_id"
   --postgres-id "$postgres_id" --clamav-id "$clamav_id" --release-log "$release_tmp/release.log" --scan-dir "$scan_dir")
 if [[ -z "$stateful" ]]; then
   verify+=(--includes-stateful)

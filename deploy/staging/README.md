@@ -362,6 +362,8 @@ The release worker copies the backup label, database system ID, encrypted
 object name, length, ciphertext SHA-256 and canonical manifest SHA-256 into
 `runtime_images.migration_backup` in
 `job.json`. Disposable rehearsals record `status: disposable` in that field.
+For v0.6.0 and later, the worker requires the verified checkpoint before
+sending an announcement, including when retrying a notification.
 Use the verified checkpoint identity to recover the exact pre-migration data.
 Apply the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
 to test recovery and provision scheduled backups and WAL/PITR. Configuration

@@ -368,7 +368,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         sys.exit(1)
     if not os.environ.get('MISSING_SCANNER'):
         print('BARGHSA_STAGING_SCANNER_V1 1.5.4 28182 1794551068')
-    if not os.environ.get('MISSING_BACKUP'):
+    if os.environ.get('DISPOSABLE_RECEIPT'):
+        print('BARGHSA_STAGING_MIGRATION_BACKUP_V1',json.dumps({'disposable':True}))
+    elif not os.environ.get('MISSING_BACKUP'):
         backup = {
             'version':1,'label':'release-'+'a'*12+'-20261113T230000Z-123',
             'system_id':'123456','blob':'blobs/'+'d'*32+'.tar.gpg','size':42000,
@@ -414,7 +416,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", "MISSING_BACKUP", "MISSING_SCANNER", None,
             "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
             "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER",
-            "DISPOSABLE_MILESTONE", "RUNTIME_BECAME_DISPOSABLE",
+            "DISPOSABLE_MILESTONE", "RUNTIME_BECAME_DISPOSABLE", "DISPOSABLE_RECEIPT",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True), ("FAIL_RETAINED_LICENSE", False, True)]:
@@ -506,6 +508,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 elif failure == "RUNTIME_BECAME_DISPOSABLE":
                     self.assertIn("requires non-disposable storage and encrypted WAL archiving", result.stderr)
                     self.assertTrue(calls[-1].endswith(" --require-protected-backup"))
+                elif failure == "DISPOSABLE_RECEIPT":
+                    self.assertIn("requires a verified encrypted migration checkpoint", result.stderr)
+                    self.assertIn("verify-images", calls[-1])
                 elif failure == "INVALID_RETAINED_ID":
                     self.assertIn("Invalid PostgreSQL or ClamAV image ID", result.stderr)
                     self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))

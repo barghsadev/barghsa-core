@@ -50,6 +50,34 @@ def verify_images(log, commit, app_id, web_id, postgres_id, clamav_id):
             "image_ids": dict(zip(("app", "web", "postgres", "clamav"), image_ids))}
 
 
+def migration_checkpoint_fields(commit):
+    return {
+        "label": rf"release-{re.escape(commit[:12])}-[0-9]{{8}}T[0-9]{{6}}Z-[0-9]+",
+        "system_id": r"[0-9]+",
+        "blob": r"blobs/[0-9a-f]{32}\.tar\.gpg",
+        "sha256": r"[0-9a-f]{64}",
+    }
+
+
+def verified_checkpoint_fields(backup, commit):
+    return (type(backup.get("size")) is int and backup["size"] > 0
+            and backup.get("manifest_readback_verified") is True
+            and all(isinstance(backup.get(field), str) and re.fullmatch(pattern, backup[field])
+                    for field, pattern in migration_checkpoint_fields(commit).items()))
+
+
+def require_migration_checkpoint(version, checkpoint, commit):
+    if not isinstance(version, str) or not re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", version):
+        raise ValueError("Release must have a standard MAJOR.MINOR.PATCH version")
+    if re.match(r"^0\.[0-5]\.", version):
+        return
+    if (not isinstance(checkpoint, dict) or checkpoint.get("status") != "verified"
+            or not verified_checkpoint_fields(checkpoint, commit)
+            or not isinstance(checkpoint.get("manifest_sha256"), str)
+            or not re.fullmatch(r"[0-9a-f]{64}", checkpoint["manifest_sha256"])):
+        raise ValueError("Staging milestone requires a verified encrypted migration checkpoint")
+
+
 def verify_migration_backup(log, commit):
     marker = "BARGHSA_STAGING_MIGRATION_BACKUP_V1 "
     records = [line.removeprefix(marker) for line in log.splitlines() if line.startswith(marker)]
@@ -60,25 +88,16 @@ def verify_migration_backup(log, commit):
         raise ValueError("Invalid staging migration backup receipt")
     if len(backup) == 1 and backup.get("disposable") is True:
         return {"status": "disposable"}
-    checks = {
-        "label": rf"release-{re.escape(commit[:12])}-[0-9]{{8}}T[0-9]{{6}}Z-[0-9]+",
-        "system_id": r"[0-9]+",
-        "blob": r"blobs/[0-9a-f]{32}\.tar\.gpg",
-        "sha256": r"[0-9a-f]{64}",
-    }
     if (type(backup.get("version")) is not int or backup["version"] != 1
             or backup.get("upload_verified") is not True
-            or backup.get("manifest_readback_verified") is not True
-            or type(backup.get("size")) is not int or backup["size"] <= 0
-            or any(not isinstance(backup.get(field), str) or not re.fullmatch(pattern, backup[field])
-                   for field, pattern in checks.items())):
+            or not verified_checkpoint_fields(backup, commit)):
         raise ValueError("Invalid verified staging migration backup receipt")
     # Verification flags belong to the command receipt, outside the off-site manifest.
     manifest = {key: value for key, value in backup.items()
                 if key not in ("upload_verified", "manifest_readback_verified")}
     manifest_digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
     return {"status": "verified", "manifest_sha256": manifest_digest, "manifest_readback_verified": True,
-            **{field: backup[field] for field in (*checks, "size")}}
+            **{field: backup[field] for field in (*migration_checkpoint_fields(commit), "size")}}
 
 
 def verify_scanner(log):
@@ -384,6 +403,7 @@ def deploy(job, state):
                        for value in images.values())
                 or runtime.get("schema_version") != 1 or runtime.get("commit") != job["commit"]):
             raise ValueError("Saved staging runtime receipt does not match the queued release")
+        require_migration_checkpoint(job["version"], runtime.get("migration_backup"), job["commit"])
         verify_live_release(job)
         with urllib.request.urlopen("https://stg.barghsa.com/api/health/ready", timeout=30) as response:
             readiness = json.load(response)
@@ -495,6 +515,7 @@ def main():
     check.add_argument("--commit", required=True)
     verify = actions.add_parser("verify-images")
     verify.add_argument("--commit", required=True)
+    verify.add_argument("--version", required=True)
     verify.add_argument("--app-id", required=True)
     verify.add_argument("--web-id", required=True)
     verify.add_argument("--postgres-id", required=True)
@@ -540,6 +561,7 @@ def main():
         receipt = verify_images(release_log, args.commit, args.app_id, args.web_id,
                                 args.postgres_id, args.clamav_id)
         receipt["migration_backup"] = verify_migration_backup(release_log, args.commit)
+        require_migration_checkpoint(args.version, receipt["migration_backup"], args.commit)
         receipt["scanner"] = verify_scanner(release_log)
         ids = receipt["image_ids"]
         receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
