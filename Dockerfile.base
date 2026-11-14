@@ -13,15 +13,22 @@ RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
 RUN find /out/api/node_modules /out/worker/node_modules -type d \
   -path '*/node_modules/pino/test/fixtures/transport' -prune -exec rm -r {} +
 
+# Keep the glibc variant available to consumers of the general build stage.
+FROM build AS alpine-packages
+RUN find /out/api/node_modules /out/worker/node_modules \( \
+    -type d \( -name '@img+sharp-linux-*@*' -o -name '@img+sharp-libvips-linux-*@*' \) -o \
+    -type l \( -name 'sharp-linux-*' -o -name 'sharp-libvips-linux-*' \) \
+  \) -prune -exec rm -r {} +
+
 FROM node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 AS runtime
 WORKDIR /app
 RUN apk add --no-cache poppler-utils font-dejavu
 # Package managers are needed only in the build stage.
 RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
   && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
-COPY --from=build /out/api ./
+COPY --from=alpine-packages /out/api ./
 COPY package.json ./root-package.json
-COPY --from=build /out/worker ./worker/
+COPY --from=alpine-packages /out/worker ./worker/
 COPY deploy/licenses/sharp-libvips/1.3.4/ ./licenses/sharp-libvips/1.3.4/
 COPY scripts/healthcheck-runtime.cjs ./healthcheck-runtime.cjs
 COPY scripts/run-packaged-migrations.cjs ./run-packaged-migrations.cjs

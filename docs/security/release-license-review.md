@@ -157,8 +157,14 @@ The prior Alpine app loaded that library as UID 1000 and resized a PNG to
 a valid 3 × 2 JPEG. The proof includes the binary checksum, resolved Cargo
 lock, build recipe, toolchain inventory and logs. The fixture uses a fresh
 Cargo resolution. Keep the publisher's original binary and source evidence
-for the exact distributed packages. The glibc variant, final image notice
-readback and distribution conditions still require reviewer disposition.
+for the exact distributed packages. The Alpine runtime build excludes the
+unused glibc Sharp and libvips packages. The general build stage still
+provides both variants for the single-container deployment. The Linux amd64
+Alpine test image loaded the pinned musl binary and retained both notices.
+Its SBOM lost exactly the two glibc rows, including one license exception.
+The other 386 exceptions in the prior five-image inventory remain in scope,
+subject to the final image scan and named dispositions. Any separate glibc
+distribution still requires its own review.
 
 A dry run of the production and auth builds identified 74 and 28 npm packages, respectively, with JavaScript present in emitted chunks. Only DOMPurify needed a license expression check; the separately emitted font assets are reviewed above. DOMPurify `3.4.17` declares MPL-2.0 **or** Apache-2.0. Use the already allowed Apache-2.0 option and retain the corresponding notices. Do not treat other workspace inventory entries as shipped solely because the dependency resolver lists them. Base OS and tooling notices, including Poppler and ClamAV, still need the final image inventory and distribution review.
 
