@@ -76,7 +76,7 @@ async function create() {
   return (await response.json()) as { id: string };
 }
 
-it('rejects unknown fields before creating, editing or publishing terms', async () => {
+it('rejects unknown fields before creating, editing, publishing or discarding terms', async () => {
   const extra = { privateField: 'private-value' };
   const rejected = await request('', 'POST', { ...draft, ...extra });
   expect(rejected.status).toBe(400);
@@ -89,7 +89,8 @@ it('rejects unknown fields before creating, editing or publishing terms', async 
   const before = (await http.pool.query('SELECT * FROM tos_versions WHERE id=$1', [id])).rows;
   const edited = await request(`/${id}`, 'PUT', { contentEn: 'New terms', ...extra });
   const published = await request(`/${id}/publish`, 'POST', { changeType: 'major', ...extra });
-  for (const response of [rejected, edited, published]) {
+  const discarded = await request(`/${id}`, 'DELETE', extra);
+  for (const response of [rejected, edited, published, discarded]) {
     expect(response.status).toBe(400);
     const body = await response.text();
     expect(body).toContain('VALIDATION:INPUT:INVALID');
@@ -106,6 +107,7 @@ it('rejects unknown fields before creating, editing or publishing terms', async 
       )
     ).rows
   ).toEqual([{ action: 'create' }]);
+  expect((await request(`/${id}`, 'DELETE', {})).status).toBe(204);
 });
 
 it('bounds each submitted terms locale without mutating a rejected draft', async () => {

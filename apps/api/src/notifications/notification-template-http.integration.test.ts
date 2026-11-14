@@ -173,7 +173,12 @@ for (const locale of ['fa', 'en'])
       } else expect(result.body).toBe('<p>Hello A&B</p>');
     });
   }
-function write(action: Action, value: { id: string; event: string }, user = 'editor') {
+function write(
+  action: Action,
+  value: { id: string; event: string },
+  user = 'editor',
+  commandBody: unknown = {}
+) {
   const path =
     action === 'create'
       ? ''
@@ -192,7 +197,7 @@ function write(action: Action, value: { id: string; event: string }, user = 'edi
           }
         : action === 'update'
           ? { bodyTemplate: 'Updated message' }
-          : {}
+          : commandBody
     ),
   });
 }
@@ -215,6 +220,25 @@ async function snapshot() {
     ).rows,
   };
 }
+
+it.each(['publish', 'unpublish', 'delete'] as const)(
+  '%s: rejects unknown fields without changing the template, inbox or audit',
+  async (action) => {
+    const value = await seed(action);
+    const before = await snapshot();
+    const rejected = await write(action, value, 'editor', { unexpected: true });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.text()).toContain('VALIDATION:INPUT:INVALID');
+    expect(await snapshot()).toEqual(before);
+    const path = `${http.base}/api/admin/notifications/templates/${value.id}`;
+    const response = await fetch(action === 'delete' ? path : `${path}/${action}`, {
+      method: action === 'delete' ? 'DELETE' : 'POST',
+      headers: headers.editor!,
+    });
+    expect(response.status).toBe(action === 'delete' ? 204 : 200);
+  }
+);
+
 async function waitForLocks(count: number) {
   await expect
     .poll(

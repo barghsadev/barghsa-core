@@ -20297,9 +20297,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Contract template deleted."
+          },
+          "400": {
+            "description": "Invalid template ID or unexpected request body"
           }
         },
         "security": [
@@ -26936,12 +26950,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "204": {
             "description": "Template deleted."
           },
           "400": {
-            "description": "Template is active"
+            "description": "Unexpected request body or active template"
           },
           "404": {
             "description": "Template not found"
@@ -27085,12 +27110,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Template published."
           },
           "400": {
-            "description": "Template is not a draft"
+            "description": "Unexpected request body or template is not a draft"
           },
           "404": {
             "description": "Template not found"
@@ -27164,12 +27200,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Template unpublished."
           },
           "400": {
-            "description": "Template is not active"
+            "description": "Unexpected request body or template is not active"
           },
           "404": {
             "description": "Template not found"
@@ -31603,12 +31650,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "204": {
             "description": "Draft discarded."
           },
           "400": {
-            "description": "Version is published and cannot be deleted"
+            "description": "Invalid discard request or published version"
           },
           "404": {
             "description": "Version not found"

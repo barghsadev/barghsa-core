@@ -62,6 +62,7 @@ import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { assertGreenSettingsFields } from './electricity-settings-fields.js';
 import {
@@ -1602,13 +1603,15 @@ export class AdminController {
   @ApiResponse({ status: 409, description: 'Draft changed since it was opened' })
   @ApiOperation({ summary: 'Delete (discard) a draft TOS version' })
   @ApiParam({ name: 'id', description: 'TOS version UUID' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 204, description: 'Draft discarded.' })
-  @ApiResponse({ status: 400, description: 'Version is published and cannot be deleted' })
+  @ApiResponse({ status: 400, description: 'Invalid discard request or published version' })
   @ApiResponse({ status: 404, description: 'Version not found' })
   async deleteTosVersion(
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
-    @Query('expectedRevision') expectedRevision: string
+    @Query('expectedRevision') expectedRevision: string,
+    @Body() body?: unknown
   ): Promise<void> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
@@ -1617,6 +1620,7 @@ export class AdminController {
       );
     }
 
+    assertEmptyCommandBody(body);
     if (!/^[a-f0-9]{64}$/.test(expectedRevision ?? ''))
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
@@ -1883,14 +1887,17 @@ export class AdminController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Publish a draft notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Template published.' })
-  @ApiResponse({ status: 400, description: 'Template is not a draft' })
+  @ApiResponse({ status: 400, description: 'Unexpected request body or template is not a draft' })
   @ApiResponse({ status: 404, description: 'Template not found' })
   async publishNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
+    assertEmptyCommandBody(body);
     return this.notificationTemplateService.publish(id, req.session);
   }
 
@@ -1905,14 +1912,17 @@ export class AdminController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Unpublish an active notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Template unpublished.' })
-  @ApiResponse({ status: 400, description: 'Template is not active' })
+  @ApiResponse({ status: 400, description: 'Unexpected request body or template is not active' })
   @ApiResponse({ status: 404, description: 'Template not found' })
   async unpublishNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
+    assertEmptyCommandBody(body);
     return this.notificationTemplateService.unpublish(id, req.session);
   }
 
@@ -1928,14 +1938,17 @@ export class AdminController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a draft notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 204, description: 'Template deleted.' })
-  @ApiResponse({ status: 400, description: 'Template is active' })
+  @ApiResponse({ status: 400, description: 'Unexpected request body or active template' })
   @ApiResponse({ status: 404, description: 'Template not found' })
   async deleteNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertNotificationPermission(req);
+    assertEmptyCommandBody(body);
     await this.notificationTemplateService.delete(id, req.session);
   }
 

@@ -18409,10 +18409,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Contract template deleted. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid template ID or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -22808,7 +22819,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Template deleted. */
             204: {
@@ -22817,7 +22832,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Template is active */
+            /** @description Unexpected request body or active template */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -22843,7 +22858,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Template published. */
             200: {
@@ -22852,7 +22871,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Template is not a draft */
+            /** @description Unexpected request body or template is not a draft */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -22920,7 +22939,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Template unpublished. */
             200: {
@@ -22929,7 +22952,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Template is not active */
+            /** @description Unexpected request body or template is not active */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -25659,7 +25682,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Draft discarded. */
             204: {
@@ -25668,7 +25695,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Version is published and cannot be deleted */
+            /** @description Invalid discard request or published version */
             400: {
                 headers: {
                     [name: string]: unknown;

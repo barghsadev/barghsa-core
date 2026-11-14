@@ -69,7 +69,7 @@ beforeEach(async () => {
     )
   ).rows[0].id;
 });
-function mutation(action: 'create' | 'update' | 'delete' | 'upload') {
+function mutation(action: 'create' | 'update' | 'delete' | 'upload', deleteBody?: unknown) {
   return fetch(
     `${http.base}/api/admin/contract-templates${action === 'create' ? '' : `/${templateId}`}${action === 'upload' ? '/versions' : ''}`,
     {
@@ -81,7 +81,9 @@ function mutation(action: 'create' | 'update' | 'delete' | 'upload') {
             : 'DELETE',
       headers,
       ...(action === 'delete'
-        ? {}
+        ? deleteBody === undefined
+          ? {}
+          : { body: JSON.stringify(deleteBody) }
         : {
             body: JSON.stringify(
               action === 'upload'
@@ -323,6 +325,19 @@ it('does not write storage when the durable reservation cannot commit', async ()
 });
 
 const auditWindow = new AuditWindow(() => http.pool);
+
+it('rejects a contract template delete body before touching the template or audit', async () => {
+  const rejected = await mutation('delete', { unexpected: true });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.text()).toContain('VALIDATION:INPUT:INVALID');
+  expect(
+    (await http.pool.query('SELECT id FROM contract_templates WHERE id=$1', [templateId])).rows
+  ).toEqual([{ id: templateId }]);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+  ).toEqual([]);
+  expect((await mutation('delete', {})).status).toBe(200);
+});
 
 it('protects a referenced template through HTTP and the database before permitting an unlinked deletion', async () => {
   const contractTypeId = randomUUID();

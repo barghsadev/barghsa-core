@@ -14,9 +14,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import {
   CONTRACT_TEMPLATE_STATUSES,
   type ContractTemplateDto,
@@ -261,13 +262,17 @@ export class ContractTemplateController {
       'templates must be archived (status=inactive); templates referenced by a contract type ' +
       'return 409 and cannot be deleted.',
   })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Contract template deleted.' })
+  @ApiResponse({ status: 400, description: 'Invalid template ID or unexpected request body' })
   async delete(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<{ deleted: boolean }> {
     this.assertDocumentsPermission(req);
     assertUuid(id);
+    assertEmptyCommandBody(body);
     return this.service.delete(id, req.session, requestIp(req));
   }
 }
