@@ -9,10 +9,14 @@ import json
 import os
 from pathlib import Path
 import re
+import runpy
 import subprocess
 import sys
 import time
 import urllib.request
+
+
+RELEASE_CHAT_ID = -1004467450624
 
 
 def command(repo, *args, capture=False, umask=-1):
@@ -270,6 +274,42 @@ def start_worker(state):
     return process.pid
 
 
+def verified_notifications(checkout, path, job):
+    if not path.is_file() or path.stat().st_size > 8192:
+        raise ValueError("Missing or invalid Telegram job receipt")
+    receipts = json.loads(path.read_bytes())
+    if not isinstance(receipts, dict) or set(receipts) - {"summary", "album"}:
+        raise ValueError("Missing or invalid Telegram job receipt")
+    metadata, notes = runpy.run_path(str(checkout / "deploy/staging/notify-release.py"))["release_details"](checkout, job["commit"])
+    if metadata != {"version": job["version"], "commit": job["commit"]}:
+        raise ValueError("Telegram job receipt checkout does not match the release")
+
+    def confirmed(receipt):
+        return (isinstance(receipt, dict) and receipt.get("status") == "sent"
+                and receipt.get("chat_id") == RELEASE_CHAT_ID
+                and all(receipt.get(key) == value for key, value in metadata.items()))
+
+    summary = receipts.get("summary")
+    if (not confirmed(summary) or type(summary.get("message_id")) is not int
+            or summary["message_id"] <= 0
+            or summary.get("text_sha256") != hashlib.sha256(notes.encode()).hexdigest()):
+        raise ValueError("Telegram job receipt does not confirm the exact release summary")
+    album = receipts.get("album")
+    photos = job["screenshots"]
+    if album is not None:
+        if not confirmed(album) or album.get("photo_sha256") != [name[:-4] for name in photos] or not photos:
+            raise ValueError("Telegram job receipt does not confirm the queued screenshots")
+        ids = album.get("message_ids")
+        if (not isinstance(ids, list) or len(ids) != len(photos)
+                or any(type(value) is not int or value <= 0 for value in ids)
+                or len(set(ids)) != len(ids) or summary["message_id"] in ids
+                or (len(photos) > 1 and (not isinstance(album.get("media_group_id"), str) or not album["media_group_id"]))):
+            raise ValueError("Telegram job receipt does not confirm one grouped album")
+    elif photos and not job.get("screenshot_warning"):
+        raise ValueError("Telegram job receipt is missing the queued screenshot outcome")
+    return {"summary": summary, **({"album": album} if album is not None else {})}
+
+
 def deploy(job, state):
     repo = Path(job["repo"])
     directory = state / "jobs" / job["commit"]
@@ -288,6 +328,7 @@ def deploy(job, state):
     if command(checkout, "git", "status", "--porcelain", capture=True):
         raise ValueError("Release checkout has uncommitted files")
     receipt = directory / "runtime-images.json"
+    notification_receipt = directory / "telegram.json"
     deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
     if bundle := job.get("image_bundle"):
         deploy_args.extend([bundle["directory"], bundle["manifest_sha256"]])
@@ -300,7 +341,9 @@ def deploy(job, state):
     if receipt.exists():
         job["runtime_images"] = json.loads(receipt.read_text())
     if job["screenshots"]:
-        args = ["python3", "deploy/staging/notify-release.py", "--commit", job["commit"]]
+        notify = ["python3", "deploy/staging/notify-release.py", "--commit", job["commit"],
+                  "--receipt", str(notification_receipt)]
+        args = list(notify)
         for name in job["screenshots"]:
             args.extend(["--screenshot", str(directory / name)])
         job.pop("screenshot_warning", None)
@@ -309,7 +352,7 @@ def deploy(job, state):
         except subprocess.CalledProcessError as error:
             # Images are optional; the exact deployed release and main note are required.
             # Recheck without images, preserving unknown-send receipts and their retry guard.
-            command(checkout, "python3", "deploy/staging/notify-release.py", "--commit", job["commit"])
+            command(checkout, *notify)
             job["screenshot_warning"] = {
                 "exit_code": error.returncode,
                 "message": "Optional screenshots could not all be confirmed; inspect notification receipts and the channel before retrying unknown images.",
@@ -319,6 +362,7 @@ def deploy(job, state):
         live = json.load(response)
     if live.get("commit") != job["commit"] or live.get("version") != job["version"]:
         raise ValueError("Live release does not match the queued version and commit")
+    job["telegram"] = verified_notifications(checkout, notification_receipt, job)
     if secret.is_symlink():
         secret.unlink()
     command(repo, "git", "worktree", "remove", str(checkout))

@@ -430,12 +430,21 @@ class StructuredReceiptTest(unittest.TestCase):
         entries.pop('album')
         with self.assertRaisesRegex(ValueError, 'screenshot receipt'):
             self.verify_release(entries)
+
         entries['deployment']['screenshot_warning'] = {'exit_code': 1, 'message': 'Image delivery unconfirmed'}
         verified = self.verify_release(entries)
         self.assertTrue(verified['album_unconfirmed'])
         self.assertEqual(verified['image_message_ids'], [])
         entries['summary']['status'] = 'unknown'
         with self.assertRaisesRegex(ValueError, 'summary receipt'):
+            self.verify_release(entries)
+
+    def test_embedded_queue_receipts_must_match_the_protected_receipts(self):
+        entries = self.release()
+        entries['deployment']['telegram'] = {key: deepcopy(entries[key]) for key in ('summary', 'album')}
+        self.assertEqual(self.verify_release(entries)['summary_message_id'], 100)
+        entries['summary']['message_id'] = 104
+        with self.assertRaisesRegex(ValueError, 'differ from the completed staging job'):
             self.verify_release(entries)
 
 

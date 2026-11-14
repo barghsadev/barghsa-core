@@ -23,7 +23,7 @@ class ReleaseNotificationTests(unittest.TestCase):
         self.root = Path(self.directory.name)
         self.addCleanup(self.directory.cleanup)
         self.metadata = {"version": "0.1.0", "commit": "a" * 40}
-        self.channel = {"id": -100123, "type": "channel", "username": "barghsa_releases"}
+        self.channel = {"id": release.RELEASE_CHAT_ID, "type": "channel", "username": "barghsa_releases"}
         self.text = "برقسا نسخه 0.1.0\n\n- A verified batch change."
 
     def call(self, method, payload):
@@ -78,7 +78,15 @@ class ReleaseNotificationTests(unittest.TestCase):
         for channel in [{**self.channel, "type": "private"}, {**self.channel, "type": "supergroup"}, {**self.channel, "username": "different_channel"}]:
             with self.subTest(channel=channel), self.assertRaises(ValueError):
                 release.verify_channel(channel, "@barghsa_releases")
-        release.verify_channel(self.channel, "-100123")
+        release.verify_channel(self.channel, str(release.RELEASE_CHAT_ID))
+
+    def test_release_channel_prevents_send_to_a_different_valid_channel(self):
+        other = {**self.channel, "id": -100123}
+        with patch.object(release, "telegram_call", return_value=other) as api:
+            with self.assertRaisesRegex(ValueError, "Barghsa release channel"):
+                self.announce()
+            self.assertEqual([call.args[1] for call in api.call_args_list], ["getChat"])
+            self.assertFalse(list(self.root.glob("*.json")))
 
     def test_notes_require_matching_semver_changes_and_message_length(self):
         (self.root / "releases").mkdir()

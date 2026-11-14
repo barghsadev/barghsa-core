@@ -16,6 +16,7 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parents[2]
 SITE = "https://stg.barghsa.com"
+RELEASE_CHAT_ID = -1004467450624
 
 
 def release_details(root, commit):
@@ -97,9 +98,15 @@ def verify_channel(channel, destination):
         raise ValueError("Telegram returned a different channel")
 
 
+def verify_release_channel(channel, destination):
+    verify_channel(channel, destination)
+    if channel["id"] != RELEASE_CHAT_ID:
+        raise ValueError("Telegram destination is not the Barghsa release channel")
+
+
 def announce(metadata, text, token, destination, state_dir, retry_unknown=False):
     channel = telegram_call(token, "getChat", {"chat_id": destination})
-    verify_channel(channel, destination)
+    verify_release_channel(channel, destination)
     deployed = request_json(f"{SITE}/release.json?commit={metadata['commit']}")
     if deployed != metadata:
         raise ValueError("Deployed version/commit do not match this batch; no announcement sent")
@@ -115,7 +122,7 @@ def announce(metadata, text, token, destination, state_dir, retry_unknown=False)
                 raise ValueError("Saved announcement identity differs from this release")
             if previous.get("status") == "sent":
                 print(f"Telegram already confirmed v{metadata['version']}, message {previous['message_id']}")
-                return
+                return previous
             if not retry_unknown:
                 raise ValueError("Previous notification outcome is unknown; inspect the channel before using --retry-unknown")
         receipt_path.write_text(json.dumps({**receipt, "status": "unknown"}) + "\n")
@@ -123,8 +130,10 @@ def announce(metadata, text, token, destination, state_dir, retry_unknown=False)
         sent = telegram_call(token, "sendMessage", {"chat_id": channel["id"], "text": text, "link_preview_options": {"is_disabled": True}})
         if type(sent.get("message_id")) is not int or sent["message_id"] <= 0 or sent.get("text") != text or sent.get("chat", {}).get("id") != channel["id"]:
             raise ValueError("Telegram message receipt did not match this release")
-        receipt_path.write_text(json.dumps({**receipt, "status": "sent", "message_id": sent["message_id"]}) + "\n")
+        confirmed = {**receipt, "status": "sent", "message_id": sent["message_id"]}
+        receipt_path.write_text(json.dumps(confirmed) + "\n")
         print(f"Staging v{metadata['version']} verified; Telegram message {sent['message_id']} confirmed")
+        return confirmed
 
 
 def screenshot_bytes(path):
@@ -138,7 +147,7 @@ def announce_screenshots(metadata, token, destination, state_dir, images, retry_
     if not 1 <= len(images) <= 10:
         raise ValueError("Use one photo or one album of at most ten screenshots; link a gallery for extras")
     channel = telegram_call(token, "getChat", {"chat_id": destination})
-    verify_channel(channel, destination)
+    verify_release_channel(channel, destination)
     if request_json(f"{SITE}/release.json?commit={metadata['commit']}") != metadata:
         raise ValueError("Deployed release changed; screenshots were not announced")
     state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -154,7 +163,7 @@ def announce_screenshots(metadata, token, destination, state_dir, images, retry_
                 raise ValueError("Saved screenshot selection differs from this release; no additional post allowed")
             if prior.get("status") == "sent":
                 print("Release screenshots already confirmed as one grouped update")
-                return
+                return prior
             if not retry_unknown:
                 raise ValueError("Previous screenshot outcome is unknown; inspect the channel before using --retry-unknown")
         else:
@@ -182,8 +191,10 @@ def announce_screenshots(metadata, token, destination, state_dir, images, retry_
         if len(images) > 1 and (not isinstance(sent[0].get('media_group_id'), str) or not sent[0]['media_group_id'] or any(row.get('media_group_id') != sent[0]['media_group_id'] for row in sent)):
             raise ValueError("Telegram album receipt did not confirm one grouped update")
         ids = [row['message_id'] for row in sent]
-        path.write_text(json.dumps({**receipt, "status": "sent", "message_ids": ids, "media_group_id": sent[0].get('media_group_id')}) + "\n")
+        confirmed = {**receipt, "status": "sent", "message_ids": ids, "media_group_id": sent[0].get('media_group_id')}
+        path.write_text(json.dumps(confirmed) + "\n")
         print(f"Release screenshots confirmed as one grouped update, messages {ids}")
+        return confirmed
 
 
 def main():
@@ -191,6 +202,7 @@ def main():
     parser.add_argument("--commit", required=True)
     parser.add_argument("--check", action="store_true", help="Validate release notes and Telegram channel before deploying")
     parser.add_argument("--retry-unknown", action="store_true", help="Retry only after manually checking the channel for a prior message")
+    parser.add_argument("--receipt", type=Path, help="Write confirmed notification results to the private release job directory")
     parser.add_argument("--screenshot", action="append", type=Path, default=[], help="Attach a PNG screenshot after the Persian release notes; repeat for multiple images")
     args = parser.parse_args()
     metadata, text = release_details(ROOT, args.commit)
@@ -203,13 +215,20 @@ def main():
     if len(images) > 10:
         raise ValueError("At most ten screenshots can accompany one release update")
     if args.check:
-        verify_channel(telegram_call(token, "getChat", {"chat_id": destination}), destination)
+        verify_release_channel(telegram_call(token, "getChat", {"chat_id": destination}), destination)
         print(f"Release preflight passed for v{metadata['version']}")
         return
     state = Path(os.environ.get("BARGHSA_RELEASE_STATE_DIR", "~/.local/state/barghsa-staging-releases")).expanduser()
-    announce(metadata, text, token, destination, state, args.retry_unknown)
+    summary = announce(metadata, text, token, destination, state, args.retry_unknown)
+    receipts = {"summary": summary}
     if images:
-        announce_screenshots(metadata, token, destination, state, images, args.retry_unknown)
+        album = announce_screenshots(metadata, token, destination, state, images, args.retry_unknown)
+        if album is not None:
+            receipts["album"] = album
+    if args.receipt:
+        temporary = args.receipt.with_suffix('.tmp')
+        temporary.write_text(json.dumps(receipts) + "\n")
+        temporary.replace(args.receipt)
 
 
 if __name__ == "__main__":

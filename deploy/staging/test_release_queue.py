@@ -132,12 +132,39 @@ fi
 if [ "${QUEUE_TEST_WRITE_IMAGES:-}" = 1 ]; then
     printf '%s\\n' "$QUEUE_TEST_IMAGES" > "$1"
 fi
-python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)"
+python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)" --receipt "$(dirname "$1")/telegram.json"
 ''')
         deploy.chmod(0o755)
-        (scripts / "notify-release.py").write_text('''import json, os, pathlib, sys
-with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as log:
-    log.write(json.dumps(sys.argv[1:])+'\\n')
+        (scripts / "notify-release.py").write_text('''import argparse, hashlib, json, os, pathlib, sys
+
+def release_details(root, commit):
+    return {"version": json.loads((root / 'package.json').read_text())["version"], "commit": commit}, "fixture notes"
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--commit', required=True)
+    parser.add_argument('--receipt', required=True, type=pathlib.Path)
+    parser.add_argument('--screenshot', action='append', type=pathlib.Path, default=[])
+    args = parser.parse_args()
+    identity, text = release_details(pathlib.Path.cwd(), args.commit)
+    receipt = {**identity, 'status': 'sent', 'chat_id': -1004467450624}
+    data = {'summary': {**receipt, 'message_id': 100, 'text_sha256': hashlib.sha256(text.encode()).hexdigest()}}
+    if args.screenshot:
+        data['album'] = {**receipt, 'message_ids': list(range(101, 101 + len(args.screenshot))),
+                         'media_group_id': 'fixture', 'photo_sha256': [path.stem for path in args.screenshot]}
+    mode = os.environ.get('QUEUE_TELEGRAM_FIXTURE')
+    if mode == 'unknown':
+        data['summary']['status'] = 'unknown'
+    elif mode == 'wrong-channel':
+        data['summary']['chat_id'] = -1000000000000
+    elif mode == 'wrong-notes':
+        data['summary']['text_sha256'] = 'b' * 64
+    elif mode == 'wrong-album' and args.screenshot:
+        data['album']['photo_sha256'] = ['b' * 64] * len(args.screenshot)
+    if mode != 'missing':
+        args.receipt.write_text(json.dumps(data))
+    with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as log:
+        log.write(json.dumps(sys.argv[1:])+'\\n')
 ''')
         self.commit = self.publish("0.1.3")
         self.image = self.root / "reviewed.png"
@@ -343,9 +370,13 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         self.assertFalse(job["ci_required"])
         self.assertNotIn("runtime_images", job)
         notifications = [json.loads(line) for line in (self.capture / "notifications").read_text().splitlines()]
-        self.assertEqual(notifications[0], ["--commit", self.commit])
-        self.assertEqual(notifications[1][:3], ["--commit", self.commit, "--screenshot"])
-        self.assertEqual(Path(notifications[1][3]).read_bytes(), self.image.read_bytes())
+        telegram = self.state / "jobs" / self.commit / "telegram.json"
+        self.assertEqual(notifications[0], ["--commit", self.commit, "--receipt", str(telegram)])
+        self.assertEqual(notifications[1][:5], [*notifications[0], "--screenshot"])
+        self.assertEqual(Path(notifications[1][5]).read_bytes(), self.image.read_bytes())
+        self.assertEqual(job["telegram"], json.loads(telegram.read_text()))
+        self.assertEqual(job["telegram"]["summary"]["message_id"], 100)
+        self.assertEqual(job["telegram"]["album"]["message_ids"], [101])
         self.assertFalse((self.state / "jobs" / self.commit / "checkout").exists())
 
     def test_completed_job_retains_deployment_image_receipt(self):
@@ -384,7 +415,9 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         self.assertEqual([job["phase"] for job in jobs], ["completed", "completed"])
         self.assertEqual(jobs[0]["screenshot_warning"]["exit_code"], 1)
         self.assertNotIn("screenshot_warning", jobs[1])
-        self.assertIn(("python3", "deploy/staging/notify-release.py", "--commit", self.commit), calls)
+        path = self.state / "jobs" / self.commit / "telegram.json"
+        self.assertIn(("python3", "deploy/staging/notify-release.py", "--commit", self.commit, "--receipt", str(path)), calls)
+        self.assertEqual(set(jobs[0]["telegram"]), {"summary"})
         self.assertEqual(sum("--screenshot" in call for call in calls), 1)
         self.assertFalse(any("--retry-unknown" in call for call in calls))
         self.assertEqual((self.capture / "deployed-head").read_text().strip(), newer)
@@ -441,6 +474,18 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         job = queue.jobs(self.state)[0]
         self.assertEqual(job["phase"], "failed")
         self.assertIn("Live release", job["error"])
+
+    def test_successful_command_cannot_replace_missing_or_mismatched_telegram_evidence(self):
+        for index, mode in enumerate(("missing", "unknown", "wrong-channel", "wrong-notes", "wrong-album")):
+            with self.subTest(mode=mode):
+                state = self.root / f"state-{index}"
+                queue.enqueue(self.repo, state, self.commit, [self.image] if mode == "wrong-album" else [])
+                with self.live(), patch.dict(os.environ, {"QUEUE_TELEGRAM_FIXTURE": mode}):
+                    self.assertEqual(queue.work(state), 1)
+                job = queue.jobs(state)[0]
+                self.assertEqual(job["phase"], "failed")
+                self.assertIn("Telegram job receipt", job["error"])
+                self.assertNotIn("telegram", job)
 
     def test_unpushed_commit_invalid_identity_and_invalid_image_are_rejected(self):
         (self.repo / "package.json").write_text('{"version":"0.1.4"}')

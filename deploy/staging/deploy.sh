@@ -200,4 +200,8 @@ if [[ -n "$receipt" ]]; then
   verify+=(--receipt "$receipt")
 fi
 python3 deploy/staging/release-queue.py "${verify[@]}"
-python3 deploy/staging/notify-release.py --commit "$commit"
+notify=(--commit "$commit")
+if [[ -n "$receipt" ]]; then
+  notify+=(--receipt "$(dirname -- "$receipt")/telegram.json")
+fi
+python3 deploy/staging/notify-release.py "${notify[@]}"

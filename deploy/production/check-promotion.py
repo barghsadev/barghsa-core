@@ -311,6 +311,9 @@ def verify_release_receipts(index_path, path, fingerprint, version, sha):
             or not all(matches(r'[a-f0-9]{64}\.png', name) for name in images) or len(set(images)) != len(images)):
         raise ValueError('Deployment receipt has an invalid screenshot selection')
     album = data.get('album')
+    embedded = {'summary': summary, **({'album': album} if album is not None else {})}
+    if 'telegram' in job and job['telegram'] != embedded:
+        raise ValueError('Telegram package receipts differ from the completed staging job')
     message_ids = []
     if album is not None:
         message_ids = album.get('message_ids')

@@ -141,7 +141,7 @@ Configure an authorized Telegram bot and channel in the local secret file
 ```json
 {
   "bot_token": "<configured privately>",
-  "chat_id": "@your_release_channel"
+  "chat_id": "-1004467450624"
 }
 ```
 
@@ -179,8 +179,11 @@ and durable no-replay receipts remain required.
 
 Confirmed message receipts live outside the checkout under
 `~/.local/state/barghsa-staging-releases`, overridable by
-`BARGHSA_RELEASE_STATE_DIR`. Repeating a confirmed notification does not send
-again. If notification fails after a healthy deployment, rerun only:
+`BARGHSA_RELEASE_STATE_DIR`. The worker also retains the verified summary and
+any confirmed grouped album in `telegram.json` and includes their message IDs
+in the completed release job. The configured name or numeric ID must resolve
+to Barghsa Release Radar (`-1004467450624`). Repeating a confirmed notification
+reuses its receipt. If notification fails after a healthy deployment, rerun only:
 
 ```sh
 python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)"

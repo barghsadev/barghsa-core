@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T01:29:59+00:00",
+  "updated": "2026-11-14T01:38:07+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8787,7 +8787,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9089,6 +9089,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -20281,7 +20289,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20518,6 +20526,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -23932,7 +23948,8 @@
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
         "The normal staging worker now validates the exact signed bytes and deletes the probe version. The isolated pinned image passed. Hosted run 43529357035 passed the corrected release-control step. The complete hosted check and actual accepted staging rollout remain open.",
         "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open.",
-        "The VPS now checks both the expected release version and exact commit before accepting the candidate manifest. Matching, stale and absent version fixtures exercised the rollback boundary. A live accepted release receipt remains open."
+        "The VPS now checks both the expected release version and exact commit before accepting the candidate manifest. Matching, stale and absent version fixtures exercised the rollback boundary. A live accepted release receipt remains open.",
+        "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release."
       ],
       "owner": null,
       "depends_on": [],
@@ -23996,7 +24013,8 @@
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-probe-object-cleanup",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-telegram-receipt"
         ],
         "current_acceptance": null
       }
@@ -24234,7 +24252,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -24406,6 +24424,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Six scoped recovery routes are additive. Existing API definitions are identical, existing settings writes retain their validators, permission, session, versioning and audit behavior, and existing service and wallet journeys passed targeted tests. Wallet copy lookups reuse the same strings and formatting. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -32162,7 +32188,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -32515,6 +32541,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -35391,7 +35425,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35983,6 +36017,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Six scoped recovery routes are additive. Existing API definitions are identical, existing settings writes retain their validators, permission, session, versioning and audit behavior, and existing service and wallet journeys passed targeted tests. Wallet copy lookups reuse the same strings and formatting. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -164507,7 +164549,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -165729,6 +165771,14 @@
                 "packages/shared/src/errors/domain-error-codes.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -643322,7 +643372,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -644568,6 +644618,14 @@
                 "packages/shared/src/errors/domain-error-codes.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -675679,7 +675737,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -675925,6 +675983,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -706005,11 +706071,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "ce382951dc3199939d5a7bd11e495dfb0d97456842e25f322debd0a20b8c79ef"
+              "sha256": "346d79c9305fcbfb084806bbbd586a1c77f10f051af5a4b38abd79048a0c6e2a"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -706363,6 +706429,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -706894,11 +706969,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "ce382951dc3199939d5a7bd11e495dfb0d97456842e25f322debd0a20b8c79ef"
+              "sha256": "346d79c9305fcbfb084806bbbd586a1c77f10f051af5a4b38abd79048a0c6e2a"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -707360,6 +707435,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -708432,7 +708516,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -708739,6 +708823,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -708811,7 +708903,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -709118,6 +709210,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -716562,7 +716662,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
+              "sha256": "62bf4afc69859d87425af4815e2ab9b6154936e091d4a4a25b18488938add04e"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -716925,6 +717025,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -725453,11 +725561,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
+              "sha256": "62bf4afc69859d87425af4815e2ab9b6154936e091d4a4a25b18488938add04e"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "05cbb1415c73d123f6fbe034088d770d6645d25ee5fc785a55bebd1ebc898aa9"
+              "sha256": "e278bffaa5cfe14062c4fea4e8d160a323443fc0e42caa21d0ae3b062803c9b2"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -726148,6 +726256,15 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -729485,7 +729602,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
+              "sha256": "62bf4afc69859d87425af4815e2ab9b6154936e091d4a4a25b18488938add04e"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -729796,6 +729913,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -730013,7 +730138,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -730233,6 +730358,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -730365,7 +730498,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -730585,6 +730718,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -730655,7 +730796,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+              "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -730875,6 +731016,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         }
@@ -1060955,19 +1061104,19 @@
           "source_evidence": [
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "c3c1c6983777d6395cb8ba03fe96aaf9739ea3d6d1ac6abc92239cb9df9ebf46"
+              "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
+              "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "05cbb1415c73d123f6fbe034088d770d6645d25ee5fc785a55bebd1ebc898aa9"
+              "sha256": "e278bffaa5cfe14062c4fea4e8d160a323443fc0e42caa21d0ae3b062803c9b2"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "e27c370884630c313c0aad3bc04c06bca25afe09e984664880748d69e56ddf9f"
+              "sha256": "7b67abbcd430dfe5d2a86683b2ecb069905c8e0993b8a756231c7963a6105c93"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1061117,6 +1061266,17 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/notify-release.py",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ]
         },
@@ -1074317,7 +1074477,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1074325,7 +1074485,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
+              "sha256": "62bf4afc69859d87425af4815e2ab9b6154936e091d4a4a25b18488938add04e"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1074333,11 +1074493,11 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "c3c1c6983777d6395cb8ba03fe96aaf9739ea3d6d1ac6abc92239cb9df9ebf46"
+              "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
+              "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1077585,6 +1077745,17 @@
                 "packages/shared/src/storage/storage-factory.ts"
               ],
               "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/notify-release.py",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ],
           "presentation_renewals": [
@@ -1080181,7 +1080352,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+              "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1080189,7 +1080360,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
+              "sha256": "62bf4afc69859d87425af4815e2ab9b6154936e091d4a4a25b18488938add04e"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1080197,11 +1080368,11 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "c3c1c6983777d6395cb8ba03fe96aaf9739ea3d6d1ac6abc92239cb9df9ebf46"
+              "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
+              "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1083350,6 +1083521,17 @@
                 "packages/shared/src/storage/storage-factory.ts"
               ],
               "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-receipt",
+              "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/notify-release.py",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The release worker now binds exact confirmed Telegram outcomes to completed staging jobs. Passing fixture evidence covers existing rollout, image, note and optional screenshot boundaries. Earlier completed releases retain their original separate delivery evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1088953,7 +1089135,8 @@
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
         "Preflight 43523386018 passed the required integrity check and all four affected test tasks on 465def304. The exact SHA reached main and its push reused the affected-test receipt. Full candidate checks remain open.",
         "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open.",
-        "Local staging tests now verify the expected release version alongside the exact SHA before the active manifest is updated. The final exact candidate, live deployment and Telegram receipts remain open."
+        "Local staging tests now verify the expected release version alongside the exact SHA before the active manifest is updated. The final exact candidate, live deployment and Telegram receipts remain open.",
+        "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release."
       ],
       "owner": null,
       "depends_on": [],
@@ -1089262,7 +1089445,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-telegram-receipt"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1268468,6 +1268652,110 @@
         {
           "file": "shared-build.log",
           "sha256": "51a2f8401dcf5c114c518dcc7b719cde97f01b0c09e578328b343dab4fb64a4b"
+        }
+      ]
+    },
+    "release-0.6-staging-telegram-receipt": {
+      "batch": "release-0.6-staging-telegram-receipt",
+      "base_commit": "82a7762e137ebbf708e30ad83f8b28e7a3046d80",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/notify-release.py",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "534beddd5c478c34a03651aa7bfe67604a7d09a95d367fc3f49f317e575e4ed1"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "346d79c9305fcbfb084806bbbd586a1c77f10f051af5a4b38abd79048a0c6e2a"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "7649f2b8f525cc167a35f1843d0ec3b02887c7ced5487cdff7551b9fddfc054e"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "62bf4afc69859d87425af4815e2ab9b6154936e091d4a4a25b18488938add04e"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "e278bffaa5cfe14062c4fea4e8d160a323443fc0e42caa21d0ae3b062803c9b2"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "7b67abbcd430dfe5d2a86683b2ecb069905c8e0993b8a756231c7963a6105c93"
+        }
+      ],
+      "checks": [
+        "The four linked fixture suites passed 82 local cases. A successful deployment or notification command cannot complete the job with a missing, unknown, wrong-channel, wrong-notes or mismatched screenshot receipt. The required summary may complete with an explicit optional album warning, without any automatic unknown retry.",
+        "The notifier checks Barghsa Release Radar before attempting either send. Replaying a confirmed summary or album returns the original result. The promotion check rejects disagreement between the completed queue job and the separately copied package receipt.",
+        "Read back the existing v0.5.1 completed queue job and matching protected Telegram receipts: summary 100 and grouped images 101 and 102 for exact commit 2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840 in Barghsa Release Radar. No notification was sent during verification."
+      ],
+      "limitations": [
+        "New receipt creation and reconciliation are proven in fixtures. No v0.6.0 deployment, Telegram send, or acceptance is certified by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-telegram-receipt",
+      "execution_receipts": [
+        {
+          "file": "staging.log",
+          "sha256": "73b218f25ea41fc2aa1e11c01b165de89ebe8ba2f3f23107eb760a023e66f7bc"
+        },
+        {
+          "file": "notification.log",
+          "sha256": "3ca93e2d1d3f5c0e00e343de9797681727d09dd6859c47eddb4618d9feb5b475"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "7f5ca3031b4645e76bae062d71d8d0b00b00130b19529c9aba8917c64bc3cf6b"
+        },
+        {
+          "file": "rollout.log",
+          "sha256": "dbaa18acdab0280d5cb79b98ad7db0e71f5e90cd9122e3834aac558b115a161a"
         }
       ]
     }
