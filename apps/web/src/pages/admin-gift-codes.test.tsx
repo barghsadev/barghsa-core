@@ -58,6 +58,15 @@ it('loads another code page and shows per-profile usage with restoration history
   try {
     await act(async () => root.render(<QueryProvider>{<AdminGiftCodesPage />}</QueryProvider>));
     expect(container.textContent).toContain('CODE00');
+    const startsAt = new Date(code(0).validFrom);
+    const fullDate = new Intl.DateTimeFormat('en', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Asia/Tehran',
+    }).format(startsAt);
+    expect(container.querySelector(`time[datetime="${startsAt.toISOString()}"]`)?.textContent).toBe(
+      fullDate
+    );
     const more = [...container.querySelectorAll('button')].find(
       (button) => button.textContent === 'Load more codes'
     );

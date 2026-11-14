@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T16:59:27+00:00",
+  "updated": "2026-11-14T17:08:18+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -70995,7 +70995,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -71155,7 +71156,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -71957,6 +71958,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -161480,7 +161489,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -161924,7 +161934,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/StaffWalletLedgerPage.tsx",
@@ -161932,7 +161942,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/gift-code-recovery.test.tsx",
@@ -162998,6 +163008,15 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -177562,7 +177581,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -177926,7 +177946,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/StaffWalletLedgerPage.tsx",
@@ -177934,7 +177954,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/gift-code-recovery.test.tsx",
@@ -178985,6 +179005,15 @@
                 "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts"
               ],
               "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -357679,7 +357708,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -357731,7 +357761,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -357873,6 +357903,14 @@
                 "apps/api/src/admin/gift-code.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -357907,7 +357945,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -357959,7 +357998,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -358101,6 +358140,14 @@
                 "apps/api/src/admin/gift-code.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -358133,7 +358180,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -358185,7 +358233,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -358327,6 +358375,14 @@
                 "apps/api/src/admin/gift-code.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -358359,7 +358415,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -358411,7 +358468,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -358553,6 +358610,14 @@
                 "apps/api/src/admin/gift-code.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -358588,7 +358653,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -358640,7 +358706,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -358782,6 +358848,14 @@
                 "apps/api/src/admin/gift-code.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -723809,7 +723883,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-onboarding-form-testing-library"
+          "release-0.6-onboarding-form-testing-library",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "source-bound-onboarding-form-testing-library",
@@ -723858,7 +723933,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding-forms.test.tsx",
-              "sha256": "8c9f69f28da49fabed707470be75aae8a4ab681311e61f7597cdcffd3930d815"
+              "sha256": "2a60d987309265d943b66aff4793f7b87dd5c99152525098cf759c2972d6facf"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -723879,6 +723954,16 @@
             {
               "path": "packages/ui/src/components/ui/dependent-select.tsx",
               "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/routes/onboarding-forms.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -739230,7 +739315,8 @@
         "Five additional critical admin and staff authority files from the hosted coverage failure pass the original release per-file gate in a targeted run. Native HTTP, authorization and finance assertions passed. Exact combined release coverage remains open.",
         "The hosted API-client coverage error was a generated file containing only declarations. It now uses the existing declaration extension and the generator reproduces the same bytes. Coverage thresholds and drift checks are unchanged.",
         "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches.",
-        "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open."
+        "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
+        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -739273,7 +739359,8 @@
           "release-0.6-openapi-declarations",
           "release-0.6-provider-coverage",
           "release-0.6-auth-contact-coverage-closure",
-          "release-0.6-auth-credential-races"
+          "release-0.6-auth-credential-races",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -785069,7 +785156,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -785365,7 +785453,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -786341,6 +786429,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -818940,7 +819036,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -819180,7 +819277,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -819694,6 +819791,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -819774,7 +819879,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-combobox-popup-transition",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -820054,7 +820160,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -820557,6 +820663,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -827118,7 +827232,8 @@
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-comment-journey-isolation",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -828214,7 +828329,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -829087,6 +829202,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -877236,7 +877359,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -877732,7 +877856,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -877852,7 +877976,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -879307,6 +879431,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -879507,7 +879640,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -880003,7 +880137,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -880123,7 +880257,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -881578,6 +881712,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -881779,7 +881922,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -882275,7 +882419,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -882395,7 +882539,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -883850,6 +883994,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -884020,7 +884173,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -884516,7 +884670,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -884636,7 +884790,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -886091,6 +886245,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -886287,7 +886450,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -886783,7 +886947,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -886903,7 +887067,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -888358,6 +888522,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -888563,7 +888736,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -889059,7 +889233,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -889179,7 +889353,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -890634,6 +890808,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -890812,7 +890995,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -891308,7 +891492,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -891428,7 +891612,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -892883,6 +893067,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -893025,7 +893218,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -893521,7 +893715,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -893641,7 +893835,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -895096,6 +895290,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -895238,7 +895441,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -895734,7 +895938,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -895854,7 +896058,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -897309,6 +897513,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -897452,7 +897665,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -897948,7 +898162,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -898068,7 +898282,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -899523,6 +899737,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -899665,7 +899888,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -900161,7 +900385,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -900281,7 +900505,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -901736,6 +901960,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -901885,7 +902118,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -902409,7 +902643,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -902565,7 +902799,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -904337,6 +904571,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -904480,7 +904723,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -905004,7 +905248,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -905160,7 +905404,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -906932,6 +907176,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -907122,7 +907375,8 @@
           "release-0.6-comment-journey-isolation",
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -909170,7 +909424,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -909410,7 +909664,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-saving-orders.test.tsx",
@@ -910497,6 +910751,15 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -910640,7 +910903,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -911184,7 +911448,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -911340,7 +911604,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -913105,6 +913369,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -913248,7 +913521,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -913772,7 +914046,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -913928,7 +914202,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -915700,6 +915974,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -915843,7 +916126,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -916367,7 +916651,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -916523,7 +916807,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -918295,6 +918579,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -918438,7 +918731,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -918962,7 +919256,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -919118,7 +919412,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -920890,6 +921184,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -921033,7 +921336,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -921557,7 +921861,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -921713,7 +922017,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -923485,6 +923789,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -923628,7 +923941,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -924152,7 +924466,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -924308,7 +924622,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -926080,6 +926394,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -926223,7 +926546,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -926747,7 +927071,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -926903,7 +927227,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -928675,6 +928999,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -928818,7 +929151,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -929342,7 +929676,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -929498,7 +929832,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -931270,6 +931604,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -931413,7 +931756,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -931937,7 +932281,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -932093,7 +932437,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -933865,6 +934209,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -934008,7 +934361,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -934532,7 +934886,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -934688,7 +935042,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -936460,6 +936814,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -936603,7 +936966,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -937127,7 +937491,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -937283,7 +937647,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -939055,6 +939419,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -940188,7 +940561,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -940712,7 +941086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -940868,7 +941242,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -942640,6 +943014,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -942783,7 +943166,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -943307,7 +943691,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.test.tsx",
@@ -943463,7 +943847,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -945235,6 +945619,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -945454,7 +945847,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -945971,7 +946365,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -946854,6 +947248,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         }
@@ -947173,7 +947575,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -947669,7 +948072,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -947789,7 +948192,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -949244,6 +949647,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -949382,7 +949794,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -949878,7 +950291,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -949998,7 +950411,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -951453,6 +951866,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -951591,7 +952013,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -952087,7 +952510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -952207,7 +952630,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -953662,6 +954085,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -953800,7 +954232,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -954296,7 +954729,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -954416,7 +954849,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -955871,6 +956304,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -956009,7 +956451,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -956505,7 +956948,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -956625,7 +957068,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -958080,6 +958523,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -958218,7 +958670,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -958714,7 +959167,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -958834,7 +959287,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -960289,6 +960742,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -960427,7 +960889,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -960923,7 +961386,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -961043,7 +961506,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -962498,6 +962961,15 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -1005512,7 +1005984,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1005844,7 +1006317,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1006518,6 +1006991,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1006867,7 +1007348,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1007199,7 +1007681,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1007873,6 +1008355,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1008222,7 +1008712,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1008554,7 +1009045,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1009228,6 +1009719,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1009580,7 +1010079,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1009912,7 +1010412,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1010586,6 +1011086,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1010938,7 +1011446,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1011270,7 +1011779,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1011944,6 +1012453,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1012323,7 +1012840,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1012655,7 +1013173,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1013329,6 +1013847,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1013677,7 +1014203,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1014009,7 +1014536,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1014683,6 +1015210,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1015031,7 +1015566,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1015363,7 +1015899,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1016037,6 +1016573,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1016386,7 +1016930,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1016718,7 +1017263,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1017392,6 +1017937,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1017759,7 +1018312,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1018091,7 +1018645,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1018765,6 +1019319,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1019115,7 +1019677,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1019447,7 +1020010,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1020121,6 +1020684,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1068638,7 +1069209,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1068970,7 +1069542,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1069644,6 +1070216,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1069991,7 +1070571,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1070323,7 +1070904,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1070997,6 +1071578,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1071344,7 +1071933,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1071676,7 +1072266,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1072350,6 +1072940,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1072697,7 +1073295,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -1073029,7 +1073628,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1073703,6 +1074302,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1105405,7 +1106012,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-wizard-server-feedback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -1105493,11 +1106101,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
-              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+              "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
             },
             {
               "path": "apps/web/src/pages/gift-code-recovery.test.tsx",
@@ -1105657,6 +1106265,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx",
+                "apps/web/src/pages/admin-gift-codes.test.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ],
           "presentation_renewals": [
@@ -1139902,7 +1140519,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -1140862,6 +1141479,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -1141133,7 +1141758,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ]
       }
     },
@@ -1142109,7 +1142735,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
-              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+              "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -1143990,6 +1144616,14 @@
                 "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-hosted-native-timeouts",
+              "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+              "paths": [
+                "apps/web/src/pages/AdminGiftCodesPage.tsx"
+              ],
+              "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
             }
           ]
         },
@@ -1144162,7 +1144796,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-hosted-native-timeouts"
         ]
       }
     },
@@ -1144496,7 +1145131,8 @@
         "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
-        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
+        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1144896,7 +1145532,8 @@
           "release-0.6-operator-archive-restore-identity",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-hosted-native-timeouts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1337768,6 +1338405,161 @@
         {
           "file": "scoped-checks.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-hosted-native-timeouts": {
+      "batch": "release-0.6-hosted-native-timeouts",
+      "base_commit": "f651af561f347ad99b74235019ff264173436e5f",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.12.03",
+        "03-core-business.md#T-03.02.02.01",
+        "03-core-business.md#T-03.02.02.02",
+        "03-core-business.md#T-03.02.02.03",
+        "03-core-business.md#T-03.02.02.04",
+        "03-core-business.md#T-03.02.02.05",
+        "06-security-testing-observability.md#T-06.09.03.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04",
+        "07-ui-ux-design.md#T-07.30.02.11",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/AdminGiftCodesPage.tsx",
+        "apps/web/src/pages/admin-gift-codes.test.tsx",
+        "apps/web/src/routes/onboarding-forms.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "45f671f219b9c6664a804ff0c36ded5bb03680690cc01c033b18be3e734fd104"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
+        },
+        {
+          "path": "apps/web/src/hooks/useGiftCodeCatalogue.ts",
+          "sha256": "4e4d3aec4c22b448a2a2e9e3aa91cadf7c945a5506d311998f9de7ef34c1da5a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
+        },
+        {
+          "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
+          "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding-forms.test.tsx",
+          "sha256": "2a60d987309265d943b66aff4793f7b87dd5c99152525098cf759c2972d6facf"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "f801183cb947de4dfd3d4e9e463779d2c42ddd4a49f4eaa74fa897a2edae1aab"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
+        "Changed-file ESLint and Prettier and web typecheck passed. The rebuilt gift-code route measured 416.02 KB gzip against its existing 500 KB budget."
+      ],
+      "limitations": [
+        "Both timed-out cases also pass independently on the earlier source. The local results establish preserved behavior and do not establish why the hosted workers exceeded five seconds."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-hosted-native-timeouts",
+      "execution_receipts": [
+        {
+          "file": "hosted-failure-excerpt.log",
+          "sha256": "b9945a848eed0be07f0bebe48ba891a7d9015f72c70f6bff752a3690efd3ebdc"
+        },
+        {
+          "file": "before-profile.log",
+          "sha256": "9128845246e384e887991d1361c7864359e50efa1b7df55c7d0432e1c760fb06"
+        },
+        {
+          "file": "final-profile.log",
+          "sha256": "6612cf90a9fece58f35f24be3fad56c06c3f1fc180abb90155b00cdcd6d31e18"
+        },
+        {
+          "file": "onboarding-final.log",
+          "sha256": "e774437bd6580ffacffde45fa1af046a2d5a600d81947911ef6ac8c746d67009"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "746123392cd8f739411cc53cf17bd1a6f9c61d73caae8c6f5e25b6d21862cb6d"
+        },
+        {
+          "file": "web-build.log",
+          "sha256": "1cdb5a3ec5cdf8951da28e0f9767f248ee3b3f10de96943f32f4814be2e3bcfd"
+        },
+        {
+          "file": "gift-code-browser.log",
+          "sha256": "73060eb9c6ae172a1c107864f2ae3d838bccd3dd4c34e2c74d38656c15c151f8"
+        },
+        {
+          "file": "budgets.log",
+          "sha256": "55d067af00bbbd9b5ea640fa792a8ac3edc20d50970d7863b7ad9489e6a844b0"
         }
       ]
     }

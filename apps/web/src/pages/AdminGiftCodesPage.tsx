@@ -1,6 +1,14 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
 import {
   LoadingStatus,
   Button,
@@ -15,7 +23,6 @@ import {
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { tGift } from '@barghsa/i18n/gifts';
 import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
-import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -220,8 +227,16 @@ export default function AdminGiftCodesPage({
   const rows = catalogue.rows ?? [],
     stats = detail.data;
   const zone = preference.timezone;
-  const formatDate = (value: string) =>
-    formatInTimezone(value, zone, locale, { dateStyle: 'medium', timeStyle: 'short' });
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: zone }),
+    [locale, zone]
+  );
+  const formatDate = (value: string) => {
+    if (!/(?:Z|[+-]\d{2}:\d{2})$/i.test(value))
+      throw new RangeError('A timestamp with an explicit UTC offset is required');
+    return dateFormatter.format(new Date(value));
+  };
   const profileName = (id: string) =>
     stats?.perProfile.find((row) => row.profileId === id)?.profileTitle ?? id;
   const selected = rows.find((row) => row.id === editor);

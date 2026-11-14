@@ -1,5 +1,5 @@
 import { act, type ComponentType, type ReactNode } from 'react';
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Route as IndividualRoute } from './onboarding/individual/$profileId.js';
 import { Route as LegalRoute } from './onboarding/legal/$profileId.js';
@@ -71,6 +71,7 @@ const scenarios = [
 let host: HTMLDivElement;
 let previousLocale: string, previousDirection: string, previousThemePolicy: string | null;
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   routing.navigate.mockClear();
   previousLocale = document.documentElement.lang;
   previousDirection = document.documentElement.dir;
@@ -126,12 +127,13 @@ it.each(scenarios)('validates and saves the $type address through the wizard', a
   const view = renderWorkspace(<Page />, host, accountId);
   const province = (await view.findByRole('combobox', { name: 'Province' })) as HTMLSelectElement;
   const city = view.getByRole('combobox', { name: 'City' }) as HTMLSelectElement;
+  const cityOptions = within(city);
   await waitFor(() => expect(city.value).toBe('rey'));
   expect(province.value).toBe('tehran');
 
   fireEvent.change(province, { target: { value: 'fars' } });
   expect(city.value).toBe('');
-  await view.findByRole('option', { name: 'Shiraz' });
+  await cityOptions.findByRole('option', { name: 'Shiraz' });
   expect(view.queryByRole('option', { name: 'Rey' })).toBeNull();
   fireEvent.change(city, { target: { value: 'shiraz' } });
 
