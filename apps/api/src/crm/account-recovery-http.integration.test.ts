@@ -373,7 +373,25 @@ it('atomically replaces lost contacts, invalidates all old authentication and ma
     [randomUUID(), row.user]
   );
   expect((await verify(row.id, challengeId)).status).toBe(200);
-  const replies = await Promise.all([post('/' + row.id + '/apply'), post('/' + row.id + '/apply')]);
+  const path = '/' + row.id + '/apply';
+  expect((await post(path, { unrecognized: true })).status).toBe(400);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT u.username,u.auth_version,c.state,s.revoked_at
+         FROM account_recovery_cases c JOIN users u ON u.user_id=c.target_user_id
+         JOIN sessions s ON s.session_id=$2 AND s.user_id=u.user_id WHERE c.id=$1`,
+        [row.id, oldSession]
+      )
+    ).rows
+  ).toEqual([{ username: row.oldLogin, auth_version: 0, state: 'approved', revoked_at: null }]);
+  const replies = await Promise.all([
+    post(path),
+    fetch(http.base + '/api/crm/account-recovery' + path, {
+      method: 'POST',
+      headers: headers['recovery-reviewer']!,
+    }),
+  ]);
   expect(replies.map((x) => x.status)).toEqual([200, 200]);
   const user = (
     await http.pool.query(

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T04:00:56+00:00",
+  "updated": "2026-11-14T04:04:58+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -37179,7 +37179,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -37994,6 +37994,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -51919,11 +51927,11 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -52721,6 +52729,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "presentation_renewals": [
@@ -58033,11 +58050,11 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -58835,6 +58852,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "presentation_renewals": [
@@ -409723,11 +409749,11 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -410525,6 +410551,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "presentation_renewals": [
@@ -419990,11 +420025,11 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -420792,6 +420827,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "presentation_renewals": [
@@ -447659,11 +447703,11 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -448461,6 +448505,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "presentation_renewals": [
@@ -486265,11 +486318,11 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -487067,6 +487120,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ],
           "presentation_renewals": [
@@ -659908,7 +659970,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+              "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -660282,6 +660344,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ]
         }
@@ -674323,7 +674393,8 @@
       "remaining": [
         "The TypeScript inventory enumerates 331 body-taking routes and Zod constructors in 701 production API and shared source files. Finish mapping delegated and manual validation, read queries and path identifiers to the actual fields, bounds and protected effects.",
         "Scoped evidence covers geography, staff authoring, finance receipt and due-date commands, and the identified administrative settings writes. Complete the remaining delegated and manual request mapping and verify field bounds and protected effects against the final hosted candidate.",
-        "Legacy and revision-guarded electricity draft discard and the admin/staff solar final-review start now accept only an omitted body or an empty object. Native HTTP assertions verify that unknown fields leave both the draft revision and solar workflow state intact. Finish the application-wide inventory and final candidate checks."
+        "Legacy and revision-guarded electricity draft discard and the admin/staff solar final-review start now accept only an omitted body or an empty object. Native HTTP assertions verify that unknown fields leave both the draft revision and solar workflow state intact. Finish the application-wide inventory and final candidate checks.",
+        "The account recovery apply command uses strict parsing for optional empty input. Its controller, client call and nine native HTTP cases were reviewed. Continue the remaining request inventory."
       ],
       "owner": null,
       "depends_on": [],
@@ -674372,7 +674443,8 @@
           "release-0.6-staff-content-validation",
           "release-0.6-finance-command-validation",
           "release-0.6-settings-command-validation",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-recovery-apply-command"
         ],
         "current_acceptance": null
       }
@@ -674397,7 +674469,8 @@
         "Staff creation, role changes, versioned verification settings and dual-approval rejection now reject unknown fields. Continue the application-wide command inventory for the remaining endpoints and preserve intentionally typed dynamic payloads.",
         "The direct profile and address tests now verify normalization and mutation receipts with valid payloads and separately verify generic rejection of unexpected fields before any authority feedback or writes.",
         "Staff geography create/edit and nested city import, terms create/edit/publish, notification template create/edit/preview/test-send, branding save/activate and customer ticket status now reject undeclared command fields. Finish mapping delegated and manual validators for the remaining routes and verify the final hosted candidate. Invoice receipt review, wallet and invoice receipt rejection, and invoice due-date override now reject undeclared fields. Delivery windows, wallet limits, dual-approval thresholds and requests, green-electricity rules, escalation policies and reminder offsets now also reject extra fields. Complete the remaining route-by-route manual and delegated inventory. Preserve documented aliases, typed detail maps and approved telemetry/provider exceptions. Email and SMS provider activation, disable and rollback now accept an empty object or no body and reject unexpected fields before reaching the service. Native HTTP evidence covers all six routes.",
-        "Legacy and revision-guarded electricity draft discard and the admin/staff solar final-review start now accept only an omitted body or an empty object. Native HTTP assertions verify that unknown fields leave both the draft revision and solar workflow state intact. Finish the application-wide inventory and final candidate checks."
+        "Legacy and revision-guarded electricity draft discard and the admin/staff solar final-review start now accept only an omitted body or an empty object. Native HTTP assertions verify that unknown fields leave both the draft revision and solar workflow state intact. Finish the application-wide inventory and final candidate checks.",
+        "The staff account recovery apply command rejects unknown fields before mutation. The native case verifies the original login, auth version, session and approval state before accepting both supported request forms and one application audit."
       ],
       "owner": null,
       "depends_on": [],
@@ -674491,7 +674564,8 @@
           "release-0.6-finance-command-validation",
           "release-0.6-settings-command-validation",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-recovery-apply-command"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -1093660,7 +1093734,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+              "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -1094663,6 +1094737,14 @@
                 "apps/api/src/crm/verification-case.controller.ts"
               ],
               "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
+            },
+            {
+              "batch": "release-0.6-recovery-apply-command",
+              "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+              "paths": [
+                "apps/api/src/crm/account-recovery.controller.ts"
+              ],
+              "scope": "The existing bodyless recovery application now refuses unknown fields. Both supported request forms, concurrent replay, target binding, token revocation and claimant login passed the migrated database contract."
             }
           ]
         },
@@ -1095085,7 +1095167,8 @@
         "The global and profile verification queues and case detail passed current staff-grant rechecks in the native PostgreSQL HTTP suite. Verify the accepted candidate and remaining operational gates.",
         "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
         "The exact Linux amd64 app fixture ships the active musl Sharp variant and both original libvips notices. The local SBOM loses two unused glibc rows, including one pending exception. Verify the exact final images and the strict gate.",
-        "The promotion checker verifies all seven operations from the original hosted load report and requires separate measured topology evidence. Exact accepted candidate and real production-equivalent load receipts remain open."
+        "The promotion checker verifies all seven operations from the original hosted load report and requires separate measured topology evidence. Exact accepted candidate and real production-equivalent load receipts remain open.",
+        "The bodyless and empty-object recovery apply requests passed native HTTP checks, with strict rejection before a contact or session change. The accepted candidate verification remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095409,7 +1095492,8 @@
           "release-0.6-verification-case-read-authority",
           "release-0.6-sharp-modified-musl-proof",
           "release-0.6-sharp-runtime-platform",
-          "release-0.6-promotion-load-receipt"
+          "release-0.6-promotion-load-receipt",
+          "release-0.6-recovery-apply-command"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1276439,6 +1276523,69 @@
         {
           "file": "hosted-load-final.json",
           "sha256": "14dd018d091b9afe1d2ab6d7dde83308bf113dffae3a20e23e6a9b9895a79a69"
+        }
+      ]
+    },
+    "release-0.6-recovery-apply-command": {
+      "batch": "release-0.6-recovery-apply-command",
+      "base_commit": "bf16b9cb8e5a8add395b308394cd1687c9ba1159",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.03.03",
+        "03-core-business.md#T-03.05.01.04",
+        "03-core-business.md#T-03.05.03.02",
+        "03-core-business.md#T-03.07.01.01",
+        "03-core-business.md#T-03.09.01.01",
+        "06-security-testing-observability.md#T-06.01.04.03",
+        "06-security-testing-observability.md#T-06.04.01.01",
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/crm/account-recovery-http.integration.test.ts",
+        "apps/api/src/crm/account-recovery.controller.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "84607e64881522435ba42a7d64f4ebe6c2acd7d91cca9b94d34a9936a276d6aa"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
+          "sha256": "fc8e092837c9179c96e5d08350e0815d7d09fc59f5d6fbba14dcad1bd7f1c250"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery.controller.ts",
+          "sha256": "5e1e410b704bdaaf18edfcf4640bfbb09dba8e280d4d504133701ca1f1b4a12c"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery.service.ts",
+          "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+        }
+      ],
+      "checks": [
+        "Nine account recovery cases passed on the compiled API and migrated PostgreSQL.",
+        "The new assertion rejects unexpected JSON with HTTP 400 before the contact, authentication version, application state or old session changes. Concurrent omitted and empty bodies both return the original single application outcome.",
+        "API typecheck, ESLint, formatting, committed OpenAPI and API-client drift checks passed."
+      ],
+      "limitations": [
+        "The proof covers the account recovery apply command. Final staging and the remaining command inventory are open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-recovery-apply-command",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "51de8476f2d3b399d9a61afd1b63bcb2aa011f5087048b29651c9db7f0f00870"
+        },
+        {
+          "file": "openapi.log",
+          "sha256": "43c5ea8f6fc314bf45985768e0220af4bee1eb71e11175231eb2f454af44ebab"
         }
       ]
     }

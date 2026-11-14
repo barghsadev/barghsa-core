@@ -35,6 +35,7 @@ const sendCodeInput = z
 const reviewInput = z
   .object({ decision: z.enum(['approved', 'rejected']), notes: z.string().trim().min(1).max(2000) })
   .strict();
+const applyInput = z.strictObject({}).optional();
 const completeInput = z
   .object({
     oldContact: z.string().trim().min(1).max(200),
@@ -102,7 +103,12 @@ export class AccountRecoveryController {
   @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Apply single-use verified recovery and revoke old authentication' })
-  apply(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+  apply(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    parse(applyInput, body);
     return this.service.apply(req.session, id, req.ip ?? '');
   }
   @Post(':id/complete')
