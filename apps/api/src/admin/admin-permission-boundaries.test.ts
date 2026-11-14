@@ -4,6 +4,11 @@ import { privateLogId } from '@barghsa/shared/log-privacy';
 import { AdminController } from './admin.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
+vi.mock('./staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (_actor: unknown, _permission: unknown, read: () => unknown) =>
+    read(),
+}));
+
 const target = '11111111-2222-4333-8444-555555555555';
 const revision = 'a'.repeat(64);
 function request(permissions: string[], isAdmin = false): AuthenticatedRequest {

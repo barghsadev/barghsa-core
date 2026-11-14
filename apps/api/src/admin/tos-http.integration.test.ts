@@ -76,6 +76,52 @@ async function create() {
   return (await response.json()) as { id: string };
 }
 
+it.each(['list', 'detail'] as const)(
+  'withholds terms %s after the editor grant is revoked during the read',
+  async (view) => {
+    const { id } = await create();
+    const path = view === 'detail' ? `/${id}` : '';
+    const allowed = await request(path);
+    expect(allowed.status).toBe(200);
+    expect(await allowed.text()).toContain(draft.contentEn);
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('LOCK TABLE tos_versions IN ACCESS EXCLUSIVE MODE');
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      pending = fetch(`${http.base}/api/admin/tos/versions${path}`, {
+        headers: headers.editor!,
+        signal: AbortSignal.timeout(10_000),
+      });
+      await expect
+        .poll(
+          async () =>
+            (
+              await http.pool.query(
+                'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
+                [pid]
+              )
+            ).rows[0].waiting
+        )
+        .toBe(true);
+      await http.pool.query(
+        "DELETE FROM user_roles WHERE user_id='editor' AND role_id='tos-editor'"
+      );
+      await blocker.query('ROLLBACK');
+      const denied = await pending;
+      expect(denied.status).toBe(403);
+      const body = await denied.text();
+      expect(JSON.parse(body)).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+      expect(body).not.toContain(draft.contentEn);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending?.catch(() => undefined);
+    }
+  }
+);
+
 it('rejects unknown fields before creating, editing, publishing or discarding terms', async () => {
   const extra = { privateField: 'private-value' };
   const rejected = await request('', 'POST', { ...draft, ...extra });

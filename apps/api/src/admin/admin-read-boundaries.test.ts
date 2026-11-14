@@ -2,6 +2,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { AdminController } from './admin.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
+vi.mock('./staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (_actor: unknown, _permission: unknown, read: () => unknown) =>
+    read(),
+}));
+
 function request(permissions: string[]): AuthenticatedRequest {
   return {
     session: { operatingContext: 'staff', userId: 'reader', permissions, isAdmin: false },

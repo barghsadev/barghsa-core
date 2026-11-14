@@ -144,6 +144,54 @@ async function seed(action: Action, event = `fix.template.${randomUUID()}`) {
   return { id, event };
 }
 
+it.each(['list', 'detail'] as const)(
+  'withholds template %s after the editor grant is revoked during the read',
+  async (view) => {
+    const { id, event } = await seed('publish');
+    const resource = view === 'detail' ? `/${id}` : `?${new URLSearchParams({ eventKey: event })}`;
+    const read = () =>
+      fetch(`${http.base}/api/admin/notifications/templates${resource}`, {
+        headers: headers.editor!,
+        signal: AbortSignal.timeout(10_000),
+      });
+    const allowed = await read();
+    expect(allowed.status).toBe(200);
+    expect(await allowed.text()).toContain('Original message');
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('LOCK TABLE notification_templates IN ACCESS EXCLUSIVE MODE');
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      pending = read();
+      await expect
+        .poll(
+          async () =>
+            (
+              await http.pool.query(
+                'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
+                [pid]
+              )
+            ).rows[0].waiting
+        )
+        .toBe(true);
+      await http.pool.query(
+        "UPDATE staff_roles SET permissions='[]' WHERE role_id='template-editor'"
+      );
+      await blocker.query('ROLLBACK');
+      const denied = await pending;
+      expect(denied.status).toBe(403);
+      const body = await denied.text();
+      expect(JSON.parse(body)).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+      expect(body).not.toContain('Original message');
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending?.catch(() => undefined);
+    }
+  }
+);
+
 for (const locale of ['fa', 'en'])
   for (const channel of ['email', 'sms', 'in_app']) {
     it(`previews ${locale} ${channel} with current branding and actual variable semantics`, async () => {

@@ -4,6 +4,7 @@ import { rejectContentFields } from './content-input-fields.js';
 import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
 import { assertServiceSettingsFields } from './service-settings-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { recheckStaffAuthorityAfter } from './staff-read-authority.js';
 import {
   readVerificationModeHistory,
   type VerificationModeConfig,
@@ -1342,7 +1343,9 @@ export class AdminController {
         403
       );
     }
-    return this.tosService.listVersions();
+    return recheckStaffAuthorityAfter(req.session, 'admin:tos:edit', () =>
+      this.tosService.listVersions()
+    );
   }
 
   /**
@@ -1368,7 +1371,9 @@ export class AdminController {
     }
     if (!z.string().uuid().safeParse(id).success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    return this.tosService.getVersion(id);
+    return recheckStaffAuthorityAfter(req.session, 'admin:tos:edit', () =>
+      this.tosService.getVersion(id)
+    );
   }
 
   /**
@@ -1687,7 +1692,9 @@ export class AdminController {
     if (channel === 'email' || channel === 'sms' || channel === 'in_app') options.channel = channel;
     if (status === 'draft' || status === 'active' || status === 'archived') options.status = status;
 
-    return this.notificationTemplateService.list(options);
+    return recheckStaffAuthorityAfter(req.session, 'admin:notifications:edit', () =>
+      this.notificationTemplateService.list(options)
+    );
   }
 
   /**
@@ -1709,7 +1716,9 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
-    return this.notificationTemplateService.getById(id);
+    return recheckStaffAuthorityAfter(req.session, 'admin:notifications:edit', () =>
+      this.notificationTemplateService.getById(id)
+    );
   }
 
   /**
