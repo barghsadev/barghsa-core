@@ -10933,7 +10933,8 @@
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "At 17:32 UTC on November 14, live staging still reported archive_mode=off. The protected backup.env, backup-key and wal-archive.env were absent. The Docker filesystem was 93% used with 6,262,157,312 bytes available. Provision the approved off-server destination and key and retain actual backup, restore and staged cutover receipts.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
-        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
+        "On November 15 the owner designated eu.barghsa.com for staging PostgreSQL recovery and accepted responsibility for recovery-key custody. The staging bridge replication role rejects ordinary SQL sessions. The first service-run backup verified ciphertext and manifest through the private versioned HTTPS bucket, and the timer is active at 03:00 and 15:00 UTC. Verify an automatic invocation, continuous encrypted WAL and point-in-time recovery on the cutover topology with the previous database and images preserved."
       ],
       "owner": null,
       "depends_on": [],
@@ -11049,7 +11050,13 @@
           "release-0.6-wal-recovery-config"
         ],
         "current_acceptance": null,
-        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
+        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
+        "staging_eu_database_recovery": {
+          "date": "2026-11-15",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-postgres-backup-restore.json",
+          "sha256": "71fd4b5de1405c77e62fd3d6ccb6cef86eb0966d5972d024a11569e6eb973a0d",
+          "scope": "staging PostgreSQL full backup and isolated physical restore"
+        }
       }
     },
     {
@@ -11077,7 +11084,8 @@
         "The native restore fixture verified replay, source fingerprints and the exact encrypted manifest digest with staged PostgreSQL and isolated object storage. Complete the actual approved recovery and timed core-service test.",
         "The restoration probe emits a structured exact-candidate result for login, dashboard, wallet and electricity, saving, solar and consultation with session revocation. The promotion verifier requires that original result and checks the chronology after data recovery. Verify it on the actual production-equivalent restored deployment.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
-        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
+        "The live staging full backup eu-baseline-20261115T093612Z restored in isolation on the exact source PostgreSQL image in 48 seconds. Both application databases were present, with matching cluster identity and zero invalid indexes or collation mismatches. The Ubuntu replacement reports a glibc collation mismatch on physical replay. Use the rehearsed logical migration for the live cutover. Continuous-WAL recovery and source-bound data loss and service-readiness measurements remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11159,7 +11167,13 @@
           "release-0.6-restore-source-identity"
         ],
         "current_acceptance": null,
-        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
+        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
+        "staging_eu_database_recovery": {
+          "date": "2026-11-15",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-postgres-backup-restore.json",
+          "sha256": "71fd4b5de1405c77e62fd3d6ccb6cef86eb0966d5972d024a11569e6eb973a0d",
+          "scope": "staging PostgreSQL full backup and isolated physical restore"
+        }
       }
     },
     {
@@ -14760,6 +14774,13 @@
             "findings": 0,
             "job_conclusion": "success"
           }
+        },
+        "owner_review_workbook": {
+          "date": "2026-11-15",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v0.6.0-license-decisions-review.xlsx",
+          "sha256": "968652dc346e904cea2939a26cd9fc974ff3ba6e4bf5e0680a6e627d77867596",
+          "exact_package_scope_rows": 386,
+          "dispositions_received": false
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -562490,7 +562511,8 @@
         "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
         "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open.",
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
-        "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts."
+        "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts.",
+        "The November 15 owner-approved EU recovery destination, verified encrypted source backup, isolated source-image restore and twice-daily staging backup timer are in place. The preview remained healthy. Before v0.6.0, verify the logical PostgreSQL cutover with encrypted WAL and point-in-time recovery, the exact migration checkpoint and the protected stage deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -563199,7 +563221,13 @@
           "apps/api/src/upload/upload.controller.ts",
           "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
           "apps/api/src/provider-config/resend-connection-tester.service.ts"
-        ]
+        ],
+        "staging_eu_database_recovery": {
+          "date": "2026-11-15",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-postgres-backup-restore.json",
+          "sha256": "71fd4b5de1405c77e62fd3d6ccb6cef86eb0966d5972d024a11569e6eb973a0d",
+          "scope": "staging PostgreSQL full backup and isolated physical restore"
+        }
       }
     },
     {
