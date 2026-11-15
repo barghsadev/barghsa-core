@@ -14926,7 +14926,8 @@
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
-        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
+        "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -15019,7 +15020,8 @@
           "release-0.6-first-announcement-runtime",
           "release-0.6-staging-service-health",
           "release-0.6-wal-recovery-config",
-          "release-0.6-license-receipt-reference"
+          "release-0.6-license-receipt-reference",
+          "release-0.6-license-promotion-fixture"
         ],
         "current_acceptance": null
       }
@@ -397587,7 +397589,7 @@
             4389548210889094,
             3832607923924757,
             1256540299604531,
-            3115932651793971,
+            2088482174620949,
             990596215557555,
             4347825997072978,
             953048350727039,
@@ -397655,7 +397657,8 @@
             1763620437843477,
             584469599575028,
             2650945617363201,
-            3666513877874346
+            3666513877874346,
+            709810231208422
           ]
         }
       }
@@ -397867,7 +397870,7 @@
             3832607923924757,
             1220101825772327,
             1256540299604531,
-            3115932651793971,
+            2088482174620949,
             4347825997072978,
             4217801687597905,
             2769211501672309,
@@ -397952,7 +397955,8 @@
             627146618781860,
             644949389910000,
             2853248825345781,
-            824424486559871
+            824424486559871,
+            709810231208422
           ]
         }
       }
@@ -562485,7 +562489,8 @@
         "Local API run at 4e4e428b7 passed 8,355 tests with three failures and one skip. Its independent per-file evaluation met the unchanged floors across 199 changed API paths. The slot and CRM positive step-up fixtures now pass all 20 related HTTP cases. Require a passing native and combined-coverage run on exact final release source.",
         "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
         "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open.",
-        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
+        "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -562918,7 +562923,8 @@
           "release-0.6-api-step-up-fixtures",
           "release-0.6-smtp-test-diagnostics",
           "release-0.6-payment-recovery-response",
-          "release-0.6-license-receipt-reference"
+          "release-0.6-license-receipt-reference",
+          "release-0.6-license-promotion-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -762346,6 +762352,48 @@
           "sha256": "71bbaea0532f246a89ede4fe472d7ebc204cb03951df786fe15ead871255756e"
         }
       ]
+    },
+    "release-0.6-license-promotion-fixture": {
+      "batch": "release-0.6-license-promotion-fixture",
+      "base_commit": "8b6668fc5e38367ab955acd6d55becc11e5c5fdd",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/test_check_promotion.py"
+      ],
+      "checks": [
+        "Run 43655645429 passed all 51 staging queue and rollback cases and 21 notifier cases. The next step failed on the retained-image promotion fixture with no approval reference.",
+        "Corrected the synthetic approved retained-image rows used by the production promotion verifier. Its report, image and registry binding assertions remain unchanged. All 29 promotion and 19 guarded-rollout cases passed.",
+        "Python compilation and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The fixture uses a synthetic review reference. Actual review, deployment and production approval gates remain open."
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "fb9110f73402fb69e343ddc33dba4d2a4d5736deafc93d4bb4d4bf11823cc018"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-promotion-fixture",
+      "execution_receipts": [
+        {
+          "file": "hosted-failure-summary.log",
+          "sha256": "aac6ffde2ac03695a65efede4b7a7a95f842d91b5a2bd6701eba23dd063b5164"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "9dc0272335d9da9648c2098aa6b00e1ba62ef3af586847c069e9f66d7599878a"
+        },
+        {
+          "file": "rollout.log",
+          "sha256": "0a38651771db25f6527b86e70a1c24ed75fd5c1d17c76bdd9836d6dea648c6d0"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -778252,9 +778300,9 @@
         "path": "packages/db/src/migrate.provider-delivery-proof.test.ts",
         "sha256": "0d7918869d13b8234eb721c08623fd06674397283295e9e51a36aa69af1ab9b6"
       },
-      "3115932651793971": {
+      "2088482174620949": {
         "path": "deploy/production/test_check_promotion.py",
-        "sha256": "d497a9e8ffe45fecebdc2924a59cfc6eadb53c9190551a4de772e8d737e2a667"
+        "sha256": "fb9110f73402fb69e343ddc33dba4d2a4d5736deafc93d4bb4d4bf11823cc018"
       },
       "4347825997072978": {
         "path": "kanban/scripts/board.py",
@@ -804592,6 +804640,14 @@
           "kanban/scripts/test_board.py"
         ],
         "scope": "The board now stores duplicate current evidence values once and expands its references before running the existing validators. Original task and release records round-trip without evidence loss. All 27 board and Definition of Done tests and 58 staging queue and production promotion tests passed."
+      },
+      "709810231208422": {
+        "batch": "release-0.6-license-promotion-fixture",
+        "base_commit": "8b6668fc5e38367ab955acd6d55becc11e5c5fdd",
+        "paths": [
+          "deploy/production/test_check_promotion.py"
+        ],
+        "scope": "Corrected the synthetic approved retained-image rows used by the production promotion verifier. Its report, image and registry binding assertions remain unchanged. All 29 promotion and 19 guarded-rollout cases passed."
       },
       "2015564305447932": {
         "batch": "release-0.6-api-request-tracing",

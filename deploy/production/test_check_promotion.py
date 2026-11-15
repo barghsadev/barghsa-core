@@ -881,7 +881,8 @@ class StructuredReceiptTest(unittest.TestCase):
                     retained_ids = {'postgres-staging': ids['postgres'], 'clamav': ids['clamav']}
                     retained_path = retained / 'release-licenses.json'
                     retained_report = json.dumps({'commit': SHA, 'images': retained_ids, 'packages': [
-                        {'scope': scope, 'status': 'approved'} for scope in retained_ids
+                        {'scope': scope, 'status': 'approved', 'approval': 'Fixture package review'}
+                        for scope in retained_ids
                     ]}).encode()
                     retained_path.write_bytes(retained_report)
                     job['runtime_images'].update(
