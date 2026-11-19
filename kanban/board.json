@@ -12400,7 +12400,8 @@
         "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
         "The November 19 elapsed staging check found the tagged disposable object still current and version 2 deleted while version 1 survived. Held and unclassified controls survived and the policy digest matched the November 14 baseline. Isolated SeaweedFS 4.47 and 4.54 both reproduced the wrong-version deletion with staggered version ages. Only 4.54 passed disposable current-object expiry. Verify ordered retention, actual expiry and protected controls on a compatible provider with a recoverable rollout before accepting this gate.",
         "The first 4.54 prototype retained the correct versions on a restored 4.47 copy but missed an already-aged disposable object. The revised isolated build evaluates both count-gated retention and tag-filtered versioned expiry against current bucket state. It passed expiry, byte reads, exact version order and held and unclassified controls on a restored synthetic copy. Restoring the same checksum-verified backup under 4.47 recovered all original versions. Qualify the exact deployment image, concurrent retention safeguards and live rollout recovery, then verify elapsed staging expiry before accepting.",
-        "The repository now builds the fix from a checksum-pinned SeaweedFS 4.54 source with Go 1.27.4. The exact Linux image passed the restored 4.47 fixture and had zero high or critical findings. The P1 remains open. Qualify the image's distribution inventory, verify hold behavior and recoverable staging rollout, and observe elapsed expiry on staging."
+        "The repository now builds the fix from a checksum-pinned SeaweedFS 4.54 source with Go 1.27.4. The exact Linux image passed the restored 4.47 fixture and had zero high or critical findings. The P1 remains open. Qualify the image's distribution inventory, verify hold behavior and recoverable staging rollout, and observe elapsed expiry on staging.",
+        "The owner confirmed all 37 objectstore exceptions with their workbook conditions. The strict check matched the exact image, all 275 packages, and the paired notice and source archive. The restored-volume lifecycle and staging S3 probe passed at the staging 768 MiB limit with local loopback endpoints. Verify actual materials delivery, recoverable live rollout and elapsed staging expiry."
       ],
       "owner": null,
       "depends_on": [],
@@ -12515,6 +12516,10 @@
         "staging_lifecycle_reproducible_image": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-reproducible-image-20261119.json",
           "sha256": "51c937b89da77d54f43225a4e23ebcbe77d1ce3c67245436cd8c9beb086de51d"
+        },
+        "storage_image_owner_license_approval": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-owner-approval-20261119.json",
+          "sha256": "09871d7fbeb8d5f4e170192e2beca8b1e95e11c269b4ff726af3f301944df7d1"
         }
       },
       "defect_severity": "P1"
@@ -14673,7 +14678,8 @@
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
         "The owner review workbook proposes 44 conditional approvals and identifies the outstanding questions for 342 exact package scopes. Obtain the actual named decisions and evidence, then rerun the strict package gate for the final images.",
         "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
-        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged."
+        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged.",
+        "The separate exact objectstore license audit passed with 238 allowlisted entries and 37 owner-approved exceptions. The final v0.6.0 image set and distribution conditions still need release evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -14850,6 +14856,10 @@
           "source_commit": "29b939aa5bd4dc588af765b8248f6e39150d2565",
           "go_version": "1.27.4",
           "failed_hosted_run": 44548133025
+        },
+        "storage_image_owner_license_approval": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-owner-approval-20261119.json",
+          "sha256": "09871d7fbeb8d5f4e170192e2beca8b1e95e11c269b4ff726af3f301944df7d1"
         }
       },
       "blocker": null
@@ -563379,6 +563389,10 @@
         "staging_lifecycle_reproducible_image": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-reproducible-image-20261119.json",
           "sha256": "51c937b89da77d54f43225a4e23ebcbe77d1ce3c67245436cd8c9beb086de51d"
+        },
+        "storage_image_owner_license_approval": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-owner-approval-20261119.json",
+          "sha256": "09871d7fbeb8d5f4e170192e2beca8b1e95e11c269b4ff726af3f301944df7d1"
         }
       }
     },

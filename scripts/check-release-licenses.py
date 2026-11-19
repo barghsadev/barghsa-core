@@ -16,6 +16,7 @@ from urllib.parse import quote
 
 ALLOWED = frozenset({'MIT', 'Apache-2.0', 'ISC', 'BSD-2-Clause', 'BSD-3-Clause'})
 IMAGE_SCOPES = ('app', 'web', 'clamav', 'postgres', 'postgres-staging')
+OBJECTSTORE_SCOPE = 'objectstore'
 STAGING_SCOPES = {
     'initialized': ('app', 'web'),
     'bootstrap': ('postgres-staging', 'clamav', 'app', 'web'),
@@ -79,10 +80,14 @@ def docker(*args):
     return subprocess.check_output(['docker', *args], timeout=60)
 
 
-def read_sbom(directory, index, scope, commit, *, staging=False, retained_id=None):
+def read_sbom(directory, index, scope, commit, *, staging=False, retained_id=None, retained_name=None,
+              expected_sbom_sha256=None):
     receipt = json.loads((directory / f'{index}-image.json').read_bytes())
     data = (directory / f'{index}-sbom.cdx.json').read_bytes()
     bom = json.loads(data)
+    sbom_sha256 = digest(data)
+    if expected_sbom_sha256 is not None:
+        require(sbom_sha256 == expected_sbom_sha256, 'Objectstore SBOM differs from the reviewed inventory')
     subject = bom['metadata']['component']
     image_id = receipt['image_id']
     require(isinstance(image_id, str) and re.fullmatch(r'sha256:[0-9a-f]{64}', image_id),
@@ -90,7 +95,9 @@ def read_sbom(directory, index, scope, commit, *, staging=False, retained_id=Non
     if retained_id is not None:
         image_name = 'postgres' if scope == 'postgres-staging' else scope
         image = receipt['image']
-        require(image_id == retained_id and re.fullmatch(rf'barghsa-{image_name}:vps-[a-z0-9._-]+', image),
+        matches_name = (image == retained_name if retained_name is not None
+                        else re.fullmatch(rf'barghsa-{image_name}:vps-[a-z0-9._-]+', image))
+        require(image_id == retained_id and matches_name,
                 f'Retained {scope} scan does not match the expected image')
     elif staging:
         image_name = 'postgres' if scope == 'postgres-staging' else scope
@@ -104,7 +111,7 @@ def read_sbom(directory, index, scope, commit, *, staging=False, retained_id=Non
         receipt['image'] == subject['name'] == image
         and bom['bomFormat'] == 'CycloneDX'
         and receipt['blocked'] is False
-        and digest(data) == receipt['sbom_sha256']
+        and sbom_sha256 == receipt['sbom_sha256']
         and ids == [image_id]
         and docker('image', 'inspect', '--format', '{{.Id}}', retained_id or image).decode().strip() == image_id,
         f'Invalid SBOM receipt or changed image for {scope}',
@@ -233,7 +240,7 @@ def read_approvals(path):
     require(isinstance(entries, list), 'Package approvals must be an array')
     for entry in entries:
         scope, identity, licenses = entry['scope'], entry['purl'], entry['licenses']
-        require(scope in (*IMAGE_SCOPES, 'browser') and isinstance(identity, str)
+        require(scope in (*IMAGE_SCOPES, OBJECTSTORE_SCOPE, 'browser') and isinstance(identity, str)
                 and re.fullmatch(r'pkg:[^\s*]+@[^\s*]+', identity)
                 and isinstance(licenses, list) and all(isinstance(x, str) and x for x in licenses),
                 'Approval must match an exact package, scope and observed license set')
@@ -252,6 +259,35 @@ def disposition(scope, identity, licenses, approvals):
     if approval:
         return 'approved', approval['reference']
     return 'review-required', None
+
+
+def audit_objectstore(directory, commit, approvals, inventory, source_bundle):
+    image_id, bom = read_sbom(directory, 1, OBJECTSTORE_SCOPE, commit,
+                             retained_id=inventory['image_id'], retained_name=inventory['scan_image'],
+                             expected_sbom_sha256=inventory['sbom_sha256'])
+    bundle_hash = hashlib.sha256()
+    with source_bundle.open('rb') as archive:
+        for chunk in iter(lambda: archive.read(1024 * 1024), b''):
+            bundle_hash.update(chunk)
+    require(bundle_hash.hexdigest() == inventory['source_bundle_sha256'],
+            'Objectstore source and notice bundle differs from the verified archive')
+
+    scanned = list(image_components(bom))
+    reviewed = inventory['licenses']
+    require(len(scanned) == len(reviewed) and set(reviewed) == {identity for identity, _ in scanned},
+            'Objectstore package list differs from the reviewed inventory')
+    packages = []
+    for identity, observed in sorted(scanned):
+        declarations = reviewed[identity]
+        require(isinstance(declarations, list) and declarations
+                and all(isinstance(name, str) and name.strip() for name in declarations),
+                f'Objectstore license evidence is missing for {identity}')
+        licenses = tuple(sorted(set(declarations)))
+        require(not observed or observed == licenses, f'Objectstore license set changed for {identity}')
+        status, reference = disposition(OBJECTSTORE_SCOPE, identity, licenses, approvals)
+        packages.append({'scope': OBJECTSTORE_SCOPE, 'purl': identity, 'licenses': licenses,
+                         'locations': [OBJECTSTORE_SCOPE], 'status': status, 'approval': reference})
+    return {'commit': commit, 'images': {OBJECTSTORE_SCOPE: image_id}, 'packages': packages}
 
 
 def audit(directory, commit, approvals, staging=None, *, retained_ids=None):
@@ -305,16 +341,22 @@ def main():
     mode.add_argument('--staging-local', choices=STAGING_SCOPES, help='Check all images built for local staging deployment')
     mode.add_argument('--staging-retained', nargs=2, metavar=('POSTGRES_ID', 'CLAMAV_ID'),
                       help='Check exact retained staging images already available in local Docker')
+    mode.add_argument('--staging-objectstore', type=Path, metavar='SOURCE_BUNDLE',
+                      help='Check the reviewed storage image and matching source and notice bundle')
     args = parser.parse_args()
     try:
         require(re.fullmatch(r'[0-9a-f]{40}', args.commit), 'Expected a full release commit SHA')
         policy = Path(__file__).resolve().parents[1] / 'deploy/licenses/release-approvals.json'
         approvals = read_approvals(policy)
-        if args.staging_retained is None:
-            result = audit(args.scan_directory, args.commit, approvals, args.staging_local)
-        else:
+        if args.staging_objectstore is not None:
+            inventory = json.loads(policy.with_name('objectstore-inventory.json').read_bytes())
+            result = audit_objectstore(args.scan_directory, args.commit, approvals, inventory,
+                                       args.staging_objectstore)
+        elif args.staging_retained is not None:
             retained_ids = dict(zip(RETAINED_SCOPES, args.staging_retained))
             result = audit(args.scan_directory, args.commit, approvals, retained_ids=retained_ids)
+        else:
+            result = audit(args.scan_directory, args.commit, approvals, args.staging_local)
         args.report.write_text(json.dumps(result, indent=2) + '\n')
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, tarfile.TarError) as error:
         print(f'License inventory check failed: {error}', file=sys.stderr)

@@ -129,6 +129,56 @@ class LicenseCheckTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'does not match the expected image'):
                     licenses.audit(root, commit, approvals, retained_ids=ids)
 
+    def test_objectstore_audit_requires_exact_image_inventory_bundle_and_scope(self):
+        image = 'barghsa-storage-lifecycle:reviewed'
+        image_id = 'sha256:' + '1' * 64
+        commit = '2' * 40
+        golang = 'pkg:golang/example@1.2.3'
+        alpine = 'pkg:apk/alpine/example@1.2.3'
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+            licenses, 'docker', return_value=image_id.encode()
+        ):
+            root = Path(directory)
+            bom = {'bomFormat': 'CycloneDX', 'metadata': {'component': {'name': image, 'properties': [
+                {'name': 'aquasecurity:trivy:ImageID', 'value': image_id}
+            ]}}, 'components': [
+                {'type': 'library', 'bom-ref': golang, 'purl': golang},
+                {'type': 'library', 'bom-ref': alpine, 'purl': alpine,
+                 'licenses': [{'license': {'id': 'GPL-2.0-only'}}]},
+            ], 'dependencies': []}
+            data = json.dumps(bom).encode()
+            (root / '1-sbom.cdx.json').write_bytes(data)
+            (root / '1-image.json').write_text(json.dumps({
+                'image': image, 'image_id': image_id, 'blocked': False, 'sbom_sha256': licenses.digest(data),
+            }))
+            bundle = root / 'sources.tar.gz'
+            bundle.write_bytes(b'reviewed source and notices')
+            inventory = {
+                'image_id': image_id, 'scan_image': image, 'sbom_sha256': licenses.digest(data),
+                'source_bundle_sha256': licenses.digest(bundle.read_bytes()),
+                'licenses': {golang: ['MIT'], alpine: ['GPL-2.0-only']},
+            }
+            approvals = {('app', alpine, ('GPL-2.0-only',)): {'reference': 'other-scope'}}
+            report = licenses.audit_objectstore(root, commit, approvals, inventory, bundle)
+            self.assertEqual(report['images'], {'objectstore': image_id})
+            self.assertEqual({row['purl']: row['status'] for row in report['packages']},
+                             {golang: 'allowed', alpine: 'review-required'})
+            approvals[('objectstore', alpine, ('GPL-2.0-only',))] = {'reference': 'owner-review'}
+            report = licenses.audit_objectstore(root, commit, approvals, inventory, bundle)
+            self.assertEqual({row['purl']: row['status'] for row in report['packages']},
+                             {golang: 'allowed', alpine: 'approved'})
+            for change, error in (
+                ({'image_id': 'sha256:' + '3' * 64}, 'expected image'),
+                ({'sbom_sha256': '4' * 64}, 'SBOM differs'),
+                ({'licenses': {golang: ['MIT']}}, 'package list differs'),
+                ({'licenses': {golang: ['MIT'], alpine: ['MIT']}}, 'license set changed'),
+            ):
+                with self.subTest(error=error), self.assertRaisesRegex(ValueError, error):
+                    licenses.audit_objectstore(root, commit, approvals, inventory | change, bundle)
+            bundle.write_bytes(b'changed source and notices')
+            with self.assertRaisesRegex(ValueError, 'source and notice bundle differs'):
+                licenses.audit_objectstore(root, commit, approvals, inventory, bundle)
+
     def test_browser_checks_notice_and_all_font_bytes_in_each_shell(self):
         commit = '1' * 40
         packages = [{'name': 'dompurify', 'version': '3.4.17', 'license': '(MPL-2.0 OR Apache-2.0)'},

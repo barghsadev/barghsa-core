@@ -4421,5 +4421,301 @@
     "approvedBy": "Majid Najafi (owner)",
     "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
     "conditions": "Owner-approved policy exception for pkg:apk/alpine/gnutls@3.8.14-r0?arch=x86_64&distro=3.24.3 in postgres. The refreshed build was inspected on November 19, 2026 under the owner's instruction to approve the whole release inventory. Retain the applicable notices and fulfill the source and replacement obligations for this version's shipped files."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/alpine-baselayout-data@3.7.2-r1?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/alpine-baselayout@3.7.2-r1?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/apk-tools@3.0.9-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/busybox-binsh@1.37.0-r31?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/busybox@1.37.0-r31?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/ca-certificates-bundle@20261020-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["MIT", "MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/curl@8.23.0-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["curl"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the package's copyright and license notices with the distributed image."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/fuse-common@3.18.3-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only", "LGPL-2.1-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Review the exact package source, patches and notices. Verify the recipient's applicable library replacement or relinking path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/fuse@2.9.9-r7?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only", "LGPL-2.1-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Review the exact package source, patches and notices. Verify the recipient's applicable library replacement or relinking path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/libapk@3.0.9-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/libcurl@8.23.0-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["curl"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the package's copyright and license notices with the distributed image."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/libgcc@15.2.0-r5?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-or-later", "LGPL-2.1-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Review the exact package source, patches and notices. Verify the recipient's applicable library replacement or relinking path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/libidn2@2.3.8-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-or-later", "LGPL-3.0-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Review the exact package source, patches and notices. Verify the recipient's applicable library replacement or relinking path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/libunistring@1.4.2-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-or-later", "LGPL-3.0-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Review the exact package source, patches and notices. Verify the recipient's applicable library replacement or relinking path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/musl-utils@1.2.6-r3?arch=x86_64&distro=3.24.4",
+    "licenses": ["BSD-2-Clause", "GPL-2.0-or-later", "MIT"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/scanelf@1.3.9-r1?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/ssl_client@1.37.0-r31?arch=x86_64&distro=3.24.4",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/zlib@1.4-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["Zlib"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the package's copyright and license notices with the distributed image."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:apk/alpine/zstd-libs@1.5.7-r2?arch=x86_64&distro=3.24.4",
+    "licenses": ["BSD-3-Clause", "GPL-2.0-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Retain the exact source, packaging patches and notices. Verify how recipients acquire them before distribution."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/apache/thrift@v0.24.0",
+    "licenses": ["Apache-2.0", "BSD-3-Clause", "GNU-All-permissive-Copying-License"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Confirm how the three license notices apply to the exact Thrift module. Retain the complete upstream notice set."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/go-sql-driver/mysql@v1.10.1",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/errwrap@v1.1.0",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-cleanhttp@v0.5.2",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-immutable-radix@v1.3.1",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-multierror@v1.1.1",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-retryablehttp@v0.7.8",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-rootcerts@v1.0.2",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/parseutil@v0.2.0",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/strutil@v0.1.2",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-sockaddr@v1.0.7",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/go-uuid@v1.0.3",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7",
+    "licenses": ["BSD-3-Clause", "MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/golang-lru@v1.0.2",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/hcl@v1.0.1-vault-7",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/raft-boltdb/v2@v2.4.2",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/raft@v1.8.0",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "objectstore",
+    "purl": "pkg:golang/github.com/hashicorp/vault/api@v1.23.0",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
+    "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
   }
 ]
