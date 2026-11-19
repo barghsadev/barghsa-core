@@ -8146,7 +8146,8 @@
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
+        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -8348,7 +8349,14 @@
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-staging-interruption-recovery"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_active_database_migration_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-migration-rehearsal-20261119.json",
+          "sha256": "f665c1e1c53c9223c6d2c45f425b520611f387eb2e152a730cca3a05c1c77bbb",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "before_migrations": 209,
+          "after_migrations": 217
+        }
       }
     },
     {
@@ -12435,7 +12443,8 @@
         "The repository now builds the fix from a checksum-pinned SeaweedFS 4.54 source with Go 1.27.4. The exact Linux image passed the restored 4.47 fixture and had zero high or critical findings. The P1 remains open. Qualify the image's distribution inventory, verify hold behavior and recoverable staging rollout, and observe elapsed expiry on staging.",
         "The owner confirmed all 37 objectstore exceptions with their workbook conditions. The strict check matched the exact image, all 275 packages, and the paired notice and source archive. The restored-volume lifecycle and staging S3 probe passed at the staging 768 MiB limit with local loopback endpoints. Verify actual materials delivery, recoverable live rollout and elapsed staging expiry.",
         "The staging receiver now requires the approved running objectstore image and exact writable volume before writers or migrations can proceed. The 23 local and staging Linux fixture tests passed. Complete the separate recoverable storage cutover, material delivery and elapsed lifecycle proof.",
-        "The encrypted EU rollback rehearsal restored all 11 synthetic versions under 4.47. The same recovered copy passed the repaired image's actual readiness check at 768 MiB and preserved version order, tags and bytes. A protected Compose render changes only the storage image and volume. The live inventory records 59 versions and five delete markers. Repeat the fingerprint after quiescing writes, compare it before reopening the repaired live store, and verify elapsed expiry after the isolated fixture's November 20 17:31 UTC threshold."
+        "The encrypted EU rollback rehearsal restored all 11 synthetic versions under 4.47. The same recovered copy passed the repaired image's actual readiness check at 768 MiB and preserved version order, tags and bytes. A protected Compose render changes only the storage image and volume. The live inventory records 59 versions and five delete markers. Repeat the fingerprint after quiescing writes, compare it before reopening the repaired live store, and verify elapsed expiry after the isolated fixture's November 20 17:31 UTC threshold.",
+        "Verified the final protected operator copy of the source and notice bundle and the embedded manifest against the reviewed checksums. The exact image on staging contains all three expected SeaweedFS and Go notices. Recipient access and package-specific replacement conditions, the live cutover, and elapsed staging expiry remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -12563,6 +12572,10 @@
         "staging_storage_cutover_preflight": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-cutover-preflight-20261119.json",
           "sha256": "5d1fdd7fd3767ea23c0ca91ffb884ea42bad3e523debe36bfa9f98d6fddc6bb5"
+        },
+        "staging_storage_materials_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-materials-final-readback-20261119.json",
+          "sha256": "5b2eca8f38d73ec7f177694cc741cf243dff823284d2f303a4dbfccbe94cfc48"
         }
       },
       "defect_severity": "P1"
@@ -14729,7 +14742,8 @@
         "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
         "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged.",
         "The separate exact objectstore license audit passed with 238 allowlisted entries and 37 owner-approved exceptions. The final v0.6.0 image set and distribution conditions still need release evidence.",
-        "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts."
+        "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
+        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -14918,6 +14932,13 @@
         "current_hosted_image_policy_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-current-hosted-license-policy-readback-20261119.json",
           "sha256": "511f4dd397fadfc824009039417a99a228d3dc556743dfbe1df0bd318d0091bc"
+        },
+        "strict_runtime_image_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-strict-images-3f8929fdd.json",
+          "sha256": "733d10e07aa7d6dbc87d279c1e1f278b7f7c719ebccfc137b987dc068b563ff7",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "run": "https://github.com/barghsadev/barghsa-core/actions/runs/44597706568",
+          "artifact_id": 14567461549
         }
       },
       "blocker": null
@@ -389100,7 +389121,8 @@
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
         "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
         "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals.",
-        "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts."
+        "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
+        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -389282,6 +389304,13 @@
         "current_hosted_image_policy_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-current-hosted-license-policy-readback-20261119.json",
           "sha256": "511f4dd397fadfc824009039417a99a228d3dc556743dfbe1df0bd318d0091bc"
+        },
+        "strict_runtime_image_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-strict-images-3f8929fdd.json",
+          "sha256": "733d10e07aa7d6dbc87d279c1e1f278b7f7c719ebccfc137b987dc068b563ff7",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "run": "https://github.com/barghsadev/barghsa-core/actions/runs/44597706568",
+          "artifact_id": 14567461549
         }
       },
       "blocker": null
@@ -397868,7 +397897,8 @@
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
-        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
+        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -397944,7 +397974,14 @@
           "release-0.6-staging-service-health",
           "release-0.6-wal-recovery-config"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_active_database_migration_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-migration-rehearsal-20261119.json",
+          "sha256": "f665c1e1c53c9223c6d2c45f425b520611f387eb2e152a730cca3a05c1c77bbb",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "before_migrations": 209,
+          "after_migrations": 217
+        }
       }
     },
     {
@@ -563064,7 +563101,8 @@
         "The November 15 owner-approved EU recovery destination, verified encrypted source backup, isolated source-image restore and twice-daily staging backup timer are in place. The preview remained healthy during the pre-cutover recovery rehearsal.",
         "The staging PostgreSQL cutover succeeded. The first stopped-writes attempt restored the original staging database after a schema-text discrepancy. An independent logical restore on the original Debian image produced the same eight regrouped CHECK expressions. The successful cutover verified the exact reference schema, compared both application databases and kept the original image and volume. Both encrypted backup receipts and the WAL/PITR proof passed before writers resumed. Staging v0.5.1 is healthy on the new protected database. Exact v0.6.0 candidate checks, strict licenses, staging deployment and Telegram receipts remain open.",
         "The owner's November 19 instruction supplies all 386 exact license approvals and the retained image policy check passes. The workbook retains applicable license conditions as follow-up. The exact final candidate, complete operational gates, staging deployment and Telegram receipts remain open.",
-        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged."
+        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged.",
+        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -563829,6 +563867,13 @@
         "storage_image_owner_license_approval": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-owner-approval-20261119.json",
           "sha256": "09871d7fbeb8d5f4e170192e2beca8b1e95e11c269b4ff726af3f301944df7d1"
+        },
+        "strict_runtime_image_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-strict-images-3f8929fdd.json",
+          "sha256": "733d10e07aa7d6dbc87d279c1e1f278b7f7c719ebccfc137b987dc068b563ff7",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "run": "https://github.com/barghsadev/barghsa-core/actions/runs/44597706568",
+          "artifact_id": 14567461549
         }
       }
     },
@@ -563902,7 +563947,8 @@
         "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open.",
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. The approved EU storage, live staging database cutover, encrypted WAL and point-in-time replay passed. Exact v0.6.0 staging deployment and production-equivalent recovery remain open.",
-        "The refreshed staging PostgreSQL image passed the encrypted backup readback before switch, isolated point-in-time replay, and verified new encrypted WAL bytes after switch. The v0.5.1 app reports healthy with all remaining runtime images verified. Exact v0.6.0 deployment and the approved production-equivalent recovery exercise remain open."
+        "The refreshed staging PostgreSQL image passed the encrypted backup readback before switch, isolated point-in-time replay, and verified new encrypted WAL bytes after switch. The v0.5.1 app reports healthy with all remaining runtime images verified. Exact v0.6.0 deployment and the approved production-equivalent recovery exercise remain open.",
+        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -564077,9 +564123,16 @@
         "staging_postgres_helper_cutover": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-postgres-helper-cutover-20261119.json",
           "sha256": "dac404eb9e445ffb21db272a0970e50afc09390f207e68b2ae7c2a4fad682690"
+        },
+        "staging_active_database_migration_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-migration-rehearsal-20261119.json",
+          "sha256": "f665c1e1c53c9223c6d2c45f425b520611f387eb2e152a730cca3a05c1c77bbb",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "before_migrations": 209,
+          "after_migrations": 217
         }
       },
-      "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and production merchant configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
+      "blocker": "Protected staging now has encrypted EU backups, archived WAL and verified point-in-time recovery. The production-equivalent exercise still requires an owner-designated target, its separate TLS PostgreSQL and pooler, and protected payment merchant configuration."
     },
     {
       "key": "release-readiness#R-06.01",

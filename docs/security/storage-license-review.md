@@ -19,6 +19,11 @@ payload files were verified after reopening the bundle. The strict storage
 license check binds the bundle checksum, SBOM and running image to the
 [reviewed inventory](../../deploy/licenses/objectstore-inventory.json).
 
+The protected staging operator copy was read back on November 19, 2026. Its
+archive and embedded manifest matched the reviewed checksums. The paired
+Linux amd64 image was present on staging and contained the SeaweedFS and Go
+license files and the Go patent notice.
+
 Before distributing the image, verify the delivered notices and recipients'
 access to the matching sources. Complete the package-specific review of the
 library replacement or relinking paths named in the workbook. The source
