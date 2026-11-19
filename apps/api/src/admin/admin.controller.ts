@@ -2313,6 +2313,78 @@ export class AdminController {
     return this.adminService.getDualApprovalThresholdConfig();
   }
 
+  @Get('config/dual-approval-threshold/rollback-history')
+  @ApiOperation({
+    summary: 'Read dual-approval threshold revisions and the current recovery draft',
+  })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'Recovery history and current draft' })
+  @ApiResponse({ status: 400, description: 'Invalid history cursor' })
+  @ApiResponse({ status: 403, description: 'Financial settings permission required' })
+  async dualApprovalThresholdRecoveryHistory(
+    @Query() raw: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.assertFinancialThresholdPermission(req);
+    const parsed = activationHistoryQuery.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery history query');
+    return this.adminService.getDualApprovalThresholdRecovery(
+      req.session,
+      parsed.data.beforeVersion
+    );
+  }
+
+  @Post('config/dual-approval-threshold/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a dual-approval threshold recovery draft' })
+  @ApiZodBody(stageRecoveryDraft)
+  @ApiResponse({ status: 201, description: 'Reviewed revision placed in the recovery draft' })
+  @ApiResponse({ status: 400, description: 'Invalid draft request' })
+  @ApiResponse({
+    status: 403,
+    description: 'Financial settings permission and recent OTP required',
+  })
+  @ApiResponse({ status: 404, description: 'Eligible source revision not found' })
+  @ApiResponse({ status: 409, description: 'Active version changed' })
+  async stageDualApprovalThresholdRecovery(@Body() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req);
+    const parsed = stageRecoveryDraft.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery draft request');
+    return this.adminService.stageDualApprovalThresholdRecovery(
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  @Post('config/dual-approval-threshold/rollback-activate')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Activate the reviewed dual-approval threshold as a new revision' })
+  @ApiZodBody(activateRecoveryDraft)
+  @ApiResponse({ status: 200, description: 'Activated threshold and recovery draft receipt' })
+  @ApiResponse({ status: 400, description: 'Invalid activation request' })
+  @ApiResponse({
+    status: 403,
+    description: 'Financial settings permission and recent OTP required',
+  })
+  @ApiResponse({ status: 409, description: 'Active version or recovery draft changed' })
+  async activateDualApprovalThresholdRecovery(
+    @Body() raw: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.assertFinancialThresholdPermission(req);
+    const parsed = activateRecoveryDraft.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery activation request');
+    return this.adminService.activateDualApprovalThresholdRecovery(
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
   /**
    * PUT /api/admin/config/dual-approval-threshold
    *
@@ -2321,7 +2393,7 @@ export class AdminController {
    * (0 = dual approval disabled). Changes are versioned and audited.
    * Permission: `admin:financial:edit` (T-09.07.01).
    *
-   * Requires recent password confirmation.
+   * Requires recent one-time-code verification.
    */
   @Put('config/dual-approval-threshold')
   @UseGuards(StepUpGuard)

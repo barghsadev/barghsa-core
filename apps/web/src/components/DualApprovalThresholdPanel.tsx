@@ -1,6 +1,7 @@
+import { lazy, Suspense, useState } from 'react';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCatalogueEditor, type CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
@@ -21,15 +22,19 @@ import {
   type ThresholdSetting,
   type ThresholdDraft,
 } from '../lib/limit-settings-form.js';
+const DualApprovalThresholdRecovery = lazy(() => import('./DualApprovalThresholdRecovery.js'));
 const path = '/api/admin/config/dual-approval-threshold';
 export default function DualApprovalThresholdPanel(props: CatalogueEditorProps = {}) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const label = (key: string) =>
     t(`admin.receiptThreshold.${key === 'readError' ? 'unavailable' : key}`, locale);
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryPending, setRecoveryPending] = useState(false);
   const messages = { thresholdIrR: label('invalid') };
   const editor = useCatalogueEditor<ThresholdSetting, ThresholdDraft>({
     ...props,
+    disabled: props.disabled || recoveryPending,
     identity: 'dual-approval-threshold',
     path,
     validate: validThreshold,
@@ -121,6 +126,33 @@ export default function DualApprovalThresholdPanel(props: CatalogueEditorProps =
         >
           {label('retry')}
         </Button>
+      )}
+      <Button
+        type="button"
+        variant="outline"
+        aria-expanded={showRecovery}
+        aria-controls={showRecovery ? 'dual-approval-threshold-recovery' : undefined}
+        disabled={props.disabled || editor.busy || editor.uncertain || recoveryPending}
+        onClick={() => setShowRecovery((visible) => !visible)}
+      >
+        {label('recoveryTitle')}
+      </Button>
+      {showRecovery && (
+        <div id="dual-approval-threshold-recovery">
+          <Suspense fallback={<LoadingStatus>{label('loading')}</LoadingStatus>}>
+            <DualApprovalThresholdRecovery
+              path={path}
+              label={label}
+              disabled={!!props.disabled || editor.busy || editor.uncertain}
+              onBusyChange={(busy) => {
+                setRecoveryPending(busy);
+                props.onBusyChange?.(busy);
+              }}
+              onDenied={editor.onDenied}
+              onActivated={editor.resource.retry}
+            />
+          </Suspense>
+        </div>
       )}
       {editor.action && (
         <TeamActionDialog

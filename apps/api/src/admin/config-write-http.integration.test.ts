@@ -241,6 +241,126 @@ it.each(
   }
 );
 
+const dualApprovalThreshold = cases.find((item) => item.path === 'dual-approval-threshold')!;
+it('restores the reviewed financial threshold only after OTP and a version-bound activation', async () => {
+  const recover = (operation: string, body?: object, user = 'operator') =>
+    fetch(`${http.base}/api/admin/config/dual-approval-threshold/rollback-${operation}`, {
+      headers: headers[user]!,
+      ...(body && { method: 'POST', body: JSON.stringify(body) }),
+    });
+  const set = (threshold_irr: number) =>
+    write(dualApprovalThreshold, 'operator', { threshold_irr });
+  for (const amount of [0, 125_000]) expect((await set(amount)).status).toBe(200);
+  const invalidSource = randomUUID();
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,'operator','config_change',$2::jsonb)`,
+    [
+      invalidSource,
+      JSON.stringify({
+        key: dualApprovalThreshold.key,
+        version: 1,
+        newValue: { threshold_irr: '0' },
+      }),
+    ]
+  );
+  const initial = await recover('history');
+  expect(initial.status).toBe(200);
+  expect(initial.headers.get('cache-control')).toContain('no-store');
+  const history = (await initial.json()) as Awaited<
+    ReturnType<AdminService['getDualApprovalThresholdRecovery']>
+  >;
+  expect(history).toEqual({
+    baseVersion: 2,
+    items: [{ id: expect.any(String), version: 1, config: { thresholdIrR: 0 } }],
+    draft: null,
+    nextBeforeVersion: null,
+  });
+  expect((await recover('history', undefined, 'viewer')).status).toBe(403);
+  expect((await recover('history?beforeVersion=0')).status).toBe(400);
+  expect(await (await recover('history?beforeVersion=1')).json()).toMatchObject({ items: [] });
+  const selection = { sourceId: history.items[0]!.id, expectedVersion: 2 };
+  expect((await recover('draft', { ...selection, thresholdIrR: 0 })).status).toBe(400);
+  expect((await recover('draft', selection, 'viewer')).status).toBe(403);
+  expect((await recover('draft', { ...selection, sourceId: invalidSource })).status).toBe(404);
+  expect((await recover('draft', { ...selection, expectedVersion: 1 })).status).toBe(409);
+  const session = headers.operator!.Cookie!.split('=')[1];
+  const otp = (valid: boolean) =>
+    http.pool.query(
+      'UPDATE sessions SET otp_step_up_verified_at=CASE WHEN $2 THEN NOW() END WHERE session_id=$1',
+      [session, valid]
+    );
+  await otp(false);
+  try {
+    expect((await recover('draft', selection)).status).toBe(403);
+  } finally {
+    await otp(true);
+  }
+  const stage = async (expectedVersion: number) => {
+    const response = await recover('draft', { ...selection, expectedVersion });
+    expect(response.status).toBe(201);
+    return (await response.json()) as Awaited<
+      ReturnType<AdminService['stageDualApprovalThresholdRecovery']>
+    >;
+  };
+  const draft = await stage(2);
+  expect(draft).toEqual({
+    id: expect.any(String),
+    baseVersion: 2,
+    sourceId: selection.sourceId,
+    sourceVersion: 1,
+    config: { thresholdIrR: 0 },
+  });
+  expect(await stage(2)).toEqual(draft);
+  const current = () =>
+    http.pool.query('SELECT value,version FROM app_config WHERE key=$1', [
+      dualApprovalThreshold.key,
+    ]);
+  expect((await current()).rows).toEqual([{ value: { threshold_irr: 125_000 }, version: 2 }]);
+  expect((await set(250_000)).status).toBe(200);
+  expect((await recover('activate', { draftId: draft.id, expectedVersion: 2 })).status).toBe(409);
+  const latest = await stage(3);
+  const activation = { draftId: latest.id, expectedVersion: 3 };
+  expect((await recover('activate', { ...activation, thresholdIrR: 0 })).status).toBe(400);
+  expect((await recover('activate', { ...activation, draftId: randomUUID() })).status).toBe(409);
+  await otp(false);
+  try {
+    expect((await recover('activate', activation)).status).toBe(403);
+  } finally {
+    await otp(true);
+  }
+  expect((await current()).rows).toEqual([{ value: { threshold_irr: 250_000 }, version: 3 }]);
+  const results = await Promise.all([
+    recover('activate', activation),
+    recover('activate', activation),
+  ]);
+  expect(results.map(({ status }) => status).sort()).toEqual([200, 409]);
+  expect(await results.find(({ status }) => status === 200)!.json()).toEqual({
+    config: { thresholdIrR: 0 },
+    version: 4,
+    draftId: latest.id,
+  });
+  expect((await current()).rows).toEqual([{ value: { threshold_irr: 0 }, version: 4 }]);
+  expect(await (await recover('history')).json()).toMatchObject({ baseVersion: 4, draft: null });
+  const { rows } = await auditWindow.query(
+    "SELECT metadata::jsonb AS data FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'draftId'=$1",
+    [latest.id]
+  );
+  expect(rows).toEqual([
+    {
+      data: expect.objectContaining({
+        key: dualApprovalThreshold.key,
+        action: 'rollback_activated',
+        sourceId: selection.sourceId,
+        sourceVersion: 1,
+        previousVersion: 3,
+        previousValue: { threshold_irr: 250_000 },
+        newValue: { threshold_irr: 0 },
+        version: 4,
+      }),
+    },
+  ]);
+});
+
 const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
 it('restores a reviewed wallet limit with a new version and preserves the zero ceiling', async () => {
   const recover = (operation: string, body?: object, user = 'operator', csrf = true) =>

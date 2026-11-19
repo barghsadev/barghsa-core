@@ -127,6 +127,14 @@ import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 import { z } from 'zod';
 import { greenRuleLimitsCompatible } from '../electricity/electricity-calculation.js';
 
+const thresholdRecoveryEvent = 'dual_approval_threshold.rollback_draft';
+const thresholdAmount = z.custom<number>(isValidDualApprovalThreshold);
+const persistedThreshold = z.union([
+  z.strictObject({ threshold_irr: thresholdAmount }),
+  z.strictObject({ thresholdIrR: thresholdAmount }),
+]);
+type ThresholdUpdate =
+  { config: DualApprovalConfig } | { recovery: z.infer<typeof activateRecoveryDraft> };
 const walletLimitRecoveryEvent = 'wallet_limit.rollback_draft';
 const walletLimitAmount = z.number().int().nonnegative();
 const persistedWalletLimit = z.union([
@@ -134,6 +142,21 @@ const persistedWalletLimit = z.union([
   z.strictObject({ limitIrR: walletLimitAmount }),
 ]);
 type WalletLimitRecoveryActivation = z.infer<typeof activateRecoveryDraft>;
+
+function recoverableThreshold(value: unknown) {
+  const parsed = persistedThreshold.safeParse(value);
+  return parsed.success ? toDualApprovalConfig(parsed.data) : null;
+}
+
+function readThresholdRecoveryDraft(client: PoolClient, baseVersion: number) {
+  return versionedConfigRecoveryDraft(
+    client,
+    thresholdRecoveryEvent,
+    DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+    recoverableThreshold,
+    baseVersion
+  );
+}
 
 function recoverableWalletLimit(value: unknown) {
   const parsed = persistedWalletLimit.safeParse(value);
@@ -1305,6 +1328,103 @@ export class AdminService {
     return config;
   }
 
+  async getDualApprovalThresholdRecovery(actor: StaffReadActor, beforeVersion?: number) {
+    return withStaffReadAuthority(actor, 'admin:financial:edit', async (client) => {
+      const baseVersion = await this.readThresholdVersion(client);
+      return {
+        baseVersion,
+        ...(await versionedConfigChangeHistory(
+          client,
+          DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+          recoverableThreshold,
+          Math.min(baseVersion, beforeVersion ?? baseVersion)
+        )),
+        draft: await readThresholdRecoveryDraft(client, baseVersion),
+      };
+    });
+  }
+
+  async stageDualApprovalThresholdRecovery(
+    input: z.infer<typeof stageRecoveryDraft>,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await lockDualApprovalThreshold(client, 'write');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireSessionOtpStepUp(client, actor);
+      const baseVersion = await this.readThresholdVersion(client);
+      if (baseVersion !== input.expectedVersion)
+        throw new ConflictException('Dual-approval threshold changed');
+      const {
+        items: [source],
+      } = await versionedConfigChangeHistory(
+        client,
+        DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+        recoverableThreshold,
+        baseVersion,
+        input.sourceId
+      );
+      if (!source) throw new NotFoundException('Dual-approval threshold revision not found');
+      const current = await readThresholdRecoveryDraft(client, baseVersion);
+      const draft =
+        current?.sourceId === source.id
+          ? current
+          : {
+              id: uuidv7(),
+              baseVersion,
+              sourceId: source.id,
+              sourceVersion: source.version,
+              config: source.config,
+            };
+      if (draft !== current) {
+        await client.query(
+          `INSERT INTO audit_log (id,user_id,event,metadata,correlation_id,ip,created_at)
+           VALUES ($1,$2,$3,$4::jsonb,$5,$6,clock_timestamp())`,
+          [
+            draft.id,
+            actor.userId,
+            thresholdRecoveryEvent,
+            JSON.stringify({
+              key: DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+              sessionId: actor.sessionId,
+              ...draft,
+            }),
+            correlationIdStorage.getStore() ?? uuidv7(),
+            ip,
+          ]
+        );
+      }
+      await requireSessionOtpStepUp(client, actor);
+      await client.query('COMMIT');
+      return draft;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async activateDualApprovalThresholdRecovery(
+    recovery: z.infer<typeof activateRecoveryDraft>,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const result = await this.persistDualApprovalThreshold({ recovery }, actor, ip);
+    return { ...result, draftId: recovery.draftId };
+  }
+
+  private async readThresholdVersion(client: PoolClient) {
+    const { rows } = await client.query<{ version: number }>(
+      'SELECT version FROM app_config WHERE key = $1',
+      [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY]
+    );
+    return rows[0]?.version ?? 0;
+  }
+
   /**
    * Persist a new admin-configurable dual-approval threshold.
    *
@@ -1324,19 +1444,24 @@ export class AdminService {
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<DualApprovalConfig> {
-    const actorUserId = actor.userId;
     assertSettingsWriteFields(input, ['threshold_irr', 'thresholdIrR']);
     if (!validateDualApprovalConfig(input).ok) throw new InputFieldException(['thresholdIrR']);
+    const { config } = await this.persistDualApprovalThreshold(
+      { config: toDualApprovalConfig(input) },
+      actor,
+      ip
+    );
+    return config;
+  }
 
-    const config = toDualApprovalConfig(input);
+  private async persistDualApprovalThreshold(
+    update: ThresholdUpdate,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const actorUserId = actor.userId;
     const pool = getDbPool();
     const now = new Date();
-
-    // Persist in the snake_case shape `getDualApprovalThresholdConfig` and
-    // the T-09.07.02 workflow consume.
-    const stored = {
-      threshold_irr: config.thresholdIrR,
-    };
 
     const client = await pool.connect();
     try {
@@ -1353,6 +1478,25 @@ export class AdminService {
       const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
         prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
+
+      let config: DualApprovalConfig;
+      let rollback: { draftId: string; sourceId: string; sourceVersion: number } | undefined;
+      if ('recovery' in update) {
+        if (update.recovery.expectedVersion !== previousVersion)
+          throw new ConflictException('Dual-approval threshold changed');
+        const draft = await readThresholdRecoveryDraft(client, previousVersion);
+        if (draft?.id !== update.recovery.draftId)
+          throw new ConflictException('Dual-approval threshold recovery draft changed');
+        config = draft.config;
+        rollback = {
+          draftId: draft.id,
+          sourceId: draft.sourceId,
+          sourceVersion: draft.sourceVersion,
+        };
+      } else {
+        config = update.config;
+      }
+      const stored = { threshold_irr: config.thresholdIrR };
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
@@ -1389,6 +1533,7 @@ export class AdminService {
             previousVersion,
             newValue: stored,
             version: newVersion,
+            ...(rollback && { action: 'rollback_activated', ...rollback }),
           }),
           correlationId,
           ip,
@@ -1402,7 +1547,7 @@ export class AdminService {
       this.logger.log(
         `Dual-approval threshold set to IRR ${config.thresholdIrR} by ${privateLogId('actor', actorUserId)}`
       );
-      return config;
+      return { config, version: newVersion };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;

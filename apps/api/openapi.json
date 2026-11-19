@@ -2918,6 +2918,141 @@
         ]
       }
     },
+    "/api/admin/config/dual-approval-threshold/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateDualApprovalThresholdRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Activated threshold and recovery draft receipt"
+          },
+          "400": {
+            "description": "Invalid activation request"
+          },
+          "403": {
+            "description": "Financial settings permission and recent OTP required"
+          },
+          "409": {
+            "description": "Active version or recovery draft changed"
+          }
+        },
+        "summary": "Activate the reviewed dual-approval threshold as a new revision",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/dual-approval-threshold/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageDualApprovalThresholdRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Reviewed revision placed in the recovery draft"
+          },
+          "400": {
+            "description": "Invalid draft request"
+          },
+          "403": {
+            "description": "Financial settings permission and recent OTP required"
+          },
+          "404": {
+            "description": "Eligible source revision not found"
+          },
+          "409": {
+            "description": "Active version changed"
+          }
+        },
+        "summary": "Prepare a dual-approval threshold recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/dual-approval-threshold/rollback-history": {
+      "get": {
+        "operationId": "AdminController_dualApprovalThresholdRecoveryHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recovery history and current draft"
+          },
+          "400": {
+            "description": "Invalid history cursor"
+          },
+          "403": {
+            "description": "Financial settings permission required"
+          }
+        },
+        "summary": "Read dual-approval threshold revisions and the current recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/electricity-contract-template": {
       "get": {
         "operationId": "AdminController_getElectricityContractTemplate",

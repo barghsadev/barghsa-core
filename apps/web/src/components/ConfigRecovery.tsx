@@ -78,6 +78,7 @@ export default function ConfigRecovery<T>({
   onDenied,
   onActivated,
   activationRisk,
+  requiresOtp,
   errorMessages,
 }: {
   path: string;
@@ -90,6 +91,7 @@ export default function ConfigRecovery<T>({
   onDenied: () => void;
   onActivated: () => void;
   activationRisk?: (value: T) => TeamAction['risk'];
+  requiresOtp?: boolean;
   errorMessages?: TeamAction['errorMessages'];
 }) {
   const locale = useLocale();
@@ -151,6 +153,7 @@ export default function ConfigRecovery<T>({
                   successStatus: 200,
                   body: { draftId: draft.id, expectedVersion: draft.baseVersion },
                   ...(risk && { risk }),
+                  ...(requiresOtp && { requiresOtp }),
                   forbiddenMessage: label('forbidden'),
                   conflictMessage: label('recoveryConflict'),
                   ...(errorMessages && { errorMessages }),
@@ -185,6 +188,7 @@ export default function ConfigRecovery<T>({
                     method: 'POST',
                     successStatus: 201,
                     body: { sourceId: revision.id, expectedVersion: baseVersion },
+                    ...(requiresOtp && { requiresOtp }),
                     forbiddenMessage: label('forbidden'),
                     conflictMessage: label('recoveryConflict'),
                     ...(errorMessages && { errorMessages }),

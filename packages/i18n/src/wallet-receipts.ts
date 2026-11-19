@@ -60,6 +60,11 @@ const fa: Record<string, string> = {
     'صفر آستانه را برای عملیات جدید غیرفعال می\u200cکند. درخواست\u200cهای تأیید موجود همچنان به تصمیم نیاز دارند.',
   'admin.receiptThreshold.unavailable': 'آستانه در دسترس نیست. هیچ تنظیمی فرض نشده است.',
   'admin.receiptThreshold.retry': 'تلاش دوباره برای بارگذاری آستانه',
+  'admin.receiptThreshold.recoveryTitle': 'سابقه و بازیابی آستانه',
+  'admin.receiptThreshold.refresh': 'بارگذاری دوباره سابقه آستانه',
+  'admin.receiptThreshold.forbidden': 'اجازه مدیریت آستانه را ندارید یا دسترسی شما تغییر کرده است.',
+  'admin.receiptThreshold.recoveryActivateConfirm':
+    'آستانه بررسی‌شده به‌عنوان نسخه جدید برای عملیات مالی بعدی فعال می‌شود. درخواست‌های تأیید موجود همچنان به تصمیم نیاز دارند.',
   'admin.receiptThreshold.invalid': 'یک مبلغ صحیح ریالی از ۰ تا ۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۱ وارد کنید.',
   'admin.walletReceipts.emergencyTitle': 'تأیید اضطراری',
   'admin.walletReceipts.emergencyHint':
@@ -188,6 +193,12 @@ const en: Record<string, string> = {
     'Zero disables the threshold for new actions. Existing pending approvals still require a decision.',
   'admin.receiptThreshold.unavailable': 'Threshold unavailable. No setting has been assumed.',
   'admin.receiptThreshold.retry': 'Retry loading threshold',
+  'admin.receiptThreshold.recoveryTitle': 'Threshold history and recovery',
+  'admin.receiptThreshold.refresh': 'Reload threshold history',
+  'admin.receiptThreshold.forbidden':
+    'You cannot manage the threshold, or your access has changed.',
+  'admin.receiptThreshold.recoveryActivateConfirm':
+    'The reviewed threshold becomes a new version for future financial actions. Existing pending approvals still require a decision.',
   'admin.receiptThreshold.invalid': 'Enter a whole IRR amount from 0 to 9,007,199,254,740,991.',
   'admin.walletReceipts.emergencyTitle': 'Emergency override',
   'admin.walletReceipts.emergencyHint':

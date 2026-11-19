@@ -3,6 +3,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
+import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import DualApprovalThresholdPanel from './DualApprovalThresholdPanel.js';
 import type { TeamAction } from './TeamActionDialog.js';
 
@@ -85,6 +86,62 @@ function linkedError() {
     .map((id) => document.getElementById(id))
     .find((node) => node?.getAttribute('role') === 'alert');
 }
+
+it('loads history on request and requires OTP to draft and restore a disabling threshold', async () => {
+  const path = '/api/admin/config/dual-approval-threshold';
+  const sourceId = 'a045e5cf-ad85-4ceb-8db1-35f1597c9443';
+  const draft = {
+    id: 'de28818b-0ce5-4fe6-9907-30caf3823dc6',
+    baseVersion: 2,
+    sourceId,
+    sourceVersion: 1,
+    config: { thresholdIrR: 0 },
+  };
+  let hasDraft = false;
+  let active = 125_000;
+  const get = vi.fn(async (url: RequestInfo | URL) => {
+    if (String(url).endsWith(`${path}/rollback-history`))
+      return Response.json({
+        baseVersion: active === 0 ? 3 : 2,
+        items: [{ id: sourceId, version: 1, config: { thresholdIrR: 0 } }],
+        nextBeforeVersion: null,
+        draft: hasDraft ? draft : null,
+      });
+    return Response.json({ thresholdIrR: active });
+  });
+  vi.stubGlobal('fetch', get);
+  const button = (text: string) =>
+    Array.from(host.querySelectorAll('button')).find((node) => node.textContent === text);
+  await render();
+  expect(get).toHaveBeenCalledTimes(1);
+  await act(async () => button(t('admin.receiptThreshold.recoveryTitle', 'en'))!.click());
+  const stageText = tServiceSettings('recovery.recoveryStage', 'en').replace('{version}', '1');
+  await vi.waitFor(() => expect(button(stageText)).toBeDefined());
+  await act(async () => button(stageText)!.click());
+  expect(harness.confirmation?.action).toMatchObject({
+    path: `${path}/rollback-draft`,
+    requiresOtp: true,
+    body: { sourceId, expectedVersion: 2 },
+  });
+  expect(field().value).toBe('125000');
+  hasDraft = true;
+  await act(async () => harness.confirmation!.onSuccess(draft));
+  const activateText = tServiceSettings('recovery.recoveryActivate', 'en');
+  await vi.waitFor(() => expect(button(activateText)).toBeDefined());
+  await act(async () => button(activateText)!.click());
+  expect(harness.confirmation?.action).toMatchObject({
+    path: `${path}/rollback-activate`,
+    requiresOtp: true,
+    risk: 'destructive',
+    body: { draftId: draft.id, expectedVersion: 2 },
+  });
+  hasDraft = false;
+  active = 0;
+  await act(async () =>
+    harness.confirmation!.onSuccess({ config: { thresholdIrR: 0 }, version: 3, draftId: draft.id })
+  );
+  await vi.waitFor(() => expect(field().value).toBe('0'));
+});
 
 it.each(['', ' ', '-10', '1e3', '12.5', '12,5', '9007199254740992', 'NaN'])(
   'retains and focuses invalid threshold %j without opening a financial command',
