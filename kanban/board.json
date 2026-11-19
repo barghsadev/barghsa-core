@@ -20075,7 +20075,7 @@
         "Monitoring retention now validates prior and current policies when preparing or activating a version-bound recovery draft. Limits and legal retention exclusions are enforced by the shared validator. Verify the exact staged candidate and complete the remaining configuration inventory.",
         "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts.",
         "Wallet top-up limits now support a version-bound recovery draft and separate verified activation with an audit receipt. The restored limit affects new submissions and a zero limit requires typed UI confirmation. The exact deployed journey and remaining configuration families are open.",
-        "Dual-approval threshold recovery uses validated audited revisions, a separate review draft and recent OTP for each write. Activation shares the normal threshold lock and records a new revision with its source and draft. The UI warns before activating a zero threshold. Verify the deployed journey and remaining configuration families."
+        "Dual-approval threshold recovery uses validated audited revisions, a separate review draft and recent OTP for each write. Activation shares the normal threshold lock and records a new revision with its source and draft. The UI warns before activating a zero threshold. The English and Persian RTL 390px browser fixtures verified two OTP confirmations, a zero-threshold confirmation and readback. Verify the deployed journey and remaining configuration families."
       ],
       "owner": null,
       "depends_on": [],
@@ -20164,7 +20164,7 @@
         "NGINX configuration changes now restore the previous config set on syntax or reload failure and retain the backup with an explicit recovery error if rollback cannot be verified. The staged infrastructure recovery receipt remains open.",
         "Local PostgreSQL tests verified that green history can reach valid older revisions after corrupt audit values and that ineligible drafts cannot be activated. Exact deployed recovery receipts remain open.",
         "Wallet top-up limits now support a version-bound recovery draft and separate verified activation with an audit receipt. The restored limit affects new submissions and a zero limit requires typed UI confirmation. The exact deployed journey and remaining configuration families are open.",
-        "Dual-approval threshold recovery uses validated audited revisions, a separate review draft and recent OTP for each write. Activation shares the normal threshold lock and records a new revision with its source and draft. The UI warns before activating a zero threshold. Verify the deployed journey and remaining configuration families."
+        "Dual-approval threshold recovery uses validated audited revisions, a separate review draft and recent OTP for each write. Activation shares the normal threshold lock and records a new revision with its source and draft. The UI warns before activating a zero threshold. The English and Persian RTL 390px browser fixtures verified two OTP confirmations, a zero-threshold confirmation and readback. Verify the deployed journey and remaining configuration families."
       ],
       "owner": null,
       "depends_on": [],
@@ -397246,7 +397246,8 @@
         "The consolidated CI gate now requires the existing six Prometheus rule suites on the pinned Prometheus image. The exact workflow step passed locally. Hosted readback and the final strict release gates remain open.",
         "Preflight 43579302081 ran the pinned Prometheus rule step successfully and passed 5,550 web and 8,147 API tests across 904 files, with one API skip. GitHub served the tested a18c8a3d3 SHA on protected main. The strict coverage, license and operational gates remain separate.",
         "Hosted full rehearsal 43583704822 verified 2,976 Chromium passes and mapped 2,976 records to 996 files. Enforced changed and critical coverage failed with 63 file errors, and strict license enforcement failed. The new telemetry coverage task closes its two missing reports locally. Recheck the remaining file errors and both strict gates on the exact candidate.",
-        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required."
+        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required.",
+        "Hosted 44584096180 stopped before tests because the PDF dependency timeout interrupted dpkg. Signed-mirror retries now finish downloading before a single offline installation. The disposable Ubuntu amd64 install verified pdftoppm and all three recovery cases passed. The successor exact-SHA GitHub gate remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -397268,7 +397269,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-strict-license-and-grafana-proof",
           "release-0.6-telemetry-source-coverage",
-          "release-0.6-wallet-history-coverage"
+          "release-0.6-wallet-history-coverage",
+          "release-0.6-ci-pdf-renderer-install"
         ],
         "current_acceptance": null
       }
@@ -763450,6 +763452,10 @@
         "threshold_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-dual-approval-threshold-recovery-20261119.json",
           "sha256": "8e2e84446993655828e112dc80656fb09b1f77f4438520bd8f3ecf9d894e7880"
+        },
+        "browser_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-threshold-recovery-browser-20261119.json",
+          "sha256": "f4486baac78f44347bbb747ee7520bec7c0763ba86abfe1d354e70b6120cf69b"
         }
       },
       "execution_receipts": {
@@ -763460,6 +763466,38 @@
         "typecheck": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/typecheck-final.log",
         "contract": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/contract-check.log",
         "lint_and_format": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/final-lint-format.log"
+      }
+    },
+    "release-0.6-ci-pdf-renderer-install": {
+      "batch": "release-0.6-ci-pdf-renderer-install",
+      "base_commit": "ac39026bee3d9ddd3b2f3033df6eaae2888b4ccc",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.01"
+      ],
+      "changed_paths": [
+        "scripts/install-ci-pdf-renderer.sh"
+      ],
+      "checks": [
+        "Only the PDF preview CI dependency installer changed. Signed archives and the existing outer workflow timeout remain. The disposable Ubuntu run verified the renderer and the three fixture outcomes preserved failure handling."
+      ],
+      "limitations": [
+        "Exact successor hosted gate is still required. Local recovery evidence is independent of final staging and production acceptance."
+      ],
+      "source_evidence": [
+        {
+          "path": "scripts/install-ci-pdf-renderer.sh",
+          "sha256": "3b20109fa970d4044c85b5bd595370af72eaf6c5cfa4ad7956b4681a8957a87b"
+        }
+      ],
+      "external_evidence": {
+        "ci_runner_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-ci-pdf-runner-recovery-20261119.json",
+          "sha256": "04c4fa50183614cb6618e3a80b7dbf81252c373669a6fc5318f11492ebd6935d"
+        }
+      },
+      "execution_receipts": {
+        "ubuntu_amd64_install": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/poppler-native-install.log",
+        "fixture": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/poppler-targeted-checks.log"
       }
     }
   },
