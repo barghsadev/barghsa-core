@@ -129,25 +129,31 @@ class BoardIntegrityTests(unittest.TestCase):
             'depends_on': [],
             'evidence': {'batches': []},
         }
-        self.board['tasks'].append(defect)
+        self.board['tasks'].insert(0, defect)
         for severity in ('P0', 'P1'):
             with self.subTest(severity=severity):
                 defect['defect_severity'] = severity
-                self.rejects(f'v0.6.0 has an open {severity} defect')
+                self.rejects(f"v0.6.0 has an open {severity} defect: {defect['key']}")
 
     def test_candidate_gate_preserves_severity_scope_and_resolution(self):
         release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
         release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
         open_minor = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'superseded')
-        open_minor['status'] = 'verify'
         resolved = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'done')
         future = next(t for t in self.board['tasks'] if t['release'] == '0.9.0' and t['status'] != 'done')
+        scope = {'0.5.0', '0.6.0', '0.9.0'}
+        existing_blockers = {task['key'] for task in blocking_defects(self.board['tasks'], scope)}
+        expected_blockers = (existing_blockers - {open_minor['key'], resolved['key']}) | {future['key']}
+        open_minor['status'] = 'verify'
         open_minor['defect_severity'] = 'P2'
         resolved['defect_severity'] = 'P1'
         future['defect_severity'] = 'P0'
         validate(self.board)
         self.assertIn(' (P2 defect)', render(self.board))
-        self.assertEqual(blocking_defects(self.board['tasks'], {'0.5.0', '0.6.0', '0.9.0'}), [future])
+        self.assertEqual(
+            [task['key'] for task in blocking_defects(self.board['tasks'], scope)],
+            [task['key'] for task in self.board['tasks'] if task['key'] in expected_blockers],
+        )
 
     def test_candidate_rejects_required_work_in_current_and_earlier_releases(self):
         release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')

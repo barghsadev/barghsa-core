@@ -1,0 +1,123 @@
+--- a/weed/s3api/s3lifecycle/engine/views.go
++++ b/weed/s3api/s3lifecycle/engine/views.go
+@@ -198,7 +198,8 @@
+ 		if a == nil || a.Mode == ModeDisabled {
+ 			continue
+ 		}
+-		if isReplayKind(key.ActionKind) {
++		// Count-based and tagged versioned expiry decisions need current bucket state.
++		if isReplayKind(key.ActionKind) && !s.requiresLiveVersionState(a) {
+ 			if !isPromoted(a, retentionWindow) {
+ 				replayActions[key] = cloneAction(a, ModeEventDriven, true)
+ 			} else {
+@@ -229,7 +230,8 @@
+ // and scan_only is a retention verdict, not a bootstrap state. Disabled
+ // actions stay out.
+ //
+-// Returns nil when every action is promoted or disabled.
++// Count-gated retention and tag-filtered versioned expiry also stay in the walk.
++// Returns nil when every action is walk-only, promoted, or disabled.
+ func (s *Snapshot) ReplayView(retentionWindow time.Duration) *Snapshot {
+ 	if s == nil {
+ 		return nil
+@@ -237,6 +239,9 @@
+ 	actions := map[s3lifecycle.ActionKey]*CompiledAction{}
+ 	for key, a := range s.actions {
+ 		if a == nil || a.Mode == ModeDisabled {
++			continue
++		}
++		if s.requiresLiveVersionState(a) {
+ 			continue
+ 		}
+ 		if isReplayKind(key.ActionKind) {
+@@ -276,3 +281,17 @@
+ 	}
+ 	return newView(s, actions)
+ }
++
++func (s *Snapshot) requiresLiveVersionState(action *CompiledAction) bool {
++	if action == nil || action.Rule == nil {
++		return false
++	}
++	switch action.Key.ActionKind {
++	case s3lifecycle.ActionKindNoncurrentDays:
++		return action.Rule.NewerNoncurrentVersions > 0
++	case s3lifecycle.ActionKindExpirationDays:
++		return s.BucketVersioned(action.Bucket) && len(action.Rule.FilterTags) > 0
++	default:
++		return false
++	}
++}
+--- a/weed/s3api/s3lifecycle/engine/hashes.go
++++ b/weed/s3api/s3lifecycle/engine/hashes.go
+@@ -96,7 +96,7 @@
+ 		if a == nil || a.Mode == ModeDisabled {
+ 			continue
+ 		}
+-		if !isReplayKind(k.ActionKind) {
++		if !isReplayKind(k.ActionKind) || s.requiresLiveVersionState(a) {
+ 			continue
+ 		}
+ 		items = append(items, hashItem{key: k, action: a})
+@@ -149,7 +149,7 @@
+ 		if a == nil || a.Mode == ModeDisabled {
+ 			continue
+ 		}
+-		if !isReplayKind(k.ActionKind) {
++		if !isReplayKind(k.ActionKind) || s.requiresLiveVersionState(a) {
+ 			continue
+ 		}
+ 		if !isPromoted(a, retentionWindow) {
+@@ -224,7 +224,7 @@
+ 		if a == nil || !a.IsActive() {
+ 			continue
+ 		}
+-		if !isReplayKind(k.ActionKind) {
++		if !isReplayKind(k.ActionKind) || s.requiresLiveVersionState(a) {
+ 			continue
+ 		}
+ 		if ttl := effectiveTTL(a); ttl > max {
+--- a/weed/s3api/s3lifecycle/engine/views_test.go
++++ b/weed/s3api/s3lifecycle/engine/views_test.go
+@@ -387,3 +387,41 @@
+ func TestRecoveryView_NilSnapshot(t *testing.T) {
+ 	assert.Nil(t, RecoveryView(nil))
+ }
++
++func TestVersionedLifecycleRequiresCurrentBucketState(t *testing.T) {
++	tagged := &s3lifecycle.Rule{
++		ID:                              "temporary-objects",
++		Status:                          s3lifecycle.StatusEnabled,
++		ExpirationDays:                  7,
++		FilterTags:                      map[string]string{"legal-hold": "false"},
++		NoncurrentVersionExpirationDays: 1,
++		NewerNoncurrentVersions:         5,
++	}
++	multipart := &s3lifecycle.Rule{
++		ID: "multipart", Status: s3lifecycle.StatusEnabled, AbortMPUDaysAfterInitiation: 1,
++	}
++	compile := func(rules ...*s3lifecycle.Rule) *Snapshot {
++		input := CompileInput{Bucket: "documents", Rules: rules, Versioned: true}
++		snap := New().Compile([]CompileInput{input}, CompileOptions{})
++		for key := range snap.actions {
++			snap.MarkActive(key)
++		}
++		return snap
++	}
++	snap := compile(tagged, multipart)
++	baseline := compile(multipart)
++	window := 30 * 24 * time.Hour
++	replay, walk := snap.RulesForShard(0, window)
++	require.NotNil(t, replay)
++	require.NotNil(t, walk)
++	assert.Len(t, replay.actions, 1)
++	assert.Len(t, walk.actions, 2)
++	for _, kind := range []s3lifecycle.ActionKind{s3lifecycle.ActionKindExpirationDays, s3lifecycle.ActionKindNoncurrentDays} {
++		key := s3lifecycle.ActionKey{Bucket: "documents", RuleHash: s3lifecycle.RuleHash(tagged), ActionKind: kind}
++		assert.Contains(t, walk.actions, key)
++		assert.NotContains(t, snap.ReplayView(window).actions, key)
++	}
++	assert.Equal(t, ReplayContentHash(baseline), ReplayContentHash(snap))
++	assert.Equal(t, PromotedHash(baseline, window), PromotedHash(snap, window))
++	assert.Equal(t, 24*time.Hour, MaxEffectiveTTL(snap))
++}

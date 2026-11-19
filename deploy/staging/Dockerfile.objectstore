@@ -1,0 +1,19 @@
+FROM --platform=$BUILDPLATFORM golang:1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea AS build
+
+ARG TARGETOS
+ARG TARGETARCH
+ENV GOTOOLCHAIN=local CGO_ENABLED=0
+WORKDIR /src
+
+# SeaweedFS 4.54. Verify the downloaded source before applying the lifecycle fix.
+ADD --checksum=sha256:7a67e76e2a8df5e1b2db5dc869f7dcab01b4ad153b537f171d20bb9e2535e94b \
+    https://codeload.github.com/seaweedfs/seaweedfs/tar.gz/5ef99c1d8dbbeb4a035c055e3b464620506aefac /tmp/seaweedfs.tar.gz
+COPY deploy/staging/objectstore-lifecycle.patch /tmp/objectstore-lifecycle.patch
+RUN tar -xzf /tmp/seaweedfs.tar.gz --strip-components=1 \
+    && git apply /tmp/objectstore-lifecycle.patch \
+    && GOOS="$TARGETOS" GOARCH="$TARGETARCH" go build -mod=readonly -trimpath -o /out/weed ./weed
+
+FROM ghcr.io/chrislusf/seaweedfs@sha256:e7d4b80af9bd49b2630a60ac6fbb7ffb620ac6a2c501f689c22a71b9f89f0203
+COPY --from=build /out/weed /usr/bin/weed
+COPY --from=build /src/LICENSE /usr/local/share/licenses/seaweedfs/LICENSE
+COPY --from=build /usr/local/go/LICENSE /usr/local/go/PATENTS /usr/local/share/licenses/go/

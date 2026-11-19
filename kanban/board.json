@@ -12399,7 +12399,8 @@
         "The staging smoke now uses a create-only probe and cleans up a lost PUT acknowledgement only with proven object ownership. The pinned SeaweedFS image verified exact version deletion, suspended null-version cleanup and conditional unversioned deletion. Verify the selected live storage policies and actual candidate receipts.",
         "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
         "The November 19 elapsed staging check found the tagged disposable object still current and version 2 deleted while version 1 survived. Held and unclassified controls survived and the policy digest matched the November 14 baseline. Isolated SeaweedFS 4.47 and 4.54 both reproduced the wrong-version deletion with staggered version ages. Only 4.54 passed disposable current-object expiry. Verify ordered retention, actual expiry and protected controls on a compatible provider with a recoverable rollout before accepting this gate.",
-        "The first 4.54 prototype retained the correct versions on a restored 4.47 copy but missed an already-aged disposable object. The revised isolated build evaluates both count-gated retention and tag-filtered versioned expiry against current bucket state. It passed expiry, byte reads, exact version order and held and unclassified controls on a restored synthetic copy. Restoring the same checksum-verified backup under 4.47 recovered all original versions. Qualify the exact deployment image, concurrent retention safeguards and live rollout recovery, then verify elapsed staging expiry before accepting."
+        "The first 4.54 prototype retained the correct versions on a restored 4.47 copy but missed an already-aged disposable object. The revised isolated build evaluates both count-gated retention and tag-filtered versioned expiry against current bucket state. It passed expiry, byte reads, exact version order and held and unclassified controls on a restored synthetic copy. Restoring the same checksum-verified backup under 4.47 recovered all original versions. Qualify the exact deployment image, concurrent retention safeguards and live rollout recovery, then verify elapsed staging expiry before accepting.",
+        "The repository now builds the fix from a checksum-pinned SeaweedFS 4.54 source with Go 1.27.4. The exact Linux image passed the restored 4.47 fixture and had zero high or critical findings. The P1 remains open. Qualify the image's distribution inventory, verify hold behavior and recoverable staging rollout, and observe elapsed expiry on staging."
       ],
       "owner": null,
       "depends_on": [],
@@ -12510,6 +12511,10 @@
         "staging_lifecycle_isolated_upgrade": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-isolated-upgrade-20261119.json",
           "sha256": "c63c1a53a3c06359f57fcf28b5b04b965cd7b27d0a1b51df79082a8830746465"
+        },
+        "staging_lifecycle_reproducible_image": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-reproducible-image-20261119.json",
+          "sha256": "51c937b89da77d54f43225a4e23ebcbe77d1ce3c67245436cd8c9beb086de51d"
         }
       },
       "defect_severity": "P1"
@@ -397703,7 +397708,7 @@
             2088482174620949,
             990596215557555,
             4347825997072978,
-            953048350727039,
+            714908582596796,
             4217801687597905,
             2689734259024606,
             2769211501672309,
@@ -397769,8 +397774,13 @@
             584469599575028,
             2650945617363201,
             3666513877874346,
-            709810231208422
+            709810231208422,
+            1952616690185476
           ]
+        },
+        "storage_p1_board_tests": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-lifecycle-provider-regression/board-source-bound-fixture-tests.log",
+          "sha256": "e4a53c0974f11e7d7185fb2cd9c8407537903aa7270571a21f2c81f0b9d65930"
         }
       }
     },
@@ -407566,7 +407576,7 @@
             647897858947698,
             4347825997072978,
             2120950820918982,
-            953048350727039,
+            714908582596796,
             4394446460099383
           ],
           "checks": [
@@ -407616,7 +407626,8 @@
             312458396182986,
             3666513877874346,
             1660715985267185,
-            2738410776947585
+            2738410776947585,
+            1952616690185476
           ]
         }
       }
@@ -407735,7 +407746,7 @@
             647897858947698,
             4347825997072978,
             2120950820918982,
-            953048350727039,
+            714908582596796,
             4394446460099383
           ],
           "checks": [
@@ -407785,7 +407796,8 @@
             312458396182986,
             3666513877874346,
             1660715985267185,
-            2738410776947585
+            2738410776947585,
+            1952616690185476
           ]
         }
       }
@@ -407859,7 +407871,7 @@
             647897858947698,
             4347825997072978,
             2120950820918982,
-            953048350727039,
+            714908582596796,
             4394446460099383
           ],
           "checks": [
@@ -407909,7 +407921,8 @@
             312458396182986,
             3666513877874346,
             1660715985267185,
-            2738410776947585
+            2738410776947585,
+            1952616690185476
           ]
         }
       }
@@ -563362,6 +563375,10 @@
         "staging_lifecycle_isolated_upgrade": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-isolated-upgrade-20261119.json",
           "sha256": "c63c1a53a3c06359f57fcf28b5b04b965cd7b27d0a1b51df79082a8830746465"
+        },
+        "staging_lifecycle_reproducible_image": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-reproducible-image-20261119.json",
+          "sha256": "51c937b89da77d54f43225a4e23ebcbe77d1ce3c67245436cd8c9beb086de51d"
         }
       }
     },
@@ -778471,9 +778488,9 @@
         "path": "kanban/scripts/board.py",
         "sha256": "9fd754b29f1ba8568c5afd8e366005d6d5f369bca677a52d4193096f96456ba5"
       },
-      "953048350727039": {
+      "714908582596796": {
         "path": "kanban/scripts/test_board.py",
-        "sha256": "7acdeeda5b6f6b96ae6cde5982bfdd59194877a1789de2236130e6d3f3806493"
+        "sha256": "bc161ddddacb647b0f7733fd2fba9b1920b0c4e1e2dd98b9baf56d36dd6c68da"
       },
       "3602438295001433": {
         "path": "scripts/check-web-navigation.mjs",
@@ -804835,6 +804852,14 @@
           "deploy/production/test_check_promotion.py"
         ],
         "scope": "Corrected the synthetic approved retained-image rows used by the production promotion verifier. Its report, image and registry binding assertions remain unchanged. All 29 promotion and 19 guarded-rollout cases passed."
+      },
+      "1952616690185476": {
+        "batch": "release-0.6-storage-p1-test-fixtures",
+        "base_commit": "b642bb184b6bd701d44c809648a4fdf61b93c87b",
+        "paths": [
+          "kanban/scripts/test_board.py"
+        ],
+        "scope": "All 27 board and Definition of Done tests passed with the open storage P1 in the canonical inventory. The synthetic severity tests now assert their exact named defect and preserve other live blockers in the expected result."
       },
       "2015564305447932": {
         "batch": "release-0.6-api-request-tracing",
