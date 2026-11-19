@@ -8147,7 +8147,8 @@
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
-        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal."
+        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal.",
+        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -8356,6 +8357,10 @@
           "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
           "before_migrations": 209,
           "after_migrations": 217
+        },
+        "staging_native_restored_http": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-native-restored-http-3f8929fdd.json",
+          "sha256": "feaa109b286ac2b347c9e46a5f2fd8e9efc88e6699610174ded17285653b9232"
         }
       }
     },
@@ -398029,7 +398034,8 @@
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
-        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal."
+        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal.",
+        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -398112,6 +398118,10 @@
           "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
           "before_migrations": 209,
           "after_migrations": 217
+        },
+        "staging_native_restored_http": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-native-restored-http-3f8929fdd.json",
+          "sha256": "feaa109b286ac2b347c9e46a5f2fd8e9efc88e6699610174ded17285653b9232"
         }
       }
     },
@@ -563494,7 +563504,8 @@
         "Hosted strict native coverage job 135820385818 passed all 14 tasks at 3f8929fdd with 18,029 passing Vitest cases. Its only skip was the conditional ClamAV integration case, verified independently against the real staging scanner on a69a51c71. Coverage and promotion-quarantine artifacts matched their published checksums. The full browser, combined coverage and frozen candidate gates remain open.",
         "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required.",
         "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required.",
-        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open."
+        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
+        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -564289,6 +564300,10 @@
         "staging_scheduled_backup_replay": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scheduled-postgres-restore-20261119.json",
           "sha256": "f5310febb31a888b6ca871340e0bb19f578a21050c3bcf4b9f04df6065930fd9"
+        },
+        "staging_native_restored_http": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-native-restored-http-3f8929fdd.json",
+          "sha256": "feaa109b286ac2b347c9e46a5f2fd8e9efc88e6699610174ded17285653b9232"
         }
       }
     },
