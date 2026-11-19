@@ -1,6 +1,20 @@
 # v0.6.0 package-specific license review
 
-This is the owner-requested review packet. It proposes specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. All other package exceptions still need approval.
+This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved all 386 active package-and-scope exceptions on November 19, 2026.
+
+## Owner approval on 2026-11-19
+
+Majid Najafi, Barghsa's owner, instructed Codex to "approve the whole license in my behalf." Codex recorded that instruction against every active exception in the reviewed v0.6.0 inventory. The approval covers 37 application entries, two browser entries, 27 ClamAV entries, 89 PostgreSQL entries, 217 staging PostgreSQL entries and 14 web entries. The historical glibc Sharp entry in workbook row 38 is excluded from that inventory.
+
+The exact package URLs, versions, distribution scopes and observed license sets are enumerated in [the approval policy](../../deploy/licenses/release-approvals.json). The policy cites this decision and names the owner as approver. The workbook records the decision date and identifies Codex as the recorder acting under the owner's instruction.
+
+The approval includes the 342 entries previously flagged for legal review. Their notice, source, license-choice and replacement questions remain recorded as conditions. Retain the required notices and fulfill the applicable obligations for the files distributed. The owner's instruction supplies the internal exception decision. The recorded source and replacement checks still need their actual evidence.
+
+The approved workbook is preserved at
+`/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx`.
+Recheck the exact final images, their notices and browser assets with the strict
+license gate. Later package versions and different license sets require their
+own dispositions.
 
 ## Staging PostgreSQL supplement
 
@@ -87,7 +101,7 @@ immutable release images. [Hosted Linux amd64 image job](https://github.com/barg
 
 The release gate accepts named owner or legal-reviewer sign-off on exact package exceptions. The owner can provide the policy approval once the stated obligations have been verified. For GPL/LGPL source and replacement questions, the recommended reviewer is a lawyer experienced in open-source software licensing. An internal compliance lead with access to that expertise can coordinate the review. OpenChain's guidance describes access to internal or external legal expertise and assignment of review and approval responsibilities. [OpenChain resource guidance](https://openchain-project.github.io/OpenChain-KWG/en/guide/iso5230_guide/2-relevant-tasks/2-resourced/).
 
-Record the reviewer and approver, exact package versions and image scopes, applicable license options, required notices and source or replacement conditions, and the dated disposition. Reviewer assignment and the remaining exception approvals are pending.
+Record the reviewer and approver, exact package versions and image scopes, applicable license options, required notices and source or replacement conditions, and the dated disposition. The [November 19 owner approval](#owner-approval-on-2026-11-19) supplies the named decisions for all 386 active exceptions. Verify the conditions against the final distribution.
 
 ## Package inventory
 

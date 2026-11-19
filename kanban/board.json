@@ -14628,7 +14628,7 @@
         "story": "01-platform-infrastructure.md#spec-86d8c16eda1f"
       },
       "requirement": "- **T-05.03.04:** Configure security scans in PR gate\n  - **Notes:** Secret scan: `trufflehog` or `gitleaks` — scan entire repo for secrets/keys. Dependency/SCA: `pnpm audit` or `snyk` (or `npm audit` for root). SAST: `semgrep` or `codeql` — custom rules for SQL injection, XSS, SSRF, hardcoded credentials, open redirects. License: `license-checker` or `fossa` — enforce allowlist (MIT, Apache-2.0, ISC, BSD-2/3). Security findings: block PR on Critical/High with credible production path; accepted risk requires owner, justification, compensating control, expiry.\n  - **Dependencies:** T-05.03.01\n  - **Complexity:** L",
-      "status": "blocked",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
@@ -14650,7 +14650,8 @@
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
         "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
-        "The owner review workbook proposes 44 conditional approvals and identifies the outstanding questions for 342 exact package scopes. Obtain the actual named decisions and evidence, then rerun the strict package gate for the final images."
+        "The owner review workbook proposes 44 conditional approvals and identifies the outstanding questions for 342 exact package scopes. Obtain the actual named decisions and evidence, then rerun the strict package gate for the final images.",
+        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -14807,9 +14808,21 @@
           "proposed_with_conditions": 44,
           "flagged_for_legal_review": 342,
           "dispositions_received": false
+        },
+        "owner_license_approval": {
+          "date": "2026-11-19",
+          "approved_by": "Majid Najafi (owner)",
+          "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
+          "policy": "deploy/licenses/release-approvals.json",
+          "policy_sha256": "255fa414d58255fa595f5290027ab7b68c465ae882c3a8b23d198b3842405ab3",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-owner-approval-20261119.json",
+          "proof_sha256": "a0a5f82e847b41b36fc968629f09ab10262d275767eb86f80c9b8e6467bcef7a",
+          "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
+          "workbook_sha256": "337ee5dfd95f89d3a89a05bbb35c6f194d4ad7c1688cac9815851284e2c138d6",
+          "exact_approvals": 386
         }
       },
-      "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
+      "blocker": null
     },
     {
       "key": "01-platform-infrastructure.md#T-05.03.05",
@@ -30291,7 +30304,7 @@
             1499669892738514,
             617608376516237,
             283370916728061,
-            2817396460757029
+            2150319014411404
           ],
           "checks": [
             3354082529935070,
@@ -30614,7 +30627,8 @@
             3375637493465557,
             1687452370128399,
             2912398863322129,
-            4196204090038088
+            4196204090038088,
+            3045323081255111
           ],
           "presentation_renewals": [
             {
@@ -388740,7 +388754,7 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.06 | Set up license compliance check (e.g. license-checker) for dependency licenses | S |",
-      "status": "blocked",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
@@ -388773,7 +388787,8 @@
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
         "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open.",
         "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
-        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open."
+        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
+        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -388927,9 +388942,21 @@
             "web": 14
           },
           "postgres_staging_review_sha256": "df2086fa0f305d8a550a6c999a711c2d9dd3bbd692965016b097cd9b6d82eb6b"
+        },
+        "owner_license_approval": {
+          "date": "2026-11-19",
+          "approved_by": "Majid Najafi (owner)",
+          "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
+          "policy": "deploy/licenses/release-approvals.json",
+          "policy_sha256": "255fa414d58255fa595f5290027ab7b68c465ae882c3a8b23d198b3842405ab3",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-owner-approval-20261119.json",
+          "proof_sha256": "a0a5f82e847b41b36fc968629f09ab10262d275767eb86f80c9b8e6467bcef7a",
+          "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
+          "workbook_sha256": "337ee5dfd95f89d3a89a05bbb35c6f194d4ad7c1688cac9815851284e2c138d6",
+          "exact_approvals": 386
         }
       },
-      "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.07.02.07",
@@ -562539,7 +562566,8 @@
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
         "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts.",
         "The November 15 owner-approved EU recovery destination, verified encrypted source backup, isolated source-image restore and twice-daily staging backup timer are in place. The preview remained healthy during the pre-cutover recovery rehearsal.",
-        "The staging PostgreSQL cutover succeeded. The first stopped-writes attempt restored the original staging database after a schema-text discrepancy. An independent logical restore on the original Debian image produced the same eight regrouped CHECK expressions. The successful cutover verified the exact reference schema, compared both application databases and kept the original image and volume. Both encrypted backup receipts and the WAL/PITR proof passed before writers resumed. Staging v0.5.1 is healthy on the new protected database. Exact v0.6.0 candidate checks, strict licenses, staging deployment and Telegram receipts remain open."
+        "The staging PostgreSQL cutover succeeded. The first stopped-writes attempt restored the original staging database after a schema-text discrepancy. An independent logical restore on the original Debian image produced the same eight regrouped CHECK expressions. The successful cutover verified the exact reference schema, compared both application databases and kept the original image and volume. Both encrypted backup receipts and the WAL/PITR proof passed before writers resumed. Staging v0.5.1 is healthy on the new protected database. Exact v0.6.0 candidate checks, strict licenses, staging deployment and Telegram receipts remain open.",
+        "The owner's November 19 instruction supplies all 386 exact license approvals and the retained image policy check passes. The workbook retains applicable license conditions as follow-up. The exact final candidate, complete operational gates, staging deployment and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -563262,6 +563290,18 @@
           "target_system_id": "7708353685619671086",
           "target_image": "sha256:88dbfd4a2cfca7c58ef87f8df96db3558e232eabcd52b991ca63c3ccf1d17fcb",
           "current_staging_release": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840"
+        },
+        "owner_license_approval": {
+          "date": "2026-11-19",
+          "approved_by": "Majid Najafi (owner)",
+          "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
+          "policy": "deploy/licenses/release-approvals.json",
+          "policy_sha256": "255fa414d58255fa595f5290027ab7b68c465ae882c3a8b23d198b3842405ab3",
+          "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-owner-approval-20261119.json",
+          "proof_sha256": "a0a5f82e847b41b36fc968629f09ab10262d275767eb86f80c9b8e6467bcef7a",
+          "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
+          "workbook_sha256": "337ee5dfd95f89d3a89a05bbb35c6f194d4ad7c1688cac9815851284e2c138d6",
+          "exact_approvals": 386
         }
       }
     },
@@ -769327,9 +769367,9 @@
         "path": "docs/security/session-location.md",
         "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
       },
-      "2817396460757029": {
+      "2150319014411404": {
         "path": "docs/security/release-license-review.md",
-        "sha256": "cf3019f54f38223640b92860810429dec638875d558cab732bc18ba3dfab82c9"
+        "sha256": "7ae20321717b09badb008d1b0f0be23235eec78190c4b4da14781983b828d205"
       },
       "3535760571433913": {
         "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -788308,6 +788348,14 @@
           "docs/security/release-license-review.md"
         ],
         "scope": "Updated the license-review section to identify the exact Nodemailer version and its hosted image inventory."
+      },
+      "3045323081255111": {
+        "batch": "release-0.6-license-owner-approval",
+        "base_commit": "c100759a918edb0e262dace5d4dec12bacaf3e7f",
+        "paths": [
+          "docs/security/release-license-review.md"
+        ],
+        "scope": "The license review document now records the owner's exact package approvals. The password-strength implementation, zxcvbn choice, assets, tests and runtime dependencies are unchanged. Existing password-meter acceptance remains applicable."
       },
       "359379790510643": {
         "batch": "release-0.5-expanded-verification-settings",

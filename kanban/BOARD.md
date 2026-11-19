@@ -12,10 +12,10 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 1261 | Accepted with unchanged source bindings. |
 | verify | 0 | Existing work may be complete; inspect evidence before building. |
-| partial | 99 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 101 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
-| blocked | 6 | Named owner or external prerequisite. |
+| blocked | 4 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -1046,7 +1046,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.03.01` | done | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
 | `01-platform-infrastructure.md#T-05.03.02` | done | Earlier deferred | Implement migration validation step (two environments) |
 | `01-platform-infrastructure.md#T-05.03.03` | done | Earlier deferred | Implement OpenAPI generation and drift check |
-| `01-platform-infrastructure.md#T-05.03.04` | blocked | Earlier deferred | Configure security scans in PR gate |
+| `01-platform-infrastructure.md#T-05.03.04` | partial | Earlier deferred | Configure security scans in PR gate |
 | `01-platform-infrastructure.md#T-05.03.05` | done | Earlier deferred | Implement coverage threshold enforcement |
 | `01-platform-infrastructure.md#T-05.04.01` | partial | Earlier deferred | Create staging gate CI workflow |
 | `01-platform-infrastructure.md#T-05.04.02` | partial | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
@@ -1235,7 +1235,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.03` | done | Recorded batch work | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
 | `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
 | `06-security-testing-observability.md#T-06.07.02.05` | done | Recorded batch work | Define triage policy: critical/high with credible production path → block release |
-| `06-security-testing-observability.md#T-06.07.02.06` | blocked | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
+| `06-security-testing-observability.md#T-06.07.02.06` | partial | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | partial | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | done | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
