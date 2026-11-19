@@ -11353,7 +11353,8 @@
         "The restore report now identifies the exact independently captured source baseline. Keep both original artifacts from the first deployed quarterly exercise with the observed alert delivery.",
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
         "The manual staging off-server recovery used a fresh version 2 baseline and the matching PostgreSQL system ID. The original EU manifest and encrypted WAL readback matched. The earlier probe commit survived and the later one was absent. PostgreSQL recovery took 54.439 seconds with zero measured RPO for the source fingerprints. The source contained 36 users and empty orders and invoices. Core-service recovery, the scheduled database exercise and delivered alerts remain open.",
-        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open."
+        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
+        "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -11435,6 +11436,10 @@
         "staging_scheduled_backup_replay": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scheduled-postgres-restore-20261119.json",
           "sha256": "f5310febb31a888b6ca871340e0bb19f578a21050c3bcf4b9f04df6065930fd9"
+        },
+        "synthetic_application_recovery_probe": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-synthetic-application-recovery-probe-20261120.json",
+          "sha256": "1bf199d5ad71cc9d53e6ddcf7d7549b826443def8a8ca1e921b87e14c912eb9d"
         }
       }
     },
@@ -15878,7 +15883,8 @@
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
         "The staging configuration-only quarterly service passed its first manual systemd run using an independently captured baseline, an encrypted EU archive and a separate PostgreSQL clone. The complete scheduled recovery still requires matching PostgreSQL and object-storage restoration, application journeys, measured core-service recovery and alert-delivery readback.",
         "The independently captured version 2 staging database proof matched the users, orders and invoices fingerprints, source identity, original EU manifest and PITR markers and measured 54.439 seconds to database readiness. Pair it with a compatible object-store checkpoint and the isolated application journeys to measure core-service recovery.",
-        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open."
+        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
+        "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -15944,6 +15950,10 @@
         "staging_scheduled_backup_replay": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scheduled-postgres-restore-20261119.json",
           "sha256": "f5310febb31a888b6ca871340e0bb19f578a21050c3bcf4b9f04df6065930fd9"
+        },
+        "synthetic_application_recovery_probe": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-synthetic-application-recovery-probe-20261120.json",
+          "sha256": "1bf199d5ad71cc9d53e6ddcf7d7549b826443def8a8ca1e921b87e14c912eb9d"
         }
       }
     },
@@ -407335,7 +407345,8 @@
         "The probe now requires the configured fixture to be the only accessible profile and the owned active default. An additional owned or delegated profile stops all service reads and retains logout.",
         "On the approved independent runner, configure the dedicated non-staff account, protected normal trusted-device or verified-contact OTP path and its four existing records. The documented protected config was absent on the staging and EU hosts at readback. Verify native live identity, scoped GETs and logout before accepting this task.",
         "The scheduled probe and guarded rollout smoke both require a single accessible owned active default profile. An additional or delegated profile stops business reads. The four detail GETs verify record and profile IDs. Local checks verified that a missing or mismatched record fails its journey and the scheduled probe still logs out.",
-        "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts."
+        "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts.",
+        "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -407355,7 +407366,11 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-synthetic-logout-readback"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "synthetic_application_recovery_probe": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-synthetic-application-recovery-probe-20261120.json",
+          "sha256": "1bf199d5ad71cc9d53e6ddcf7d7549b826443def8a8ca1e921b87e14c912eb9d"
+        }
       }
     },
     {
@@ -563523,7 +563538,8 @@
         "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
         "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open.",
         "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification.",
-        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open."
+        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
+        "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -564330,6 +564346,10 @@
         "musl_source_and_notice_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-libvips-source-and-notice-readback-20261120.json",
           "sha256": "b69c8b30c68b0822c06ceb9578b902594ebc88a06947073c623257537faebafb"
+        },
+        "synthetic_application_recovery_probe": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-synthetic-application-recovery-probe-20261120.json",
+          "sha256": "1bf199d5ad71cc9d53e6ddcf7d7549b826443def8a8ca1e921b87e14c912eb9d"
         }
       }
     },
