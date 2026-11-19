@@ -194,7 +194,8 @@ export function OnboardingWizard({
                     ? t(`onboarding.draft.${draft.status}`, locale)
                     : undefined
                 }
-                working={pending || submitting || working || saving || draft.status === 'saving'}
+                working={pending || submitting || working || saving}
+                draftSaving={draft.status === 'saving'}
                 workingLabel={t(
                   submitting
                     ? 'onboarding.wizard.submitting'

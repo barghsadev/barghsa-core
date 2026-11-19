@@ -333,6 +333,10 @@ for (const locale of ['en', 'fa'] as const) {
     }) => {
       const state = await fixture(page, locale, type);
       state.draft.version = 6;
+      let finishSave!: () => void;
+      state.saveGate = new Promise<void>((resolve) => {
+        finishSave = resolve;
+      });
       await page.goto(`/onboarding/${type.toLowerCase()}/${profileId}?step=4`);
       await dismissMessages(page, locale);
       await expect(page).toHaveURL(/step=1$/);
@@ -340,9 +344,18 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(field).toHaveValue('');
       await field.fill('Fresh draft');
       const controls = leaveControls(page, locale);
-      await controls.back.click();
-      await expect(controls.dialog).toBeVisible();
-      await controls.save.click();
+      try {
+        await controls.back.click();
+        await expect(controls.dialog).toBeVisible();
+        await expect.poll(() => state.saveRequests.length).toBe(1);
+        await expect(controls.leave).toBeDisabled();
+        await expect(controls.save).toBeEnabled();
+        await controls.save.click();
+        await expect(controls.save).toBeDisabled();
+        expect(state.saveRequests).toHaveLength(1);
+      } finally {
+        finishSave();
+      }
       await expect(page).toHaveURL(/\/onboarding$/);
       expect(state.saveRequests).toHaveLength(1);
       expect(state.saveRequests[0]).toMatchObject({

@@ -12,6 +12,7 @@ interface Props {
   saveDisabled?: boolean;
   errorMessage?: string | undefined;
   working: boolean;
+  draftSaving?: boolean;
   workingLabel: string;
   onStay: () => void;
   onLeave: () => void;
@@ -20,7 +21,16 @@ interface Props {
 }
 
 export default function WizardLeaveDialog(props: Props) {
-  const { onSave, saveDisabled, errorMessage, working, workingLabel, onStay, onLeave } = props;
+  const {
+    onSave,
+    saveDisabled,
+    errorMessage,
+    working,
+    draftSaving = false,
+    workingLabel,
+    onStay,
+    onLeave,
+  } = props;
   const locale = useLocale();
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -31,6 +41,7 @@ export default function WizardLeaveDialog(props: Props) {
   );
   const [saving, setSaving] = useState(false);
   const [failed, setFailed] = useState(false);
+  const busy = saving || working || draftSaving;
   const recoveryWorking = !!props.recovery && working;
   const inFlight = useRef(false);
   const mounted = useRef(true);
@@ -66,7 +77,7 @@ export default function WizardLeaveDialog(props: Props) {
     }
   };
   const discardSavedAndLeave = async () => {
-    if (!discardGate.allowed || inFlight.current || working || !props.onDiscardSaved) return;
+    if (!discardGate.allowed || inFlight.current || busy || !props.onDiscardSaved) return;
     inFlight.current = true;
     setSaving(true);
     setFailed(false);
@@ -85,17 +96,13 @@ export default function WizardLeaveDialog(props: Props) {
   };
   return (
     <Dialog open onOpenChange={(open) => !open && stay()}>
-      <DialogContent
-        dir={locale === 'fa' ? 'rtl' : 'ltr'}
-        showCloseButton={false}
-        aria-busy={saving || working}
-      >
+      <DialogContent dir={locale === 'fa' ? 'rtl' : 'ltr'} showCloseButton={false} aria-busy={busy}>
         <DialogTitle>{t('electricity.order.unsaved.title', locale)}</DialogTitle>
         <DialogDescription>{t('electricity.order.unsaved.description', locale)}</DialogDescription>
-        {(saving || working) && (
+        {busy && (
           <p role="status">{saving ? t('electricity.order.savingDraft', locale) : workingLabel}</p>
         )}
-        {!saving && !working && !props.recovery && (failed || errorMessage) && (
+        {!busy && !props.recovery && (failed || errorMessage) && (
           <p role="alert" className="text-sm text-destructive">
             {errorMessage || t('electricity.order.draftSaveFailed', locale)}
           </p>
@@ -120,18 +127,18 @@ export default function WizardLeaveDialog(props: Props) {
           <Button
             type="button"
             variant="ghost"
-            disabled={saving || working}
-            onClick={() => !inFlight.current && onLeave()}
+            disabled={busy}
+            onClick={() => !inFlight.current && !busy && onLeave()}
           >
             {t('electricity.order.unsaved.leave', locale)}
           </Button>
           {props.onDiscardSaved && (
             <>
-              <ConfirmationFields gate={discardGate} disabled={saving || working} />
+              <ConfirmationFields gate={discardGate} disabled={busy} />
               <Button
                 type="button"
                 variant="destructive"
-                disabled={saving || working || !discardGate.allowed}
+                disabled={busy || !discardGate.allowed}
                 onClick={() => void discardSavedAndLeave()}
               >
                 {t('electricity.order.unsaved.discardSaved', locale)}
