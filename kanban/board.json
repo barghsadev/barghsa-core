@@ -11333,7 +11333,8 @@
         "No quarterly schedule is installed or activated. Each exercise requires a coordinated fresh source baseline/confirmed commit and archived production results; live RPO/RTO and delivered alerts remain external.",
         "Failure receiver acceptance is a local handoff contract; external monitoring must also catch missing runs/process termination. Core-service readiness remains a separate measured cutover.",
         "The restore report now identifies the exact independently captured source baseline. Keep both original artifacts from the first deployed quarterly exercise with the observed alert delivery.",
-        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
+        "The manual staging off-server recovery used a fresh version 2 baseline and the matching PostgreSQL system ID. The original EU manifest and encrypted WAL readback matched. The earlier probe commit survived and the later one was absent. PostgreSQL recovery took 54.439 seconds with zero measured RPO for the source fingerprints. The source contained 36 users and empty orders and invoices. Core-service recovery, the scheduled database exercise and delivered alerts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11407,7 +11408,11 @@
           "release-0.6-restore-source-identity"
         ],
         "current_acceptance": null,
-        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
+        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
+        "staging_database_version2_baseline_pitr": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-database-version2-baseline-pitr-20261119.json",
+          "sha256": "cfa1b75e45fe8656b3718c9225fae43ac87b27e52c9aeb5ee408c8be22a50a4d"
+        }
       }
     },
     {
@@ -11497,8 +11502,8 @@
       "launch_required": true,
       "remaining": [
         "Production secret-manager provisioning, complete deployment file inventory, HTTPS off-server storage/IAM/lifecycle and actual retained backup history require operational evidence.",
-        "The staging configuration backup timer is installed and enabled at 02:00 UTC. Its first manual systemd run captured 19 files and 33 configuration tables. An independent check verified the exact EU archive and manifest versions and ciphertext hash. Verify the first timer-triggered run, bucket retention, the quarterly schedule, production configuration rehydration and delivered monitoring alerts.",
-        "The encrypted staging archive passed upload and versioned manifest readback on eu.barghsa.com. A private restore matched 19 files and 33 configuration tables against an independent baseline, with zero observed loss for covered assets and a 2.715-second restore. The measured restore covered these assets. The scheduled quarterly exercise and core-service recovery remain open."
+        "The staging configuration backup timer is installed and enabled at 02:00 UTC. Its first manual systemd run captured 19 files and 33 configuration tables. An independent check verified the exact EU archive and manifest versions and ciphertext hash. The versioned EU bucket expires noncurrent versions after 90 days and aborts incomplete multipart uploads after seven days. Verify scheduled execution, production configuration rehydration and delivered monitoring alerts.",
+        "The installed quarterly staging configuration service held PostgreSQL share locks through the independent baseline and backup. A private clone restored 19 files and 33 configuration tables from the verified EU archive in 3.534 seconds with zero observed loss for those assets. The timer is active on the first Saturday of each quarter at 04:00 UTC. Its first timer-triggered receipt and measured core-service recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11605,6 +11610,14 @@
         "staging_config_daily_schedule": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-daily-schedule-20261119.json",
           "sha256": "d911216a194d59ab6213d1c6961c2ca3efb5dbc95a90d741d8087836ba054bfc"
+        },
+        "staging_config_quarterly_schedule": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-quarterly-schedule-20261119.json",
+          "sha256": "41d48a17e39a77494804c19e0b354111c910972c6a3f385932fced7fac15d2b2"
+        },
+        "staging_eu_backup_bucket_retention": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-backup-retention-readback-20261119.json",
+          "sha256": "dc615d80a6b6b31c9b7f479a80cc5a56f08b3af6925a102d669f857cdf54f2a9"
         }
       }
     },
@@ -15789,7 +15802,9 @@
         "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews.",
         "The approval check now recomputes RPO using the retained source baseline and replay time and enforces matching fingerprints. Repeat the complete measured recovery on the approved deployment.",
         "The application check for the quarterly exercise now produces exact-revision, timestamped evidence for all core journeys and logout. Execute it on the restored target and retain the approved off-server receipts, measured recovery and alert readback.",
-        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
+        "The staging configuration-only quarterly service passed its first manual systemd run using an independently captured baseline, an encrypted EU archive and a separate PostgreSQL clone. The complete scheduled recovery still requires matching PostgreSQL and object-storage restoration, application journeys, measured core-service recovery and alert-delivery readback.",
+        "The independently captured version 2 staging database proof matched the users, orders and invoices fingerprints, source identity, original EU manifest and PITR markers and measured 54.439 seconds to database readiness. Pair it with a compatible object-store checkpoint and the isolated application journeys to measure core-service recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -15843,7 +15858,15 @@
           "release-0.6-restored-application-probe",
           "release-0.6-restore-source-identity"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_config_quarterly_schedule": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-quarterly-schedule-20261119.json",
+          "sha256": "41d48a17e39a77494804c19e0b354111c910972c6a3f385932fced7fac15d2b2"
+        },
+        "staging_database_version2_baseline_pitr": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-database-version2-baseline-pitr-20261119.json",
+          "sha256": "cfa1b75e45fe8656b3718c9225fae43ac87b27e52c9aeb5ee408c8be22a50a4d"
+        }
       }
     },
     {
