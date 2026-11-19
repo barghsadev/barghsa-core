@@ -395301,7 +395301,8 @@
         "Verify the expanded fast Axe gate and critical journey states on the exact accepted staging candidate. The local production browser evidence covers both languages and includes intake, final review and confirmation states. The solar detail back link passed the existing 44 px minimum and the affected recovery and Axe checks in Persian and English on mobile Chromium and WebKit.",
         "Complete and record the manual keyboard and screen-reader review of final submission, payment and staff approval on the exact candidate, including actual staging workflow boundaries.",
         "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
-        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required."
+        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
+        "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -395332,7 +395333,11 @@
           "release-0.6-nightly-shared-build",
           "release-0.6-browser-43561500300"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "financial_keyboard_review": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-financial-keyboard-review-8fc81897f.json",
+          "sha256": "f8002b1a1e207a3b97104901de2f44589c97356b4bc33251612fabf8878725a3"
+        }
       }
     },
     {
@@ -563505,7 +563510,8 @@
         "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required.",
         "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required.",
         "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
-        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open."
+        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open.",
+        "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -564304,6 +564310,10 @@
         "staging_native_restored_http": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-native-restored-http-3f8929fdd.json",
           "sha256": "feaa109b286ac2b347c9e46a5f2fd8e9efc88e6699610174ded17285653b9232"
+        },
+        "financial_keyboard_review": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-financial-keyboard-review-8fc81897f.json",
+          "sha256": "f8002b1a1e207a3b97104901de2f44589c97356b4bc33251612fabf8878725a3"
         }
       }
     },
