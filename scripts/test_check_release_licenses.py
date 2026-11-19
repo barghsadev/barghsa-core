@@ -179,13 +179,19 @@ class LicenseCheckTests(unittest.TestCase):
         bom = {'components': [
             {'bom-ref': 'gosu', 'type': 'library', 'purl': gosu},
             {'bom-ref': 'unknown', 'type': 'library', 'purl': unknown},
+            {'bom-ref': 'old-go', 'type': 'library', 'purl': 'pkg:golang/stdlib@v1.27.3'},
+            {'bom-ref': 'patched-go', 'type': 'library', 'purl': 'pkg:golang/stdlib@v1.27.4'},
+            {'bom-ref': 'unknown-go', 'type': 'library', 'purl': 'pkg:golang/stdlib@v1.27.5'},
         ], 'dependencies': []}
         with patch.object(licenses, 'POSTGRES_GO_NOTICES', expected), \
              patch.object(licenses, 'docker', return_value=b'container') as docker, \
              patch.object(licenses, 'archive_files', return_value=files) as archive:
             verified = licenses.verify_postgres_notices('image')
             self.assertEqual(list(licenses.image_components(bom, verified)), [
-                (gosu, ('Apache-2.0',)), (unknown, ())
+                (gosu, ('Apache-2.0',)), (unknown, ()),
+                ('pkg:golang/stdlib@v1.27.3', ('BSD-3-Clause',)),
+                ('pkg:golang/stdlib@v1.27.4', ('BSD-3-Clause',)),
+                ('pkg:golang/stdlib@v1.27.5', ()),
             ])
             archive.assert_called_once_with('container', '/usr/local/share/licenses/gosu')
             for invalid in ({'gosu.LICENSE': files['gosu.LICENSE']}, files | {'gosu.LICENSE': b'other'}):

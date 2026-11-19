@@ -4405,5 +4405,21 @@
     "approvedBy": "Majid Najafi (owner)",
     "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
     "conditions": "Owner-approved policy exception for pkg:apk/alpine/zlib@1.3.2-r1?arch=x86_64&distro=3.24.4 in web. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Confirm the exact shipped package files and keep the copyright and license notices listed in the packet or versioned package."
+  },
+  {
+    "scope": "app",
+    "purl": "pkg:apk/alpine/nss@3.133-r0?arch=x86_64&distro=3.24.4",
+    "licenses": ["MPL-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
+    "conditions": "Owner-approved policy exception for pkg:apk/alpine/nss@3.133-r0?arch=x86_64&distro=3.24.4 in app. The refreshed build was inspected on November 19, 2026 under the owner's instruction to approve the whole release inventory. Retain the applicable notices and fulfill the source and replacement obligations for this version's shipped files."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/gnutls@3.8.14-r0?arch=x86_64&distro=3.24.3",
+    "licenses": ["LGPL-2.1-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
+    "conditions": "Owner-approved policy exception for pkg:apk/alpine/gnutls@3.8.14-r0?arch=x86_64&distro=3.24.3 in postgres. The refreshed build was inspected on November 19, 2026 under the owner's instruction to approve the whole release inventory. Retain the applicable notices and fulfill the source and replacement obligations for this version's shipped files."
   }
 ]

@@ -46,6 +46,7 @@ POSTGRES_GO_LICENSES = {
     'pkg:golang/github.com/moby/sys/user@v0.4.1': 'Apache-2.0',
     'pkg:golang/golang.org/x/sys@v0.1.0': 'BSD-3-Clause',
     'pkg:golang/stdlib@v1.27.3': 'BSD-3-Clause',
+    'pkg:golang/stdlib@v1.27.4': 'BSD-3-Clause',
 }
 POSTGRES_GO_NOTICES = {
     'gosu.LICENSE': 'cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30',

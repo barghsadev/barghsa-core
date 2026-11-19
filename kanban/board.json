@@ -9977,7 +9977,7 @@
             1479851929840785,
             4363839482195469,
             2350459817201001,
-            1625912423379728,
+            1211957629208944,
             2975805882592835,
             3749915115670395,
             1478727936988320,
@@ -10008,7 +10008,8 @@
             1882139875151920,
             3337368565147027,
             38517527046632,
-            3224257337317482
+            3224257337317482,
+            2087535122813261
           ]
         }
       }
@@ -13619,7 +13620,7 @@
             2485658752816053,
             1479851929840785,
             3917170407626177,
-            1625912423379728,
+            1211957629208944,
             4386475015118142,
             3324927078577734,
             1040458230893498,
@@ -13647,7 +13648,8 @@
             733919026410852,
             3391001886312774,
             2751763189598736,
-            3573460487422629
+            3573460487422629,
+            2087535122813261
           ]
         }
       },
@@ -14651,7 +14653,8 @@
         "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
         "The owner review workbook proposes 44 conditional approvals and identifies the outstanding questions for 342 exact package scopes. Obtain the actual named decisions and evidence, then rerun the strict package gate for the final images.",
-        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance."
+        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
+        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged."
       ],
       "owner": null,
       "depends_on": [],
@@ -14814,12 +14817,20 @@
           "approved_by": "Majid Najafi (owner)",
           "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
           "policy": "deploy/licenses/release-approvals.json",
-          "policy_sha256": "255fa414d58255fa595f5290027ab7b68c465ae882c3a8b23d198b3842405ab3",
+          "policy_sha256": "7e933072e87e3144dc791c906a55f8810c8488cca71005690bbda0fc201024af",
           "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-owner-approval-20261119.json",
-          "proof_sha256": "a0a5f82e847b41b36fc968629f09ab10262d275767eb86f80c9b8e6467bcef7a",
+          "proof_sha256": "4ddeab4d4fa671750d24143b6d9529f5c68648fe41d20176cefcdd50022f3df8",
           "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
-          "workbook_sha256": "337ee5dfd95f89d3a89a05bbb35c6f194d4ad7c1688cac9815851284e2c138d6",
-          "exact_approvals": 386
+          "workbook_sha256": "d2142b8df4ed1dd852a5250f803f63d7e496ca16e267dd50dadef8bf83da8dab",
+          "exact_approvals": 388
+        },
+        "patched_gosu_toolchain": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-gosu-runtime-check.json",
+          "sha256": "e74a91b152979367854f025b7e876875995cefb8dc96312442e01f965034bb41",
+          "local_scans": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-helper-scans",
+          "source_commit": "29b939aa5bd4dc588af765b8248f6e39150d2565",
+          "go_version": "1.27.4",
+          "failed_hosted_run": 44548133025
         }
       },
       "blocker": null
@@ -30304,7 +30315,7 @@
             1499669892738514,
             617608376516237,
             283370916728061,
-            2150319014411404
+            3079925964364903
           ],
           "checks": [
             3354082529935070,
@@ -30628,7 +30639,8 @@
             1687452370128399,
             2912398863322129,
             4196204090038088,
-            3045323081255111
+            3045323081255111,
+            443774619156764
           ],
           "presentation_renewals": [
             {
@@ -388448,7 +388460,7 @@
             1368919690263265,
             315337029627335,
             3830507931348172,
-            1625912423379728,
+            1211957629208944,
             1364273028583396
           ],
           "checks": [
@@ -388491,7 +388503,8 @@
             1923789840765052,
             2562915566480803,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            2087535122813261
           ]
         }
       }
@@ -388788,7 +388801,8 @@
         "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open.",
         "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
-        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance."
+        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
+        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged."
       ],
       "owner": null,
       "depends_on": [],
@@ -388948,12 +388962,20 @@
           "approved_by": "Majid Najafi (owner)",
           "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
           "policy": "deploy/licenses/release-approvals.json",
-          "policy_sha256": "255fa414d58255fa595f5290027ab7b68c465ae882c3a8b23d198b3842405ab3",
+          "policy_sha256": "7e933072e87e3144dc791c906a55f8810c8488cca71005690bbda0fc201024af",
           "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-owner-approval-20261119.json",
-          "proof_sha256": "a0a5f82e847b41b36fc968629f09ab10262d275767eb86f80c9b8e6467bcef7a",
+          "proof_sha256": "4ddeab4d4fa671750d24143b6d9529f5c68648fe41d20176cefcdd50022f3df8",
           "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
-          "workbook_sha256": "337ee5dfd95f89d3a89a05bbb35c6f194d4ad7c1688cac9815851284e2c138d6",
-          "exact_approvals": 386
+          "workbook_sha256": "d2142b8df4ed1dd852a5250f803f63d7e496ca16e267dd50dadef8bf83da8dab",
+          "exact_approvals": 388
+        },
+        "patched_gosu_toolchain": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-gosu-runtime-check.json",
+          "sha256": "e74a91b152979367854f025b7e876875995cefb8dc96312442e01f965034bb41",
+          "local_scans": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-helper-scans",
+          "source_commit": "29b939aa5bd4dc588af765b8248f6e39150d2565",
+          "go_version": "1.27.4",
+          "failed_hosted_run": 44548133025
         }
       },
       "blocker": null
@@ -389504,7 +389526,7 @@
             4338039208752933,
             1368919690263265,
             315337029627335,
-            1625912423379728,
+            1211957629208944,
             3832607923924757,
             1364273028583396
           ],
@@ -389544,7 +389566,8 @@
             1923789840765052,
             2562915566480803,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            2087535122813261
           ]
         }
       }
@@ -562567,7 +562590,8 @@
         "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts.",
         "The November 15 owner-approved EU recovery destination, verified encrypted source backup, isolated source-image restore and twice-daily staging backup timer are in place. The preview remained healthy during the pre-cutover recovery rehearsal.",
         "The staging PostgreSQL cutover succeeded. The first stopped-writes attempt restored the original staging database after a schema-text discrepancy. An independent logical restore on the original Debian image produced the same eight regrouped CHECK expressions. The successful cutover verified the exact reference schema, compared both application databases and kept the original image and volume. Both encrypted backup receipts and the WAL/PITR proof passed before writers resumed. Staging v0.5.1 is healthy on the new protected database. Exact v0.6.0 candidate checks, strict licenses, staging deployment and Telegram receipts remain open.",
-        "The owner's November 19 instruction supplies all 386 exact license approvals and the retained image policy check passes. The workbook retains applicable license conditions as follow-up. The exact final candidate, complete operational gates, staging deployment and Telegram receipts remain open."
+        "The owner's November 19 instruction supplies all 386 exact license approvals and the retained image policy check passes. The workbook retains applicable license conditions as follow-up. The exact final candidate, complete operational gates, staging deployment and Telegram receipts remain open.",
+        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged."
       ],
       "owner": null,
       "depends_on": [],
@@ -563296,12 +563320,20 @@
           "approved_by": "Majid Najafi (owner)",
           "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
           "policy": "deploy/licenses/release-approvals.json",
-          "policy_sha256": "255fa414d58255fa595f5290027ab7b68c465ae882c3a8b23d198b3842405ab3",
+          "policy_sha256": "7e933072e87e3144dc791c906a55f8810c8488cca71005690bbda0fc201024af",
           "proof": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-owner-approval-20261119.json",
-          "proof_sha256": "a0a5f82e847b41b36fc968629f09ab10262d275767eb86f80c9b8e6467bcef7a",
+          "proof_sha256": "4ddeab4d4fa671750d24143b6d9529f5c68648fe41d20176cefcdd50022f3df8",
           "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
-          "workbook_sha256": "337ee5dfd95f89d3a89a05bbb35c6f194d4ad7c1688cac9815851284e2c138d6",
-          "exact_approvals": 386
+          "workbook_sha256": "d2142b8df4ed1dd852a5250f803f63d7e496ca16e267dd50dadef8bf83da8dab",
+          "exact_approvals": 388
+        },
+        "patched_gosu_toolchain": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-gosu-runtime-check.json",
+          "sha256": "e74a91b152979367854f025b7e876875995cefb8dc96312442e01f965034bb41",
+          "local_scans": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-helper-scans",
+          "source_commit": "29b939aa5bd4dc588af765b8248f6e39150d2565",
+          "go_version": "1.27.4",
+          "failed_hosted_run": 44548133025
         }
       }
     },
@@ -766815,9 +766847,9 @@
         "path": "postgres-config/barghsa-postgres.conf",
         "sha256": "97e45ca64dab75191478c8a32c7ba2fdba6563aa49c787b6ab6da42de21e66ed"
       },
-      "1625912423379728": {
+      "1211957629208944": {
         "path": "packages/db/scripts/backup/Dockerfile",
-        "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        "sha256": "65f802fc8379afb7b717dbcf35e0f72242e7d14eed827e649bee098c7f90b513"
       },
       "2975805882592835": {
         "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -769367,9 +769399,9 @@
         "path": "docs/security/session-location.md",
         "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
       },
-      "2150319014411404": {
+      "3079925964364903": {
         "path": "docs/security/release-license-review.md",
-        "sha256": "7ae20321717b09badb008d1b0f0be23235eec78190c4b4da14781983b828d205"
+        "sha256": "30e1f1bf02e07bb6081953e5af74f2ff163e8892d1b024566da820955b192301"
       },
       "3535760571433913": {
         "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -783702,6 +783734,14 @@
         ],
         "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
       },
+      "2087535122813261": {
+        "batch": "release-0.6-patched-gosu-toolchain",
+        "base_commit": "a4ea71db2d8e1d186b98054a7cf22c0de8c49b72",
+        "paths": [
+          "packages/db/scripts/backup/Dockerfile"
+        ],
+        "scope": "The backup image rebuilds the same gosu source commit with digest-pinned Go 1.27.4. The Alpine and Ubuntu fixtures verified the expected postgres UID, backup Python dependencies, child exit status and all original notice bytes. Both exact fixture images passed the high/critical vulnerability gate. The Compose topology and scanner implementation are unchanged. The review document records two exact package versions under the owner's whole-inventory instruction. Final candidate and live staging replacement receipts remain open."
+      },
       "2190989721315638": {
         "batch": "release-0.6-protected-storage-origins",
         "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
@@ -788356,6 +788396,14 @@
           "docs/security/release-license-review.md"
         ],
         "scope": "The license review document now records the owner's exact package approvals. The password-strength implementation, zxcvbn choice, assets, tests and runtime dependencies are unchanged. Existing password-meter acceptance remains applicable."
+      },
+      "443774619156764": {
+        "batch": "release-0.6-patched-gosu-toolchain",
+        "base_commit": "a4ea71db2d8e1d186b98054a7cf22c0de8c49b72",
+        "paths": [
+          "docs/security/release-license-review.md"
+        ],
+        "scope": "The backup image rebuilds the same gosu source commit with digest-pinned Go 1.27.4. The Alpine and Ubuntu fixtures verified the expected postgres UID, backup Python dependencies, child exit status and all original notice bytes. Both exact fixture images passed the high/critical vulnerability gate. The Compose topology and scanner implementation are unchanged. The review document records two exact package versions under the owner's whole-inventory instruction. Final candidate and live staging replacement receipts remain open."
       },
       "359379790510643": {
         "batch": "release-0.5-expanded-verification-settings",
