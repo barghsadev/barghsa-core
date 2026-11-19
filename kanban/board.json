@@ -11240,7 +11240,8 @@
         "Apply the source-verified PostgreSQL rule group with the exact staging Prometheus and operations receiver. Capture live scoped firing and resolved receipts and exercise the approved operations destination.",
         "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised.",
         "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
-        "The live staging PostgreSQL filesystem exporter now requires a client certificate on the private Docker bridge. Its byte counts matched the active data volume. An isolated instance of the staging Prometheus image loaded the reviewed rules, scraped the exporter successfully and fired PostgresDiskUsageHigh at P2. The filesystem had 3.61 GB available out of 81.84 GB. Recover capacity, verify the active overlay, delivered firing and resolved receipts, and Grafana access."
+        "The live staging PostgreSQL filesystem exporter now requires a client certificate on the private Docker bridge. Its byte counts matched the active data volume. An isolated instance of the staging Prometheus image loaded the reviewed rules, scraped the exporter successfully and fired PostgresDiskUsageHigh at P2. The filesystem had 3.61 GB available out of 81.84 GB. Recover capacity, verify the active overlay, delivered firing and resolved receipts, and Grafana access.",
+        "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -11336,6 +11337,10 @@
         "staging_live_disk_scrape": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-live-postgres-disk-scrape-20261119.json",
           "sha256": "32a0bd3974de1cf942b3a65ea7f344372b51daf303defff09e70a3801b399cb8"
+        },
+        "staging_archived_image_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-archived-image-restore-20261119.json",
+          "sha256": "1caf4b73727c16ad237d9eaba0a5dc295755cbd33f71c7e0233b18e66063cdfa"
         }
       }
     },
@@ -380172,7 +380177,8 @@
         "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks.",
         "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only.",
         "The published v0.5.1 icon matched the exact same-origin PNG. The retained API window from 12:03 to 17:55 UTC on November 14 held two style-element reports and zero image reports, and login retained Report-Only. All 16 Chromium and WebKit checks passed on the compiled a1264d2d5 build, including registration feedback in both languages and themes, native browser reports, untrusted style blocking and the compiled validator. Complete the representative observation and staff and customer enforcement journeys on the deployed candidate.",
-        "On November 14 at 20:04 UTC, live staging v0.5.1 served the reactivated 3,415-byte same-origin PNG with private no-store caching. Chromium and WebKit previously verified the same file. The same API container recorded zero CSP reports from 14:08:53 through 20:04 UTC and login still served Report-Only. Complete the representative full-week report-only observation, verify the candidate Sonner fix, and exercise the customer and staff enforcement journeys."
+        "On November 14 at 20:04 UTC, live staging v0.5.1 served the reactivated 3,415-byte same-origin PNG with private no-store caching. Chromium and WebKit previously verified the same file. The same API container recorded zero CSP reports from 14:08:53 through 20:04 UTC and login still served Report-Only. Complete the representative full-week report-only observation, verify the candidate Sonner fix, and exercise the customer and staff enforcement journeys.",
+        "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -380201,7 +380207,11 @@
           "release-0.6-csp-enforced-feedback",
           "release-0.6-staging-favicon-csp-live-readback"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_csp_seven_day_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-seven-day-readback-20261119.json",
+          "sha256": "0126882c54b678b0ced5a8c51123748da5034b781a4cafa77048f4eca35613fd"
+        }
       }
     },
     {
@@ -563573,7 +563583,9 @@
         "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts.",
         "A one-time staging systemd timer triggered the existing isolated PostgreSQL restore verifier on November 19. The journal bound the start, verifier report and successful exit to one invocation. The latest backup eligible for the captured recovery point matched its original EU manifest and the independent source fingerprints. The earlier committed marker survived and the later marker was absent, and the database recovered in 35.224 seconds with zero measured RPO for the covered tables. The temporary units and container were collected. The recurring quarterly execution, delivered failure alerts and the core-service recovery exercise remain open.",
         "The live staging PostgreSQL filesystem exporter now requires a client certificate on the private Docker bridge. Its byte counts matched the active data volume. An isolated instance of the staging Prometheus image loaded the reviewed rules, scraped the exporter successfully and fired PostgresDiskUsageHigh at P2. The filesystem had 3.61 GB available out of 81.84 GB. Recover capacity, verify the active overlay, delivered firing and resolved receipts, and Grafana access.",
-        "Strict hosted run 44597706568 passed all seven jobs on 3f8929fdd. Chromium ran 2,978 cases with zero skips, unexpected outcomes, flakes or runner errors. Combined source coverage passed for all 13 groups. The frozen release and its complete 40-shard nightly receipt remain open."
+        "Strict hosted run 44597706568 passed all seven jobs on 3f8929fdd. Chromium ran 2,978 cases with zero skips, unexpected outcomes, flakes or runner errors. Combined source coverage passed for all 13 groups. The frozen release and its complete 40-shard nightly receipt remain open.",
+        "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts.",
+        "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -564396,6 +564408,14 @@
         "strict_hosted_browser_and_coverage": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-strict-hosted-browser-and-coverage-44597706568.json",
           "sha256": "5722020be904969271bfa22578daf8be20fe6f4edd33a7ff6c8771a449563457"
+        },
+        "staging_archived_image_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-archived-image-restore-20261119.json",
+          "sha256": "1caf4b73727c16ad237d9eaba0a5dc295755cbd33f71c7e0233b18e66063cdfa"
+        },
+        "staging_csp_seven_day_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-seven-day-readback-20261119.json",
+          "sha256": "0126882c54b678b0ced5a8c51123748da5034b781a4cafa77048f4eca35613fd"
         }
       }
     },
