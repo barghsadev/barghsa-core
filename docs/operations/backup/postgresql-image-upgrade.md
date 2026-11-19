@@ -32,6 +32,13 @@ Run the packaged backup tools as `postgres` during image verification. The
 first trial build inherited owner-only file modes from its private archive,
 which prevented that user from loading the backup modules.
 
+Check the digest of `/opt/backup/physical_backup.py` in the active PostgreSQL
+container against the reviewed source, including after a base-image or runtime
+helper refresh. The archiver must verify new WAL ciphertext from object storage
+before returning success to PostgreSQL. Exercise failed readback and a retry
+against isolated storage, then verify a fresh archived segment against its
+local digest after the staging switch.
+
 From the reviewed checkout, build a new staging tag and scan the resulting
 image. The build uses the existing backup image for the privilege-drop binary,
 its notices and the PostGIS initialization scripts. The staging builder refreshes
