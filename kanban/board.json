@@ -11247,7 +11247,8 @@
         "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised.",
         "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
         "The live staging PostgreSQL filesystem exporter now requires a client certificate on the private Docker bridge. Its byte counts matched the active data volume. An isolated instance of the staging Prometheus image loaded the reviewed rules, scraped the exporter successfully and fired PostgresDiskUsageHigh at P2. The filesystem had 3.61 GB available out of 81.84 GB. Recover capacity, verify the active overlay, delivered firing and resolved receipts, and Grafana access.",
-        "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts."
+        "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts.",
+        "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names."
       ],
       "owner": null,
       "depends_on": [],
@@ -11347,6 +11348,10 @@
         "staging_archived_image_restore": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-archived-image-restore-20261119.json",
           "sha256": "1caf4b73727c16ad237d9eaba0a5dc295755cbd33f71c7e0233b18e66063cdfa"
+        },
+        "active_staging_postgres_scrapes": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-postgres-scrapes-20261119.json",
+          "sha256": "b13be1d744c673cb954384113db4bce37aaffe53c854a537d4829c7bb790c690"
         }
       }
     },
@@ -11553,7 +11558,8 @@
       "remaining": [
         "Production secret-manager provisioning, complete deployment file inventory, HTTPS off-server storage/IAM/lifecycle and actual retained backup history require operational evidence.",
         "The staging configuration backup timer is installed and enabled at 02:00 UTC. Its first manual systemd run captured 19 files and 33 configuration tables. An independent check verified the exact EU archive and manifest versions and ciphertext hash. The versioned EU bucket expires noncurrent versions after 90 days and aborts incomplete multipart uploads after seven days. Verify scheduled execution, production configuration rehydration and delivered monitoring alerts.",
-        "The installed quarterly staging configuration service held PostgreSQL share locks through the independent baseline and backup. A private clone restored 19 files and 33 configuration tables from the verified EU archive in 3.534 seconds with zero observed loss for those assets. The timer is active on the first Saturday of each quarter at 04:00 UTC. Its first timer-triggered receipt and measured core-service recovery remain open."
+        "The installed quarterly staging configuration service held PostgreSQL share locks through the independent baseline and backup. A private clone restored 19 files and 33 configuration tables from the verified EU archive in 3.534 seconds with zero observed loss for those assets. The timer is active on the first Saturday of each quarter at 04:00 UTC. Its first timer-triggered receipt and measured core-service recovery remain open.",
+        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11668,6 +11674,10 @@
         "staging_eu_backup_bucket_retention": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-backup-retention-readback-20261119.json",
           "sha256": "dc615d80a6b6b31c9b7f479a80cc5a56f08b3af6925a102d669f857cdf54f2a9"
+        },
+        "staging_monitoring_configuration_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-monitoring-configuration-restore-20261119.json",
+          "sha256": "880c474589eb7b7e5d67c44c04fc3236931de2e23600730987906cc7dbf28d0f"
         }
       }
     },
@@ -403638,7 +403648,8 @@
         "Verify live P1 firing and resolved PostgreSQL collection, connection, deadlock and replica-lag receipts from the deployed candidate, including the approved on-call route.",
         "Backup monitoring now raises the existing P1 when the expected staging/core target disappears from discovery. All seven pinned rule suites passed. Verify the exact deployed exporter, Alertmanager and approved on-call firing and recovery.",
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
-        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts."
+        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts.",
+        "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names."
       ],
       "owner": null,
       "depends_on": [],
@@ -403677,6 +403688,10 @@
         "staging_live_backup_metrics": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-backup-metrics-readback-20261119.json",
           "sha256": "7e81f666c2427182180157e044572e403c49b0b6f935defa9b0f582369fa7a91"
+        },
+        "active_staging_postgres_scrapes": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-postgres-scrapes-20261119.json",
+          "sha256": "b13be1d744c673cb954384113db4bce37aaffe53c854a537d4829c7bb790c690"
         }
       }
     },
@@ -563608,7 +563623,9 @@
         "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts.",
         "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate.",
         "The compiled Linux amd64 3f8929fdd gateway with current payment recovery sources received a real HTTP 404 for an absent fixture through the protected staging sandbox. Recovery returned null and then recovered and verified the existing settled fixture. The sandbox ledger SHA-256 matched before and after. Exact candidate rollout, live circuit signals and the production-equivalent provider rehearsal remain open.",
-        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts."
+        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts.",
+        "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names.",
+        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -564447,6 +564464,14 @@
         "staging_live_backup_metrics": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-backup-metrics-readback-20261119.json",
           "sha256": "7e81f666c2427182180157e044572e403c49b0b6f935defa9b0f582369fa7a91"
+        },
+        "active_staging_postgres_scrapes": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-postgres-scrapes-20261119.json",
+          "sha256": "b13be1d744c673cb954384113db4bce37aaffe53c854a537d4829c7bb790c690"
+        },
+        "staging_monitoring_configuration_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-monitoring-configuration-restore-20261119.json",
+          "sha256": "880c474589eb7b7e5d67c44c04fc3236931de2e23600730987906cc7dbf28d0f"
         }
       }
     },

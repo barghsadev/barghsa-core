@@ -146,6 +146,8 @@ Replace the baseline intentionally after each approved configuration change; the
 command refuses an existing output. Keep the original baseline for historical backups.
 Validate unit paths and permissions on the actual host before separately enabling timers.
 
+On staging, install the [monitoring inventory helper](../../../deploy/staging/monitoring-backup-inputs.sh) at `/opt/barghsa/staging/config-backup/monitoring-inputs.sh`. The daily backup and quarterly restore scripts both load it after collecting the web TLS files. It reads the active Prometheus and Alertmanager Compose paths and mounted configuration, then adds the private exporter certificates, wrapped keys and backup reporting scripts. The restored paths should match the inventory for the reviewed deployment.
+
 Retain the label, source revision, schema revision, inventory, baseline timestamp,
 measured RPO/RTO, report, alert-delivery evidence and operator review from each quarterly
 run. Local synthetic tests do not establish off-server deployment, 90 days of retained
