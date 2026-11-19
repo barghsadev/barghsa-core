@@ -254,8 +254,8 @@ echo apps-started >&2
             )
             fake_docker.chmod(0o755)
             text = RELEASE.read_text()
-            function = text[text.index("rollback() {"):text.index("\n# Check an existing container")]
-            traps = text[text.index('\ntrap rollback ERR'):text.index('\n# These images are pinned')]
+            function = text[text.index("verify_objectstore() {"):text.index("\n# Check an existing container")]
+            traps = text[text.index('\ntrap rollback ERR'):text.index('\n# The repaired object store')]
             env = {
                 **os.environ,
                 "PATH": f"{root}:{os.environ['PATH']}",
@@ -276,6 +276,7 @@ echo apps-started >&2
                 'dc=(docker compose --env-file "$runtime" --env-file "$active" "${compose_files[@]}")\n'
                 f'migration_in_progress={str(migration_in_progress).lower()}\n'
                 '''postgres_id=fixture
+objectstore_id=''
 verify_running_image() {
   if [[ $1 == postgres ]]; then
     [[ $2 == fixture && "$POSTGRES_READY" == 1 ]]
@@ -455,14 +456,16 @@ echo compose-admitted
                     if diagnostic:
                         self.assertIn(diagnostic, result.stderr)
 
-    def staging_compose_config(self, fixture, *, volume='', archive=False):
+    def staging_compose_config(self, fixture, *, volume='', archive=False, objectstore_image='', objectstore_volume=''):
         # Some Compose versions load env_file even with --no-env-resolution.
         # Use test-owned files and keep the live templates and host untouched.
         env = {**os.environ, **dict.fromkeys((
             'BARGHSA_APP_IMAGE', 'BARGHSA_WEB_IMAGE', 'BARGHSA_POSTGRES_IMAGE', 'BARGHSA_CLAMAV_IMAGE',
             'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'S3_ACCESS_KEY_ID', 'S3_SECRET_ACCESS_KEY',
             'S3_BUCKET',
-        ), 'fixture'), 'BARGHSA_POSTGRES_VOLUME': volume}
+        ), 'fixture'), 'BARGHSA_POSTGRES_VOLUME': volume,
+            'BARGHSA_STAGING_OBJECTSTORE_IMAGE': objectstore_image,
+            'BARGHSA_STAGING_OBJECTSTORE_VOLUME': objectstore_volume}
         runtime_env = fixture / 'runtime.env'
         runtime_env.touch()
         base = fixture / STAGING_COMPOSE.name
@@ -488,6 +491,83 @@ echo compose-admitted
                 self.assertEqual(config['volumes']['pgdata']['name'], selected or DEFAULT_VOLUME)
                 self.assertIn({'type': 'volume', 'source': 'pgdata', 'target': '/var/lib/postgresql/data', 'volume': {}},
                               config['services']['postgres']['volumes'])
+
+    def test_compose_selects_the_repaired_objectstore_and_preserves_the_original_volume(self):
+        with tempfile.TemporaryDirectory(prefix='barghsa-compose-') as directory:
+            root = Path(directory)
+            legacy = self.staging_compose_config(root)
+            image = 'barghsa-storage-lifecycle:repository-4.54'
+            volume = 'barghsa-staging_objectdata.rehearsed'
+            repaired = self.staging_compose_config(root, objectstore_image=image, objectstore_volume=volume)
+        self.assertTrue(legacy['services']['objectstore']['image'].startswith('ghcr.io/chrislusf/seaweedfs@sha256:'))
+        self.assertEqual(legacy['volumes']['objectdata']['name'], 'barghsa-staging_objectdata')
+        self.assertEqual(repaired['services']['objectstore']['image'], image)
+        self.assertEqual(repaired['volumes']['objectdata']['name'], volume)
+        self.assertEqual(repaired['services']['objectstore']['volumes'], legacy['services']['objectstore']['volumes'])
+
+    def test_release_rejects_unapproved_objectstore_images_and_mounts(self):
+        text = RELEASE.read_text()
+        config = text[text.index("\nobjectstore_id=''"):text.index('\nfor key in BARGHSA_APP_IMAGE')]
+        verify = text[text.index('\nverify_running_image() {'):text.index('\nrollback() {')]
+        script = f'''set -euo pipefail
+mode=$1
+version=0.6.0
+dc=(compose)
+export BARGHSA_STAGING_OBJECTSTORE_IMAGE=barghsa-storage-lifecycle:repository-4.54
+export BARGHSA_STAGING_OBJECTSTORE_VOLUME=barghsa-staging_objectdata.rehearsed
+case "$mode" in
+  legacy) version=0.5.1; unset BARGHSA_STAGING_OBJECTSTORE_IMAGE ;;
+  unconfigured) unset BARGHSA_STAGING_OBJECTSTORE_IMAGE ;;
+  wrong-tag) BARGHSA_STAGING_OBJECTSTORE_IMAGE=barghsa-storage-lifecycle:wrong ;;
+  bad-volume-name) BARGHSA_STAGING_OBJECTSTORE_VOLUME=unrelated ;;
+esac
+compose() {{
+  [[ "$*" == 'ps -q objectstore' ]]
+  if [[ "$mode" != absent ]]; then echo fixture-container; fi
+}}
+docker() {{
+  [[ "$mode" != legacy ]]
+  case "$1:$5" in
+    image:barghsa-storage-lifecycle:repository-4.54)
+      if [[ "$mode" == wrong-loaded ]]; then printf 'sha256:%064d\\n' 0; return; fi ;;
+    container:fixture-container)
+      if [[ "$4" == *'.Mounts'* ]]; then
+        case "$mode" in
+          wrong-mount) echo 'volume:barghsa-staging_objectdata:true' ;;
+          read-only-mount) echo "volume:$BARGHSA_STAGING_OBJECTSTORE_VOLUME:false" ;;
+          *) echo "volume:$BARGHSA_STAGING_OBJECTSTORE_VOLUME:true" ;;
+        esac
+        return
+      fi
+      if [[ "$mode" == wrong-running ]]; then printf 'sha256:%064d\\n' 1; return; fi ;;
+    *) return 99 ;;
+  esac
+  echo sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51
+}}
+{config}
+{verify}
+verify_objectstore
+echo admitted
+'''
+        for mode, diagnostic in (
+            ('match', ''),
+            ('legacy', ''),
+            ('unconfigured', 'Stage the repaired object-store image'),
+            ('wrong-tag', 'Stage the repaired object-store image'),
+            ('wrong-loaded', 'Loaded object-store image ID differs'),
+            ('bad-volume-name', 'Invalid active object-store volume name'),
+            ('absent', 'The approved object store must be running'),
+            ('wrong-running', 'Running image ID differs from the candidate manifest: objectstore'),
+            ('wrong-mount', 'Object-store data mount differs from the active volume'),
+            ('read-only-mount', 'Object-store data mount differs from the active volume'),
+        ):
+            with self.subTest(mode=mode):
+                result = subprocess.run(['bash', '-c', script, 'storage-fixture', mode],
+                                        capture_output=True, text=True, check=False, timeout=10)
+                self.assertEqual(result.returncode, bool(diagnostic), result.stderr)
+                self.assertEqual(result.stdout.strip(), '' if diagnostic else 'admitted')
+                if diagnostic:
+                    self.assertIn(diagnostic, result.stderr)
 
     def test_wal_overlay_only_changes_postgres_and_mounts_the_existing_private_key(self):
         with tempfile.TemporaryDirectory(prefix='barghsa-compose-') as directory:
@@ -657,8 +737,8 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
         text = RELEASE.read_text()
         start = text.rindex('\nverify_running_image clamav "$clamav_id"\n')
         switch = text[text.index('\n', start + 1):text.index("\nprintf 'Staging release healthy:", start)]
-        rollback = text[text.index('rollback() {'):text.index('\n# Check an existing container')]
-        traps = text[text.index('\ntrap rollback ERR'):text.index('\n# These images are pinned')]
+        rollback = text[text.index('verify_objectstore() {'):text.index('\n# Check an existing container')]
+        traps = text[text.index('\ntrap rollback ERR'):text.index('\n# The repaired object store')]
         script = r'''set -euo pipefail
 active=$1
 candidate=$2
@@ -686,6 +766,7 @@ dc=(docker)
 runtime=fixture
 compose_files=(-f fixture)
 postgres_id=fixture
+objectstore_id=''
 verify_running_image() { return 1; }
 ''' + rollback + traps + switch + '\necho accepted\n'
         for failure in ('none', 'install', 'rename', 'before-rename', 'after-rename'):
@@ -899,6 +980,7 @@ BARGHSA_POSTGRES_VOLUME={RESTORED_VOLUME}
 BARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-fixture
 BARGHSA_STAGING_WAL_ARCHIVE=false
 BARGHSA_DISPOSABLE=true
+objectstore_id=''
 BARGHSA_APP_IMAGE_ID=sha256:{'a' * 64}
 BARGHSA_WEB_IMAGE_ID=sha256:{'b' * 64}
 if [[ "$1" == bootstrap || "$1" == wrong-bootstrap-image ]]; then

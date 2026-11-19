@@ -83,6 +83,20 @@ done
 [[ "$S3_PUBLIC_ENDPOINT" == "$APP_PUBLIC_URL" && "$S3_ENDPOINT" == http://objectstore:8333 && "$S3_PRIVATE_ENDPOINT" == "$S3_ENDPOINT" && "$S3_FORCE_PATH_STYLE" == true ]] || {
   echo 'S3 settings must match the single-domain path-style gateway' >&2; exit 1;
 }
+objectstore_id=''
+if [[ ! "$version" =~ ^0\.[0-5]\. || -n "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" ]]; then
+  [[ "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" == barghsa-storage-lifecycle:repository-4.54 ]] || {
+    echo 'Stage the repaired object-store image before releasing the application' >&2; exit 1;
+  }
+  objectstore_id=sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51
+  [[ "$(docker image inspect --format '{{.Id}}' "$BARGHSA_STAGING_OBJECTSTORE_IMAGE")" == "$objectstore_id" ]] || {
+    echo 'Loaded object-store image ID differs from the approved image' >&2; exit 1;
+  }
+fi
+objectstore_volume=${BARGHSA_STAGING_OBJECTSTORE_VOLUME:-barghsa-staging_objectdata}
+[[ "$objectstore_volume" =~ ^barghsa-staging_objectdata([._-][a-z0-9][a-z0-9._-]*)?$ ]] || {
+  echo 'Invalid active object-store volume name' >&2; exit 1;
+}
 for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE; do
   [[ "${!key:-}" =~ ^barghsa-(app|web|postgres|clamav):vps-[a-z0-9._-]+$ ]] || {
     printf 'Invalid local image tag: %s\n' "$key" >&2; exit 1;
@@ -173,6 +187,23 @@ verify_running_image() {
   fi
 }
 
+verify_objectstore() {
+  [[ -n "$objectstore_id" ]] || return 0
+  local container mount
+  container=$("${dc[@]}" ps -q objectstore) || return
+  if [[ -z "$container" ]]; then
+    echo 'The approved object store must be running before release' >&2
+    return 1
+  fi
+  verify_running_image objectstore "$objectstore_id" "$container" || return
+  mount=$(docker container inspect --format \
+    '{{range .Mounts}}{{if eq .Destination "/data"}}{{.Type}}:{{.Name}}:{{.RW}}{{end}}{{end}}' "$container") || return
+  if [[ "$mount" != "volume:$objectstore_volume:true" ]]; then
+    echo 'Object-store data mount differs from the active volume' >&2
+    return 1
+  fi
+}
+
 rollback() {
   local status=${1:-$?}
   trap - ERR
@@ -196,6 +227,10 @@ rollback() {
     if ! (
       if ! verify_running_image postgres "$postgres_id"; then
         echo 'PostgreSQL image or volume could not be verified for rollback' >&2
+        stop_rollback_services "${previous[@]}"
+        exit 1
+      fi
+      if ! verify_objectstore; then
         stop_rollback_services "${previous[@]}"
         exit 1
       fi
@@ -263,16 +298,22 @@ postgres_container=$("${dc[@]}" ps --all -q postgres)
 if [[ -n "$postgres_container" ]]; then
   verify_running_image postgres "$postgres_id" "$postgres_container"
 fi
+verify_objectstore
 trap rollback ERR
 trap 'rollback 129' HUP
 trap 'rollback 130' INT
 trap 'rollback 143' TERM
 
-# These images are pinned by digest; a cached exact image needs no registry round trip.
-"${dc[@]}" pull --policy missing redis objectstore
+# The repaired object store is transferred and verified before stateful maintenance.
+if [[ -n "$objectstore_id" ]]; then
+  "${dc[@]}" pull --policy missing redis
+else
+  "${dc[@]}" pull --policy missing redis objectstore
+fi
 "${dc[@]}" up -d --no-recreate --wait --wait-timeout 900 postgres redis objectstore clamav
 verify_running_image postgres "$postgres_id"
 verify_running_image clamav "$clamav_id"
+verify_objectstore
 if ! "${dc[@]}" exec -T clamav sh -c 'printf "nVERSION\n" | nc -w 3 127.0.0.1 3310' |
   LC_ALL=C python3 -c '
 from datetime import datetime, timezone
@@ -473,6 +514,7 @@ docker run --rm --env-file "$runtime" --network barghsa-staging-private \
 
 verify_running_image postgres "$postgres_id"
 verify_running_image clamav "$clamav_id"
+verify_objectstore
 pending_active=$(mktemp "${active}.XXXXXXXX")
 if ! install -m 0600 -- "$candidate" "$pending_active"; then
   rm -f -- "$pending_active"

@@ -9778,7 +9778,7 @@
             4015076116499943,
             4209182327757999,
             4241115377612946,
-            4257944719117123
+            912713385575125
           ],
           "checks": [
             4439444302641798,
@@ -9794,7 +9794,8 @@
             1054657676763651,
             4341424141076182,
             2115362914297869,
-            2562915566480803
+            2562915566480803,
+            239515042949512
           ]
         }
       }
@@ -12408,7 +12409,8 @@
         "The November 19 elapsed staging check found the tagged disposable object still current and version 2 deleted while version 1 survived. Held and unclassified controls survived and the policy digest matched the November 14 baseline. Isolated SeaweedFS 4.47 and 4.54 both reproduced the wrong-version deletion with staggered version ages. Only 4.54 passed disposable current-object expiry. Verify ordered retention, actual expiry and protected controls on a compatible provider with a recoverable rollout before accepting this gate.",
         "The first 4.54 prototype retained the correct versions on a restored 4.47 copy but missed an already-aged disposable object. The revised isolated build evaluates both count-gated retention and tag-filtered versioned expiry against current bucket state. It passed expiry, byte reads, exact version order and held and unclassified controls on a restored synthetic copy. Restoring the same checksum-verified backup under 4.47 recovered all original versions. Qualify the exact deployment image, concurrent retention safeguards and live rollout recovery, then verify elapsed staging expiry before accepting.",
         "The repository now builds the fix from a checksum-pinned SeaweedFS 4.54 source with Go 1.27.4. The exact Linux image passed the restored 4.47 fixture and had zero high or critical findings. The P1 remains open. Qualify the image's distribution inventory, verify hold behavior and recoverable staging rollout, and observe elapsed expiry on staging.",
-        "The owner confirmed all 37 objectstore exceptions with their workbook conditions. The strict check matched the exact image, all 275 packages, and the paired notice and source archive. The restored-volume lifecycle and staging S3 probe passed at the staging 768 MiB limit with local loopback endpoints. Verify actual materials delivery, recoverable live rollout and elapsed staging expiry."
+        "The owner confirmed all 37 objectstore exceptions with their workbook conditions. The strict check matched the exact image, all 275 packages, and the paired notice and source archive. The restored-volume lifecycle and staging S3 probe passed at the staging 768 MiB limit with local loopback endpoints. Verify actual materials delivery, recoverable live rollout and elapsed staging expiry.",
+        "The staging receiver now requires the approved running objectstore image and exact writable volume before writers or migrations can proceed. The 23 local and staging Linux fixture tests passed. Complete the separate recoverable storage cutover, material delivery and elapsed lifecycle proof."
       ],
       "owner": null,
       "depends_on": [],
@@ -12505,7 +12507,8 @@
           "release-0.6-admin-probe-cleanup",
           "release-0.6-staging-probe-uncertain-write",
           "release-0.6-staging-storage-policy-readback",
-          "release-0.6-staging-storage-lifecycle-baseline"
+          "release-0.6-staging-storage-lifecycle-baseline",
+          "release-0.6-staging-objectstore-release-receiver"
         ],
         "current_acceptance": null,
         "staging_lifecycle_elapsed_failure": {
@@ -13201,7 +13204,7 @@
             878789146717865,
             680981381061175,
             3513479427036515,
-            77356163763801,
+            881450341471239,
             2577092342995346,
             2645740275209480
           ],
@@ -13256,7 +13259,8 @@
             3499934746180282,
             1608220146988446,
             638491568431204,
-            3181386224650582
+            3181386224650582,
+            4458859255345362
           ]
         }
       }
@@ -15402,9 +15406,9 @@
             2426167627219121,
             3664960298222868,
             2719536177275900,
-            1537323190863352,
-            77356163763801,
-            2865001578239068,
+            2785333276480746,
+            881450341471239,
+            378174069838108,
             2506773297712354,
             753281310031346,
             3317750341468659
@@ -15457,7 +15461,8 @@
             3499934746180282,
             1608220146988446,
             3703417886993783,
-            3181386224650582
+            3181386224650582,
+            2459822372857812
           ]
         }
       }
@@ -19872,8 +19877,8 @@
             1599047804612857,
             3779379415145857,
             2091941185117249,
-            77356163763801,
-            4257944719117123,
+            881450341471239,
+            912713385575125,
             2485658752816053,
             4363839482195469,
             3243034897711484,
@@ -19940,7 +19945,8 @@
             2253619526350552,
             1608220146988446,
             638491568431204,
-            3181386224650582
+            3181386224650582,
+            941689725848481
           ]
         }
       }
@@ -21318,8 +21324,8 @@
             2014961454363098,
             1220101825772327,
             1599047804612857,
-            77356163763801,
-            4257944719117123,
+            881450341471239,
+            912713385575125,
             2485658752816053,
             3917170407626177,
             1082593500875011,
@@ -21430,7 +21436,8 @@
             3012903276163328,
             1608220146988446,
             638491568431204,
-            3181386224650582
+            3181386224650582,
+            941689725848481
           ]
         }
       }
@@ -61735,7 +61742,7 @@
             335271907751690,
             1183468454534810,
             738324130165064,
-            1537323190863352,
+            2785333276480746,
             3108623938713492,
             644211720979049,
             1026419847754339,
@@ -62522,7 +62529,8 @@
             1880326439086662,
             3720899336470004,
             2484943224506275,
-            1511795022188542
+            1511795022188542,
+            228510612796114
           ],
           "presentation_renewals": [
             {
@@ -97748,10 +97756,10 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            77356163763801,
-            4257944719117123,
+            881450341471239,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             2448746277784920,
@@ -98175,7 +98183,8 @@
             3454701496299565,
             1345081247258369,
             1816270634520707,
-            3181386224650582
+            3181386224650582,
+            2767955812168702
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -311068,7 +311077,7 @@
             369294257960186,
             2890151288168295,
             2829329825743575,
-            4257944719117123,
+            912713385575125,
             1230063180731605,
             4434865050022141,
             113690421838329,
@@ -311636,7 +311645,8 @@
             649336315340862,
             3239468737812509,
             1407784332862207,
-            2201600647618761
+            2201600647618761,
+            239515042949512
           ],
           "presentation_renewals": [
             {
@@ -311820,7 +311830,7 @@
             369294257960186,
             2890151288168295,
             2829329825743575,
-            4257944719117123,
+            912713385575125,
             1230063180731605,
             4434865050022141,
             113690421838329,
@@ -312388,7 +312398,8 @@
             649336315340862,
             3239468737812509,
             1407784332862207,
-            2201600647618761
+            2201600647618761,
+            239515042949512
           ],
           "presentation_renewals": [
             {
@@ -312571,7 +312582,7 @@
             369294257960186,
             2890151288168295,
             2829329825743575,
-            4257944719117123,
+            912713385575125,
             1230063180731605,
             4434865050022141,
             113690421838329,
@@ -313139,7 +313150,8 @@
             649336315340862,
             3239468737812509,
             1407784332862207,
-            2201600647618761
+            2201600647618761,
+            239515042949512
           ],
           "presentation_renewals": [
             {
@@ -359640,7 +359652,7 @@
             259494274243887,
             4309141198379617,
             2829329825743575,
-            1537323190863352,
+            2785333276480746,
             1230063180731605,
             3908512161763803,
             4274200221694227,
@@ -359873,7 +359885,8 @@
             1880326439086662,
             3720899336470004,
             2484943224506275,
-            1511795022188542
+            1511795022188542,
+            228510612796114
           ],
           "presentation_renewals": [
             {
@@ -369533,9 +369546,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -369715,7 +369728,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -369915,9 +369929,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -370097,7 +370111,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -370295,9 +370310,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -370477,7 +370492,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -370675,9 +370691,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -370878,7 +370894,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -371291,9 +371308,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -371473,7 +371490,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -371789,10 +371807,10 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            77356163763801,
-            4257944719117123,
+            881450341471239,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             1230063180731605,
@@ -372237,7 +372255,8 @@
             3454701496299565,
             1345081247258369,
             1816270634520707,
-            3181386224650582
+            3181386224650582,
+            2767955812168702
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -372590,9 +372609,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -372772,7 +372791,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -372969,9 +372989,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -373151,7 +373171,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -373349,9 +373370,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -373531,7 +373552,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -373730,9 +373752,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -373933,7 +373955,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -374130,9 +374153,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -374312,7 +374335,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -374509,9 +374533,9 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            4257944719117123,
+            912713385575125,
             3667823558989007,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             3373590423940153,
             4210333381993491,
@@ -374691,7 +374715,8 @@
             2064012016837705,
             1880326439086662,
             3720899336470004,
-            1816270634520707
+            1816270634520707,
+            2297216828564787
           ],
           "presentation_renewals": [
             {
@@ -376030,7 +376055,7 @@
           "source_evidence": [
             4338039208752933,
             2092969738130521,
-            4257944719117123,
+            912713385575125,
             3004271802203158,
             4421281151048076,
             3094706306395470,
@@ -376058,7 +376083,8 @@
             3781215324528146,
             2562915566480803,
             3239468737812509,
-            2763168939394585
+            2763168939394585,
+            239515042949512
           ]
         }
       }
@@ -376116,7 +376142,7 @@
             504867543476242,
             2601889625513770,
             3271279376111875,
-            4257944719117123,
+            912713385575125,
             3004271802203158,
             3580763562437991,
             4182988779184364,
@@ -376156,7 +376182,8 @@
             2562915566480803,
             3239468737812509,
             2763168939394585,
-            2983158311970137
+            2983158311970137,
+            239515042949512
           ]
         }
       }
@@ -379341,7 +379368,7 @@
             1054042870946519,
             1517466251251333,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             3709147928938153,
             2075556512260868
           ],
@@ -379387,7 +379414,8 @@
             3054664170731583,
             1889525020198242,
             2379578128810161,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       }
@@ -379431,7 +379459,7 @@
             1054042870946519,
             1517466251251333,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             3709147928938153
           ],
           "checks": [
@@ -379451,7 +379479,8 @@
             4341424141076182,
             3808758057641086,
             3054664170731583,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       }
@@ -379696,7 +379725,7 @@
             1054042870946519,
             1517466251251333,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             3709147928938153,
             2075556512260868
           ],
@@ -379742,7 +379771,8 @@
             3054664170731583,
             1889525020198242,
             2379578128810161,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       }
@@ -379918,7 +379948,7 @@
             1054042870946519,
             1517466251251333,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             4476611148532011,
             3591853430902160,
             680981381061175,
@@ -379945,7 +379975,8 @@
             4341424141076182,
             3808758057641086,
             3054664170731583,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       }
@@ -385201,7 +385232,7 @@
           "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
           "source_evidence": [
             878789146717865,
-            77356163763801,
+            881450341471239,
             680981381061175,
             2577092342995346,
             3513479427036515,
@@ -385259,7 +385290,8 @@
             3499934746180282,
             1608220146988446,
             638491568431204,
-            3181386224650582
+            3181386224650582,
+            4458859255345362
           ]
         }
       }
@@ -386571,7 +386603,7 @@
             2196600251640641,
             315337029627335,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             3108623938713492
           ],
           "checks": [
@@ -386612,7 +386644,8 @@
             1946058500922369,
             3864188913298834,
             3239468737812509,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       },
@@ -387529,7 +387562,7 @@
             4406911412757718,
             533651428807525,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             647897858947698,
             3134026023299905,
             4164258886142913
@@ -387555,7 +387588,8 @@
             145435064327048,
             2253619526350552,
             1660715985267185,
-            2738410776947585
+            2738410776947585,
+            239515042949512
           ]
         }
       }
@@ -389322,7 +389356,7 @@
             4338039208752933,
             1368919690263265,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             2485658752816053,
             4460707284961423,
             876284429132128,
@@ -389347,7 +389381,8 @@
             4341424141076182,
             2115362914297869,
             2562915566480803,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       }
@@ -389701,7 +389736,7 @@
           "kind": "reviewed-repository-threat-model-and-process",
           "base_commit": "76078aa9cac598593b213692553765253d58bce2",
           "source_evidence": [
-            4257944719117123,
+            912713385575125,
             684448568822175
           ],
           "checks": [
@@ -389715,7 +389750,8 @@
             2353683670879282,
             4111121724035326,
             1054657676763651,
-            4341424141076182
+            4341424141076182,
+            239515042949512
           ]
         }
       },
@@ -389761,7 +389797,7 @@
           "kind": "reviewed-repository-threat-model-and-process",
           "base_commit": "76078aa9cac598593b213692553765253d58bce2",
           "source_evidence": [
-            4257944719117123,
+            912713385575125,
             4052544849490977,
             684448568822175
           ],
@@ -389806,7 +389842,8 @@
             2853061486994848,
             1054657676763651,
             4341424141076182,
-            3282104002303968
+            3282104002303968,
+            239515042949512
           ]
         }
       },
@@ -400354,7 +400391,7 @@
             2752605459844465,
             3689002454873470,
             680981381061175,
-            4257944719117123,
+            912713385575125,
             3894075223168185,
             1724932521307524,
             2203925458818864
@@ -400372,7 +400409,8 @@
             1633305571623058,
             3377812092956924,
             2569797323340346,
-            1349355370811221
+            1349355370811221,
+            239515042949512
           ]
         }
       }
@@ -401023,7 +401061,7 @@
             1657744382337854,
             3060357761681718,
             1225596886225839,
-            4257944719117123,
+            912713385575125,
             680981381061175,
             2232861611025621
           ],
@@ -401066,7 +401104,8 @@
             2532431653574813,
             1032824940140882,
             2991523800540785,
-            965268192787915
+            965268192787915,
+            239515042949512
           ]
         }
       }
@@ -405152,7 +405191,7 @@
             4071959884264566,
             2201308583917101,
             1657744382337854,
-            4257944719117123,
+            912713385575125,
             3917170407626177,
             1869263342022641,
             4338563790015953,
@@ -405223,7 +405262,8 @@
             2769967237423255,
             3491920403995021,
             3629627640434884,
-            2197651103075413
+            2197651103075413,
+            239515042949512
           ]
         }
       }
@@ -405307,7 +405347,7 @@
             4071959884264566,
             2201308583917101,
             1657744382337854,
-            4257944719117123,
+            912713385575125,
             3917170407626177,
             1869263342022641,
             4338563790015953,
@@ -405378,7 +405418,8 @@
             2769967237423255,
             3491920403995021,
             3629627640434884,
-            2197651103075413
+            2197651103075413,
+            239515042949512
           ]
         }
       }
@@ -405546,7 +405587,7 @@
             4071959884264566,
             2201308583917101,
             1657744382337854,
-            4257944719117123,
+            912713385575125,
             3917170407626177,
             1869263342022641,
             4338563790015953,
@@ -405666,7 +405707,8 @@
             2769967237423255,
             3491920403995021,
             3629627640434884,
-            2197651103075413
+            2197651103075413,
+            239515042949512
           ]
         }
       }
@@ -407341,7 +407383,7 @@
             1368919690263265,
             1225596886225839,
             1599047804612857,
-            4257944719117123,
+            912713385575125,
             1916129011609021,
             2485658752816053,
             3917170407626177,
@@ -407402,7 +407444,8 @@
             1889525020198242,
             2379578128810161,
             392023230978439,
-            2253619526350552
+            2253619526350552,
+            239515042949512
           ]
         }
       }
@@ -557243,13 +557286,13 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            77356163763801,
-            4257944719117123,
+            881450341471239,
+            912713385575125,
             1916129011609021,
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -558190,7 +558233,8 @@
             3842280649162748,
             1816270634520707,
             3287616644835669,
-            1897851227767987
+            1897851227767987,
+            2767955812168702
           ],
           "presentation_renewals": [
             {
@@ -559239,13 +559283,13 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            77356163763801,
-            4257944719117123,
+            881450341471239,
+            912713385575125,
             1916129011609021,
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            1537323190863352,
+            2785333276480746,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -560089,7 +560133,8 @@
             3842280649162748,
             1816270634520707,
             3287616644835669,
-            1897851227767987
+            1897851227767987,
+            2767955812168702
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -762602,6 +762647,97 @@
           "sha256": "0a38651771db25f6527b86e70a1c24ed75fd5c1d17c76bdd9836d6dea648c6d0"
         }
       ]
+    },
+    "release-0.6-staging-objectstore-release-receiver": {
+      "batch": "release-0.6-staging-objectstore-release-receiver",
+      "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.03",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.08.01.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.16.02.02",
+        "06-security-testing-observability.md#T-06.16.02.03",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/compose.yml",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "1421066f7ac6db7eaa45db72e35e93a4e0d5c4d4c2b16fb60ed583fddb8f5741"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "2f0ada2675415b95ded2e39e9409fb26dad1267ab3122432955cd8c58f684946"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "a0452b9845993504a7cb399d858bea19733e600beda77c5c0744538196220231"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "015d4208bccc73c7325a7f491a5ed9c9eafd9eddaf5a5b9dbbae24b1f4b6ccde"
+        }
+      ],
+      "checks": [
+        "All 23 staging receiver tests passed locally and from an isolated source fixture on the live staging Linux host. The fixtures checked eight rejected storage configurations and mounts, verified one approved runtime and preserved the legacy path.",
+        "Rendered legacy Compose JSON exactly matches the preceding source. Rendering the repaired setup changes only the objectstore image reference and its named volume. No other service, route, health check, mount target or port changes.",
+        "Bash syntax, ShellCheck, scoped Markdown/YAML formatting and git diff --check passed."
+      ],
+      "limitations": [
+        "The tests execute the receiver guards, Compose rendering and rollback fixtures. The live objectstore has yet to be cut over and the elapsed lifecycle and material delivery receipts remain open."
+      ],
+      "external_evidence": {
+        "staging_native_receiver": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-receiver-20261119.json",
+          "sha256": "4840b1d7f98adc804bcf4752476163c05ebc9cb5abe05bb9ae3fb9aa5c79b980"
+        }
+      },
+      "execution_receipts": {
+        "staging_native_receiver": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-lifecycle-provider-regression/staging-storage-receiver-native-20261119.log"
+      }
     }
   },
   "historical_improvements": [
@@ -766892,9 +767028,9 @@
         "path": "apps/web/healthcheck.js",
         "sha256": "4d2fc81cf04fcaffc127be89df3a8405ffe55f75d5a7f14e6cd403e8135fe20d"
       },
-      "4257944719117123": {
+      "912713385575125": {
         "path": "deploy/staging/compose.yml",
-        "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        "sha256": "2f0ada2675415b95ded2e39e9409fb26dad1267ab3122432955cd8c58f684946"
       },
       "2485658752816053": {
         "path": "docker-compose.prod.yml",
@@ -767440,9 +767576,9 @@
         "path": "scripts/check-staging-proxy.mjs",
         "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
       },
-      "77356163763801": {
+      "881450341471239": {
         "path": "deploy/staging/README.md",
-        "sha256": "6c4e4e2bc997e3f7dac33ea55e741328cb545299ac65fdc81e40305b0855da65"
+        "sha256": "1421066f7ac6db7eaa45db72e35e93a4e0d5c4d4c2b16fb60ed583fddb8f5741"
       },
       "3837771807479024": {
         "path": "apps/api/src/common/etag.interceptor.ts",
@@ -767696,13 +767832,13 @@
         "path": "docs/runbooks/bad-deployment.md",
         "sha256": "4d49509afa1af4dd865f7f39d2acd6978b70341e98b7ca4998bb58ced8a76720"
       },
-      "1537323190863352": {
+      "2785333276480746": {
         "path": "deploy/staging/release.sh",
-        "sha256": "bf5fd414080b6b9c51299cdcfcac1c0d87425d8252052e1f1c473d73cf6d9c8c"
+        "sha256": "a0452b9845993504a7cb399d858bea19733e600beda77c5c0744538196220231"
       },
-      "2865001578239068": {
+      "378174069838108": {
         "path": "deploy/staging/test_release_rollback.py",
-        "sha256": "a62b93dab6e606a8b8f8ceb9596a0fabfc394eb16e9d5ab8b13c212180e1bab2"
+        "sha256": "015d4208bccc73c7325a7f491a5ed9c9eafd9eddaf5a5b9dbbae24b1f4b6ccde"
       },
       "2506773297712354": {
         "path": "deploy/production/guarded-rollout.py",
@@ -783687,6 +783823,14 @@
         ],
         "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
       },
+      "239515042949512": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/compose.yml"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
+      },
       "1311070312075465": {
         "batch": "release-0.6-environment-indicator",
         "base_commit": "edc967b386d310bdcbdce91fec06f501c0d0c47d",
@@ -785101,6 +785245,14 @@
         ],
         "scope": "The staging queue validates the written review reference already emitted by the strict license audit. The fix covers application bundles and retained image receipts. All 30 queue, 21 rollback and 11 license-audit tests passed."
       },
+      "4458859255345362": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
+      },
       "632352904530847": {
         "batch": "release-0.6-environment-indicator",
         "base_commit": "edc967b386d310bdcbdce91fec06f501c0d0c47d",
@@ -785682,6 +785834,16 @@
           "deploy/staging/test_release_rollback.py"
         ],
         "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
+      },
+      "2459822372857812": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/release.sh",
+          "deploy/staging/README.md",
+          "deploy/staging/test_release_rollback.py"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
       },
       "1872787075134013": {
         "batch": "release-0.6-load-client-address-fixture",
@@ -786657,6 +786819,15 @@
           "apps/web/test/server.spec.ts"
         ],
         "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+      },
+      "941689725848481": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/compose.yml"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
       },
       "3601319476379502": {
         "batch": "release-0.6-provider-tests-outside-transactions",
@@ -791767,6 +791938,14 @@
         ],
         "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
       },
+      "228510612796114": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/release.sh"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
+      },
       "3685737157540087": {
         "batch": "release-0.6-dashboard-grid-after-entrance",
         "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
@@ -795806,6 +795985,16 @@
           "deploy/staging/release.sh"
         ],
         "scope": "Renewed only the staging receiver, rollback-test and runbook bindings after the pre-quiesce WAL and migration backup recovery configuration check. The related deployment and rollback suite passed. Existing evidence continues to cover previously verified application paths."
+      },
+      "2767955812168702": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/compose.yml",
+          "deploy/staging/release.sh"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
       },
       "3844342463607983": {
         "batch": "release-0.5-theme-direction-completion",
@@ -799929,6 +800118,15 @@
           "apps/worker/src/ai-inference/server.ts"
         ],
         "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
+      },
+      "2297216828564787": {
+        "batch": "release-0.6-staging-objectstore-release-receiver",
+        "base_commit": "619e723c608322f15ba724fd3746903cbf8a709c",
+        "paths": [
+          "deploy/staging/compose.yml",
+          "deploy/staging/release.sh"
+        ],
+        "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
       },
       "1028415289980595": {
         "batch": "release-0.6-operator-log-pseudonyms",

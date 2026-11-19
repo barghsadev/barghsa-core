@@ -308,9 +308,24 @@ verifies the transferred archive before loading it. The existing health,
 migration, image readback and Telegram checks apply. Keep the retained database
 and scanner scan receipts with the same release evidence.
 
-Redis and object-store images are pinned by digest. Already installed exact
-images are reused with Compose's `--policy missing`; missing images are still
-pulled and a failed pull blocks the release.
+Redis and the legacy object-store image use digest-pinned registry references.
+Compose pulls missing registry images. For v0.6.0 and later, first complete a
+separate object-store cutover with verified source and notice materials. The
+application release requires the running repaired image and its intended data mount.
+
+For the storage cutover, acquire `/run/lock/barghsa-staging-release.lock` and
+quiesce application writers and direct S3 writes at the edge. Stop the old
+object store and retain its original image and volume. Verify the cold copy's
+checksum before restoring it to a separate `barghsa-staging_objectdata` volume
+with a suffix for the cutover. Set `BARGHSA_STAGING_OBJECTSTORE_IMAGE` to
+`barghsa-storage-lifecycle:repository-4.54` and
+`BARGHSA_STAGING_OBJECTSTORE_VOLUME` to the new volume name in the protected
+staging runtime file. Start only the storage service using the verified local
+image. Verify authenticated readback, version order and lifecycle policies
+before allowing writes. If validation fails before writes resume, restore the
+previous runtime settings and original volume while holding the lock. After
+writes resume, preserve the new volume and reconcile its changes before any
+rollback. The application release does not switch storage images or volumes.
 
 The NGINX configuration gives auth, upload and AI separate per-IP quotas.
 The edge returns a localized JSON `429` and `Retry-After` while the API keeps
