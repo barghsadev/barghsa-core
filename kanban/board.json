@@ -15575,7 +15575,8 @@
         "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
         "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open.",
         "Scheduled runs 44278844002 and 44500665254 exposed subpixel failures measuring mobile electricity contract action targets. The corrected stylesheet passed all 2,000 translated positions and 10 repeated mobile Chromium journeys. The related browser run found two mobile Safari password-meter contrast failures during fade-in. The corrected meter passed all eight forced-change configurations and the full 28-case affected auth selection with zero retries. The complete nightly rollup, scheduled delivery and immutable candidate gate remain required.",
-        "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required."
+        "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required.",
+        "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -15705,6 +15706,10 @@
         "onboarding_autosave_navigation_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/onboarding-autosave-navigation-20261119.json",
           "sha256": "1ec791e2dff762b11ce56c097558142b46d89e9939fb67d393d6cbabad294a8e"
+        },
+        "conversation_identity_menu_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/conversation-identity-menu-stability-20261119.json",
+          "sha256": "d5fbbcca44da303e8213d3766d9beeb7fbdcc4d03f64eff55120c6c44610a827"
         }
       }
     },
@@ -19122,7 +19127,7 @@
             2001846797578626,
             4389833239456302,
             3348094398928691,
-            2281317818285942,
+            1532388261548843,
             1950795568405193,
             2741699709531970,
             2364683364338954,
@@ -19205,7 +19210,8 @@
             3629627640434884,
             2197651103075413,
             1615895441467583,
-            1721639407168843
+            1721639407168843,
+            2784096218352567
           ]
         }
       }
@@ -162880,8 +162886,8 @@
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
           "reviewed_sha": "39b110c9fd087865cfaaf1ef07b1ccdc5edea6c9",
           "source_evidence": [
-            2281317818285942,
-            2356443632718632,
+            1532388261548843,
+            4394326071444059,
             3261278711368752,
             1345985288571562,
             3261357889059016,
@@ -163443,7 +163449,8 @@
             3341326461649856,
             2484943224506275,
             1511795022188542,
-            1279297292794248
+            1279297292794248,
+            16992559525100
           ],
           "presentation_renewals": [
             {
@@ -163607,8 +163614,8 @@
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
           "reviewed_sha": "39b110c9fd087865cfaaf1ef07b1ccdc5edea6c9",
           "source_evidence": [
-            2281317818285942,
-            2356443632718632,
+            1532388261548843,
+            4394326071444059,
             3261278711368752,
             1345985288571562,
             3261357889059016,
@@ -164170,7 +164177,8 @@
             3341326461649856,
             2484943224506275,
             1511795022188542,
-            1279297292794248
+            1279297292794248,
+            16992559525100
           ],
           "presentation_renewals": [
             {
@@ -164367,12 +164375,12 @@
             2597245546768185,
             335271907751690,
             1966312591147565,
-            2356443632718632,
+            4394326071444059,
             568816169873130,
             1345985288571562,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             1155005692474219,
             3261357889059016,
             2822808182725611,
@@ -165001,7 +165009,8 @@
             3341326461649856,
             2484943224506275,
             1511795022188542,
-            732553660899599
+            732553660899599,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -165247,12 +165256,12 @@
             2597245546768185,
             335271907751690,
             1966312591147565,
-            2356443632718632,
+            4394326071444059,
             568816169873130,
             1345985288571562,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             2001105146384972,
             1027339373480767,
             4488981332017330,
@@ -166444,7 +166453,8 @@
             3341326461649856,
             2484943224506275,
             1511795022188542,
-            732553660899599
+            732553660899599,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -166735,12 +166745,12 @@
             2597245546768185,
             335271907751690,
             1966312591147565,
-            2356443632718632,
+            4394326071444059,
             568816169873130,
             1345985288571562,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             2001105146384972,
             1027339373480767,
             4488981332017330,
@@ -167932,7 +167942,8 @@
             3341326461649856,
             2484943224506275,
             1511795022188542,
-            732553660899599
+            732553660899599,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -168140,8 +168151,8 @@
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
           "reviewed_sha": "39b110c9fd087865cfaaf1ef07b1ccdc5edea6c9",
           "source_evidence": [
-            2281317818285942,
-            2356443632718632,
+            1532388261548843,
+            4394326071444059,
             3261278711368752,
             1345985288571562,
             3261357889059016,
@@ -168703,7 +168714,8 @@
             3341326461649856,
             2484943224506275,
             1511795022188542,
-            1279297292794248
+            1279297292794248,
+            16992559525100
           ],
           "presentation_renewals": [
             {
@@ -418758,7 +418770,7 @@
             3471057164537066,
             335271907751690,
             1789483761168738,
-            2281317818285942,
+            1532388261548843,
             2290875619539084,
             2858370885884236,
             2809721327900423,
@@ -418969,7 +418981,8 @@
             3407644592663993,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            2784096218352567
           ]
         },
         "acceptance_history": [
@@ -419146,7 +419159,7 @@
             1345985288571562,
             1789483761168738,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             3126800061976968,
             3000490126573589,
             1916289050188735,
@@ -419695,7 +419708,8 @@
             446919204610362,
             2764106535779115,
             2368353321927125,
-            1721639407168843
+            1721639407168843,
+            2784096218352567
           ]
         },
         "acceptance_history": [
@@ -420497,7 +420511,7 @@
             2604158983346984,
             2392537952417035,
             28263692557630,
-            2281317818285942,
+            1532388261548843,
             737735267649886,
             1024702215357186,
             3000490126573589,
@@ -421042,7 +421056,8 @@
             941346798338012,
             842218650528331,
             1934240793389591,
-            3476363656192367
+            3476363656192367,
+            2784096218352567
           ],
           "presentation_renewals": [
             {
@@ -423705,7 +423720,7 @@
             2604158983346984,
             2392537952417035,
             28263692557630,
-            2281317818285942,
+            1532388261548843,
             737735267649886,
             1024702215357186,
             3000490126573589,
@@ -424250,7 +424265,8 @@
             941346798338012,
             842218650528331,
             1934240793389591,
-            3476363656192367
+            3476363656192367,
+            2784096218352567
           ],
           "presentation_renewals": [
             {
@@ -435605,7 +435621,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -435613,7 +435629,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -435764,7 +435780,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -436104,7 +436121,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -436112,7 +436129,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -436263,7 +436280,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -436602,7 +436620,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -436610,7 +436628,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -436761,7 +436779,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -438752,7 +438771,7 @@
             3971271498446652,
             3168815782173836,
             1345985288571562,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             59610264634992,
@@ -439026,7 +439045,8 @@
             842218650528331,
             1735775986935962,
             1721639407168843,
-            3476363656192367
+            3476363656192367,
+            2784096218352567
           ]
         }
       }
@@ -470629,7 +470649,7 @@
             1534809048361187,
             1040589702438338,
             1966312591147565,
-            2356443632718632,
+            4394326071444059,
             2604158983346984,
             2150421867501057,
             4145707581668751,
@@ -470637,7 +470657,7 @@
             1345985288571562,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             59610264634992,
@@ -471178,7 +471198,8 @@
             1666341313318083,
             2222173171812634,
             3346217408432432,
-            3476363656192367
+            3476363656192367,
+            4259610104572512
           ]
         }
       }
@@ -493621,7 +493642,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -493629,7 +493650,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -493780,7 +493801,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -494119,7 +494141,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -494127,7 +494149,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -494278,7 +494300,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -494617,7 +494640,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -494625,7 +494648,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -494776,7 +494799,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -495115,7 +495139,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -495123,7 +495147,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -495274,7 +495298,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -495617,7 +495642,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -495625,7 +495650,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -495776,7 +495801,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -496115,7 +496141,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -496123,7 +496149,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -496274,7 +496300,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -496614,7 +496641,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -496622,7 +496649,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -496773,7 +496800,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -497113,7 +497141,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -497121,7 +497149,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -497272,7 +497300,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -497612,7 +497641,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -497620,7 +497649,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -497771,7 +497800,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -498111,7 +498141,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -498119,7 +498149,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -498270,7 +498300,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -498610,7 +498641,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -498618,7 +498649,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -498769,7 +498800,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -499109,7 +499141,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -499117,7 +499149,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -499268,7 +499300,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -499608,7 +499641,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -499616,7 +499649,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -499767,7 +499800,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -500107,7 +500141,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -500115,7 +500149,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -500266,7 +500300,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -500606,7 +500641,7 @@
             2518364668412847,
             3279350101095092,
             4137863011179318,
-            2356443632718632,
+            4394326071444059,
             2266764049265778,
             3614352170563181,
             568816169873130,
@@ -500614,7 +500649,7 @@
             1789483761168738,
             3546299060044917,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             737735267649886,
             1737389312768062,
@@ -500765,7 +500800,8 @@
             2927939502738672,
             446919204610362,
             842218650528331,
-            1721639407168843
+            1721639407168843,
+            4259610104572512
           ],
           "presentation_renewals": [
             {
@@ -562331,7 +562367,7 @@
             1345985288571562,
             1789483761168738,
             3261278711368752,
-            2281317818285942,
+            1532388261548843,
             865826829246061,
             59610264634992,
             1408300001479135,
@@ -562640,7 +562676,7 @@
             3192154593406260,
             2910294446990841,
             4036610727640613,
-            2356443632718632,
+            4394326071444059,
             671040835498156,
             2657756049063145,
             837420416914918,
@@ -563007,7 +563043,8 @@
             44093114943962,
             1735775986935962,
             1721639407168843,
-            3476363656192367
+            3476363656192367,
+            16992559525100
           ]
         },
         "batches": [
@@ -563440,7 +563477,8 @@
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
         "Scheduled runs 44278844002 and 44500665254 exposed subpixel failures measuring mobile electricity contract action targets. The corrected stylesheet passed all 2,000 translated positions and 10 repeated mobile Chromium journeys. The related browser run found two mobile Safari password-meter contrast failures during fade-in. The corrected meter passed all eight forced-change configurations and the full 28-case affected auth selection with zero retries. The complete nightly rollup, scheduled delivery and immutable candidate gate remain required.",
         "Hosted strict native coverage job 135820385818 passed all 14 tasks at 3f8929fdd with 18,029 passing Vitest cases. Its only skip was the conditional ClamAV integration case, verified independently against the real staging scanner on a69a51c71. Coverage and promotion-quarantine artifacts matched their published checksums. The full browser, combined coverage and frozen candidate gates remain open.",
-        "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required."
+        "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required.",
+        "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -564227,6 +564265,10 @@
         "onboarding_autosave_navigation_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/onboarding-autosave-navigation-20261119.json",
           "sha256": "1ec791e2dff762b11ce56c097558142b46d89e9939fb67d393d6cbabad294a8e"
+        },
+        "conversation_identity_menu_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/conversation-identity-menu-stability-20261119.json",
+          "sha256": "d5fbbcca44da303e8213d3766d9beeb7fbdcc4d03f64eff55120c6c44610a827"
         }
       }
     },
@@ -564619,7 +564661,7 @@
             7811877324909,
             62457317077143,
             3422561078713283,
-            2281317818285942,
+            1532388261548843,
             1950795568405193,
             564603524709210,
             1277649889756652,
@@ -564648,7 +564690,8 @@
             1694471896052280,
             1848654220517792,
             3769678244004496,
-            1721639407168843
+            1721639407168843,
+            2784096218352567
           ]
         }
       }
@@ -769947,9 +769990,9 @@
         "path": "apps/web/index.html",
         "sha256": "84f023baf7bccb06256efc85e8af9ab506f7219f542df333c577162efbc2acf3"
       },
-      "2281317818285942": {
+      "1532388261548843": {
         "path": "apps/web/src/components/ProfileMenu.tsx",
-        "sha256": "8f22e26959cf7ce4c89984c5e689905f0bdfee81ff9b872f01cd043f2f5b6d8c"
+        "sha256": "a14526b490bff2e03a16970ddca65a502d9445755c5aead38628ce7302dc3b09"
       },
       "1950795568405193": {
         "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -777107,9 +777150,9 @@
         "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
         "sha256": "6749b87bf32c141145ee9b31415b542dafbcbcd14c3a8d78f301ed432db8f428"
       },
-      "2356443632718632": {
+      "4394326071444059": {
         "path": "apps/web/src/components/OperatingContextSwitch.tsx",
-        "sha256": "4593aac13b37b5807b9f89a800abf8c522cb25c2745c71d2cbe6e6affe976c2d"
+        "sha256": "68336ee765b44dc668fa51c41ba61caaf4df3ac50a0176bf3c2cabf1bf7fceb2"
       },
       "3261278711368752": {
         "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -787994,6 +788037,14 @@
           "packages/api-client/src/openapi.generated.d.ts"
         ],
         "scope": "Added only dual-approval threshold history, draft and activation and their localized settings UI. Existing OpenAPI definitions were compared for equality. Existing threshold writes still return the same shape and use the same permissions, OTP and lock. The generic recovery dialog retains its existing optional verification behavior for other callers. The affected API, web and shared SQL lint suites passed."
+      },
+      "2784096218352567": {
+        "batch": "release-0.6-conversation-identity-menu",
+        "base_commit": "53dc0af1161c78057aa9a2838be963383bfe8831",
+        "paths": [
+          "apps/web/src/components/ProfileMenu.tsx"
+        ],
+        "scope": "The account menu displays its context row and secondary actions together while retaining the deferred workspace switch. Renewed only the changed menu behavior and its context, navigation, preferences, retry and accessibility callers. The controlled reproduction, 51 browser cases, 22 unit cases and 105 bundle budgets passed. Evidence: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/conversation-identity-menu-stability-20261119.json."
       },
       "3847046591393488": {
         "batch": "release-0.6-report-mounted-emergency-recovery",
@@ -798992,6 +799043,15 @@
         ],
         "scope": "Added only dual-approval threshold history, draft and activation and their localized settings UI. Existing OpenAPI definitions were compared for equality. Existing threshold writes still return the same shape and use the same permissions, OTP and lock. The generic recovery dialog retains its existing optional verification behavior for other callers. The affected API, web and shared SQL lint suites passed."
       },
+      "16992559525100": {
+        "batch": "release-0.6-conversation-identity-menu",
+        "base_commit": "53dc0af1161c78057aa9a2838be963383bfe8831",
+        "paths": [
+          "apps/web/src/components/ProfileMenu.tsx",
+          "apps/web/src/components/OperatingContextSwitch.tsx"
+        ],
+        "scope": "The account menu displays its context row and secondary actions together while retaining the deferred workspace switch. Renewed only the changed menu behavior and its context, navigation, preferences, retry and accessibility callers. The controlled reproduction, 51 browser cases, 22 unit cases and 105 bundle budgets passed. Evidence: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/conversation-identity-menu-stability-20261119.json."
+      },
       "1913889931923219": {
         "batch": "release-0.5-ai-chat-journeys",
         "base_commit": "87fe01a7208b02300da96e9c0936dad42b3d9643",
@@ -799031,6 +799091,15 @@
           "apps/worker/src/jobs/async-runner.ts"
         ],
         "scope": "Migration 0295 appends a nullable, validated, immutable trace parent to async jobs. The previous migration journal entries, lease/retry behavior and external job fields are preserved. The two reviewed SQL digests were renewed after checking that all interpolated expressions are identical; the new value is driver-bound."
+      },
+      "4259610104572512": {
+        "batch": "release-0.6-conversation-identity-menu",
+        "base_commit": "53dc0af1161c78057aa9a2838be963383bfe8831",
+        "paths": [
+          "apps/web/src/components/OperatingContextSwitch.tsx",
+          "apps/web/src/components/ProfileMenu.tsx"
+        ],
+        "scope": "The account menu displays its context row and secondary actions together while retaining the deferred workspace switch. Renewed only the changed menu behavior and its context, navigation, preferences, retry and accessibility callers. The controlled reproduction, 51 browser cases, 22 unit cases and 105 bundle budgets passed. Evidence: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/conversation-identity-menu-stability-20261119.json."
       },
       "494628715011627": {
         "batch": "release-0.5-expanded-verification-settings",

@@ -20,7 +20,8 @@ export function OperatingContextSwitch(props: OperatingContextProps) {
 }
 
 function OwnedContextSwitch({ area, locale, session }: OperatingContextProps) {
-  const [canSwitch, setCanSwitch] = useState(false);
+  const [fetchedCanSwitch, setFetchedCanSwitch] = useState(false);
+  const canSwitch = session === undefined ? fetchedCanSwitch : (session?.canSwitchContext ?? false);
   const [state, setState] = useState<'ready' | 'pending' | 'denied' | 'unconfirmed'>('ready');
   const request = useRef<AbortController | null>(null);
   const current = area === 'admin' ? 'staff' : 'customer';
@@ -28,17 +29,14 @@ function OwnedContextSwitch({ area, locale, session }: OperatingContextProps) {
   const switchLabel = workspaceModeText(target === 'staff' ? 'toStaff' : 'toCustomer', locale);
 
   useEffect(() => {
-    if (session !== undefined) {
-      setCanSwitch(session?.canSwitchContext ?? false);
-      return;
-    }
+    if (session !== undefined) return;
     const controller = new AbortController();
     void readSessionContext(controller.signal)
       .then((session) => {
-        if (!controller.signal.aborted) setCanSwitch(session?.canSwitchContext ?? false);
+        if (!controller.signal.aborted) setFetchedCanSwitch(session?.canSwitchContext ?? false);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setCanSwitch(false);
+        if (!controller.signal.aborted) setFetchedCanSwitch(false);
       });
     return () => controller.abort();
   }, [session]);

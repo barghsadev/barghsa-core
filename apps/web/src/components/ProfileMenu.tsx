@@ -12,9 +12,11 @@ import {
   SizedAvatar,
 } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
+import { t } from '@barghsa/i18n/workspace';
 import { useAsyncData } from '../hooks/useAsyncData.js';
 import { parseSessionContext } from '../lib/session-role.js';
 import { withCsrf } from '../lib/csrf.js';
+
 const OperatingContextSwitch = lazy(() =>
   import('./OperatingContextSwitch.js').then((module) => ({
     default: module.OperatingContextSwitch,
@@ -25,7 +27,6 @@ const ConversationIdentityDialog = lazy(() =>
     default: module.ConversationIdentityDialog,
   }))
 );
-import { t } from '@barghsa/i18n/workspace';
 
 async function readAccount(response: Response) {
   if (!response.ok) throw new Error('Account unavailable');
@@ -162,53 +163,52 @@ export function ProfileMenu({
               </>
             )}
           </div>
-          <div className="space-y-2 border-t pt-3">
-            {opened && (
-              <Suspense fallback={account.status === 'loading' ? null : accountLoading}>
-                <OperatingContextSwitch area={area} locale={locale} session={user} />
-              </Suspense>
+          {/* The context row and the actions below it must appear together. */}
+          <Suspense fallback={account.status === 'loading' ? null : accountLoading}>
+            <div className="space-y-2 border-t pt-3">
+              {opened && <OperatingContextSwitch area={area} locale={locale} session={user} />}
+              {preferences}
+            </div>
+            <nav aria-label={shellText('account', locale)} className="space-y-1 border-t pt-3">
+              <Button
+                variant="ghost"
+                className="w-full justify-start"
+                onClick={() => {
+                  setOpen(false);
+                  setIdentityOpen(true);
+                }}
+              >
+                <UserRound aria-hidden="true" />
+                {t('conversationIdentity.title', locale)}
+              </Button>
+              <Link
+                to={area === 'admin' ? '/settings/username' : '/settings/profile'}
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                <UserRound className="size-4" aria-hidden="true" />
+                {shellText('myProfile', locale)}
+              </Link>
+              <Link to="/settings" className={linkClass} onClick={() => setOpen(false)}>
+                <Settings className="size-4" aria-hidden="true" />
+                {shellText('settings', locale)}
+              </Link>
+            </nav>
+            {error && (
+              <p role="alert" className="text-sm text-destructive">
+                {shellText('logoutError', locale)}
+              </p>
             )}
-            {preferences}
-          </div>
-          <nav aria-label={shellText('account', locale)} className="space-y-1 border-t pt-3">
             <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => {
-                setOpen(false);
-                setIdentityOpen(true);
-              }}
+              variant="outline"
+              disabled={pending}
+              onClick={() => void logout()}
+              className="justify-start"
             >
-              <UserRound aria-hidden="true" />
-              {t('conversationIdentity.title', locale)}
+              <LogOut aria-hidden="true" />
+              {shellText(pending ? 'logoutPending' : 'logout', locale)}
             </Button>
-            <Link
-              to={area === 'admin' ? '/settings/username' : '/settings/profile'}
-              className={linkClass}
-              onClick={() => setOpen(false)}
-            >
-              <UserRound className="size-4" aria-hidden="true" />
-              {shellText('myProfile', locale)}
-            </Link>
-            <Link to="/settings" className={linkClass} onClick={() => setOpen(false)}>
-              <Settings className="size-4" aria-hidden="true" />
-              {shellText('settings', locale)}
-            </Link>
-          </nav>
-          {error && (
-            <p role="alert" className="text-sm text-destructive">
-              {shellText('logoutError', locale)}
-            </p>
-          )}
-          <Button
-            variant="outline"
-            disabled={pending}
-            onClick={() => void logout()}
-            className="justify-start"
-          >
-            <LogOut aria-hidden="true" />
-            {shellText(pending ? 'logoutPending' : 'logout', locale)}
-          </Button>
+          </Suspense>
         </PopoverContent>
       </Popover>
       {identityOpen && (
