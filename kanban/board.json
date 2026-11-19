@@ -14763,7 +14763,8 @@
         "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged.",
         "The separate exact objectstore license audit passed with 238 allowlisted entries and 37 owner-approved exceptions. The final v0.6.0 image set and distribution conditions still need release evidence.",
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
-        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts."
+        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
+        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -14959,6 +14960,10 @@
           "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
           "run": "https://github.com/barghsadev/barghsa-core/actions/runs/44597706568",
           "artifact_id": 14567461549
+        },
+        "musl_source_and_notice_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-libvips-source-and-notice-readback-20261120.json",
+          "sha256": "b69c8b30c68b0822c06ceb9578b902594ebc88a06947073c623257537faebafb"
         }
       },
       "blocker": null
@@ -30510,7 +30515,7 @@
             1499669892738514,
             617608376516237,
             283370916728061,
-            3079925964364903
+            1853862367514453
           ],
           "checks": [
             3354082529935070,
@@ -30835,7 +30840,8 @@
             2912398863322129,
             4196204090038088,
             3045323081255111,
-            443774619156764
+            443774619156764,
+            3662875780842044
           ],
           "presentation_renewals": [
             {
@@ -389230,7 +389236,8 @@
         "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
         "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals.",
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
-        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts."
+        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
+        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -389419,6 +389426,10 @@
           "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
           "run": "https://github.com/barghsadev/barghsa-core/actions/runs/44597706568",
           "artifact_id": 14567461549
+        },
+        "musl_source_and_notice_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-libvips-source-and-notice-readback-20261120.json",
+          "sha256": "b69c8b30c68b0822c06ceb9578b902594ebc88a06947073c623257537faebafb"
         }
       },
       "blocker": null
@@ -563511,7 +563522,8 @@
         "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required.",
         "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
         "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open.",
-        "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification."
+        "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification.",
+        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -564314,6 +564326,10 @@
         "financial_keyboard_review": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-financial-keyboard-review-8fc81897f.json",
           "sha256": "f8002b1a1e207a3b97104901de2f44589c97356b4bc33251612fabf8878725a3"
+        },
+        "musl_source_and_notice_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-libvips-source-and-notice-readback-20261120.json",
+          "sha256": "b69c8b30c68b0822c06ceb9578b902594ebc88a06947073c623257537faebafb"
         }
       }
     },
@@ -770915,9 +770931,9 @@
         "path": "docs/security/session-location.md",
         "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
       },
-      "3079925964364903": {
+      "1853862367514453": {
         "path": "docs/security/release-license-review.md",
-        "sha256": "30e1f1bf02e07bb6081953e5af74f2ff163e8892d1b024566da820955b192301"
+        "sha256": "9443e08e3283e61e14b084f57045008044bffad34ea3af17e20ebda68df00290"
       },
       "3535760571433913": {
         "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -790034,6 +790050,14 @@
           "docs/security/release-license-review.md"
         ],
         "scope": "The backup image rebuilds the same gosu source commit with digest-pinned Go 1.27.4. The Alpine and Ubuntu fixtures verified the expected postgres UID, backup Python dependencies, child exit status and all original notice bytes. Both exact fixture images passed the high/critical vulnerability gate. The Compose topology and scanner implementation are unchanged. The review document records two exact package versions under the owner's whole-inventory instruction. Final candidate and live staging replacement receipts remain open."
+      },
+      "3662875780842044": {
+        "batch": "release-0.6-musl-license-source",
+        "base_commit": "c886e6f8999fa5351051f6b74a08eac264a5d7b0",
+        "paths": [
+          "docs/security/release-license-review.md"
+        ],
+        "scope": "The document adds a libvips source and notice receipt. The GeoLite2 decision and its surrounding release checks match the accepted version byte for byte. Verified the reviewed app image excludes GeoLite2 and its package. Existing session-location acceptance still applies."
       },
       "359379790510643": {
         "batch": "release-0.5-expanded-verification-settings",

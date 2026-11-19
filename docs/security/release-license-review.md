@@ -188,6 +188,21 @@ The other 386 exceptions in the prior five-image inventory remain in scope,
 subject to the final image scan and named dispositions. Any separate glibc
 distribution still requires its own review.
 
+The Linux amd64 musl distribution packet contains the 33 verified upstream
+recipe inputs and patches, 170 Rust crate archives, the pinned build source,
+the bundled notices, and the replacement test's recipe and toolchain records.
+Both libraries produced the same preview dimensions in the `3f8929fdd` app
+image as UID 1000 for PNG, JPEG, WebP and PDF input. The process identified the
+loaded libraries by their distinct checksums. Both web shells in that revision
+also passed the exact font and notice check.
+
+The source and notice ZIP is in the v0.6.0 approval outputs under
+`v06-sharp-source-20261120/sharp-libvips-linuxmusl-x64-1.3.4-source-and-notices.zip`.
+All 215 payload files matched its manifest after reopening the archive. Its
+SHA-256 is `f55739fed74efe67e2002602805fd89ca4c0ed33326d31997aca2b80bf16ad1e`.
+Read back this packet and the exact final app image through the distribution
+channel before recording the final release receipt.
+
 A dry run of the production and auth builds identified 74 and 28 npm packages, respectively, with JavaScript present in emitted chunks. Only DOMPurify needed a license expression check; the separately emitted font assets are reviewed above. DOMPurify `3.4.17` declares MPL-2.0 **or** Apache-2.0. Use the already allowed Apache-2.0 option and retain the corresponding notices. Do not treat other workspace inventory entries as shipped solely because the dependency resolver lists them. Base OS and tooling notices, including Poppler and ClamAV, still need the final image inventory and distribution review.
 
 The combined app image SBOM identified three third-party packages without a normalized license field: `busboy@1.6.0`, `png-js@2.0.0`, and `streamsearch@1.1.0`. Their original MIT license files were read from the isolated app image and matched the pinned package copies byte for byte. Internal Barghsa workspace entries without a third-party license field are first-party code.
