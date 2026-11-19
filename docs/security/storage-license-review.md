@@ -24,8 +24,22 @@ archive and embedded manifest matched the reviewed checksums. The paired
 Linux amd64 image was present on staging and contained the SeaweedFS and Go
 license files and the Go patent notice.
 
+## Library substitution check
+
+On November 19, 2026, the exact image passed the same check locally and on
+staging Linux amd64. Isolated containers used a read-only root filesystem, no
+network and a temporary directory of byte-distinct library copies. The test
+added inert markers to those copies to verify which files the loader mapped.
+
+`curl` selected the alternate `libidn2` and `libunistring` files through
+`LD_LIBRARY_PATH`, reported IDN support and read a local fixture. The musl
+loader mapped the alternate `libfuse`, `libulockmgr` and `libgcc_s` files in a
+separate process. The `fuse-common` package supplies `/etc/fuse.conf`, which
+the test replaced through a read-only bind mount and verified by checksum.
+The SeaweedFS executable reported version 4.54 and uses the static build from
+the reviewed image recipe.
+
 Before distributing the image, verify the delivered notices and recipients'
-access to the matching sources. Complete the package-specific review of the
-library replacement or relinking paths named in the workbook. The source
-availability conditions for the MPL-covered modules remain part of the
-approval. [MPL 2.0 distribution terms](https://www.mozilla.org/en-US/MPL/2.0/).
+access to the matching sources. The workbook retains the package-specific
+conditions, including source availability for the MPL-covered modules.
+[MPL 2.0 distribution terms](https://www.mozilla.org/en-US/MPL/2.0/).

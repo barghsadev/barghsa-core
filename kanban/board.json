@@ -12444,7 +12444,8 @@
         "The owner confirmed all 37 objectstore exceptions with their workbook conditions. The strict check matched the exact image, all 275 packages, and the paired notice and source archive. The restored-volume lifecycle and staging S3 probe passed at the staging 768 MiB limit with local loopback endpoints. Verify actual materials delivery, recoverable live rollout and elapsed staging expiry.",
         "The staging receiver now requires the approved running objectstore image and exact writable volume before writers or migrations can proceed. The 23 local and staging Linux fixture tests passed. Complete the separate recoverable storage cutover, material delivery and elapsed lifecycle proof.",
         "The encrypted EU rollback rehearsal restored all 11 synthetic versions under 4.47. The same recovered copy passed the repaired image's actual readiness check at 768 MiB and preserved version order, tags and bytes. A protected Compose render changes only the storage image and volume. The live inventory records 59 versions and five delete markers. Repeat the fingerprint after quiescing writes, compare it before reopening the repaired live store, and verify elapsed expiry after the isolated fixture's November 20 17:31 UTC threshold.",
-        "Verified the final protected operator copy of the source and notice bundle and the embedded manifest against the reviewed checksums. The exact image on staging contains all three expected SeaweedFS and Go notices. Recipient access and package-specific replacement conditions, the live cutover, and elapsed staging expiry remain open."
+        "Verified the final protected operator copy of the source and notice bundle and the embedded manifest against the reviewed checksums. The exact image on staging contains all three expected SeaweedFS and Go notices. Recipient access and package-specific replacement conditions, the live cutover, and elapsed staging expiry remain open.",
+        "The exact reviewed SeaweedFS image passed matching local and native staging tests for alternate shared libraries and the FUSE configuration bind. The ten associated source and recipe payloads match the reviewed archive. The owner workbook still governs recipient access and distribution conditions. Elapsed expiry and recoverable live storage cutover remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -12576,6 +12577,10 @@
         "staging_storage_materials_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-materials-final-readback-20261119.json",
           "sha256": "5b2eca8f38d73ec7f177694cc741cf243dff823284d2f303a4dbfccbe94cfc48"
+        },
+        "staging_storage_library_substitution": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-library-substitution-20261119.json",
+          "sha256": "d3d8dcee3dfa6526b26e9479ef86ae247a801cd8212c154c97dbc682b7a08a3a"
         }
       },
       "defect_severity": "P1"
@@ -386586,7 +386591,8 @@
         "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys.",
         "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
         "At 17:31 UTC on November 14, live v0.5.1 reported healthy ClamAV 1.5.4 and daily 28183 at 40,054 seconds old against the existing 48-hour limit. The staging archives, private mirror and retained vendor-signed bytes matched by SHA-256. The mirror recorded a routine official-feed check at 17:26 UTC. Final candidate upload and monitoring checks remain open.",
-        "The whole API rerun exposed the legacy RTF verification request using a category property. The controller now accepts the optional field from the existing category enum and rejects unknown fields or invalid values. The server-issued key still selects the category and the owned reservation still controls the scope and declared bytes. All 43 affected compiled tests passed, including the substituted-byte denial and the legacy category call. The exact whole candidate and staging gates remain open."
+        "The whole API rerun exposed the legacy RTF verification request using a category property. The controller now accepts the optional field from the existing category enum and rejects unknown fields or invalid values. The server-issued key still selects the category and the owned reservation still controls the scope and declared bytes. All 43 affected compiled tests passed, including the substituted-byte denial and the legacy category call. The exact whole candidate and staging gates remain open.",
+        "On November 19 the retained staging ClamAV 1.5.4 loaded daily 28188 at 50,200 seconds old against the 48-hour limit. The three complete installed archives passed vendor detached-signature verification. The same sidecars and byte ranges matched the private EU mirror. The a69a51c71 compiled candidate passed the isolated scanner-interruption, clean-release and quarantine integration case. Repeat the upload and monitoring checks on the accepted staged application."
       ],
       "owner": null,
       "depends_on": [],
@@ -386622,7 +386628,11 @@
           "release-0.6-staging-scanner-gate-readback",
           "release-0.6-upload-verification-compatibility"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_scanner_28188_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scanner-28188-20261119.json",
+          "sha256": "81172c40010d0f4bc9a7134167c753de2c7ecc33a68ff334f7e73645700a28ba"
+        }
       }
     },
     {
@@ -397371,7 +397381,8 @@
         "Hosted full rehearsal 43583704822 verified 2,976 Chromium passes and mapped 2,976 records to 996 files. Enforced changed and critical coverage failed with 63 file errors, and strict license enforcement failed. The new telemetry coverage task closes its two missing reports locally. Recheck the remaining file errors and both strict gates on the exact candidate.",
         "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required.",
         "Hosted 44584096180 stopped before tests because the PDF dependency timeout interrupted dpkg. Signed-mirror retries now finish downloading before a single offline installation. The disposable Ubuntu amd64 install verified pdftoppm and all three recovery cases passed. The successor exact-SHA GitHub gate remains required.",
-        "The scoped coverage check used the unchanged release evaluator against v0.5.1. Ninety-six related web cases and 141 translation cases passed, including explicit Persian and English assertions that existing approvals still require a decision. All four scoped source paths cleared their required thresholds. The current full native and combined checks still need exact release receipts."
+        "The scoped coverage check used the unchanged release evaluator against v0.5.1. Ninety-six related web cases and 141 translation cases passed, including explicit Persian and English assertions that existing approvals still require a decision. All four scoped source paths cleared their required thresholds. The current full native and combined checks still need exact release receipts.",
+        "Hosted strict native coverage job 135820385818 passed all 14 tasks at 3f8929fdd with 18,029 passing Vitest cases. Its only skip was the conditional ClamAV integration case, verified independently against the real staging scanner on a69a51c71. Coverage and promotion-quarantine artifacts matched their published checksums. The full browser, combined coverage and frozen candidate gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -397400,6 +397411,13 @@
         "threshold_recovery_scoped_coverage": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-threshold-recovery-coverage-20261119.json",
           "sha256": "abc9951524f9079ab5af70305cf1a4dce956d8a0296dbf59a698712cff7196df"
+        },
+        "strict_native_coverage_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/strict-native-job-44597706568.json",
+          "sha256": "5f9ef5e7061ec3c96fb6cd09f04df2a9b3e093b28d95c8b453eb1cde47b610a5",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "run": 44597706568,
+          "job": 135820385818
         }
       }
     },
@@ -397824,7 +397842,8 @@
         "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
         "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate.",
         "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor.",
-        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required."
+        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required.",
+        "Hosted strict native coverage job 135820385818 passed all 14 tasks at 3f8929fdd with 18,029 passing Vitest cases. Its only skip was the conditional ClamAV integration case, verified independently against the real staging scanner on a69a51c71. Coverage and promotion-quarantine artifacts matched their published checksums. The full browser, combined coverage and frozen candidate gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -397907,6 +397926,13 @@
           "declared_skips": 2,
           "browser_case": "apps/web/e2e/admin-settings-live.spec.ts:795",
           "cause": "Persian storage save assertion saw the save receipt and a loading element with role=status in main."
+        },
+        "strict_native_coverage_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/strict-native-job-44597706568.json",
+          "sha256": "5f9ef5e7061ec3c96fb6cd09f04df2a9b3e093b28d95c8b453eb1cde47b610a5",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "run": 44597706568,
+          "job": 135820385818
         }
       }
     },
@@ -563340,7 +563366,8 @@
         "The owner's November 19 instruction supplies all 386 exact license approvals and the retained image policy check passes. The workbook retains applicable license conditions as follow-up. The exact final candidate, complete operational gates, staging deployment and Telegram receipts remain open.",
         "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals. Verify the successor hosted images and final strict candidate. The deployed database image retains its previous helper until the accepted replacement is staged.",
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
-        "Scheduled runs 44278844002 and 44500665254 exposed subpixel failures measuring mobile electricity contract action targets. The corrected stylesheet passed all 2,000 translated positions and 10 repeated mobile Chromium journeys. The related browser run found two mobile Safari password-meter contrast failures during fade-in. The corrected meter passed all eight forced-change configurations and the full 28-case affected auth selection with zero retries. The complete nightly rollup, scheduled delivery and immutable candidate gate remain required."
+        "Scheduled runs 44278844002 and 44500665254 exposed subpixel failures measuring mobile electricity contract action targets. The corrected stylesheet passed all 2,000 translated positions and 10 repeated mobile Chromium journeys. The related browser run found two mobile Safari password-meter contrast failures during fade-in. The corrected meter passed all eight forced-change configurations and the full 28-case affected auth selection with zero retries. The complete nightly rollup, scheduled delivery and immutable candidate gate remain required.",
+        "Hosted strict native coverage job 135820385818 passed all 14 tasks at 3f8929fdd with 18,029 passing Vitest cases. Its only skip was the conditional ClamAV integration case, verified independently against the real staging scanner on a69a51c71. Coverage and promotion-quarantine artifacts matched their published checksums. The full browser, combined coverage and frozen candidate gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -564116,6 +564143,13 @@
         "nightly_accessibility_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/nightly-accessibility-renewal-20261119.json",
           "sha256": "cc31a3645243960a5a09be1207f18caac34bbfd89ab4af53848c214a3c814549"
+        },
+        "strict_native_coverage_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/strict-native-job-44597706568.json",
+          "sha256": "5f9ef5e7061ec3c96fb6cd09f04df2a9b3e093b28d95c8b453eb1cde47b610a5",
+          "commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "run": 44597706568,
+          "job": 135820385818
         }
       }
     },
