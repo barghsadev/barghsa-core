@@ -1028,7 +1028,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.02.04` | done | Earlier acceptance_verified | Document Redis architecture decision in ADR |
 | `01-platform-infrastructure.md#T-04.03.01` | done | Earlier acceptance_verified | Create S3 storage provider abstraction |
 | `01-platform-infrastructure.md#T-04.03.02` | done | Earlier acceptance_verified | Implement presigned URL workflow for direct browser upload/download |
-| `01-platform-infrastructure.md#T-04.03.03` | partial | Earlier partial | Configure bucket versioning and lifecycle policies |
+| `01-platform-infrastructure.md#T-04.03.03` | partial | Earlier partial | Configure bucket versioning and lifecycle policies (P1 defect) |
 | `01-platform-infrastructure.md#T-04.03.04` | done | Earlier acceptance_verified | Create admin configuration UI for storage |
 | `01-platform-infrastructure.md#T-04.03.05` | done | Earlier partial | Enforce immutability for signed contracts and critical records |
 | `01-platform-infrastructure.md#T-04.04.01` | done | Earlier acceptance_verified | Create NGINX/Caddy configuration for pilot (single-node) topology |
