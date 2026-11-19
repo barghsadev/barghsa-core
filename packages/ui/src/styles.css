@@ -985,8 +985,9 @@
 @utility touch-action {
   @media (pointer: coarse) {
     @apply inline-flex items-center;
-    min-block-size: max(44px, calc(var(--spacing) * 11));
-    min-inline-size: max(44px, calc(var(--spacing) * 11));
+    /* Leave one CSS pixel for fractional bounds during page transitions. */
+    min-block-size: max(45px, calc(var(--spacing) * 11));
+    min-inline-size: max(45px, calc(var(--spacing) * 11));
   }
 }
 
@@ -997,7 +998,7 @@
     block-size: max(44px, calc(var(--spacing) * 11));
     min-inline-size: 44px;
   }
-  a[href],
+  a[href]:not(:where(.touch-action)),
   button,
   [data-slot='button'],
   [data-slot='input'],

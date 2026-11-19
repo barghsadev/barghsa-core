@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1261 | Accepted with unchanged source bindings. |
+| done | 1262 | Accepted with unchanged source bindings. |
 | verify | 0 | Existing work may be complete; inspect evidence before building. |
-| partial | 101 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 100 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 4 | Named owner or external prerequisite. |
@@ -1327,7 +1327,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.03.03` | partial | Recorded batch work | Run load test with realistic Persian/English payloads and production-like indexes |
 | `06-security-testing-observability.md#T-06.11.03.04` | done | Recorded batch work | Configure database protection: request/statement/lock/idle-transaction timeouts, pool limits, pagination caps, export/report concurrency limits |
 | `06-security-testing-observability.md#T-06.11.03.05` | done | Recorded batch work | Set up CI performance budget: route JS size, Core Web Vitals regression check for primary mobile flows |
-| `06-security-testing-observability.md#T-06.11.03.06` | partial | Recorded batch work | Schedule weekly performance regression run in staging |
+| `06-security-testing-observability.md#T-06.11.03.06` | done | Recorded batch work | Schedule weekly performance regression run in staging |
 | `06-security-testing-observability.md#T-06.11.04.01` | done | Recorded batch work | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |
 | `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
 | `06-security-testing-observability.md#T-06.11.04.03` | done | Recorded batch work | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |

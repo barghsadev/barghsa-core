@@ -224,7 +224,7 @@ export function PasswordField({
       {showStrength && (
         <div
           id={`${id}-strength`}
-          className={`space-y-1 transition-all motion-reduce:transition-none ${showStrengthMeter ? 'translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
+          className={`space-y-1 transition-transform motion-reduce:transition-none ${showStrengthMeter ? 'translate-y-0' : 'invisible -translate-y-1'}`}
           aria-hidden={!showStrengthMeter}
           aria-live="polite"
         >
