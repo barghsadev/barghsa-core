@@ -6965,7 +6965,7 @@
           "source_evidence": [
             4210333381993491,
             2843385801107809,
-            926370738786721,
+            3392945489747461,
             1288255796839634,
             634403061910429
           ],
@@ -6982,7 +6982,8 @@
             1005062837575707,
             1949838255842432,
             96541141008679,
-            548592553402320
+            548592553402320,
+            4188002392598432
           ]
         }
       }
@@ -10954,7 +10955,8 @@
         "On November 15 the owner designated eu.barghsa.com for staging PostgreSQL recovery and accepted responsibility for recovery-key custody. The staging bridge replication role rejects ordinary SQL sessions. The first service-run backup verified ciphertext and manifest through the private versioned HTTPS bucket, and the timer is active at 03:00 and 15:00 UTC. The initial service-run receipt precedes the live WAL cutover.",
         "Staging cut over to the verified PostgreSQL 16.15 Ubuntu image and a dedicated volume. The old and new clusters each produced encrypted full backups with ciphertext and manifest readback. The active protected archive uploads to eu.barghsa.com. An isolated restore retrieved the encrypted WAL, matched the decrypted segment hash and reached the selected point. Verify the automatic schedule invocation and the required backup and retention evidence for the production-equivalent topology.",
         "Staging now runs the scanned Go 1.27.4 helper image on its existing PostgreSQL 16.15 cluster and cutover volume. The encrypted checkpoint readback, isolated 101-second PITR at the selected transaction boundary, and new encrypted WAL bytes matched. The existing scheduled timer is active. Production-equivalent provisioning, retention and exercised recovery remain open.",
-        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open."
+        "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
+        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -11092,6 +11094,10 @@
         "staging_scheduled_backup_replay": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scheduled-postgres-restore-20261119.json",
           "sha256": "f5310febb31a888b6ca871340e0bb19f578a21050c3bcf4b9f04df6065930fd9"
+        },
+        "staging_live_backup_metrics": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-backup-metrics-readback-20261119.json",
+          "sha256": "7e81f666c2427182180157e044572e403c49b0b6f935defa9b0f582369fa7a91"
         }
       }
     },
@@ -14132,7 +14138,8 @@
         "Verify scoped payment, bill, notification and storage circuit metrics and controlled recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior during the rehearsal.",
         "The compiled f571986ee HTTP adapter recovered and verified an existing settled fixture through live staging HTTPS with its current adapter source. Verify the exact deployed application, circuit signals and controlled recovery.",
         "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
-        "Added direct shared-source verification for provider failure windows, cooldown, single half-open recovery, stale responses and isolated provider settings. The 89 affected API cases passed. Exact staging provider recovery still needs live verification."
+        "Added direct shared-source verification for provider failure windows, cooldown, single half-open recovery, stale responses and isolated provider settings. The 89 affected API cases passed. Exact staging provider recovery still needs live verification.",
+        "The compiled Linux amd64 3f8929fdd gateway with current payment recovery sources received a real HTTP 404 for an absent fixture through the protected staging sandbox. Recovery returned null and then recovered and verified the existing settled fixture. The sandbox ledger SHA-256 matched before and after. Exact candidate rollout, live circuit signals and the production-equivalent provider rehearsal remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -14187,7 +14194,11 @@
           "release-0.6-staging-telegram-relay-recovery",
           "release-0.6-shared-critical-coverage"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_current_payment_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-payment-recovery-readback-3f8929fdd-20261119.json",
+          "sha256": "b23631f075ce9186905919321e219ebcac4379e9471dfa1bf83160f5367bfd62"
+        }
       }
     },
     {
@@ -396113,7 +396124,7 @@
           ],
           "source_evidence": [
             584927519609571,
-            926370738786721,
+            3392945489747461,
             414161154840126,
             4210333381993491
           ],
@@ -396139,7 +396150,8 @@
             1949838255842432,
             96541141008679,
             3439286525914331,
-            548592553402320
+            548592553402320,
+            4188002392598432
           ]
         }
       }
@@ -396412,7 +396424,7 @@
             2880814916820155,
             2428465667438283,
             878789146717865,
-            926370738786721,
+            3392945489747461,
             4375539760351322,
             2444233006358474,
             2000921156679990,
@@ -396460,7 +396472,8 @@
             96541141008679,
             2647239046242254,
             3292704201735026,
-            548592553402320
+            548592553402320,
+            4188002392598432
           ]
         }
       }
@@ -401651,7 +401664,7 @@
             2312248916515284,
             1345875911635862,
             1027394922919997,
-            926370738786721
+            3392945489747461
           ],
           "checks": [
             532600618113705,
@@ -401672,7 +401685,8 @@
             4376287659812745,
             1949838255842432,
             96541141008679,
-            548592553402320
+            548592553402320,
+            4188002392598432
           ]
         }
       }
@@ -401715,7 +401729,7 @@
             1191061194381305,
             1529796732799859,
             1594812984404992,
-            926370738786721,
+            3392945489747461,
             4240805865379259,
             3370702621755906
           ],
@@ -401734,7 +401748,8 @@
             997755432210515,
             1949838255842432,
             96541141008679,
-            548592553402320
+            548592553402320,
+            4188002392598432
           ]
         }
       }
@@ -402608,7 +402623,7 @@
             1191061194381305,
             3317000771637166,
             2232861611025621,
-            926370738786721,
+            3392945489747461,
             4240805865379259
           ],
           "source_renewals": [
@@ -402629,7 +402644,8 @@
             2991523800540785,
             3969589814169539,
             2251767074995137,
-            548592553402320
+            548592553402320,
+            4188002392598432
           ]
         }
       }
@@ -403621,7 +403637,8 @@
         "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope. Verify the barghsa_role label on all monitored API targets and the rollout guard response.",
         "Verify live P1 firing and resolved PostgreSQL collection, connection, deadlock and replica-lag receipts from the deployed candidate, including the approved on-call route.",
         "Backup monitoring now raises the existing P1 when the expected staging/core target disappears from discovery. All seven pinned rule suites passed. Verify the exact deployed exporter, Alertmanager and approved on-call firing and recovery.",
-        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open."
+        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
+        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -403656,7 +403673,11 @@
           "release-0.6-backup-target-monitoring",
           "release-0.6-verified-main-and-backup-scrape"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_live_backup_metrics": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-backup-metrics-readback-20261119.json",
+          "sha256": "7e81f666c2427182180157e044572e403c49b0b6f935defa9b0f582369fa7a91"
+        }
       }
     },
     {
@@ -563585,7 +563606,9 @@
         "The live staging PostgreSQL filesystem exporter now requires a client certificate on the private Docker bridge. Its byte counts matched the active data volume. An isolated instance of the staging Prometheus image loaded the reviewed rules, scraped the exporter successfully and fired PostgresDiskUsageHigh at P2. The filesystem had 3.61 GB available out of 81.84 GB. Recover capacity, verify the active overlay, delivered firing and resolved receipts, and Grafana access.",
         "Strict hosted run 44597706568 passed all seven jobs on 3f8929fdd. Chromium ran 2,978 cases with zero skips, unexpected outcomes, flakes or runner errors. Combined source coverage passed for all 13 groups. The frozen release and its complete 40-shard nightly receipt remain open.",
         "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts.",
-        "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate."
+        "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate.",
+        "The compiled Linux amd64 3f8929fdd gateway with current payment recovery sources received a real HTTP 404 for an absent fixture through the protected staging sandbox. Recovery returned null and then recovered and verified the existing settled fixture. The sandbox ledger SHA-256 matched before and after. Exact candidate rollout, live circuit signals and the production-equivalent provider rehearsal remain open.",
+        "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -564416,6 +564439,14 @@
         "staging_csp_seven_day_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-seven-day-readback-20261119.json",
           "sha256": "0126882c54b678b0ced5a8c51123748da5034b781a4cafa77048f4eca35613fd"
+        },
+        "staging_current_payment_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-payment-recovery-readback-3f8929fdd-20261119.json",
+          "sha256": "b23631f075ce9186905919321e219ebcac4379e9471dfa1bf83160f5367bfd62"
+        },
+        "staging_live_backup_metrics": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-backup-metrics-readback-20261119.json",
+          "sha256": "7e81f666c2427182180157e044572e403c49b0b6f935defa9b0f582369fa7a91"
         }
       }
     },
@@ -767801,9 +767832,9 @@
         "path": "packages/db/src/query-cancellation.integration.test.ts",
         "sha256": "207f72c5d29eebc0d4ec3e98800a69f2680cd3d61d1bb8deb4a86b885b1c1f31"
       },
-      "926370738786721": {
+      "3392945489747461": {
         "path": "docs/operations/postgresql-monitoring.md",
-        "sha256": "63c5b3b78e7eea4f0665aa2752b8fe466ecc16c84ad16c51bee57dae77b653d9"
+        "sha256": "d5ec260271b04be3d27ec7915fed1600604ed6cfff9fd21aaa57c336780d4571"
       },
       "1288255796839634": {
         "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -784618,6 +784649,14 @@
           "docs/operations/postgresql-monitoring.md"
         ],
         "scope": "Documents the verified private staging filesystem exporter and certificate configuration. Existing acceptance sources and documented behavior were reviewed against the previous document."
+      },
+      "4188002392598432": {
+        "batch": "release-0.6-staging-live-backup-metrics",
+        "base_commit": "c27774c69671e0e99df5ace879eb6fb1ddae4e4d",
+        "paths": [
+          "docs/operations/postgresql-monitoring.md"
+        ],
+        "scope": "Adds the verified staging backup textfile configuration. Existing PostgreSQL monitoring instructions were compared byte for byte and their runtime sources still match."
       },
       "215584391360569": {
         "batch": "release-0.6-structured-operator-logs",
