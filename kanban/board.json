@@ -11491,7 +11491,7 @@
       "remaining": [
         "Production secret-manager provisioning, complete deployment file inventory, HTTPS off-server storage/IAM/lifecycle and actual retained backup history require operational evidence.",
         "Daily and quarterly unit templates are not installed or enabled. Production config rehydration, independently captured current baselines, measured application recovery and delivered monitoring alerts remain unverified. The local report explicitly limits RPO/RTO to covered assets.",
-        "Configuration backup now reads back the encrypted archive and exact immutable manifest before reporting success or pruning. The migrated PostgreSQL and isolated SeaweedFS fixture passed successful rehydration, same-size corruption and inconsistent-manifest checks. Install the job on the approved off-server destination and retain an independently measured configuration restore."
+        "The encrypted staging archive passed upload and versioned manifest readback on eu.barghsa.com. A private restore matched 19 files and 33 configuration tables against an independent baseline, with zero observed loss for covered assets and a 2.715-second restore. Enable protected configuration backup and restore schedules and retain their actual receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -11587,7 +11587,14 @@
           "release-0.6-configuration-backup-readback"
         ],
         "current_acceptance": null,
-        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-configuration-backup-readback/native-backup-tests.log"
+        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-configuration-backup-readback/native-backup-tests.log",
+        "staging_eu_config_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-recovery-20261119.json",
+          "sha256": "fd466b5e3858f0975cf976a37480370fccc4182bf952c09e730aecc2c8b0b036",
+          "source_commit": "4bea6499cd83174048c9ae46637ebc18ff2282cb",
+          "backup_label": "config-proof-20261119T165801Z",
+          "scope": "configuration_assets"
+        }
       }
     },
     {
@@ -563453,7 +563460,7 @@
         "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
         "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report.",
         "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open.",
-        "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required.",
+        "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The encrypted staging configuration archive passed versioned EU readback and isolated rehydration. Scheduled configuration jobs and measured core-service recovery remain open.",
         "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
@@ -563465,7 +563472,7 @@
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open.",
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
-        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open."
+        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. The approved EU storage, live staging database cutover, encrypted WAL and point-in-time replay passed. Exact v0.6.0 staging deployment and production-equivalent recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -563629,6 +563636,13 @@
           "commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
           "database": 28181,
           "receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-gate-readback/staging-scanner-version.txt"
+        },
+        "staging_eu_config_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-recovery-20261119.json",
+          "sha256": "fd466b5e3858f0975cf976a37480370fccc4182bf952c09e730aecc2c8b0b036",
+          "source_commit": "4bea6499cd83174048c9ae46637ebc18ff2282cb",
+          "backup_label": "config-proof-20261119T165801Z",
+          "scope": "configuration_assets"
         }
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and production merchant configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
