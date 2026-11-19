@@ -12398,7 +12398,7 @@
         "The admin storage configuration probe now checks versioning and deletes the exact version of its generated key. The staging SeaweedFS image verified signed downloads, no retained probe bytes or markers, and an unchanged unrelated object in both disposable bucket modes. Actual deployed policy and expiry remain open.",
         "The staging smoke now uses a create-only probe and cleans up a lost PUT acknowledgement only with proven object ownership. The pinned SeaweedFS image verified exact version deletion, suspended null-version cleanup and conditional unversioned deletion. Verify the selected live storage policies and actual candidate receipts.",
         "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
-        "Under the live v0.5.1 staging bucket policy, a create-only synthetic probe seeded four tmp keys with ten exact versions on November 14. The baseline retained every version and both legal-hold and unclassified controls. Read back elapsed provider expiry and five-version retention after November 15 at 10:39 UTC."
+        "The November 19 elapsed staging check found the tagged disposable object still current and version 2 deleted while version 1 survived. Held and unclassified controls survived and the policy digest matched the November 14 baseline. Isolated SeaweedFS 4.47 and 4.54 both reproduced the wrong-version deletion with staggered version ages. Only 4.54 passed disposable current-object expiry. Verify ordered retention, actual expiry and protected controls on a compatible provider with a recoverable rollout before accepting this gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -12497,7 +12497,11 @@
           "release-0.6-staging-storage-policy-readback",
           "release-0.6-staging-storage-lifecycle-baseline"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_lifecycle_elapsed_failure": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-failed-readback-20261119.json",
+          "sha256": "43f5e9e2ce3decbcc2610b1626298ed3e9a0beaa5f733f52301ebf87f17227cf"
+        }
       }
     },
     {
@@ -563325,7 +563329,13 @@
           "proof_sha256": "4ddeab4d4fa671750d24143b6d9529f5c68648fe41d20176cefcdd50022f3df8",
           "approved_workbook": "/Users/majid/.local/state/barghsa-production-approval/outputs/v06-license-approval-20261119/v0.6.0-license-owner-approved.xlsx",
           "workbook_sha256": "d2142b8df4ed1dd852a5250f803f63d7e496ca16e267dd50dadef8bf83da8dab",
-          "exact_approvals": 388
+          "exact_approvals": 388,
+          "verified_main_sha": "6737ad179f99f80060967dab2beb9779f92edb52",
+          "hosted_preflight_run": 44550533799,
+          "hosted_image_readback": {
+            "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/license-approved-hosted-images-6737ad179.json",
+            "sha256": "7d367c4ea7c80d5338f781b10164fc0ebe69c1a956435be963c3012a68ac5f9f"
+          }
         },
         "patched_gosu_toolchain": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-owner-approval/patched-gosu-runtime-check.json",
@@ -563334,6 +563344,10 @@
           "source_commit": "29b939aa5bd4dc588af765b8248f6e39150d2565",
           "go_version": "1.27.4",
           "failed_hosted_run": 44548133025
+        },
+        "staging_lifecycle_elapsed_failure": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-lifecycle-failed-readback-20261119.json",
+          "sha256": "43f5e9e2ce3decbcc2610b1626298ed3e9a0beaa5f733f52301ebf87f17227cf"
         }
       }
     },
