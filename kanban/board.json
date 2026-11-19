@@ -13006,9 +13006,9 @@
       "remaining": [
         "Read back the approved headers on the accepted v0.6.0 staging release SHA.",
         "Review the required live CSP report window and prove enforcement. Verify HSTS at the selected production-equivalent ingress with its approved TLS and subdomain scope.",
-        "On live v0.5.1, / and /release.json emit duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options. The installed NGINX file lacks the three proxy_hide_header directives already verified in protected main. Read back the reviewed configuration and singular headers on the accepted staging SHA.",
+        "Before the November 19 update, live v0.5.1 returned duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options on / and /release.json. Its NGINX file lacked the three proxy_hide_header directives already verified on protected main.",
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
-        "Live v0.5.1 still emits three duplicate baseline headers on the web routes. The release smoke now requires a single exact value for all four baseline headers on the web root and API readiness before recording an active candidate. Receipt from the accepted v0.6.0 staging deployment remains required.",
+        "Installed the reviewed v0.6 NGINX policy at 3f8929fdd in staging. Two public web routes, two health routes and the CSRF bootstrap now return one copy of each baseline header. TLS 1.2 and 1.3, unchanged report-only CSP and signed storage readback passed. Recheck the exact accepted v0.6.0 application deployment.",
         "The dedicated staging proxy installer now preserves the existing config set and restores it on failed validation or reload. Ubuntu 24.04 verified file and symlink restoration and Certbot lock contention. Verify actual edge headers after the accepted release."
       ],
       "owner": null,
@@ -13122,7 +13122,11 @@
           "release-0.6-staging-edge-smoke",
           "release-0.6-staging-nginx-recovery"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_v06_edge_live_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-v06-nginx-edge-readback-20261119.json",
+          "sha256": "984875a0f32fc73d4fc4f7d0520bcb955976e72e81e8f561e0d949a3d39447ae"
+        }
       }
     },
     {
@@ -397283,7 +397287,8 @@
         "Preflight 43579302081 ran the pinned Prometheus rule step successfully and passed 5,550 web and 8,147 API tests across 904 files, with one API skip. GitHub served the tested a18c8a3d3 SHA on protected main. The strict coverage, license and operational gates remain separate.",
         "Hosted full rehearsal 43583704822 verified 2,976 Chromium passes and mapped 2,976 records to 996 files. Enforced changed and critical coverage failed with 63 file errors, and strict license enforcement failed. The new telemetry coverage task closes its two missing reports locally. Recheck the remaining file errors and both strict gates on the exact candidate.",
         "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required.",
-        "Hosted 44584096180 stopped before tests because the PDF dependency timeout interrupted dpkg. Signed-mirror retries now finish downloading before a single offline installation. The disposable Ubuntu amd64 install verified pdftoppm and all three recovery cases passed. The successor exact-SHA GitHub gate remains required."
+        "Hosted 44584096180 stopped before tests because the PDF dependency timeout interrupted dpkg. Signed-mirror retries now finish downloading before a single offline installation. The disposable Ubuntu amd64 install verified pdftoppm and all three recovery cases passed. The successor exact-SHA GitHub gate remains required.",
+        "The scoped coverage check used the unchanged release evaluator against v0.5.1. Ninety-six related web cases and 141 translation cases passed, including explicit Persian and English assertions that existing approvals still require a decision. All four scoped source paths cleared their required thresholds. The current full native and combined checks still need exact release receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -397308,7 +397313,11 @@
           "release-0.6-wallet-history-coverage",
           "release-0.6-ci-pdf-renderer-install"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "threshold_recovery_scoped_coverage": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-threshold-recovery-coverage-20261119.json",
+          "sha256": "abc9951524f9079ab5af70305cf1a4dce956d8a0296dbf59a698712cff7196df"
+        }
       }
     },
     {
@@ -400679,7 +400688,8 @@
         "Verify current provider, worker and infrastructure sink behavior on the exact accepted source. Rehearse representative token, identity and payment inputs against all configured production-equivalent sinks, including isolated proxy failures, and retain the redacted receipts.",
         "Native Redis and PostgreSQL fixtures assert bounded trace attributes and the absence of SQL, parameters, Redis command data and error text. Verify the same boundary on the protected deployed sink.",
         "The Resend connection tester discards HTTP failure bodies before publishing an operation and status diagnostic. Unrecognized domain status strings cannot enter the saved test result. Fixed endpoint, authorization-before-send, verified recipient, receipt bounds, provider status classification and activation rules are preserved. All 128 related unit and compiled API cases passed. The final focused tester run passed 26 cases. Read back the exact candidate on the protected deployed sink.",
-        "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open."
+        "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
+        "The installed staging NGINX projection omitted a synthetic readiness query marker and retained its correlation ID, coarse route, status and timing. The old access log retained the equivalent test query. The signed private S3 read and exact-version cleanup passed. Verify the exact accepted application and protected telemetry sinks."
       ],
       "owner": null,
       "depends_on": [],
@@ -400993,6 +401003,10 @@
             4221842673111181,
             2738410776947585
           ]
+        },
+        "staging_v06_edge_live_readback": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-v06-nginx-edge-readback-20261119.json",
+          "sha256": "984875a0f32fc73d4fc4f7d0520bcb955976e72e81e8f561e0d949a3d39447ae"
         }
       }
     },
