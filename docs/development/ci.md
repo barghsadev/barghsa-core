@@ -74,6 +74,8 @@ The web suite pins Playwright 1.65.0 for its driver. This version restores WebKi
 
 The nightly Firefox jobs use Mozilla Firefox 159.0, revision 1575 from Playwright's pinned `1.66.0-alpha-2026-11-10` runtime distribution. The default Firefox revision 1572 crashed during axe analysis on both macOS and hosted Linux. The previous stable runtime could not create a context with the 1.65 driver because its download protocol lacks a required parameter. Local reproduction can use `BARGHSA_FIREFOX_EXECUTABLE` to select the same revision. Retire the pin after the default stable Firefox passes the same accessibility cases and the full hosted matrix.
 
+Each nightly browser shard runs in a digest-pinned Playwright image as the hosted runner's user. It uses the ephemeral runner's loopback and the Docker socket group discovered on that runner. This lets Testcontainers publish its isolated PostgreSQL fixture on loopback, where the browser fixture's existing network guard allows it.
+
 The primary mobile lab measures populated paint in the page once the login control or first populated history row is visible, fonts are ready, and two animation frames have elapsed. The sample also records when Playwright collected the result. LCP, layout shift and blocking time retain their existing observation window and budgets.
 
 Use the [service extraction review](../adr/003-modular-monolith-rationale.md#extraction-review-before-pushing-to-main)

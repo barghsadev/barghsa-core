@@ -111,10 +111,6 @@ jobs:
     name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }} of 8
     needs: browser-build
     runs-on: ubuntu-latest
-    container:
-      # Match the locked Playwright version and avoid installing system packages per shard.
-      image: mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a
-      options: --user 1001 --shm-size=1g
     defaults:
       run:
         shell: bash
@@ -135,6 +131,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: '10.11.1'
+          dest: ${{ runner.temp }}/setup-pnpm
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -170,7 +167,20 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}/8"
+        run: |
+          # Keep the browser fixture's published PostgreSQL port on runner loopback.
+          docker run --rm --network host --shm-size=1g \
+            --user "$(id -u):$(id -g)" --group-add "$(stat -c '%g' /var/run/docker.sock)" \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
+            --volume "$RUNNER_TEMP:$RUNNER_TEMP" \
+            --volume "$RUNNER_TOOL_CACHE:$RUNNER_TOOL_CACHE:ro" \
+            --workdir "$GITHUB_WORKSPACE" \
+            --env PATH --env CI --env BARGHSA_TEST_PREBUILT --env BARGHSA_FIREFOX_EXECUTABLE \
+            --env "PLAYWRIGHT_BROWSERS_PATH=${PLAYWRIGHT_BROWSERS_PATH:-/ms-playwright}" \
+            --env TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 \
+            mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a \
+            node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}/8"
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes
