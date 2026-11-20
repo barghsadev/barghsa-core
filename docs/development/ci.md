@@ -6,6 +6,8 @@ Manually dispatch CI to run the full release checks. They include coverage from 
 
 Direct pushes to `main` require **Verify monorepo integrity** on the exact candidate. Create the preflight ref directly at that commit in one push. The first run compares affected packages with the common ancestor on `main`. A stack can fast-forward together after the exact tip passes. Keep diagnostic snapshots on a parent that already contains their board changes because the secret scanner reads all branch history.
 
+Preflight and main pushes enforce the approved image license policy. CI uploads the inventory even when the license gate rejects an image, so reviewers can see which exact package and distribution scope needs a disposition.
+
 The test and application-quality jobs build the workspace before using compiled API and browser fixtures. They run alongside the static, secret and runtime image scans. Combined coverage waits for the two jobs that produce its artifacts. The required check waits for all six results, including the full coverage enforcement result when full CI is selected.
 
 In full CI, a failed workspace still fails the native test job. Coverage tasks
