@@ -1,0 +1,102 @@
+name: Verify pinned nightly browser bootstrap on native Linux
+on:
+  push:
+    branches: ['codex/verify/v06-nightly-container-user-20261120']
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+    steps:
+      - name: Package the synthetic compiled fixture
+        id: package
+        shell: bash
+        run: |
+          mkdir -p apps/web/dist
+          printf '%s\n' "$GITHUB_SHA" > .nightly-browser-revision
+          printf '%s\n' 'nightly-runtime-fixture' > apps/web/dist/bootstrap-probe.txt
+          archive="$RUNNER_TEMP/nightly-browser-build.tar.gz"
+          tar -czf "$archive" .nightly-browser-revision apps/web/dist
+          digest=$(sha256sum "$archive")
+          printf 'archive_sha256=%s\n' "${digest%% *}" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        id: upload
+        with:
+          name: nightly-runtime-native-fixture
+          path: ${{ runner.temp }}/nightly-browser-build.tar.gz
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: package
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a
+      options: --user 1001 --shm-size=1g
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.package.outputs.artifact_id }}
+          path: ${{ runner.temp }}/nightly-browser-build
+          merge-multiple: true
+      - name: Verify and restore the compiled fixtures
+        shell: bash
+        env:
+          BROWSER_ARCHIVE_SHA256: ${{ needs.package.outputs.archive_sha256 }}
+        run: |
+          [[ "$BROWSER_ARCHIVE_SHA256" =~ ^[a-f0-9]{64}$ ]]
+          archive="$RUNNER_TEMP/nightly-browser-build/nightly-browser-build.tar.gz"
+          printf '%s  %s\n' "$BROWSER_ARCHIVE_SHA256" "$archive" | sha256sum -c
+          test "$(tar -xOzf "$archive" .nightly-browser-revision)" = "$GITHUB_SHA"
+          tar -xzf "$archive" --exclude=.nightly-browser-revision
+      - name: Install pinned Firefox runtime
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/barghsa-firefox
+        run: |
+          pnpm dlx playwright@1.66.0-alpha-2026-11-10 install firefox
+          firefox="$PLAYWRIGHT_BROWSERS_PATH/firefox-1575/firefox/firefox"
+          test -x "$firefox"
+          printf 'PLAYWRIGHT_BROWSERS_PATH=%s\nBARGHSA_FIREFOX_EXECUTABLE=%s\n' "$PLAYWRIGHT_BROWSERS_PATH" "$firefox" >> "$GITHUB_ENV"
+      - name: Verify artifact, Bash and browser launch
+        run: |
+          test "$(uname -m)" = x86_64
+          [[ $(node --version) == v24.* ]]
+          test "$(cat apps/web/dist/bootstrap-probe.txt)" = nightly-runtime-fixture
+          node --test scripts/browser-projects.test.mjs
+          python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
+          PLAYWRIGHT_BROWSERS_PATH=/ms-playwright pnpm --filter @barghsa/web exec node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import { chromium, firefox, webkit } from '@playwright/test';
+          for (const [engine, launchOptions] of [
+            [chromium, {}],
+            [webkit, {}],
+            [firefox, {executablePath: process.env.BARGHSA_FIREFOX_EXECUTABLE}],
+          ]) {
+            const browser = await engine.launch(launchOptions);
+            try {
+              const page = await browser.newPage();
+              await page.setContent('<button>Bootstrap verified</button>');
+              assert.equal(await page.getByRole('button').textContent(), 'Bootstrap verified');
+              console.log('Native browser verified', engine.name(), browser.version());
+            } finally {
+              await browser.close();
+            }
+          }
+          JS
