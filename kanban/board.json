@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T18:25:50.927407+00:00",
+  "updated": "2026-11-20T19:39:19.664360+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11589,9 +11589,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Use the checked standalone rehearsal manifest on the separate app host with protected configuration. Verify production-equivalent pooler and direct database TLS, rejected wrong hostname or untrusted CA, firewall denial from an unauthorized network, and encrypted off-server backups. No production deployment is authorized.",
+        "Use the standalone manifest on the designated managed PostgreSQL and app hosts during final rollout. Verify production endpoint TLS, access denial, encrypted off-server backups and monitoring on the final topology.",
         "The production Compose manifest sets the deployment environment on API, worker, inference and web. A stale staging label in either supported runtime credential format previously affected worker and inference logs, traces and error reports. The Linux Compose fixture reproduced four failures across the two formats and all six tests passed after the correction, including the existing runtime and migration credential separation. Verify labels and collector readbacks on the approved production-equivalent topology.",
-        "The exact f7c488e16 packaged app used TLS 1.3 on the direct PostgreSQL connection and both PgBouncer connections in an isolated synthetic Docker network. The app and pooler rejected wrong hostnames and untrusted CAs on every applicable connection. An unrelated Docker network could reach neither database endpoint. The approved production-equivalent topology, firewall and collector readback remain open."
+        "The owner-approved two-host fixture ran the exact 5e97de751 candidate on staging and PostgreSQL and PgBouncer on EU. TLS 1.3, wrong-host and untrusted-CA rejection, loopback database listeners and unauthorized network denial passed. The runtime role had journal read access and no write or schema creation access. Storage readiness passed in 1371 ms over the restricted direct tunnel. The frozen candidate and planned managed topology still need their own deployment and monitoring receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -11644,7 +11644,33 @@
           "release-0.6-production-telemetry-labels",
           "release-0.6-scheduled-backup-and-packaged-tls"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "temporary_two_host_rehearsal": {
+          "commit": "5e97de751c2f144dd1ed589fa8e23882a3831314",
+          "deployment": "owner-approved staging-app and temporary EU PostgreSQL/PgBouncer fixture",
+          "synthetic_data_only": true,
+          "receipts": {
+            "tls": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-tls-20261120.json",
+              "sha256": "69a4bf95240ae1e8a89bd8d375012da0779efd5548e345c94e88202c29eea291"
+            },
+            "migration": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-migration-20261120.json",
+              "sha256": "5517c938bf9e2b50fecef2bdc16e15be17b1fda27fb60935e2fa21a08fe62df7"
+            },
+            "application_and_wallet": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-app-wallet-20261120.json",
+              "sha256": "ebd7ae2835d4f550cc09d8ee98a5f3d9500616cb9806b66747f7977ce4b3bde2"
+            },
+            "pitr": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-pitr-20261120.json",
+              "sha256": "626868e032f2c1f1d4f39dd8eed13be97ebe23edee9c86cb3ce757ab9a300471"
+            }
+          },
+          "verified_database_seconds": 8,
+          "verified_application_seconds": 99,
+          "checked_commit_rpo_seconds": 0
+        }
       }
     },
     {
@@ -568513,8 +568539,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify topology, TLS/hostname checks, firewall, secrets, encrypted off-server backups and storage retention.",
-        "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO. The approval check now verifies core-service elapsed time and the four service journey receipts alongside the database exercise.",
+        "Verify the frozen rollout topology, TLS/hostname checks, firewall, protected configuration, off-server backups and live storage retention. The approved two-host synthetic rehearsal has exact host and dependency readbacks.",
+        "Verify release-bound migration/seed ordering and paired recovery, then measure service RPO/RTO. The two-host fixture applied and replayed 219 migrations, preserved one audited bootstrap admin, verified one sandbox wallet credit, and restored that credit through the chosen WAL checkpoint. Database readback took 8 seconds and authenticated application readback took 99 seconds from archive retrieval, with zero loss of the checked commit. The approval check also requires results for all four service journeys on the frozen release candidate.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
@@ -568778,9 +568804,35 @@
         "automatic_clamav_refresh": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-clamav-automatic-refresh-28188-20261120.json",
           "sha256": "97ddf24b769572f0226aa94ab1914d2258878e1203453302b88ab21a80c721e6"
+        },
+        "temporary_two_host_rehearsal": {
+          "commit": "5e97de751c2f144dd1ed589fa8e23882a3831314",
+          "deployment": "owner-approved staging-app and temporary EU PostgreSQL/PgBouncer fixture",
+          "synthetic_data_only": true,
+          "receipts": {
+            "tls": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-tls-20261120.json",
+              "sha256": "69a4bf95240ae1e8a89bd8d375012da0779efd5548e345c94e88202c29eea291"
+            },
+            "migration": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-migration-20261120.json",
+              "sha256": "5517c938bf9e2b50fecef2bdc16e15be17b1fda27fb60935e2fa21a08fe62df7"
+            },
+            "application_and_wallet": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-app-wallet-20261120.json",
+              "sha256": "ebd7ae2835d4f550cc09d8ee98a5f3d9500616cb9806b66747f7977ce4b3bde2"
+            },
+            "pitr": {
+              "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-two-host-pitr-20261120.json",
+              "sha256": "626868e032f2c1f1d4f39dd8eed13be97ebe23edee9c86cb3ce757ab9a300471"
+            }
+          },
+          "verified_database_seconds": 8,
+          "verified_application_seconds": 99,
+          "checked_commit_rpo_seconds": 0
         }
       },
-      "blocker": "Staging has encrypted EU backups, archived WAL and verified point-in-time recovery. The official payment sandbox and staging TLS egress are verified for a no-funds rehearsal. The production-equivalent exercise still requires a designated target with its separate TLS PostgreSQL and pooler, and actual approved monitoring delivery receipts. A production merchant remains required for real settlement."
+      "blocker": "The owner designated the temporary staging/EU rehearsal and its exact candidate passed isolated startup, payment and WAL recovery. The frozen release still requires live storage retention and signed callback evidence, approved monitoring delivery receipts and final rollout configuration. A production merchant remains required for real settlement."
     },
     {
       "key": "release-readiness#R-06.01",
