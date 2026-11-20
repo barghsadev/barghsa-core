@@ -1,7 +1,7 @@
 name: Verify the nightly browser fixture through runner loopback
 on:
   push:
-    branches: ['codex/verify/v06-nightly-loopback-fixture-20261120']
+    branches: ['codex/verify/v06-nightly-loopback-runtime-20261120']
 permissions:
   actions: read
   contents: read
@@ -17,6 +17,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: '10.11.1'
+          dest: ${{ runner.temp }}/setup-pnpm
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
