@@ -405551,7 +405551,8 @@
         "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks. On November 13 the retained v0.5.1 scanner was current, but the live Prometheus had neither this metric nor its alert rule. The rule now also covers a healthy expected worker that omits the scanner series. Apply the candidate rules with the candidate worker and operations receiver, then verify the exact live series and receipts.",
         "Verify live P2 firing and resolved PostgreSQL cache, connection, transaction, lock and slow-query receipts from the deployed candidate.",
         "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
-        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack."
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
+        "The retained live v0.5.1 scanner pulled daily database 28188 from the approved EU mirror on its normal cycle. ClamD reloaded it, then four further staging checks reported it current. All three database archives and their detached signatures matched the mirror byte for byte, and the running scanner verified all three vendor signatures. Verify the exact v0.6.0 application and signature-age firing and recovery receipts after deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -405579,9 +405580,14 @@
           "release-0.6-clamav-missing-metric",
           "release-0.6-postgres-alert-wiring",
           "release-0.6-postgres-disk-capacity",
-          "release-0.6-clamav-mirror-recurring"
+          "release-0.6-clamav-mirror-recurring",
+          "release-0.6-automatic-clamav-refresh"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "automatic_clamav_refresh": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-clamav-automatic-refresh-28188-20261120.json",
+          "sha256": "97ddf24b769572f0226aa94ab1914d2258878e1203453302b88ab21a80c721e6"
+        }
       }
     },
     {
@@ -566630,7 +566636,8 @@
         "The 02:00 UTC staging configuration timer uploaded and verified the exact versioned EU archive. Independent readback reconstructed 56 files and 33 configuration tables with the protected key still wrapped. The full application recovery, operational receipts and protected production-equivalent target remain open.",
         "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
         "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
-        "The compiled API passed one isolated no-funds wallet checkout through the official ZarinPal sandbox, including exact initiation replay, read-only callback, CSRF rejection and one idempotent credit. Verified the same reference from staging over TLS with provider code 101. The exact deployed candidate and controlled staging provider and anomaly checks remain open."
+        "The compiled API passed one isolated no-funds wallet checkout through the official ZarinPal sandbox, including exact initiation replay, read-only callback, CSRF rejection and one idempotent credit. Verified the same reference from staging over TLS with provider code 101. The exact deployed candidate and controlled staging provider and anomaly checks remain open.",
+        "The retained live v0.5.1 scanner pulled daily database 28188 from the approved EU mirror on its normal cycle. ClamD reloaded it, then four further staging checks reported it current. All three database archives and their detached signatures matched the mirror byte for byte, and the running scanner verified all three vendor signatures. Verify the exact v0.6.0 application and signature-age firing and recovery receipts after deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -566732,7 +566739,8 @@
           "release-0.6-verify-configuration-backup-and-checks",
           "release-0.6-paired-physical-recovery-rehearsal",
           "release-0.6-paired-eu-recovery-rehearsal",
-          "release-0.6-official-wallet-payment-sandbox"
+          "release-0.6-official-wallet-payment-sandbox",
+          "release-0.6-automatic-clamav-refresh"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -566829,6 +566837,10 @@
         "official_zarinpal_wallet_sandbox": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-zarinpal-sandbox-20261120.json",
           "sha256": "317e78128163fb4b86c9969d3f5e59476392debeafb1a3fd2ea7c73a4ed06b13"
+        },
+        "automatic_clamav_refresh": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-clamav-automatic-refresh-28188-20261120.json",
+          "sha256": "97ddf24b769572f0226aa94ab1914d2258878e1203453302b88ab21a80c721e6"
         }
       },
       "blocker": "Staging has encrypted EU backups, archived WAL and verified point-in-time recovery. The official payment sandbox and staging TLS egress are verified for a no-funds rehearsal. The production-equivalent exercise still requires a designated target with its separate TLS PostgreSQL and pooler, and actual approved monitoring delivery receipts. A production merchant remains required for real settlement."
@@ -767594,6 +767606,48 @@
         }
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-probe-stream"
+    },
+    "release-0.6-automatic-clamav-refresh": {
+      "batch": "release-0.6-automatic-clamav-refresh",
+      "base_commit": "2bbab9af42cf40c24a762fc7236af2a29faa7575",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.03",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "kanban/board.json"
+      ],
+      "checks": [
+        "The retained live v0.5.1 scanner pulled daily database 28188 from the approved EU mirror on its normal cycle. ClamD reloaded it, then four further staging checks reported it current. All three database archives and their detached signatures matched the mirror byte for byte, and the running scanner verified all three vendor signatures. Verify the exact v0.6.0 application and signature-age firing and recovery receipts after deployment."
+      ],
+      "limitations": [
+        "This readback covers the retained v0.5.1 stage scanner and its actual refreshes. The v0.6.0 worker metric, controlled alert delivery and exact deployed application remain open."
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "94a4d1c004d8a0220527f7a3400e8bb90e751d0dea21f7dcfbf601383d10dc59"
+        },
+        {
+          "path": "deploy/staging/barghsa-clamav-mirror-tunnel.service",
+          "sha256": "1290394f2022c9839fe3191df72e2f45b2e1e98fe9f08e16d7b907c1f11ff82d"
+        },
+        {
+          "path": "deploy/staging/clamav-mirror-tunnel.sh",
+          "sha256": "e0bc95b1c1d5c6904b8eb55e8dc242fee73bea5c07c3d92a13f852ef078468cc"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "2f0ada2675415b95ded2e39e9409fb26dad1267ab3122432955cd8c58f684946"
+        }
+      ],
+      "execution_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-clamav-automatic-refresh-28188-20261120.json",
+          "sha256": "97ddf24b769572f0226aa94ab1914d2258878e1203453302b88ab21a80c721e6"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-clamav-mirror-recurring/automatic-28188"
     }
   },
   "historical_improvements": [
