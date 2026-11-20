@@ -15248,7 +15248,8 @@
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
-        "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts."
+        "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts.",
+        "The b15ebc3a9 packaged Linux app, worker, retained staging PostgreSQL image and signed SeaweedFS image passed on a private staging-host network. Migration 0297, no-op repeat, readiness and liveness, original image identity and two exact signed object-version receipts were verified. The final immutable candidate and live release worker receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -15344,7 +15345,11 @@
           "release-0.6-license-receipt-reference",
           "release-0.6-license-promotion-fixture"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
+        }
       }
     },
     {
@@ -388884,7 +388889,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The real signed SeaweedFS image and compiled API/worker passed together over TLS on isolated PostgreSQL. Direct and multipart signed versions matched independent byte readback. The exact image, source archive and expected notices are present on staging. Mount the protected configuration and verify the active candidate's real callback after the recoverable storage cutover."
+        "The immutable Linux app at b15ebc3a9, its normal worker process and the exact signed SeaweedFS image passed in a private staging-host Docker network. The API accepted the protected read-only key under its node group. It applied 0297 and an immediate repeat had no pending migrations. Actual direct and multipart callbacks each matched independent version and byte reads. Verify the active protected callback after recovering and cutting over live storage."
       ],
       "owner": null,
       "depends_on": [],
@@ -388935,6 +388940,10 @@
         "staging_signed_storage_package": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
           "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
         }
       }
     },
@@ -388953,7 +388962,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The native signed sender retried after a proxy returned 503 following database commit. Three actual deliveries produced exactly two durable rows for two versions. The current application deployment still needs the scoped readback. SMS delivery reconciliation remains open."
+        "The packaged API and normal worker process on staged Linux handled three actual HTTPS deliveries, including one 503 after persistence. The database retained two encrypted receipts, each with one completed attempt, and updated only the two matching provisional reservations. Verify the active candidate after storage cutover. SMS delivery reconciliation remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -389006,6 +389015,10 @@
         "staging_signed_storage_package": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
           "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
         }
       }
     },
@@ -389124,7 +389137,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The native end-to-end test verified a direct event, one duplicate delivery and one multipart event against real versioned SeaweedFS and compiled API/worker. The accepted candidate needs live staging receipt readback and the remaining SMS proof."
+        "The native staged runtime repeated the direct, multipart and post-persistence 503 replay with real signed storage and exact package images. Both selected versions read back byte-for-byte. Existing negative signature and expiry cases retain their source proof. Verify the active candidate and remaining SMS provider receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -389171,6 +389184,10 @@
         "staging_signed_storage_package": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
           "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
         }
       }
     },
@@ -390425,7 +390442,8 @@
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
         "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
-        "The signed storage image retained the approved 275 package identities and license sets. Its strict check passed with 238 allowlisted and 37 exact conditional approvals. Staging readback verified the exact transferred image, source archive and the three installed SeaweedFS and Go notices. Final application and distribution receipts remain required."
+        "The signed storage image retained the approved 275 package identities and license sets. Its strict check passed with 238 allowlisted and 37 exact conditional approvals. Staging readback verified the exact transferred image, source archive and the three installed SeaweedFS and Go notices. Final application and distribution receipts remain required.",
+        "The exact signed SeaweedFS image repeated the library substitution and FUSE configuration readback in a private staging Linux container. The b15ebc3a9 application package contains the reviewed Sharp license and third-party notice. The frozen release still requires its own enforced application image, paired source and distribution receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -390627,6 +390645,10 @@
         "staging_signed_storage_package": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
           "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
         }
       },
       "blocker": null
@@ -399290,7 +399312,8 @@
         "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
         "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal.",
-        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open."
+        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open.",
+        "Native isolated staging proof at b15ebc3a9 applied the packaged migration set, verified the new receipt table and verified that a repeat had no pending migrations. The API and worker returned passing readiness and liveness, and the immutable API commit matched its health response. A private SeaweedFS test verified the protected callback and exact versions and bytes. Live staged deployment and the final release remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -399377,6 +399400,10 @@
         "staging_native_restored_http": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-native-restored-http-3f8929fdd.json",
           "sha256": "feaa109b286ac2b347c9e46a5f2fd8e9efc88e6699610174ded17285653b9232"
+        },
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
         }
       }
     },
@@ -564926,7 +564953,8 @@
         "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names.",
         "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open.",
         "The CSP rehearsal now models staging's same-origin storage and the native customer runner loads the workspace TypeScript fixture. Fourteen compiled business cases, two native customer sessions and eight report-only transfer safeguards passed in Chromium and WebKit. Live enforcement and direct upload readback remain release gates.",
-        "The signed storage image, API and worker passed the combined TLS, duplicate, version and rollback evidence. Protected staging storage has the checksum-verified image and source archive. Wait for the natural expiry of the original seeded fixture on the exact signed-image clone and verify the recoverable live storage cutover before acceptance."
+        "The signed storage image, API and worker passed the combined TLS, duplicate, version and rollback evidence. Protected staging storage has the checksum-verified image and source archive. Wait for the natural expiry of the original seeded fixture on the exact signed-image clone and verify the recoverable live storage cutover before acceptance.",
+        "The exact b15ebc3a9 Linux API and normal worker passed their native staging rehearsal with signed storage, migration 0297 and a no-op repeat. Three verified HTTPS deliveries produced two encrypted completed receipts and preserved both uploads as provisional. The active v0.5.1 services and manifest were preserved. The timed exact-image lifecycle proof, recoverable live cutover and other acceptance gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -565784,6 +565812,10 @@
         "staging_signed_storage_package": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
           "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        "native_staging_signed_storage_runtime": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
         }
       }
     },
