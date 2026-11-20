@@ -7,7 +7,9 @@ vi.mock('./email-breaker.js', () => ({
   },
 }));
 import { beforeEach, expect, it, vi } from 'vitest';
+import { classifyProviderError, requiresProviderConfigurationFix } from './email-errors.js';
 import { createEmailSender } from './email.js';
+import { DeliveryRejected } from './execution.js';
 const { lookup, createTransport, sendMail, close } = vi.hoisted(() => ({
   lookup: vi.fn(),
   createTransport: vi.fn(),
@@ -114,6 +116,37 @@ it('requires recipient acceptance and closes the connection after failure', asyn
   });
   await expect(sender()(message)).rejects.toThrow('recipient rejected');
   expect(close).toHaveBeenCalled();
+});
+it('keeps only typed SMTP diagnostics when a relay rejects a message', async () => {
+  sendMail.mockRejectedValueOnce(
+    Object.assign(new Error('550 mailbox private-contact@example.test'), {
+      responseCode: 550,
+      response: '550 mailbox private-contact@example.test',
+      command: 'MAIL FROM',
+      code: 'EENVELOPE',
+    })
+  );
+  const error = await sender()(message).catch((error: unknown) => error);
+  expect(error).toMatchObject({ message: 'SMTP delivery failed (550)', responseCode: 550 });
+  expect(error).not.toHaveProperty('response');
+  expect(error).not.toBeInstanceOf(DeliveryRejected);
+  expect(classifyProviderError(error)).toBe('permanent');
+  expect(requiresProviderConfigurationFix(error)).toBe(true);
+  expect(close).toHaveBeenCalledOnce();
+});
+it.each([
+  [{ name: 'TimeoutError' }, { name: 'TimeoutError' }],
+  [
+    { cause: { code: 'ECONNRESET', message: 'private relay context' } },
+    { cause: { code: 'ECONNRESET' } },
+  ],
+])('preserves the transient classification of typed SMTP network failures', async (cause, safe) => {
+  sendMail.mockRejectedValueOnce(Object.assign(new Error('private relay context'), cause));
+  const error = await sender()(message).catch((error: unknown) => error);
+  expect(error).toMatchObject({ message: 'SMTP connection unavailable', ...safe });
+  expect(JSON.stringify(error)).not.toContain('private relay context');
+  expect(classifyProviderError(error)).toBe('transient');
+  expect(error).not.toBeInstanceOf(DeliveryRejected);
 });
 it('aborts an outstanding send when its worker claim is lost', async () => {
   sendMail.mockImplementation(() => new Promise(() => {}));

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T17:54:30.436112+00:00",
+  "updated": "2026-11-20T18:25:50.927407+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -72586,7 +72586,7 @@
             75301215133072,
             712065149242448,
             3428242214270494,
-            1390151195244505,
+            2355528575142242,
             456587449835278,
             3527646616771689,
             2055165527269399,
@@ -72629,7 +72629,8 @@
             3616577190318622,
             1316014914388211,
             3864188913298834,
-            4496982961227154
+            4496982961227154,
+            4081740886435158
           ]
         },
         "brand_theme_caller_renewal": {
@@ -80947,10 +80948,10 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
-            1557491101643074,
+            2953064326731657,
             3370390926513674,
             3311015882192804,
             2339800821672817,
@@ -81227,7 +81228,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -81734,10 +81736,10 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
-            1557491101643074,
+            2953064326731657,
             3370390926513674,
             3311015882192804,
             2339800821672817,
@@ -82014,7 +82016,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -82520,10 +82523,10 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
-            1557491101643074,
+            2953064326731657,
             3370390926513674,
             3311015882192804,
             2339800821672817,
@@ -82800,7 +82803,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -83307,10 +83311,10 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
-            1557491101643074,
+            2953064326731657,
             3370390926513674,
             3311015882192804,
             2339800821672817,
@@ -83587,7 +83591,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -84093,10 +84098,10 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
-            1557491101643074,
+            2953064326731657,
             3370390926513674,
             3311015882192804,
             2339800821672817,
@@ -84373,7 +84378,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -84870,7 +84876,7 @@
             1136775601272047,
             1090183949956975,
             4372383407340296,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             77688855297759,
             752372943992240,
@@ -85019,7 +85025,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -85507,7 +85514,7 @@
             1136775601272047,
             1090183949956975,
             4372383407340296,
-            1390151195244505,
+            2355528575142242,
             4031767066314520
           ],
           "checks": [
@@ -85674,7 +85681,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -86048,10 +86056,10 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
-            1557491101643074,
+            2953064326731657,
             3370390926513674,
             3311015882192804,
             2339800821672817,
@@ -86328,7 +86336,8 @@
             3287616644835669,
             1832992762036922,
             983958935467165,
-            233366735219635
+            233366735219635,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -356960,7 +356969,7 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             3456676233129974,
             456587449835278,
@@ -357108,7 +357117,8 @@
             2012236674359630,
             1889525020198242,
             2379578128810161,
-            1150427068410616
+            1150427068410616,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -357320,7 +357330,7 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             456587449835278,
             3551419815502577,
@@ -357582,7 +357592,8 @@
             2379578128810161,
             3900013905582121,
             1832992762036922,
-            2650028209684369
+            2650028209684369,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -357774,7 +357785,7 @@
             1368277807777478,
             1090183949956975,
             4372383407340296,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             456587449835278,
             3108623938713492
@@ -357941,7 +357952,8 @@
             2012236674359630,
             1889525020198242,
             2379578128810161,
-            1150427068410616
+            1150427068410616,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -358099,7 +358111,7 @@
             1368277807777478,
             1090183949956975,
             4372383407340296,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             456587449835278,
             3108623938713492
@@ -358266,7 +358278,8 @@
             2012236674359630,
             1889525020198242,
             2379578128810161,
-            1150427068410616
+            1150427068410616,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -358424,7 +358437,7 @@
             1368277807777478,
             1090183949956975,
             4372383407340296,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             456587449835278,
             3108623938713492
@@ -358591,7 +358604,8 @@
             2012236674359630,
             1889525020198242,
             2379578128810161,
-            1150427068410616
+            1150427068410616,
+            4081740886435158
           ],
           "presentation_renewals": [
             {
@@ -388241,12 +388255,13 @@
             4152574677516512,
             3766814548391448,
             1136775601272047,
-            1390151195244505
+            2355528575142242
           ],
           "source_renewals": [
             4279548075037714,
             4068854406608864,
-            1543218101388168
+            1543218101388168,
+            4081740886435158
           ]
         }
       }
@@ -391400,7 +391415,8 @@
         "Electricity increase receipts now project a request-bound receipt ID and signed fields without stored session or network evidence. Repeat the controlled response check on the final staging candidate and complete the other sink readbacks.",
         "The Resend connection tester discards HTTP failure bodies before publishing an operation and status diagnostic. Unrecognized domain status strings cannot enter the saved test result. Fixed endpoint, authorization-before-send, verified recipient, receipt bounds, provider status classification and activation rules are preserved. All 128 related unit and compiled API cases passed. The final focused tester run passed 26 cases. Read back the exact candidate on the protected deployed sink.",
         "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
-        "Verification requests no longer reflect an unknown provider ID in API results or logged diagnostics. Migrated HTTP verified the existing provider-not-found category and observed the matching safe log by its correlation ID. Current deployed sinks and broader diagnostic review remain open."
+        "Verification requests no longer reflect an unknown provider ID in API results or logged diagnostics. Migrated HTTP verified the existing provider-not-found category and observed the matching safe log by its correlation ID. Current deployed sinks and broader diagnostic review remain open.",
+        "SMTP delivery failures now discard relay text before it can reach persisted delivery history or caller diagnostics. The original sender exposed a synthetic relay reply containing an email address. The fixed sender keeps allowlisted network and SMTP classification data and leaves ambiguous sends in reconciliation. All 72 shared delivery, 92 worker and 107 API notification cases and 38 package export checks passed. Verify persisted diagnostics on the exact staging candidate and the approved external sinks."
       ],
       "owner": null,
       "depends_on": [],
@@ -391441,7 +391457,11 @@
           "release-0.6-smtp-test-diagnostics",
           "release-0.6-verification-request"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "smtp_send_diagnostics": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/smtp-send-diagnostics-20261120.json",
+          "sha256": "0591a565f2b66cb7368b522a07103f99a96bd8fffed511f46f3c9112a9e89dd4"
+        }
       }
     },
     {
@@ -396361,12 +396381,12 @@
             2796305546764647,
             2055165527269399,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             3456676233129974,
             456587449835278,
             874383184537105,
-            1557491101643074,
+            2953064326731657,
             3108623938713492
           ],
           "checks": [
@@ -396407,7 +396427,8 @@
             2484943224506275,
             1511795022188542,
             3884635036213300,
-            3437623834728936
+            3437623834728936,
+            4237167931214162
           ]
         }
       },
@@ -397383,12 +397404,12 @@
             2796305546764647,
             2055165527269399,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             3688325452932695,
             3456676233129974,
             456587449835278,
             874383184537105,
-            1557491101643074,
+            2953064326731657,
             3108623938713492
           ],
           "checks": [
@@ -397430,7 +397451,8 @@
             2484943224506275,
             1511795022188542,
             3884635036213300,
-            3437623834728936
+            3437623834728936,
+            4237167931214162
           ]
         }
       },
@@ -399106,7 +399128,7 @@
             1874171321536631,
             3202173990355149,
             2180621495743483,
-            1557491101643074,
+            2953064326731657,
             3309884375961720,
             1339027131151802,
             533651428807525,
@@ -399153,7 +399175,8 @@
             2738410776947585,
             1540413741092317,
             2649249452682699,
-            3546959538438740
+            3546959538438740,
+            395195625553404
           ]
         }
       },
@@ -401660,7 +401683,7 @@
             3108623938713492,
             4338563790015953,
             1891967371466760,
-            1390151195244505,
+            2355528575142242,
             4372383407340296,
             874383184537105,
             2055165527269399,
@@ -401724,7 +401747,8 @@
             1889525020198242,
             2379578128810161,
             985239836471606,
-            3437623834728936
+            3437623834728936,
+            4081740886435158
           ]
         }
       }
@@ -404232,7 +404256,8 @@
         "Native Redis and PostgreSQL fixtures assert bounded trace attributes and the absence of SQL, parameters, Redis command data and error text. Verify the same boundary on the protected deployed sink.",
         "The Resend connection tester discards HTTP failure bodies before publishing an operation and status diagnostic. Unrecognized domain status strings cannot enter the saved test result. Fixed endpoint, authorization-before-send, verified recipient, receipt bounds, provider status classification and activation rules are preserved. All 128 related unit and compiled API cases passed. The final focused tester run passed 26 cases. Read back the exact candidate on the protected deployed sink.",
         "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
-        "The installed staging NGINX projection omitted a synthetic readiness query marker and retained its correlation ID, coarse route, status and timing. The old access log retained the equivalent test query. The signed private S3 read and exact-version cleanup passed. Verify the exact accepted application and protected telemetry sinks."
+        "The installed staging NGINX projection omitted a synthetic readiness query marker and retained its correlation ID, coarse route, status and timing. The old access log retained the equivalent test query. The signed private S3 read and exact-version cleanup passed. Verify the exact accepted application and protected telemetry sinks.",
+        "SMTP delivery failures now discard relay text before it can reach persisted delivery history or caller diagnostics. The original sender exposed a synthetic relay reply containing an email address. The fixed sender keeps allowlisted network and SMTP classification data and leaves ambiguous sends in reconciliation. All 72 shared delivery, 92 worker and 107 API notification cases and 38 package export checks passed. Verify persisted diagnostics on the exact staging candidate and the approved external sinks."
       ],
       "owner": null,
       "depends_on": [],
@@ -404550,6 +404575,10 @@
         "staging_v06_edge_live_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-v06-nginx-edge-readback-20261119.json",
           "sha256": "984875a0f32fc73d4fc4f7d0520bcb955976e72e81e8f561e0d949a3d39447ae"
+        },
+        "smtp_send_diagnostics": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/smtp-send-diagnostics-20261120.json",
+          "sha256": "0591a565f2b66cb7368b522a07103f99a96bd8fffed511f46f3c9112a9e89dd4"
         }
       }
     },
@@ -562166,12 +562195,12 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
             3456676233129974,
             456587449835278,
-            1557491101643074,
+            2953064326731657,
             3480233543146939,
             1189484444438779,
             3370390926513674,
@@ -562990,7 +563019,8 @@
             1875191364136080,
             3990378492663856,
             503204402032448,
-            3580811973321880
+            3580811973321880,
+            4237167931214162
           ],
           "presentation_renewals": [
             {
@@ -564194,12 +564224,12 @@
             1090183949956975,
             4372383407340296,
             2776135047547976,
-            1390151195244505,
+            2355528575142242,
             4031767066314520,
             3688325452932695,
             3456676233129974,
             456587449835278,
-            1557491101643074,
+            2953064326731657,
             3480233543146939,
             1189484444438779,
             3370390926513674,
@@ -564922,7 +564952,8 @@
             1875191364136080,
             3990378492663856,
             503204402032448,
-            3580811973321880
+            3580811973321880,
+            4237167931214162
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -567530,7 +567561,8 @@
         "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open.",
         "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images.",
         "The signed storage image passed natural expiry and staged age-based protection before the fenced storage-only cutover. The encrypted EU archive restored with the same inventory and the v0.5.1 application returned healthy on the new volume. Two regular November 20 PostgreSQL backups verified EU manifest readback and matching live metrics. Candidate application callback, combined release checks and authorized external monitoring receipts remain open.",
-        "Staging prepares the protected callback overlay before v0.6.0 application deployment and the release script now requires it. Actual staging Compose readback limits the difference to the intended mounts and API key path. The current application remains healthy with provider delivery disabled. Verify the live candidate and persisted callback."
+        "Staging prepares the protected callback overlay before v0.6.0 application deployment and the release script now requires it. Actual staging Compose readback limits the difference to the intended mounts and API key path. The current application remains healthy with provider delivery disabled. Verify the live candidate and persisted callback.",
+        "SMTP delivery failures now discard relay text before it can reach persisted delivery history or caller diagnostics. The original sender exposed a synthetic relay reply containing an email address. The fixed sender keeps allowlisted network and SMTP classification data and leaves ambiguous sends in reconciliation. All 72 shared delivery, 92 worker and 107 API notification cases and 38 package export checks passed. Verify persisted diagnostics on the exact staging candidate and the approved external sinks."
       ],
       "owner": null,
       "depends_on": [],
@@ -568458,6 +568490,10 @@
         "staging_signed_storage_overlay_admission": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-overlay-admission-20261120.json",
           "sha256": "a598e6cac3e42a52fc9ac2ef11e8d910f8d67c78906ca596c0f16a7a785af681"
+        },
+        "smtp_send_diagnostics": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/smtp-send-diagnostics-20261120.json",
+          "sha256": "0591a565f2b66cb7368b522a07103f99a96bd8fffed511f46f3c9112a9e89dd4"
         }
       }
     },
@@ -770452,6 +770488,63 @@
         "release-readiness#R-03.01",
         "release-readiness#R-03.02"
       ]
+    },
+    "release-0.6-smtp-send-diagnostics": {
+      "batch": "release-0.6-smtp-send-diagnostics",
+      "base_commit": "ca5728a956dbe2dd8ef98c32992cf79064d57c75",
+      "changed_paths": [
+        "packages/shared/src/notification-delivery/email.ts",
+        "packages/shared/src/notification-delivery/smtp.test.ts"
+      ],
+      "checks": [
+        "Only SMTP send failures are projected before they reach configured email callers. The fixed diagnostic and finite typed fields preserve SMTP response codes, provider health, caller cancellation, durable outcomes and repeat behavior. TLS and destination validation, the success receipt and the Resend path retain their existing acceptance."
+      ],
+      "execution_receipts": [
+        {
+          "file": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/smtp-send-diagnostics-20261120.json",
+          "sha256": "0591a565f2b66cb7368b522a07103f99a96bd8fffed511f46f3c9112a9e89dd4"
+        }
+      ],
+      "external_evidence": [],
+      "limitations": [
+        "This verifies the shared SMTP sender and affected callers. Final deployed telemetry sinks remain open."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "c971c0d313a8c0523be3740e235ea6d93a12b1f9c0619050f8a74058e24450dd"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+          "sha256": "d40bdc04dde61002dcf2845bd1b1d3f186981eefd55ceaf0adbacc441b08c59c"
+        }
+      ],
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.03",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.04.04.06",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ]
     }
   },
   "historical_improvements": [
@@ -779885,9 +779978,9 @@
         "path": "apps/worker/src/notifications/delivery-log.ts",
         "sha256": "e5a7aa2820702c05bbba7068a0fb0cf89a8e1c00d5f4ef210832376d9334b94a"
       },
-      "1390151195244505": {
+      "2355528575142242": {
         "path": "packages/shared/src/notification-delivery/email.ts",
-        "sha256": "8ce4ade40220fca9544e6b51751bd72ee4a57f543d3fdd260c6315d903e33880"
+        "sha256": "c971c0d313a8c0523be3740e235ea6d93a12b1f9c0619050f8a74058e24450dd"
       },
       "456587449835278": {
         "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -780233,9 +780326,9 @@
         "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
         "sha256": "6203460859ebbed90ad17ec8d6ea4e2d5e450e231b79be66af8679a4209d1f1c"
       },
-      "1557491101643074": {
+      "2953064326731657": {
         "path": "packages/shared/src/notification-delivery/smtp.test.ts",
-        "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
+        "sha256": "d40bdc04dde61002dcf2845bd1b1d3f186981eefd55ceaf0adbacc441b08c59c"
       },
       "2588487507754765": {
         "path": "apps/api/src/email-webhook/email-webhook.module.ts",
@@ -801870,6 +801963,14 @@
         ],
         "scope": "Reviewed the additive SMS report fields and journal entry, the worker timer and the existing receipt write. The existing send identity, receipt status, provider configuration and retry grants retain their guarantees. Clean and populated PostgreSQL migration runs, compiled worker callers and the focused report contract passed. Documentation changes cover the approved optional report path."
       },
+      "4081740886435158": {
+        "batch": "release-0.6-smtp-send-diagnostics",
+        "base_commit": "ca5728a956dbe2dd8ef98c32992cf79064d57c75",
+        "paths": [
+          "packages/shared/src/notification-delivery/email.ts"
+        ],
+        "scope": "Only SMTP send failures are projected before they reach configured email callers. The fixed diagnostic and finite typed fields preserve SMTP response codes, provider health, caller cancellation, durable outcomes and repeat behavior. TLS and destination validation, the success receipt and the Resend path retain their existing acceptance."
+      },
       "2399684774929892": {
         "batch": "release-0.5-expanded-service-targets-escalation",
         "base_commit": "d5cf532b1cd12233d990ae3c3479ac15b1e50212",
@@ -802520,6 +802621,15 @@
           "packages/db/drizzle/production/meta/_journal.json"
         ],
         "scope": "Reviewed the additive SMS report fields and journal entry, the worker timer and the existing receipt write. The existing send identity, receipt status, provider configuration and retry grants retain their guarantees. Clean and populated PostgreSQL migration runs, compiled worker callers and the focused report contract passed. Documentation changes cover the approved optional report path."
+      },
+      "4237167931214162": {
+        "batch": "release-0.6-smtp-send-diagnostics",
+        "base_commit": "ca5728a956dbe2dd8ef98c32992cf79064d57c75",
+        "paths": [
+          "packages/shared/src/notification-delivery/email.ts",
+          "packages/shared/src/notification-delivery/smtp.test.ts"
+        ],
+        "scope": "Only SMTP send failures are projected before they reach configured email callers. The fixed diagnostic and finite typed fields preserve SMTP response codes, provider health, caller cancellation, durable outcomes and repeat behavior. TLS and destination validation, the success receipt and the Resend path retain their existing acceptance."
       },
       "2798703902748997": {
         "batch": "release-0.6-provider-redirects-and-response-caps",
@@ -813303,6 +813413,14 @@
           "docs/security/security-verification.md"
         ],
         "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+      },
+      "395195625553404": {
+        "batch": "release-0.6-smtp-send-diagnostics",
+        "base_commit": "ca5728a956dbe2dd8ef98c32992cf79064d57c75",
+        "paths": [
+          "packages/shared/src/notification-delivery/smtp.test.ts"
+        ],
+        "scope": "Only SMTP send failures are projected before they reach configured email callers. The fixed diagnostic and finite typed fields preserve SMTP response codes, provider health, caller cancellation, durable outcomes and repeat behavior. TLS and destination validation, the success receipt and the Resend path retain their existing acceptance."
       },
       "3621449461636853": {
         "batch": "release-0.6-alert-dashboards",

@@ -19,6 +19,46 @@ import { readCappedJson } from '../storage/read-capped-bytes.js';
 
 const MAX_RESEND_RESPONSE_BYTES = 64 * 1024;
 
+/** Keep only the SMTP fields used for delivery and provider-health decisions. */
+function smtpSendFailure(error: unknown): Error {
+  const value =
+    error && typeof error === 'object'
+      ? (error as {
+          responseCode?: unknown;
+          code?: unknown;
+          command?: unknown;
+          cause?: unknown;
+          name?: unknown;
+        })
+      : {};
+  const responseCode =
+    typeof value.responseCode === 'number' &&
+    Number.isInteger(value.responseCode) &&
+    value.responseCode >= 400 &&
+    value.responseCode < 600
+      ? value.responseCode
+      : undefined;
+  const causeCode = (value.cause as { code?: unknown } | undefined)?.code;
+  const message =
+    responseCode !== undefined
+      ? `SMTP delivery failed (${responseCode})`
+      : isTransientEmailError(error)
+        ? 'SMTP connection unavailable'
+        : 'SMTP delivery failed';
+  return Object.assign(new Error(message), {
+    ...(responseCode !== undefined ? { responseCode } : {}),
+    ...(typeof value.code === 'string' &&
+    (value.code === 'EAUTH' || isTransientEmailError({ code: value.code }))
+      ? { code: value.code }
+      : {}),
+    ...(value.command === 'MAIL FROM' ? { command: value.command } : {}),
+    ...(value.name === 'TimeoutError' ? { name: value.name } : {}),
+    ...(typeof causeCode === 'string' && isTransientEmailError({ cause: { code: causeCode } })
+      ? { cause: { code: causeCode } }
+      : {}),
+  });
+}
+
 export interface DeliveryPool {
   query(sql: string, params?: unknown[]): Promise<{ rows: Array<Record<string, unknown>> }>;
 }
@@ -187,15 +227,19 @@ export function createEmailSender(
           deliverySignal.throwIfAborted();
           const result = await Promise.race([
             cancelled,
-            transport.sendMail({
-              from: { name: config.from_name ?? 'Barghsa', address: config.from_email },
-              to: message.destination,
-              replyTo: config.reply_to,
-              subject: message.subject,
-              ...(message.html ? { html: message.html } : {}),
-              ...(message.text ? { text: message.text } : {}),
-              messageId: `<${createHash('sha256').update(message.idempotencyKey).digest('hex')}@${config.from_email.split('@')[1]}>`,
-            }),
+            transport
+              .sendMail({
+                from: { name: config.from_name ?? 'Barghsa', address: config.from_email },
+                to: message.destination,
+                replyTo: config.reply_to,
+                subject: message.subject,
+                ...(message.html ? { html: message.html } : {}),
+                ...(message.text ? { text: message.text } : {}),
+                messageId: `<${createHash('sha256').update(message.idempotencyKey).digest('hex')}@${config.from_email.split('@')[1]}>`,
+              })
+              .catch((error: unknown) => {
+                throw smtpSendFailure(error);
+              }),
           ]);
           if (!result.accepted?.length && result.rejected?.length === 1)
             throw new DeliveryRejected('SMTP recipient rejected');
