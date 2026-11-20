@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T19:39:19.664360+00:00",
+  "updated": "2026-11-20T19:55:46.594413+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -389768,7 +389768,8 @@
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-clamav-mirror-recurring",
           "release-0.6-staging-scanner-gate-readback",
-          "release-0.6-upload-verification-compatibility"
+          "release-0.6-upload-verification-compatibility",
+          "release-0.6-clamav-libxml2-86144"
         ],
         "current_acceptance": null,
         "staging_scanner_28188_readback": {
@@ -390034,7 +390035,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-clamav-libxml2-86144"
         ],
         "current_acceptance": {
           "kind": "reviewed_current_source",
@@ -390048,7 +390050,7 @@
             4333719847802498,
             3154817129100341,
             2196600251640641,
-            315337029627335,
+            3860301669721090,
             1599047804612857,
             912713385575125,
             3108623938713492
@@ -390097,7 +390099,8 @@
             239515042949512,
             4480472245978925,
             2461493859728927,
-            3546959538438740
+            3546959538438740,
+            1067589445036843
           ]
         }
       },
@@ -392184,7 +392187,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-clamav-libxml2-86144"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -392193,7 +392197,7 @@
             3832607923924757,
             4338039208752933,
             1368919690263265,
-            315337029627335,
+            3860301669721090,
             3830507931348172,
             1211957629208944,
             1364273028583396
@@ -392239,7 +392243,8 @@
             2562915566480803,
             1889525020198242,
             2379578128810161,
-            2087535122813261
+            2087535122813261,
+            1067589445036843
           ]
         }
       }
@@ -393265,7 +393270,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-clamav-libxml2-86144"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -393273,7 +393279,7 @@
           "source_evidence": [
             4338039208752933,
             1368919690263265,
-            315337029627335,
+            3860301669721090,
             1211957629208944,
             3832607923924757,
             1364273028583396
@@ -393315,7 +393321,8 @@
             2562915566480803,
             1889525020198242,
             2379578128810161,
-            2087535122813261
+            2087535122813261,
+            1067589445036843
           ]
         }
       }
@@ -568042,7 +568049,8 @@
           "release-0.6-saving-catalogue-read-authority",
           "release-0.6-query-read-authority",
           "release-0.6-staging-edge-probes",
-          "release-0.6-systemd-license-approval"
+          "release-0.6-systemd-license-approval",
+          "release-0.6-clamav-libxml2-86144"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -770597,6 +770605,28 @@
         "release-readiness#R-03.01",
         "release-readiness#R-03.02"
       ]
+    },
+    "release-0.6-clamav-libxml2-86144": {
+      "batch": "release-0.6-clamav-libxml2-86144",
+      "base_commit": "b1232cbbfa9606ce11c7406c9773ec763dd7bb2e",
+      "paths": [
+        "deploy/clamav/Dockerfile"
+      ],
+      "checks": [
+        "Hosted preflight 44804335161 blocked libxml2 2.13.9-r2 in the Alpine 3.24 ClamAV image. The signed Alpine repository package 2.13.9-r3 was installed in the exact patched amd64 image.",
+        "The image passed daemon readiness, safe content, EICAR detection and three document integration cases covering real scan recovery, durable jobs and sealed RTF.",
+        "The repository-pinned scanner produced the exact image report and CycloneDX SBOM with zero high or critical vulnerabilities. The upgraded libxml2 package declares MIT."
+      ],
+      "limitations": [
+        "The exact protected preflight and deployed scanner-image readback remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-clamav-libxml2-20261120.json",
+      "execution_receipts": [
+        {
+          "file": "v06-clamav-libxml2-20261120.json",
+          "sha256": "f5527d620cfa0132809d4ff698ce942bab68fd65155ade3ab84913e64fd7fb0a"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -785998,9 +786028,9 @@
         "path": "packages/shared/src/admin/upload-policies.ts",
         "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
       },
-      "315337029627335": {
+      "3860301669721090": {
         "path": "deploy/clamav/Dockerfile",
-        "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        "sha256": "cd0db5af08985505e7cb5e76960044e9558e3679fb93c3e54a8832b9aa6d2c63"
       },
       "293828677520525": {
         "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
@@ -812128,6 +812158,14 @@
           "apps/worker/src/main.ts"
         ],
         "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+      },
+      "1067589445036843": {
+        "batch": "release-0.6-clamav-libxml2-86144",
+        "base_commit": "b1232cbbfa9606ce11c7406c9773ec763dd7bb2e",
+        "paths": [
+          "deploy/clamav/Dockerfile"
+        ],
+        "scope": "Alpine libxml2 security upgrade only. The exact patched scanner passed native clean and EICAR checks, all three affected application and worker integration cases, and the pinned vulnerability scan."
       },
       "791278543445903": {
         "batch": "release-0.6-operator-log-pseudonyms",

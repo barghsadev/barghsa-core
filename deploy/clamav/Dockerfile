@@ -1,5 +1,7 @@
 FROM clamav/clamav:1.5@sha256:45fe5149fbee5a46509c9848ef20d0c354b7b2323c9369f285939a37cf33422a
 
+RUN apk add --no-cache --upgrade 'libxml2>=2.13.9-r3'
+
 # Direct uploads allow up to 100 MiB. Match the largest accepted upload so
 # INSTREAM can inspect the entire object.
 # Archive expansion limits stay in place and are reported as a blocked verdict.
