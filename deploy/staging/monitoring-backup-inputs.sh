@@ -3,8 +3,29 @@
 capture_monitoring_inputs() {
   local name text path
   local managed=/opt/barghsa/staging/monitoring/
+  local primary=barghsa-staging-monitoring-prometheus-1
+  local archive=barghsa-staging-monitoring-prometheus-archive-1
+  local -a containers=("$primary" barghsa-staging-monitoring-alertmanager-1)
   local -a mounted=()
-  for name in barghsa-staging-monitoring-prometheus-1 barghsa-staging-monitoring-alertmanager-1; do
+  local -a environments=(/etc/barghsa/staging/monitoring-compose.env /etc/barghsa/staging/operations.env)
+
+  text=$(docker inspect --format '{{index .Config.Labels "com.docker.compose.project.config_files"}}' "$primary") || return 1
+  if [[ ",$text," == *"/metrics-retention-compose.yml,"* ]]; then
+    containers+=("$archive")
+    path=$(docker inspect --format '{{range .Mounts}}{{if and (eq .Type "bind") (eq .Destination "/etc/prometheus/prometheus.yml")}}{{.Source}}{{end}}{{end}}' "$archive") || return 1
+    [[ "$path" == "$managed"* ]] || return 1
+    mounted+=("$path")
+    text=$(docker inspect --format '{{index .Config.Labels "com.docker.compose.project.environment_file"}}' "$archive") || return 1
+    [[ -n "$text" ]] || return 1
+    while IFS= read -r path; do
+      [[ "$path" =~ ^/(opt/barghsa/staging/monitoring|etc/barghsa/staging)/[a-zA-Z0-9._/-]+\.env$ ]] || return 1
+      [[ "$path" == "$(realpath -e -- "$path")" ]] || return 1
+      [[ "$(stat -c '%u:%a' -- "$path")" =~ ^0:[46]00$ ]] || return 1
+      environments+=("$path")
+    done <<< "${text//,/$'\n'}"
+  fi
+
+  for name in "${containers[@]}"; do
     text=$(docker inspect --format '{{range .Mounts}}{{if eq .Type "bind"}}{{println .Source}}{{end}}{{end}}' "$name")
     while IFS= read -r path; do
       if [[ "$path" == "$managed"* ]]; then mounted+=("$path"); fi
@@ -23,9 +44,10 @@ capture_monitoring_inputs() {
     add_input deploy "${path#/}"
   done <<< "$text"
 
-  for path in monitoring-compose.env operations.env; do
-    add_input env "etc/barghsa/staging/$path"
-  done
+  text=$(printf '%s\n' "${environments[@]}" | sort -u)
+  while IFS= read -r path; do
+    add_input env "${path#/}"
+  done <<< "$text"
   add_input encryption_key etc/barghsa/staging/operations-webhook-token
   add_input encryption_key etc/barghsa/staging/postgres-disk/issuer/ca.key
   add_input tls etc/barghsa/staging/postgres-disk/issuer/ca.pem

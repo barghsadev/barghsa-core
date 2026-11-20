@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T20:35:15.558454+00:00",
+  "updated": "2026-11-20T20:48:09.483277+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11790,14 +11790,15 @@
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-configuration-backup-readback",
-          "release-0.6-verify-configuration-backup-and-checks"
+          "release-0.6-verify-configuration-backup-and-checks",
+          "release-0.6-staging-metrics-archive-config-recovery"
         ],
         "current_acceptance": {
           "kind": "native_verification",
           "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
           "source_evidence": [
-            4224570002802235,
-            466286796035795,
+            1564041301377969,
+            1880233176946558,
             1524270420910059,
             252012373289793,
             282061544305323,
@@ -11805,11 +11806,15 @@
             3044795682365846,
             3874686232760928,
             2827715711783056,
-            252075794241722
+            252075794241722,
+            1767619732710911
           ],
           "checks": [
             3879078635623494,
             1068789989655690
+          ],
+          "source_renewals": [
+            1017269358319036
           ]
         },
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-configuration-backup-readback/native-backup-tests.log",
@@ -16205,7 +16210,8 @@
         "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts.",
         "A one-time staging systemd timer triggered the existing isolated PostgreSQL restore verifier on November 19. The journal bound the start, verifier report and successful exit to one invocation. The latest backup eligible for the captured recovery point matched its original EU manifest and the independent source fingerprints. The earlier committed marker survived and the later marker was absent, and the database recovered in 35.224 seconds with zero measured RPO for the covered tables. The temporary units and container were collected. The recurring quarterly execution, delivered failure alerts and the core-service recovery exercise remain open.",
         "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
-        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open."
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
+        "Rehearsed the active metrics archive configuration recovery through the existing encrypted EU store. The staged verifier restored the archive scrape file and protected environment alongside the prior configuration and compared the complete independent fingerprint inventory. The accepted topology and separate recovery/monitoring gates remain."
       ],
       "owner": null,
       "depends_on": [],
@@ -16259,7 +16265,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-restore-source-identity",
           "release-0.6-paired-physical-recovery-rehearsal",
-          "release-0.6-paired-eu-recovery-rehearsal"
+          "release-0.6-paired-eu-recovery-rehearsal",
+          "release-0.6-staging-metrics-archive-config-recovery"
         ],
         "current_acceptance": null,
         "staging_config_quarterly_schedule": {
@@ -410968,7 +410975,8 @@
       "remaining": [
         "Staging primary retention and capacity verified. The private 400-day archive starts on November 20, 2026. Two consecutive scrapes verified preserved source samples, 222 series and volume growth within the 2 GiB cap. Retain the prior history gap and verify growth on the accepted production topology.",
         "Verify the accepted target and separately authorized external alert delivery. The prior isolated fixture retained a 399-day sample across restart. Staging history readback covers the observed current five-minute interval.",
-        "Verify any later published admin retention changes against the active archive. The deployed staging archive uses the reviewed 400-day default."
+        "Verify any later published admin retention changes against the active archive. The deployed staging archive uses the reviewed 400-day default.",
+        "Rehearsed the active metrics archive configuration recovery through the existing encrypted EU store. The staged verifier restored the archive scrape file and protected environment alongside the prior configuration and compared the complete independent fingerprint inventory. The accepted topology and separate recovery/monitoring gates remain."
       ],
       "owner": null,
       "depends_on": [],
@@ -410985,7 +410993,8 @@
         "batches": [
           "release-0.6-prometheus-metric-retention",
           "release-0.6-operational-retention",
-          "release-0.6-staging-metrics-archive-live"
+          "release-0.6-staging-metrics-archive-live",
+          "release-0.6-staging-metrics-archive-config-recovery"
         ],
         "current_acceptance": null
       }
@@ -568661,7 +568670,8 @@
         "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
         "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
         "The compiled API passed one isolated no-funds wallet checkout through the official ZarinPal sandbox, including exact initiation replay, read-only callback, CSRF rejection and one idempotent credit. Verified the same reference from staging over TLS with provider code 101. The exact deployed candidate and controlled staging provider and anomaly checks remain open.",
-        "The retained live v0.5.1 scanner pulled daily database 28188 from the approved EU mirror on its normal cycle. ClamD reloaded it, then four further staging checks reported it current. All three database archives and their detached signatures matched the mirror byte for byte, and the running scanner verified all three vendor signatures. Verify the exact v0.6.0 application and signature-age firing and recovery receipts after deployment."
+        "The retained live v0.5.1 scanner pulled daily database 28188 from the approved EU mirror on its normal cycle. ClamD reloaded it, then four further staging checks reported it current. All three database archives and their detached signatures matched the mirror byte for byte, and the running scanner verified all three vendor signatures. Verify the exact v0.6.0 application and signature-age firing and recovery receipts after deployment.",
+        "Rehearsed the active metrics archive configuration recovery through the existing encrypted EU store. The staged verifier restored the archive scrape file and protected environment alongside the prior configuration and compared the complete independent fingerprint inventory. The accepted topology and separate recovery/monitoring gates remain."
       ],
       "owner": null,
       "depends_on": [],
@@ -568764,7 +568774,8 @@
           "release-0.6-paired-physical-recovery-rehearsal",
           "release-0.6-paired-eu-recovery-rehearsal",
           "release-0.6-official-wallet-payment-sandbox",
-          "release-0.6-automatic-clamav-refresh"
+          "release-0.6-automatic-clamav-refresh",
+          "release-0.6-staging-metrics-archive-config-recovery"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -770769,6 +770780,30 @@
           "sha256": "a85ad3adc3def80fdaae6da56c54bb04491a895ebf7699443602eeeab86bdce1"
         }
       ]
+    },
+    "release-0.6-staging-metrics-archive-config-recovery": {
+      "batch": "release-0.6-staging-metrics-archive-config-recovery",
+      "base_commit": "45a436d37a1f0502096cd7c9a50fa9ac7e51408b",
+      "paths": [
+        "deploy/staging/monitoring-backup-inputs.sh",
+        "deploy/staging/test_release_monitoring_backup.py",
+        "docs/operations/backup/config-restore-runbook.md"
+      ],
+      "checks": [
+        "The previous live backup inventory included the metrics Compose overlay and mount override while omitting the referenced archive scrape file and protected environment. The staged replacement adds exactly those two input records and preserves every earlier path.",
+        "All four inventory tests and eighteen existing encrypted backup/restore tests passed. The archive environment is a protected env input from the active Compose labels.",
+        "The actual staging recovery unit wrote and read back a new encrypted EU archive, verified the updated inventory, and restored 60 files and 33 configuration tables in the isolated clone. Exact configuration RPO was zero and verified readback took 5.799 seconds."
+      ],
+      "limitations": [
+        "The scoped configuration proof does not measure core-service recovery, archive metrics history restoration or external alert delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-archive-config-backup-20261120.json",
+      "execution_receipts": [
+        {
+          "file": "v06-staging-archive-config-backup-20261120.json",
+          "sha256": "33883d189395f2c6b55dcb513c88c794ebe760a1f7a7a9bcab8ea3d92c4087db"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -775254,13 +775289,13 @@
         "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
         "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
       },
-      "4224570002802235": {
+      "1564041301377969": {
         "path": "deploy/staging/monitoring-backup-inputs.sh",
-        "sha256": "77356c9c9a9707b073acae5f57539a47321a430f39d6b561e5f230851e3598d9"
+        "sha256": "906a888aaa1109587b6f6624415436ad5133b7d462754ca20ccddaaef7dc7fe0"
       },
-      "466286796035795": {
+      "1880233176946558": {
         "path": "docs/operations/backup/config-restore-runbook.md",
-        "sha256": "8bfffa5ee908e037b722d2ffc3f0f51e42a1b765baccf799fb3a51d9d999bbfd"
+        "sha256": "0eaff67c279a4791fde2f49d7912d7541e770b33c540dbab2a24b69f7f211089"
       },
       "1524270420910059": {
         "path": "packages/db/scripts/backup/config_backup.py",
@@ -775293,6 +775328,10 @@
       "252075794241722": {
         "path": "packages/db/scripts/backup/systemd/barghsa-config-restore-exercise.timer",
         "sha256": "bf2c014f5cbc94e83b898d8b417a236f80d9b9c127bdabbfdd349d2c309f9d97"
+      },
+      "1767619732710911": {
+        "path": "deploy/staging/test_release_monitoring_backup.py",
+        "sha256": "17c238c4a9d626258958ae05ff8fff2c4f5505f03f1663d5585ed9384ae14205"
       },
       "2691242227704393": {
         "path": "packages/shared/src/redis/redis-factory.ts",
@@ -792644,6 +792683,16 @@
           "apps/api/src/electricity/electricity-order.integration.test.ts"
         ],
         "scope": "The additive migration preserves earlier migration entries and the table schema. Reviewed the scope checks on settlement and expiry and verified native payment, worker, baseline and exact upgrade cases. Unchanged parts of previously accepted paths retain their existing evidence."
+      },
+      "1017269358319036": {
+        "batch": "release-0.6-staging-metrics-archive-config-recovery",
+        "base_commit": "45a436d37a1f0502096cd7c9a50fa9ac7e51408b",
+        "paths": [
+          "deploy/staging/monitoring-backup-inputs.sh",
+          "deploy/staging/test_release_monitoring_backup.py",
+          "docs/operations/backup/config-restore-runbook.md"
+        ],
+        "scope": "Added the missing active archive files to the protected configuration inventory. The same staging recovery service verified the encrypted off-server snapshot and every restored source-file fingerprint."
       },
       "4470513240745497": {
         "batch": "release-0.6-redis-command-tracing",
