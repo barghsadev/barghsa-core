@@ -5,12 +5,20 @@ import { createRequire } from 'node:module';
 import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { t } from '@barghsa/i18n/workspace';
 import { shellText } from '@barghsa/i18n/shell';
-import { startTestPostgres } from '../../../packages/db/src/test/globalSetup';
-import { startHttpFixture } from '../../api/src/test/http-fixture';
 import { createStaticServer } from '../server.js';
 import { test, expect } from './coverage-fixture';
 
+const requireDb = createRequire(new URL('../../../packages/db/package.json', import.meta.url));
 const requireApi = createRequire(new URL('../../api/package.json', import.meta.url));
+// Load the DB workspace's NodeNext sources before loading the native fixtures.
+const { register } = requireDb('tsx/cjs/api') as { register(): void };
+register();
+const { startTestPostgres } = requireDb(
+  './src/test/globalSetup.ts'
+) as typeof import('../../../packages/db/src/test/globalSetup');
+const { startHttpFixture } = requireApi(
+  './src/test/http-fixture.ts'
+) as typeof import('../../api/src/test/http-fixture');
 const locale = 'fa';
 const fixtureName = 'کاربر آزمایشی';
 

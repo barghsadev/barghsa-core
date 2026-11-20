@@ -359392,7 +359392,7 @@
             4246045154725758,
             3736803204227592,
             1550366381690447,
-            3103404761580464,
+            852627010966933,
             494523421112973,
             89881876736410,
             3069914752726127,
@@ -359423,7 +359423,8 @@
             2325930101307397,
             2560446033636596,
             1734281426143111,
-            168111367817703
+            168111367817703,
+            580981761638250
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/safe-document-detail-preview",
@@ -359514,7 +359515,8 @@
             3944156388743222,
             3302455329354579,
             1946058500922369,
-            3239468737812509
+            3239468737812509,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -360409,7 +360411,7 @@
             4246045154725758,
             3736803204227592,
             1550366381690447,
-            3103404761580464,
+            852627010966933,
             494523421112973,
             89881876736410,
             3069914752726127,
@@ -360440,7 +360442,8 @@
             2325930101307397,
             2560446033636596,
             1734281426143111,
-            168111367817703
+            168111367817703,
+            580981761638250
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/safe-document-detail-preview",
@@ -360531,7 +360534,8 @@
             3944156388743222,
             3302455329354579,
             1946058500922369,
-            3239468737812509
+            3239468737812509,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -362885,7 +362889,7 @@
             4246045154725758,
             3736803204227592,
             1550366381690447,
-            3103404761580464,
+            852627010966933,
             494523421112973,
             89881876736410,
             3069914752726127,
@@ -362929,7 +362933,8 @@
             2325930101307397,
             2560446033636596,
             1734281426143111,
-            168111367817703
+            168111367817703,
+            580981761638250
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/safe-document-detail-preview",
@@ -363028,7 +363033,8 @@
             3944156388743222,
             3302455329354579,
             1946058500922369,
-            3239468737812509
+            3239468737812509,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -380210,13 +380216,18 @@
         "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only.",
         "The published v0.5.1 icon matched the exact same-origin PNG. The retained API window from 12:03 to 17:55 UTC on November 14 held two style-element reports and zero image reports, and login retained Report-Only. All 16 Chromium and WebKit checks passed on the compiled a1264d2d5 build, including registration feedback in both languages and themes, native browser reports, untrusted style blocking and the compiled validator. Complete the representative observation and staff and customer enforcement journeys on the deployed candidate.",
         "On November 14 at 20:04 UTC, live staging v0.5.1 served the reactivated 3,415-byte same-origin PNG with private no-store caching. Chromium and WebKit previously verified the same file. The same API container recorded zero CSP reports from 14:08:53 through 20:04 UTC and login still served Report-Only. Complete the representative full-week report-only observation, verify the candidate Sonner fix, and exercise the customer and staff enforcement journeys.",
-        "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate."
+        "The retained v0.5.1 API logs covered all seven days from November 12 at 18:46 UTC and classified all 38 CSP reports. These were 20 image requests to another origin and 18 inline-style reports. The last image report was November 13 and the last style report was November 15. The live login response still serves Report-Only and the active 3,415-byte same-origin PNG matches the uploaded favicon. Legacy edge traffic can be attributed by referrer on four of the seven days. Representative customer and staff journeys and enforcement remain open on the exact candidate.",
+        "A compiled rehearsal exercised CSP enforcement in Chromium and WebKit. Six electricity and solar cases initially failed because their fixture receiver used a different port. The upload fixture now serves the application and streamed upload on one origin in enforcement mode. All 14 targeted electricity, saving, solar and consultation journeys and both PostgreSQL-backed signed-in customer journeys passed. Eight report-only transfer-resume cases passed the existing credential, byte and reservation assertions. The live staging application environment and active durable storage revision use the same public origin with path-style signing. Exercise live customer and staff paths and read back same-origin receipt and solar document bytes under enforcement on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/web/e2e/upload-fixture.ts",
+          "apps/web/e2e/rollout-smoke.spec.ts",
+          "docs/operations/storage-configuration.md"
+        ],
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
@@ -380243,6 +380254,10 @@
         "staging_csp_seven_day_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-seven-day-readback-20261119.json",
           "sha256": "0126882c54b678b0ced5a8c51123748da5034b781a4cafa77048f4eca35613fd"
+        },
+        "staging_csp_business_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-business-rehearsal-20261120.json",
+          "sha256": "bf02b710c7e220b60625d82a9e57c9159d88d917bbfc010adb7bfec1a0430ee8"
         }
       }
     },
@@ -394395,7 +394410,7 @@
             3324437070931386,
             2337041771644187,
             271984339233944,
-            3103404761580464,
+            852627010966933,
             335271907751690,
             1534809048361187,
             59610264634992,
@@ -394416,12 +394431,14 @@
             4069102709482719,
             4371429569898483,
             889985415563243,
-            951305325835911
+            951305325835911,
+            580981761638250
           ],
           "source_renewals": [
             177502565566556,
             3288945720525475,
-            3476363656192367
+            3476363656192367,
+            2607445134387421
           ]
         }
       }
@@ -394662,7 +394679,7 @@
             2921896171630389,
             293005828401899,
             3305194367762875,
-            3103404761580464,
+            852627010966933,
             335271907751690,
             3578760035422357,
             4074681076788513,
@@ -394676,14 +394693,16 @@
             4482475766617487,
             1729422844314189,
             3091041944973015,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "source_renewals": [
             7452213857984,
             3173240539928272,
             3288945720525475,
             3142997009322617,
-            3938135741061713
+            3938135741061713,
+            2607445134387421
           ]
         }
       }
@@ -394853,7 +394872,7 @@
             4368684968752415,
             432402897659717,
             3306871816619358,
-            3103404761580464,
+            852627010966933,
             335271907751690,
             1955598147147003,
             2931996043672577,
@@ -394866,7 +394885,8 @@
             4249707411007493,
             3721048054677066,
             1282638247948815,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "source_renewals": [
             3968121688949526,
@@ -394877,7 +394897,8 @@
             2091036735299610,
             2733455611411028,
             1397518992161983,
-            3288945720525475
+            3288945720525475,
+            2607445134387421
           ]
         }
       }
@@ -438861,7 +438882,7 @@
             2420928410098832,
             3427886213013403,
             953918528677556,
-            3103404761580464,
+            852627010966933,
             3742657635074847,
             2273180439985076,
             317617910138591,
@@ -439122,7 +439143,8 @@
             2201291801792273,
             951305325835911,
             3062641131844408,
-            2297830686301027
+            2297830686301027,
+            580981761638250
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -439190,7 +439212,8 @@
             1735775986935962,
             1721639407168843,
             3476363656192367,
-            2784096218352567
+            2784096218352567,
+            2607445134387421
           ]
         }
       }
@@ -530597,7 +530620,7 @@
             2597245546768185,
             2229980372613588,
             2420928410098832,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             1132727567050530,
@@ -530672,7 +530695,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Actual shared ListPage customer/staff lists show safe subject, finite status, P1/P2/P3 priorities, localized relative and exact update time and authorized related-record links. Mobile cards retain expandable keyboard-accessible secondary fields, accepted queue state and failed-page recovery.",
           "limitations": [
@@ -530709,7 +530733,8 @@
             2731734917005317,
             3288945720525475,
             2927939502738672,
-            517538951283210
+            517538951283210,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -530900,7 +530925,7 @@
             2597245546768185,
             2229980372613588,
             2420928410098832,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             1132727567050530,
@@ -530975,7 +531000,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Current detail includes subject, status, priority, creation/update dates, related record, public chronological conversation and reply input; only currently authorized staff see internal toggle, private contact and assignment/status controls.",
           "limitations": [
@@ -531012,7 +531038,8 @@
             2731734917005317,
             3288945720525475,
             2927939502738672,
-            517538951283210
+            517538951283210,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -531207,7 +531234,7 @@
             2597245546768185,
             2229980372613588,
             2420928410098832,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             1132727567050530,
@@ -531282,7 +531309,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Comments ordered by created_at/id show recorded author context, approved name/role fallback, Avatar, exact timestamp, sanitized Markdown or literal plain text, current attachment thumbnails and distinct customer/staff/internal styling. Internal notes carry localized INTERNAL label.",
           "limitations": [
@@ -531319,7 +531347,8 @@
             2731734917005317,
             3288945720525475,
             2927939502738672,
-            517538951283210
+            517538951283210,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -531511,7 +531540,7 @@
             2597245546768185,
             2229980372613588,
             2420928410098832,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             1132727567050530,
@@ -531586,7 +531615,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Reply editor provides bold/italic/list/HTTP link formatting, safe preview, validated drag/drop and selected files, staff-only internal toggle and submit. Separate branches retain text/files and exact retry commands; failed/mismatched/uncertain outcomes do not clear drafts or resend uploads.",
           "limitations": [
@@ -531623,7 +531653,8 @@
             2731734917005317,
             3288945720525475,
             2927939502738672,
-            517538951283210
+            517538951283210,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -531814,7 +531845,7 @@
             2597245546768185,
             2229980372613588,
             2420928410098832,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             1132727567050530,
@@ -531889,7 +531920,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Staff status editor exposes all six domain states through legal transitions with required localized reason input, current assignment and permissions. Server trims/audits reasons privately, serializes transitions, rolls back audit/notification failure and replays exact original receipts without reverting newer state.",
           "limitations": [
@@ -531926,7 +531958,8 @@
             2731734917005317,
             3288945720525475,
             2927939502738672,
-            517538951283210
+            517538951283210,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -532119,7 +532152,7 @@
             2597245546768185,
             2229980372613588,
             2420928410098832,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             1132727567050530,
@@ -532194,7 +532227,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Customer SQL filters internal comments even for staff ticket owners in customer context. UI filters before storage and render. Direct/cached attachment previews, reply receipts and writes enforce current owner/profile/operating context/session/grants and never return internal bytes or private notifications to customers.",
           "limitations": [
@@ -532231,7 +532265,8 @@
             2731734917005317,
             3288945720525475,
             2927939502738672,
-            517538951283210
+            517538951283210,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -534899,7 +534934,7 @@
             2200943904942411,
             3817337598802695,
             4336739995083235,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             850050187551283,
@@ -534986,7 +535021,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Current shared FileUpload provides keyboard browse/drop, ordered file metadata, localized configured extension/MIME/size/count validation, retained accepted files and named progress/phase announcements. DocumentUpload captures reservation/file/confirmation identity and resumes without duplicating acknowledged transfer or document effects.",
           "limitations": [
@@ -535024,7 +535060,8 @@
             2739026410250038,
             2731734917005317,
             3288945720525475,
-            2927939502738672
+            2927939502738672,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -535223,7 +535260,7 @@
             2200943904942411,
             3817337598802695,
             4336739995083235,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             850050187551283,
@@ -535310,7 +535347,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Shared FilePreview renders image thumbnails, bounded authenticated transient selected-PDF first pages, current-authorized stored derivatives and safe icon fallback. Local object URLs are revoked, hidden/obsolete rendering aborted, unsafe protocols and executable SVG/unknown files refused. Actual document, ticket and upload callers verified.",
           "limitations": [
@@ -535348,7 +535386,8 @@
             2739026410250038,
             2731734917005317,
             3288945720525475,
-            2927939502738672
+            2927939502738672,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -535546,7 +535585,7 @@
             2200943904942411,
             3817337598802695,
             4336739995083235,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             850050187551283,
@@ -535633,7 +535672,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "All nine document states have localized distinct semantic badges/icons; PendingScan pulses with reduced-motion respect, Removed is struck through, Approved has check and Rejected reason is displayed in list/detail. Unknown state stays distinguishable without invented authority.",
           "limitations": [
@@ -535671,7 +535711,8 @@
             2739026410250038,
             2731734917005317,
             3288945720525475,
-            2927939502738672
+            2927939502738672,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -535871,7 +535912,7 @@
             2200943904942411,
             3817337598802695,
             4336739995083235,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             850050187551283,
@@ -535958,7 +535999,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Current DocumentList shows icon/name/size/upload date/state and explicit lazy preview/download plus permitted replace/remove controls in table and mobile cards. Layout preserves selected detail, drafts and accepted revision-bound receipts. Owner/profile/grant denial clears private controls/links; revision-bound mutations retain exact retries and immutable history.",
           "limitations": [
@@ -535996,7 +536038,8 @@
             2739026410250038,
             2731734917005317,
             3288945720525475,
-            2927939502738672
+            2927939502738672,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -536194,7 +536237,7 @@
             2200943904942411,
             3817337598802695,
             4336739995083235,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             850050187551283,
@@ -536281,7 +536324,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Configured allowed formats, actual size and count appear before upload. Invalid extension/MIME, oversized/empty/name/count selections show specific localized messages and preserve the existing draft. Current policy changes revalidate retained selections; server refuses declared or actual byte/context mismatches before trusted use.",
           "limitations": [
@@ -536319,7 +536363,8 @@
             2739026410250038,
             2731734917005317,
             3288945720525475,
-            2927939502738672
+            2927939502738672,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -536517,7 +536562,7 @@
             2200943904942411,
             3817337598802695,
             4336739995083235,
-            3103404761580464,
+            852627010966933,
             244783737707374,
             335271907751690,
             850050187551283,
@@ -536604,7 +536649,8 @@
             1280092395111258,
             661672706671234,
             1667095386560605,
-            889985415563243
+            889985415563243,
+            580981761638250
           ],
           "criterion_result": "Quarantined state or scanState blocks preview/download and suppresses scanner reasons in backend customer projections/history and again in UI list/detail/badge. Only the safe localized replacement message appears; cached previews, current grants and superseded files cannot bypass the boundary.",
           "limitations": [
@@ -536642,7 +536688,8 @@
             2739026410250038,
             2731734917005317,
             3288945720525475,
-            2927939502738672
+            2927939502738672,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -549968,7 +550015,7 @@
             2129400297178712,
             1714670979068916,
             3306871816619358,
-            3103404761580464,
+            852627010966933,
             4273036981065701,
             335271907751690,
             2691429734684969,
@@ -550121,7 +550168,8 @@
             265036998976264,
             889985415563243,
             705212389183949,
-            2507644814170911
+            2507644814170911,
+            580981761638250
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -550621,7 +550669,8 @@
             1407784332862207,
             2201600647618761,
             2872962606606280,
-            927830332531022
+            927830332531022,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -551742,7 +551791,7 @@
             2129400297178712,
             1714670979068916,
             3306871816619358,
-            3103404761580464,
+            852627010966933,
             4273036981065701,
             335271907751690,
             2691429734684969,
@@ -551895,7 +551944,8 @@
             265036998976264,
             889985415563243,
             705212389183949,
-            2507644814170911
+            2507644814170911,
+            580981761638250
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -552393,7 +552443,8 @@
             1407784332862207,
             2201600647618761,
             2872962606606280,
-            927830332531022
+            927830332531022,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -558001,7 +558052,7 @@
             2875832663329932,
             3892478422374868,
             2597245546768185,
-            3103404761580464,
+            852627010966933,
             2247234263820953,
             1142932900302659,
             3103683225756862,
@@ -558532,7 +558583,8 @@
             951305325835911,
             161286708135146,
             3062641131844408,
-            4130285963748962
+            4130285963748962,
+            580981761638250
           ],
           "limitations": [],
           "operational_limits": [
@@ -559163,7 +559215,8 @@
             3287616644835669,
             1897851227767987,
             2767955812168702,
-            3394387245496237
+            3394387245496237,
+            2607445134387421
           ],
           "presentation_renewals": [
             {
@@ -560002,7 +560055,7 @@
             2875832663329932,
             3892478422374868,
             2597245546768185,
-            3103404761580464,
+            852627010966933,
             2247234263820953,
             1142932900302659,
             3103683225756862,
@@ -560529,7 +560582,8 @@
             951305325835911,
             161286708135146,
             3062641131844408,
-            4130285963748962
+            4130285963748962,
+            580981761638250
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -561064,7 +561118,8 @@
             3287616644835669,
             1897851227767987,
             2767955812168702,
-            3394387245496237
+            3394387245496237,
+            2607445134387421
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -563636,7 +563691,8 @@
         "The compiled Linux amd64 3f8929fdd gateway with current payment recovery sources received a real HTTP 404 for an absent fixture through the protected staging sandbox. Recovery returned null and then recovered and verified the existing settled fixture. The sandbox ledger SHA-256 matched before and after. Exact candidate rollout, live circuit signals and the production-equivalent provider rehearsal remain open.",
         "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts.",
         "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names.",
-        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open."
+        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open.",
+        "The CSP rehearsal now models staging's same-origin storage and the native customer runner loads the workspace TypeScript fixture. Fourteen compiled business cases, two native customer sessions and eight report-only transfer safeguards passed in Chromium and WebKit. Live enforcement and direct upload readback remain release gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -564483,6 +564539,10 @@
         "staging_monitoring_configuration_restore": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-monitoring-configuration-restore-20261119.json",
           "sha256": "880c474589eb7b7e5d67c44c04fc3236931de2e23600730987906cc7dbf28d0f"
+        },
+        "staging_csp_business_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-business-rehearsal-20261120.json",
+          "sha256": "bf02b710c7e220b60625d82a9e57c9159d88d917bbfc010adb7bfec1a0430ee8"
         }
       }
     },
@@ -767381,7 +767441,8 @@
       "1966990290956279": "Reviewed Persian desktop and mobile captures from the built release with synthetic settings data.",
       "1742496022480107": "Removed programmatic sidebar scrolling from the shared shell. The sidebar uses normal browser scrolling and keeps active link styling and keyboard navigation.",
       "142269673859176": "The initial protected preflight exceeded the wallet gzip limit at 300.07 KB. The corrected local merged build measured 299.84 KB against the original 300 KB limit. All 102 original budgets passed in the corrected staging and merged builds.",
-      "1348616652009183": "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures."
+      "1348616652009183": "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures.",
+      "580981761638250": "The exact upload fixture passed eight report-only transfer-resume cases and 14 enforced business cases in Chromium and WebKit. See the source-bound staging CSP business rehearsal receipt."
     },
     "source_evidence": {
       "3985308057320810": {
@@ -783055,6 +783116,10 @@
       "3910538114047136": {
         "path": "releases/0.5.1.md",
         "sha256": "c19eca06bc21d70f43d66050ff277d5f94651ea47fd799e4a0797076157a03a6"
+      },
+      "852627010966933": {
+        "path": "apps/web/e2e/upload-fixture.ts",
+        "sha256": "f6da77a30f714ae0adcc03e6bd8fca9ff6e9fd5172276179dc9c97eb974e4a74"
       }
     },
     "source_renewals": {
@@ -816068,6 +816133,14 @@
           "apps/web/src/components/AppShell.tsx"
         ],
         "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
+      },
+      "2607445134387421": {
+        "batch": "release-0.6-native-csp-business-journeys",
+        "base_commit": "afd69fae921e1ca9976b46b1a8ff0a10c0094800",
+        "paths": [
+          "apps/web/e2e/upload-fixture.ts"
+        ],
+        "scope": "The upload receiver serves a same-origin compiled application only for the opted-in enforced CSP rehearsal. Its ordinary separate upload server retained the eight credential, bytes and reservation cases. Fourteen affected business cases passed under enforcement. Reuse existing evidence for unchanged application and browser paths."
       }
     }
   }

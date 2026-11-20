@@ -1,4 +1,4 @@
-import { createServer, type IncomingHttpHeaders, type ServerResponse } from 'node:http';
+import { createServer, request, type IncomingHttpHeaders, type ServerResponse } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { test as base } from './coverage-fixture';
 
@@ -34,11 +34,25 @@ export function pdfPreviewFixture() {
 
 // Receive actual file bytes: WebKit does not expose File request bodies through routing.
 export const test = base.extend<{
-  uploadReceiver: { url: string; uploads: Upload[]; holdResponses: boolean; release: () => void };
+  uploadReceiver: {
+    url: string;
+    uploads: Upload[];
+    holdResponses: boolean;
+    release: () => void;
+    serveApplication: (origin: string) => string;
+  };
 }>({
+  baseURL: async ({ baseURL, uploadReceiver }, use) => {
+    if (process.env.WEB_CSP_MODE === 'enforce' && baseURL) {
+      await use(uploadReceiver.serveApplication(baseURL));
+    } else {
+      await use(baseURL);
+    }
+  },
   uploadReceiver: async ({}, use) => {
     const uploads: Upload[] = [];
     const pending: ServerResponse[] = [];
+    let application: URL | undefined;
     const receiver = {
       url: '',
       uploads,
@@ -46,8 +60,37 @@ export const test = base.extend<{
       release: () => {
         for (const response of pending.splice(0)) response.end();
       },
+      serveApplication: (origin: string) => {
+        const upstream = new URL(origin);
+        if (upstream.protocol !== 'http:' || upstream.hostname !== '127.0.0.1') {
+          throw new Error('The upload rehearsal requires the isolated compiled browser server');
+        }
+        application = upstream;
+        return new URL(receiver.url).origin;
+      },
     };
     const server = createServer((req, res) => {
+      if (application && req.url !== '/upload') {
+        const upstream = request(
+          {
+            hostname: application.hostname,
+            port: application.port,
+            path: req.url,
+            method: req.method,
+            headers: req.headers,
+          },
+          (response) => {
+            res.writeHead(response.statusCode ?? 502, response.headers);
+            response.pipe(res);
+          }
+        );
+        upstream.on('error', () => {
+          if (res.headersSent) res.destroy();
+          else res.writeHead(502).end();
+        });
+        req.pipe(upstream);
+        return;
+      }
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'PUT, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'content-type, if-none-match');
