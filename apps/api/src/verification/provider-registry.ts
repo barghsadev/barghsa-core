@@ -99,7 +99,7 @@ export class VerificationProviderRegistry {
       return {
         verified: false,
         code: 'PROVIDER_ERROR',
-        message: `Provider "${providerId}" is not registered`,
+        message: 'Verification provider is not registered',
         durationMs: 0,
         rawResponse: { error: VerificationErrorCodes.PROVIDER_NOT_FOUND },
       };

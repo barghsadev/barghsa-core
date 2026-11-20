@@ -76,6 +76,10 @@ export class StubVerificationProvider extends VerificationProviderAdapter {
   validateInput(input: Record<string, unknown>): string[] {
     const errors: string[] = [];
 
+    if (Object.keys(input).some((key) => key !== 'nationalId')) {
+      errors.push('Unexpected verification input fields');
+    }
+
     if (!input['nationalId']) {
       errors.push('nationalId is required');
     } else if (typeof input['nationalId'] !== 'string') {

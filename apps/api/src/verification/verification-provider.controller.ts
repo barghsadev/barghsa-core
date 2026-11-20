@@ -36,7 +36,7 @@ const SetProviderConfigSchema = z.strictObject({
  * Zod schema for the verification request body.
  */
 const RunVerificationSchema = z.strictObject({
-  providerId: z.string().min(1),
+  providerId: z.string().min(1).max(128),
   input: z.record(z.string(), z.unknown()),
 });
 
@@ -283,8 +283,14 @@ export class VerificationProviderController {
     schema: {
       type: 'object',
       required: ['providerId', 'input'],
+      additionalProperties: false,
       properties: {
-        providerId: { type: 'string', description: 'Provider identifier' },
+        providerId: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 128,
+          description: 'Provider identifier',
+        },
         input: { type: 'object', description: 'Provider-specific input data' },
       },
     },
@@ -313,9 +319,7 @@ export class VerificationProviderController {
       );
     }
 
-    this.logger.log(
-      `Verification requested: provider=${parsed.data.providerId} by ${privateLogId('actor', req.session.userId)}`
-    );
+    this.logger.log(`Verification requested: by ${privateLogId('actor', req.session.userId)}`);
 
     return this.verificationProviderService.verify(parsed.data.providerId, parsed.data.input);
   }

@@ -50,12 +50,50 @@ const save = () =>
     headers,
     body: JSON.stringify({ providerId: 'stub', enabled: true, settings }),
   });
-const verify = () =>
+const verify = (providerId = 'stub', input = { nationalId: '0000000000' }) =>
   fetch(`${http.base}/api/admin/verification/verify`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ providerId: 'stub', input: { nationalId: '0000000000' } }),
+    body: JSON.stringify({ providerId, input }),
   });
+
+it('keeps unregistered provider input out of the result and verification logs', async () => {
+  const unknownProvider = 'unregistered-verification-fixture';
+  const response = await verify(unknownProvider);
+  expect(response.status).toBe(200);
+  const body = await response.text();
+  expect(JSON.parse(body)).toMatchObject({
+    verified: false,
+    code: 'PROVIDER_ERROR',
+    rawResponse: { error: 'VERIFICATION:PROVIDER_NOT_FOUND' },
+  });
+  const correlationId = response.headers.get('x-correlation-id')!;
+  expect(correlationId).toBeTruthy();
+  const verificationLog = () =>
+    http
+      .logs()
+      .split('\n')
+      .find((line) => line.includes(correlationId) && line.includes('Verification requested:'));
+  await expect.poll(verificationLog).toBeDefined();
+  expect(verificationLog()).not.toContain(unknownProvider);
+  expect(body).not.toContain(unknownProvider);
+});
+
+it('bounds the provider identifier at the HTTP request boundary', async () => {
+  const response = await verify('x'.repeat(129));
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+});
+
+it('rejects undeclared verification input fields before running the adapter', async () => {
+  const input = { nationalId: '0000000000', unexpected: 'synthetic-extra-field' };
+  const response = await verify('stub', input);
+  expect(response.status).toBe(200);
+  const body = await response.text();
+  expect(JSON.parse(body)).toMatchObject({ verified: false, code: 'INVALID_INPUT' });
+  expect(body).not.toContain(input.unexpected);
+  expect(await (await verify()).json()).toMatchObject({ verified: true });
+});
 
 it('refuses a mismatched provider identity and leaves disabled encrypted settings unused', async () => {
   const update = (value: unknown) =>

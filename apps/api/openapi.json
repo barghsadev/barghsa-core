@@ -32829,6 +32829,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "input": {
                     "description": "Provider-specific input data",
@@ -32836,6 +32837,8 @@
                   },
                   "providerId": {
                     "description": "Provider identifier",
+                    "maxLength": 128,
+                    "minLength": 1,
                     "type": "string"
                   }
                 },
