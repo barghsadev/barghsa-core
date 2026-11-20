@@ -22,6 +22,22 @@ Recheck the exact final images, their notices and browser assets with the strict
 license gate. Later package versions and different license sets require their
 own dispositions.
 
+## November 20 Ubuntu package refresh
+
+The exact `b15ebc3a9` and `2d363a4e7` reports identified two version changes
+in the Ubuntu Noble amd64 staging PostgreSQL image. Both `libsystemd0` and
+`libudev1` moved to `255.4-1ubuntu8.19`. The running staging image contains
+the approved `8.18` versions. The two new reports list the same license
+sets as the approved entries. The corresponding Ubuntu source manifest and
+source archives matched their published checksums. Debian's copyright
+file, both new binary notices and both notices installed on staging had
+identical SHA-256 checksums.
+
+The refreshed Linux amd64 package versions still require their exact
+dispositions. Preserve the existing notice, corresponding-source and
+replacement obligations. [Ubuntu source publication](https://lists.ubuntu.com/archives/noble-changes/2026-November/060633.html)
+and [current hosted inventory](https://github.com/barghsadev/barghsa-core/actions/runs/44655936435).
+
 ## Staging PostgreSQL supplement
 
 The five-image preflight at `212cb619` adds the Ubuntu `postgres-staging`

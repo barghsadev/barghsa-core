@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T01:54:49+00:00",
+  "updated": "2026-11-20T02:03:16+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11609,16 +11609,10 @@
         "story": "01-platform-infrastructure.md#spec-5bb57a947ff4"
       },
       "requirement": "- **T-04.01.07:** Encrypted off-server backup of config, secrets, and critical application files\n  - **Notes:** Extend the backup regime from PostgreSQL-only to include: application `.env` files, admin config snapshots (JSON export of all `active` config versions), encryption keys (wrapped copies), Docker Compose / deploy scripts, and TLS certificates. Backups are encrypted (GPG or envelope encryption) and stored off-server (same S3 target as DB backups or separate secure location). Add a quarterly restore test that verifies config rehydration and documents measured RPO/RTO for non-DB assets. Include a section in the restore runbook (T-04.01.03) covering config-and-file rehydration.\n  - **Dependencies:** T-04.01.02\n  - **Complexity:** M\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Production secret-manager provisioning, complete deployment file inventory, HTTPS off-server storage/IAM/lifecycle and actual retained backup history require operational evidence.",
-        "The staging configuration backup timer is installed and enabled at 02:00 UTC. Its first manual systemd run captured 19 files and 33 configuration tables. An independent check verified the exact EU archive and manifest versions and ciphertext hash. The versioned EU bucket expires noncurrent versions after 90 days and aborts incomplete multipart uploads after seven days. Verify scheduled execution, production configuration rehydration and delivered monitoring alerts.",
-        "The installed quarterly staging configuration service held PostgreSQL share locks through the independent baseline and backup. A private clone restored 19 files and 33 configuration tables from the verified EU archive in 3.534 seconds with zero observed loss for those assets. The timer is active on the first Saturday of each quarter at 04:00 UTC. Its first timer-triggered receipt and measured core-service recovery remain open.",
-        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open.",
-        "Installed the reviewed staging inventory for the signed storage callback. The approved EU archive and manifest readback verified 56 files and 33 configuration tables. The native restore verified the wrapped signing key, notification configuration and read-only Compose overlay against the actual protected originals. It measured 5.524 seconds and zero loss for the covered configuration. The regular scheduled execution and production-equivalent recovery remain required."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11712,9 +11706,29 @@
         ],
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
-          "release-0.6-configuration-backup-readback"
+          "release-0.6-configuration-backup-readback",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+          "source_evidence": [
+            4224570002802235,
+            466286796035795,
+            1524270420910059,
+            252012373289793,
+            282061544305323,
+            915359278895213,
+            3044795682365846,
+            3874686232760928,
+            2827715711783056,
+            252075794241722
+          ],
+          "checks": [
+            3879078635623494,
+            1068789989655690
+          ]
+        },
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-configuration-backup-readback/native-backup-tests.log",
         "staging_eu_config_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-recovery-20261119.json",
@@ -11742,6 +11756,10 @@
         "staging_storage_callback_config_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-callback-config-recovery-20261120.json",
           "sha256": "668fc2da57b06d1c42d06ea3e23417f8dd3fd6ff119045ebd2c99e0f080b445d"
+        },
+        "staging_scheduled_configuration_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scheduled-config-backup-20261120.json",
+          "sha256": "42971ccef96ceeb48e3eeb75dbc24c77869a822dae8d68203c26e0cf2b1e410b"
         }
       }
     },
@@ -14927,7 +14945,8 @@
         "The separate exact objectstore license audit passed with 238 allowlisted entries and 37 owner-approved exceptions. The final v0.6.0 image set and distribution conditions still need release evidence.",
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
-        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open."
+        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
+        "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages."
       ],
       "owner": null,
       "depends_on": [],
@@ -15002,7 +15021,8 @@
           "release-0.6-hosted-image-scan-8436b628a",
           "release-0.6-license-review-refresh-f7fc00b88",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-license-receipt-reference"
+          "release-0.6-license-receipt-reference",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -15127,6 +15147,10 @@
         "musl_source_and_notice_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-libvips-source-and-notice-readback-20261120.json",
           "sha256": "b69c8b30c68b0822c06ceb9578b902594ebc88a06947073c623257537faebafb"
+        },
+        "ubuntu_noble_systemd_version_refresh": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-systemd-license-refresh/exact-version-review.json",
+          "sha256": "dcd1224d98de7b88df719c96fc8806e453cce0e7261d02b3db3ad128ca216b30"
         }
       },
       "blocker": null
@@ -30728,7 +30752,7 @@
             1499669892738514,
             617608376516237,
             283370916728061,
-            1853862367514453
+            205397931577530
           ],
           "checks": [
             3354082529935070,
@@ -31054,7 +31078,8 @@
             4196204090038088,
             3045323081255111,
             443774619156764,
-            3662875780842044
+            3662875780842044,
+            1204144011576571
           ],
           "presentation_renewals": [
             {
@@ -381962,14 +381987,10 @@
         "story": "06-security-testing-observability.md#spec-9ca0fd6d9629"
       },
       "requirement": "| T-06.02.03.04 | Write integration tests: verify all security headers present and correct on responses | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify the complete security header policy with the accepted staging SHA and the HSTS policy at the selected production-equivalent TLS ingress. The isolated hosted proxy tests now enforce exact singular headers on HTTPS success, 413 and 429.",
-        "The v0.5.1 live edge duplicates three web security headers. /api/health/ready emits one value each. The exact accepted staging SHA and reviewed NGINX configuration still need a fresh live header check.",
-        "The exact release smoke rejected live v0.5.1 web header duplication. The isolated HTTPS staging profile passed singular header values on success, 413 and 429, and the release fixture rejected duplicate, missing and wrong fields before promotion. Read the actual accepted staging responses and production-equivalent HSTS evidence."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -381992,9 +382013,32 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-single-edge-security-headers",
           "release-0.6-staging-edge-live-readback",
-          "release-0.6-staging-edge-smoke"
+          "release-0.6-staging-edge-smoke",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+          "source_evidence": [
+            78662436795518,
+            609241399754975,
+            3513479427036515,
+            2577092342995346,
+            2645740275209480,
+            878789146717865,
+            156896413270823,
+            680981381061175,
+            4476611148532011,
+            3591853430902160,
+            3709147928938153,
+            2960541284577999,
+            2916731061973370
+          ],
+          "checks": [
+            3284122391347357,
+            2080910576855554
+          ]
+        }
       }
     },
     {
@@ -390929,48 +390973,10 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.06 | Set up license compliance check (e.g. license-checker) for dependency licenses | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
-        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
-        "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts.",
-        "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt.",
-        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
-        "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending.",
-        "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet.",
-        "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open.",
-        "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
-        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "Verified five image and SBOM identities in hosted report-only preflight 43546424873 on bf319cdcb. All 859 exact package entries match the preceding preflight and the same 387 require sign-off. The strict candidate gate remains open.",
-        "Both locked Sharp libvips 1.3.4 Linux x64 binaries match the publisher workspace archive byte for byte. The review packet now includes eight exact upstream source archives and three build patches. Complete corresponding build input and replacement evidence, final image notice readback and named disposition.",
-        "Both Sharp npm package signatures and provenance attestations verified. The publisher job identifies 105 matching Rust crate archives and retains a log of removed features and static link options. The receipt packet includes all 33 direct build inputs and a non-root prior-image checksum readback. Complete the modified rebuild, verify actual candidate notices and obtain the named package dispositions.",
-        "Read back all 217 package-specific notices in retained PostgreSQL image dbb54d6c8c53. The supplement maps 216 installed Debian packages to full source versions and identifies both common-license path mismatches. Obtain reviewer dispositions and verify the final immutable image.",
-        "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
-        "The Alpine runtime SBOM removes the glibc Sharp addon and one LGPL libvips review row. Reconcile the remaining 386 rows against the final five-image inventory and verify conditions and named dispositions. A separate glibc deployment still needs its own review.",
-        "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate.",
-        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
-        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
-        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
-        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
-        "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
-        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
-        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
-        "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open.",
-        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
-        "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
-        "Majid Najafi approved all 386 active package/scope/license exceptions on November 19, 2026, including the 342 earlier legal-review flags. Codex recorded the explicit instruction in the workbook, the exact policy and the review document. The 857-entry reviewed inventory has 386 approved and 471 allowed entries. The strict check of the exact retained PostgreSQL and ClamAV images passed all 282 entries, including their 244 exceptions. Verify the final immutable candidate and the recorded distribution conditions before release acceptance.",
-        "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals.",
-        "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
-        "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
-        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
-        "The signed storage image retained the approved 275 package identities and license sets. Its strict check passed with 238 allowlisted and 37 exact conditional approvals. Staging readback verified the exact transferred image, source archive and the three installed SeaweedFS and Go notices. Final application and distribution receipts remain required.",
-        "The exact signed SeaweedFS image repeated the library substitution and FUSE configuration readback in a private staging Linux container. The b15ebc3a9 application package contains the reviewed Sharp license and third-party notice. The frozen release still requires its own enforced application image, paired source and distribution receipts."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -391054,29 +391060,21 @@
           "release-0.6-license-review-refresh-f7fc00b88",
           "release-0.6-staging-scanner-gate-readback",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-license-receipt-reference"
+          "release-0.6-license-receipt-reference",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
         "current_acceptance": {
-          "kind": "source-bound-strict-gate-failed-pending-approval",
-          "base_commit": "fa7d7416ad254dae8bab76e8a8a00231715554dc",
+          "kind": "native_verification",
+          "base_commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
           "source_evidence": [
-            4408457265269910,
-            2706798312389763,
-            4022985181171604,
-            2798305884558653,
-            2125512332515078,
-            2192783506123442
+            3832607923924757,
+            1519067751003713,
+            2456642983541496,
+            2064846375361020
           ],
           "checks": [
-            1823593546212080,
-            3444489821660733,
-            484986423083301
-          ],
-          "source_renewals": [
-            2847380965056372,
-            375002563480230,
-            3723168532346971,
-            4464595810166998
+            1610188270030346,
+            3700808238309276
           ]
         },
         "exact_license_report": {
@@ -391175,6 +391173,10 @@
         "native_staging_signed_storage_runtime": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
           "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
+        },
+        "ubuntu_noble_systemd_version_refresh": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-systemd-license-refresh/exact-version-review.json",
+          "sha256": "dcd1224d98de7b88df719c96fc8806e453cce0e7261d02b3db3ad128ca216b30"
         }
       },
       "blocker": null
@@ -399679,35 +399681,10 @@
         "story": "06-security-testing-observability.md#spec-7e8081f9925c"
       },
       "requirement": "| T-06.12.03.01 | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM | L |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. The previous full workflow failed the image license gate; its branding setup and Persian storage receipt fixtures now have focused passing checks.",
-        "Run 43143811872 passed protected monorepo integrity and the five-image build, scan and report-only inventory. The final strict license and full release coverage gates still require their own exact candidate evidence.",
-        "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
-        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
-        "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
-        "Hosted run 43583704822 belongs to 81d4381e9, attempt 1. All 2,976 Chromium tests passed with no flakes, skips or runner errors. Mapped coverage completed, but combined coverage failed with 63 file errors. The two telemetry files now pass the unchanged changed-source threshold locally at 55/55 lines and 59/61 branches.",
-        "Six further shared finance, verification and admin files from the hosted failure now pass the original critical coverage gate locally. Verified 161/161 lines and 130/133 branches for these six; rerun the full final candidate gate after fixing the other deficits.",
-        "All three previously failing worker notification files now pass the existing critical per-file coverage gate in a focused five-file unit and PostgreSQL run. The exact immutable release gate and the other package gaps remain open.",
-        "Five additional critical admin and staff authority files from the hosted coverage failure pass the original release per-file gate in a targeted run. Native HTTP, authorization and finance assertions passed. Exact combined release coverage remains open.",
-        "The hosted API-client coverage error was a generated file containing only declarations. It now uses the existing declaration extension and the generator reproduces the same bytes. Coverage thresholds and drift checks are unchanged.",
-        "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches.",
-        "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
-        "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
-        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
-        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
-        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
-        "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open.",
-        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
-        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
-        "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate.",
-        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor.",
-        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required.",
-        "Hosted strict native coverage job 135820385818 passed all 14 tasks at 3f8929fdd with 18,029 passing Vitest cases. Its only skip was the conditional ClamAV integration case, verified independently against the real staging scanner on a69a51c71. Coverage and promotion-quarantine artifacts matched their published checksums. The full browser, combined coverage and frozen candidate gates remain open.",
-        "Strict hosted run 44597706568 passed all seven jobs on 3f8929fdd. Chromium ran 2,978 cases with zero skips, unexpected outcomes, flakes or runner errors. Combined source coverage passed for all 13 groups. The frozen release and its complete 40-shard nightly receipt remain open."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -399769,9 +399746,21 @@
           "release-0.6-operations-copy-native",
           "release-0.6-web-coverage-evidence-reuse",
           "release-0.6-team-expiry-fixture",
-          "release-0.6-wallet-history-coverage"
+          "release-0.6-wallet-history-coverage",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "3f8929fdd249c2cc5676a7c7c8220553b29ef96b",
+          "source_evidence": [
+            3832607923924757,
+            1364273028583396
+          ],
+          "checks": [
+            2782136831303067,
+            3758054711417818
+          ]
+        },
         "exact_hosted_checkpoint": {
           "commit": "133576f31ba18e34a02b1892866a3210e3cad037",
           "workflow_run": 42629838223,
@@ -407252,12 +407241,10 @@
         "story": "06-security-testing-observability.md#spec-4321834970e2"
       },
       "requirement": "| T-06.16.01.05 | Write trace verification test: single request produces complete trace across service → DB → outbox → worker | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Read back successful and rolled-back traces for the exact deployed candidate in the protected collector. Local compiled fixtures now prove API, domain, PostgreSQL queries, outbox and worker parent relationships. The earlier temporary staging backend rehearsed a complete trace before general PostgreSQL spans were added."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -407303,9 +407290,29 @@
           "release-0.6-domain-postgresql-tracing",
           "release-0.6-validated-outbox-trace-constraint",
           "release-0.6-private-jaeger-readback-rehearsal",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+          "source_evidence": [
+            447404038480292,
+            3257771873966330,
+            504867543476242,
+            746340631219295,
+            319666655675670,
+            1209319919314768,
+            60500750304499,
+            2796257097544827,
+            2196600251640641,
+            4333719847802498
+          ],
+          "checks": [
+            2314448225462146,
+            1158560119186336
+          ]
+        }
       }
     },
     {
@@ -565449,7 +565456,10 @@
         "Native NGINX verified a complete S3 fence, worker drain and restoration without touching live traffic. The preliminary live inventory of 59 versions and five delete markers still matches the prior fingerprint. The exact cutover transport proved the EU readback and independent recovery with a synthetic archive larger than the current storage volume. Final fenced inventory, live rollout and natural expiry remain required.",
         "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover.",
         "Task-specific acceptance covers generated and bound SBOMs, structured logging tests, the staged smoke and migration runner, and the signed storage callback implementation. Before accepting v0.6.0, verify exact final distribution and images, the real configured external log sink, the live recovery checkpoint and staged smoke, and actual protected callback delivery after the storage cutover.",
-        "Authenticated SMS.ir report polling is implemented under the owner decision. A live staging query found zero accepted SMS.ir notification receipts and one active tested provider. The exact candidate still needs a matching authenticated real delivery report."
+        "Authenticated SMS.ir report polling is implemented under the owner decision. A live staging query found zero accepted SMS.ir notification receipts and one active tested provider. The exact candidate still needs a matching authenticated real delivery report.",
+        "Staging configuration backup and restore, the compiled trace chain test and both edge-header suites meet their task-specific requirements. The exact deployed candidate and protected external collector, live edge, production-equivalent HSTS and whole-service recovery remain release requirements.",
+        "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages.",
+        "Current CI implements both targeted protected checks and a full strict gate. The identical workflow passed all seven strict jobs at 3f8929fdd. The exact frozen release, nightly rollup, package dispositions and final distribution and deployment receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -565885,7 +565895,8 @@
           "release-0.6-license-receipt-reference",
           "release-0.6-license-promotion-fixture",
           "release-0.6-reconcile-verified-components",
-          "release-0.6-smsir-delivery-polling"
+          "release-0.6-smsir-delivery-polling",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -566331,6 +566342,10 @@
         "staging_storage_only_compose_rehearsal": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-only-cutover-compose-20261120.json",
           "sha256": "8cba4a28c3a66cc74d4b23266947cd2717fe624e2072d1ff6eb5702d3e57270a"
+        },
+        "ubuntu_noble_systemd_version_refresh": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-systemd-license-refresh/exact-version-review.json",
+          "sha256": "dcd1224d98de7b88df719c96fc8806e453cce0e7261d02b3db3ad128ca216b30"
         }
       }
     },
@@ -566406,7 +566421,8 @@
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. The approved EU storage, live staging database cutover, encrypted WAL and point-in-time replay passed. Exact v0.6.0 staging deployment and production-equivalent recovery remain open.",
         "The refreshed staging PostgreSQL image passed the encrypted backup readback before switch, isolated point-in-time replay, and verified new encrypted WAL bytes after switch. The v0.5.1 app reports healthy with all remaining runtime images verified. Exact v0.6.0 deployment and the approved production-equivalent recovery exercise remain open.",
         "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal.",
-        "The owner confirmed on November 20 that no production target exists yet and expects a topology similar to staging. Continue synthetic preparation using the verified staging baseline. The protected TLS pooler, sandbox merchant and full production-equivalent rehearsal remain open."
+        "The owner confirmed on November 20 that no production target exists yet and expects a topology similar to staging. Continue synthetic preparation using the verified staging baseline. The protected TLS pooler, sandbox merchant and full production-equivalent rehearsal remain open.",
+        "The 02:00 UTC staging configuration timer uploaded and verified the exact versioned EU archive. Independent readback reconstructed 56 files and 33 configuration tables with the protected key still wrapped. The full application recovery, operational receipts and protected production-equivalent target remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -566504,7 +566520,8 @@
           "release-0.6-promotion-staged-ancestor",
           "release-0.6-staging-service-health",
           "release-0.6-wal-recovery-config",
-          "release-0.6-smsir-delivery-polling"
+          "release-0.6-smsir-delivery-polling",
+          "release-0.6-verify-configuration-backup-and-checks"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -766705,6 +766722,71 @@
         }
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sms-delivery-report"
+    },
+    "release-0.6-verify-configuration-backup-and-checks": {
+      "batch": "release-0.6-verify-configuration-backup-and-checks",
+      "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.07",
+        "06-security-testing-observability.md#T-06.16.01.05",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.12.03.01"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "checks": [
+        "Read back the exact staging systemd timer invocation and EU object versions. Independently restored current callback configuration. The focused trace chain and both HTTPS edge profile tests passed.",
+        "Both hosted inventories independently flagged just the same two new Ubuntu versions. Their source manifests, source archives and packaged notice matched the recorded checksums. The live installation retains the prior approved binaries.",
+        "The unchanged CI gate and strict license enforcement passed all seven jobs at 3f8929fdd. The 12 current license policy tests passed, and the newest report identified the two new exact dispositions that remain open."
+      ],
+      "limitations": [
+        "External sinks, final candidate receipts, real production-equivalent rehearsal and exact new package dispositions remain open."
+      ],
+      "execution_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-scheduled-config-backup-20261120.json",
+          "sha256": "42971ccef96ceeb48e3eeb75dbc24c77869a822dae8d68203c26e0cf2b1e410b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-eu-config-quarterly-schedule-20261119.json",
+          "sha256": "41d48a17e39a77494804c19e0b354111c910972c6a3f385932fced7fac15d2b2"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-callback-config-recovery-20261120.json",
+          "sha256": "668fc2da57b06d1c42d06ea3e23417f8dd3fd6ff119045ebd2c99e0f080b445d"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/trace-chain.log",
+          "sha256": "ae7bf4c7b09b483b06f567b998b3b3cdcc3a2fcd35d2809d244faf42fa10b183"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/edge-header-pilot.log",
+          "sha256": "c77a00491e7984860fc664aca0ae3b3089e9c177cf3a844102087e03ee083b40"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/edge-header-staging.log",
+          "sha256": "6a810c6d44591b12ab35e6a992191504fccd06a4b5d40f02a10392f2c47675e0"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-systemd-license-refresh/exact-version-review.json",
+          "sha256": "dcd1224d98de7b88df719c96fc8806e453cce0e7261d02b3db3ad128ca216b30"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/strict-ci-3f8929fdd.json",
+          "sha256": "4cc36297836f2d2adfa49582b10ab22595347799ada71a9c4ce2779225477c26"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/license-tests.log",
+          "sha256": "da9562fa487070352c2d122aec05229674b81225189d6a53c1d06b984e6a3418"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit"
     }
   },
   "historical_improvements": [
@@ -766944,6 +767026,8 @@
       "569290742902562": "The source of global readiness, Redis, object storage, and the DB health entry point matches the deployed v0.5.0 baseline. Only PostgreSQL governs HTTP readiness. The prior exact runtime verification observed optional Redis and storage warnings, a PostgreSQL outage returning 503 while liveness stayed available, and recovery after PostgreSQL resumed. Both actual staging HTTPS health bodies report ok.",
       "3654491028065745": "The staging queue and rollback tests passed all 14 cases. Both shell scripts passed syntax checks. Final v0.6.0 release smoke, migration ordering and exact live metadata remain tracked by the separate staging deployment task.",
       "1613628954958959": "Current provider tester injection was verified in the compiled app. All 11 HTTP and 60 native provider self-test cases passed. The step-up, contact, guard, activation, receipt and secret handling assertions remain enforced.",
+      "3879078635623494": "The first regular staging configuration backup after adding the dormant callback started on November 20 at 02:00:01 UTC. The versioned manifest and encrypted archive were read back from the approved EU destination. All 56 files and 33 configuration tables were present. Independent restore matched the exact protected signing key, notification config and Compose overlay. The archive kept the key wrapped.",
+      "1068789989655690": "The operator exercise restored that same scope against independent fingerprints with zero measured configuration-asset loss and 5.524 seconds measured restore time. The installed quarterly service separately passed its operator-triggered exercise against a private clone. Its active calendar schedules the next run for January 2 at 04:00 UTC. Exact final candidate and full production-equivalent recovery remain required by R-05.03 and the release gates.",
       "3156946205781041": "13 factory unit checks and one real TCP stalled-connection test pass",
       "2663455277038733": "Redis absence/failure remains non-critical in readiness implementation",
       "3041742555071619": "Production-image checkpoint at 2aeaf54 proves optional Redis outage boot; health behavior is unchanged",
@@ -768751,6 +768835,8 @@
       "2707296838818002": "Chromium, Firefox and WebKit all rejected the exact enforced frame-ancestors policy when copied into a cross-origin fixture with no X-Frame-Options. The separate control with only frame-ancestors removed executed, and the combined production headers also blocked embedding. Eight first-party login cases passed with enforcement in Chromium and WebKit, in English and Persian.",
       "3351099773207262": "Staging API initially lacked Permissions-Policy. Its NGINX configuration matched v0.5.0. Applied the existing main template whose only delta is the approved Permissions-Policy and duplicate handling. Validated syntax, reloaded NGINX and verified the HTTPS API, login and 404 responses. The application remains v0.5.0, CSP remains report-only, and HSTS stays disabled on staging.",
       "608422724851808": "The production-equivalent TLS and HSTS verification, the required CSP observation window, and the accepted v0.6.0 staging rollout remain open.",
+      "3284122391347357": "The staging and pilot NGINX HTTPS fixtures verified precise singular security headers on success, 413 size rejection and 429 rate rejection. Both verified TLS 1.2 and TLS 1.3, rejected invalid hostnames, legacy protocols and disallowed ciphers, and preserved correlated private access logs.",
+      "2080910576855554": "The pilot fixture proved absent HSTS in the default profile, rejection of staging activation, and one configured HSTS value in the production-mode fixture. The previously observed duplicate fields on live v0.5.1, exact candidate live response, and production-equivalent HSTS proof remain open under R-05.02, T-06.02.03.02 and R-05.03.",
       "3854581406488764": "Protected GitHub check 132177571405 passed on exact dfe73b34a in workflow run 43503647318. Its required application-integrity job ran the built web header, pilot TLS proxy and staging proxy checks successfully.",
       "3937290455665886": "Disposable pilot and staging probes failed on duplicate X-Content-Type-Options with the earlier proxy templates. The corrected exact-value probes passed on HTTPS success, size rejection and rate rejection. The CI gate propagates failures of these assertions.",
       "1795228284502266": "The current checkout matches all listed tested inputs at dfe73b34a. The live staging and production-equivalent TLS/HSTS evidence stays outstanding in T-04.04.02, T-06.02.03.02 and T-06.02.03.04.",
@@ -768926,6 +769012,8 @@
       "3994303989991954": "PR, main and preflight all run Gitleaks with complete history and verified redaction. Required check rejects missing/failed scan outcomes.",
       "1215932498552189": "The current runbook defines how to triage medium findings, blocks high and critical findings with credible production paths and requires explicit approval with reason, compensating control and expiry for accepted risk.",
       "1805834849687725": "The existing hosted image and dependency scan enforcement remains stronger for high and critical findings. The new license gate does not change those scan thresholds.",
+      "1610188270030346": "All 12 license policy tests passed. The unchanged strict policy and checker passed the five exact image scopes in hosted run 44597706568. The separately bound signed SeaweedFS inventory verified all 275 packages with the owner-confirmed 37 exact conditions and paired notice and source archive.",
+      "3700808238309276": "The newest report correctly flagged both unapproved Ubuntu Noble 8.19 package identities. Exact package dispositions, final strict image verification and rights and delivery evidence remain required under T-05.03.04 and R-05.02.",
       "2375916005829523": "GitHub Actions run 44649101982 succeeded at b15ebc3a9. All five dispatched build scopes emitted CycloneDX inventories. Each report hash, SBOM hash, named image and embedded immutable image ID matched the downloaded scan and inventory. The six deployment tests included rejecting changed scan or SBOM evidence and rejecting a protected rollout without its live matching runtime receipt.",
       "4015932504065620": "The retained signed SeaweedFS image has its own exact SBOM and source-and-notice archive and passed the strict objectstore check. Exact final-image scan, publication, distribution and staging receipts remain required by R-05.02, R-05.03 and the release gates.",
       "3192544554064401": "The staged and production Node configurations retain their heap limits and set --no-deprecation. The local Node control suppressed a deprecation warning and emitted an ordinary warning. Both production Compose forms reject inspector and insecure-parser flags from protected environment files.",
@@ -769155,6 +769243,8 @@
       "1145304292613462": "The existing strict CI step executes pnpm check:contract. The accepted generation and drift-rejection evidence is unchanged across the exact command, workflow, canonical API snapshot, generated client package and source files.",
       "518299461292634": "The active main ruleset requires GitHub Actions Verify monorepo integrity. The approved direct-main workflow reports in the Actions job summary. Its exact job body matches the current source in runs 43630925743 and 43583704822.",
       "514154568329696": "Hosted run 43630925743 reported its exact SHA, affected tests, report-only licensing and all six successful dependency outcomes. Strict run 43583704822 reported its exact SHA, full tests, enforced licensing and six dependency outcomes. It recorded license and coverage failures and failed the required check. The original hosted job logs retain the values and the current script reproduces both summaries.",
+      "2782136831303067": "The workflow is installed on main and the required app-backed integrity check is active. The unchanged workflow passed all seven strict CI jobs on the immutable main ancestor 3f8929fdd, with native, browser, accessibility, scan and SBOM artifact production and combined source coverage. Ordinary main run 44653872027 also passed at b15ebc3a9.",
+      "3758054711417818": "Run the full workflow once against the frozen release and verify the nightly rollup under T-05.05.01 and the milestone. The protected check still applies to every pushed revision.",
       "3585885065300926": "Native isolated staging at 3f8929fdd ran the packaged app and web against the EU PITR clone of the active database. Eight pending migrations applied and the repeat applied none. The web login and version and API liveness and dependency readiness returned the recorded healthy revision.",
       "3074877315116874": "The immutable b15ebc3a9 app and normal worker passed native isolated staging liveness and readiness, migration 0297 and the no-op repeat. Six deployment tests passed, including writer-stop failure, schema mismatch, exact image verification, candidate HTTP smoke, artifact checksums and protected receipt enforcement.",
       "4458929344129024": "The accepted-candidate deployment, its migration checkpoint and smoke, and the separate production-equivalent protected rehearsal remain in T-05.04.01 and R-05.02 through R-05.04.",
@@ -769315,6 +769405,8 @@
       "4370485259777089": "Compose normalization of the three staging monitoring files preserved the existing services, private Grafana loopback port and anonymous sign-in denial. The optional overlay added only the read-only Tempo datasource and the named external query network to Grafana.",
       "3599733208962602": "Native Grafana OSS 13.3.1 authenticated an operator against the exact provisioning file, used Tempo 3.1.1 at the recorded immutable arm64 manifest digest, and returned an injected OTLP fixture by trace ID and TraceQL service and span filters. Playwright verified that the trace span rendered in Grafana Explore. Unauthenticated datasource and query requests returned 401.",
       "2767164995599508": "The explicit provisioning removal procedure returned 404 for the removed datasource and retained default Prometheus. The temporary native Grafana process, browser session, fixture credentials and Tempo container were removed. Documentation formatting and diff checks passed.",
+      "2314448225462146": "The rebuilt API and worker passed the isolated OTLP and real PostgreSQL test. An authenticated password change proved the request, domain transaction, database queries and outbox insertion share one trace. The worker produced its child span with the saved parent, preserving request privacy. A forced rollback kept the transaction spans and produced no outbox row.",
+      "1158560119186336": "The protected external collector and its exact deployed candidate receipts remain required by T-06.16.01.01 and R-05.02.",
       "2997457199997508": "Outbound events are constructed from the fixed process and error identifiers, validated build SHA, deployment environment, a server-generated event ID or browser support reference, and the matched API route template. They do not serialize raw errors, stack traces, request data, cookies, finance details or job payloads. The compiled HTTPS test verified browser, protected API and real worker process payloads and no report for a rejected 401.",
       "1597205040639514": "36 shared, 32 API and 2 browser reporter tests passed. The first production-migrated disposable PostgreSQL run passed 17 HTTP cases and stopped one trusted-device teardown at its existing 15-second limit during two concurrent suites. The same case passed in isolation with its original assertions and timeouts. All 16 compiled worker-process tests passed in the serial run. The 35 shared package export checks, four package typechecks, contract drift, changed-file lint, formatting and staging Compose config passed.",
       "3849023250942603": "Development and staging sample all eligible errors. Production defaults to ten percent with a protected 0–1 rate setting. The original browser 204 still requires the matching event receipt. Production sampled-out events return 202 without sending. OpenAPI and the generated client include this response.",
@@ -771170,6 +771262,46 @@
       "3461718327955004": {
         "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
         "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
+      },
+      "4224570002802235": {
+        "path": "deploy/staging/monitoring-backup-inputs.sh",
+        "sha256": "77356c9c9a9707b073acae5f57539a47321a430f39d6b561e5f230851e3598d9"
+      },
+      "466286796035795": {
+        "path": "docs/operations/backup/config-restore-runbook.md",
+        "sha256": "8bfffa5ee908e037b722d2ffc3f0f51e42a1b765baccf799fb3a51d9d999bbfd"
+      },
+      "1524270420910059": {
+        "path": "packages/db/scripts/backup/config_backup.py",
+        "sha256": "b3b7ce15a3ba9c086e4cd1c335f569f579b7f814bc55f8877baad5f5c0e7bbbf"
+      },
+      "252012373289793": {
+        "path": "packages/db/scripts/backup/backup-config.sh",
+        "sha256": "c534616aec66d89a5bd5aa65215821988aed6d4273428bfbe2903a338b5ad879"
+      },
+      "282061544305323": {
+        "path": "packages/db/scripts/backup/restore-config.sh",
+        "sha256": "8a78886192f3c08ee55489b14a6bec4e24fc6f5753d42f66e32ba2e7a0d86bd3"
+      },
+      "915359278895213": {
+        "path": "packages/db/scripts/backup/verify-restore-config.sh",
+        "sha256": "5b7ce161185a67076b0ed2c3a2efc1c8c25b936b812b0c6875924f0d5d6b844d"
+      },
+      "3044795682365846": {
+        "path": "packages/db/scripts/backup/systemd/barghsa-config-backup.service",
+        "sha256": "24d579995a89a4331606cda7f37954908e30296ec6c644272dea0fd7eb3867f7"
+      },
+      "3874686232760928": {
+        "path": "packages/db/scripts/backup/systemd/barghsa-config-backup.timer",
+        "sha256": "818649e35746bcf631ab8058683ccd2ad60e8f02c5b2e554413652d82a412b4b"
+      },
+      "2827715711783056": {
+        "path": "packages/db/scripts/backup/systemd/barghsa-config-restore-exercise.service",
+        "sha256": "48b1d136af7d43767ea61af55b6fddf08824995f7ac13d042fee1e5c235ce011"
+      },
+      "252075794241722": {
+        "path": "packages/db/scripts/backup/systemd/barghsa-config-restore-exercise.timer",
+        "sha256": "bf2c014f5cbc94e83b898d8b417a236f80d9b9c127bdabbfdd349d2c309f9d97"
       },
       "2691242227704393": {
         "path": "packages/shared/src/redis/redis-factory.ts",
@@ -773595,9 +773727,9 @@
         "path": "docs/security/session-location.md",
         "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
       },
-      "1853862367514453": {
+      "205397931577530": {
         "path": "docs/security/release-license-review.md",
-        "sha256": "9443e08e3283e61e14b084f57045008044bffad34ea3af17e20ebda68df00290"
+        "sha256": "12988ce6b1dbe8ae88ed023278a1ac28a710b2fc7b3cddb16e01d5577d03e425"
       },
       "3535760571433913": {
         "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -781579,13 +781711,13 @@
         "path": "packages/shared/src/finance/wallet-payment-review.ts",
         "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
       },
-      "156896413270823": {
-        "path": "deploy/pilot/render-nginx.py",
-        "sha256": "8e128ce4807c142191ea1636303716b2cb02104c1b22ffcb73ae356b19e78c49"
-      },
       "609241399754975": {
         "path": "scripts/check-proxy-tls.mjs",
         "sha256": "166c569cfe4e3400e118388483a35b7505bd4a896e5c70d71db8f53258c9681c"
+      },
+      "156896413270823": {
+        "path": "deploy/pilot/render-nginx.py",
+        "sha256": "8e128ce4807c142191ea1636303716b2cb02104c1b22ffcb73ae356b19e78c49"
       },
       "4052544849490977": {
         "path": "docs/security/authorization.md",
@@ -781838,10 +781970,6 @@
       "3830507931348172": {
         "path": "docs/security/supply-chain.md",
         "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
-      },
-      "1524270420910059": {
-        "path": "packages/db/scripts/backup/config_backup.py",
-        "sha256": "b3b7ce15a3ba9c086e4cd1c335f569f579b7f814bc55f8877baad5f5c0e7bbbf"
       },
       "4387914196204433": {
         "path": "packages/db/scripts/backup/verify_restore.py",
@@ -782162,6 +782290,18 @@
       "1364273028583396": {
         "path": "scripts/check-runtime-images.sh",
         "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+      },
+      "1519067751003713": {
+        "path": "scripts/check-release-licenses.py",
+        "sha256": "78face40e09183ceee3fbc98d018171b5d6f0c1d97f066d3b1360a42ea9352ba"
+      },
+      "2456642983541496": {
+        "path": "scripts/test_check_release_licenses.py",
+        "sha256": "bb556d358519db16e97cfe92f5403e9787985ec72dbb9f33519fac882a940543"
+      },
+      "2064846375361020": {
+        "path": "deploy/licenses/release-approvals.json",
+        "sha256": "1d5926bd53e7d8f243012da689d3364e1febb2a7b0b47f171990b3390569468f"
       },
       "2882020909847356": {
         "path": "deploy/staging/Dockerfile.postgres",
@@ -783186,6 +783326,18 @@
       "22071275750422": {
         "path": "deploy/monitoring/grafana-provisioning/tempo.yml",
         "sha256": "003e197dce03739d9258d8fe9afd5ad8726ef550dc306a01dd8de4ab72487c12"
+      },
+      "1209319919314768": {
+        "path": "packages/db/src/query-tracing.ts",
+        "sha256": "e03e778f2611c642b903ab1bfcd667d8c73f5e4b8ab34319efd7cf2acea6c18f"
+      },
+      "60500750304499": {
+        "path": "packages/telemetry/src/index.ts",
+        "sha256": "d57274cc67d6a175da2ec1bfb263c29881a28534aab6b84d9841ff5878031ed4"
+      },
+      "2796257097544827": {
+        "path": "apps/worker/src/jobs/queue-trace.ts",
+        "sha256": "8cbddba9fb5a19829eadb1b97a8501ab7b609d3ff58d6910fd270f160223c959"
       },
       "2286632157739342": {
         "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
@@ -792938,6 +793090,14 @@
           "docs/security/release-license-review.md"
         ],
         "scope": "The document adds a libvips source and notice receipt. The GeoLite2 decision and its surrounding release checks match the accepted version byte for byte. Verified the reviewed app image excludes GeoLite2 and its package. Existing session-location acceptance still applies."
+      },
+      "1204144011576571": {
+        "batch": "release-0.6-verify-configuration-backup-and-checks",
+        "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+        "paths": [
+          "docs/security/release-license-review.md"
+        ],
+        "scope": "The license packet records two newly observed Ubuntu package versions and unchanged notices. The existing owner approvals, enforced policy and internal review decisions remain intact."
       },
       "359379790510643": {
         "batch": "release-0.5-expanded-verification-settings",

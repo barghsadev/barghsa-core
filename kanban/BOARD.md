@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-20T01:54:49+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-20T02:03:16+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1266 | Accepted with unchanged source bindings. |
+| done | 1271 | Accepted with unchanged source bindings. |
 | verify | 0 | Existing work may be complete; inspect evidence before building. |
-| partial | 97 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 92 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1024,7 +1024,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.01.04` | partial | Earlier partial | Implement PostgreSQL performance baseline and monitoring |
 | `01-platform-infrastructure.md#T-04.01.05` | partial | Earlier partial | Quarterly restore exercise |
 | `01-platform-infrastructure.md#T-04.01.06` | partial | Earlier partial | Hybrid deployment: separate managed PostgreSQL from app VM |
-| `01-platform-infrastructure.md#T-04.01.07` | partial | Earlier partial | Encrypted off-server backup of config, secrets, and critical application files |
+| `01-platform-infrastructure.md#T-04.01.07` | done | Earlier partial | Encrypted off-server backup of config, secrets, and critical application files |
 | `01-platform-infrastructure.md#T-04.02.01` | done | Earlier acceptance_verified | Create Redis connection factory with graceful fallback |
 | `01-platform-infrastructure.md#T-04.02.02` | done | Earlier acceptance_verified | Implement distributed rate-limiting with Redis acceleration + PostgreSQL fallback |
 | `01-platform-infrastructure.md#T-04.02.03` | done | Earlier acceptance_verified | Implement configuration caching with clear invalidation |
@@ -1148,7 +1148,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.03.01` | done | Recorded batch work | Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` |
 | `06-security-testing-observability.md#T-06.02.03.02` | partial | Recorded batch work | Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS |
 | `06-security-testing-observability.md#T-06.02.03.03` | done | Recorded batch work | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
-| `06-security-testing-observability.md#T-06.02.03.04` | partial | Recorded batch work | Write integration tests: verify all security headers present and correct on responses |
+| `06-security-testing-observability.md#T-06.02.03.04` | done | Recorded batch work | Write integration tests: verify all security headers present and correct on responses |
 | `06-security-testing-observability.md#T-06.02.03.05` | done | Recorded batch work | Add CI check that fails if required security headers are missing or misconfigured |
 | `06-security-testing-observability.md#T-06.02.04.01` | done | Recorded batch work | Implement CORS middleware with exact origin allowlist (env config, not wildcard) |
 | `06-security-testing-observability.md#T-06.02.04.02` | done | Recorded batch work | Ensure credentialed CORS (credentials: include) never accepts wildcard origin |
@@ -1238,7 +1238,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.03` | done | Recorded batch work | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
 | `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
 | `06-security-testing-observability.md#T-06.07.02.05` | done | Recorded batch work | Define triage policy: critical/high with credible production path → block release |
-| `06-security-testing-observability.md#T-06.07.02.06` | partial | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
+| `06-security-testing-observability.md#T-06.07.02.06` | done | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | done | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | done | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
@@ -1347,7 +1347,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.02.04` | done | Recorded batch work | Implement OpenAPI drift detection: generated schema vs committed spec |
 | `06-security-testing-observability.md#T-06.12.02.05` | blocked | Recorded batch work | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
 | `06-security-testing-observability.md#T-06.12.02.06` | done | Recorded batch work | Add status check reporting: pass/fail per check, summary comment on PR |
-| `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
+| `06-security-testing-observability.md#T-06.12.03.01` | done | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
 | `06-security-testing-observability.md#T-06.12.03.02` | done | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
 | `06-security-testing-observability.md#T-06.12.03.03` | done | Recorded batch work | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
 | `06-security-testing-observability.md#T-06.12.03.04` | done | Recorded batch work | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
@@ -1423,7 +1423,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.16.01.02` | partial | Recorded batch work | Ensure trace context propagation across async boundaries: outbox → worker, queue → handler |
 | `06-security-testing-observability.md#T-06.16.01.03` | partial | Recorded batch work | Configure retention: sampled traces 7 days, error/slow 30 days |
 | `06-security-testing-observability.md#T-06.16.01.04` | done | Recorded batch work | Create Grafana Explore / Tempo search UI integration for trace discovery |
-| `06-security-testing-observability.md#T-06.16.01.05` | partial | Recorded batch work | Write trace verification test: single request produces complete trace across service → DB → outbox → worker |
+| `06-security-testing-observability.md#T-06.16.01.05` | done | Recorded batch work | Write trace verification test: single request produces complete trace across service → DB → outbox → worker |
 | `06-security-testing-observability.md#T-06.16.02.01` | partial | Recorded batch work | Integrate Sentry SDK (or open-source alternative) into API, worker, and web processes |
 | `06-security-testing-observability.md#T-06.16.02.02` | done | Recorded batch work | Configure PII scrubbing: strip secrets, national IDs, financial details, tokens from error reports |
 | `06-security-testing-observability.md#T-06.16.02.03` | done | Recorded batch work | Configure environment-specific sampling: 100% in dev/staging, sample rate in production |
