@@ -7,6 +7,7 @@ import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 import type { ContractService } from './contract.service.js';
 import type { ContractCancellationService } from './contract-cancellation.service.js';
 type Intent = Awaited<ReturnType<ContractCancellationService['get']>>;
@@ -191,6 +192,45 @@ it('creates only a staff review request, preserves exact retries and exposes it 
     ).rows[0].n
   ).toBe(1);
 });
+it.each(['detail', 'queue'] as const)(
+  'withholds staff cancellation request %s when the session expires during the database read',
+  async (view) => {
+    const f = await fixture();
+    await publish(f);
+    const submitted = await submit(f);
+    expect(submitted.status, http.logs()).toBe(201);
+    const request = (await submitted.json()) as RequestDto;
+    const path =
+      view === 'detail'
+        ? `admin/contracts/${f.row.id}/cancellation-requests`
+        : 'admin/contract-cancellation-requests';
+    const current = await send(path);
+    expect(current.status, http.logs()).toBe(200);
+    const visible = { id: request.id, contractId: f.row.id };
+    if (view === 'detail') expect(await current.json()).toMatchObject({ request: visible });
+    else {
+      expect(await current.json()).toMatchObject({
+        requests: expect.arrayContaining([expect.objectContaining(visible)]),
+      });
+    }
+    expect((await send(path, 'GET', undefined, 'request-support')).status).toBe(403);
+
+    const denied = await readAfterStaffSessionExpires(
+      http.pool,
+      'request-legal',
+      (headers) => fetch(`${http.base}/api/${path}`, { headers }),
+      (client) =>
+        client.query('LOCK TABLE contract_cancellation_requests IN ACCESS EXCLUSIVE MODE'),
+      'FROM contract_cancellation_requests r JOIN contracts c'
+    );
+    expect(denied.status, http.logs()).toBe(401);
+    const body = await denied.text();
+    expect(body).not.toContain(f.row.id);
+    expect(body).not.toContain(request.id);
+  },
+  12000
+);
+
 it('keeps drafts and other profiles private and rejects stale or malformed submissions', async () => {
   const f = await fixture(),
     other = await fixture();

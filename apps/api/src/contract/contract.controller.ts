@@ -21,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -206,9 +207,10 @@ export class ContractController {
     @Query('terminalAction') action?: string
   ) {
     this.authorize(req, true);
-    return this.service.cancellationPreview(
-      parse(contractUuid, id),
-      parse(z.enum(['cancel', 'reject']).default('cancel'), action)
+    const contractId = parse(contractUuid, id);
+    const terminalAction = parse(z.enum(['cancel', 'reject']).default('cancel'), action);
+    return withStaffReadAuthority(req.session, 'contracts:write', (client) =>
+      this.service.cancellationPreview(contractId, terminalAction, client)
     );
   }
 

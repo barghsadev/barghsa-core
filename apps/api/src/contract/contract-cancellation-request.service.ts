@@ -191,14 +191,14 @@ export class ContractCancellationRequestService {
       conflict(error);
     }
   }
-  async staff(id: string) {
-    if (!(await getDbPool().query('SELECT id FROM contracts WHERE id=$1', [id])).rowCount)
+  async staff(id: string, client: Pool | PoolClient = getDbPool()) {
+    if (!(await client.query('SELECT id FROM contracts WHERE id=$1', [id])).rowCount)
       throw new NotFoundException();
-    return { request: await this.latest(getDbPool(), id) };
+    return { request: await this.latest(client, id) };
   }
-  async queue(before?: string, serviceType?: 'savings') {
+  async queue(before?: string, serviceType?: 'savings', client: Pool | PoolClient = getDbPool()) {
     const rows = (
-      await getDbPool().query(
+      await client.query(
         selection +
           ` WHERE r.status='Pending' AND c.state NOT IN ('Cancelled','Completed','Rejected')
             AND (s.status IS NULL OR s.status NOT IN ('completed','rejected','cancelled'))

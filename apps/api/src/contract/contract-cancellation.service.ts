@@ -187,9 +187,13 @@ export class ContractCancellationService {
     return this.get(id, intentId);
   }
 
-  async get(id: string, intentId: string) {
+  async get(
+    id: string,
+    intentId: string,
+    client: PoolClient | ReturnType<typeof getDbPool> = getDbPool()
+  ) {
     const row = (
-      await getDbPool().query<
+      await client.query<
         Intent & {
           approval_status: string | null;
           customer_request_status: string | null;
@@ -243,9 +247,13 @@ export class ContractCancellationService {
     };
   }
 
-  async latest(id: string, terminalAction: 'cancel' | 'reject' = 'cancel') {
+  async latest(
+    id: string,
+    terminalAction: 'cancel' | 'reject' = 'cancel',
+    client: PoolClient | ReturnType<typeof getDbPool> = getDbPool()
+  ) {
     const row = (
-      await getDbPool().query<{ intent_id: string | null }>(
+      await client.query<{ intent_id: string | null }>(
         `SELECT latest.id AS intent_id FROM contracts c
       LEFT JOIN LATERAL (SELECT i.id FROM contract_cancellation_intents i WHERE i.contract_id=c.id AND COALESCE(i.financial_snapshot->>'terminalAction','cancel')=$2 ORDER BY i.created_at DESC,i.id DESC LIMIT 1) latest ON true
       WHERE c.id=$1`,
@@ -253,7 +261,7 @@ export class ContractCancellationService {
       )
     ).rows[0];
     if (!row) throw new NotFoundException();
-    return { intent: row.intent_id ? await this.get(id, row.intent_id) : null };
+    return { intent: row.intent_id ? await this.get(id, row.intent_id, client) : null };
   }
 
   async execute(id: string, input: ExecuteCancellationInput, actor: ContractActor, ip: string) {

@@ -3,6 +3,7 @@ import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 import {
   seedCustomerProfile,
   seedCustomerUser,
@@ -1028,6 +1029,47 @@ it('withholds staff cancellation details when the session expires during the dat
     await http.pool.query('DELETE FROM sessions WHERE session_id=$1', [session]);
   }
 }, 12000);
+
+it.each(['preview', 'latest', 'decision'] as const)(
+  'withholds staff cancellation %s when the session expires during the database read',
+  async (view) => {
+    const f = await fixture();
+    const preview = view === 'preview';
+    const intent = preview ? undefined : await prepare(f);
+    const path = `contracts/${f.contract.id}/${preview ? 'cancellation-preview' : 'cancellations'}${view === 'decision' ? `/${intent!.id}` : ''}`;
+    const current = await send(path);
+    expect(current.status, http.logs()).toBe(200);
+    if (view === 'preview') {
+      expect(await current.json()).toMatchObject({ fingerprint: f.body.expectedFingerprint });
+    } else if (view === 'latest') {
+      expect(await current.json()).toMatchObject({ intent: { id: intent!.id } });
+    } else {
+      expect(await current.json()).toMatchObject({ id: intent!.id });
+    }
+    expect((await send(path, undefined, 'cancel-support')).status).toBe(403);
+
+    const queryText = {
+      preview: 'contract_has_pending_payments(c.id)',
+      latest: 'SELECT latest.id AS intent_id',
+      decision: 'SELECT i.*,approval.status AS approval_status',
+    };
+    const denied = await readAfterStaffSessionExpires(
+      http.pool,
+      'cancel-legal',
+      (headers) => fetch(`${http.base}/api/admin/${path}`, { headers }),
+      (client) =>
+        preview
+          ? client.query('LOCK TABLE invoices IN ACCESS EXCLUSIVE MODE')
+          : client.query('LOCK TABLE contract_cancellation_intents IN ACCESS EXCLUSIVE MODE'),
+      queryText[view]
+    );
+    expect(denied.status, http.logs()).toBe(401);
+    const body = await denied.text();
+    expect(body).not.toContain(f.contract.id);
+    expect(body).not.toContain(intent?.id ?? f.body.expectedFingerprint);
+  },
+  12000
+);
 
 it('returns a JSON empty decision and resumes saved approvals after reopening', async () => {
   const f = await fixture(),

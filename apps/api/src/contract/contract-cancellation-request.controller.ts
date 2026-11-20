@@ -12,6 +12,7 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -105,9 +106,10 @@ export class StaffCancellationRequestController {
     @Query('service') service?: string
   ) {
     authorize(req);
-    return this.service.queue(
-      before === undefined ? undefined : parse(contractUuid, before),
-      service === undefined ? undefined : parse(z.literal('savings'), service)
+    const cursor = before === undefined ? undefined : parse(contractUuid, before);
+    const serviceType = service === undefined ? undefined : parse(z.literal('savings'), service);
+    return withStaffReadAuthority(req.session, 'contracts:write', (client) =>
+      this.service.queue(cursor, serviceType, client)
     );
   }
   @Get('contracts/:id/cancellation-requests')
@@ -115,7 +117,10 @@ export class StaffCancellationRequestController {
   @ApiOperation({ summary: 'Read the latest customer request for a staff cancellation decision' })
   get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     authorize(req);
-    return this.service.staff(parse(contractUuid, id));
+    const contractId = parse(contractUuid, id);
+    return withStaffReadAuthority(req.session, 'contracts:write', (client) =>
+      this.service.staff(contractId, client)
+    );
   }
   @Post('contract-cancellation-requests/:requestId/reject')
   @RequiresStepUp()
