@@ -12873,14 +12873,15 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-provider-circuit",
           "release-0.6-web-server-tracing",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-storage-probe-stream"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
           "base_commit": "42d2c40721ad40ba244eaa5bdac0e036a595c84a",
           "source_evidence": [
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             2875832663329932,
             3892478422374868,
             2433369058809904,
@@ -12901,7 +12902,8 @@
           "checks": [
             1029068237105629,
             3644264731890591,
-            3062641131844408
+            3062641131844408,
+            1675071305457009
           ],
           "source_renewals": [
             2124012302264901,
@@ -12923,7 +12925,8 @@
             4227617193604528,
             3239468737812509,
             2454183000652926,
-            3026163102847354
+            3026163102847354,
+            3437707986042905
           ]
         }
       }
@@ -20923,8 +20926,8 @@
             2426167627219121,
             1230063180731605,
             2238645071536023,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             4043172283590996
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo",
@@ -20984,7 +20987,8 @@
             3629627640434884,
             2197651103075413,
             563870213112406,
-            4288241415510224
+            4288241415510224,
+            3437707986042905
           ]
         }
       }
@@ -32339,8 +32343,8 @@
             2993540581497920,
             2606557603986526,
             2238645071536023,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             3186856004015172,
             677360496321412,
             2170815843496738,
@@ -33323,7 +33327,8 @@
             2307641782730240,
             1832992762036922,
             251116967695569,
-            1836501033610297
+            1836501033610297,
+            3437707986042905
           ],
           "presentation_renewals": [
             {
@@ -62259,8 +62264,8 @@
             2951047706667329,
             3461718327955004,
             2238645071536023,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             3186856004015172,
             677360496321412,
             2170815843496738,
@@ -63070,7 +63075,8 @@
             228510612796114,
             1832992762036922,
             1239819274270615,
-            4139613294510282
+            4139613294510282,
+            3437707986042905
           ],
           "presentation_renewals": [
             {
@@ -357558,7 +357564,7 @@
             1453887020404920,
             1903387969556534,
             13759986640782,
-            1036330613138264,
+            4238539401660696,
             677360496321412,
             2606557603986526,
             2245840505098690,
@@ -357656,7 +357662,8 @@
             3026163102847354,
             2484943224506275,
             1511795022188542,
-            534670550961879
+            534670550961879,
+            2202666024062452
           ],
           "presentation_renewals": [
             {
@@ -357736,7 +357743,7 @@
             1453887020404920,
             1903387969556534,
             13759986640782,
-            1036330613138264,
+            4238539401660696,
             677360496321412,
             2606557603986526,
             2245840505098690,
@@ -357834,7 +357841,8 @@
             3026163102847354,
             2484943224506275,
             1511795022188542,
-            534670550961879
+            534670550961879,
+            2202666024062452
           ],
           "presentation_renewals": [
             {
@@ -357908,7 +357916,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-storage-sdk-endpoint-policy",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-storage-probe-stream"
         ],
         "current_acceptance": {
           "status": "done",
@@ -357917,8 +357926,8 @@
             771355023850083,
             3679417637570647,
             2245840505098690,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             677360496321412,
             3849839116474357,
             760960258543334,
@@ -357974,7 +357983,8 @@
             2325930101307397,
             2560446033636596,
             705212389183949,
-            3062641131844408
+            3062641131844408,
+            1675071305457009
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/storage-foundations-current-acceptance",
@@ -358073,7 +358083,8 @@
             2454183000652926,
             3026163102847354,
             2484943224506275,
-            1511795022188542
+            1511795022188542,
+            3437707986042905
           ],
           "presentation_renewals": [
             {
@@ -358170,8 +358181,8 @@
             771355023850083,
             3679417637570647,
             2245840505098690,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             677360496321412,
             3849839116474357,
             760960258543334,
@@ -358300,7 +358311,8 @@
             2454183000652926,
             3026163102847354,
             2484943224506275,
-            1511795022188542
+            1511795022188542,
+            3437707986042905
           ],
           "presentation_renewals": [
             {
@@ -364564,7 +364576,7 @@
             760960258543334,
             4230488777123013,
             3118958576176339,
-            3609198769129808,
+            2127978434758322,
             41118176768100,
             2376369722803609,
             4274200221694227,
@@ -364738,7 +364750,8 @@
             2518223937317462,
             3239468737812509,
             4480472245978925,
-            2461493859728927
+            2461493859728927,
+            2198413399526339
           ],
           "presentation_renewals": [
             {
@@ -364871,7 +364884,7 @@
             760960258543334,
             4230488777123013,
             3118958576176339,
-            3609198769129808,
+            2127978434758322,
             41118176768100,
             2376369722803609,
             4274200221694227,
@@ -365045,7 +365058,8 @@
             2518223937317462,
             3239468737812509,
             4480472245978925,
-            2461493859728927
+            2461493859728927,
+            2198413399526339
           ],
           "presentation_renewals": [
             {
@@ -365180,7 +365194,7 @@
             760960258543334,
             4230488777123013,
             3118958576176339,
-            3609198769129808,
+            2127978434758322,
             41118176768100,
             2376369722803609,
             4274200221694227,
@@ -365369,7 +365383,8 @@
             2518223937317462,
             3239468737812509,
             4480472245978925,
-            2461493859728927
+            2461493859728927,
+            2198413399526339
           ],
           "presentation_renewals": [
             {
@@ -365537,7 +365552,7 @@
             760960258543334,
             4230488777123013,
             3118958576176339,
-            3609198769129808,
+            2127978434758322,
             41118176768100,
             2376369722803609,
             4274200221694227,
@@ -365744,7 +365759,8 @@
             4480472245978925,
             1832992762036922,
             534670550961879,
-            130241357629046
+            130241357629046,
+            2198413399526339
           ],
           "presentation_renewals": [
             {
@@ -365889,7 +365905,7 @@
             760960258543334,
             4230488777123013,
             3118958576176339,
-            3609198769129808,
+            2127978434758322,
             41118176768100,
             2376369722803609,
             4274200221694227,
@@ -366063,7 +366079,8 @@
             2518223937317462,
             3239468737812509,
             4480472245978925,
-            2461493859728927
+            2461493859728927,
+            2198413399526339
           ],
           "presentation_renewals": [
             {
@@ -386779,7 +386796,8 @@
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
         "The private Telegram transport retains its 10-second deadline, 64 KiB response cap and redirect rejection. An inconsistent HTTP and Bot API status cannot authorize a retry. Actual candidate and the remaining outbound inventory remain open.",
         "The staging host release smoke now enforces a 20-second maximum and 64 KiB response limit on all three public JSON reads. Real curl loopback tests passed the exact limit, oversized response without Content-Length and redirects. The broader outbound provider inventory and exact deployment remain open.",
-        "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open."
+        "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open.",
+        "A failed signed storage connection probe now closes its unfinished response body promptly. The 35 migrated storage API cases preserve the existing authority, content, credential masking, configuration and version-scoped cleanup safeguards. The outbound inventory and deployed candidate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -386819,7 +386837,8 @@
           "release-0.6-bound-staging-worker-readbacks",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-payment-recovery-response"
+          "release-0.6-payment-recovery-response",
+          "release-0.6-storage-probe-stream"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -390144,7 +390163,7 @@
             2455564408383001,
             3504858025286786,
             1244096846657652,
-            1036330613138264,
+            4238539401660696,
             268558275293593,
             982758726566698,
             3635778835580717,
@@ -390178,7 +390197,8 @@
             145435064327048,
             1660715985267185,
             2738410776947585,
-            2649249452682699
+            2649249452682699,
+            2202666024062452
           ]
         }
       }
@@ -559834,8 +559854,8 @@
             2300838331056287,
             512893012956013,
             2606557603986526,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             2603818186923838,
             677360496321412,
             220217333430592,
@@ -561108,7 +561128,8 @@
             3011263934478573,
             3431018044996981,
             1836501033610297,
-            2075546320213099
+            2075546320213099,
+            3437707986042905
           ],
           "presentation_renewals": [
             {
@@ -561855,8 +561876,8 @@
             2300838331056287,
             512893012956013,
             2606557603986526,
-            1036330613138264,
-            3609198769129808,
+            4238539401660696,
+            2127978434758322,
             2603818186923838,
             677360496321412,
             220217333430592,
@@ -563027,7 +563048,8 @@
             3011263934478573,
             3431018044996981,
             1836501033610297,
-            2075546320213099
+            2075546320213099,
+            3437707986042905
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -565621,7 +565643,8 @@
         "The staged PostgreSQL filesystem recovered above the monitored threshold and the compiled candidate passed 12 localized Orca speech cases covering the four services and high-risk staff and wallet reviews. The exact frozen release, protected topology and delivery receipts remain open.",
         "Staff contract cancellation status now denies session expiry during the financial read. Compiled native and web caller checks passed. Verify the exact deployed candidate.",
         "Staff AI health now uses the shared staff read transaction around the model circuit query. A session expiring during the actual PostgreSQL read receives 401 without model details. The worker health probe completes before the database authority transaction starts. Verify the exact deployed candidate.",
-        "The compiled API passed one isolated no-funds wallet checkout through the official ZarinPal sandbox, including exact initiation replay, read-only callback, CSRF rejection and one idempotent credit. Verified the same reference from staging over TLS with provider code 101. The exact deployed candidate and controlled staging provider and anomaly checks remain open."
+        "The compiled API passed one isolated no-funds wallet checkout through the official ZarinPal sandbox, including exact initiation replay, read-only callback, CSRF rejection and one idempotent credit. Verified the same reference from staging over TLS with provider code 101. The exact deployed candidate and controlled staging provider and anomaly checks remain open.",
+        "A failed signed storage connection probe now closes its unfinished response body promptly. The 35 migrated storage API cases preserve the existing authority, content, credential masking, configuration and version-scoped cleanup safeguards. The outbound inventory and deployed candidate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -566065,7 +566088,8 @@
           "release-0.6-screen-reader-and-live-capacity",
           "release-0.6-staff-cancellation-status-authority",
           "release-0.6-ai-health-authority",
-          "release-0.6-official-wallet-payment-sandbox"
+          "release-0.6-official-wallet-payment-sandbox",
+          "release-0.6-storage-probe-stream"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -767511,6 +767535,65 @@
         }
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-zarinpal-sandbox/attempt-3"
+    },
+    "release-0.6-storage-probe-stream": {
+      "batch": "release-0.6-storage-probe-stream",
+      "base_commit": "95b4d3588b38d837c422ffa707e2440da7684a7c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.04",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/storage/storage-config.service.ts",
+        "apps/api/src/storage/storage-config-http.integration.test.ts",
+        "kanban/board.json"
+      ],
+      "checks": [
+        "The compiled storage configuration endpoint rejected a signed-download 403 but did not close its unfinished response stream. The focused native case reproduced that failure before the fix.",
+        "The failed-download branch now cancels the response body before disposing of the disposable probe. All 35 migrated HTTP cases passed after rebuilding the API. The download was rejected with the existing 503, credentials were masked, the active configuration stayed unchanged and the scoped probe object was removed."
+      ],
+      "limitations": [
+        "The before-and-after regression used a disposable storage fixture. Deployed storage lifecycle proof and the signed callback cutover remain separate operational gates."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "470c3b040e0f266dde8f0c4bf5237eb9c606f0b9e125526f92db9bf69c92fdb5"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "651a69d7d91d269f91c396b9c56ec3caa3a43c0e500d128e4d50a0fae260830f"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "ab1fa23720698d8f3b0c694c9c30059f594f9dc0e428c20415bbf8c29c90e5d5"
+        },
+        {
+          "path": "apps/api/src/storage/read-capped-bytes.ts",
+          "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        }
+      ],
+      "execution_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-probe-stream/before.json",
+          "sha256": "1589e073821651f772690d34249d3c0833d4f825aa259037510469987e2f0157"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-probe-stream/native.json",
+          "sha256": "cab32f085aad0655a0a2ee2a672631574134aab1e3f125b9e49acd97dcf9ce47"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-probe-stream/build.log",
+          "sha256": "2f19f9c0e94e9de68f7c745a7b6330d568d896741308d9851b8a4a60f7ecfcce"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-probe-stream"
     }
   },
   "historical_improvements": [
@@ -767772,6 +767855,7 @@
       "81058972816254": "Reused 43 document HTTP, 24 storage-record HTTP, three storage-access HTTP and two multipart HTTP cases from run 42689595374, plus nine browser upload-component assertions. Matching tests cover real MinIO signing, mismatch rejection, download byte identity and durable configured-scanner jobs. The run's separate stale refresh assertion was corrected independently.",
       "1029068237105629": "Reused the prior source-bound admin storage acceptance under 05-notifications-documents-ai.md#T-05.09.03 and 24 matching storage-config API cases from run 42689595374. The current UI has endpoint, region, bucket, credential identifier, password-masked write-only secret, path style, private/public URLs, Test Connection, result feedback and versioned save.",
       "3644264731890591": "The active version remains in the existing encrypted configuration store as approved. AES-256-GCM protects the secret. The save probe performs a disposable upload and signed browser download with byte comparison, then preserves the prior active revision on failed authority, stale version, provider test or audit persistence. The production-equivalent storage, lifecycle, scanner and restore receipts remain separate operational gates.",
+      "1675071305457009": "The failed-download branch now cancels the response body before disposing of the disposable probe. All 35 migrated HTTP cases passed after rebuilding the API. The download was rejected with the existing 503, credentials were masked, the active configuration stayed unchanged and the scoped probe object was removed.",
       "866076910112196": "GitHub run 43315948494 passed 152 cases across eleven relevant suites, including native PostgreSQL migration, contract signature, document HTTP with real object storage, generic signed-record soft removal, storage cleanup and guarded version destruction. One configured real ClamD case was skipped and belongs to the separate scanner requirement. The overall run failed a separate web test. All listed source bindings match the tested commit.",
       "2998021813792595": "The signed-copy flow binds the approved original and signed bytes to the exact version, records their append-only locks and protects both after a replacement race or a new amendment. Mounted and migrated fixtures verify approval authority, the sealed-byte boundary, current scope, exact replay, unchanged history and denial of removal and replacement of locked evidence.",
       "2337089965117663": "The generic storage remove route keeps signed bytes and records soft removal. Ordinary worker cleanup excludes signed records and serializes claims with promotion. The durable destruction worker and migrated database independently refuse contractual and financial bytes after removal and reject outdated approvals before any provider delete. Eligible nonfinancial destruction follows its separate approval workflow.",
@@ -772214,13 +772298,13 @@
         "path": "apps/web/src/lib/file-upload.ts",
         "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
       },
-      "1036330613138264": {
+      "4238539401660696": {
         "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-        "sha256": "02185aa32d1372da393e926f52f3d7c36d8660c70687f1eb427ce2172ea23d1a"
+        "sha256": "651a69d7d91d269f91c396b9c56ec3caa3a43c0e500d128e4d50a0fae260830f"
       },
-      "3609198769129808": {
+      "2127978434758322": {
         "path": "apps/api/src/storage/storage-config.service.ts",
-        "sha256": "74a79027c1de199e52780a595ae3f9055e09bb071057ca73a7304d102c74f22c"
+        "sha256": "470c3b040e0f266dde8f0c4bf5237eb9c606f0b9e125526f92db9bf69c92fdb5"
       },
       "2875832663329932": {
         "path": "apps/web/e2e/storage-config.spec.ts",
@@ -789785,6 +789869,15 @@
         ],
         "scope": "Additive coverage of invalid recovery commands, current verification read authority and disabled or mismatched encrypted adapter settings. The existing runtime policies remain verified by matching source and the native suite."
       },
+      "3437707986042905": {
+        "batch": "release-0.6-storage-probe-stream",
+        "base_commit": "95b4d3588b38d837c422ffa707e2440da7684a7c",
+        "paths": [
+          "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "apps/api/src/storage/storage-config.service.ts"
+        ],
+        "scope": "Only the unsuccessful signed-download response is closed early. The native storage configuration and access cases verify the existing connection probe, credential handling, current authority, activation and cleanup boundaries."
+      },
       "3982485007464807": {
         "batch": "release-0.6-specialized-queue-tracing",
         "base_commit": "b11f4126387971e27696ff2f00de0cbe6c5416f0",
@@ -804914,6 +805007,14 @@
         ],
         "scope": "Multipart part authorization, completion and abort and staff record removal now reject undeclared JSON before invoking the existing storage and record services. Omitted and empty request bodies still invoke the normal commands. Prior access, exact-byte, idempotency, retention and audit assertions passed. The contract retains each success response and adds HTTP 400 for the four changed operations. The existing concurrent notification delivery fixture now uses its shared transport type by name and retains all assertions. Unchanged criteria retain prior evidence."
       },
+      "2202666024062452": {
+        "batch": "release-0.6-storage-probe-stream",
+        "base_commit": "95b4d3588b38d837c422ffa707e2440da7684a7c",
+        "paths": [
+          "apps/api/src/storage/storage-config-http.integration.test.ts"
+        ],
+        "scope": "Only the unsuccessful signed-download response is closed early. The native storage configuration and access cases verify the existing connection probe, credential handling, current authority, activation and cleanup boundaries."
+      },
       "2495531170388985": {
         "batch": "release-0.6-protected-storage-origins",
         "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
@@ -805357,6 +805458,14 @@
           "apps/api/src/upload/multipart-http.integration.test.ts"
         ],
         "scope": "Multipart part authorization, completion and abort and staff record removal now reject undeclared JSON before invoking the existing storage and record services. Omitted and empty request bodies still invoke the normal commands. Prior access, exact-byte, idempotency, retention and audit assertions passed. The contract retains each success response and adds HTTP 400 for the four changed operations. The existing concurrent notification delivery fixture now uses its shared transport type by name and retains all assertions. Unchanged criteria retain prior evidence."
+      },
+      "2198413399526339": {
+        "batch": "release-0.6-storage-probe-stream",
+        "base_commit": "95b4d3588b38d837c422ffa707e2440da7684a7c",
+        "paths": [
+          "apps/api/src/storage/storage-config.service.ts"
+        ],
+        "scope": "Only the unsuccessful signed-download response is closed early. The native storage configuration and access cases verify the existing connection probe, credential handling, current authority, activation and cleanup boundaries."
       },
       "1658181362237533": {
         "batch": "release-0.6-ticket-attachment-copy-boundary",

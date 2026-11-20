@@ -23,6 +23,7 @@ const probeRequests: {
 const probeVersion = 'fixture-version';
 let versioning: 'Enabled' | 'Suspended' | undefined;
 let omitPutVersion = false;
+let rejectedDownloadClosed = false;
 let probeFault:
   'none' | 'upload' | 'download' | 'corrupt' | 'oversize' | 'cleanup' | 'lost-put' | 'ownership' =
   'none';
@@ -51,9 +52,16 @@ beforeAll(async () => {
         expiry: url.searchParams.get('X-Amz-Expires'),
         version: url.searchParams.get('versionId'),
       });
+      if (req.method === 'GET' && probeFault === 'download') {
+        res.once('close', () => {
+          rejectedDownloadClosed = true;
+        });
+        res.writeHead(403);
+        res.write('<Error>');
+        return;
+      }
       if (
         (req.method === 'PUT' && probeFault === 'upload') ||
-        (req.method === 'GET' && probeFault === 'download') ||
         (req.method === 'DELETE' && probeFault === 'cleanup')
       ) {
         res.writeHead(403);
@@ -744,6 +752,7 @@ for (const fault of ['upload', 'download', 'corrupt', 'oversize', 'cleanup'] as 
   it(`refuses an unproved ${fault} probe without changing configuration or echoing secrets`, async () => {
     const before = await current();
     probeFault = fault;
+    rejectedDownloadClosed = false;
     probeRequests.length = 0;
     try {
       const response = await request('/config', 'PUT', await update());
@@ -754,6 +763,8 @@ for (const fault of ['upload', 'download', 'corrupt', 'oversize', 'cleanup'] as 
       });
       expect(JSON.stringify(body)).not.toContain('new-secret-never-return');
       expect(JSON.stringify(body)).not.toContain('new-access-key');
+      if (fault === 'download')
+        await expect.poll(() => rejectedDownloadClosed, { timeout: 1_500 }).toBe(true);
       expect(await current()).toEqual(before);
       expect(probeRequests.at(-1)?.method).toBe(fault === 'upload' ? 'HEAD' : 'DELETE');
       if (fault !== 'cleanup') expect(probeObjects.size).toBe(0);

@@ -325,7 +325,10 @@ export class StorageConfigService {
       await this.authorize(session);
       const url = await providers.browser.presignedGetUrl(key, 60);
       const response = await fetch(url, { signal: AbortSignal.timeout(5000), redirect: 'error' });
-      if (!response.ok || !response.body) throw new Error('Probe download failed');
+      if (!response.ok || !response.body) {
+        await response.body?.cancel().catch(() => {});
+        throw new Error('Probe download failed');
+      }
       const downloaded = await readCappedBytes(response.body, expected.byteLength);
       if (downloaded.truncated || !Buffer.from(downloaded.bytes).equals(expected))
         throw new Error('Probe content mismatch');
