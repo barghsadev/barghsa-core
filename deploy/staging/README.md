@@ -333,8 +333,8 @@ previous runtime settings and original volume while holding the lock. After
 writes resume, preserve the new volume and reconcile its changes before any
 rollback. The application release does not switch storage images or volumes.
 
-To prepare signed storage events, set `BARGHSA_STAGING_STORAGE_WEBHOOK=true`
-in the protected staging runtime file. The Compose overlay mounts
+For v0.6.0 and later, set `BARGHSA_STAGING_STORAGE_WEBHOOK=true` in the protected
+staging runtime file before running the application release. The Compose overlay mounts
 `/etc/barghsa/staging/storage-webhook/notification.toml` in SeaweedFS and
 mounts the `signing-key` from that same directory read-only in the API and
 SeaweedFS. Keep the directory root-only on the host. Make the key readable

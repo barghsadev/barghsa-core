@@ -97,6 +97,10 @@ if [[ ! "$version" =~ ^0\.[0-5]\. || -n "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}"
     echo 'Loaded object-store image ID differs from the approved image' >&2; exit 1;
   }
 fi
+if [[ ! "$version" =~ ^0\.[0-5]\. && "${BARGHSA_STAGING_STORAGE_WEBHOOK:-false}" != true ]]; then
+  echo 'Staging milestone requires the protected storage webhook overlay' >&2
+  exit 1
+fi
 if [[ "${BARGHSA_STAGING_STORAGE_WEBHOOK:-false}" == true ]]; then
   [[ "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" == "$signed_objectstore_image" &&
      -s /etc/barghsa/staging/storage-webhook/notification.toml &&

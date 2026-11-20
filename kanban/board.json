@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T17:37:01.577655+00:00",
+  "updated": "2026-11-20T17:54:30.436112+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12643,7 +12643,8 @@
         "The private native NGINX rehearsal verified that the shared S3 fence blocks new PUT, DELETE and multipart creation while a pre-reload worker finishes an existing upload. Reopening was explicit. The preliminary live fingerprint still matches all 59 versions, five markers, order, rules, tags and bytes. The EU path uploaded and verified a 31.47 MB encrypted synthetic cold archive in 204 seconds and independently restored it in 14 seconds. Repeat the fully fenced inventory and volume capture after the exact natural expiry gate.",
         "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover.",
         "The staged cutover inputs matched the exact signed image, rollback volume and protected configuration. The command rejected the real pre-window lifecycle result before changing any running container, image manifest, runtime file or NGINX configuration. Verify natural expiry after November 20 at 17:31:14 UTC, then perform the live cutover and signed application callback test.",
-        "The exact reviewed staging image expired the eligible current object, pruned the oldest eligible noncurrent version, and preserved held and unclassified objects after natural aging. The fenced live cutover restored the encrypted EU archive with matching checksums before reopening writes. Authenticated readback matched all 59 versions, five delete markers, five lifecycle rules, version order, tags and bytes. PostgreSQL stayed active, the original storage volume is retained, staging readiness passed, and anonymous S3 returned 403. The existing v0.5.1 app still runs with callbacks disabled. Verify the signed HTTPS callback and durable duplicate receipt on the immutable v0.6.0 candidate and the selected production-equivalent policy and hold authority before accepting the task."
+        "The exact reviewed staging image expired the eligible current object, pruned the oldest eligible noncurrent version, and preserved held and unclassified objects after natural aging. The fenced live cutover restored the encrypted EU archive with matching checksums before reopening writes. Authenticated readback matched all 59 versions, five delete markers, five lifecycle rules, version order, tags and bytes. PostgreSQL stayed active, the original storage volume is retained, staging readiness passed, and anonymous S3 returned 403. The existing v0.5.1 app still runs with callbacks disabled. Verify the signed HTTPS callback and durable duplicate receipt on the immutable v0.6.0 candidate and the selected production-equivalent policy and hold authority before accepting the task.",
+        "The v0.6 and later staging release now rejects a missing or disabled protected callback overlay. Its 24 staging rollback and admission checks passed, including compatibility with earlier releases, absent protected inputs and writable mounts. The protected staging flag is set. Native Compose verified the future API read-only key mount and both SeaweedFS mounts, with all other settings equal. No containers restarted and provider delivery is disabled. The exact v0.6.0 signed HTTPS delivery, durable duplicate and selected production-equivalent retention authority remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -12813,6 +12814,10 @@
         "staging_signed_storage_live_cutover": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-live-cutover-20261120.json",
           "sha256": "814d317fa2e324432da2016ae13571ecd72dd991f6cdbad8856366580d201718"
+        },
+        "staging_signed_storage_overlay_admission": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-overlay-admission-20261120.json",
+          "sha256": "a598e6cac3e42a52fc9ac2ef11e8d910f8d67c78906ca596c0f16a7a785af681"
         }
       },
       "defect_severity": "P1"
@@ -13501,7 +13506,7 @@
             878789146717865,
             680981381061175,
             3513479427036515,
-            1206685866573554,
+            3029006399341178,
             2577092342995346,
             2645740275209480
           ],
@@ -13563,7 +13568,8 @@
             4458859255345362,
             4149196523916836,
             1250914822414554,
-            3011263934478573
+            3011263934478573,
+            1378384713543063
           ]
         }
       }
@@ -15768,9 +15774,9 @@
             2426167627219121,
             3664960298222868,
             2719536177275900,
-            1943955045815573,
-            1206685866573554,
-            3402460186357571,
+            4196705158078792,
+            3029006399341178,
+            3201890790755014,
             2506773297712354,
             753281310031346,
             3317750341468659
@@ -15833,7 +15839,8 @@
             790021110620565,
             1250914822414554,
             3011263934478573,
-            2151685327028375
+            2151685327028375,
+            960708938134978
           ]
         }
       }
@@ -20339,7 +20346,7 @@
             1599047804612857,
             3779379415145857,
             2091941185117249,
-            1206685866573554,
+            3029006399341178,
             912713385575125,
             2485658752816053,
             4363839482195469,
@@ -20412,7 +20419,8 @@
             1599608966337785,
             4149196523916836,
             1250914822414554,
-            3011263934478573
+            3011263934478573,
+            1378384713543063
           ]
         }
       }
@@ -21809,7 +21817,7 @@
             2014961454363098,
             1220101825772327,
             1599047804612857,
-            1206685866573554,
+            3029006399341178,
             912713385575125,
             2485658752816053,
             3917170407626177,
@@ -21925,7 +21933,8 @@
             941689725848481,
             4149196523916836,
             1250914822414554,
-            3011263934478573
+            3011263934478573,
+            1378384713543063
           ]
         }
       }
@@ -62411,7 +62420,7 @@
             335271907751690,
             1183468454534810,
             738324130165064,
-            1943955045815573,
+            4196705158078792,
             3108623938713492,
             644211720979049,
             1026419847754339,
@@ -63206,7 +63215,8 @@
             1239819274270615,
             4139613294510282,
             3437707986042905,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -98674,10 +98684,10 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            1206685866573554,
+            3029006399341178,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2448746277784920,
@@ -99119,7 +99129,8 @@
             2075546320213099,
             552197353518721,
             3817994007476500,
-            503204402032448
+            503204402032448,
+            3580811973321880
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -362570,7 +362581,7 @@
             259494274243887,
             4309141198379617,
             2829329825743575,
-            1943955045815573,
+            4196705158078792,
             1230063180731605,
             3908512161763803,
             4274200221694227,
@@ -362813,7 +362824,8 @@
             1239819274270615,
             251116967695569,
             2344164794407037,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -372576,7 +372588,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -372763,7 +372775,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -372966,7 +372979,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373153,7 +373166,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -373354,7 +373368,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373541,7 +373555,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -373742,7 +373757,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373950,7 +373965,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -374368,7 +374384,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -374555,7 +374571,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -374872,10 +374889,10 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            1206685866573554,
+            3029006399341178,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             1230063180731605,
@@ -375338,7 +375355,8 @@
             2075546320213099,
             552197353518721,
             3817994007476500,
-            503204402032448
+            503204402032448,
+            3580811973321880
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -375694,7 +375712,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -375881,7 +375899,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -376081,7 +376100,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -376268,7 +376287,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -376469,7 +376489,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -376656,7 +376676,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -376858,7 +376879,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -377066,7 +377087,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -377266,7 +377288,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -377453,7 +377475,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -377653,7 +377676,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -377840,7 +377863,8 @@
             983958935467165,
             1239819274270615,
             2075546320213099,
-            503204402032448
+            503204402032448,
+            2640852810981636
           ],
           "presentation_renewals": [
             {
@@ -383377,15 +383401,16 @@
             4476611148532011,
             3591853430902160,
             3709147928938153,
-            1943955045815573,
-            3402460186357571
+            4196705158078792,
+            3201890790755014
           ],
           "checks": [
             3284122391347357,
             2080910576855554
           ],
           "source_renewals": [
-            2151685327028375
+            2151685327028375,
+            4420314386056221
           ]
         }
       }
@@ -388585,7 +388610,7 @@
           "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
           "source_evidence": [
             878789146717865,
-            1206685866573554,
+            3029006399341178,
             680981381061175,
             2577092342995346,
             3513479427036515,
@@ -388650,7 +388675,8 @@
             4458859255345362,
             4149196523916836,
             1250914822414554,
-            3011263934478573
+            3011263934478573,
+            1378384713543063
           ]
         }
       }
@@ -401406,9 +401432,9 @@
           "source_evidence": [
             1680424996333195,
             4306434327613320,
-            1943955045815573,
+            4196705158078792,
             1870514664343367,
-            3402460186357571,
+            3201890790755014,
             1865315599655079
           ],
           "checks": [
@@ -401417,7 +401443,8 @@
             4458929344129024
           ],
           "source_renewals": [
-            2151685327028375
+            2151685327028375,
+            4420314386056221
           ]
         },
         "staging_active_database_migration_rehearsal": {
@@ -561984,13 +562011,13 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            1206685866573554,
+            3029006399341178,
             912713385575125,
             1680424996333195,
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -562962,7 +562989,8 @@
             3395331315898153,
             1875191364136080,
             3990378492663856,
-            503204402032448
+            503204402032448,
+            3580811973321880
           ],
           "presentation_renewals": [
             {
@@ -564012,13 +564040,13 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            1206685866573554,
+            3029006399341178,
             912713385575125,
             1680424996333195,
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            1943955045815573,
+            4196705158078792,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -564893,7 +564921,8 @@
             3395331315898153,
             1875191364136080,
             3990378492663856,
-            503204402032448
+            503204402032448,
+            3580811973321880
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -567500,7 +567529,8 @@
         "Reviewed 28 additional documented query-identifier GET routes. Contract authoring, legal holds, promotion profile options and staff team candidate reads now keep their existing staff grant and current session through the response. Actual blocked PostgreSQL reads reproduced four old 200 responses; the fixed application returns 401 without exposing the records. The 102 targeted API and 72 web cases passed. Broader resource review and the exact candidate remain open.",
         "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open.",
         "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images.",
-        "The signed storage image passed natural expiry and staged age-based protection before the fenced storage-only cutover. The encrypted EU archive restored with the same inventory and the v0.5.1 application returned healthy on the new volume. Two regular November 20 PostgreSQL backups verified EU manifest readback and matching live metrics. Candidate application callback, combined release checks and authorized external monitoring receipts remain open."
+        "The signed storage image passed natural expiry and staged age-based protection before the fenced storage-only cutover. The encrypted EU archive restored with the same inventory and the v0.5.1 application returned healthy on the new volume. Two regular November 20 PostgreSQL backups verified EU manifest readback and matching live metrics. Candidate application callback, combined release checks and authorized external monitoring receipts remain open.",
+        "Staging prepares the protected callback overlay before v0.6.0 application deployment and the release script now requires it. Actual staging Compose readback limits the difference to the intended mounts and API key path. The current application remains healthy with provider delivery disabled. Verify the live candidate and persisted callback."
       ],
       "owner": null,
       "depends_on": [],
@@ -568424,6 +568454,10 @@
         "staging_scheduled_backup_second_readback": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-live-backup-metrics/regular-postgres-backup-20261120T1500Z.json",
           "sha256": "a49da3f35752ca6d04f881d4540fbbe81aef02a7c0c2de80f89932adc584a98f"
+        },
+        "staging_signed_storage_overlay_admission": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-overlay-admission-20261120.json",
+          "sha256": "a598e6cac3e42a52fc9ac2ef11e8d910f8d67c78906ca596c0f16a7a785af681"
         }
       }
     },
@@ -770354,6 +770388,70 @@
           "sha256": "a590c94c23266692ef906c0bd1c4bc70a4730f8b15bf41e1a074ecffd6ad99c9"
         }
       ]
+    },
+    "release-0.6-staging-signed-overlay-admission": {
+      "base_commit": "1b01277c41bcbf2a26066ea24c6826c2f5ddc560",
+      "batch": "release-0.6-staging-signed-overlay-admission",
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "checks": [
+        "The new staging check only admits v0.6 and later with the protected signed callback overlay. The earlier release path and existing rollback, smoke, edge and application behaviors retain their prior coverage. All 24 staging rollout and rollback cases passed. Native staging Compose verified that the protected flag changes only the intended signing-key and sender configuration mounts and API key location."
+      ],
+      "execution_receipts": [
+        {
+          "file": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-overlay-admission-20261120.json",
+          "sha256": "a598e6cac3e42a52fc9ac2ef11e8d910f8d67c78906ca596c0f16a7a785af681"
+        }
+      ],
+      "external_evidence": [],
+      "limitations": [
+        "The current staging application is v0.5.1 and callback delivery is disabled. The exact v0.6.0 signed callback, durable duplicate receipt, and production-equivalent retention policy remain open."
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "67a00e12d96d829fec12d208a6dc164093af133f802ac1e7bb1eee25500765c6"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ede8644c2adf4b7e608d2e2577b80760317f601eadde91deae8f419513fcd4ac"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "02fabf4d81780e692cb392878b33590bfa225fd8c115dd12c93105b111cde9f3"
+        }
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.03",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ]
     }
   },
   "historical_improvements": [
@@ -775271,9 +775369,9 @@
         "path": "scripts/check-staging-proxy.mjs",
         "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
       },
-      "1206685866573554": {
+      "3029006399341178": {
         "path": "deploy/staging/README.md",
-        "sha256": "c2c57d72c093eefc454b247d3df1dd70e2bd518e10b1d02b5e118dbba56f7110"
+        "sha256": "67a00e12d96d829fec12d208a6dc164093af133f802ac1e7bb1eee25500765c6"
       },
       "3837771807479024": {
         "path": "apps/api/src/common/etag.interceptor.ts",
@@ -775527,13 +775625,13 @@
         "path": "docs/runbooks/bad-deployment.md",
         "sha256": "4d49509afa1af4dd865f7f39d2acd6978b70341e98b7ca4998bb58ced8a76720"
       },
-      "1943955045815573": {
+      "4196705158078792": {
         "path": "deploy/staging/release.sh",
-        "sha256": "9ea61c74358719bd9be43451470c74dd27c83e7cbd3c40d02d939ffdc59f5b71"
+        "sha256": "ede8644c2adf4b7e608d2e2577b80760317f601eadde91deae8f419513fcd4ac"
       },
-      "3402460186357571": {
+      "3201890790755014": {
         "path": "deploy/staging/test_release_rollback.py",
-        "sha256": "0972e7df8405ec238b9a48c6dd760de09152b7a73b515be8ecb74ac9de36d744"
+        "sha256": "02fabf4d81780e692cb392878b33590bfa225fd8c115dd12c93105b111cde9f3"
       },
       "2506773297712354": {
         "path": "deploy/production/guarded-rollout.py",
@@ -785031,6 +785129,10 @@
         "path": "deploy/staging/compose.yml",
         "sha256": "313320ae3a3550695cf7fb7a6c2e3c1039b4ba77007a627f144aecb9cd0c902d"
       },
+      "1943955045815573": {
+        "path": "deploy/staging/release.sh",
+        "sha256": "9ea61c74358719bd9be43451470c74dd27c83e7cbd3c40d02d939ffdc59f5b71"
+      },
       "4191751383596332": {
         "path": "packages/db/src/index.ts",
         "sha256": "92b5c9da3967eff31a8228c7c683d6a30d743d0f59ecd12dbf748c828ebd99a4"
@@ -793213,6 +793315,14 @@
         ],
         "scope": "Adds the storage-only Compose base rule to the documented staged cutover. The native render preserves the complete live fallback, PostgreSQL WAL overlay, and every unrelated service setting. Existing staging release, rollback, proxy and source evidence remains valid."
       },
+      "1378384713543063": {
+        "batch": "release-0.6-staging-signed-overlay-admission",
+        "base_commit": "1b01277c41bcbf2a26066ea24c6826c2f5ddc560",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "The new staging check only admits v0.6 and later with the protected signed callback overlay. The earlier release path and existing rollback, smoke, edge and application behaviors retain their prior coverage. All 24 staging rollout and rollback cases passed. Native staging Compose verified that the protected flag changes only the intended signing-key and sender configuration mounts and API key location."
+      },
       "632352904530847": {
         "batch": "release-0.6-environment-indicator",
         "base_commit": "edc967b386d310bdcbdce91fec06f501c0d0c47d",
@@ -793838,6 +793948,16 @@
           "deploy/staging/test_release_rollback.py"
         ],
         "scope": "Only public edge header reads and the anonymous storage denial read changed. Existing deployment, rollback, AI, notification and authenticated storage evidence retains its original scope."
+      },
+      "960708938134978": {
+        "batch": "release-0.6-staging-signed-overlay-admission",
+        "base_commit": "1b01277c41bcbf2a26066ea24c6826c2f5ddc560",
+        "paths": [
+          "deploy/staging/release.sh",
+          "deploy/staging/README.md",
+          "deploy/staging/test_release_rollback.py"
+        ],
+        "scope": "The new staging check only admits v0.6 and later with the protected signed callback overlay. The earlier release path and existing rollback, smoke, edge and application behaviors retain their prior coverage. All 24 staging rollout and rollback cases passed. Native staging Compose verified that the protected flag changes only the intended signing-key and sender configuration mounts and API key location."
       },
       "1872787075134013": {
         "batch": "release-0.6-load-client-address-fixture",
@@ -800215,6 +800335,14 @@
         ],
         "scope": "Only public edge header reads and the anonymous storage denial read changed. Existing deployment, rollback, AI, notification and authenticated storage evidence retains its original scope."
       },
+      "2640852810981636": {
+        "batch": "release-0.6-staging-signed-overlay-admission",
+        "base_commit": "1b01277c41bcbf2a26066ea24c6826c2f5ddc560",
+        "paths": [
+          "deploy/staging/release.sh"
+        ],
+        "scope": "The new staging check only admits v0.6 and later with the protected signed callback overlay. The earlier release path and existing rollback, smoke, edge and application behaviors retain their prior coverage. All 24 staging rollout and rollback cases passed. Native staging Compose verified that the protected flag changes only the intended signing-key and sender configuration mounts and API key location."
+      },
       "3685737157540087": {
         "batch": "release-0.6-dashboard-grid-after-entrance",
         "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
@@ -804418,6 +804546,15 @@
           "apps/api/src/ai-agents/ai-health.controller.ts"
         ],
         "scope": "The AI health view retains its existing staff grants, response and worker probe. The migrated health and native worker cases confirm current staff authority and independent core readiness."
+      },
+      "3580811973321880": {
+        "batch": "release-0.6-staging-signed-overlay-admission",
+        "base_commit": "1b01277c41bcbf2a26066ea24c6826c2f5ddc560",
+        "paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh"
+        ],
+        "scope": "The new staging check only admits v0.6 and later with the protected signed callback overlay. The earlier release path and existing rollback, smoke, edge and application behaviors retain their prior coverage. All 24 staging rollout and rollback cases passed. Native staging Compose verified that the protected flag changes only the intended signing-key and sender configuration mounts and API key location."
       },
       "3844342463607983": {
         "batch": "release-0.5-theme-direction-completion",
@@ -809591,6 +809728,15 @@
           "deploy/staging/nginx.conf"
         ],
         "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+      },
+      "4420314386056221": {
+        "batch": "release-0.6-staging-signed-overlay-admission",
+        "base_commit": "1b01277c41bcbf2a26066ea24c6826c2f5ddc560",
+        "paths": [
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
+        ],
+        "scope": "The new staging check only admits v0.6 and later with the protected signed callback overlay. The earlier release path and existing rollback, smoke, edge and application behaviors retain their prior coverage. All 24 staging rollout and rollback cases passed. Native staging Compose verified that the protected flag changes only the intended signing-key and sender configuration mounts and API key location."
       },
       "4310785932564150": {
         "batch": "release-0.6-central-authorization",

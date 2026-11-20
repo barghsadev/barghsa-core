@@ -533,6 +533,7 @@ echo compose-admitted
     def test_release_rejects_unapproved_objectstore_images_and_mounts(self):
         text = RELEASE.read_text()
         config = text[text.index("\nobjectstore_id=''"):text.index('\nfor key in BARGHSA_APP_IMAGE')]
+        config = config.replace('/etc/barghsa/staging/storage-webhook/', '$2/')
         verify = text[text.index('\nverify_running_image() {'):text.index('\nrollback() {')]
         script = f'''set -euo pipefail
 mode=$1
@@ -540,17 +541,19 @@ version=0.6.0
 dc=(compose)
 signed_tag=barghsa-storage-lifecycle:signed-webhooks-454577ed5276
 legacy_tag=barghsa-storage-lifecycle:repository-4.54
-export BARGHSA_STAGING_STORAGE_WEBHOOK=false
+export BARGHSA_STAGING_STORAGE_WEBHOOK=true
 export BARGHSA_STAGING_OBJECTSTORE_IMAGE="$signed_tag"
 export BARGHSA_STAGING_OBJECTSTORE_VOLUME=barghsa-staging_objectdata.rehearsed
 case "$mode" in
-  legacy) version=0.5.1; unset BARGHSA_STAGING_OBJECTSTORE_IMAGE ;;
-  legacy-repaired) version=0.5.1; BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag" ;;
+  legacy) version=0.5.1; unset BARGHSA_STAGING_OBJECTSTORE_IMAGE BARGHSA_STAGING_STORAGE_WEBHOOK ;;
+  legacy-repaired) version=0.5.1; BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag"; BARGHSA_STAGING_STORAGE_WEBHOOK=false ;;
   unsigned-milestone) BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag" ;;
   legacy-sender) version=0.5.1; BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag"; BARGHSA_STAGING_STORAGE_WEBHOOK=true ;;
   unconfigured) unset BARGHSA_STAGING_OBJECTSTORE_IMAGE ;;
   wrong-tag) BARGHSA_STAGING_OBJECTSTORE_IMAGE=barghsa-storage-lifecycle:wrong ;;
   bad-volume-name) BARGHSA_STAGING_OBJECTSTORE_VOLUME=unrelated ;;
+  callback-unset) unset BARGHSA_STAGING_STORAGE_WEBHOOK ;;
+  callback-disabled) BARGHSA_STAGING_STORAGE_WEBHOOK=false ;;
 esac
 compose() {{
   [[ "$*" == 'ps -q objectstore' ]]
@@ -590,7 +593,6 @@ docker() {{
 }}
 {config}
 {verify}
-if [[ "$mode" == callback-* ]]; then BARGHSA_STAGING_STORAGE_WEBHOOK=true; fi
 verify_objectstore
 echo admitted
 '''
@@ -609,12 +611,20 @@ echo admitted
             ('wrong-mount', 'Object-store data mount differs from the active volume'),
             ('read-only-mount', 'Object-store data mount differs from the active volume'),
             ('callback-match', ''),
+            ('callback-unset', 'Staging milestone requires the protected storage webhook overlay'),
+            ('callback-disabled', 'Staging milestone requires the protected storage webhook overlay'),
+            ('callback-input-missing', 'Storage webhooks require the approved image'),
             ('callback-writeable', 'Object-store callback mounts differ'),
             ('callback-missing', 'Object-store callback mounts differ'),
         ):
             with self.subTest(mode=mode):
-                result = subprocess.run(['bash', '-c', script, 'storage-fixture', mode],
-                                        capture_output=True, text=True, check=False, timeout=10)
+                with tempfile.TemporaryDirectory() as directory:
+                    callback = Path(directory)
+                    (callback / 'notification.toml').write_text('enabled = false\n')
+                    if mode != 'callback-input-missing':
+                        (callback / 'signing-key').write_text('fixture-key\n')
+                    result = subprocess.run(['bash', '-c', script, 'storage-fixture', mode, directory],
+                                            capture_output=True, text=True, check=False, timeout=10)
                 self.assertEqual(result.returncode, bool(diagnostic), result.stderr)
                 self.assertEqual(result.stdout.strip(), '' if diagnostic else 'admitted')
                 if diagnostic:
