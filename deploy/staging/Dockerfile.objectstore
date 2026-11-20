@@ -9,8 +9,10 @@ WORKDIR /src
 ADD --checksum=sha256:7a67e76e2a8df5e1b2db5dc869f7dcab01b4ad153b537f171d20bb9e2535e94b \
     https://codeload.github.com/seaweedfs/seaweedfs/tar.gz/5ef99c1d8dbbeb4a035c055e3b464620506aefac /tmp/seaweedfs.tar.gz
 COPY deploy/staging/objectstore-lifecycle.patch /tmp/objectstore-lifecycle.patch
+COPY deploy/staging/objectstore-webhook.patch /tmp/objectstore-webhook.patch
 RUN tar -xzf /tmp/seaweedfs.tar.gz --strip-components=1 \
-    && git apply /tmp/objectstore-lifecycle.patch \
+    && git apply /tmp/objectstore-lifecycle.patch /tmp/objectstore-webhook.patch \
+    && go test -mod=readonly ./weed/notification/webhook \
     && GOOS="$TARGETOS" GOARCH="$TARGETARCH" go build -mod=readonly -trimpath -o /out/weed ./weed
 
 FROM ghcr.io/chrislusf/seaweedfs@sha256:e7d4b80af9bd49b2630a60ac6fbb7ffb620ac6a2c501f689c22a71b9f89f0203

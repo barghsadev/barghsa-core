@@ -387895,14 +387895,17 @@
       "launch_required": true,
       "remaining": [
         "Existing storage paths verify owned reservations and object bytes before trusted use. Obtain the selected storage provider signing and event identity contract and verify an idempotent signed receiver, or reconcile acceptance to the existing authenticated readback design.",
-        "The exact reviewed SeaweedFS 4.54 image delivered an authenticated bearer callback for an isolated object write. The receiver observed neither a per-delivery signature nor a timestamp or event identity header. The provider retried a 503 with identical body bytes, and overwriting the same object emitted a distinct update. Authenticated S3 reads independently matched both writes. Implement and verify a signed sender and replay-safe intake before enabling callbacks. The existing authorized reservation and authenticated byte readback remain required."
+        "The exact reviewed SeaweedFS 4.54 image delivered an authenticated bearer callback for an isolated object write. The receiver observed neither a per-delivery signature nor a timestamp or event identity header. The provider retried a 503 with identical body bytes, and overwriting the same object emitted a distinct update. Authenticated S3 reads independently matched both writes. Implement and verify a signed sender and replay-safe intake before enabling callbacks. The existing authorized reservation and authenticated byte readback remain required.",
+        "The optional signed SeaweedFS sender builds from the pinned source and requires a protected key, scoped bucket and fixed HTTPS endpoint. The exact Linux image delivered valid signed events for direct and multipart object versions, filtered directory and delete-marker events, and rejected redirects in the provider test suite. The required durable API receiver, scoped update and deployed readback remain open. Verify the final image distribution package before activation."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "docs/operations/storage-configuration.md"
+          "docs/operations/storage-configuration.md",
+          "deploy/staging/Dockerfile.objectstore",
+          "deploy/staging/objectstore-webhook.patch"
         ],
         "batches": [
           "release-0.6-shared-webhook-signature-verification"
@@ -387911,6 +387914,10 @@
         "staging_seaweedfs_webhook_contract": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-webhook-contract-20261120.json",
           "sha256": "f8063ee14de11a6a3f9747a9da38c518125ce894cc91bc41d615fa0ec103c168"
+        },
+        "staging_signed_storage_sender": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-signed-sender-20261120.json",
+          "sha256": "40733760ceae69505f617c1f9cbaf76de7443df34c17d34ceb967e0f6676fc74"
         }
       }
     },
@@ -387930,7 +387937,8 @@
       "launch_required": true,
       "remaining": [
         "Complete the approved SMS and storage receipt contracts with source digest, current authority and replay-safe outcome evidence.",
-        "The reviewed SeaweedFS sender retried identical payload bytes and emitted a distinct event for an overwrite at the same key. The wire envelope supplies no independent delivery ID. Verify stable signed identity and the durable duplicate outcome with the final callback sender."
+        "The reviewed SeaweedFS sender retried identical payload bytes and emitted a distinct event for an overwrite at the same key. The wire envelope supplies no independent delivery ID. Verify stable signed identity and the durable duplicate outcome with the final callback sender.",
+        "The signed sender derives a stable identity from the normalized object version and signs each delivery time and exact body. A real 503 retry retained the event identity and the second version of the same key had a distinct signed identity. Verify the durable receiver's duplicate result and atomic processed status."
       ],
       "owner": null,
       "depends_on": [],
@@ -387948,6 +387956,10 @@
         "staging_seaweedfs_webhook_contract": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-webhook-contract-20261120.json",
           "sha256": "f8063ee14de11a6a3f9747a9da38c518125ce894cc91bc41d615fa0ec103c168"
+        },
+        "staging_signed_storage_sender": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-signed-sender-20261120.json",
+          "sha256": "40733760ceae69505f617c1f9cbaf76de7443df34c17d34ceb967e0f6676fc74"
         }
       }
     },
@@ -388067,7 +388079,8 @@
       "launch_required": true,
       "remaining": [
         "Complete valid, expiry, wrong/missing proof, replay and duplicate tests for the approved SMS and storage contracts.",
-        "Hosted run 43456360315 verified the migrated Resend, signed top-up, chargeback and alert suites. The same 72 native cases passed on the current 0296 schema. Obtain actual staging provider receipts."
+        "Hosted run 43456360315 verified the migrated Resend, signed top-up, chargeback and alert suites. The same 72 native cases passed on the current 0296 schema. Obtain actual staging provider receipts.",
+        "The provider package tests and native versioned storage rehearsal verified TLS, signed content, retry identity, distinct direct and multipart versions, filtering and redirect refusal. The storage API receiver still needs the full authenticity, expiry, replay and duplicate suite."
       ],
       "owner": null,
       "depends_on": [],
@@ -388079,7 +388092,11 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-callback-receipts"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_signed_storage_sender": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-signed-sender-20261120.json",
+          "sha256": "40733760ceae69505f617c1f9cbaf76de7443df34c17d34ceb967e0f6676fc74"
+        }
       }
     },
     {

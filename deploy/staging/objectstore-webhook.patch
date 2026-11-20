@@ -1,0 +1,456 @@
+diff --git a/weed/notification/webhook/http.go b/weed/notification/webhook/http.go
+index 4a044ae..a474681 100644
+--- a/weed/notification/webhook/http.go
++++ b/weed/notification/webhook/http.go
+@@ -12,6 +12,7 @@ import (
+ 	"time"
+ 
+ 	"github.com/seaweedfs/seaweedfs/weed/glog"
++	"github.com/seaweedfs/seaweedfs/weed/s3api/s3_constants"
+ 	"github.com/seaweedfs/seaweedfs/weed/security"
+ 	util_http "github.com/seaweedfs/seaweedfs/weed/util/http"
+ )
+@@ -23,6 +24,7 @@ const (
+ type httpClient struct {
+ 	endpoint   string
+ 	token      string
++	signed     *signedDelivery
+ 	timeout    time.Duration
+ 	client     *http.Client // Reused HTTP client with redirect prevention
+ 	endpointMu sync.RWMutex
+@@ -30,9 +32,14 @@ type httpClient struct {
+ }
+ 
+ func newHTTPClient(cfg *config) (*httpClient, error) {
++	signed, err := loadSignedDelivery(cfg.signingKeyFile, cfg.signedBucket, cfg.endpoint)
++	if err != nil {
++		return nil, err
++	}
+ 	return &httpClient{
+ 		endpoint: cfg.endpoint,
+ 		token:    cfg.authBearerToken,
++		signed:   signed,
+ 		timeout:  time.Duration(cfg.timeoutSeconds) * time.Second,
+ 		client: &http.Client{
+ 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+@@ -43,9 +50,35 @@ func newHTTPClient(cfg *config) (*httpClient, error) {
+ }
+ 
+ func (h *httpClient) sendMessage(message *webhookMessage) error {
++	if h.signed != nil {
++		return h.sendSignedUpload(message)
++	}
+ 	return h.sendMessageWithRetry(message, 0)
+ }
+ 
++func (h *httpClient) sendSignedUpload(message *webhookMessage) error {
++	metadata := message.Notification.GetNewEntry().GetExtended()
++	_, deleteMarker := metadata[s3_constants.ExtDeleteMarkerKey]
++	request, err := h.signed.request(
++		message.Key, message.EventType, string(metadata[s3_constants.ExtVersionIdKey]), deleteMarker, time.Now(),
++	)
++	if err != nil || request == nil {
++		return err
++	}
++	ctx, cancel := context.WithTimeout(context.Background(), h.timeout)
++	defer cancel()
++	response, err := h.client.Do(request.WithContext(ctx))
++	if err != nil {
++		return fmt.Errorf("signed storage webhook delivery failed: %w", err)
++	}
++	defer response.Body.Close()
++	_, _ = io.CopyN(io.Discard, response.Body, 4096)
++	if response.StatusCode < 200 || response.StatusCode >= 300 {
++		return fmt.Errorf("signed storage webhook returned status %d", response.StatusCode)
++	}
++	return nil
++}
++
+ func (h *httpClient) sendMessageWithRetry(message *webhookMessage, depth int) error {
+ 	// Prevent infinite recursion
+ 	if depth > maxWebhookRetryDepth {
+diff --git a/weed/notification/webhook/signed_delivery.go b/weed/notification/webhook/signed_delivery.go
+new file mode 100644
+index 0000000..e056b9a
+--- /dev/null
++++ b/weed/notification/webhook/signed_delivery.go
+@@ -0,0 +1,101 @@
++package webhook
++
++import (
++	"bytes"
++	"crypto/hmac"
++	"crypto/sha256"
++	"encoding/base64"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"io"
++	"net/http"
++	"net/url"
++	"os"
++	"regexp"
++	"strconv"
++	"strings"
++	"time"
++)
++
++var (
++	signedBucketName = regexp.MustCompile(`^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$`)
++	signedVersionID  = regexp.MustCompile(`^[0-9a-f]{32}$`)
++	signedUploadKey  = regexp.MustCompile(`^uploads/[a-z][a-z0-9_-]{0,31}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\.[a-z0-9]{1,32})?$`)
++)
++
++type signedDelivery struct {
++	endpoint string
++	bucket   string
++	key      []byte
++}
++
++type signedUploadEvent struct {
++	EventType string `json:"event_type"`
++	Bucket    string `json:"bucket"`
++	Key       string `json:"key"`
++	VersionID string `json:"version_id"`
++}
++
++func loadSignedDelivery(keyFile, bucket, endpoint string) (*signedDelivery, error) {
++	if keyFile == "" && bucket == "" {
++		return nil, nil
++	}
++	target, err := url.Parse(endpoint)
++	if keyFile == "" || !signedBucketName.MatchString(bucket) || err != nil ||
++		target.Scheme != "https" || target.Hostname() == "" || target.User != nil ||
++		target.RawQuery != "" || target.ForceQuery || target.Fragment != "" {
++		return nil, fmt.Errorf("signed storage webhook requires a key file, bucket and fixed HTTPS endpoint")
++	}
++	file, err := os.Open(keyFile)
++	if err != nil {
++		return nil, fmt.Errorf("could not open storage webhook signing key")
++	}
++	defer file.Close()
++	content, err := io.ReadAll(io.LimitReader(file, 129))
++	if err != nil || len(content) == 129 {
++		return nil, fmt.Errorf("could not read storage webhook signing key")
++	}
++	key, err := hex.DecodeString(strings.TrimSpace(string(content)))
++	if err != nil || len(key) != sha256.Size {
++		return nil, fmt.Errorf("storage webhook signing key must encode 32 bytes as hex")
++	}
++	return &signedDelivery{endpoint: target.String(), bucket: bucket, key: key}, nil
++}
++
++func (s *signedDelivery) request(path, eventType, version string, deleteMarker bool, now time.Time) (*http.Request, error) {
++	if eventType != "create" || deleteMarker || !signedVersionID.MatchString(version) {
++		return nil, nil
++	}
++	relative, inBucket := strings.CutPrefix(path, "/buckets/"+s.bucket+"/")
++	key, versionFile := strings.CutSuffix(relative, ".versions/v_"+version)
++	if !inBucket || !versionFile || !signedUploadKey.MatchString(key) {
++		return nil, nil
++	}
++
++	// The S3 version gets one identity even when the filer emits the event again.
++	payload, err := json.Marshal(signedUploadEvent{
++		EventType: "object-created",
++		Bucket:    s.bucket,
++		Key:       key,
++		VersionID: version,
++	})
++	if err != nil {
++		return nil, err
++	}
++	id := fmt.Sprintf("%x", sha256.Sum256(payload))
++	timestamp := strconv.FormatInt(now.Unix(), 10)
++	signature := hmac.New(sha256.New, s.key)
++	_, _ = signature.Write([]byte(id + "." + timestamp + "."))
++	_, _ = signature.Write(payload)
++
++	request, err := http.NewRequest(http.MethodPost, s.endpoint, bytes.NewReader(payload))
++	if err != nil {
++		return nil, err
++	}
++	request.Header.Set("Content-Type", "application/json")
++	request.Header.Set("X-Barghsa-Webhook-Id", id)
++	request.Header.Set("X-Barghsa-Webhook-Timestamp", timestamp)
++	request.Header.Set("X-Barghsa-Webhook-Signature", base64.StdEncoding.EncodeToString(signature.Sum(nil)))
++	return request, nil
++}
+diff --git a/weed/notification/webhook/signed_delivery_test.go b/weed/notification/webhook/signed_delivery_test.go
+new file mode 100644
+index 0000000..07eb37f
+--- /dev/null
++++ b/weed/notification/webhook/signed_delivery_test.go
+@@ -0,0 +1,132 @@
++package webhook
++
++import (
++	"crypto/hmac"
++	"crypto/sha256"
++	"encoding/base64"
++	"fmt"
++	"io"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++)
++
++const (
++	callbackBucket = "callback-fixture"
++	callbackKey    = "uploads/document/10f74629-8669-4b36-a1dc-89df2a7b9aad.pdf"
++	versionA       = "6716672bc6dce1dcbee268af1e7ff285"
++	versionB       = "6716672bc6dce1dcbee268af1e7ff286"
++)
++
++func testSignedDelivery(t *testing.T) *signedDelivery {
++	t.Helper()
++	path := filepath.Join(t.TempDir(), "key")
++	if err := os.WriteFile(path, []byte(strings.Repeat("ab", 32)+"\n"), 0600); err != nil {
++		t.Fatal(err)
++	}
++	delivery, err := loadSignedDelivery(path, callbackBucket, "https://storage.example.test/internal/upload-event")
++	if err != nil {
++		t.Fatal(err)
++	}
++	return delivery
++}
++
++func TestSignedUploadStableAcrossRetryAndDistinctVersions(t *testing.T) {
++	signed := testSignedDelivery(t)
++	at := time.Unix(1795133954, 0)
++	firstBody, firstID, firstSignature := func() (string, string, string) {
++		request, err := signed.request("/buckets/"+callbackBucket+"/"+callbackKey+".versions/v_"+versionA, "create", versionA, false, at)
++		if err != nil || request == nil {
++			t.Fatalf("request = %v, error = %v", request, err)
++		}
++		defer request.Body.Close()
++		body, err := io.ReadAll(request.Body)
++		if err != nil {
++			t.Fatal(err)
++		}
++		if request.Method != "POST" || request.Header.Get("Content-Type") != "application/json" || request.Header.Get("Authorization") != "" {
++			t.Fatal("unexpected method or headers")
++		}
++		id := request.Header.Get("X-Barghsa-Webhook-Id")
++		signature := request.Header.Get("X-Barghsa-Webhook-Signature")
++		if id != fmt.Sprintf("%x", sha256.Sum256(body)) || request.Header.Get("X-Barghsa-Webhook-Timestamp") != "1795133954" {
++			t.Fatal("event ID or delivery timestamp mismatch")
++		}
++		expected := hmac.New(sha256.New, []byte(strings.Repeat("\xab", 32)))
++		fmt.Fprintf(expected, "%s.1795133954.%s", id, body)
++		if signature != base64.StdEncoding.EncodeToString(expected.Sum(nil)) {
++			t.Fatal("signature does not bind the ID, timestamp and exact payload")
++		}
++		return string(body), id, signature
++	}()
++	expectedBody := `{"event_type":"object-created","bucket":"callback-fixture","key":"uploads/document/10f74629-8669-4b36-a1dc-89df2a7b9aad.pdf","version_id":"6716672bc6dce1dcbee268af1e7ff285"}`
++	if firstBody != expectedBody {
++		t.Fatal("delivery contains unexpected metadata")
++	}
++	retry, err := signed.request("/buckets/"+callbackBucket+"/"+callbackKey+".versions/v_"+versionA, "create", versionA, false, at.Add(time.Second))
++	if err != nil || retry == nil {
++		t.Fatalf("retry request = %v, error = %v", retry, err)
++	}
++	defer retry.Body.Close()
++	body, err := io.ReadAll(retry.Body)
++	if err != nil || string(body) != firstBody {
++		t.Fatal("retry body changed")
++	}
++	if retry.Header.Get("X-Barghsa-Webhook-Id") != firstID || retry.Header.Get("X-Barghsa-Webhook-Signature") == firstSignature {
++		t.Fatal("retry must retain identity and sign the current delivery time")
++	}
++	other, err := signed.request("/buckets/"+callbackBucket+"/"+callbackKey+".versions/v_"+versionB, "create", versionB, false, at)
++	if err != nil || other == nil {
++		t.Fatalf("second object version request = %v, error = %v", other, err)
++	}
++	defer other.Body.Close()
++	if other.Header.Get("X-Barghsa-Webhook-Id") == firstID {
++		t.Fatal("a different version of the same key needs a separate identity")
++	}
++}
++
++func TestSignedUploadIgnoresFilerBookkeeping(t *testing.T) {
++	signed := testSignedDelivery(t)
++	base := "/buckets/" + callbackBucket + "/" + callbackKey
++	cases := []struct {
++		name, path, event, version string
++		marker                     bool
++	}{
++		{"latest pointer", base + ".versions", "update", versionA, false},
++		{"directory", base + ".versions", "create", "", false},
++		{"different bucket", "/buckets/unrelated/" + callbackKey + ".versions/v_" + versionA, "create", versionA, false},
++		{"delete marker", base + ".versions/v_" + versionA, "create", versionA, true},
++		{"other version", base + ".versions/v_" + versionA, "create", versionB, false},
++		{"other namespace", "/buckets/" + callbackBucket + "/logs/callback.pdf.versions/v_" + versionA, "create", versionA, false},
++	}
++	for _, tc := range cases {
++		t.Run(tc.name, func(t *testing.T) {
++			if request, err := signed.request(tc.path, tc.event, tc.version, tc.marker, time.Now()); err != nil || request != nil {
++				t.Fatalf("unexpected delivery: request = %v, error = %v", request, err)
++			}
++		})
++	}
++}
++
++func TestSignedDeliveryRequiresProtectedConfiguration(t *testing.T) {
++	if delivery, err := loadSignedDelivery("", "", ""); err != nil || delivery != nil {
++		t.Fatal("the new mode must be opt-in")
++	}
++	key := filepath.Join(t.TempDir(), "key")
++	if err := os.WriteFile(key, []byte(strings.Repeat("ab", 32)), 0600); err != nil {
++		t.Fatal(err)
++	}
++	for _, endpoint := range []string{"http://storage.example.test", "https://user@storage.example.test", "https://storage.example.test?token=fixture", "https://storage.example.test/#fragment"} {
++		if delivery, err := loadSignedDelivery(key, callbackBucket, endpoint); err == nil || delivery != nil {
++			t.Fatal("unsafe destination must be refused with a valid signing key")
++		}
++	}
++	if err := os.WriteFile(key, []byte("short"), 0600); err != nil {
++		t.Fatal(err)
++	}
++	if delivery, err := loadSignedDelivery(key, callbackBucket, "https://storage.example.test"); err == nil || delivery != nil {
++		t.Fatal("invalid signing key must be refused for a valid destination")
++	}
++}
+diff --git a/weed/notification/webhook/signed_http_test.go b/weed/notification/webhook/signed_http_test.go
+new file mode 100644
+index 0000000..56934fd
+--- /dev/null
++++ b/weed/notification/webhook/signed_http_test.go
+@@ -0,0 +1,69 @@
++package webhook
++
++import (
++	"io"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++
++	"github.com/seaweedfs/seaweedfs/weed/pb/filer_pb"
++	"github.com/seaweedfs/seaweedfs/weed/s3api/s3_constants"
++)
++
++func TestSignedWebhookUsesActualTLSAndDoesNotFollowRedirect(t *testing.T) {
++	deliveries := make(chan string, 2)
++	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.URL.Path == "/redirected" {
++			deliveries <- "redirected"
++			w.WriteHeader(http.StatusNoContent)
++			return
++		}
++		body, err := io.ReadAll(r.Body)
++		if err != nil || r.Header.Get("X-Barghsa-Webhook-Signature") == "" || r.Header.Get("Authorization") != "" {
++			deliveries <- "invalid signed request"
++			w.WriteHeader(http.StatusBadRequest)
++			return
++		}
++		deliveries <- string(body)
++		http.Redirect(w, r, "/redirected", http.StatusTemporaryRedirect)
++	}))
++	defer server.Close()
++	key := filepath.Join(t.TempDir(), "signed-key")
++	if err := os.WriteFile(key, []byte(strings.Repeat("ab", 32)), 0600); err != nil {
++		t.Fatal(err)
++	}
++	client, err := newHTTPClient(&config{
++		endpoint: server.URL, signingKeyFile: key, signedBucket: callbackBucket,
++		authBearerToken: "fixture-bearer-for-unsigned-protocol", timeoutSeconds: 3,
++	})
++	if err != nil {
++		t.Fatal(err)
++	}
++	client.client.Transport = server.Client().Transport
++	err = client.sendMessage(&webhookMessage{
++		Key:       "/buckets/" + callbackBucket + "/" + callbackKey + ".versions/v_" + versionA,
++		EventType: "create",
++		Notification: &filer_pb.EventNotification{
++			NewEntry: &filer_pb.Entry{
++				Extended: map[string][]byte{s3_constants.ExtVersionIdKey: []byte(versionA)},
++			},
++		},
++	})
++	if err == nil || !strings.Contains(err.Error(), "status 307") {
++		t.Fatalf("signed webhook should reject a redirect, got %v", err)
++	}
++	select {
++	case body := <-deliveries:
++		if !strings.Contains(body, versionA) {
++			t.Fatal("authorized delivery did not reach the expected TLS receiver")
++		}
++	default:
++		t.Fatal("no authorized delivery reached the receiver")
++	}
++	if len(deliveries) != 0 {
++		t.Fatal("redirect received a follow-up submission")
++	}
++}
+diff --git a/weed/notification/webhook/types.go b/weed/notification/webhook/types.go
+index 1567e83..8efedcd 100644
+--- a/weed/notification/webhook/types.go
++++ b/weed/notification/webhook/types.go
+@@ -57,6 +57,8 @@ func newWebhookMessage(key string, message proto.Message) *webhookMessage {
+ type config struct {
+ 	endpoint        string
+ 	authBearerToken string
++	signingKeyFile  string
++	signedBucket    string
+ 	timeoutSeconds  int
+ 
+ 	maxRetries        int
+@@ -73,6 +75,8 @@ func newConfigWithDefaults(configuration util.Configuration, prefix string) *con
+ 	c := &config{
+ 		endpoint:          configuration.GetString(prefix + "endpoint"),
+ 		authBearerToken:   configuration.GetString(prefix + "bearer_token"),
++		signingKeyFile:    configuration.GetString(prefix + "signing_key_file"),
++		signedBucket:      configuration.GetString(prefix + "signed_bucket"),
+ 		timeoutSeconds:    10,
+ 		maxRetries:        3,
+ 		backoffSeconds:    3,
+diff --git a/weed/notification/webhook/webhook_queue.go b/weed/notification/webhook/webhook_queue.go
+index afaa326..8ecc325 100644
+--- a/weed/notification/webhook/webhook_queue.go
++++ b/weed/notification/webhook/webhook_queue.go
+@@ -40,9 +40,9 @@ type target struct {
+ 
+ func newTarget(name string, cfg *config) (*target, error) {
+ 	t := &target{
+-		name:   name,
+-		config: cfg,
+-		filter: newFilter(cfg),
++		name:    name,
++		config:  cfg,
++		filter:  newFilter(cfg),
+ 		sem:     make(chan struct{}, cfg.nWorkers),
+ 		inbox:   make(chan *message.Message, cfg.bufferSize),
+ 		pending: make(chan struct{}, cfg.bufferSize),
+@@ -404,24 +404,7 @@ func (w *Queue) logDeadLetterMessages() error {
+ 					glog.Errorf("received nil message from dead letter channel")
+ 					continue
+ 				}
+-				key := "unknown"
+-				targetName := ""
+-				if msg.Metadata != nil {
+-					if keyValue, exists := msg.Metadata["key"]; exists {
+-						key = keyValue
+-					}
+-					targetName = msg.Metadata["target"]
+-				}
+-				payload := ""
+-				if msg.Payload != nil {
+-					var n filer_pb.EventNotification
+-					if err := proto.Unmarshal(msg.Payload, &n); err != nil {
+-						payload = fmt.Sprintf("failed to unmarshal payload: %v", err)
+-					} else {
+-						payload = n.String()
+-					}
+-				}
+-				glog.Errorf("received dead letter message: %s, key: %s, target: %s", payload, key, targetName)
++				glog.Errorf("webhook dead letter for target %q", msg.Metadata.Get("target"))
+ 			case <-w.ctx.Done():
+ 				return
+ 			}
