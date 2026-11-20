@@ -15,6 +15,7 @@ let child: ChildProcess;
 let fixtureLogs = '';
 let http: {
   base: string;
+  storageBrowserOrigin?: string;
   session: string;
   csrf: string;
   customerSession: string;
@@ -3113,7 +3114,13 @@ for (const locale of ['en', 'fa'] as const) {
       return response.json();
     };
     const before = await readPublic();
-    await page.goto('/admin/branding');
+    if (process.env.WEB_CSP_MODE === 'enforce') {
+      expect(http.storageBrowserOrigin).toBeTruthy();
+      const shell = await page.goto(new URL('/admin/branding', http.storageBrowserOrigin).href);
+      expect(shell?.headers()['content-security-policy']).toContain("connect-src 'self'");
+    } else {
+      await page.goto('/admin/branding');
+    }
     await page
       .getByRole('button', { name: adminText('admin.settings.edit', locale), exact: true })
       .click();

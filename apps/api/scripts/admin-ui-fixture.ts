@@ -22,7 +22,17 @@ async function main() {
   cleanups.push(database.close);
   const objects = new Map<string, Buffer>();
   const probeMetadata = new Map<string, { nonce: string; etag: string }>();
+  // The enforced favicon rehearsal mirrors staging's same-origin object storage.
+  const shell =
+    process.env.WEB_CSP_MODE === 'enforce'
+      ? (await import('../../web/server.js')).createStaticServer()
+      : undefined;
   const storage = createServer(async (request, response) => {
+    const url = new URL(request.url!, 'http://localhost');
+    if (shell && url.pathname !== '/test-evidence' && !url.pathname.startsWith('/test-evidence/')) {
+      shell.emit('request', request, response);
+      return;
+    }
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Methods', 'PUT, GET, HEAD, OPTIONS');
     response.setHeader('Access-Control-Allow-Headers', '*');
@@ -30,7 +40,6 @@ async function main() {
       response.end();
       return;
     }
-    const url = new URL(request.url!, 'http://localhost');
     const key = decodeURIComponent(url.pathname).replace('/test-evidence/', '');
     if (request.method === 'GET' && url.searchParams.has('versioning')) {
       response.setHeader('Content-Type', 'application/xml');
@@ -91,16 +100,10 @@ async function main() {
   });
   await new Promise<void>((done) => storage.listen(0, '127.0.0.1', done));
   cleanups.push(() => new Promise<void>((done) => storage.close(() => done())));
+  const storageOrigin = `http://127.0.0.1:${(storage.address() as { port: number }).port}`;
   const previousProviderKey = process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
   process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = randomUUID();
-  const http = await startHttpFixture(
-    database.connectionString,
-    `http://127.0.0.1:${(storage.address() as { port: number }).port}`,
-    '',
-    10,
-    '',
-    true
-  );
+  const http = await startHttpFixture(database.connectionString, storageOrigin, '', 10, '', true);
   if (previousProviderKey === undefined) delete process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
   else process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = previousProviderKey;
   cleanups.push(() => http.close());
@@ -270,6 +273,7 @@ async function main() {
   process.once('SIGTERM', requestClose);
   process.send?.({
     base: http.base,
+    storageBrowserOrigin: shell ? storageOrigin : undefined,
     session,
     csrf,
     customerSession,
