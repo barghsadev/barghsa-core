@@ -4592,6 +4592,78 @@ it('expires old drafts using the configured retention period', async () => {
   expect(await (await get()).json()).toMatchObject({ currentStep: 2, data: body.data });
 });
 
+it('withholds staff price adjustment history when the session expires during the database read', async () => {
+  const order = await submittedOrder();
+  const path = `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`;
+  const read = () => fetch(path, { headers: staffHeaders });
+  const current = await read();
+  expect(current.status, http.logs()).toBe(200);
+  expect(await current.json()).toMatchObject({
+    contractId: order.contractId,
+    profileId: input.profileId,
+    adjustments: [],
+  });
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[]' WHERE role_id='role-legal-contracts'"
+  );
+  expect((await read()).status).toBe(403);
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["contracts:write"]' WHERE role_id='role-legal-contracts'`
+  );
+  const writeOnly = await read();
+  expect(writeOnly.status, http.logs()).toBe(200);
+  expect(await writeOnly.json()).toMatchObject({ contractId: order.contractId, canCancel: true });
+
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE electricity_price_adjustments IN ACCESS EXCLUSIVE MODE');
+    const { pid } = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid'))
+      .rows[0]!;
+    const { expires_at: expiresAt } = (
+      await http.pool.query<{ expires_at: Date }>(
+        `UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '4 seconds'
+           WHERE user_id='reviewer' RETURNING expires_at`
+      )
+    ).rows[0]!;
+    pending = read();
+    await expect
+      .poll(async () => {
+        const waiting = await http.pool.query<{ count: number }>(
+          `SELECT count(*)::int AS count FROM pg_stat_activity
+             WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))
+               AND query LIKE '%AS has_open_proposal%'`,
+          [pid]
+        );
+        return waiting.rows[0]!.count;
+      })
+      .toBe(1);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query<{ expired: boolean }>(
+              'SELECT clock_timestamp()>=$1::timestamptz AS expired',
+              [expiresAt]
+            )
+          ).rows[0]!.expired,
+        { timeout: 6000 }
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    const denied = await pending;
+    expect(denied.status, http.logs()).toBe(401);
+    const body = await denied.text();
+    expect(body).not.toContain(order.contractId);
+    expect(body).not.toContain('adjustments');
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending;
+  }
+}, 12000);
+
 it.each(['charge', 'credit'] as const)(
   'discloses a future staff price %s before issuing its linked adjustment',
   async (kind) => {

@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -70,10 +71,15 @@ export class StaffElectricityPriceAdjustmentController {
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiOperation({ summary: 'Read electricity contract price adjustment history' })
   async get(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    if (!hasStaffPermission(req, 'contracts:read') && !hasStaffPermission(req, 'contracts:write'))
-      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
-    const result = await this.service.staff(parse(idSchema, id));
+    const canRead = hasStaffPermission(req, 'contracts:read');
     const canCancel = hasStaffPermission(req, 'contracts:write');
+    if (!canRead && !canCancel) throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    const contractId = parse(idSchema, id);
+    const result = await withStaffReadAuthority(
+      req.session,
+      canRead ? 'contracts:read' : 'contracts:write',
+      (client) => this.service.staff(contractId, client)
+    );
     return {
       ...result,
       canPropose: result.canPropose && canCancel,

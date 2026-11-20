@@ -197,9 +197,9 @@ export class ElectricityPriceAdjustmentService {
     return row;
   }
 
-  private async profileId(contractId: string) {
+  private async profileId(contractId: string, client?: PoolClient) {
     const row = (
-      await getDbPool().query<{ profile_id: string }>(
+      await (client ?? getDbPool()).query<{ profile_id: string }>(
         "SELECT profile_id FROM contracts WHERE id=$1 AND service_type='electricity'",
         [contractId]
       )
@@ -318,37 +318,32 @@ export class ElectricityPriceAdjustmentService {
     });
   }
 
-  async staff(contractId: string) {
-    const profileId = await this.profileId(contractId);
-    const client = await getDbPool().connect();
-    try {
-      const contract = await this.contract(client, contractId, profileId);
-      const adjustments = await this.rows(client, contractId);
-      const openIncrease =
-        (
-          await client.query<{ open: boolean }>(
-            `SELECT EXISTS(SELECT 1 FROM electricity_quantity_increase_requests
+  async staff(contractId: string, client: PoolClient) {
+    const profileId = await this.profileId(contractId, client);
+    const contract = await this.contract(client, contractId, profileId);
+    const adjustments = await this.rows(client, contractId);
+    const openIncrease =
+      (
+        await client.query<{ open: boolean }>(
+          `SELECT EXISTS(SELECT 1 FROM electricity_quantity_increase_requests
          WHERE contract_id=$1 AND status IN ('pending','approved','awaiting_signature','awaiting_payment')) AS open`,
-            [contractId]
-          )
-        ).rows[0]?.open ?? false;
-      return {
-        contractId,
-        profileId,
-        versionId: contract.version_id,
-        periodEnd: contract.period_end,
-        canPropose:
-          contract.state === 'Active' &&
-          contract.electricity_status === 'active' &&
-          contract.period_end > new Date() &&
-          !openIncrease &&
-          !contract.has_open_proposal,
-        blockedByIncrease: openIncrease,
-        adjustments,
-      };
-    } finally {
-      client.release();
-    }
+          [contractId]
+        )
+      ).rows[0]?.open ?? false;
+    return {
+      contractId,
+      profileId,
+      versionId: contract.version_id,
+      periodEnd: contract.period_end,
+      canPropose:
+        contract.state === 'Active' &&
+        contract.electricity_status === 'active' &&
+        contract.period_end > new Date() &&
+        !openIncrease &&
+        !contract.has_open_proposal,
+      blockedByIncrease: openIncrease,
+      adjustments,
+    };
   }
 
   async propose(
