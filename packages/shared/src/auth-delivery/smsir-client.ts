@@ -72,6 +72,76 @@ export async function getSmsirCredit(
   return credit;
 }
 
+interface SmsirAcceptedSend {
+  messageId: string;
+  destination: string;
+  sender?: string;
+  acceptedAt: Date;
+}
+
+/** SMS.ir reports include the message body. Only return the delivery evidence. */
+export async function getSmsirDeliveryReport(
+  apiKey: string,
+  base: string,
+  accepted: SmsirAcceptedSend,
+  request: typeof fetch = fetch,
+  timeout = 15_000
+): Promise<{ state: number | null; deliveredAt: Date | null }> {
+  const expectedId = Number(accepted.messageId);
+  const expectedMobile = Number(accepted.destination.replace(/^(?:\+98|0)/, ''));
+  const acceptedMs = accepted.acceptedAt.getTime();
+  if (
+    !/^[1-9]\d{0,9}$/.test(accepted.messageId) ||
+    expectedId > 2_147_483_647 ||
+    !/^(?:\+98|0)9\d{9}$/.test(accepted.destination) ||
+    !Number.isFinite(acceptedMs)
+  )
+    throw new Error('Invalid SMS.ir send receipt');
+
+  const data = (await smsirRequest(
+    `send/${accepted.messageId}`,
+    apiKey,
+    base,
+    undefined,
+    request,
+    timeout
+  )) as {
+    messageId?: unknown;
+    mobile?: unknown;
+    lineNumber?: unknown;
+    sendDateTime?: unknown;
+    deliveryState?: unknown;
+    deliveryDateTime?: unknown;
+  } | null;
+  const sent = data?.sendDateTime;
+  const state = data?.deliveryState ?? null;
+  const delivery = data?.deliveryDateTime ?? null;
+  const slop = 5 * 60_000;
+  if (
+    !data ||
+    data.messageId !== expectedId ||
+    data.mobile !== expectedMobile ||
+    (accepted.sender !== undefined && data.lineNumber !== Number(accepted.sender)) ||
+    typeof sent !== 'number' ||
+    !Number.isSafeInteger(sent) ||
+    Math.abs(sent * 1000 - acceptedMs) > slop ||
+    (state !== null &&
+      (typeof state !== 'number' || !Number.isInteger(state) || state < 1 || state > 7)) ||
+    (state === 1 && delivery === null) ||
+    (delivery !== null &&
+      (typeof delivery !== 'number' ||
+        !Number.isSafeInteger(delivery) ||
+        delivery < sent ||
+        delivery * 1000 > Date.now() + slop))
+  )
+    throw new Error('SMS.ir report did not match the accepted send');
+
+  return {
+    state,
+    deliveredAt: state === 1 && typeof delivery === 'number' ? new Date(delivery * 1000) : null,
+  };
+}
+
 export async function sendSmsirVerification(
   apiKey: string,
   base: string,

@@ -28,6 +28,22 @@ History rows count processing attempts. Recovering an accepted receipt or
 holding an uncertain receipt does not make another provider request, so those
 rows have no measured send duration. The history view explains this distinction.
 
+### SMS.ir recipient delivery
+
+For a new accepted SMS with a message ID, the worker starts an authenticated
+status lookup after one minute. It uses the original tested provider version
+and the job's saved recipient. Pending reports are checked again within a
+24-hour window. The worker stops if the provider version is retired. Previous
+receipts keep the send evidence already on record.
+
+The protected receipt includes `sms_report_checked_at`, `sms_report_state` and
+`sms_report_delivered_at`. State 1 confirms handset delivery. States 3 and 5
+describe carrier processing or receipt. States 2, 4, 6 and 7 are provider
+failure outcomes. An absent result leaves recipient delivery unconfirmed.
+The worker stores no provider-returned message text. Any report, including a
+failure, leaves the original acceptance intact and cannot trigger a retry
+of the send. [SMS.ir report statuses](https://sms.ir/rest-api/).
+
 Queue and detail reads hold the current staff view grant through the read and
 check session validity before returning data. A dead-letter entry must match
 the job ID, outbox ID and delivery channel to show its payload or qualify for

@@ -114,7 +114,8 @@ export function durableDelivery(
         UPDATE notification_delivery_log SET status='delivered',provider_ref=$4,latency_ms=$5
         WHERE notification_id=$1 AND channel=$2 AND send_attempt_token=$3 AND status='sending' RETURNING id
       )
-      UPDATE notification_send_receipts SET status='accepted',provider_ref=$4,accepted_at=NOW(),last_error=NULL,updated_at=NOW()
+      UPDATE notification_send_receipts SET status='accepted',provider_ref=$4,accepted_at=NOW(),last_error=NULL,updated_at=NOW(),
+        sms_report_due_at=CASE WHEN channel='sms' AND $4 ~ '^[1-9][0-9]{0,9}$' THEN NOW()+INTERVAL '1 minute' END
       WHERE outbox_id=$1 AND channel=$2 AND attempt_token=$3 AND status='sending'
         AND EXISTS (SELECT 1 FROM history) RETURNING provider_ref`,
       [outboxId, channel, token, receipt, durationMs]

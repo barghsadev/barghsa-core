@@ -374,7 +374,7 @@
 
 #### S-06.06.02 — Webhook/callback security
 
-**Description:** Payment, SMS, storage, and other callbacks verify provider signatures/secrets, timestamp/replay windows, event IDs, expected merchant/account context, and server-side transaction status. Browser redirects never proof of payment. Webhook processing idempotent, stores raw event securely, returns quickly before async processing.
+**Description:** Payment, storage and other signed callbacks verify provider signatures/secrets, timestamp and replay windows, event IDs, expected merchant/account context, and server-side transaction status. Browser redirects never prove payment. Webhooks store raw events securely, acknowledge quickly and process idempotently. For SMS.ir notification sends, authenticate the provider report lookup and bind it to the tested provider version, accepted message ID, original recipient and send time. Record recipient delivery separately from provider acceptance.
 
 **Complexity:** L  
 **Dependencies:** None  
@@ -383,7 +383,7 @@
 |------|-------------|-----------|
 | T-06.06.02.01 | Implement generic webhook verification service: signature/HMAC verification, replay window (e.g. ±5 min), event ID dedup | L |
 | T-06.06.02.02 | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored | M |
-| T-06.06.02.03 | Build SMS provider callback adapter: verify authenticity, replay-safe delivery status | M |
+| T-06.06.02.03 | Implement authenticated, replay-safe SMS.ir report polling for accepted notification sends | M |
 | T-06.06.02.04 | Build storage provider callback: verify signature, replay-safe, idempotent status update | M |
 | T-06.06.02.05 | Implement webhook idempotency: store webhook event hash + processed flag; reject duplicates | M |
 | T-06.06.02.06 | Ensure raw provider events stored securely (encrypted or access-controlled) when permitted by policy | S |

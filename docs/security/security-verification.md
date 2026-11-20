@@ -234,10 +234,18 @@ commits with all associated effects. Payment keeps its existing claim and
 outcome states. When a verified paid callback reopens the same unpaid intent,
 the claim records the new digest with its corresponding validated payload.
 
-SMS.ir v1 publishes an authenticated delivery report by message ID. Its public
-specification has no signed delivery callback declaration. A status report
-proves provider feedback for that message and must stay separate from the
-signed callback gate. [SMS.ir API specification](https://api.sms.ir/swagger/v1/swagger.json).
+The owner approved authenticated SMS.ir polling for the notification channel.
+The worker fetches the report by the accepted message ID using the same active
+provider configuration. It checks the original recipient, direct sender line
+when present, and send and delivery times. A database lease rejects stale
+results. The worker stores only status and timestamps. Provider acceptance and
+the original receipt remain intact, and polling can never resend a message.
+[SMS.ir report API and status codes](https://sms.ir/rest-api/).
+
+Verify the original receipt and the separate result using an authorized
+recipient before closing the live gate. The restricted authentication queue
+keeps its own send records. The notification worker never fetches OTP report
+bodies.
 
 ## Profile financial admission
 

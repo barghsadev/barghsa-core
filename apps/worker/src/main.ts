@@ -38,6 +38,7 @@ import {
   runDocumentDestruction,
 } from './documents/destruction-runner.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
+import { pollSmsDeliveryReport } from './notifications/sms-delivery-report.js';
 import {
   checkSmsCredit,
   SMS_CREDIT_JOB_TYPE,
@@ -531,6 +532,14 @@ async function main(): Promise<void> {
       });
     }
   }, SMS_CREDIT_POLL_INTERVAL_MS);
+
+  pollers.every(async () => {
+    try {
+      await pollSmsDeliveryReport(getDbPool());
+    } catch {
+      logger.warn('SMS.ir delivery report check failed');
+    }
+  }, 2000);
 
   // ── Notification outbox poll loop (E-05, T-05.01.02 / T-05.02.01) ──────
   // Poll for due outbox rows, dispatch channels, and record outcomes.

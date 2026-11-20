@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-20T01:44:31+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-20T01:54:49+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -12,10 +12,10 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 1266 | Accepted with unchanged source bindings. |
 | verify | 0 | Existing work may be complete; inspect evidence before building. |
-| partial | 96 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 97 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
-| blocked | 4 | Named owner or external prerequisite. |
+| blocked | 3 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -1222,7 +1222,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.01.08` | done | Recorded batch work | Security review: file path traversal, double extension, magic byte manipulation, zip bombs |
 | `06-security-testing-observability.md#T-06.06.02.01` | done | Recorded batch work | Implement generic webhook verification service: signature/HMAC verification, replay window (e.g. ±5 min), event ID dedup |
 | `06-security-testing-observability.md#T-06.06.02.02` | done | Recorded batch work | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored |
-| `06-security-testing-observability.md#T-06.06.02.03` | blocked | Recorded batch work | Build SMS provider callback adapter: verify authenticity, replay-safe delivery status |
+| `06-security-testing-observability.md#T-06.06.02.03` | partial | Recorded batch work | Implement authenticated, replay-safe SMS.ir report polling for accepted notification sends |
 | `06-security-testing-observability.md#T-06.06.02.04` | done | Recorded batch work | Build storage provider callback: verify signature, replay-safe, idempotent status update |
 | `06-security-testing-observability.md#T-06.06.02.05` | partial | Recorded batch work | Implement webhook idempotency: store webhook event hash + processed flag; reject duplicates |
 | `06-security-testing-observability.md#T-06.06.02.06` | done | Recorded batch work | Ensure raw provider events stored securely (encrypted or access-controlled) when permitted by policy |

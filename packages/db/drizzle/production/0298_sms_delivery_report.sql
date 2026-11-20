@@ -1,0 +1,10 @@
+ALTER TABLE "notification_send_receipts" ADD COLUMN "sms_report_due_at" timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "notification_send_receipts" ADD COLUMN "sms_report_checked_at" timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "notification_send_receipts" ADD COLUMN "sms_report_state" integer;--> statement-breakpoint
+ALTER TABLE "notification_send_receipts" ADD COLUMN "sms_report_delivered_at" timestamp with time zone;--> statement-breakpoint
+CREATE INDEX "notification_send_sms_report_due_idx" ON "notification_send_receipts" USING btree ("sms_report_due_at","outbox_id") WHERE "notification_send_receipts"."sms_report_due_at" IS NOT NULL AND "notification_send_receipts"."channel"='sms';--> statement-breakpoint
+ALTER TABLE "notification_send_receipts" ADD CONSTRAINT "notification_send_sms_report_check" CHECK (("notification_send_receipts"."sms_report_due_at" IS NULL AND "notification_send_receipts"."sms_report_checked_at" IS NULL AND "notification_send_receipts"."sms_report_state" IS NULL AND "notification_send_receipts"."sms_report_delivered_at" IS NULL)
+        OR ("notification_send_receipts"."channel"='sms' AND "notification_send_receipts"."status"='accepted' AND "notification_send_receipts"."transport"='smsir'
+          AND ("notification_send_receipts"."sms_report_state" IS NULL OR ("notification_send_receipts"."sms_report_state" BETWEEN 1 AND 7 AND "notification_send_receipts"."sms_report_checked_at" IS NOT NULL))
+          AND ("notification_send_receipts"."sms_report_delivered_at" IS NOT NULL) = COALESCE("notification_send_receipts"."sms_report_state"=1, false)
+          AND ("notification_send_receipts"."sms_report_state" IS NULL OR "notification_send_receipts"."sms_report_state" IN (3,5) OR "notification_send_receipts"."sms_report_due_at" IS NULL)));
