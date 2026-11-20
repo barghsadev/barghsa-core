@@ -18,6 +18,7 @@ import {
   KB_PROCESSING_JOB_TYPE,
 } from './knowledge-bases/processing-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
+import { processStorageWebhookReceipt } from './storage/upload-webhook-runner.js';
 import { cleanupMultipartOrphans } from './storage/multipart-cleanup.js';
 import {
   DOCUMENT_SCAN_INTERVAL_MS,
@@ -333,6 +334,15 @@ async function main(): Promise<void> {
       });
     }
   }, 1000);
+
+  pollers.every(async () => {
+    if (draining || !process.env.STORAGE_CONFIG_ENCRYPTION_KEY) return;
+    try {
+      await processStorageWebhookReceipt(getDbPool());
+    } catch {
+      logger.error('Storage webhook receipt processing failed');
+    }
+  }, 5000);
 
   let cleanupProvider: ReturnType<typeof cleanupStorageProvider> | null = null;
   try {

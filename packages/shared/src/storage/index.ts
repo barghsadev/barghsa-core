@@ -46,5 +46,6 @@ export {
   finishMultipartUpload,
 } from './multipart-upload.js';
 export type { MultipartUploadState } from './multipart-upload.js';
+export * from './upload-webhook.js';
 
 export const STORAGE_UPLOAD_SCAN_JOB_TYPE = 'storage-upload-scan';

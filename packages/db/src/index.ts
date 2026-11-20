@@ -683,6 +683,7 @@ export * from './authorization-denial';
 export * from './schema/rate-limit';
 export * from './schema/config';
 export * from './schema/storage-record';
+export * from './schema/storage-webhook-events.js';
 export * from './schema/otp-challenge';
 export * from './schema/users';
 export * from './schema/conversation-identities';

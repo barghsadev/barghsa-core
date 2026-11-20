@@ -15,6 +15,10 @@ import { browserCorsOptions } from './common/browser-origin.js';
 import { observeHttpRequest } from './metrics/http-request-metrics.js';
 import { ApiRequestTracing } from './metrics/api-request-tracing.js';
 import type { Server, ServerResponse } from 'node:http';
+import {
+  STORAGE_UPLOAD_WEBHOOK_BODY_LIMIT,
+  STORAGE_UPLOAD_WEBHOOK_PATH,
+} from '@barghsa/shared/storage';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
@@ -74,6 +78,14 @@ export async function createApplication() {
     type: (request) =>
       request.method === 'POST' &&
       /^\/api\/route-errors\/?(?:\?|$)/.test(request.url ?? '') &&
+      /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
+  });
+  app.useBodyParser('json', {
+    limit: STORAGE_UPLOAD_WEBHOOK_BODY_LIMIT,
+    inflate: false,
+    type: (request) =>
+      request.method === 'POST' &&
+      request.url?.split('?')[0]?.replace(/\/$/, '') === STORAGE_UPLOAD_WEBHOOK_PATH &&
       /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
   });
   app.useBodyParser('json', { limit: 100 * 1024 });

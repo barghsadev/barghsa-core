@@ -13,11 +13,12 @@ import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from './storage.constants
 import { StorageAdminController } from './storage-admin.controller.js';
 import { StorageRecordDbAdapter } from './storage-record-db-adapter.js';
 import { StorageRecordsController } from './storage-records.controller.js';
+import { StorageWebhookController } from './storage-webhook.controller.js';
 
 @Global()
 @Module({
   imports: [SessionModule],
-  controllers: [StorageAdminController, StorageRecordsController],
+  controllers: [StorageAdminController, StorageRecordsController, StorageWebhookController],
   providers: [
     StorageRecordAdminService,
     StorageConfigService,
