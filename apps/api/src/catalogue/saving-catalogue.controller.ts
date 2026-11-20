@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { z } from 'zod';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -85,7 +86,10 @@ export class AdminSavingCatalogueController {
   @ApiOperation({ summary: 'Read assigned hardware and saving-plan agreement versions' })
   configuration(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     this.authorize(req);
-    return this.service.admin(parse(idSchema, id));
+    const planId = parse(idSchema, id);
+    return withStaffReadAuthority(req.session, 'admin:catalogue:edit', (client) =>
+      this.service.admin(planId, client)
+    );
   }
 
   @Put(':id/duplicate-policy')

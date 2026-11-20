@@ -17,7 +17,8 @@ import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
-import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
@@ -52,12 +53,8 @@ function present(row: HardwareInventory) {
 export class SavingInventoryController {
   @Get()
   @ApiOperation({ summary: 'Read hardware stock and reservation configuration' })
-  async get(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, req.session.userId, 'admin:catalogue:edit');
-      await requireCurrentSession(client, req.session);
+  get(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    return withStaffReadAuthority(req.session, 'admin:catalogue:edit', async (client) => {
       const row = (
         await client.query<HardwareInventory>(
           "SELECT id,stock_tracking,stock_count,reserved_count,reservation_minutes FROM products WHERE id=$1 AND type='hardware'",
@@ -65,14 +62,8 @@ export class SavingInventoryController {
         )
       ).rows[0];
       if (!row) throw new HttpException('Hardware product not found', 404);
-      await client.query('COMMIT');
       return present(row);
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+    });
   }
 
   @Put()

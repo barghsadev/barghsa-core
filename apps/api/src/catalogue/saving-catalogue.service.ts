@@ -120,25 +120,20 @@ export class SavingCatalogueService {
     }
   }
 
-  async admin(planId: string) {
-    const client = await getDbPool().connect();
-    try {
-      const plan = await this.plan(client, planId);
-      const hardware = (
-        await client.query<{ hardware_id: string }>(
-          'SELECT hardware_id FROM saving_plan_hardware WHERE plan_id=$1 ORDER BY hardware_id',
-          [planId]
-        )
-      ).rows.map((row) => row.hardware_id);
-      return {
-        planId,
-        hardwareIds: hardware,
-        preventActiveDuplicates: plan.prevent_active_saving_duplicates,
-        agreements: await this.agreements(client, planId),
-      };
-    } finally {
-      client.release();
-    }
+  async admin(planId: string, client: PoolClient) {
+    const plan = await this.plan(client, planId);
+    const hardware = (
+      await client.query<{ hardware_id: string }>(
+        'SELECT hardware_id FROM saving_plan_hardware WHERE plan_id=$1 ORDER BY hardware_id',
+        [planId]
+      )
+    ).rows.map((row) => row.hardware_id);
+    return {
+      planId,
+      hardwareIds: hardware,
+      preventActiveDuplicates: plan.prevent_active_saving_duplicates,
+      agreements: await this.agreements(client, planId),
+    };
   }
 
   private async mutate<T>(actor: Actor, fn: (client: PoolClient) => Promise<T>) {

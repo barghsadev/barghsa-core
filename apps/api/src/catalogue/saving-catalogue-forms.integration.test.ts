@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>, userId: string, hardwareId: string, planId: string;
 beforeAll(async () => {
@@ -184,6 +185,47 @@ it('inventory unknown/mixed errors stay general', async () => {
   expect(data.error.code).toBe('VALIDATION:PARSE:ZOD_ERROR');
   expect(data.error.fields).toBeUndefined();
 });
+it.each(['agreement drafts', 'hardware stock'] as const)(
+  'withholds saving catalogue %s when staff authority expires during the database read',
+  async (resource) => {
+    const agreement = resource === 'agreement drafts';
+    const path = agreement
+      ? `saving-plans/${planId}/configuration`
+      : `hardware/${hardwareId}/inventory`;
+    const draftBody = 'Synthetic agreement for the session-expiry test.';
+    if (agreement) {
+      const draft = await request(`saving-plans/${planId}/agreements/draft`, 'POST', {
+        title: 'Draft terms',
+        body: draftBody,
+      });
+      expect(draft.status, http.logs()).toBe(201);
+    }
+    const current = await request(path);
+    expect(current.status, http.logs()).toBe(200);
+    expect(await current.json()).toMatchObject(
+      agreement ? { planId, agreements: [{ body: draftBody }] } : { hardwareId }
+    );
+
+    const denied = await readAfterStaffSessionExpires(
+      http.pool,
+      userId,
+      (headers) => fetch(`${http.base}/api/admin/catalogue/${path}`, { headers }),
+      (client) =>
+        agreement
+          ? client.query('LOCK TABLE saving_plan_agreement_versions IN ACCESS EXCLUSIVE MODE')
+          : client.query('LOCK TABLE products IN ACCESS EXCLUSIVE MODE'),
+      agreement
+        ? 'FROM saving_plan_agreement_versions WHERE plan_id=$1'
+        : 'SELECT id,stock_tracking,stock_count,reserved_count,reservation_minutes FROM products'
+    );
+    expect(denied.status, http.logs()).toBe(401);
+    const response = await denied.text();
+    expect(response).not.toContain(agreement ? planId : hardwareId);
+    expect(response).not.toContain(draftBody);
+  },
+  12000
+);
+
 it('inventory receipts identify hardware, reflect no-op and reservations, and failed conflicts leave no audit', async () => {
   const path = `hardware/${hardwareId}/inventory`,
     body = { stockTracking: true, stockCount: 10, reservationMinutes: 5 };
