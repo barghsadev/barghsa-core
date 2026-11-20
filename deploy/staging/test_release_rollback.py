@@ -456,7 +456,7 @@ echo compose-admitted
                     if diagnostic:
                         self.assertIn(diagnostic, result.stderr)
 
-    def staging_compose_config(self, fixture, *, volume='', archive=False, objectstore_image='', objectstore_volume=''):
+    def staging_compose_config(self, fixture, *, volume='', archive=False, objectstore_image='', objectstore_volume='', storage_webhook=False):
         # Some Compose versions load env_file even with --no-env-resolution.
         # Use test-owned files and keep the live templates and host untouched.
         env = {**os.environ, **dict.fromkeys((
@@ -479,6 +479,8 @@ echo compose-admitted
             local_overlay = fixture / overlay.name
             local_overlay.write_text(overlay.read_text().replace('/etc/barghsa/staging/wal-archive.env', str(backup_env)))
             command.extend(['-f', str(local_overlay)])
+        if storage_webhook:
+            command.extend(['-f', str(STAGING_COMPOSE.with_name('compose.objectstore-webhook.yml'))])
         result = subprocess.run([*command, 'config', '--no-env-resolution', '--format', 'json'],
                                 capture_output=True, text=True, check=False, env=env)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -505,6 +507,29 @@ echo compose-admitted
         self.assertEqual(repaired['volumes']['objectdata']['name'], volume)
         self.assertEqual(repaired['services']['objectstore']['volumes'], legacy['services']['objectstore']['volumes'])
 
+    def test_storage_webhook_overlay_shares_only_the_protected_callback_key(self):
+        with tempfile.TemporaryDirectory(prefix='barghsa-compose-') as directory:
+            root = Path(directory)
+            baseline = self.staging_compose_config(root)
+            enabled = self.staging_compose_config(root, storage_webhook=True)
+        api = enabled['services'].pop('api')
+        objectstore = enabled['services'].pop('objectstore')
+        original_api = baseline['services'].pop('api')
+        original_objectstore = baseline['services'].pop('objectstore')
+        self.assertEqual(enabled, baseline)
+        self.assertEqual(api['environment'].pop('STORAGE_WEBHOOK_SIGNING_KEY_FILE'),
+                         '/run/secrets/storage-webhook-key')
+        self.assertEqual(api['environment'], original_api['environment'])
+        # Compose omits false inside the normalized bind settings.
+        key_mount = {'type': 'bind', 'source': '/etc/barghsa/staging/storage-webhook/signing-key',
+                     'target': '/run/secrets/storage-webhook-key', 'read_only': True,
+                     'bind': {}}
+        notifier_mount = {'type': 'bind', 'source': '/etc/barghsa/staging/storage-webhook/notification.toml',
+                          'target': '/etc/seaweedfs/notification.toml', 'read_only': True,
+                          'bind': {}}
+        self.assertEqual(api['volumes'], [key_mount])
+        self.assertEqual(objectstore['volumes'], [*original_objectstore['volumes'], notifier_mount, key_mount])
+
     def test_release_rejects_unapproved_objectstore_images_and_mounts(self):
         text = RELEASE.read_text()
         config = text[text.index("\nobjectstore_id=''"):text.index('\nfor key in BARGHSA_APP_IMAGE')]
@@ -513,10 +538,16 @@ echo compose-admitted
 mode=$1
 version=0.6.0
 dc=(compose)
-export BARGHSA_STAGING_OBJECTSTORE_IMAGE=barghsa-storage-lifecycle:repository-4.54
+signed_tag=barghsa-storage-lifecycle:signed-webhooks-454577ed5276
+legacy_tag=barghsa-storage-lifecycle:repository-4.54
+export BARGHSA_STAGING_STORAGE_WEBHOOK=false
+export BARGHSA_STAGING_OBJECTSTORE_IMAGE="$signed_tag"
 export BARGHSA_STAGING_OBJECTSTORE_VOLUME=barghsa-staging_objectdata.rehearsed
 case "$mode" in
   legacy) version=0.5.1; unset BARGHSA_STAGING_OBJECTSTORE_IMAGE ;;
+  legacy-repaired) version=0.5.1; BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag" ;;
+  unsigned-milestone) BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag" ;;
+  legacy-sender) version=0.5.1; BARGHSA_STAGING_OBJECTSTORE_IMAGE="$legacy_tag"; BARGHSA_STAGING_STORAGE_WEBHOOK=true ;;
   unconfigured) unset BARGHSA_STAGING_OBJECTSTORE_IMAGE ;;
   wrong-tag) BARGHSA_STAGING_OBJECTSTORE_IMAGE=barghsa-storage-lifecycle:wrong ;;
   bad-volume-name) BARGHSA_STAGING_OBJECTSTORE_VOLUME=unrelated ;;
@@ -528,9 +559,18 @@ compose() {{
 docker() {{
   [[ "$mode" != legacy ]]
   case "$1:$5" in
-    image:barghsa-storage-lifecycle:repository-4.54)
+    image:"$signed_tag"|image:"$legacy_tag")
       if [[ "$mode" == wrong-loaded ]]; then printf 'sha256:%064d\\n' 0; return; fi ;;
     container:fixture-container)
+      if [[ "$4" == *'/run/secrets/storage-webhook-key'* ]]; then
+        echo 'bind:/etc/barghsa/staging/storage-webhook/notification.toml:/etc/seaweedfs/notification.toml:false'
+        if [[ "$mode" == callback-writeable ]]; then
+          echo 'bind:/etc/barghsa/staging/storage-webhook/signing-key:/run/secrets/storage-webhook-key:true'
+        elif [[ "$mode" != callback-missing ]]; then
+          echo 'bind:/etc/barghsa/staging/storage-webhook/signing-key:/run/secrets/storage-webhook-key:false'
+        fi
+        return
+      fi
       if [[ "$4" == *'.Mounts'* ]]; then
         case "$mode" in
           wrong-mount) echo 'volume:barghsa-staging_objectdata:true' ;;
@@ -542,16 +582,24 @@ docker() {{
       if [[ "$mode" == wrong-running ]]; then printf 'sha256:%064d\\n' 1; return; fi ;;
     *) return 99 ;;
   esac
-  echo sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51
+  if [[ "$mode" == legacy-repaired || "$mode" == legacy-sender ]]; then
+    echo sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51
+  else
+    echo sha256:18b2061890ce35b940d787914e0402ae4548bfe7494f6263d70062ea3015fe6d
+  fi
 }}
 {config}
 {verify}
+if [[ "$mode" == callback-* ]]; then BARGHSA_STAGING_STORAGE_WEBHOOK=true; fi
 verify_objectstore
 echo admitted
 '''
         for mode, diagnostic in (
             ('match', ''),
             ('legacy', ''),
+            ('legacy-repaired', ''),
+            ('unsigned-milestone', 'Stage the repaired object-store image'),
+            ('legacy-sender', 'Storage webhooks require the approved image'),
             ('unconfigured', 'Stage the repaired object-store image'),
             ('wrong-tag', 'Stage the repaired object-store image'),
             ('wrong-loaded', 'Loaded object-store image ID differs'),
@@ -560,6 +608,9 @@ echo admitted
             ('wrong-running', 'Running image ID differs from the candidate manifest: objectstore'),
             ('wrong-mount', 'Object-store data mount differs from the active volume'),
             ('read-only-mount', 'Object-store data mount differs from the active volume'),
+            ('callback-match', ''),
+            ('callback-writeable', 'Object-store callback mounts differ'),
+            ('callback-missing', 'Object-store callback mounts differ'),
         ):
             with self.subTest(mode=mode):
                 result = subprocess.run(['bash', '-c', script, 'storage-fixture', mode],

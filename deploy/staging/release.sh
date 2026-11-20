@@ -84,14 +84,26 @@ done
   echo 'S3 settings must match the single-domain path-style gateway' >&2; exit 1;
 }
 objectstore_id=''
+signed_objectstore_image=barghsa-storage-lifecycle:signed-webhooks-454577ed5276
 if [[ ! "$version" =~ ^0\.[0-5]\. || -n "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" ]]; then
-  [[ "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" == barghsa-storage-lifecycle:repository-4.54 ]] || {
+  if [[ "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" == "$signed_objectstore_image" ]]; then
+    objectstore_id=sha256:18b2061890ce35b940d787914e0402ae4548bfe7494f6263d70062ea3015fe6d
+  elif [[ "$version" =~ ^0\.[0-5]\. && "$BARGHSA_STAGING_OBJECTSTORE_IMAGE" == barghsa-storage-lifecycle:repository-4.54 ]]; then
+    objectstore_id=sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51
+  else
     echo 'Stage the repaired object-store image before releasing the application' >&2; exit 1;
-  }
-  objectstore_id=sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51
+  fi
   [[ "$(docker image inspect --format '{{.Id}}' "$BARGHSA_STAGING_OBJECTSTORE_IMAGE")" == "$objectstore_id" ]] || {
     echo 'Loaded object-store image ID differs from the approved image' >&2; exit 1;
   }
+fi
+if [[ "${BARGHSA_STAGING_STORAGE_WEBHOOK:-false}" == true ]]; then
+  [[ "${BARGHSA_STAGING_OBJECTSTORE_IMAGE:-}" == "$signed_objectstore_image" &&
+     -s /etc/barghsa/staging/storage-webhook/notification.toml &&
+     -s /etc/barghsa/staging/storage-webhook/signing-key ]] || {
+    echo 'Storage webhooks require the approved image and protected callback configuration' >&2; exit 1;
+  }
+  compose_files+=(-f /opt/barghsa/staging/compose.objectstore-webhook.yml)
 fi
 objectstore_volume=${BARGHSA_STAGING_OBJECTSTORE_VOLUME:-barghsa-staging_objectdata}
 [[ "$objectstore_volume" =~ ^barghsa-staging_objectdata([._-][a-z0-9][a-z0-9._-]*)?$ ]] || {
@@ -201,6 +213,15 @@ verify_objectstore() {
   if [[ "$mount" != "volume:$objectstore_volume:true" ]]; then
     echo 'Object-store data mount differs from the active volume' >&2
     return 1
+  fi
+  if [[ "${BARGHSA_STAGING_STORAGE_WEBHOOK:-false}" == true ]]; then
+    local webhook_mounts
+    webhook_mounts=$(docker container inspect --format \
+      '{{range .Mounts}}{{if or (eq .Destination "/etc/seaweedfs/notification.toml") (eq .Destination "/run/secrets/storage-webhook-key")}}{{.Type}}:{{.Source}}:{{.Destination}}:{{.RW}}{{println}}{{end}}{{end}}' "$container" | sort) || return
+    if [[ "$webhook_mounts" != $'bind:/etc/barghsa/staging/storage-webhook/notification.toml:/etc/seaweedfs/notification.toml:false\nbind:/etc/barghsa/staging/storage-webhook/signing-key:/run/secrets/storage-webhook-key:false' ]]; then
+      echo 'Object-store callback mounts differ from the protected configuration' >&2
+      return 1
+    fi
   fi
 }
 

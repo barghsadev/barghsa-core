@@ -318,7 +318,7 @@ quiesce application writers and direct S3 writes at the edge. Stop the old
 object store and retain its original image and volume. Verify the cold copy's
 checksum before restoring it to a separate `barghsa-staging_objectdata` volume
 with a suffix for the cutover. Set `BARGHSA_STAGING_OBJECTSTORE_IMAGE` to
-`barghsa-storage-lifecycle:repository-4.54` and
+`barghsa-storage-lifecycle:signed-webhooks-454577ed5276` and
 `BARGHSA_STAGING_OBJECTSTORE_VOLUME` to the new volume name in the protected
 staging runtime file. Start only the storage service using the verified local
 image. Verify authenticated readback, version order and lifecycle policies
@@ -326,6 +326,19 @@ before allowing writes. If validation fails before writes resume, restore the
 previous runtime settings and original volume while holding the lock. After
 writes resume, preserve the new volume and reconcile its changes before any
 rollback. The application release does not switch storage images or volumes.
+
+To prepare signed storage events, set `BARGHSA_STAGING_STORAGE_WEBHOOK=true`
+in the protected staging runtime file. The Compose overlay mounts
+`/etc/barghsa/staging/storage-webhook/notification.toml` in SeaweedFS and
+mounts the `signing-key` from that same directory read-only in the API and
+SeaweedFS. Keep the directory root-only on the host. Make the key readable
+by the API container's `node` group and the SeaweedFS service. Configure
+`signing_key_file = "/run/secrets/storage-webhook-key"`, the active
+`signed_bucket`, and the staging HTTPS `/api/webhooks/storage/seaweedfs`
+endpoint. Leave `enabled = false` until the new API and worker are healthy.
+Restart the storage service with the same protected overlay when enabling
+notifications. Use a disposable reserved upload to verify the received
+version, durable duplicate receipt, and independent S3 readback. [Storage configuration](../../docs/operations/storage-configuration.md).
 
 The NGINX configuration gives auth, upload and AI separate per-IP quotas.
 The edge returns a localized JSON `429` and `Retry-After` while the API keeps

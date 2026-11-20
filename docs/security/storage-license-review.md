@@ -24,6 +24,16 @@ archive and embedded manifest matched the reviewed checksums. The paired
 Linux amd64 image was present on staging and contained the SeaweedFS and Go
 license files and the Go patent notice.
 
+## Signed callback image on 2026-11-20
+
+The signed callback build retains the same 275 package identities and license
+sets. The 37 confirmed exceptions retain the workbook's conditions. The
+matching archive includes both repository patches and the exact image recipe.
+All 1,167 archive members passed checksum readback. The reconstructed image
+retains the SeaweedFS and Go notices and passed the strict artifact check.
+Use the exact image and matching archive in the current inventory when
+distributing this build. [Reviewed inventory](../../deploy/licenses/objectstore-inventory.json).
+
 ## Library substitution check
 
 On November 19, 2026, the exact image passed the same check locally and on

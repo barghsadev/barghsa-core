@@ -1,0 +1,25 @@
+services:
+  objectstore:
+    volumes:
+      - type: bind
+        source: /etc/barghsa/staging/storage-webhook/notification.toml
+        target: /etc/seaweedfs/notification.toml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /etc/barghsa/staging/storage-webhook/signing-key
+        target: /run/secrets/storage-webhook-key
+        read_only: true
+        bind:
+          create_host_path: false
+  api:
+    environment:
+      STORAGE_WEBHOOK_SIGNING_KEY_FILE: /run/secrets/storage-webhook-key
+    volumes:
+      - type: bind
+        source: /etc/barghsa/staging/storage-webhook/signing-key
+        target: /run/secrets/storage-webhook-key
+        read_only: true
+        bind:
+          create_host_path: false

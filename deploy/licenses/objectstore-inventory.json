@@ -1,8 +1,8 @@
 {
-  "image_id": "sha256:0cac1d166b73eb5d8fa627435b4ef9bece507689533f9199224f184d69fbba51",
-  "scan_image": "barghsa-storage-lifecycle:repository-4.54",
-  "sbom_sha256": "ea27748750eefbcf1f9be7ca7a2afa467cce899dcecc44d085cbfea91c6396c1",
-  "source_bundle_sha256": "bd4b7f991ec788e35a433985a6aeaff1fece0142357e96631160748c50ca499b",
+  "image_id": "sha256:18b2061890ce35b940d787914e0402ae4548bfe7494f6263d70062ea3015fe6d",
+  "scan_image": "barghsa-storage-lifecycle:signed-webhooks-454577ed5276",
+  "sbom_sha256": "e2db851ba013f3741d8b8aba743c1dfc890b2d224142eb2149406cdc034778b1",
+  "source_bundle_sha256": "3ba8edfae4e51a215577d9db17e7a7b1737dfa50b3dedf6a1b4aaaefe282dc3e",
   "licenses": {
     "pkg:apk/alpine/alpine-baselayout-data@3.7.2-r1?arch=x86_64&distro=3.24.4": ["GPL-2.0-only"],
     "pkg:apk/alpine/alpine-baselayout@3.7.2-r1?arch=x86_64&distro=3.24.4": ["GPL-2.0-only"],

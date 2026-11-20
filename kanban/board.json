@@ -12546,7 +12546,8 @@
         "The staging receiver now requires the approved running objectstore image and exact writable volume before writers or migrations can proceed. The 23 local and staging Linux fixture tests passed. Complete the separate recoverable storage cutover, material delivery and elapsed lifecycle proof.",
         "The encrypted EU rollback rehearsal restored all 11 synthetic versions under 4.47. The same recovered copy passed the repaired image's actual readiness check at 768 MiB and preserved version order, tags and bytes. A protected Compose render changes only the storage image and volume. The live inventory records 59 versions and five delete markers. Repeat the fingerprint after quiescing writes, compare it before reopening the repaired live store, and verify elapsed expiry after the isolated fixture's November 20 17:31 UTC threshold.",
         "Verified the final protected operator copy of the source and notice bundle and the embedded manifest against the reviewed checksums. The exact image on staging contains all three expected SeaweedFS and Go notices. Recipient access and package-specific replacement conditions, the live cutover, and elapsed staging expiry remain open.",
-        "The exact reviewed SeaweedFS image passed matching local and native staging tests for alternate shared libraries and the FUSE configuration bind. The ten associated source and recipe payloads match the reviewed archive. The owner workbook still governs recipient access and distribution conditions. Elapsed expiry and recoverable live storage cutover remain open."
+        "The exact reviewed SeaweedFS image passed matching local and native staging tests for alternate shared libraries and the FUSE configuration bind. The ten associated source and recipe payloads match the reviewed archive. The owner workbook still governs recipient access and distribution conditions. Elapsed expiry and recoverable live storage cutover remain open.",
+        "The signed final storage build is loaded on staging. An isolated clone of the original synthetic storage volume matched 85 file checksums. The exact new image opened that clone and preserved held and unclassified fixtures. The original tagged object reaches one-day eligibility at 2026-11-20 17:31:14.155718 UTC. Run the exact-image observer then, and verify the recoverable live cutover, fingerprint and selected provider behavior on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -12635,7 +12636,14 @@
           "packages/shared/src/storage/s3-storage-provider.ts",
           "packages/shared/src/storage/setup-bucket.test.ts",
           "packages/shared/src/storage/setup-bucket.ts",
-          "packages/shared/src/storage/storage-provider.ts"
+          "packages/shared/src/storage/storage-provider.ts",
+          "deploy/licenses/objectstore-inventory.json",
+          "deploy/staging/README.md",
+          "deploy/staging/compose.objectstore-webhook.yml",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py",
+          "docs/security/storage-license-review.md"
         ],
         "batches": [
           "release-0.6-storage-sdk-endpoint-policy",
@@ -12682,6 +12690,10 @@
         "staging_storage_library_substitution": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-library-substitution-20261119.json",
           "sha256": "d3d8dcee3dfa6526b26e9479ef86ae247a801cd8212c154c97dbc682b7a08a3a"
+        },
+        "staging_signed_storage_package": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
         }
       },
       "defect_severity": "P1"
@@ -13364,14 +13376,15 @@
             878789146717865,
             680981381061175,
             3513479427036515,
-            881450341471239,
+            3991342327763850,
             2577092342995346,
             2645740275209480
           ],
           "checks": [
             2534751549455268,
             178137427497833,
-            4130285963748962
+            4130285963748962,
+            469424028647510
           ],
           "source_renewals": [
             650415283981579,
@@ -13420,7 +13433,8 @@
             1608220146988446,
             638491568431204,
             3181386224650582,
-            4458859255345362
+            4458859255345362,
+            4149196523916836
           ]
         }
       }
@@ -15602,9 +15616,9 @@
             2426167627219121,
             3664960298222868,
             2719536177275900,
-            2785333276480746,
-            881450341471239,
-            378174069838108,
+            2960541284577999,
+            3991342327763850,
+            2916731061973370,
             2506773297712354,
             753281310031346,
             3317750341468659
@@ -15614,7 +15628,8 @@
             3794394147245329,
             2648374651102814,
             161286708135146,
-            4130285963748962
+            4130285963748962,
+            469424028647510
           ],
           "source_renewals": [
             88825792085133,
@@ -15658,7 +15673,10 @@
             1608220146988446,
             3703417886993783,
             3181386224650582,
-            2459822372857812
+            2459822372857812,
+            1239819274270615,
+            4149196523916836,
+            790021110620565
           ]
         }
       }
@@ -20123,7 +20141,8 @@
             2803644656080666,
             178137427497833,
             4130285963748962,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "source_evidence": [
             1368919690263265,
@@ -20136,7 +20155,7 @@
             1599047804612857,
             3779379415145857,
             2091941185117249,
-            881450341471239,
+            3991342327763850,
             912713385575125,
             2485658752816053,
             4363839482195469,
@@ -20206,7 +20225,8 @@
             638491568431204,
             3181386224650582,
             941689725848481,
-            1599608966337785
+            1599608966337785,
+            4149196523916836
           ]
         }
       }
@@ -21584,14 +21604,15 @@
             3800804607191502,
             2216547240129837,
             178137427497833,
-            4130285963748962
+            4130285963748962,
+            469424028647510
           ],
           "source_evidence": [
             4363839482195469,
             2014961454363098,
             1220101825772327,
             1599047804612857,
-            881450341471239,
+            3991342327763850,
             912713385575125,
             2485658752816053,
             3917170407626177,
@@ -21704,7 +21725,8 @@
             1608220146988446,
             638491568431204,
             3181386224650582,
-            941689725848481
+            941689725848481,
+            4149196523916836
           ]
         }
       }
@@ -62091,7 +62113,7 @@
             335271907751690,
             1183468454534810,
             738324130165064,
-            2785333276480746,
+            2960541284577999,
             3108623938713492,
             644211720979049,
             1026419847754339,
@@ -62222,7 +62244,8 @@
             705212389183949,
             1152538525203764,
             1539244305539768,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -62881,7 +62904,8 @@
             2484943224506275,
             1511795022188542,
             228510612796114,
-            1832992762036922
+            1832992762036922,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -98195,10 +98219,10 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            881450341471239,
+            3991342327763850,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2448746277784920,
@@ -98308,7 +98332,8 @@
             2201291801792273,
             178137427497833,
             4130285963748962,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -98627,7 +98652,9 @@
             2767955812168702,
             4377463095916742,
             1832992762036922,
-            983958935467165
+            983958935467165,
+            4149196523916836,
+            1239819274270615
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -360852,7 +360879,7 @@
             259494274243887,
             4309141198379617,
             2829329825743575,
-            2785333276480746,
+            2960541284577999,
             1230063180731605,
             3908512161763803,
             4274200221694227,
@@ -360922,7 +360949,8 @@
             3797582708437361,
             2689672081647735,
             705212389183949,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/permanent-document-retention",
@@ -361089,7 +361117,8 @@
             1511795022188542,
             228510612796114,
             1832992762036922,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -370801,7 +370830,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -370858,7 +370887,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -370984,7 +371014,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -371186,7 +371217,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -371243,7 +371274,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -371369,7 +371401,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -371569,7 +371602,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -371626,7 +371659,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -371752,7 +371786,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -371952,7 +371987,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -372022,7 +372057,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -372156,7 +372192,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -372571,7 +372608,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -372628,7 +372665,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -372754,7 +372792,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -373070,10 +373109,10 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            881450341471239,
+            3991342327763850,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             1230063180731605,
@@ -373196,7 +373235,8 @@
             2201291801792273,
             178137427497833,
             4130285963748962,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -373523,7 +373563,9 @@
             2767955812168702,
             4377463095916742,
             1832992762036922,
-            983958935467165
+            983958935467165,
+            4149196523916836,
+            1239819274270615
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -373878,7 +373920,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373935,7 +373977,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -374061,7 +374104,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -374260,7 +374304,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -374317,7 +374361,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -374443,7 +374488,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -374643,7 +374689,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -374700,7 +374746,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -374826,7 +374873,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -375027,7 +375075,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -375097,7 +375145,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -375231,7 +375280,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -375430,7 +375480,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -375487,7 +375537,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -375613,7 +375664,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -375812,7 +375864,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -375869,7 +375921,8 @@
             2689672081647735,
             2216547240129837,
             2201291801792273,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -375995,7 +376048,8 @@
             3720899336470004,
             1816270634520707,
             2297216828564787,
-            983958935467165
+            983958935467165,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -386597,7 +386651,7 @@
           "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
           "source_evidence": [
             878789146717865,
-            881450341471239,
+            3991342327763850,
             680981381061175,
             2577092342995346,
             3513479427036515,
@@ -386607,7 +386661,8 @@
             2917209888023619,
             2534751549455268,
             178137427497833,
-            4130285963748962
+            4130285963748962,
+            469424028647510
           ],
           "source_renewals": [
             650415283981579,
@@ -386656,7 +386711,8 @@
             1608220146988446,
             638491568431204,
             3181386224650582,
-            4458859255345362
+            4458859255345362,
+            4149196523916836
           ]
         }
       }
@@ -388828,7 +388884,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The compiled receiver verifies the exact SeaweedFS wire contract and queues one encrypted receipt. The worker independently reads the current object and records the version on a still-valid pending reservation. Five native cases verified the new boundary and existing upload authorization remains in force. Verify the combined provider/receiver deployment with immutable images, the protected signing key, authenticated readback and exact license/source evidence before enabling staging callbacks."
+        "The real signed SeaweedFS image and compiled API/worker passed together over TLS on isolated PostgreSQL. Direct and multipart signed versions matched independent byte readback. The exact image, source archive and expected notices are present on staging. Mount the protected configuration and verify the active candidate's real callback after the recoverable storage cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -388851,7 +388907,14 @@
           "packages/db/src/schema/storage-webhook-events.ts",
           "packages/eslint-config/reviewed-postgres-sql.json",
           "packages/shared/src/storage/index.ts",
-          "packages/shared/src/storage/upload-webhook.ts"
+          "packages/shared/src/storage/upload-webhook.ts",
+          "deploy/licenses/objectstore-inventory.json",
+          "deploy/staging/README.md",
+          "deploy/staging/compose.objectstore-webhook.yml",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py",
+          "docs/security/storage-license-review.md"
         ],
         "batches": [
           "release-0.6-shared-webhook-signature-verification"
@@ -388868,6 +388931,10 @@
         "staging_storage_webhook_receiver": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-webhook-receiver-20261120.json",
           "sha256": "fd171c74c1099fb30ca68cc89df4ec48344c36d550c74e76ddafea7aaa9f6f33"
+        },
+        "staging_signed_storage_package": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
         }
       }
     },
@@ -388886,7 +388953,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The storage receiver keeps one encrypted PostgreSQL row across four concurrent duplicate deliveries. Two workers claim the event only once, and final receipt status commits atomically with the metadata observation when the reservation is still eligible. Verify the combined storage implementation on staging and complete SMS reconciliation acceptance under the approved receipt contract."
+        "The native signed sender retried after a proxy returned 503 following database commit. Three actual deliveries produced exactly two durable rows for two versions. The current application deployment still needs the scoped readback. SMS delivery reconciliation remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -388907,7 +388974,14 @@
           "packages/db/src/schema/storage-webhook-events.ts",
           "packages/eslint-config/reviewed-postgres-sql.json",
           "packages/shared/src/storage/index.ts",
-          "packages/shared/src/storage/upload-webhook.ts"
+          "packages/shared/src/storage/upload-webhook.ts",
+          "deploy/licenses/objectstore-inventory.json",
+          "deploy/staging/README.md",
+          "deploy/staging/compose.objectstore-webhook.yml",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py",
+          "docs/security/storage-license-review.md"
         ],
         "batches": [
           "release-0.6-provider-webhook-storage-and-replay-evidence",
@@ -388928,6 +389002,10 @@
         "staging_storage_webhook_receiver": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-webhook-receiver-20261120.json",
           "sha256": "fd171c74c1099fb30ca68cc89df4ec48344c36d550c74e76ddafea7aaa9f6f33"
+        },
+        "staging_signed_storage_package": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
         }
       }
     },
@@ -389046,7 +389124,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Five native storage receiver cases cover missing, wrong, altered, expired and replayed proof, scoped bucket, concurrent duplicates and worker lease protection. The exact SeaweedFS sender tests cover direct and multipart deliveries and 503 retry identity. Rehearse the combined storage delivery on staging and obtain the remaining SMS provider and reconciliation receipts. Existing signed payment and Resend proofs remain linked."
+        "The native end-to-end test verified a direct event, one duplicate delivery and one multipart event against real versioned SeaweedFS and compiled API/worker. The accepted candidate needs live staging receipt readback and the remaining SMS proof."
       ],
       "owner": null,
       "depends_on": [],
@@ -389067,7 +389145,14 @@
           "packages/db/src/schema/storage-webhook-events.ts",
           "packages/eslint-config/reviewed-postgres-sql.json",
           "packages/shared/src/storage/index.ts",
-          "packages/shared/src/storage/upload-webhook.ts"
+          "packages/shared/src/storage/upload-webhook.ts",
+          "deploy/licenses/objectstore-inventory.json",
+          "deploy/staging/README.md",
+          "deploy/staging/compose.objectstore-webhook.yml",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py",
+          "docs/security/storage-license-review.md"
         ],
         "batches": [
           "release-0.6-provider-webhook-storage-and-replay-evidence",
@@ -389082,6 +389167,10 @@
         "staging_storage_webhook_receiver": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-webhook-receiver-20261120.json",
           "sha256": "fd171c74c1099fb30ca68cc89df4ec48344c36d550c74e76ddafea7aaa9f6f33"
+        },
+        "staging_signed_storage_package": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
         }
       }
     },
@@ -390335,7 +390424,8 @@
         "Hosted preflight 44548133025 stopped at CVE-2026-97054 in the gosu helper's Go 1.27.3 standard library. The same upstream helper now builds with pinned Go 1.27.4. The Alpine and Ubuntu runtime checks and both exact fixture scans passed with zero high or critical findings. The owner policy also records the observed NSS 3.133-r0 and GnuTLS 3.8.14-r0 versions, for 388 exact approvals.",
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
-        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open."
+        "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
+        "The signed storage image retained the approved 275 package identities and license sets. Its strict check passed with 238 allowlisted and 37 exact conditional approvals. Staging readback verified the exact transferred image, source archive and the three installed SeaweedFS and Go notices. Final application and distribution receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -390361,7 +390451,12 @@
           "pnpm-lock.yaml",
           "deploy/staging/README.md",
           "deploy/staging/release-queue.py",
-          "deploy/staging/test_release_queue.py"
+          "deploy/staging/test_release_queue.py",
+          "deploy/licenses/objectstore-inventory.json",
+          "deploy/staging/compose.objectstore-webhook.yml",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py",
+          "docs/security/storage-license-review.md"
         ],
         "batches": [
           "release-0.6-font-source-provenance",
@@ -390528,6 +390623,10 @@
         "musl_source_and_notice_readback": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-libvips-source-and-notice-readback-20261120.json",
           "sha256": "b69c8b30c68b0822c06ceb9578b902594ebc88a06947073c623257537faebafb"
+        },
+        "staging_signed_storage_package": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
         }
       },
       "blocker": null
@@ -403622,7 +403721,7 @@
             1345875911635862,
             3719988716092036,
             2232861611025621,
-            1916129011609021,
+            1680424996333195,
             680981381061175,
             414161154840126
           ],
@@ -403631,7 +403730,8 @@
             3132111504653671,
             114559040946201,
             2575131976111378,
-            161286708135146
+            161286708135146,
+            469424028647510
           ],
           "source_renewals": [
             3538430675736236,
@@ -403683,7 +403783,8 @@
             1898236124347999,
             597835374776364,
             3439286525914331,
-            392023230978439
+            392023230978439,
+            4168174308691627
           ]
         }
       }
@@ -407233,7 +407334,7 @@
           "source_evidence": [
             3832607923924757,
             4338039208752933,
-            1916129011609021,
+            1680424996333195,
             2211072514436837,
             3192154593406260,
             2384360727376038,
@@ -407262,7 +407363,8 @@
             2945704754079712,
             2997457199997508,
             161286708135146,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "source_renewals": [
             3723168532346971,
@@ -407372,7 +407474,8 @@
             2197651103075413,
             239515042949512,
             563870213112406,
-            4480472245978925
+            4480472245978925,
+            4168174308691627
           ]
         }
       }
@@ -409055,7 +409158,7 @@
             1225596886225839,
             1599047804612857,
             912713385575125,
-            1916129011609021,
+            1680424996333195,
             2485658752816053,
             3917170407626177,
             876284429132128
@@ -409064,7 +409167,8 @@
             4354098492956853,
             2750138670620098,
             494840448421314,
-            161286708135146
+            161286708135146,
+            469424028647510
           ],
           "limitations": [
             "The native log proof used disposable metadata-only app and web images on the staging host. Check full candidate image identity and Docker log details after the accepted release is deployed.",
@@ -409116,7 +409220,8 @@
             2379578128810161,
             392023230978439,
             2253619526350552,
-            239515042949512
+            239515042949512,
+            4168174308691627
           ]
         }
       }
@@ -559373,13 +559478,13 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            881450341471239,
+            3991342327763850,
             912713385575125,
-            1916129011609021,
+            1680424996333195,
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -559693,7 +559798,8 @@
             3062641131844408,
             4130285963748962,
             580981761638250,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [],
           "operational_limits": [
@@ -560329,7 +560435,10 @@
             4480472245978925,
             1832992762036922,
             983958935467165,
-            534670550961879
+            534670550961879,
+            4149196523916836,
+            4168174308691627,
+            1239819274270615
           ],
           "presentation_renewals": [
             {
@@ -561378,13 +561487,13 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            881450341471239,
+            3991342327763850,
             912713385575125,
-            1916129011609021,
+            1680424996333195,
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            2785333276480746,
+            2960541284577999,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -561697,7 +561806,8 @@
             3062641131844408,
             4130285963748962,
             580981761638250,
-            253090249689773
+            253090249689773,
+            469424028647510
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -562237,7 +562347,10 @@
             4480472245978925,
             1832992762036922,
             983958935467165,
-            534670550961879
+            534670550961879,
+            4149196523916836,
+            4168174308691627,
+            1239819274270615
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -564812,7 +564925,8 @@
         "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts.",
         "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names.",
         "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open.",
-        "The CSP rehearsal now models staging's same-origin storage and the native customer runner loads the workspace TypeScript fixture. Fourteen compiled business cases, two native customer sessions and eight report-only transfer safeguards passed in Chromium and WebKit. Live enforcement and direct upload readback remain release gates."
+        "The CSP rehearsal now models staging's same-origin storage and the native customer runner loads the workspace TypeScript fixture. Fourteen compiled business cases, two native customer sessions and eight report-only transfer safeguards passed in Chromium and WebKit. Live enforcement and direct upload readback remain release gates.",
+        "The signed storage image, API and worker passed the combined TLS, duplicate, version and rollback evidence. Protected staging storage has the checksum-verified image and source archive. Wait for the natural expiry of the original seeded fixture on the exact signed-image clone and verify the recoverable live storage cutover before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -565520,7 +565634,10 @@
           "apps/api/src/storage/storage-record-http.integration.test.ts",
           "apps/api/src/upload/upload.controller.ts",
           "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-          "apps/api/src/provider-config/resend-connection-tester.service.ts"
+          "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "deploy/licenses/objectstore-inventory.json",
+          "deploy/staging/compose.objectstore-webhook.yml",
+          "docs/security/storage-license-review.md"
         ],
         "staging_eu_database_recovery": {
           "date": "2026-11-15",
@@ -565663,6 +565780,10 @@
         "staging_csp_business_rehearsal": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-csp-business-rehearsal-20261120.json",
           "sha256": "bf02b710c7e220b60625d82a9e57c9159d88d917bbfc010adb7bfec1a0430ee8"
+        },
+        "staging_signed_storage_package": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
         }
       }
     },
@@ -768564,7 +768685,8 @@
       "1348616652009183": "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures.",
       "580981761638250": "The exact upload fixture passed eight report-only transfer-resume cases and 14 enforced business cases in Chromium and WebKit. See the source-bound staging CSP business rehearsal receipt.",
       "253090249689773": "The signed storage callback receiver and worker passed five final cases on migrated PostgreSQL. The storage, Resend and CSP HTTP boundaries and Resend verifier passed 85 existing cases. See the exact source-bound callback receiver receipt.",
-      "1326181805023753": "The existing SQL-rule test and changed-file lint passed after verifying that the schema re-export adds no query text to the reviewed database index."
+      "1326181805023753": "The existing SQL-rule test and changed-file lint passed after verifying that the schema re-export adds no query text to the reviewed database index.",
+      "469424028647510": "The signed storage artifact, exact license and two callback services passed the isolated native rehearsal. The affected release and rollback suite passed across the initial and corrected focused executions. The reviewed image and source archive were verified after transfer to protected staging storage."
     },
     "source_evidence": {
       "3985308057320810": {
@@ -784270,6 +784392,22 @@
       "2783358097275046": {
         "path": "packages/db/drizzle/production/meta/_journal.json",
         "sha256": "a12e9db74ad4edef5e8fdd1248283ae1431199b41e38e5ca3244546ccddc8796"
+      },
+      "3991342327763850": {
+        "path": "deploy/staging/README.md",
+        "sha256": "ef269cd179ca2e16829a2ff82d408d9847e6a00086467687194794a4a4f18318"
+      },
+      "1680424996333195": {
+        "path": "deploy/staging/deploy.sh",
+        "sha256": "4a42c59f77692aa3f77277cc5dd001a404f0e92f660e0e035759fc475950c8f0"
+      },
+      "2960541284577999": {
+        "path": "deploy/staging/release.sh",
+        "sha256": "aa7b8cb616a52376bc7811c5a2a24df1e1a1b84f8451c9ada4326ad92e7111fe"
+      },
+      "2916731061973370": {
+        "path": "deploy/staging/test_release_rollback.py",
+        "sha256": "9e9f2c3805b00f947fef23871f7f3922231a795213f84e2e72c1f937fc2c3111"
       }
     },
     "source_renewals": {
@@ -817347,6 +817485,38 @@
           "packages/eslint-config/reviewed-postgres-sql.json"
         ],
         "scope": "Refreshes only the existing reviewed source digest for the database index. The re-export changes no SQL. The dynamic SQL rule test and changed-file lint passed and query enforcement remains in effect."
+      },
+      "4149196523916836": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "Records the exact signed image and protected callback mount preparation. Existing backup, deploy, TLS and restoration procedures retain their execution behavior."
+      },
+      "4168174308691627": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/deploy.sh"
+        ],
+        "scope": "Adds the optional read-only callback overlay to the staging runbook files transferred for the release. Existing migration, archive, image transfer, NGINX and receipt steps have the prior behavior. The deployment and rollback checks passed."
+      },
+      "1239819274270615": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/release.sh"
+        ],
+        "scope": "Pins the scanned signed objectstore image for v0.6.0 and later. The optional callback path requires both protected files, the exact mounted image and both read-only bind mounts. Running image, migration, backup, rollback, and previous legacy approval checks passed."
+      },
+      "790021110620565": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/test_release_rollback.py"
+        ],
+        "scope": "Retains exact volume, image identity and rollback checks and covers the signed release selection and read-only mount checks. The normalized Compose test verifies unrelated services are unchanged."
       }
     }
   }
