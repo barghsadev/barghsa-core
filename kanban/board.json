@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T02:17:10+00:00",
+  "updated": "2026-11-20T02:27:27+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11182,7 +11182,8 @@
         "The live staging full backup eu-baseline-20261115T093612Z restored in isolation on the exact source PostgreSQL image in 48 seconds. Both application databases were present, with matching cluster identity and zero invalid indexes or collation mismatches. The Ubuntu replacement reports a glibc collation mismatch on physical replay. The successful live cutover below used a logical migration.",
         "An isolated point-in-time restore from the live staging backup completed in 48 seconds. It recovered both application databases and the committed pre-target marker, excluded the post-target marker, matched the PostgreSQL system ID, and reported zero invalid indexes. The live logical cutover matched all 373 application table fingerprints, roles, grants and ordering. The full core-service recovery rehearsal and independent RPO and RTO verification remain open.",
         "An isolated restore of the verified staging pre-switch backup replayed the new EU WAL segment through the exact named checkpoint in 28.981 seconds. The PostgreSQL system ID and users, orders and invoices fingerprints matched the independent baseline. All indexes were valid and the restored server listened only on the private local socket. The core-service recovery target and production-equivalent rehearsal remain open.",
-        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open."
+        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11262,7 +11263,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-restore-source-identity",
-          "release-0.6-paired-physical-recovery-rehearsal"
+          "release-0.6-paired-physical-recovery-rehearsal",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
@@ -11287,6 +11289,10 @@
         "paired_synthetic_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-isolated-recovery-20261120.json",
           "sha256": "32d74db957189b4606e25fa966aa84203ce71e5d883c92c454df209b0ee55bfb"
+        },
+        "paired_synthetic_eu_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-eu-recovery-20261120.json",
+          "sha256": "0b8cec40fe2e61e13fa1567235fcb42153f4cdfeae1052e2ba1b686dbfffa214"
         }
       }
     },
@@ -11441,7 +11447,8 @@
         "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
         "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts.",
         "A one-time staging systemd timer triggered the existing isolated PostgreSQL restore verifier on November 19. The journal bound the start, verifier report and successful exit to one invocation. The latest backup eligible for the captured recovery point matched its original EU manifest and the independent source fingerprints. The earlier committed marker survived and the later marker was absent, and the database recovered in 35.224 seconds with zero measured RPO for the covered tables. The temporary units and container were collected. The recurring quarterly execution, delivered failure alerts and the core-service recovery exercise remain open.",
-        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open."
+        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11513,7 +11520,8 @@
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-restore-source-identity",
-          "release-0.6-paired-physical-recovery-rehearsal"
+          "release-0.6-paired-physical-recovery-rehearsal",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
@@ -11536,6 +11544,10 @@
         "paired_synthetic_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-isolated-recovery-20261120.json",
           "sha256": "32d74db957189b4606e25fa966aa84203ce71e5d883c92c454df209b0ee55bfb"
+        },
+        "paired_synthetic_eu_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-eu-recovery-20261120.json",
+          "sha256": "0b8cec40fe2e61e13fa1567235fcb42153f4cdfeae1052e2ba1b686dbfffa214"
         }
       }
     },
@@ -14958,7 +14970,8 @@
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
         "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
-        "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages."
+        "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages.",
+        "The latest f7c488e16 hosted image inventory still has 857 packages, including only the unchanged two pending 8.19 dispositions. All exact runtime scans, the dependency audit, Semgrep and the redacted history scan passed. The strict frozen release and distribution receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -15034,7 +15047,8 @@
           "release-0.6-license-review-refresh-f7fc00b88",
           "release-0.6-promotion-review-evidence",
           "release-0.6-license-receipt-reference",
-          "release-0.6-verify-configuration-backup-and-checks"
+          "release-0.6-verify-configuration-backup-and-checks",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -16093,7 +16107,8 @@
         "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
         "The recovery observer passed all 11 HTTPS checks on the compiled 3f8929fdd app and web images after PostgreSQL logical restore. A dedicated nonstaff account signed in through the normal trusted-device path and read its default profile, dashboard, wallet, and one owned electricity, saving, solar and consultation record. Logout cleared cookies and returned 401 for the former session. Restored record identities, the preexisting unpaid invoice and its payment and refund totals matched after the probe. The active staging data has zero records for each of the four services and no protected synthetic configuration. Provision the independent runner and fixture and verify the final candidate, core-service recovery and live alert receipts.",
         "A one-time staging systemd timer triggered the existing isolated PostgreSQL restore verifier on November 19. The journal bound the start, verifier report and successful exit to one invocation. The latest backup eligible for the captured recovery point matched its original EU manifest and the independent source fingerprints. The earlier committed marker survived and the later marker was absent, and the database recovered in 35.224 seconds with zero measured RPO for the covered tables. The temporary units and container were collected. The recurring quarterly execution, delivered failure alerts and the core-service recovery exercise remain open.",
-        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open."
+        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -16146,7 +16161,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-restored-application-probe",
           "release-0.6-restore-source-identity",
-          "release-0.6-paired-physical-recovery-rehearsal"
+          "release-0.6-paired-physical-recovery-rehearsal",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
         "current_acceptance": null,
         "staging_config_quarterly_schedule": {
@@ -16172,6 +16188,10 @@
         "paired_synthetic_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-isolated-recovery-20261120.json",
           "sha256": "32d74db957189b4606e25fa966aa84203ce71e5d883c92c454df209b0ee55bfb"
+        },
+        "paired_synthetic_eu_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-eu-recovery-20261120.json",
+          "sha256": "0b8cec40fe2e61e13fa1567235fcb42153f4cdfeae1052e2ba1b686dbfffa214"
         }
       }
     },
@@ -391342,20 +391362,10 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.08 | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed.",
-        "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed.",
-        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
-        "The release now checks the private scanner response before stopping writers and requires one scanner receipt before announcement. Verify actual candidate scans, image identities and signed feed in the live release.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
-        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "Hosted rehearsal 43583704822 at 81d4381e9 passed all 12 mobile Chromium cases on its first attempt. Login and all four service histories had Persian and English samples. Maximum LCP was 1,652 ms, populated render 1,659.4 ms, CLS 0.0478 and blocking time 0 ms.",
-        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
-        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -391392,9 +391402,27 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
           "release-0.6-hosted-image-scan-8436b628a",
-          "release-0.6-license-review-refresh-f7fc00b88"
+          "release-0.6-license-review-refresh-f7fc00b88",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+          "source_evidence": [
+            3832607923924757,
+            3783725332462803,
+            1449692057873620,
+            2965818594429650,
+            1087251982870955,
+            1364273028583396,
+            4329846260454311
+          ],
+          "checks": [
+            1999288664670832,
+            4316492052598954,
+            2114980219699119
+          ]
+        },
         "current_dependency_checkpoint": {
           "reviewed_sha": "ba890a55b9f1ef6fcc9be6a9cafeb13ed7d120b6",
           "source_evidence": [
@@ -565478,7 +565506,9 @@
         "Staging configuration backup and restore, the compiled trace chain test and both edge-header suites meet their task-specific requirements. The exact deployed candidate and protected external collector, live edge, production-equivalent HSTS and whole-service recovery remain release requirements.",
         "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages.",
         "Current CI implements both targeted protected checks and a full strict gate. The identical workflow passed all seven strict jobs at 3f8929fdd. The exact frozen release, nightly rollup, package dispositions and final distribution and deployment receipts remain required.",
-        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open."
+        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
+        "The security scanner configuration is accepted. Exact f7c488e16 scanner outputs passed independently. Its report-only inventory again identified the two Ubuntu 8.19 dispositions required by the final strict image gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -565916,7 +565946,8 @@
           "release-0.6-reconcile-verified-components",
           "release-0.6-smsir-delivery-polling",
           "release-0.6-verify-configuration-backup-and-checks",
-          "release-0.6-paired-physical-recovery-rehearsal"
+          "release-0.6-paired-physical-recovery-rehearsal",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -566370,6 +566401,10 @@
         "paired_synthetic_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-isolated-recovery-20261120.json",
           "sha256": "32d74db957189b4606e25fa966aa84203ce71e5d883c92c454df209b0ee55bfb"
+        },
+        "paired_synthetic_eu_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-eu-recovery-20261120.json",
+          "sha256": "0b8cec40fe2e61e13fa1567235fcb42153f4cdfeae1052e2ba1b686dbfffa214"
         }
       }
     },
@@ -566447,7 +566482,8 @@
         "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal.",
         "The owner confirmed on November 20 that no production target exists yet and expects a topology similar to staging. Continue synthetic preparation using the verified staging baseline. The protected TLS pooler, sandbox merchant and full production-equivalent rehearsal remain open.",
         "The 02:00 UTC staging configuration timer uploaded and verified the exact versioned EU archive. Independent readback reconstructed 56 files and 33 configuration tables with the protected key still wrapped. The full application recovery, operational receipts and protected production-equivalent target remain open.",
-        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open."
+        "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -566547,7 +566583,8 @@
           "release-0.6-wal-recovery-config",
           "release-0.6-smsir-delivery-polling",
           "release-0.6-verify-configuration-backup-and-checks",
-          "release-0.6-paired-physical-recovery-rehearsal"
+          "release-0.6-paired-physical-recovery-rehearsal",
+          "release-0.6-paired-eu-recovery-rehearsal"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -566636,6 +566673,10 @@
         "paired_synthetic_recovery": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-isolated-recovery-20261120.json",
           "sha256": "32d74db957189b4606e25fa966aa84203ce71e5d883c92c454df209b0ee55bfb"
+        },
+        "paired_synthetic_eu_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-eu-recovery-20261120.json",
+          "sha256": "0b8cec40fe2e61e13fa1567235fcb42153f4cdfeae1052e2ba1b686dbfffa214"
         }
       },
       "blocker": "Protected staging now has encrypted EU backups, archived WAL and verified point-in-time recovery. The production-equivalent exercise still requires an owner-designated target, its separate TLS PostgreSQL and pooler, and protected payment merchant configuration."
@@ -766897,6 +766938,118 @@
           "sha256": "0a85a429e61376eaa9f699578026772a6e8fbb3d84cff2fbf53fb471dafe975d"
         }
       ]
+    },
+    "release-0.6-paired-eu-recovery-rehearsal": {
+      "batch": "release-0.6-paired-eu-recovery-rehearsal",
+      "base_commit": "f7c488e164f627d2ea133a52a1996996d70393d0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-04.01.05",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "01-platform-infrastructure.md#T-05.03.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "516b3491f2e6fb28ae2a7bf5962513716a8a519dab0970e85fc3c9291e1a330b"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "99ac3023fa72c6c4e045ebef65f10326d52e43293dd9baf0922eaaedc3e6267a"
+        },
+        {
+          "path": "packages/db/scripts/backup/config_backup.py",
+          "sha256": "b3b7ce15a3ba9c086e4cd1c335f569f579b7f814bc55f8877baad5f5c0e7bbbf"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "e444e52edd022cfed20b2829b09418be99a5958ab8d73196104e5469a5446675"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f3f174f59be1eeccdc7ea44f67130eea453371bc366043a07d23440ed29272c8"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "1234d2cb59978e5f79dfcd4ad7222202174d08bf677d00c8c082de2d8ad3bc5b"
+        }
+      ],
+      "checks": [
+        "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
+        "The exact f7c488e16 hosted check verified 2181 files with the configured Semgrep rules and retained a redacted scan of the complete Git history. Semgrep recorded zero findings or scan errors. Gitleaks reported zero unexcluded findings. The PNPM audit found zero High and Critical dependencies.",
+        "All five container image receipts, vulnerability reports and bound SBOM checksums match the exact hosted build. Container scanning reported zero High and Critical findings. The unchanged CI and scanner policy executed the full strict checks in run 44597706568."
+      ],
+      "limitations": [
+        "The rehearsal used synthetic fixture data and the protected, versioned EU staging recovery store. The restored Linux amd64 Docker runtime used loopback and no published ports.",
+        "The accepted v0.6.0 release and its designated production-equivalent target, paired restore and live alert receipt still require evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t",
+      "execution_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-paired-eu-recovery-20261120.json",
+          "sha256": "0b8cec40fe2e61e13fa1567235fcb42153f4cdfeae1052e2ba1b686dbfffa214"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/backup-manifest.json",
+          "sha256": "87f96a88d0750609599948bb9ccc240dea43c15cb57085dd320ca6adc64a3ee4"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/independent-baseline.json",
+          "sha256": "57d5cd99db741a6111d94c2ce9fe835a71f8b87f1d038e321d6a48479243e899"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/database-verification.json",
+          "sha256": "0f15ede0d65623506d338e68bb95c37109df0a7857afc19a9dd37176b97fde1d"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/configuration-verification.json",
+          "sha256": "0edd57b752a180e5d9fd1048a8ea35a9d1431a0d00c945ca73925758f8e6d14c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/source-objects.json",
+          "sha256": "b56a9f991953451be801ae77a97cc4ca977ec158c0b61d2da149cf8c66d4345e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/restored-objects.json",
+          "sha256": "b56a9f991953451be801ae77a97cc4ca977ec158c0b61d2da149cf8c66d4345e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/service-journeys.json",
+          "sha256": "dc0ffc0e63b2ad33fe3460a084c3a8212ca892ebd8b51cfa2855d47dfabf6471"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/eu-upload.json",
+          "sha256": "3a920271e1f00c85e8ed7c6129373fa833ee88fb06fcaf06f1e2b4347155b502"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/eu-run.lRBWUl0t/eu-readback.log",
+          "sha256": "fc4571b714f3f1e4bee76f58f52582e2726c39683e9f2a8ed2b420130cd995ce"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/f7-hosted-security/static-security/static-security.json",
+          "sha256": "34273603725e2de9f0c03cb0191521748328d64e74222076066dfee7ec533ee6"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/f7-hosted-security/secret-scan/secret-scan.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/f7-hosted-security/dependency-audit/dependency-audit.json",
+          "sha256": "e0fd34995ada815471cef3e98a0d40a9ba23b3ebccad8efae4b5d838fe548d5f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/f7-hosted-runtime-images/verified-runtime-inventory.json",
+          "sha256": "4c9e5a7cd9d79b6d6a4b0f30aecad9ade7b86fa8d69a67ee22965f4003b7f9df"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-paired-core-recovery/f7-security-jobs.json",
+          "sha256": "002c9f5a8152eb3f422a9904ec0536dd6ec4bf21b60f71d9692b2ee5b14d1487"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -769126,6 +769279,9 @@
       "3700808238309276": "The newest report correctly flagged both unapproved Ubuntu Noble 8.19 package identities. Exact package dispositions, final strict image verification and rights and delivery evidence remain required under T-05.03.04 and R-05.02.",
       "2375916005829523": "GitHub Actions run 44649101982 succeeded at b15ebc3a9. All five dispatched build scopes emitted CycloneDX inventories. Each report hash, SBOM hash, named image and embedded immutable image ID matched the downloaded scan and inventory. The six deployment tests included rejecting changed scan or SBOM evidence and rejecting a protected rollout without its live matching runtime receipt.",
       "4015932504065620": "The retained signed SeaweedFS image has its own exact SBOM and source-and-notice archive and passed the strict objectstore check. Exact final-image scan, publication, distribution and staging receipts remain required by R-05.02, R-05.03 and the release gates.",
+      "1999288664670832": "The exact f7c488e16 hosted check verified 2181 files with the configured Semgrep rules and retained a redacted scan of the complete Git history. Semgrep recorded zero findings or scan errors. Gitleaks reported zero unexcluded findings. The PNPM audit found zero High and Critical dependencies.",
+      "4316492052598954": "All five container image receipts, vulnerability reports and bound SBOM checksums match the exact hosted build. Container scanning reported zero High and Critical findings. The unchanged CI and scanner policy executed the full strict checks in run 44597706568.",
+      "2114980219699119": "The scanner configuration remains enabled for both pull requests and protected direct main updates. The final release requires strict license enforcement and distribution evidence under T-05.03.04 and R-05.02. The two new Ubuntu package versions remain pending exact disposition.",
       "3192544554064401": "The staged and production Node configurations retain their heap limits and set --no-deprecation. The local Node control suppressed a deprecation warning and emitted an ordinary warning. Both production Compose forms reject inspector and insecure-parser flags from protected environment files.",
       "1667660205881464": "A disposable private Linux network reused the previously verified app, web and PostgreSQL content. The app and web image variants applied only the exact ENV instructions from the changed Dockerfiles. Native packaged migration, non-root/read-only readiness, shared API/worker image, inspector denial, strict HTTP parsing, dependency loss and recovery, clean SIGTERM, and test-resource cleanup all passed.",
       "1517342053818739": "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates.",
