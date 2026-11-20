@@ -111,6 +111,13 @@ jobs:
     name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }} of 8
     needs: browser-build
     runs-on: ubuntu-latest
+    container:
+      # Match the locked Playwright version and avoid installing system packages per shard.
+      image: mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a
+      options: --shm-size=1g
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -148,16 +155,13 @@ jobs:
           printf '%s  %s\n' "$BROWSER_ARCHIVE_SHA256" "$archive" | sha256sum -c
           test "$(tar -xOzf "$archive" .nightly-browser-revision)" = "$GITHUB_SHA"
           tar -xzf "$archive" --exclude=.nightly-browser-revision
-      - name: Install browser runtimes
-        if: matrix.browser != 'firefox'
-        run: pnpm --filter @barghsa/web exec playwright install --with-deps "${{ matrix.browser }}"
       - name: Install pinned Firefox runtime
         if: matrix.browser == 'firefox'
         env:
           PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/barghsa-firefox
         run: |
           # Firefox 1572 crashes during axe analysis. Revision 1575 passes the same cases.
-          pnpm dlx playwright@1.66.0-alpha-2026-11-10 install --with-deps firefox
+          pnpm dlx playwright@1.66.0-alpha-2026-11-10 install firefox
           firefox="$PLAYWRIGHT_BROWSERS_PATH/firefox-1575/firefox/firefox"
           test -x "$firefox"
           printf 'PLAYWRIGHT_BROWSERS_PATH=%s\nBARGHSA_FIREFOX_EXECUTABLE=%s\n' "$PLAYWRIGHT_BROWSERS_PATH" "$firefox" >> "$GITHUB_ENV"

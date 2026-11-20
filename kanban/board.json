@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T19:55:46.594413+00:00",
+  "updated": "2026-11-20T20:28:16.772217+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5953,13 +5953,14 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             4310718850880231,
             1329301340858721,
@@ -6028,7 +6029,8 @@
             4152562415490364,
             3239468737812509,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            3740545211621373
           ]
         }
       }
@@ -6347,13 +6349,14 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             335271907751690,
             1256540299604531,
@@ -6421,7 +6424,8 @@
             1889525020198242,
             2314241780480617,
             2487052512659602,
-            312458396182986
+            312458396182986,
+            3740545211621373
           ]
         }
       }
@@ -15907,7 +15911,8 @@
         "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open.",
         "Scheduled runs 44278844002 and 44500665254 exposed subpixel failures measuring mobile electricity contract action targets. The corrected stylesheet passed all 2,000 translated positions and 10 repeated mobile Chromium journeys. The related browser run found two mobile Safari password-meter contrast failures during fade-in. The corrected meter passed all eight forced-change configurations and the full 28-case affected auth selection with zero retries. The complete nightly rollup, scheduled delivery and immutable candidate gate remain required.",
         "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required.",
-        "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required."
+        "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required.",
+        "Scheduled November 20 WebKit shard 3 completed its tests and uploads, then hit the job timeout after a slow system dependency install. The pinned runtime fixes the cold install path and passed five actual production-browser journey cases. Verify the next complete scheduled matrix and separately approved report delivery."
       ],
       "owner": null,
       "depends_on": [],
@@ -16027,7 +16032,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-browser-43561500300",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-scheduled-browser-43576703292"
+          "release-0.6-scheduled-browser-43576703292",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": null,
         "nightly_accessibility_readback": {
@@ -389734,7 +389740,8 @@
         "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
         "At 17:31 UTC on November 14, live v0.5.1 reported healthy ClamAV 1.5.4 and daily 28183 at 40,054 seconds old against the existing 48-hour limit. The staging archives, private mirror and retained vendor-signed bytes matched by SHA-256. The mirror recorded a routine official-feed check at 17:26 UTC. Final candidate upload and monitoring checks remain open.",
         "The whole API rerun exposed the legacy RTF verification request using a category property. The controller now accepts the optional field from the existing category enum and rejects unknown fields or invalid values. The server-issued key still selects the category and the owned reservation still controls the scope and declared bytes. All 43 affected compiled tests passed, including the substituted-byte denial and the legacy category call. The exact whole candidate and staging gates remain open.",
-        "On November 19 the retained staging ClamAV 1.5.4 loaded daily 28188 at 50,200 seconds old against the 48-hour limit. The three complete installed archives passed vendor detached-signature verification. The same sidecars and byte ranges matched the private EU mirror. The a69a51c71 compiled candidate passed the isolated scanner-interruption, clean-release and quarantine integration case. Repeat the upload and monitoring checks on the accepted staged application."
+        "On November 19 the retained staging ClamAV 1.5.4 loaded daily 28188 at 50,200 seconds old against the 48-hour limit. The three complete installed archives passed vendor detached-signature verification. The same sidecars and byte ranges matched the private EU mirror. The a69a51c71 compiled candidate passed the isolated scanner-interruption, clean-release and quarantine integration case. Repeat the upload and monitoring checks on the accepted staged application.",
+        "Staging v0.5.1 now runs the fixed retained scanner, with signed daily database 28189, confirmed worker connectivity, native clean and EICAR verdicts and a verified rollback backup. Exact v0.6.0 staged application checks are still required."
       ],
       "owner": null,
       "depends_on": [],
@@ -389769,7 +389776,8 @@
           "release-0.6-clamav-mirror-recurring",
           "release-0.6-staging-scanner-gate-readback",
           "release-0.6-upload-verification-compatibility",
-          "release-0.6-clamav-libxml2-86144"
+          "release-0.6-clamav-libxml2-86144",
+          "release-0.6-retained-staging-scanner-live-r3"
         ],
         "current_acceptance": null,
         "staging_scanner_28188_readback": {
@@ -395920,7 +395928,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "batch": "release-0.6-critical-form-recovery",
@@ -395930,7 +395939,7 @@
             3073323863794353
           ],
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             549371195359892,
             121170738474575,
             1141890046391240,
@@ -396028,7 +396037,8 @@
             3239468737812509,
             2005308045537251,
             2688092399472925,
-            3476363656192367
+            3476363656192367,
+            3740545211621373
           ]
         }
       }
@@ -398121,13 +398131,14 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
           "reviewed_sha": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             4368684968752415,
             432402897659717,
             3306871816619358,
@@ -398157,7 +398168,8 @@
             2733455611411028,
             1397518992161983,
             3288945720525475,
-            2607445134387421
+            2607445134387421,
+            3740545211621373
           ]
         }
       }
@@ -398364,13 +398376,14 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
           "reviewed_sha": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             335271907751690,
             1087088856558274,
@@ -398416,7 +398429,8 @@
             1355501064327624,
             3288945720525475,
             1529355937300869,
-            2294135178540376
+            2294135178540376,
+            3740545211621373
           ]
         }
       }
@@ -401572,7 +401586,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
           "release-0.6-promotion-staged-ancestor",
-          "release-0.6-board-evidence-compaction"
+          "release-0.6-board-evidence-compaction",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -401584,7 +401599,7 @@
             3141462911362460
           ],
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             1256540299604531,
             2088482174620949,
@@ -401657,7 +401672,8 @@
             2650945617363201,
             3666513877874346,
             709810231208422,
-            1952616690185476
+            1952616690185476,
+            3740545211621373
           ]
         },
         "storage_p1_board_tests": {
@@ -401859,7 +401875,8 @@
           "release-0.6-promotion-review-evidence",
           "release-0.6-production-telemetry-labels",
           "release-0.6-promotion-staged-ancestor",
-          "release-0.6-board-evidence-compaction"
+          "release-0.6-board-evidence-compaction",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -401871,7 +401888,7 @@
             889985415563243
           ],
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             1220101825772327,
             1256540299604531,
@@ -401961,7 +401978,8 @@
             644949389910000,
             2853248825345781,
             824424486559871,
-            709810231208422
+            709810231208422,
+            3740545211621373
           ]
         }
       }
@@ -402294,13 +402312,14 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             335271907751690,
             3108623938713492,
             4217801687597905,
@@ -402333,7 +402352,8 @@
             2733455611411028,
             1397518992161983,
             3288945720525475,
-            3239468737812509
+            3239468737812509,
+            3740545211621373
           ]
         }
       }
@@ -402518,7 +402538,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -402529,7 +402550,7 @@
             889985415563243
           ],
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             1256540299604531,
             2974370710122,
@@ -402590,7 +402611,8 @@
             1889525020198242,
             2314241780480617,
             2487052512659602,
-            312458396182986
+            312458396182986,
+            3740545211621373
           ]
         }
       }
@@ -402650,7 +402672,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-nightly-pinned-browser-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -402661,7 +402684,7 @@
             889985415563243
           ],
           "source_evidence": [
-            4389548210889094,
+            835419655370361,
             3832607923924757,
             1256540299604531,
             2974370710122,
@@ -402722,7 +402745,8 @@
             1889525020198242,
             2314241780480617,
             2487052512659602,
-            312458396182986
+            312458396182986,
+            3740545211621373
           ]
         }
       }
@@ -410920,9 +410944,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Confirm the archive and primary TSDB capacity on the accepted target and enable the reviewed overlay with the exact approved Prometheus image and protected size limit.",
-        "Verify scoped current archive scrapes, primary alerts, history readback, and volume growth at deployment. The isolated fixture retained a 399-day sample across restart. Record any pre-activation history gap.",
-        "The admin revision can extend the Prometheus archive retention within the enforced range. The rendered Compose plan preserves primary retention, archive capacity and downsampling. Verify the active archive."
+        "Staging primary retention and capacity verified. The private 400-day archive starts on November 20, 2026. Two consecutive scrapes verified preserved source samples, 222 series and volume growth within the 2 GiB cap. Retain the prior history gap and verify growth on the accepted production topology.",
+        "Verify the accepted target and separately authorized external alert delivery. The prior isolated fixture retained a 399-day sample across restart. Staging history readback covers the observed current five-minute interval.",
+        "Verify any later published admin retention changes against the active archive. The deployed staging archive uses the reviewed 400-day default."
       ],
       "owner": null,
       "depends_on": [],
@@ -410938,7 +410962,8 @@
         ],
         "batches": [
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-staging-metrics-archive-live"
         ],
         "current_acceptance": null
       }
@@ -567595,7 +567620,8 @@
         "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images.",
         "The signed storage image passed natural expiry and staged age-based protection before the fenced storage-only cutover. The encrypted EU archive restored with the same inventory and the v0.5.1 application returned healthy on the new volume. Two regular November 20 PostgreSQL backups verified EU manifest readback and matching live metrics. Candidate application callback, combined release checks and authorized external monitoring receipts remain open.",
         "Staging prepares the protected callback overlay before v0.6.0 application deployment and the release script now requires it. Actual staging Compose readback limits the difference to the intended mounts and API key path. The current application remains healthy with provider delivery disabled. Verify the live candidate and persisted callback.",
-        "SMTP delivery failures now discard relay text before it can reach persisted delivery history or caller diagnostics. The original sender exposed a synthetic relay reply containing an email address. The fixed sender keeps allowlisted network and SMTP classification data and leaves ambiguous sends in reconciliation. All 72 shared delivery, 92 worker and 107 API notification cases and 38 package export checks passed. Verify persisted diagnostics on the exact staging candidate and the approved external sinks."
+        "SMTP delivery failures now discard relay text before it can reach persisted delivery history or caller diagnostics. The original sender exposed a synthetic relay reply containing an email address. The fixed sender keeps allowlisted network and SMTP classification data and leaves ambiguous sends in reconciliation. All 72 shared delivery, 92 worker and 107 API notification cases and 38 package export checks passed. Verify persisted diagnostics on the exact staging candidate and the approved external sinks.",
+        "Activated private staging metrics retention and patched the live scanner. Fixed the cold browser bootstrap behind the cancelled November 20 shard and verified all five affected browser projects on the exact base. The frozen release matrix, lifecycle, monitoring destinations and reviews remain outstanding."
       ],
       "owner": null,
       "depends_on": [],
@@ -568050,7 +568076,10 @@
           "release-0.6-query-read-authority",
           "release-0.6-staging-edge-probes",
           "release-0.6-systemd-license-approval",
-          "release-0.6-clamav-libxml2-86144"
+          "release-0.6-clamav-libxml2-86144",
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-staging-metrics-archive-live",
+          "release-0.6-retained-staging-scanner-live-r3"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -770627,6 +770656,73 @@
           "sha256": "f5527d620cfa0132809d4ff698ce942bab68fd65155ade3ab84913e64fd7fb0a"
         }
       ]
+    },
+    "release-0.6-nightly-pinned-browser-runtime": {
+      "batch": "release-0.6-nightly-pinned-browser-runtime",
+      "base_commit": "8505eec8996cb3600f14b54d8b2bf2da063cab68",
+      "paths": [
+        ".github/workflows/browser-nightly.yml"
+      ],
+      "checks": [
+        "Scheduled run 44712853117 lost WebKit shard 3 at the 60-minute job timeout. The browser exercise and artifact uploads had succeeded with 396 passing cases. The Ubuntu browser dependency install consumed 31 minutes and 34 seconds, primarily fetching large packages from the runner mirror.",
+        "The lock-matched amd64 Playwright 1.65.0 Ubuntu 26.04 image provides the same Chromium and WebKit revisions. Firefox revision 1575 is still installed and selected explicitly. All five browser projects launched under Node 24.22.2 and passed the exact-source English electricity quote, payment and contract activation journey with zero failures or flakes.",
+        "Actionlint, Prettier, the two selector cases and three browser result parser tests passed. The full nightly matrix, artifact checks, quarantine, original 60-minute budget and app assertions remain in force."
+      ],
+      "limitations": [
+        "The next fully scheduled and attributable 40-shard run and approved outcome email receipt remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-nightly-pinned-browser-runtime-20261120.json",
+      "execution_receipts": [
+        {
+          "file": "v06-nightly-pinned-browser-runtime-20261120.json",
+          "sha256": "50e9b37011e984fda5469bb53913eeda682ac2ba15f4c0b0a77c0b01320f4f9e"
+        }
+      ]
+    },
+    "release-0.6-staging-metrics-archive-live": {
+      "batch": "release-0.6-staging-metrics-archive-live",
+      "base_commit": "8505eec8996cb3600f14b54d8b2bf2da063cab68",
+      "paths": [
+        "deploy/monitoring/metrics-retention-compose.yml",
+        "deploy/monitoring/prometheus-archive.yml"
+      ],
+      "checks": [
+        "The existing exact stage Prometheus image now keeps primary data for 35 days and runs a separate 400-day metrics archive with a 2 GiB size cap. The rendered plans preserved existing data, private scrape configuration and other services.",
+        "Two consecutive five-minute scrapes retained the first samples and observed 222 series, scoped API and worker samples, three recording-rule series, and volume growth from 26,755 to 28,303 apparent bytes. All four primary targets and its active Alertmanager stayed verified after activation.",
+        "The two earlier activation readbacks interpreted the normalized flag units incorrectly. The prior primary and its data were verified after each rollback. The corrected readback verified 5w, 400d and 2GiB."
+      ],
+      "limitations": [
+        "Record the pre-November 20 archive history gap. Verify the long-window capacity trend, accepted target and separately approved alert delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-metrics-archive-20261120.json",
+      "execution_receipts": [
+        {
+          "file": "v06-staging-metrics-archive-20261120.json",
+          "sha256": "5ab3a706327c2f1b349900e8b81b363a9136123bd66791a627e64f8581b709f7"
+        }
+      ]
+    },
+    "release-0.6-retained-staging-scanner-live-r3": {
+      "batch": "release-0.6-retained-staging-scanner-live-r3",
+      "base_commit": "8505eec8996cb3600f14b54d8b2bf2da063cab68",
+      "paths": [
+        "deploy/clamav/Dockerfile"
+      ],
+      "checks": [
+        "Protected CI 44806739379 passed source 8505eec89 and main readback matched. Main CI 44808578177 also passed at that source.",
+        "The exact patched retained scanner now runs on staging v0.5.1. The signature volume retained signed daily database 28189, native clean and EICAR checks passed and the active worker reached the scanner.",
+        "The first restart reached health and rolled back after an incompatible process inspection format. The previous image readback succeeded. The corrected check passed on retry. The exact retained PostgreSQL and scanner pair passed the pinned scan and all 282 release license entries passed."
+      ],
+      "limitations": [
+        "The exact v0.6.0 deployment and sealed application upload receipt remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-retained-staging-scanner-20261120.json",
+      "execution_receipts": [
+        {
+          "file": "v06-retained-staging-scanner-20261120.json",
+          "sha256": "a97f930f3743631d9484684e8aa742e9361dd62df7bfb19d8a182be1facc394e"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -774108,9 +774204,9 @@
         "path": "apps/worker/src/refunds/retry-runner.ts",
         "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
       },
-      "4389548210889094": {
+      "835419655370361": {
         "path": ".github/workflows/browser-nightly.yml",
-        "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
+        "sha256": "f139bdeeb839cda38b3ebc5bf0e508e8d3b82c912a1312f06d35ab41a401648a"
       },
       "4310718850880231": {
         "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -790858,6 +790954,14 @@
           "apps/web/playwright.config.ts"
         ],
         "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+      },
+      "3740545211621373": {
+        "batch": "release-0.6-nightly-pinned-browser-runtime",
+        "base_commit": "8505eec8996cb3600f14b54d8b2bf2da063cab68",
+        "paths": [
+          ".github/workflows/browser-nightly.yml"
+        ],
+        "scope": "Nightly browser bootstrap only. Browser projects, pinned firefox executable, release accounting and checked application assertions retain their behavior. Five affected native production-browser journeys passed in the exact replacement image."
       },
       "2897000423732868": {
         "batch": "release-0.6-promotion-receipt-binding",
