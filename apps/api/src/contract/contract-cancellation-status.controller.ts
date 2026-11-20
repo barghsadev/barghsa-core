@@ -1,7 +1,7 @@
 import { Controller, Get, HttpException, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { customerContractAccess } from './contract-customer-access.js';
@@ -23,19 +23,22 @@ export class StaffContractCancellationStatusController {
   @ApiOperation({
     summary: 'Read service cancellation and current financial closure independently',
   })
-  async get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     if (!hasStaffPermission(req, 'contracts:read'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    const status = await readCancellationStatus(getDbPool(), idValue(id));
-    return {
-      ...status,
-      canCancel:
-        hasStaffPermission(req, 'contracts:write') &&
-        !['Completed', 'Cancelled', 'Rejected'].includes(status.state) &&
-        !status.savingTerminal,
-      canReject: hasStaffPermission(req, 'contracts:write') && status.rejectionAvailable,
-      canChooseRefund: hasStaffPermission(req, 'admin:financial:edit'),
-    };
+    const parsed = idValue(id);
+    return withStaffReadAuthority(req.session, 'contracts:read', async (client) => {
+      const status = await readCancellationStatus(client, parsed);
+      return {
+        ...status,
+        canCancel:
+          hasStaffPermission(req, 'contracts:write') &&
+          !['Completed', 'Cancelled', 'Rejected'].includes(status.state) &&
+          !status.savingTerminal,
+        canReject: hasStaffPermission(req, 'contracts:write') && status.rejectionAvailable,
+        canChooseRefund: hasStaffPermission(req, 'admin:financial:edit'),
+      };
+    });
   }
 }
 @ApiTags('Contracts')

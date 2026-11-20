@@ -953,6 +953,82 @@ it('reports financial closure only after obligations settle and scopes customer 
   expect((await send('contracts/not-a-uuid/cancellation-status')).status).toBe(400);
 });
 
+it('withholds staff cancellation details when the session expires during the database read', async () => {
+  const f = await fixture();
+  const path = `contracts/${f.contract.id}/cancellation-status`;
+  const session = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,expires_at,idle_deadline)
+       VALUES($1,'cancel-legal',$2,$3,'staff',clock_timestamp()+INTERVAL '1 hour',
+              clock_timestamp()+INTERVAL '30 minutes')`,
+    [session, randomUUID(), randomUUID()]
+  );
+  const read = () =>
+    fetch(`${http.base}/api/admin/${path}`, {
+      headers: { Cookie: `barghsa_session=${session}` },
+    });
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    const current = await read();
+    expect(current.status, http.logs()).toBe(200);
+    expect(await current.json()).toMatchObject({
+      contractId: f.contract.id,
+      financialStatus: 'not_cancelled',
+      canCancel: true,
+      canChooseRefund: false,
+    });
+    expect((await send(path, undefined, 'cancel-support')).status).toBe(403);
+
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE invoices IN ACCESS EXCLUSIVE MODE');
+    const { pid } = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid'))
+      .rows[0]!;
+    const { expires_at: expiresAt } = (
+      await http.pool.query<{ expires_at: Date }>(
+        `UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '4 seconds'
+           WHERE session_id=$1 RETURNING expires_at`,
+        [session]
+      )
+    ).rows[0]!;
+    pending = read();
+    await expect
+      .poll(async () => {
+        const waiting = await http.pool.query<{ count: number }>(
+          `SELECT count(*)::int AS count FROM pg_stat_activity
+             WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))
+               AND query LIKE '%contract_has_pending_payments(c.id)%'`,
+          [pid]
+        );
+        return waiting.rows[0]!.count;
+      })
+      .toBe(1);
+    await expect
+      .poll(
+        async () => {
+          const observed = await http.pool.query<{ expired: boolean }>(
+            'SELECT clock_timestamp()>=$1::timestamptz AS expired',
+            [expiresAt]
+          );
+          return observed.rows[0]!.expired;
+        },
+        { timeout: 6000 }
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    const denied = await pending;
+    expect(denied.status, http.logs()).toBe(401);
+    const body = await denied.text();
+    expect(body).not.toContain(f.contract.id);
+    expect(body).not.toContain('financialStatus');
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending;
+    await http.pool.query('DELETE FROM sessions WHERE session_id=$1', [session]);
+  }
+}, 12000);
+
 it('returns a JSON empty decision and resumes saved approvals after reopening', async () => {
   const f = await fixture(),
     path = `contracts/${f.contract.id}/cancellations`;
