@@ -1804,11 +1804,14 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": false,
                   "properties": {
                     "consultation": {
+                      "additionalProperties": false,
                       "properties": {
                         "fallbacks": {
                           "items": {
+                            "additionalProperties": false,
                             "properties": {
                               "strategy": {
                                 "enum": [
@@ -1849,9 +1852,11 @@
                       "type": "object"
                     },
                     "ticket": {
+                      "additionalProperties": false,
                       "properties": {
                         "fallbacks": {
                           "items": {
+                            "additionalProperties": false,
                             "properties": {
                               "strategy": {
                                 "enum": [
@@ -1892,9 +1897,11 @@
                       "type": "object"
                     },
                     "verification_case": {
+                      "additionalProperties": false,
                       "properties": {
                         "fallbacks": {
                           "items": {
+                            "additionalProperties": false,
                             "properties": {
                               "strategy": {
                                 "enum": [
@@ -1960,11 +1967,14 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "consultation": {
+                    "additionalProperties": false,
                     "properties": {
                       "fallbacks": {
                         "items": {
+                          "additionalProperties": false,
                           "properties": {
                             "strategy": {
                               "enum": [
@@ -2005,9 +2015,11 @@
                     "type": "object"
                   },
                   "ticket": {
+                    "additionalProperties": false,
                     "properties": {
                       "fallbacks": {
                         "items": {
+                          "additionalProperties": false,
                           "properties": {
                             "strategy": {
                               "enum": [
@@ -2048,9 +2060,11 @@
                     "type": "object"
                   },
                   "verification_case": {
+                    "additionalProperties": false,
                     "properties": {
                       "fallbacks": {
                         "items": {
+                          "additionalProperties": false,
                           "properties": {
                             "strategy": {
                               "enum": [
@@ -2102,11 +2116,14 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": false,
                   "properties": {
                     "consultation": {
+                      "additionalProperties": false,
                       "properties": {
                         "fallbacks": {
                           "items": {
+                            "additionalProperties": false,
                             "properties": {
                               "strategy": {
                                 "enum": [
@@ -2147,9 +2164,11 @@
                       "type": "object"
                     },
                     "ticket": {
+                      "additionalProperties": false,
                       "properties": {
                         "fallbacks": {
                           "items": {
+                            "additionalProperties": false,
                             "properties": {
                               "strategy": {
                                 "enum": [
@@ -2190,9 +2209,11 @@
                       "type": "object"
                     },
                     "verification_case": {
+                      "additionalProperties": false,
                       "properties": {
                         "fallbacks": {
                           "items": {
+                            "additionalProperties": false,
                             "properties": {
                               "strategy": {
                                 "enum": [

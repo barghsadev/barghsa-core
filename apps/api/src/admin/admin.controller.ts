@@ -172,11 +172,13 @@ const escalationPolicyRequest = {
 };
 const assignmentRulesSchema = {
   type: 'object' as const,
+  additionalProperties: false,
   properties: Object.fromEntries(
     STAFF_ASSIGNMENT_WORK_TYPES.map((type) => [
       type,
       {
         type: 'object' as const,
+        additionalProperties: false,
         properties: {
           ...assignmentChoiceProperties,
           teamId: { ...assignmentChoiceProperties.teamId, nullable: true },
@@ -185,6 +187,7 @@ const assignmentRulesSchema = {
             maxItems: STAFF_ASSIGNMENT_MAX_FALLBACKS,
             items: {
               type: 'object' as const,
+              additionalProperties: false,
               properties: assignmentChoiceProperties,
               required: ['teamId', 'strategy'],
             },

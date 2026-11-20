@@ -99,6 +99,24 @@ describe('staff assignment rules contract (T-09.08.02)', () => {
       expect(result.verification_case.strategy).toBe('round_robin');
     });
 
+    it('keeps known routing from stored rules containing legacy fields', () => {
+      const ticket = {
+        teamId: 'primary',
+        strategy: 'load',
+        fallbacks: [{ teamId: 'secondary', strategy: 'expertise' }],
+      };
+      const stored = {
+        ticket: {
+          ...ticket,
+          legacy: true,
+          fallbacks: ticket.fallbacks.map((choice) => ({ ...choice, legacy: true })),
+        },
+      };
+      expect(validateStaffAssignmentRules(stored).ok).toBe(true);
+      expect(toStaffAssignmentRules(stored).ticket).toEqual(ticket);
+      expect(validateStaffAssignmentRules(stored, { rejectUnknownFields: true }).ok).toBe(false);
+    });
+
     it('returns the manual default for non-object input', () => {
       expect(toStaffAssignmentRules(null)).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES);
       expect(toStaffAssignmentRules([1])).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES);

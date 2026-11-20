@@ -2967,7 +2967,7 @@ export class AdminService {
     ip: string
   ): Promise<StaffAssignmentRules> {
     const actorUserId = actor.userId;
-    const validation = validateStaffAssignmentRules(input);
+    const validation = validateStaffAssignmentRules(input, { rejectUnknownFields: true });
     if (!validation.ok) {
       throw new HttpException(
         {

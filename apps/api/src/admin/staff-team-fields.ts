@@ -44,7 +44,8 @@ export function assertStaffRoutingFields(body: unknown) {
   )
     throw generic();
   const fields = STAFF_ASSIGNMENT_WORK_TYPES.filter(
-    (type) => !validateStaffAssignmentRules({ [type]: body[type] }).ok
+    (type) =>
+      !validateStaffAssignmentRules({ [type]: body[type] }, { rejectUnknownFields: true }).ok
   ).map(
     (type) =>
       ({

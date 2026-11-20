@@ -423,3 +423,46 @@ it('rejects a membership change discovered after account locks without overwriti
     (await call(`staff-teams/${created.id}`, 'PUT', { name: 'Fresh edit' }, 'operator')).status
   ).toBe(200);
 });
+it.each(['primary', 'fallback'] as const)(
+  'rejects an undeclared %s routing field before changing configuration or audit history',
+  async (location) => {
+    const primary = await team(),
+      fallback = await team();
+    const path = 'config/assignment-rules';
+    const valid = {
+      ticket: {
+        teamId: primary.id,
+        strategy: 'load',
+        fallbacks: [{ teamId: fallback.id, strategy: 'round_robin' }],
+      },
+    };
+    expect((await call(path, 'PUT', valid)).status).toBe(200);
+    const read = async () => ({
+      rules: (
+        await http.pool.query(
+          "SELECT value,version FROM app_config WHERE key='admin.staff_assignment_rules'"
+        )
+      ).rows,
+      audit: (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='admin.staff_assignment_rules' ORDER BY id"
+        )
+      ).rows,
+    });
+    const before = await read();
+    const updated = { ...valid.ticket, strategy: 'expertise' };
+    const unexpected = { unexpected: 'private-submitted-value' };
+    const ticket =
+      location === 'primary'
+        ? { ...updated, ...unexpected }
+        : { ...updated, fallbacks: [{ ...updated.fallbacks[0], ...unexpected }] };
+    const response = await call(path, 'PUT', { ticket });
+    expect(response.status).toBe(400);
+    const text = await response.text();
+    expect(JSON.parse(text)).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields: ['ticketRule'] },
+    });
+    expect(text).not.toContain('private-submitted-value');
+    expect(await read()).toEqual(before);
+  }
+);

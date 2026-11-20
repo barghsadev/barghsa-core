@@ -110,8 +110,13 @@ export function isValidStaffAssignmentStrategy(raw: unknown): raw is StaffAssign
  *
  * The map is a full replace: work types omitted by the admin are normalized
  * to the manual-assignment default (`null` team) on persist.
+ * Request validation can reject extra nested fields while stored legacy rules
+ * continue to project only their recognized routing fields.
  */
-export function validateStaffAssignmentRules(input: unknown): StaffAssignmentRulesValidationResult {
+export function validateStaffAssignmentRules(
+  input: unknown,
+  { rejectUnknownFields = false } = {}
+): StaffAssignmentRulesValidationResult {
   const issues: string[] = [];
 
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
@@ -137,6 +142,11 @@ export function validateStaffAssignmentRules(input: unknown): StaffAssignmentRul
       continue;
     }
     const rule = raw as Record<string, unknown>;
+    if (
+      rejectUnknownFields &&
+      Object.keys(rule).some((key) => key !== 'teamId' && key !== 'strategy' && key !== 'fallbacks')
+    )
+      issues.push(`${workType} rule contains unsupported fields`);
     if (rule.teamId !== undefined && rule.teamId !== null && typeof rule.teamId !== 'string') {
       issues.push(`${workType} teamId must be a string or null`);
     }
@@ -163,6 +173,11 @@ export function validateStaffAssignmentRules(input: unknown): StaffAssignmentRul
             continue;
           }
           const choice = entry as Record<string, unknown>;
+          if (
+            rejectUnknownFields &&
+            Object.keys(choice).some((key) => key !== 'teamId' && key !== 'strategy')
+          )
+            issues.push(`${workType} fallback contains unsupported fields`);
           if (
             typeof choice.teamId !== 'string' ||
             !choice.teamId.trim() ||
