@@ -39,8 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the final v0.6.0 preflights, obtain scheduled email delivery, and finish independent synthetic alert delivery, license review and protected backup prerequisites.
+Verify the first scheduled configuration backup using the updated inventory and the next regular PostgreSQL backup. Verify exact storage expiry and recoverable cutover after the staged object reaches its required age. Reconcile candidate monitoring, protected checks and authorized delivery receipts in parallel.
 
+- `01-platform-infrastructure.md#T-04.01.07`: Encrypted off-server backup of config, secrets, and critical application files
+- `01-platform-infrastructure.md#T-04.01.02`: Configure automated backups with WAL archiving and PITR
+- `01-platform-infrastructure.md#T-04.03.03`: Configure bucket versioning and lifecycle policies
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 - `06-security-testing-observability.md#T-06.15.02.02`: Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2
 - `06-security-testing-observability.md#T-06.17.03.02`: Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider)

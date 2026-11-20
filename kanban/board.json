@@ -11606,7 +11606,8 @@
         "Production secret-manager provisioning, complete deployment file inventory, HTTPS off-server storage/IAM/lifecycle and actual retained backup history require operational evidence.",
         "The staging configuration backup timer is installed and enabled at 02:00 UTC. Its first manual systemd run captured 19 files and 33 configuration tables. An independent check verified the exact EU archive and manifest versions and ciphertext hash. The versioned EU bucket expires noncurrent versions after 90 days and aborts incomplete multipart uploads after seven days. Verify scheduled execution, production configuration rehydration and delivered monitoring alerts.",
         "The installed quarterly staging configuration service held PostgreSQL share locks through the independent baseline and backup. A private clone restored 19 files and 33 configuration tables from the verified EU archive in 3.534 seconds with zero observed loss for those assets. The timer is active on the first Saturday of each quarter at 04:00 UTC. Its first timer-triggered receipt and measured core-service recovery remain open.",
-        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open."
+        "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open.",
+        "Installed the reviewed staging inventory for the signed storage callback. The approved EU archive and manifest readback verified 56 files and 33 configuration tables. The native restore verified the wrapped signing key, notification configuration and read-only Compose overlay against the actual protected originals. It measured 5.524 seconds and zero loss for the covered configuration. The regular scheduled execution and production-equivalent recovery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -11695,7 +11696,9 @@
           "historically_skipped": false
         },
         "changed_paths": [
-          ".env.example"
+          ".env.example",
+          "deploy/staging/monitoring-backup-inputs.sh",
+          "docs/operations/backup/config-restore-runbook.md"
         ],
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
@@ -11725,6 +11728,10 @@
         "staging_monitoring_configuration_restore": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-monitoring-configuration-restore-20261119.json",
           "sha256": "880c474589eb7b7e5d67c44c04fc3236931de2e23600730987906cc7dbf28d0f"
+        },
+        "staging_storage_callback_config_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-callback-config-recovery-20261120.json",
+          "sha256": "668fc2da57b06d1c42d06ea3e23417f8dd3fd6ff119045ebd2c99e0f080b445d"
         }
       }
     },
@@ -12547,7 +12554,9 @@
         "The encrypted EU rollback rehearsal restored all 11 synthetic versions under 4.47. The same recovered copy passed the repaired image's actual readiness check at 768 MiB and preserved version order, tags and bytes. A protected Compose render changes only the storage image and volume. The live inventory records 59 versions and five delete markers. Repeat the fingerprint after quiescing writes, compare it before reopening the repaired live store, and verify elapsed expiry after the isolated fixture's November 20 17:31 UTC threshold.",
         "Verified the final protected operator copy of the source and notice bundle and the embedded manifest against the reviewed checksums. The exact image on staging contains all three expected SeaweedFS and Go notices. Recipient access and package-specific replacement conditions, the live cutover, and elapsed staging expiry remain open.",
         "The exact reviewed SeaweedFS image passed matching local and native staging tests for alternate shared libraries and the FUSE configuration bind. The ten associated source and recipe payloads match the reviewed archive. The owner workbook still governs recipient access and distribution conditions. Elapsed expiry and recoverable live storage cutover remain open.",
-        "The signed final storage build is loaded on staging. An isolated clone of the original synthetic storage volume matched 85 file checksums. The exact new image opened that clone and preserved held and unclassified fixtures. The original tagged object reaches one-day eligibility at 2026-11-20 17:31:14.155718 UTC. Run the exact-image observer then, and verify the recoverable live cutover, fingerprint and selected provider behavior on the accepted candidate."
+        "The signed final storage build is loaded on staging. An isolated clone of the original synthetic storage volume matched 85 file checksums. The exact new image opened that clone and preserved held and unclassified fixtures. The original tagged object reaches one-day eligibility at 2026-11-20 17:31:14.155718 UTC. Run the exact-image observer then, and verify the recoverable live cutover, fingerprint and selected provider behavior on the accepted candidate.",
+        "Staging now has the protected dormant key and notification configuration for the exact signed image. The stored active bucket matched the running storage container, and the API image's node group read the key through a read-only mount. EU archive readback and isolated restore verified all three callback inputs. Delivery is disabled and the active image manifest and runtime remained intact. Complete the exact natural expiry and recoverable live storage cutover.",
+        "The exact signed 4.54 image fetched and verified the encrypted EU version of the synthetic 4.47 cold volume, then started it with the default staging command, 768 MiB limit and protected dormant callback mounts. All 11 versioned byte/tag reads, seven ordered history versions and three protected objects matched. Stage remains on the prior store while the natural age gate runs. Verify live fingerprints and fenced cutover after the exact-image expiry observation."
       ],
       "owner": null,
       "depends_on": [],
@@ -12643,7 +12652,9 @@
           "deploy/staging/deploy.sh",
           "deploy/staging/release.sh",
           "deploy/staging/test_release_rollback.py",
-          "docs/security/storage-license-review.md"
+          "docs/security/storage-license-review.md",
+          "deploy/staging/monitoring-backup-inputs.sh",
+          "docs/operations/backup/config-restore-runbook.md"
         ],
         "batches": [
           "release-0.6-storage-sdk-endpoint-policy",
@@ -12694,6 +12705,14 @@
         "staging_signed_storage_package": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
           "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        "staging_storage_callback_config_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-callback-config-recovery-20261120.json",
+          "sha256": "668fc2da57b06d1c42d06ea3e23417f8dd3fd6ff119045ebd2c99e0f080b445d"
+        },
+        "staging_signed_storage_eu_cold_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-eu-cold-restore-20261120.json",
+          "sha256": "e9fbfd73470f96c19fd9199a7ff30abca1ffe543d501486ba1feff20d9d3545d"
         }
       },
       "defect_severity": "P1"
@@ -388889,7 +388908,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The immutable Linux app at b15ebc3a9, its normal worker process and the exact signed SeaweedFS image passed in a private staging-host Docker network. The API accepted the protected read-only key under its node group. It applied 0297 and an immediate repeat had no pending migrations. Actual direct and multipart callbacks each matched independent version and byte reads. Verify the active protected callback after recovering and cutting over live storage."
+        "The immutable Linux app at b15ebc3a9, its normal worker process and the exact signed SeaweedFS image passed in a private staging-host Docker network. The API accepted the protected read-only key under its node group. It applied 0297 and an immediate repeat had no pending migrations. Actual direct and multipart callbacks each matched independent version and byte reads. Verify the active protected callback after recovering and cutting over live storage.",
+        "The protected signing key, disabled notification configuration and reviewed Compose overlay are prepared on staging. The bucket matches the active stored configuration, and the API container's node group read the key through the intended read-only mount. EU backup and an isolated restore verified all three inputs. Activate the callback and verify real delivery after the recoverable storage cutover and healthy application rollout."
       ],
       "owner": null,
       "depends_on": [],
@@ -388919,7 +388939,9 @@
           "deploy/staging/deploy.sh",
           "deploy/staging/release.sh",
           "deploy/staging/test_release_rollback.py",
-          "docs/security/storage-license-review.md"
+          "docs/security/storage-license-review.md",
+          "deploy/staging/monitoring-backup-inputs.sh",
+          "docs/operations/backup/config-restore-runbook.md"
         ],
         "batches": [
           "release-0.6-shared-webhook-signature-verification"
@@ -388944,6 +388966,10 @@
         "native_staging_signed_storage_runtime": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
           "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
+        },
+        "staging_storage_callback_config_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-callback-config-recovery-20261120.json",
+          "sha256": "668fc2da57b06d1c42d06ea3e23417f8dd3fd6ff119045ebd2c99e0f080b445d"
         }
       }
     },
@@ -564954,7 +564980,9 @@
         "The staging daily backup and quarterly restore share a monitoring inventory drawn from the running Compose services. The manual quarterly invocation read back its verified encrypted EU archive and prepared an isolated restore of 53 files and 33 configuration tables. The 34 added files include the active monitoring overlay, private exporter certificates and wrapped keys, and backup metrics configuration. The restore matched the independent baseline in 4.818 seconds with zero observed loss for the covered assets. The scheduled invocation, production-equivalent exercise and measured core-service recovery remain open.",
         "The CSP rehearsal now models staging's same-origin storage and the native customer runner loads the workspace TypeScript fixture. Fourteen compiled business cases, two native customer sessions and eight report-only transfer safeguards passed in Chromium and WebKit. Live enforcement and direct upload readback remain release gates.",
         "The signed storage image, API and worker passed the combined TLS, duplicate, version and rollback evidence. Protected staging storage has the checksum-verified image and source archive. Wait for the natural expiry of the original seeded fixture on the exact signed-image clone and verify the recoverable live storage cutover before acceptance.",
-        "The exact b15ebc3a9 Linux API and normal worker passed their native staging rehearsal with signed storage, migration 0297 and a no-op repeat. Three verified HTTPS deliveries produced two encrypted completed receipts and preserved both uploads as provisional. The active v0.5.1 services and manifest were preserved. The timed exact-image lifecycle proof, recoverable live cutover and other acceptance gates remain open."
+        "The exact b15ebc3a9 Linux API and normal worker passed their native staging rehearsal with signed storage, migration 0297 and a no-op repeat. Three verified HTTPS deliveries produced two encrypted completed receipts and preserved both uploads as provisional. The active v0.5.1 services and manifest were preserved. The timed exact-image lifecycle proof, recoverable live cutover and other acceptance gates remain open.",
+        "The exact callback key and configuration are ready on staging with delivery disabled. The installed encrypted configuration backup and native restore verified 56 staged files and 33 tables, including the three new callback inputs, in 5.524 seconds with zero loss for the covered configuration. The natural storage expiry, live cutover, scheduled receipts and final staging gates remain open.",
+        "The exact signed image also booted the checksum-verified versioned EU backup of the synthetic 4.47 cold volume with the default staging command and dormant callback mounts. All 11 byte/tag checks and all protected controls matched. The live storage cutover and exact elapsed expiry remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -565665,7 +565693,9 @@
           "apps/api/src/provider-config/resend-connection-tester.service.ts",
           "deploy/licenses/objectstore-inventory.json",
           "deploy/staging/compose.objectstore-webhook.yml",
-          "docs/security/storage-license-review.md"
+          "docs/security/storage-license-review.md",
+          "deploy/staging/monitoring-backup-inputs.sh",
+          "docs/operations/backup/config-restore-runbook.md"
         ],
         "staging_eu_database_recovery": {
           "date": "2026-11-15",
@@ -565816,6 +565846,14 @@
         "native_staging_signed_storage_runtime": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
           "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
+        },
+        "staging_storage_callback_config_recovery": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-callback-config-recovery-20261120.json",
+          "sha256": "668fc2da57b06d1c42d06ea3e23417f8dd3fd6ff119045ebd2c99e0f080b445d"
+        },
+        "staging_signed_storage_eu_cold_restore": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-eu-cold-restore-20261120.json",
+          "sha256": "e9fbfd73470f96c19fd9199a7ff30abca1ffe543d501486ba1feff20d9d3545d"
         }
       }
     },
@@ -765588,6 +765626,9 @@
     "id": "release-0.6-recovery-and-monitoring-receipts",
     "release": "0.6.0",
     "task_keys": [
+      "01-platform-infrastructure.md#T-04.01.07",
+      "01-platform-infrastructure.md#T-04.01.02",
+      "01-platform-infrastructure.md#T-04.03.03",
       "release-readiness#R-05.02",
       "06-security-testing-observability.md#T-06.15.02.02",
       "06-security-testing-observability.md#T-06.17.03.02",
@@ -765595,7 +765636,7 @@
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify the final v0.6.0 preflights, obtain scheduled email delivery, and finish independent synthetic alert delivery, license review and protected backup prerequisites."
+    "goal": "Verify the first scheduled configuration backup using the updated inventory and the next regular PostgreSQL backup. Verify exact storage expiry and recoverable cutover after the staged object reaches its required age. Reconcile candidate monitoring, protected checks and authorized delivery receipts in parallel."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

@@ -48,4 +48,19 @@ capture_monitoring_inputs() {
   add_input deploy usr/local/lib/barghsa-staging/report-postgres-backup.py
   add_input deploy opt/barghsa/staging/postgres-backup-monitor/run_backup_job.py
   add_input deploy opt/barghsa/staging/config-backup/monitoring-inputs.sh
+
+  local webhook=etc/barghsa/staging/storage-webhook
+  if [[ -e "/$webhook" || -L "/$webhook" ]]; then
+    [[ -d "/$webhook" && ! -L "/$webhook" ]] || return 1
+    for path in notification.toml signing-key; do
+      [[ -f "/$webhook/$path" && -s "/$webhook/$path" && ! -L "/$webhook/$path" ]] || return 1
+    done
+    add_input deploy "$webhook/notification.toml"
+    add_input encryption_key "$webhook/signing-key"
+  fi
+  path=opt/barghsa/staging/compose.objectstore-webhook.yml
+  if [[ -e "/$path" || -L "/$path" ]]; then
+    [[ -f "/$path" && -s "/$path" && ! -L "/$path" ]] || return 1
+    add_input deploy "$path"
+  fi
 }

@@ -148,6 +148,8 @@ Validate unit paths and permissions on the actual host before separately enablin
 
 On staging, install the [monitoring inventory helper](../../../deploy/staging/monitoring-backup-inputs.sh) at `/opt/barghsa/staging/config-backup/monitoring-inputs.sh`. The daily backup and quarterly restore scripts both load it after collecting the web TLS files. It reads the active Prometheus and Alertmanager Compose paths and mounted configuration, then adds the private exporter certificates, wrapped keys and backup reporting scripts. The restored paths should match the inventory for the reviewed deployment.
 
+When the signed storage callback is prepared, the same inventory includes its notification configuration, wrapped signing key and installed Compose overlay. Rehydrate the key in the private restore workspace and verify its recorded hash. Install the reviewed files under the root-only `/etc/barghsa/staging/storage-webhook` directory. Set the signing key to owner `root`, group ID `1000` and mode `0440` before mounting it read-only in the API and SeaweedFS. Verify the configured bucket and HTTPS callback before enabling delivery.
+
 Retain the label, source revision, schema revision, inventory, baseline timestamp,
 measured RPO/RTO, report, alert-delivery evidence and operator review from each quarterly
 run. Local synthetic tests do not establish off-server deployment, 90 days of retained
