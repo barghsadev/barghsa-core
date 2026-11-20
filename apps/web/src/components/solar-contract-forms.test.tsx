@@ -2,6 +2,7 @@ import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { z } from 'zod';
 import type * as SchemaModule from '../lib/solar-contract-form-schemas.js';
 import { SolarContractForm } from './SolarContractForm.js';
 import { AdminSolarPostalPage } from '../pages/AdminSolarPostalPage.js';
@@ -20,8 +21,7 @@ import type { SolarContractBody } from '../lib/solar-contract-form.js';
 import type { TeamActionDialog } from './TeamActionDialog.js';
 const harness = vi.hoisted(() => ({
   dialog: null as ComponentProps<typeof TeamActionDialog> | null,
-  schemaGate: null as Promise<void> | null,
-  schemaStarted: false,
+  pauseValidation: null as (() => Promise<void>) | null,
   locale: 'en' as 'en' | 'fa',
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
@@ -35,9 +35,19 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 }));
 vi.mock('../lib/solar-contract-form-schemas.js', async (importOriginal) => {
   const actual = await importOriginal<typeof SchemaModule>();
-  harness.schemaStarted = true;
-  if (harness.schemaGate) await harness.schemaGate;
-  return { ...actual, solarContractSchema: actual.solarContractSchema };
+  return {
+    ...actual,
+    solarContractSchema: (...args: Parameters<typeof actual.solarContractSchema>) => {
+      const schema = actual.solarContractSchema(...args);
+      const pause = harness.pauseValidation;
+      return pause
+        ? z.preprocess(async (input) => {
+            await pause();
+            return input;
+          }, schema)
+        : schema;
+    },
+  };
 });
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: (props: ComponentProps<typeof TeamActionDialog>) => {
@@ -59,7 +69,7 @@ const defaultResponse = async (url: string, init?: RequestInit) =>
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   harness.dialog = null;
-  harness.schemaGate = null;
+  harness.pauseValidation = null;
   harness.locale = 'en';
   owner = null;
   denied = vi.fn();
@@ -164,35 +174,39 @@ async function click(testid: string) {
     host.querySelector<HTMLButtonElement>('[data-testid="' + testid + '"]')!.click()
   );
 }
-it('native blur with held schema and companion edits cannot erase later authoritative submit errors', async () => {
-  let release!: () => void;
-  harness.schemaGate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
+it('native blur with held validation and companion edits cannot erase later authoritative submit errors', async () => {
   await mount();
   await valid();
   await set('solar-contract-title', 'x'.repeat(201));
-  await act(async () => {
-    const title = host.querySelector<HTMLInputElement>('#solar-contract-title')!;
-    title.focus();
-    title.blur();
-  });
-  await vi.waitFor(() => expect(harness.schemaStarted).toBe(true));
-  await set('solar-contract-text', 'Edited while schema loads');
-  await submit();
-  await submit();
-  expect(calls.filter((call) => call.url.endsWith('/review'))).toHaveLength(0);
-  await act(async () => {
-    release();
-    await harness.schemaGate;
-  });
-  harness.schemaGate = null;
-  await vi.waitFor(async () => {
-    await act(async () => {});
+  const validations: Array<() => void> = [];
+  harness.pauseValidation = () => new Promise((resolve) => validations.push(resolve));
+  const expectRejected = () => {
     expect(host.querySelector('#solar-contract-title')?.getAttribute('aria-invalid')).toBe('true');
     expect(document.activeElement?.id).toBe('solar-contract-title');
-  });
-  expect(owner).toBeNull();
+    expect(owner).toBeNull();
+    expect(calls.filter((call) => call.url.endsWith('/review'))).toHaveLength(0);
+  };
+  try {
+    await act(async () => {
+      const title = host.querySelector<HTMLInputElement>('#solar-contract-title')!;
+      title.focus();
+      title.blur();
+    });
+    await vi.waitFor(() => expect(validations).toHaveLength(1));
+    await set('solar-contract-text', 'Edited while validation is pending');
+    await submit();
+    await submit();
+    await vi.waitFor(() => expect(validations).toHaveLength(2));
+    expect(owner).not.toBeNull();
+    expect(calls.filter((call) => call.url.endsWith('/review'))).toHaveLength(0);
+    await act(async () => validations[1]!());
+    await vi.waitFor(expectRejected);
+    await act(async () => validations[0]!());
+    expectRejected();
+  } finally {
+    harness.pauseValidation = null;
+    await act(async () => validations.forEach((release) => release()));
+  }
 });
 it.each(['en', 'fa'] as const)(
   '%s: touched shared fields retain complete raw input, linked first error focus and duplicate guard',
