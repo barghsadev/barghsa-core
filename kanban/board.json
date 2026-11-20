@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T20:41:34+00:00",
+  "updated": "2026-11-20T01:44:31+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -388942,13 +388942,10 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.04 | Build storage provider callback: verify signature, replay-safe, idempotent status update | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The immutable Linux app at b15ebc3a9, its normal worker process and the exact signed SeaweedFS image passed in a private staging-host Docker network. The API accepted the protected read-only key under its node group. It applied 0297 and an immediate repeat had no pending migrations. Actual direct and multipart callbacks each matched independent version and byte reads. Verify the active protected callback after recovering and cutting over live storage.",
-        "The protected signing key, disabled notification configuration and reviewed Compose overlay are prepared on staging. The bucket matches the active stored configuration, and the API container's node group read the key through the intended read-only mount. EU backup and an isolated restore verified all three inputs. Activate the callback and verify real delivery after the recoverable storage cutover and healthy application rollout."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -388982,9 +388979,39 @@
           "docs/operations/backup/config-restore-runbook.md"
         ],
         "batches": [
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-reconcile-verified-components"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "b15ebc3a996dfe026e10515d0ea5e01706308149",
+          "source_evidence": [
+            319666655675670,
+            766662835256260,
+            3973331734222933,
+            4093274502314846,
+            2439923868593081,
+            969742011371398,
+            1152565007735474,
+            1292744732420608,
+            633801304219853,
+            1494984847148783,
+            3878848860046990,
+            1865315599655079,
+            2814077259281938,
+            2783358097275046,
+            2563405803285017,
+            260301848586455,
+            1032353569761040,
+            2377243118297347,
+            178032077037025
+          ],
+          "checks": [
+            2399800600732587,
+            3677992327402541,
+            1890459355494832
+          ]
+        },
         "staging_seaweedfs_webhook_contract": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-webhook-contract-20261120.json",
           "sha256": "f8063ee14de11a6a3f9747a9da38c518125ce894cc91bc41d615fa0ec103c168"
@@ -390728,37 +390755,10 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.07 | Generate SBOM (Software Bill of Materials) for each production build | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests.",
-        "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
-        "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
-        "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
-        "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately.",
-        "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests. The promotion check verifies copied staged vulnerability, SBOM and license report bytes against the worker receipt and matches the recorded production registry platform IDs. Obtain the actual registry and separate retained stateful image evidence.",
-        "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts.",
-        "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required.",
-        "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts.",
-        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
-        "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence.",
-        "Protected preflight 43510245617 at d19812d0a verified all five hosted image scan subjects and their SBOM and scan digests. The approved cutover and exact deployed and registry receipts remain open.",
-        "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open.",
-        "Rebuilt PostgreSQL image dbb54d6c8c53 has exact scan and SBOM evidence with zero high or critical findings. Complete authorized cutover and the exact deployed and registry receipts.",
-        "The worker pins the exact retained license report alongside the retained scans. The approval package verifier checks both against the deployed image IDs. Actual staging and registry receipts remain open.",
-        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
-        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "The exact local Linux amd64 app image ce2980001a9e has a verified CycloneDX receipt, 315 package rows, 12 medium findings and zero high or critical findings. Collect final staging and production registry receipts.",
-        "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs.",
-        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
-        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
-        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
-        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The staging worker now re-reads app and retained SBOM and scan receipts before resuming a v0.6.0 notification. It detects changes to reports and license dispositions against the saved image evidence. Exact approved release images and deployment receipts remain required.",
-        "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -390824,9 +390824,28 @@
           "release-0.6-cumulative-image-receipts",
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-reconcile-verified-components"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "b15ebc3a996dfe026e10515d0ea5e01706308149",
+          "source_evidence": [
+            3832607923924757,
+            4338039208752933,
+            1368919690263265,
+            1256540299604531,
+            2882020909847356,
+            1680424996333195,
+            4306434327613320,
+            1870514664343367,
+            1364273028583396
+          ],
+          "checks": [
+            2375916005829523,
+            4015932504065620
+          ]
+        },
         "exact_hosted_checkpoint": {
           "commit": "133576f31ba18e34a02b1892866a3210e3cad037",
           "workflow_run": 42629838223,
@@ -399344,41 +399363,10 @@
         "story": "06-security-testing-observability.md#spec-7e8081f9925c"
       },
       "requirement": "| T-06.12.03.02 | Build staging smoke deployment: readiness/liveness verification, migration rehearsal | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. Preserve the original database volume and previous images together before accepting writes.",
-        "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released.",
-        "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required.",
-        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
-        "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence.",
-        "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open.",
-        "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open.",
-        "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open.",
-        "The pre-promotion web smoke now verifies the package version and commit together. Missing or invalid manifest versions fail before startup, and stale or absent public versions enter rollback. Repeat on the exact isolated and deployed candidate.",
-        "The exact SeaweedFS rehearsal recovered probe cleanup after an unacknowledged PUT, preserved unrelated data and still failed the staging gate. Rehearse the complete smoke on the accepted immutable images and retain the live receipt.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The staged migration rehearsal now has an explicit official release boundary for protected storage and encrypted WAL. Verify the actual archive settings, off-server checkpoint and readback during the accepted candidate rollout.",
-        "The staging receiver still requires protected storage and encrypted WAL before running migrations. The worker also refuses a disposable checkpoint at receipt verification and on notification retries. Verify the real archive settings, the off-server checkpoint and its readback during the accepted candidate rollout.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal.",
-        "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram.",
-        "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts.",
-        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
-        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
-        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
-        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
-        "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts.",
-        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
-        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
-        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
-        "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
-        "On native staging, the packaged 3f8929fdd migration runner applied the eight pending migrations (0289–0296) to an isolated active application database recovered from the verified EU checkpoint. Its repeat was a no-op. The old and new image database probes each accepted their matching schema and rejected the other schema. Table fingerprints matched the independent source readback and survived the migration. There were no invalid indexes. The final candidate still requires its HTTP smoke tests, staged deployment receipts and production-equivalent rehearsal.",
-        "On native staging Linux amd64, the 3f8929fdd app and web images served HTTP from the isolated EU PITR clone. All eight packaged migrations applied to the restored active database and a repeat applied none. API liveness and warning-free readiness passed with PostgreSQL, Redis and the repaired SeaweedFS image. The login page and release metadata matched the recorded rehearsal revision. Eleven recovered versioned fixture objects matched their bytes and tags. The exact deployment probe verified private write, signed read and version-specific cleanup. The frozen v0.6.0 candidate, deployed receipts and authenticated full core-service recovery remain open.",
-        "Native isolated staging proof at b15ebc3a9 applied the packaged migration set, verified the new receipt table and verified that a repeat had no pending migrations. The API and worker returned passing readiness and liveness, and the immutable API commit matched its health response. A private SeaweedFS test verified the protected callback and exact versions and bytes. Live staged deployment and the final release remain open."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -399451,9 +399439,26 @@
           "release-0.6-receiver-version-backup",
           "release-0.6-first-announcement-runtime",
           "release-0.6-staging-service-health",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-reconcile-verified-components"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "native_verification",
+          "base_commit": "b15ebc3a996dfe026e10515d0ea5e01706308149",
+          "source_evidence": [
+            1680424996333195,
+            4306434327613320,
+            2960541284577999,
+            1870514664343367,
+            2916731061973370,
+            1865315599655079
+          ],
+          "checks": [
+            3585885065300926,
+            3074877315116874,
+            4458929344129024
+          ]
+        },
         "staging_active_database_migration_rehearsal": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-active-migration-rehearsal-20261119.json",
           "sha256": "f665c1e1c53c9223c6d2c45f425b520611f387eb2e152a730cca3a05c1c77bbb",
@@ -402565,12 +402570,10 @@
         "story": "06-security-testing-observability.md#spec-fbdd9ec1cd8c"
       },
       "requirement": "| T-06.13.02.07 | Write integration test: log format compliance, redaction, correlation ID presence | S |\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Exercise and retain redacted receipts for the exact accepted candidate across the configured external log sink. Native API, database, worker, static web and proxy checks now verify structured format, correlation and representative privacy boundaries."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -402700,101 +402703,25 @@
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
           "release-0.6-structured-operator-logs",
           "release-0.6-runtime-log-channel-and-image",
-          "release-0.6-structured-log-fixtures"
+          "release-0.6-structured-log-fixtures",
+          "release-0.6-reconcile-verified-components"
         ],
         "current_acceptance": {
-          "kind": "scoped-operator-log-verification",
-          "base_commit": "6761df94c30bc4ba3993bd84a778596cc420d122",
+          "kind": "native_verification",
+          "base_commit": "2d363a4e7a50c709e8b7b41fc1295196fdd6b192",
           "source_evidence": [
-            2880649624047561,
-            4100935620291072,
-            2998696559019342,
-            534456639018653,
-            2997898451731698,
-            3658805737000089,
-            1461872589065969,
-            1552869989343586,
-            3004651182485672,
-            406222616709777,
-            3725705614406186,
-            2030311329030389,
-            3180009402699701,
-            1887173150483016,
-            3024368958607621,
-            3132240059109196,
-            3251315971266329,
-            1612747867248203,
-            1223382705140932,
-            4096569994374586,
-            867783401481871,
-            653103193130321,
-            1032371566577748,
-            3535624444161393,
-            3322338948782374,
-            342944333449637,
-            1730197199882482,
-            881057048185795,
-            3018646931489796,
-            2989252429496211,
-            1622855673178959,
-            1666894162993769,
-            3668971613848040,
-            1453234805555665,
-            4248248830382986,
-            1943004160367713,
-            72159293370245,
-            2654388551344185,
-            811497079752191,
-            1711000165267575,
-            635358955069255,
-            1901401896293284,
-            1897516823453306,
-            277565332127761,
-            4148330515739557,
-            2674230806181855,
-            2557400707286718,
-            2691049984487236,
-            839382675705179,
-            1292963466906904,
-            1445023261501045,
-            1800047743864987,
-            2879510623697408,
-            4269767219392587,
-            2299237197244534,
-            1787896252563211,
-            3612703200067366,
-            252267276611149,
-            465043005539026,
-            2122940435971318,
-            1699354918066904,
-            2083948174206510,
-            3093517130272916,
-            1254758657547135,
-            2374828989274835,
-            2347529531737576,
-            2969376006209772,
-            2734622026876449,
-            2864645391592112,
-            2278121170490689,
-            3904960363438090,
-            647897858947698,
-            3824821199978570,
-            3062243286054980,
-            2372084551352152
+            2332858311967969,
+            2766703057425745,
+            1705081210127132,
+            3336780762196242,
+            607104509012655,
+            1639515628579144,
+            2721168934557900,
+            3894075223168185
           ],
           "checks": [
-            2350029129217522,
-            2026235876807503,
-            1368628133260972,
-            2782221135488874,
-            1572726825269290,
-            3900782594438478
-          ],
-          "source_renewals": [
-            3167179458835769,
-            3145782551525668,
-            4221842673111181,
-            2738410776947585
+            214616782154533,
+            1710449767117032
           ]
         }
       }
@@ -565030,7 +564957,8 @@
         "The exact callback key and configuration are ready on staging with delivery disabled. The installed encrypted configuration backup and native restore verified 56 staged files and 33 tables, including the three new callback inputs, in 5.524 seconds with zero loss for the covered configuration. The natural storage expiry, live cutover, scheduled receipts and final staging gates remain open.",
         "The exact signed image also booted the checksum-verified versioned EU backup of the synthetic 4.47 cold volume with the default staging command and dormant callback mounts. All 11 byte/tag checks and all protected controls matched. The live storage cutover and exact elapsed expiry remain open.",
         "Native NGINX verified a complete S3 fence, worker drain and restoration without touching live traffic. The preliminary live inventory of 59 versions and five delete markers still matches the prior fingerprint. The exact cutover transport proved the EU readback and independent recovery with a synthetic archive larger than the current storage volume. Final fenced inventory, live rollout and natural expiry remain required.",
-        "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover."
+        "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover.",
+        "Task-specific acceptance covers generated and bound SBOMs, structured logging tests, the staged smoke and migration runner, and the signed storage callback implementation. Before accepting v0.6.0, verify exact final distribution and images, the real configured external log sink, the live recovery checkpoint and staged smoke, and actual protected callback delivery after the storage cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -565464,7 +565392,8 @@
           "release-0.6-smtp-test-diagnostics",
           "release-0.6-payment-recovery-response",
           "release-0.6-license-receipt-reference",
-          "release-0.6-license-promotion-fixture"
+          "release-0.6-license-promotion-fixture",
+          "release-0.6-reconcile-verified-components"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -765640,6 +765569,59 @@
         "ubuntu_amd64_install": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/poppler-native-install.log",
         "fixture": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-threshold-recovery/poppler-targeted-checks.log"
       }
+    },
+    "release-0.6-reconcile-verified-components": {
+      "batch": "release-0.6-reconcile-verified-components",
+      "base_commit": "2d363a4e7a50c709e8b7b41fc1295196fdd6b192",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.13.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.06.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "checks": [
+        "Verified two current native logging runs and the six deployment guard tests. Reused the content-matching hosted image receipts and two native staging-host runtime rehearsals."
+      ],
+      "limitations": [
+        "The v0.6.0 release and separate live and production-equivalent gates remain open."
+      ],
+      "execution_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/hosted-sbom-binding.json",
+          "sha256": "76bab0d89c8c49696de6d0767a9d7018a1653a3bbb0a65049c4d25be7dbfd59c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-package-20261120.json",
+          "sha256": "ce4ca4cfda427b4ecef058448355195b69c04eb5be34bd08f6def7b575d637e8"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/api-log-fixtures.log",
+          "sha256": "96faf88c7283c97dc35ad7bea41c7875af5f36479fbc9a06ff5279104ee10db6"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/shared-log-fixtures.log",
+          "sha256": "7f84888a0c027a6b8af5140e945b9ea7a648ceecda24090686b21384de0f6032"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit/build.log",
+          "sha256": "9887b1365209e22cc406457ce24e3ba4d9c3fd9a1b78b645f971dc07a0bc3fe6"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-runtime-rehearsal-20261120.json",
+          "sha256": "cc149bbfafb429415d0bd07373f133344137360646427b114f8332c30700c0d8"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-staging-native-restored-http-3f8929fdd.json",
+          "sha256": "feaa109b286ac2b347c9e46a5f2fd8e9efc88e6699610174ded17285653b9232"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-webhook-receiver-20261120.json",
+          "sha256": "fd171c74c1099fb30ca68cc89df4ec48344c36d550c74e76ddafea7aaa9f6f33"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-scope-audit"
     }
   },
   "historical_improvements": [
@@ -765804,6 +765786,7 @@
       "721958844904714": "Node 24 passed all 101 current route and interaction budgets through both the default gzip and Size Limit checks. Electricity measures 246.71 KB under its restored 250 KB limit, wallet 299.44 KB under 300 KB, login 146.51 KB under 150 KB and admin wallet receipts 499.90 KB under 500 KB. CI runs this command on every integrity build, including ordinary changes, and uses its own bundled checker tests once.",
       "4388474250227276": "The generated manifests contain 544 app entries and 29 auth entries. Both exact outputs serve content-hashed JavaScript and CSS with one-year immutable caching, and HTML with private no-store. The API's global private no-store policy was verified on live v0.5 success and authentication denial. CDN-ready output is distinct from external CDN rollout.",
       "2989820888515312": "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved.",
+      "253090249689773": "The signed storage callback receiver and worker passed five final cases on migrated PostgreSQL. The storage, Resend and CSP HTTP boundaries and Resend verifier passed 85 existing cases. See the exact source-bound callback receiver receipt.",
       "676486809512351": "Retained the working Vitest 4 projects configuration in the root vitest.config.ts. Vitest's supported projects field replaces the older workspace representation. The actual installed runner discovered 1,262 files across eight testable projects, and all three selected shared base configuration tests passed. Explicit imports and separate typechecking remain the shared defaults.",
       "2442778656562660": "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
       "2858266005413573": "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
@@ -765906,6 +765889,9 @@
       "2534751549455268": "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt.",
       "178137427497833": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
       "4130285963748962": "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior.",
+      "469424028647510": "The signed storage artifact, exact license and two callback services passed the isolated native rehearsal. The affected release and rollback suite passed across the initial and corrected focused executions. The reviewed image and source archive were verified after transfer to protected staging storage.",
+      "601248659294711": "Native staging NGINX blocked new bucket requests while an earlier upload finished, and verified worker drain and restored access. The live NGINX process and included S3 source were unchanged. The exact volume-sized synthetic EU archive verified its immutable version and restore bytes.",
+      "2722680406957809": "Native storage-only Compose model matches the running deployment in its default and rollback modes, retains WAL, and restricts selected image, volume, and mounts to the intended callback and storage paths.",
       "356757864371954": "The actual compiled app and auth asset responses have one-year immutable caching for hashes and private no-store HTML. The unchanged NGINX fixture verified seven static, private and error cache policies and gzip. Live staging success and authentication-denial API responses both sent the exact private, no-cache, no-store, must-revalidate directive. There is no separate external CDN deployment claim.",
       "466265288211980": "All 11 unit and six migrated PostgreSQL HTTP cases passed. Exact SHA-256 tags produce empty 304s for authorized geography reference data, change with new data and cannot bypass session revocation. Profile and wallet GET/HEAD keep full authorized status and privacy without validators. The live catalogue serves current prices and availability and remains outside ETag negotiation, as documented.",
       "2992949370039945": "The pilot deployment command verifies the prior route and immutable image identities, runs the isolated packaged migration, starts and verifies all candidate services, checks exact API and web source revisions, reloads NGINX, waits for the previous workers to drain and retires the old slot. Before retirement a failed candidate restores the verified previous route. Uncertain rollback preserves both slots.",
@@ -767555,6 +767541,7 @@
       "3021965477663691": "The existing image history/predecessor/replacement test now asserts the original protected anchor, absence of inline original bytes, then the separate fetched derivative. Prior history, navigation, link attributes and replacement assertions remain. Added a PDF regression for no inline frames/images/embeds/objects with a protected original link. Component hooks, permissions, private withdrawal, metadata, requests, actions, audits and URL validation remain exact. No new strings or dependencies.",
       "318362270102908": "One scoped diff review and textual proof: production source is exact after removing only the 20-line embed block. Existing 295-case backend/storage/scanner/RTF/review/lineage evidence remains bound to unchanged API/DB/worker/shared bytes. All other current metadata/recovery/profile/state/history criteria retain source-bound evidence; affected UI journeys ran against the final web build. No assertions, budgets or coverage floors weakened.",
       "642089521832720": "Reviewed the actual synthetic FA first-page capture from the same browser run. Its legal-hold panel shows a controlled unavailable state because this fixture omits the unrelated retention API; it does not certify live hold availability. No version, release, staging, Telegram or production action. Preview route/TTL/privacy/CDN owner disposition remains pending.",
+      "580981761638250": "The exact upload fixture passed eight report-only transfer-resume cases and 14 enforced business cases in Chromium and WebKit. See the source-bound staging CSP business rehearsal receipt.",
       "2528416644017396": "29 distinct related cases pass: 13 worker destruction cases, ten existing migrated document lifecycle cases, one strengthened real 0271-to-0272 upgrade/replay case, three affected migrated schema snapshots and two real document-retention HTTP cases. Skipped cases are not counted; strengthened upgrade reruns are one case. Final worker source/build is tested, and API/UI/shared/DB/i18n compiled outputs match the preceding source-bound acceptance.",
       "1372611119740140": "Permanent retention is independent of parent closure, policy duration, legal holds and legacy approvals. The database predicate protects invoice, contract and financial purchase-order documents, contract-category uploads, contract associations/locks and solar intake with a contract. Removed fifty-year-old Paid, Cancelled and Refunded invoice documents remain ineligible, with original storage keys preserved. Other standalone uploads and uncontracted terminal solar intake retain the existing configured deadline path.",
       "1829462772181711": "Expand-only 0272 adds three database functions and two guards, replacing only document_retention_eligibility. It cancels protected pending/approved/started manifests with an audit record, retains all approval fields, attempts and historical identities, and does not touch objects or already-destroyed history. A real upgrade seeds twelve protected and three unprotected legacy manifests; only the twelve protected ones change. All other public rows and existing function OIDs/definitions except the eligibility function match exactly. Replay applies nothing and preserves every row.",
@@ -767754,6 +767741,7 @@
       "3397114560025552": "The inventory identified 176 complex SQL or forwarding reports in 96 files. Reused the prior data-flow review for 61 exact source hashes. Reviewed current changes in the remaining 35 and checked 10 shared SQL fragment and policy sources. The recorded digests require another review when any of those files changes.",
       "385727303220112": "Reviewed the remaining SQL choices and forwarding paths. Identifiers, lock modes, operators, projections and placeholder counters come from bounded source choices. Query values remain in driver parameters. The lint change leaves runtime query text, authorization and transactions unchanged.",
       "1988621693015240": "All three shared ESLint test files passed, including static compositions, parameterized query configurations, indirect methods, supported constructors and a regression proving that a changed reviewed driver adapter fails. Scoped lint passed with zero warnings. Formatting and the existing production suppression checks passed.",
+      "1326181805023753": "The existing SQL-rule test and changed-file lint passed after verifying that the schema re-export adds no query text to the reviewed database index.",
       "886210940451584": "SQL injection fixtures reject Express and Nest-controlled text in direct driver SQL or Drizzle sql.raw, and accept parameterized driver and Drizzle templates.",
       "353239159163167": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
       "1138230754265899": "Audited authored application and shared production source for raw HTML sinks. The sole sink is TosContent, which escapes raw Markdown HTML and images before applying the DOMPurify tag and attribute allowlist. The two matching EN/FA sanitizer tests passed in run 42689595374.",
@@ -767827,6 +767815,9 @@
       "306900104129572": "Both provider-specific ledgers enforce unique event identity before effects, using transaction-bound receipt and result handling. Wallet retry and credit idempotency remain in the existing settlement service. The local unit check does not certify the PostgreSQL recovery suite or live providers.",
       "2834913664602663": "The signed payment POST uses the exact raw body, event ID and timestamp with bounded HMAC verification. It matches merchant context, order, authority and amount and checks provider status server-side before credit.",
       "1821889100567040": "The browser return GET only redirects. The explicit authenticated POST rechecks current profile authority and gets server-side status. The focused signature/controller cases and the source-matching 50 native callback, chargeback and durable recovery cases passed. Live merchant activation and provider receipts remain separate.",
+      "2399800600732587": "Five native storage callback and worker cases and 85 affected HTTP and signature cases passed. The receiver verifies the protected signature, request target, time and identity before storing an encrypted receipt. Processing uses scoped replay-safe updates and retains provisional status.",
+      "3677992327402541": "The isolated staging-host rehearsal at b15ebc3a9 used the exact signed SeaweedFS image and protected key mount. It verified three HTTPS deliveries including a retry after persistence, two completed receipts and two separately verified versioned byte reads for direct and multipart upload.",
+      "1890459355494832": "Live callback activation and receipt readback after the recoverable storage cutover remain required by T-06.06.02.05, T-06.06.02.07 and R-05.02.",
       "1803871712773042": "The private event tables retain verified Resend JSON and validated payment fields without signing secrets. Webhook responses return acknowledgements. Current staff capability and session are required for the restricted history projection, which maps the callback to coarse delivery status and a fixed bounce diagnostic. Staging DB is on the private Compose network; the production template requires certificate validation for the external PostgreSQL connection. Production topology rehearsal remains separate.",
       "1839262009637881": "All 50 exact-source signature, replay, callback controller and payment service unit cases passed. Successful hosted job 129636126527 passed 53 native cases for the unchanged wallet and Resend receipt, deduplication, authority, history and unmatched callback logic. The later shared signature helper was exercised by the 50 current unit cases. The same candidate does not supply a live provider receipt.",
       "897299206982298": "The unchanged production Compose manifest accepts protected dotenv inputs and keeps runtime and migration roles separate. A Linux launcher resolves the encrypted file alternative at the deployment boundary. It uses separate host-key-encrypted, named systemd credentials and private sealed memory files.",
@@ -767852,6 +767843,8 @@
       "3994303989991954": "PR, main and preflight all run Gitleaks with complete history and verified redaction. Required check rejects missing/failed scan outcomes.",
       "1215932498552189": "The current runbook defines how to triage medium findings, blocks high and critical findings with credible production paths and requires explicit approval with reason, compensating control and expiry for accepted risk.",
       "1805834849687725": "The existing hosted image and dependency scan enforcement remains stronger for high and critical findings. The new license gate does not change those scan thresholds.",
+      "2375916005829523": "GitHub Actions run 44649101982 succeeded at b15ebc3a9. All five dispatched build scopes emitted CycloneDX inventories. Each report hash, SBOM hash, named image and embedded immutable image ID matched the downloaded scan and inventory. The six deployment tests included rejecting changed scan or SBOM evidence and rejecting a protected rollout without its live matching runtime receipt.",
+      "4015932504065620": "The retained signed SeaweedFS image has its own exact SBOM and source-and-notice archive and passed the strict objectstore check. Exact final-image scan, publication, distribution and staging receipts remain required by R-05.02, R-05.03 and the release gates.",
       "3192544554064401": "The staged and production Node configurations retain their heap limits and set --no-deprecation. The local Node control suppressed a deprecation warning and emitted an ordinary warning. Both production Compose forms reject inspector and insecure-parser flags from protected environment files.",
       "1667660205881464": "A disposable private Linux network reused the previously verified app, web and PostgreSQL content. The app and web image variants applied only the exact ENV instructions from the changed Dockerfiles. Native packaged migration, non-root/read-only readiness, shared API/worker image, inspector denial, strict HTTP parsing, dependency loss and recovery, clean SIGTERM, and test-resource cleanup all passed.",
       "1517342053818739": "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates.",
@@ -768079,6 +768072,9 @@
       "1145304292613462": "The existing strict CI step executes pnpm check:contract. The accepted generation and drift-rejection evidence is unchanged across the exact command, workflow, canonical API snapshot, generated client package and source files.",
       "518299461292634": "The active main ruleset requires GitHub Actions Verify monorepo integrity. The approved direct-main workflow reports in the Actions job summary. Its exact job body matches the current source in runs 43630925743 and 43583704822.",
       "514154568329696": "Hosted run 43630925743 reported its exact SHA, affected tests, report-only licensing and all six successful dependency outcomes. Strict run 43583704822 reported its exact SHA, full tests, enforced licensing and six dependency outcomes. It recorded license and coverage failures and failed the required check. The original hosted job logs retain the values and the current script reproduces both summaries.",
+      "3585885065300926": "Native isolated staging at 3f8929fdd ran the packaged app and web against the EU PITR clone of the active database. Eight pending migrations applied and the repeat applied none. The web login and version and API liveness and dependency readiness returned the recorded healthy revision.",
+      "3074877315116874": "The immutable b15ebc3a9 app and normal worker passed native isolated staging liveness and readiness, migration 0297 and the no-op repeat. Six deployment tests passed, including writer-stop failure, schema mismatch, exact image verification, candidate HTTP smoke, artifact checksums and protected receipt enforcement.",
+      "4458929344129024": "The accepted-candidate deployment, its migration checkpoint and smoke, and the separate production-equivalent protected rehearsal remain in T-05.04.01 and R-05.02 through R-05.04.",
       "153118933612094": "All 14 board integrity tests passed, including acceptance rejection of open P0 and P1 defects even when outside launch-required scope, acceptance with only resolved or lower-severity defects in scope, future milestone isolation, and invalid severity rejection.",
       "3506126650582039": "Six promotion, eleven quarantine, two browser-results, and three browser-rollup tests passed. The promotion checker continues to require exact successful hosted runs, a strict 40-shard rollup without flakes, and no active critical quarantine.",
       "3170166350632158": "Hosted browser run 42864645557 completed all 40 shards and its strict rollup failed on six flakes. This is evidence that the gate rejected a nonclean run. Replacement run 42878628863 remains a separate release prerequisite.",
@@ -768133,6 +768129,8 @@
       "1306656102333887": "Five selected invoice cases passed in an isolated migrated PostgreSQL fixture, covering overdue settlement, concurrency and atomic rollback. The build, canonical contract, final API typecheck and changed-file lint and format passed.",
       "2727755614976114": "Rate-limit diagnostics retain configured namespaces and outcomes. Resolved keys, raw client addresses and backend exception details are omitted. The compiled trusted/untrusted proxy cases verified positive diagnostic content, bounded localized responses and absence of fixture identity values.",
       "406383277155185": "The configuration-cache API adapter retains stable failure notices and omits backend exception strings. The native fallback test injected a sensitive sentinel, returned the durable value and verified that the sentinel was absent from the warning.",
+      "214616782154533": "Rebuilt the API and worker and passed 35 Vitest cases across the PostgreSQL-backed proxy and verification HTTP fixtures and correlation logger tests, plus five shared logging tests. The fixtures assert API and worker JSON, correlation, isolated request and trace context, and exclusion of raw identity, error and notification data.",
+      "1710449767117032": "The actual external log sink and exact-candidate receipts remain required by T-06.13.02.06, T-06.18.01.01 and R-05.02.",
       "1415302501993375": "Private staging API and worker both returned Prometheus samples. An isolated Prometheus loaded the new scrape stanzas and collected healthy pg_metrics_collection_success, pg_cache_hit_ratio and notifications_queue_depth. Public ingress returned 404 JSON for /api/metrics and the HTML app shell for /metrics.",
       "2564130254617867": "Promtool validated the exact candidate configuration and both unchanged rule files. The new configuration still needs live operator readback after rollout. No live notification or alert delivery is claimed.",
       "532600618113705": "A real production-compiled Nest/Express process and disposable PostgreSQL database verified successful, malformed, unauthorized and unknown-route responses, count and histogram buckets, collapsed profile IDs and unmatched paths, absence of private input, and probe exclusions.",
@@ -768811,13 +768809,7 @@
       "1966990290956279": "Reviewed Persian desktop and mobile captures from the built release with synthetic settings data.",
       "1742496022480107": "Removed programmatic sidebar scrolling from the shared shell. The sidebar uses normal browser scrolling and keeps active link styling and keyboard navigation.",
       "142269673859176": "The initial protected preflight exceeded the wallet gzip limit at 300.07 KB. The corrected local merged build measured 299.84 KB against the original 300 KB limit. All 102 original budgets passed in the corrected staging and merged builds.",
-      "1348616652009183": "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures.",
-      "580981761638250": "The exact upload fixture passed eight report-only transfer-resume cases and 14 enforced business cases in Chromium and WebKit. See the source-bound staging CSP business rehearsal receipt.",
-      "253090249689773": "The signed storage callback receiver and worker passed five final cases on migrated PostgreSQL. The storage, Resend and CSP HTTP boundaries and Resend verifier passed 85 existing cases. See the exact source-bound callback receiver receipt.",
-      "1326181805023753": "The existing SQL-rule test and changed-file lint passed after verifying that the schema re-export adds no query text to the reviewed database index.",
-      "469424028647510": "The signed storage artifact, exact license and two callback services passed the isolated native rehearsal. The affected release and rollback suite passed across the initial and corrected focused executions. The reviewed image and source archive were verified after transfer to protected staging storage.",
-      "601248659294711": "Native staging NGINX blocked new bucket requests while an earlier upload finished, and verified worker drain and restored access. The live NGINX process and included S3 source were unchanged. The exact volume-sized synthetic EU archive verified its immutable version and restore bytes.",
-      "2722680406957809": "Native storage-only Compose model matches the running deployment in its default and rollback modes, retains WAL, and restricts selected image, volume, and mounts to the intended callback and storage paths."
+      "1348616652009183": "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures."
     },
     "source_evidence": {
       "3985308057320810": {
@@ -768988,9 +768980,9 @@
         "path": "apps/web/test/server.spec.ts",
         "sha256": "e6e73665e3f2122a8d9a2223fc546be253919f518364e4b7316037ea1e09f8ac"
       },
-      "4200184305785306": {
+      "319666655675670": {
         "path": "apps/api/src/app.factory.ts",
-        "sha256": "5f68467ff25ab93cf2f8533d97287bf16606c029bd3a1dd4c75df26a3480e8c8"
+        "sha256": "c43aa364705de2a975898fdee3550d0c1d55baeb9197bd5a454496ceb690be44"
       },
       "3638403404844884": {
         "path": "apps/api/src/common/cache-control.interceptor.ts",
@@ -769068,9 +769060,9 @@
         "path": "packages/db/src/test/testDb.ts",
         "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
       },
-      "656947779827361": {
+      "2783358097275046": {
         "path": "packages/db/drizzle/production/meta/_journal.json",
-        "sha256": "d756ebc6b42173eca69eb69bf27803b953a8d4635e09acef75311456c35527b7"
+        "sha256": "a12e9db74ad4edef5e8fdd1248283ae1431199b41e38e5ca3244546ccddc8796"
       },
       "1918821838296176": {
         "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -769280,9 +769272,9 @@
         "path": "packages/db/package.json",
         "sha256": "05c0b2bb7804ec3ac0761a3cdd2fc7f603c6b670ff1ecddc4458ce3723c504e5"
       },
-      "4210333381993491": {
+      "2563405803285017": {
         "path": "packages/db/src/index.ts",
-        "sha256": "accf165bb9b708862543a26d0aa68e25724ba3495803768f71f8f0246a73a18f"
+        "sha256": "497a52d95847928252942895410af8d84422ca205ba683d7e83bf851a9ade6b6"
       },
       "1157169327596250": {
         "path": "packages/db/src/index.test.ts",
@@ -770044,9 +770036,9 @@
         "path": "apps/api/src/common/shutdown-http.integration.test.ts",
         "sha256": "872e63df6df29666eac2b2a9d377a0279b091d1929ea43dda63407d8c765b08e"
       },
-      "1657744382337854": {
+      "2439923868593081": {
         "path": "apps/worker/src/main.ts",
-        "sha256": "586ad20efda59bc6f23f78e3b8b01dcf937cba3544c3006ec2cee10e517eebfe"
+        "sha256": "7350a09101beebdff9cf53901fdcdcf952db489713b287d1edf5d3f3d2a67538"
       },
       "1165683992124585": {
         "path": "apps/worker/src/jobs/poller-group.ts",
@@ -770364,9 +770356,9 @@
         "path": "apps/api/src/storage/storage-records.controller.ts",
         "sha256": "d5761c10b87126ed6dce636363bef1b351522bfc0c50b8bc16ac3d5329c152a4"
       },
-      "3062790285737104": {
+      "4093274502314846": {
         "path": "apps/api/src/storage/storage.module.ts",
-        "sha256": "78d533db0d2e3dfb68edc7f0d02e0df168b65692e9afc1051fa83a1ed0271232"
+        "sha256": "78b8febe9ac1014e6d174200b143dbe71535e7cf217d41d94836302723fa9cc9"
       },
       "120307755101227": {
         "path": "apps/api/src/test/contract-journey-http-proof.ts",
@@ -770488,9 +770480,9 @@
         "path": "scripts/check-staging-proxy.mjs",
         "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
       },
-      "881450341471239": {
+      "1206685866573554": {
         "path": "deploy/staging/README.md",
-        "sha256": "1421066f7ac6db7eaa45db72e35e93a4e0d5c4d4c2b16fb60ed583fddb8f5741"
+        "sha256": "c2c57d72c093eefc454b247d3df1dd70e2bd518e10b1d02b5e118dbba56f7110"
       },
       "3837771807479024": {
         "path": "apps/api/src/common/etag.interceptor.ts",
@@ -770744,13 +770736,13 @@
         "path": "docs/runbooks/bad-deployment.md",
         "sha256": "4d49509afa1af4dd865f7f39d2acd6978b70341e98b7ca4998bb58ced8a76720"
       },
-      "2785333276480746": {
+      "2960541284577999": {
         "path": "deploy/staging/release.sh",
-        "sha256": "a0452b9845993504a7cb399d858bea19733e600beda77c5c0744538196220231"
+        "sha256": "aa7b8cb616a52376bc7811c5a2a24df1e1a1b84f8451c9ada4326ad92e7111fe"
       },
-      "378174069838108": {
+      "2916731061973370": {
         "path": "deploy/staging/test_release_rollback.py",
-        "sha256": "015d4208bccc73c7325a7f491a5ed9c9eafd9eddaf5a5b9dbbae24b1f4b6ccde"
+        "sha256": "9e9f2c3805b00f947fef23871f7f3922231a795213f84e2e72c1f937fc2c3111"
       },
       "2506773297712354": {
         "path": "deploy/production/guarded-rollout.py",
@@ -772124,9 +772116,9 @@
         "path": "packages/db/src/storage-multipart.ts",
         "sha256": "94b647911b672b58d0d38867aef5ca6fad69ac65ee2da499f518d67aeb405ba5"
       },
-      "1827535772415667": {
+      "2377243118297347": {
         "path": "packages/shared/src/storage/index.ts",
-        "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
+        "sha256": "06c93f8a21bbe4dcd7d0cc5edb10701890b75ef1043026d29c82cdc9bb1fddac"
       },
       "2726176096401586": {
         "path": "packages/shared/src/storage/multipart-upload.test.ts",
@@ -780112,9 +780104,9 @@
         "path": "apps/web/src/components/FilePreview.test.tsx",
         "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
       },
-      "3103404761580464": {
+      "852627010966933": {
         "path": "apps/web/e2e/upload-fixture.ts",
-        "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        "sha256": "f6da77a30f714ae0adcc03e6bd8fca9ff6e9fd5172276179dc9c97eb974e4a74"
       },
       "494523421112973": {
         "path": "apps/web/e2e/fixtures/first-page-proof.png",
@@ -780796,9 +780788,9 @@
         "path": "packages/eslint-config/no-dynamic-postgres-query.test.mjs",
         "sha256": "0420cbe965bb7187198a34c5ec68cbf0f93810fdf9d92017f4585a2be1de3abf"
       },
-      "3757446752598650": {
+      "1032353569761040": {
         "path": "packages/eslint-config/reviewed-postgres-sql.json",
-        "sha256": "000dd8eeaf3779dac497c7a1f2fd50a48d46ce1c1fc3e39c4bc7d26ae2ad7e0d"
+        "sha256": "9e75f477eae64ae44c93d61221d93c8a20a8017f35821162d7f26cde90f9ae46"
       },
       "3819057715915651": {
         "path": "apps/web/src/components/TosContent.test.tsx",
@@ -781008,6 +781000,54 @@
         "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
         "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
       },
+      "766662835256260": {
+        "path": "apps/api/src/storage/storage-webhook-http.integration.test.ts",
+        "sha256": "1a43b1f0b1dd2e6f90da83470dde33774b3d32bf3e93fc6d11a8d63c7a442f03"
+      },
+      "3973331734222933": {
+        "path": "apps/api/src/storage/storage-webhook.controller.ts",
+        "sha256": "9aaf9120b7c7278d861bf30e44f3af6f61403ca427e1feaa812e0b5ad9dcbe34"
+      },
+      "969742011371398": {
+        "path": "apps/worker/src/storage/upload-webhook-runner.ts",
+        "sha256": "286e2bf6745dbba6dd1b9abc5958d1ea5c582dc12c0335aec5262a11ecfdfa20"
+      },
+      "1152565007735474": {
+        "path": "deploy/licenses/objectstore-inventory.json",
+        "sha256": "e49b855994d192bc6341eb4720370c02e187f69dd5692b866a2123f780b3f73f"
+      },
+      "1292744732420608": {
+        "path": "deploy/staging/Dockerfile.objectstore",
+        "sha256": "2687ed280803f245c806dda0452ec8ba38848eaefe4fb61ee64f630256d6539f"
+      },
+      "633801304219853": {
+        "path": "deploy/staging/compose.objectstore-webhook.yml",
+        "sha256": "c123c11f00a637b990867204fa306570cbe94afc607c5701640d36e9e84e059e"
+      },
+      "1494984847148783": {
+        "path": "deploy/staging/objectstore-webhook.patch",
+        "sha256": "454577ed5276a6ec79462092750aa3732d3d8852e87d22fca5652abd1ddd2dfd"
+      },
+      "3878848860046990": {
+        "path": "docs/operations/storage-configuration.md",
+        "sha256": "6119b230ff3b39dbf43b962adedc56abf183a2a90f72f3c9f578f69716333b0e"
+      },
+      "1865315599655079": {
+        "path": "packages/db/drizzle/production/0297_storage_webhook_events.sql",
+        "sha256": "135ce7418864d591abcf33cca672a5a34da733cd9aaf37edf1fc82d777edad86"
+      },
+      "2814077259281938": {
+        "path": "packages/db/drizzle/production/meta/0297_snapshot.json",
+        "sha256": "4398593ab18a3cf1a3e5744f18122d71c1d4009943e60bf53eff6988c9db9cf4"
+      },
+      "260301848586455": {
+        "path": "packages/db/src/schema/storage-webhook-events.ts",
+        "sha256": "ca8c6447b58c63fa253b781802734de1fde3b070609f90efc6b2b25f53cd5834"
+      },
+      "178032077037025": {
+        "path": "packages/shared/src/storage/upload-webhook.ts",
+        "sha256": "a7b66d1d4ab7d76c52543d95f76de79966cf1ca1b0d790a9bab954216f7366e2"
+      },
       "3002924467478972": {
         "path": "deploy/production/test_compose_with_credentials.py",
         "sha256": "eadc1b271cea07266f41b8d33c0c3691291989b91d23ff0fec473ba561f37e34"
@@ -781031,6 +781071,22 @@
       "1364273028583396": {
         "path": "scripts/check-runtime-images.sh",
         "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+      },
+      "2882020909847356": {
+        "path": "deploy/staging/Dockerfile.postgres",
+        "sha256": "96ab21e4e52f225b37cbac044190fa769e53916411af8e934675720477a83ca7"
+      },
+      "1680424996333195": {
+        "path": "deploy/staging/deploy.sh",
+        "sha256": "4a42c59f77692aa3f77277cc5dd001a404f0e92f660e0e035759fc475950c8f0"
+      },
+      "4306434327613320": {
+        "path": "deploy/staging/release-queue.py",
+        "sha256": "d2e0f6deb94268394886905e8a9d88b8dc8095a4d155d8f9132572fc72c3a57d"
+      },
+      "1870514664343367": {
+        "path": "deploy/staging/test_release_queue.py",
+        "sha256": "06d1bfaf642c8ae33a1ac7bd84e5488dd1156719a3c10dbbc4d20546d6439c48"
       },
       "2766675676600201": {
         "path": "apps/api/src/common/proxy-trust.ts",
@@ -781959,10 +782015,6 @@
       "3719988716092036": {
         "path": "deploy/monitoring/grafana-api-health-dashboard.json",
         "sha256": "bdad6bcd53ed25cb34b72c2caf585c91e251b56193c3290fd603f37ff95542ca"
-      },
-      "1916129011609021": {
-        "path": "deploy/staging/deploy.sh",
-        "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
       },
       "3317000771637166": {
         "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
@@ -784408,14 +784460,6 @@
         "path": "deploy/staging/notify-release.py",
         "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
       },
-      "4306434327613320": {
-        "path": "deploy/staging/release-queue.py",
-        "sha256": "d2e0f6deb94268394886905e8a9d88b8dc8095a4d155d8f9132572fc72c3a57d"
-      },
-      "1870514664343367": {
-        "path": "deploy/staging/test_release_queue.py",
-        "sha256": "06d1bfaf642c8ae33a1ac7bd84e5488dd1156719a3c10dbbc4d20546d6439c48"
-      },
       "2176669155858087": {
         "path": "apps/api/src/electricity/electricity-staff-review.service.test.ts",
         "sha256": "8c834acca62a80715165f8825774d3062ae0640e9cff5f93020b829a05899046"
@@ -784491,62 +784535,6 @@
       "3910538114047136": {
         "path": "releases/0.5.1.md",
         "sha256": "c19eca06bc21d70f43d66050ff277d5f94651ea47fd799e4a0797076157a03a6"
-      },
-      "852627010966933": {
-        "path": "apps/web/e2e/upload-fixture.ts",
-        "sha256": "f6da77a30f714ae0adcc03e6bd8fca9ff6e9fd5172276179dc9c97eb974e4a74"
-      },
-      "319666655675670": {
-        "path": "apps/api/src/app.factory.ts",
-        "sha256": "c43aa364705de2a975898fdee3550d0c1d55baeb9197bd5a454496ceb690be44"
-      },
-      "4093274502314846": {
-        "path": "apps/api/src/storage/storage.module.ts",
-        "sha256": "78b8febe9ac1014e6d174200b143dbe71535e7cf217d41d94836302723fa9cc9"
-      },
-      "2439923868593081": {
-        "path": "apps/worker/src/main.ts",
-        "sha256": "7350a09101beebdff9cf53901fdcdcf952db489713b287d1edf5d3f3d2a67538"
-      },
-      "2563405803285017": {
-        "path": "packages/db/src/index.ts",
-        "sha256": "497a52d95847928252942895410af8d84422ca205ba683d7e83bf851a9ade6b6"
-      },
-      "2377243118297347": {
-        "path": "packages/shared/src/storage/index.ts",
-        "sha256": "06c93f8a21bbe4dcd7d0cc5edb10701890b75ef1043026d29c82cdc9bb1fddac"
-      },
-      "1032353569761040": {
-        "path": "packages/eslint-config/reviewed-postgres-sql.json",
-        "sha256": "9e75f477eae64ae44c93d61221d93c8a20a8017f35821162d7f26cde90f9ae46"
-      },
-      "2783358097275046": {
-        "path": "packages/db/drizzle/production/meta/_journal.json",
-        "sha256": "a12e9db74ad4edef5e8fdd1248283ae1431199b41e38e5ca3244546ccddc8796"
-      },
-      "3991342327763850": {
-        "path": "deploy/staging/README.md",
-        "sha256": "ef269cd179ca2e16829a2ff82d408d9847e6a00086467687194794a4a4f18318"
-      },
-      "1680424996333195": {
-        "path": "deploy/staging/deploy.sh",
-        "sha256": "4a42c59f77692aa3f77277cc5dd001a404f0e92f660e0e035759fc475950c8f0"
-      },
-      "2960541284577999": {
-        "path": "deploy/staging/release.sh",
-        "sha256": "aa7b8cb616a52376bc7811c5a2a24df1e1a1b84f8451c9ada4326ad92e7111fe"
-      },
-      "2916731061973370": {
-        "path": "deploy/staging/test_release_rollback.py",
-        "sha256": "9e9f2c3805b00f947fef23871f7f3922231a795213f84e2e72c1f937fc2c3111"
-      },
-      "2767006362502801": {
-        "path": "deploy/staging/README.md",
-        "sha256": "6b94e019e88411c1d4cbb804938aa1d57b8acde809bf3018ee10e736169626dd"
-      },
-      "1206685866573554": {
-        "path": "deploy/staging/README.md",
-        "sha256": "c2c57d72c093eefc454b247d3df1dd70e2bd518e10b1d02b5e118dbba56f7110"
       }
     },
     "source_renewals": {
@@ -785439,6 +785427,14 @@
         ],
         "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
       },
+      "1599608966337785": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "apps/api/src/app.factory.ts"
+        ],
+        "scope": "Adds an exact-method and exact-path JSON parser with a 512-byte limit and no decompression. Existing CSP, email webhook, storage reservation and signature cases passed with this parser."
+      },
       "1112623725033418": {
         "batch": "release-0.6-operator-log-pseudonyms",
         "base_commit": "6761df94c30bc4ba3993bd84a778596cc420d122",
@@ -785621,6 +785617,14 @@
           "apps/api/src/refund/wallet-refund-http.integration.test.ts"
         ],
         "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+      },
+      "1832992762036922": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "packages/db/drizzle/production/meta/_journal.json"
+        ],
+        "scope": "Appends migration 0297. It creates a new receipt table, receipt constraints and a due-row index. All preceding migrations and existing tables are unchanged. The compiled HTTP cases applied the migration set to a disposable PostgreSQL database."
       },
       "4242622172012557": {
         "batch": "integrated-qa-preview-journeys",
@@ -786118,6 +786122,14 @@
           "packages/db/src/index.ts"
         ],
         "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+      },
+      "983958935467165": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "packages/db/src/index.ts"
+        ],
+        "scope": "Adds the new schema re-export. The existing parameterized SQL review digest was renewed after verifying every other source byte is unchanged."
       },
       "3784420951471217": {
         "batch": "release-0.6-structured-operator-logs",
@@ -787238,6 +787250,14 @@
         ],
         "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
       },
+      "4480472245978925": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "apps/worker/src/main.ts"
+        ],
+        "scope": "Adds a distinct scheduled callback receipt poller. Existing poller setup, cadence, handlers and shutdown behavior are unchanged. Focused worker receipt cases passed with PostgreSQL."
+      },
       "3136229663168485": {
         "batch": "release-0.6-environment-indicator",
         "base_commit": "edc967b386d310bdcbdce91fec06f501c0d0c47d",
@@ -787825,6 +787845,14 @@
         ],
         "scope": "Only upload-verify request shape changed to preserve the optional legacy category hint. Current ownership, upload scope, trusted byte and size verification, successful response, status codes and unrelated OpenAPI operations retain their tests and contract."
       },
+      "3687527671205872": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "apps/api/src/storage/storage.module.ts"
+        ],
+        "scope": "Registers the exact signed-provider controller. Existing storage ownership, role, scan and record HTTP cases passed with the registered module."
+      },
       "20795010586887": {
         "batch": "release-0.6-edge-tls-and-hsts",
         "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
@@ -788252,6 +788280,30 @@
           "deploy/staging/README.md"
         ],
         "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
+      },
+      "4149196523916836": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "Records the exact signed image and protected callback mount preparation. Existing backup, deploy, TLS and restoration procedures retain their execution behavior."
+      },
+      "1250914822414554": {
+        "batch": "release-0.6-native-storage-fence-rehearsal",
+        "base_commit": "bf1831dc790d0dbb08877d8d0d21d6156a36aaa5",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "Clarifies how the existing staging S3 proxy is fenced and drained during a separate storage cutover. The exact deployed snippet matched repository bytes. The private native NGINX rehearsal verified new puts, deletes and multipart requests remain blocked while an earlier upload finishes, and verified explicit reopening. No application, rollback or image behaviors changed."
+      },
+      "3011263934478573": {
+        "batch": "release-0.6-storage-only-cutover-compose",
+        "base_commit": "bf1831dc790d0dbb08877d8d0d21d6156a36aaa5",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "Adds the storage-only Compose base rule to the documented staged cutover. The native render preserves the complete live fallback, PostgreSQL WAL overlay, and every unrelated service setting. Existing staging release, rollback, proxy and source evidence remains valid."
       },
       "632352904530847": {
         "batch": "release-0.6-environment-indicator",
@@ -788844,6 +788896,22 @@
           "deploy/staging/test_release_rollback.py"
         ],
         "scope": "The staging receiver now verifies the patched objectstore image ID and data mount before migration, before publishing the release and before starting rolled-back application writers. Legacy Compose output is identical and the repaired runtime changes only the storage image and volume. All 23 staging receiver tests passed locally and on the staging Linux host. Live cutover and elapsed lifecycle are tracked under T-04.03.03."
+      },
+      "1239819274270615": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/release.sh"
+        ],
+        "scope": "Pins the scanned signed objectstore image for v0.6.0 and later. The optional callback path requires both protected files, the exact mounted image and both read-only bind mounts. Running image, migration, backup, rollback, and previous legacy approval checks passed."
+      },
+      "790021110620565": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/test_release_rollback.py"
+        ],
+        "scope": "Retains exact volume, image identity and rollback checks and covers the signed release selection and read-only mount checks. The normalized Compose test verifies unrelated services are unchanged."
       },
       "1872787075134013": {
         "batch": "release-0.6-load-client-address-fixture",
@@ -791102,6 +791170,14 @@
           "apps/api/src/admin/admin.controller.ts"
         ],
         "scope": "Added only dual-approval threshold history, draft and activation and their localized settings UI. Existing OpenAPI definitions were compared for equality. Existing threshold writes still return the same shape and use the same permissions, OTP and lock. The generic recovery dialog retains its existing optional verification behavior for other callers. The affected API, web and shared SQL lint suites passed."
+      },
+      "534670550961879": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "packages/shared/src/storage/index.ts"
+        ],
+        "scope": "Exports the narrow upload callback schema and constants. Existing storage exports retain their implementations. Compiled and affected storage cases passed."
       },
       "1488426184733054": {
         "batch": "release-0.6-rate-limit-and-registration-contract",
@@ -802896,6 +802972,14 @@
         ],
         "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
       },
+      "2607445134387421": {
+        "batch": "release-0.6-native-csp-business-journeys",
+        "base_commit": "afd69fae921e1ca9976b46b1a8ff0a10c0094800",
+        "paths": [
+          "apps/web/e2e/upload-fixture.ts"
+        ],
+        "scope": "The upload receiver serves a same-origin compiled application only for the opted-in enforced CSP rehearsal. Its ordinary separate upload server retained the eight credential, bytes and reservation cases. Fourteen affected business cases passed under enforcement. Reuse existing evidence for unchanged application and browser paths."
+      },
       "1004083845936097": {
         "batch": "release-0.6-approved-document-destruction-boundary",
         "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -805866,6 +805950,14 @@
           "packages/eslint-config/reviewed-postgres-sql.json"
         ],
         "scope": "Added only dual-approval threshold history, draft and activation and their localized settings UI. Existing OpenAPI definitions were compared for equality. Existing threshold writes still return the same shape and use the same permissions, OTP and lock. The generic recovery dialog retains its existing optional verification behavior for other callers. The affected API, web and shared SQL lint suites passed."
+      },
+      "1706169237189848": {
+        "batch": "release-0.6-storage-webhook-receiver",
+        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
+        "paths": [
+          "packages/eslint-config/reviewed-postgres-sql.json"
+        ],
+        "scope": "Refreshes only the existing reviewed source digest for the database index. The re-export changes no SQL. The dynamic SQL rule test and changed-file lint passed and query enforcement remains in effect."
       },
       "3527238623108168": {
         "batch": "release-0.6-raw-sql-lint",
@@ -809835,6 +809927,14 @@
           "deploy/staging/deploy.sh"
         ],
         "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
+      },
+      "4168174308691627": {
+        "batch": "release-0.6-signed-storage-distribution",
+        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
+        "paths": [
+          "deploy/staging/deploy.sh"
+        ],
+        "scope": "Adds the optional read-only callback overlay to the staging runbook files transferred for the release. Existing migration, archive, image transfer, NGINX and receipt steps have the prior behavior. The deployment and rollback checks passed."
       },
       "4069530372235762": {
         "batch": "release-0.6-external-provider-dashboard",
@@ -817560,118 +817660,6 @@
           "apps/web/src/components/AppShell.tsx"
         ],
         "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
-      },
-      "2607445134387421": {
-        "batch": "release-0.6-native-csp-business-journeys",
-        "base_commit": "afd69fae921e1ca9976b46b1a8ff0a10c0094800",
-        "paths": [
-          "apps/web/e2e/upload-fixture.ts"
-        ],
-        "scope": "The upload receiver serves a same-origin compiled application only for the opted-in enforced CSP rehearsal. Its ordinary separate upload server retained the eight credential, bytes and reservation cases. Fourteen affected business cases passed under enforcement. Reuse existing evidence for unchanged application and browser paths."
-      },
-      "1599608966337785": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "apps/api/src/app.factory.ts"
-        ],
-        "scope": "Adds an exact-method and exact-path JSON parser with a 512-byte limit and no decompression. Existing CSP, email webhook, storage reservation and signature cases passed with this parser."
-      },
-      "3687527671205872": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "apps/api/src/storage/storage.module.ts"
-        ],
-        "scope": "Registers the exact signed-provider controller. Existing storage ownership, role, scan and record HTTP cases passed with the registered module."
-      },
-      "4480472245978925": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "apps/worker/src/main.ts"
-        ],
-        "scope": "Adds a distinct scheduled callback receipt poller. Existing poller setup, cadence, handlers and shutdown behavior are unchanged. Focused worker receipt cases passed with PostgreSQL."
-      },
-      "1832992762036922": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "packages/db/drizzle/production/meta/_journal.json"
-        ],
-        "scope": "Appends migration 0297. It creates a new receipt table, receipt constraints and a due-row index. All preceding migrations and existing tables are unchanged. The compiled HTTP cases applied the migration set to a disposable PostgreSQL database."
-      },
-      "983958935467165": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "packages/db/src/index.ts"
-        ],
-        "scope": "Adds the new schema re-export. The existing parameterized SQL review digest was renewed after verifying every other source byte is unchanged."
-      },
-      "534670550961879": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "packages/shared/src/storage/index.ts"
-        ],
-        "scope": "Exports the narrow upload callback schema and constants. Existing storage exports retain their implementations. Compiled and affected storage cases passed."
-      },
-      "1706169237189848": {
-        "batch": "release-0.6-storage-webhook-receiver",
-        "base_commit": "f6112473ce3bb3c7bc7aace1c6a73bf97b42e5c1",
-        "paths": [
-          "packages/eslint-config/reviewed-postgres-sql.json"
-        ],
-        "scope": "Refreshes only the existing reviewed source digest for the database index. The re-export changes no SQL. The dynamic SQL rule test and changed-file lint passed and query enforcement remains in effect."
-      },
-      "4149196523916836": {
-        "batch": "release-0.6-signed-storage-distribution",
-        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
-        "paths": [
-          "deploy/staging/README.md"
-        ],
-        "scope": "Records the exact signed image and protected callback mount preparation. Existing backup, deploy, TLS and restoration procedures retain their execution behavior."
-      },
-      "4168174308691627": {
-        "batch": "release-0.6-signed-storage-distribution",
-        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
-        "paths": [
-          "deploy/staging/deploy.sh"
-        ],
-        "scope": "Adds the optional read-only callback overlay to the staging runbook files transferred for the release. Existing migration, archive, image transfer, NGINX and receipt steps have the prior behavior. The deployment and rollback checks passed."
-      },
-      "1239819274270615": {
-        "batch": "release-0.6-signed-storage-distribution",
-        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
-        "paths": [
-          "deploy/staging/release.sh"
-        ],
-        "scope": "Pins the scanned signed objectstore image for v0.6.0 and later. The optional callback path requires both protected files, the exact mounted image and both read-only bind mounts. Running image, migration, backup, rollback, and previous legacy approval checks passed."
-      },
-      "790021110620565": {
-        "batch": "release-0.6-signed-storage-distribution",
-        "base_commit": "71dd048307eedc6ba9576a86d30784bc1f4a0b1d",
-        "paths": [
-          "deploy/staging/test_release_rollback.py"
-        ],
-        "scope": "Retains exact volume, image identity and rollback checks and covers the signed release selection and read-only mount checks. The normalized Compose test verifies unrelated services are unchanged."
-      },
-      "1250914822414554": {
-        "batch": "release-0.6-native-storage-fence-rehearsal",
-        "base_commit": "bf1831dc790d0dbb08877d8d0d21d6156a36aaa5",
-        "paths": [
-          "deploy/staging/README.md"
-        ],
-        "scope": "Clarifies how the existing staging S3 proxy is fenced and drained during a separate storage cutover. The exact deployed snippet matched repository bytes. The private native NGINX rehearsal verified new puts, deletes and multipart requests remain blocked while an earlier upload finishes, and verified explicit reopening. No application, rollback or image behaviors changed."
-      },
-      "3011263934478573": {
-        "batch": "release-0.6-storage-only-cutover-compose",
-        "base_commit": "bf1831dc790d0dbb08877d8d0d21d6156a36aaa5",
-        "paths": [
-          "deploy/staging/README.md"
-        ],
-        "scope": "Adds the storage-only Compose base rule to the documented staged cutover. The native render preserves the complete live fallback, PostgreSQL WAL overlay, and every unrelated service setting. Existing staging release, rollback, proxy and source evidence remains valid."
       }
     }
   }
