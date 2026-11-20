@@ -387894,17 +387894,24 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Existing storage paths verify owned reservations and object bytes before trusted use. Obtain the selected storage provider signing and event identity contract and verify an idempotent signed receiver, or reconcile acceptance to the existing authenticated readback design."
+        "Existing storage paths verify owned reservations and object bytes before trusted use. Obtain the selected storage provider signing and event identity contract and verify an idempotent signed receiver, or reconcile acceptance to the existing authenticated readback design.",
+        "The exact reviewed SeaweedFS 4.54 image delivered an authenticated bearer callback for an isolated object write. The receiver observed neither a per-delivery signature nor a timestamp or event identity header. The provider retried a 503 with identical body bytes, and overwriting the same object emitted a distinct update. Authenticated S3 reads independently matched both writes. Implement and verify a signed sender and replay-safe intake before enabling callbacks. The existing authorized reservation and authenticated byte readback remain required."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "docs/operations/storage-configuration.md"
+        ],
         "batches": [
           "release-0.6-shared-webhook-signature-verification"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_seaweedfs_webhook_contract": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-webhook-contract-20261120.json",
+          "sha256": "f8063ee14de11a6a3f9747a9da38c518125ce894cc91bc41d615fa0ec103c168"
+        }
       }
     },
     {
@@ -387922,7 +387929,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Complete the approved SMS and storage receipt contracts with source digest, current authority and replay-safe outcome evidence."
+        "Complete the approved SMS and storage receipt contracts with source digest, current authority and replay-safe outcome evidence.",
+        "The reviewed SeaweedFS sender retried identical payload bytes and emitted a distinct event for an overwrite at the same key. The wire envelope supplies no independent delivery ID. Verify stable signed identity and the durable duplicate outcome with the final callback sender."
       ],
       "owner": null,
       "depends_on": [],
@@ -387936,7 +387944,11 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-callback-receipts"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "staging_seaweedfs_webhook_contract": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-seaweedfs-webhook-contract-20261120.json",
+          "sha256": "f8063ee14de11a6a3f9747a9da38c518125ce894cc91bc41d615fa0ec103c168"
+        }
       }
     },
     {
