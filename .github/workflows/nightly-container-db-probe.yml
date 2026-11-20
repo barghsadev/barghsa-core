@@ -1,0 +1,69 @@
+name: Verify nightly browser database fixture on native Linux
+on:
+  push:
+    branches: ['codex/verify/v06-nightly-container-db-20261120']
+permissions:
+  contents: read
+jobs:
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a
+      options: --user 1001 --shm-size=1g
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Confirm access to the runner Docker socket
+        run: |
+          id
+          stat -c '%a %u %g' /var/run/docker.sock
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import http from 'node:http';
+          await new Promise((resolve, reject) => {
+            http.get({socketPath: '/var/run/docker.sock', path: '/_ping'}, (response) => {
+              response.setEncoding('utf8');
+              let body = '';
+              response.on('data', (chunk) => { body += chunk; });
+              response.on('end', () => {
+                assert.equal(response.statusCode, 200);
+                assert.equal(body, 'OK');
+                resolve();
+              });
+            }).on('error', reject);
+          });
+          console.log('Docker fixture socket is reachable');
+          JS
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Open and tear down the real browser database fixture
+        run: |
+          pnpm --filter @barghsa/db exec tsx -e '
+            import assert from "node:assert/strict";
+            import { Pool } from "pg";
+            import { startTestPostgres } from "./src/test/globalSetup";
+            async function main() {
+              const fixture = await startTestPostgres();
+              const db = new Pool({ connectionString: fixture.connectionString });
+              try {
+                const result = await db.query(
+                  "SELECT extname FROM pg_extension WHERE extname IN (\x27vector\x27, \x27btree_gist\x27) ORDER BY extname"
+                );
+                assert.deepEqual(result.rows.map(row => row.extname), ["btree_gist", "vector"]);
+                console.log("The browser PostgreSQL fixture is ready");
+              } finally {
+                await db.end();
+                await fixture.close();
+              }
+            }
+            main().catch(error => { console.error(error.name, error.code ?? "", error.message); process.exitCode = 1; });
+          '
