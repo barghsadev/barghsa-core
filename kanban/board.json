@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T11:28:25.635203+00:00",
+  "updated": "2026-11-20T17:37:01.577655+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11016,7 +11016,8 @@
         "The November 19 15:00 UTC systemd trigger completed the scheduled encrypted PostgreSQL full backup to the approved EU host. Journal and object readback matched the backup label, bytes and ciphertext digest. Restoring that timer-generated archive reached the independent WAL checkpoint in 147.192 seconds. The earlier probe commit survived, the later one was absent and the users, orders and invoices fingerprints matched. The measured database RPO was zero for the covered tables. The scheduled recovery exercise, core-service recovery and production-equivalent receipts remain open.",
         "The installed staging backup service published the result of a manual systemd invocation on November 19. It matched the journal entry to the verified 9,182,501-byte EU archive and advanced all three scoped job metrics. The private exporter required a client certificate. The isolated staging Prometheus target read the exact values with no active backup alert. The three hook boundary cases and ten native backup evidence cases passed. The regular timer remains active. Verify its next invocation, the active Prometheus overlay and delivered P1 receipts.",
         "The running staging image now verifies newly stored WAL ciphertext before acknowledging archival to PostgreSQL. The exact replacement image passed 22 native backup tests and a fresh image scan found zero High or Critical vulnerabilities. The same database volume and cluster remained active. The new segment reached the versioned EU store, decrypted to the local SHA-256 and contained the selected restore point. A read-only inventory found 13 current-cluster full backups and 397 WAL segments across about 4.5 days. The effective retention minima were 14 and 7 days and the policy planned no deletions. Verify the full retention windows, approved P1 delivery and the production-equivalent backup.",
-        "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. The complete retention windows, production-equivalent backup, and approved P1 delivery remain open."
+        "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. The complete retention windows, production-equivalent backup, and approved P1 delivery remain open.",
+        "The second regular November 20 timer fired at 15:00:01 UTC. The same PostgreSQL image verified the 9,175,584-byte encrypted EU backup and read back its manifest. Prometheus read the three updated values for that same systemd invocation. Verify the complete retention windows, production-equivalent backup and approved P1 delivery."
       ],
       "owner": null,
       "depends_on": [],
@@ -11164,6 +11165,10 @@
         "staging_wal_runtime_alignment": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-postgres-wal-runtime-alignment-20261119.json",
           "sha256": "da2a0a401e751cd63e8ac847b9c798d6da4bd7657abacad6ef72e2d0056e35e5"
+        },
+        "staging_scheduled_backup_second_readback": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-live-backup-metrics/regular-postgres-backup-20261120T1500Z.json",
+          "sha256": "a49da3f35752ca6d04f881d4540fbbe81aef02a7c0c2de80f89932adc584a98f"
         }
       }
     },
@@ -12637,7 +12642,8 @@
         "The exact signed 4.54 image fetched and verified the encrypted EU version of the synthetic 4.47 cold volume, then started it with the default staging command, 768 MiB limit and protected dormant callback mounts. All 11 versioned byte/tag reads, seven ordered history versions and three protected objects matched. Stage remains on the prior store while the natural age gate runs. Verify live fingerprints and fenced cutover after the exact-image expiry observation.",
         "The private native NGINX rehearsal verified that the shared S3 fence blocks new PUT, DELETE and multipart creation while a pre-reload worker finishes an existing upload. Reopening was explicit. The preliminary live fingerprint still matches all 59 versions, five markers, order, rules, tags and bytes. The EU path uploaded and verified a 31.47 MB encrypted synthetic cold archive in 204 seconds and independently restored it in 14 seconds. Repeat the fully fenced inventory and volume capture after the exact natural expiry gate.",
         "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover.",
-        "The staged cutover inputs matched the exact signed image, rollback volume and protected configuration. The command rejected the real pre-window lifecycle result before changing any running container, image manifest, runtime file or NGINX configuration. Verify natural expiry after November 20 at 17:31:14 UTC, then perform the live cutover and signed application callback test."
+        "The staged cutover inputs matched the exact signed image, rollback volume and protected configuration. The command rejected the real pre-window lifecycle result before changing any running container, image manifest, runtime file or NGINX configuration. Verify natural expiry after November 20 at 17:31:14 UTC, then perform the live cutover and signed application callback test.",
+        "The exact reviewed staging image expired the eligible current object, pruned the oldest eligible noncurrent version, and preserved held and unclassified objects after natural aging. The fenced live cutover restored the encrypted EU archive with matching checksums before reopening writes. Authenticated readback matched all 59 versions, five delete markers, five lifecycle rules, version order, tags and bytes. PostgreSQL stayed active, the original storage volume is retained, staging readiness passed, and anonymous S3 returned 403. The existing v0.5.1 app still runs with callbacks disabled. Verify the signed HTTPS callback and durable duplicate receipt on the immutable v0.6.0 candidate and the selected production-equivalent policy and hold authority before accepting the task."
       ],
       "owner": null,
       "depends_on": [],
@@ -12803,6 +12809,10 @@
         "staging_storage_only_compose_rehearsal": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-only-cutover-compose-20261120.json",
           "sha256": "8cba4a28c3a66cc74d4b23266947cd2717fe624e2072d1ff6eb5702d3e57270a"
+        },
+        "staging_signed_storage_live_cutover": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-live-cutover-20261120.json",
+          "sha256": "814d317fa2e324432da2016ae13571ecd72dd991f6cdbad8856366580d201718"
         }
       },
       "defect_severity": "P1"
@@ -567489,7 +567499,8 @@
         "Mapped 132 generated parameterized GET routes to their resource handlers. Saving-plan configuration and hardware inventory now recheck staff session expiry before returning data. Both original 200 responses were reproduced with real blocked PostgreSQL queries, and both now return 401. Existing edits, reservation conflicts and catalogue UI tests passed. Wider delegated and query-only reads and the immutable candidate remain open.",
         "Reviewed 28 additional documented query-identifier GET routes. Contract authoring, legal holds, promotion profile options and staff team candidate reads now keep their existing staff grant and current session through the response. Actual blocked PostgreSQL reads reproduced four old 200 responses; the fixed application returns 401 without exposing the records. The 102 targeted API and 72 web cases passed. Broader resource review and the exact candidate remain open.",
         "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open.",
-        "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images."
+        "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images.",
+        "The signed storage image passed natural expiry and staged age-based protection before the fenced storage-only cutover. The encrypted EU archive restored with the same inventory and the v0.5.1 application returned healthy on the new volume. Two regular November 20 PostgreSQL backups verified EU manifest readback and matching live metrics. Candidate application callback, combined release checks and authorized external monitoring receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568405,6 +568416,14 @@
         "official_zarinpal_wallet_sandbox": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-zarinpal-sandbox-20261120.json",
           "sha256": "317e78128163fb4b86c9969d3f5e59476392debeafb1a3fd2ea7c73a4ed06b13"
+        },
+        "staging_signed_storage_live_cutover": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-live-cutover-20261120.json",
+          "sha256": "814d317fa2e324432da2016ae13571ecd72dd991f6cdbad8856366580d201718"
+        },
+        "staging_scheduled_backup_second_readback": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-live-backup-metrics/regular-postgres-backup-20261120T1500Z.json",
+          "sha256": "a49da3f35752ca6d04f881d4540fbbe81aef02a7c0c2de80f89932adc584a98f"
         }
       }
     },
@@ -770377,7 +770396,6 @@
     "id": "release-0.6-recovery-and-monitoring-receipts",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.01.07",
       "01-platform-infrastructure.md#T-04.01.02",
       "01-platform-infrastructure.md#T-04.03.03",
       "release-readiness#R-05.02",
@@ -770387,7 +770405,7 @@
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify the first scheduled configuration backup using the updated inventory and the next regular PostgreSQL backup. Verify exact storage expiry and recoverable cutover after the staged object reaches its required age. Reconcile candidate monitoring, protected checks and authorized delivery receipts in parallel."
+    "goal": "Verify the signed callback on the immutable v0.6.0 candidate after the accepted storage-only cutover. Reconcile production-equivalent recovery and retention, candidate monitoring, protected checks and authorized delivery receipts."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

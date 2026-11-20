@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-20T11:28:25.635203+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-20T17:37:01.577655+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the first scheduled configuration backup using the updated inventory and the next regular PostgreSQL backup. Verify exact storage expiry and recoverable cutover after the staged object reaches its required age. Reconcile candidate monitoring, protected checks and authorized delivery receipts in parallel.
+Verify the signed callback on the immutable v0.6.0 candidate after the accepted storage-only cutover. Reconcile production-equivalent recovery and retention, candidate monitoring, protected checks and authorized delivery receipts.
 
-- `01-platform-infrastructure.md#T-04.01.07`: Encrypted off-server backup of config, secrets, and critical application files
 - `01-platform-infrastructure.md#T-04.01.02`: Configure automated backups with WAL archiving and PITR
 - `01-platform-infrastructure.md#T-04.03.03`: Configure bucket versioning and lifecycle policies
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
