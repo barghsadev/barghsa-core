@@ -11325,7 +11325,8 @@
         "The live staging PostgreSQL filesystem exporter now requires a client certificate on the private Docker bridge. Its byte counts matched the active data volume. An isolated instance of the staging Prometheus image loaded the reviewed rules, scraped the exporter successfully and fired PostgresDiskUsageHigh at P2. The filesystem had 3.61 GB available out of 81.84 GB. Recover capacity, verify the active overlay, delivered firing and resolved receipts, and Grafana access.",
         "Archived an unused historical image to the protected EU host using the existing recovery key. The encrypted byte readback matched. Verification checked the original OCI index and each referenced blob. The exact image then loaded from the EU archive into an independent Docker image store. Reclaiming its staging copy freed 667,267,072 bytes. The running containers, volumes and active image manifest matched before and after. Continue capacity recovery and verify the active disk alert firing and resolved receipts.",
         "The running staging Prometheus now scrapes both protected PostgreSQL exporters alongside the API and worker. All four targets were up. The active disk availability series matched the PostgreSQL filesystem and all three backup series matched the verified systemd run. The previous time series, named TSDB volume, Alertmanager target and non-Prometheus containers matched across the change. Keep measuring capacity recovery and verify the required P1 and P2 notification receipts and final staging release. The current operations receiver rejects alert names outside its allowlist and lacks the new PostgreSQL names.",
-        "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. Approved P1 and P2 firing and recovery receipts and the exact live release remain open."
+        "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. Approved P1 and P2 firing and recovery receipts and the exact live release remain open.",
+        "The staging filesystem regained 5,116,825,600 bytes after encrypted EU archival and verified readback of historical images. The active containers, volumes and image manifest matched the verified archive receipts. The healthy PostgreSQL filesystem and active Prometheus independently measured 20.8% free. Approved live alert delivery and recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -11411,7 +11412,8 @@
           "release-0.6-otlp-connection-deadline",
           "release-0.6-postgres-alert-wiring",
           "release-0.6-postgres-disk-capacity",
-          "release-0.6-scheduled-backup-and-packaged-tls"
+          "release-0.6-scheduled-backup-and-packaged-tls",
+          "release-0.6-screen-reader-and-live-capacity"
         ],
         "current_acceptance": null,
         "verified_staging_postgres_monitoring": {
@@ -397135,7 +397137,8 @@
         "Complete and record the manual keyboard and screen-reader review of final submission, payment and staff approval on the exact candidate, including actual staging workflow boundaries.",
         "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
         "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
-        "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification."
+        "The compiled 8fc81897f web build passed 20 natural keyboard review cases at 390 px in Persian RTL and English LTR across Chromium and WebKit. The checks covered electricity submission and exact retry, wallet payment review and exact retry, and staff approval with step-up. All eight all-keyboard electricity retry follow-up cases preserved visible focus through departure protection and return to the retry button. The existing financial receipt, scope, verification and idempotency assertions passed. Actual screen-reader output, the frozen candidate and live staging workflows still require verification.",
+        "On the exact f7c488e16 compiled Linux web image, Orca 46.1 and headed Chromium announced the staff approval and wallet payment dialogs with the exact synthetic amounts, the electricity unconfirmed-outcome alert, the saving equipment confirmation, the solar area and saved value, and the consultation profile confirmation. All six cases passed in both Persian and English with the existing Axe, focus, write guards and fixture assertions. Repeat the required checks on the frozen release and verify the live staging workflows."
       ],
       "owner": null,
       "depends_on": [],
@@ -397164,7 +397167,8 @@
           "release-0.6-critical-review-accessibility",
           "release-0.6-solar-back-touch-target",
           "release-0.6-nightly-shared-build",
-          "release-0.6-browser-43561500300"
+          "release-0.6-browser-43561500300",
+          "release-0.6-screen-reader-and-live-capacity"
         ],
         "current_acceptance": null,
         "financial_keyboard_review": {
@@ -565522,7 +565526,8 @@
         "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
         "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
         "The security scanner configuration is accepted. Exact f7c488e16 scanner outputs passed independently. Its report-only inventory again identified the two Ubuntu 8.19 dispositions required by the final strict image gate.",
-        "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. The exact f7c488e16 packaged app used TLS 1.3 on the direct PostgreSQL connection and both PgBouncer connections in an isolated synthetic Docker network. The app and pooler rejected wrong hostnames and untrusted CAs on every applicable connection. An unrelated Docker network could reach neither database endpoint. The staged cutover inputs matched the exact signed image, rollback volume and protected configuration. The command rejected the real pre-window lifecycle result before changing any running container, image manifest, runtime file or NGINX configuration. The exact accepted release and protected topology and delivery gates remain open."
+        "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. The exact f7c488e16 packaged app used TLS 1.3 on the direct PostgreSQL connection and both PgBouncer connections in an isolated synthetic Docker network. The app and pooler rejected wrong hostnames and untrusted CAs on every applicable connection. An unrelated Docker network could reach neither database endpoint. The staged cutover inputs matched the exact signed image, rollback volume and protected configuration. The command rejected the real pre-window lifecycle result before changing any running container, image manifest, runtime file or NGINX configuration. The exact accepted release and protected topology and delivery gates remain open.",
+        "The staged PostgreSQL filesystem recovered above the monitored threshold and the compiled candidate passed 12 localized Orca speech cases covering the four services and high-risk staff and wallet reviews. The exact frozen release, protected topology and delivery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -565962,7 +565967,8 @@
           "release-0.6-verify-configuration-backup-and-checks",
           "release-0.6-paired-physical-recovery-rehearsal",
           "release-0.6-paired-eu-recovery-rehearsal",
-          "release-0.6-scheduled-backup-and-packaged-tls"
+          "release-0.6-scheduled-backup-and-packaged-tls",
+          "release-0.6-screen-reader-and-live-capacity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -767149,6 +767155,71 @@
         }
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-live-backup-metrics"
+    },
+    "release-0.6-screen-reader-and-live-capacity": {
+      "batch": "release-0.6-screen-reader-and-live-capacity",
+      "base_commit": "83c324a42cf00933730a3b61471a6ececc31907e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.01.01",
+        "01-platform-infrastructure.md#T-04.01.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "kanban/board.json"
+      ],
+      "checks": [
+        "On the exact f7c488e16 compiled Linux web image, Orca 46.1 and headed Chromium announced the staff approval and wallet payment dialogs with the exact synthetic amounts, the electricity unconfirmed-outcome alert, the saving equipment confirmation, the solar area and saved value, and the consultation profile confirmation. All six cases passed in both Persian and English with the existing Axe, focus, write guards and fixture assertions.",
+        "The staging filesystem regained 5,116,825,600 bytes after encrypted EU archival and verified readback of historical images. The active containers, volumes and image manifest matched the verified archive receipts. The healthy PostgreSQL filesystem and active Prometheus independently measured 20.8% free."
+      ],
+      "limitations": [
+        "The actual speech used isolated browser fixtures and the compiled web image. The final deployed staging and other screen reader platforms remain separate verification scopes.",
+        "The filesystem and Prometheus readbacks establish capacity recovery. Approved external alert delivery remains open."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "4d9ad93d8959954b19d8fbce72ef770cc73b9b97b0e65611544c7ac8c9ce4e9b"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "cf6b0be7a251e469efd2b27067449513b3d8b6617340943d676fc4b3df1fd930"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "c80f3afab8aa387ef124076de76a0a01e48c6c7029accd6bc5a83b8f8351252b"
+        },
+        {
+          "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+          "sha256": "e95ae935e663c66bd0c06343af79f74fe4cb2e3780399a33c694ad1242707f2e"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "1ffdd8d27847e4a0d2d5bc6fc837d612f511c40f0aec0d32edb784cae6a451c4"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "af2a85d1b248e6ab22f5c0558777ef5b5a3f3fb10955234305b3b0e092940e55"
+        },
+        {
+          "path": "deploy/monitoring/postgres-alert-rules.json",
+          "sha256": "482af16ad7ea8c8db11c6b95b28f92cf4c7175a3457c073597e8af4df06546f9"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-disk.yml",
+          "sha256": "a6a8613562cf739d45c590ae4406b39a4f7df1c021d1808ce144c596772e072b"
+        }
+      ],
+      "execution_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-screen-reader-20261120.json",
+          "sha256": "3b803b5e2a1ec7d85aef0dc2826231bca9e2fd3986b45b0c521a730662025735"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-preparation-disk-recovery-20261120.json",
+          "sha256": "1e9a4bb9a42f23ac7391359081a08b568f3b477c42a42f356540eb7dc9962dfc"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-screen-reader"
     }
   },
   "historical_improvements": [
