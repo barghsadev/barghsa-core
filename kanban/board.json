@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T20:28:16.772217+00:00",
+  "updated": "2026-11-20T20:35:15.558454+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5954,13 +5954,14 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             4310718850880231,
             1329301340858721,
@@ -6030,7 +6031,8 @@
             3239468737812509,
             1889525020198242,
             2379578128810161,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -6350,13 +6352,14 @@
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             335271907751690,
             1256540299604531,
@@ -6425,7 +6428,8 @@
             2314241780480617,
             2487052512659602,
             312458396182986,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -15912,7 +15916,8 @@
         "Scheduled runs 44278844002 and 44500665254 exposed subpixel failures measuring mobile electricity contract action targets. The corrected stylesheet passed all 2,000 translated positions and 10 repeated mobile Chromium journeys. The related browser run found two mobile Safari password-meter contrast failures during fade-in. The corrected meter passed all eight forced-change configurations and the full 28-case affected auth selection with zero retries. The complete nightly rollup, scheduled delivery and immutable candidate gate remain required.",
         "Scheduled run 44278844002 captured the expired-draft autosave race on WebKit. Repeated local attempts reproduced the race. Holding the first write proved the old Save and leave action stayed disabled. The revised dialog joins that write and waits for its verified version. The 36 onboarding and 32 electricity, saving and solar caller cases passed with zero retries, and all nine draft unit cases passed. The complete nightly and frozen staging gates remain required.",
         "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required.",
-        "Scheduled November 20 WebKit shard 3 completed its tests and uploads, then hit the job timeout after a slow system dependency install. The pinned runtime fixes the cold install path and passed five actual production-browser journey cases. Verify the next complete scheduled matrix and separately approved report delivery."
+        "Scheduled November 20 WebKit shard 3 completed its tests and uploads, then hit the job timeout after a slow system dependency install. The pinned runtime fixes the cold install path and passed five actual production-browser journey cases. Verify the next complete scheduled matrix and separately approved report delivery.",
+        "The final non-root container passed native GitHub archive handoff, Bash setup and Chromium, Firefox and WebKit launch. The first root probe exposed Firefox’s GitHub home ownership restriction. The corrected non-root production-browser Firefox journey passed. A full scheduled receipt is still required."
       ],
       "owner": null,
       "depends_on": [],
@@ -16033,7 +16038,8 @@
           "release-0.6-browser-43561500300",
           "release-0.6-coverage-browser-selection",
           "release-0.6-scheduled-browser-43576703292",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": null,
         "nightly_accessibility_readback": {
@@ -395929,7 +395935,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "batch": "release-0.6-critical-form-recovery",
@@ -395939,7 +395946,7 @@
             3073323863794353
           ],
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             549371195359892,
             121170738474575,
             1141890046391240,
@@ -396038,7 +396045,8 @@
             2005308045537251,
             2688092399472925,
             3476363656192367,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -398132,13 +398140,14 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-coverage-browser-selection",
           "release-0.6-solar-postal-utc-day",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
           "reviewed_sha": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             4368684968752415,
             432402897659717,
             3306871816619358,
@@ -398169,7 +398178,8 @@
             1397518992161983,
             3288945720525475,
             2607445134387421,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -398377,13 +398387,14 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
           "reviewed_sha": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             335271907751690,
             1087088856558274,
@@ -398430,7 +398441,8 @@
             3288945720525475,
             1529355937300869,
             2294135178540376,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -401587,7 +401599,8 @@
           "release-0.6-promotion-review-evidence",
           "release-0.6-promotion-staged-ancestor",
           "release-0.6-board-evidence-compaction",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -401599,7 +401612,7 @@
             3141462911362460
           ],
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             1256540299604531,
             2088482174620949,
@@ -401673,7 +401686,8 @@
             3666513877874346,
             709810231208422,
             1952616690185476,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         },
         "storage_p1_board_tests": {
@@ -401876,7 +401890,8 @@
           "release-0.6-production-telemetry-labels",
           "release-0.6-promotion-staged-ancestor",
           "release-0.6-board-evidence-compaction",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -401888,7 +401903,7 @@
             889985415563243
           ],
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             1220101825772327,
             1256540299604531,
@@ -401979,7 +401994,8 @@
             2853248825345781,
             824424486559871,
             709810231208422,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -402313,13 +402329,14 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             335271907751690,
             3108623938713492,
             4217801687597905,
@@ -402353,7 +402370,8 @@
             1397518992161983,
             3288945720525475,
             3239468737812509,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -402539,7 +402557,8 @@
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -402550,7 +402569,7 @@
             889985415563243
           ],
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             1256540299604531,
             2974370710122,
@@ -402612,7 +402631,8 @@
             2314241780480617,
             2487052512659602,
             312458396182986,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -402673,7 +402693,8 @@
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-nightly-pinned-browser-runtime"
+          "release-0.6-nightly-pinned-browser-runtime",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -402684,7 +402705,7 @@
             889985415563243
           ],
           "source_evidence": [
-            835419655370361,
+            955076998768099,
             3832607923924757,
             1256540299604531,
             2974370710122,
@@ -402746,7 +402767,8 @@
             2314241780480617,
             2487052512659602,
             312458396182986,
-            3740545211621373
+            3740545211621373,
+            2642014990194729
           ]
         }
       }
@@ -567621,7 +567643,8 @@
         "The signed storage image passed natural expiry and staged age-based protection before the fenced storage-only cutover. The encrypted EU archive restored with the same inventory and the v0.5.1 application returned healthy on the new volume. Two regular November 20 PostgreSQL backups verified EU manifest readback and matching live metrics. Candidate application callback, combined release checks and authorized external monitoring receipts remain open.",
         "Staging prepares the protected callback overlay before v0.6.0 application deployment and the release script now requires it. Actual staging Compose readback limits the difference to the intended mounts and API key path. The current application remains healthy with provider delivery disabled. Verify the live candidate and persisted callback.",
         "SMTP delivery failures now discard relay text before it can reach persisted delivery history or caller diagnostics. The original sender exposed a synthetic relay reply containing an email address. The fixed sender keeps allowlisted network and SMTP classification data and leaves ambiguous sends in reconciliation. All 72 shared delivery, 92 worker and 107 API notification cases and 38 package export checks passed. Verify persisted diagnostics on the exact staging candidate and the approved external sinks.",
-        "Activated private staging metrics retention and patched the live scanner. Fixed the cold browser bootstrap behind the cancelled November 20 shard and verified all five affected browser projects on the exact base. The frozen release matrix, lifecycle, monitoring destinations and reviews remain outstanding."
+        "Activated private staging metrics retention and patched the live scanner. Fixed the cold browser bootstrap behind the cancelled November 20 shard and verified all five affected browser projects on the exact base. The frozen release matrix, lifecycle, monitoring destinations and reviews remain outstanding.",
+        "The final non-root container passed native GitHub archive handoff, Bash setup and Chromium, Firefox and WebKit launch. The first root probe exposed Firefox’s GitHub home ownership restriction. The corrected non-root production-browser Firefox journey passed. A full scheduled receipt is still required."
       ],
       "owner": null,
       "depends_on": [],
@@ -568079,7 +568102,8 @@
           "release-0.6-clamav-libxml2-86144",
           "release-0.6-nightly-pinned-browser-runtime",
           "release-0.6-staging-metrics-archive-live",
-          "release-0.6-retained-staging-scanner-live-r3"
+          "release-0.6-retained-staging-scanner-live-r3",
+          "release-0.6-nightly-nonroot-runtime"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -770723,6 +770747,28 @@
           "sha256": "a97f930f3743631d9484684e8aa742e9361dd62df7bfb19d8a182be1facc394e"
         }
       ]
+    },
+    "release-0.6-nightly-nonroot-runtime": {
+      "batch": "release-0.6-nightly-nonroot-runtime",
+      "base_commit": "52aa3356c3061d900f3aebd070a1cc521fd1ed51",
+      "paths": [
+        ".github/workflows/browser-nightly.yml"
+      ],
+      "checks": [
+        "Native GitHub run 44811849259 verified the artifact and Chromium and WebKit bootstrap. Firefox revision 1575 refused root execution with the GitHub workspace home owned by the runner user.",
+        "The same image at UID 1001 reran the exact artifact verification and browser bootstrap steps on GitHub in run 44812206461. Chromium, WebKit and the explicitly installed Firefox all launched.",
+        "Five browser and device smoke checks passed under UID 1001. The exact-source English electricity payment and activation journey also passed on Firefox with the production build, locked executable and zero flakes or failures."
+      ],
+      "limitations": [
+        "The complete scheduled nightly matrix and external report receipt remain separate release requirements."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/v06-nightly-nonroot-runtime-20261120.json",
+      "execution_receipts": [
+        {
+          "file": "v06-nightly-nonroot-runtime-20261120.json",
+          "sha256": "a85ad3adc3def80fdaae6da56c54bb04491a895ebf7699443602eeeab86bdce1"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -774204,9 +774250,9 @@
         "path": "apps/worker/src/refunds/retry-runner.ts",
         "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
       },
-      "835419655370361": {
+      "955076998768099": {
         "path": ".github/workflows/browser-nightly.yml",
-        "sha256": "f139bdeeb839cda38b3ebc5bf0e508e8d3b82c912a1312f06d35ab41a401648a"
+        "sha256": "d7894f84f1a56906d5b3440fee6ad0ab248674e30ad76a95e22d499fa687c1bc"
       },
       "4310718850880231": {
         "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -790962,6 +791008,14 @@
           ".github/workflows/browser-nightly.yml"
         ],
         "scope": "Nightly browser bootstrap only. Browser projects, pinned firefox executable, release accounting and checked application assertions retain their behavior. Five affected native production-browser journeys passed in the exact replacement image."
+      },
+      "2642014990194729": {
+        "batch": "release-0.6-nightly-nonroot-runtime",
+        "base_commit": "52aa3356c3061d900f3aebd070a1cc521fd1ed51",
+        "paths": [
+          ".github/workflows/browser-nightly.yml"
+        ],
+        "scope": "Container UID corrected after native Firefox rejected root. The same artifact, browser and release acceptance contracts passed in the non-root native probe and focused production Firefox journey."
       },
       "2897000423732868": {
         "batch": "release-0.6-promotion-receipt-binding",

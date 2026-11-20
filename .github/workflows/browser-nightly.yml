@@ -114,7 +114,7 @@ jobs:
     container:
       # Match the locked Playwright version and avoid installing system packages per shard.
       image: mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a
-      options: --shm-size=1g
+      options: --user 1001 --shm-size=1g
     defaults:
       run:
         shell: bash
