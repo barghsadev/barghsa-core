@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T08:12:04.355380+00:00",
+  "updated": "2026-11-20T11:28:25.635203+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -15005,8 +15005,7 @@
         "Verified the current hosted artifact at 12c1f9329. Its five image, SBOM and scan receipts match and contain zero High or Critical findings. All 857 license entries match the current policy with zero needing review. The new installed staging PostgreSQL image and retained ClamAV both passed scans and the strict 282-entry license check. Retain the final v0.6.0 application image, supply-chain and distribution receipts.",
         "The enforced image job in run 44597706568 passed on 3f8929fdd. Artifact 14567461549 verified all five image identities, SBOMs and vulnerability reports. The images had zero High or Critical findings and the strict license check accepted 471 allowlisted and 386 exactly approved entries. The frozen release still needs its exact image and distribution receipts.",
         "Assembled the Linux amd64 musl libvips source and notice packet with 33 upstream recipe inputs, 170 Rust crates and a separately resolved replacement build. All 215 payload files matched after reopening the archive. The locally built 3f8929fdd app identified both the published and source-modified libraries by the loaded binary checksums under UID 1000. The same PNG, JPEG, WebP and PDF preview checks passed for both libraries and both web shells passed the exact font and notice checks. The frozen candidate and actual distribution access remain open.",
-        "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages.",
-        "The latest f7c488e16 hosted image inventory still has 857 packages, including only the unchanged two pending 8.19 dispositions. All exact runtime scans, the dependency audit, Semgrep and the redacted history scan passed. The strict frozen release and distribution receipts remain open."
+        "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images."
       ],
       "owner": null,
       "depends_on": [],
@@ -15083,14 +15082,15 @@
           "release-0.6-promotion-review-evidence",
           "release-0.6-license-receipt-reference",
           "release-0.6-verify-configuration-backup-and-checks",
-          "release-0.6-paired-eu-recovery-rehearsal"
+          "release-0.6-paired-eu-recovery-rehearsal",
+          "release-0.6-systemd-license-approval"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
           "base_commit": "fa7d7416ad254dae8bab76e8a8a00231715554dc",
           "source_evidence": [
-            4408457265269910,
-            2706798312389763,
+            2145286796915912,
+            57988567301537,
             4022985181171604,
             2798305884558653,
             2125512332515078,
@@ -15105,7 +15105,8 @@
             2847380965056372,
             375002563480230,
             3723168532346971,
-            4464595810166998
+            4464595810166998,
+            4048561367915382
           ]
         },
         "exact_license_report": {
@@ -15381,7 +15382,8 @@
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
         "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts.",
         "The b15ebc3a9 packaged Linux app, worker, retained staging PostgreSQL image and signed SeaweedFS image passed on a private staging-host network. Migration 0297, no-op repeat, readiness and liveness, original image identity and two exact signed object-version receipts were verified. The final immutable candidate and live release worker receipts remain required.",
-        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open."
+        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open.",
+        "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images."
       ],
       "owner": null,
       "depends_on": [],
@@ -15476,7 +15478,8 @@
           "release-0.6-wal-recovery-config",
           "release-0.6-license-receipt-reference",
           "release-0.6-license-promotion-fixture",
-          "release-0.6-staging-edge-probes"
+          "release-0.6-staging-edge-probes",
+          "release-0.6-systemd-license-approval"
         ],
         "current_acceptance": null,
         "native_staging_signed_storage_runtime": {
@@ -30812,7 +30815,8 @@
           "release-0.6-amd64-license-readback",
           "release-0.6-operational-retention",
           "release-0.6-image-and-scanner-receipt-readback",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-systemd-license-approval"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -30855,7 +30859,7 @@
             1499669892738514,
             617608376516237,
             283370916728061,
-            205397931577530
+            2145286796915912
           ],
           "checks": [
             3354082529935070,
@@ -31182,7 +31186,8 @@
             3045323081255111,
             443774619156764,
             3662875780842044,
-            1204144011576571
+            1204144011576571,
+            77188109634050
           ],
           "presentation_renewals": [
             {
@@ -392503,7 +392508,8 @@
           "release-0.6-staging-scanner-gate-readback",
           "release-0.6-promotion-review-evidence",
           "release-0.6-license-receipt-reference",
-          "release-0.6-verify-configuration-backup-and-checks"
+          "release-0.6-verify-configuration-backup-and-checks",
+          "release-0.6-systemd-license-approval"
         ],
         "current_acceptance": {
           "kind": "native_verification",
@@ -392512,11 +392518,14 @@
             3832607923924757,
             1519067751003713,
             2456642983541496,
-            2064846375361020
+            57988567301537
           ],
           "checks": [
             1610188270030346,
             3700808238309276
+          ],
+          "source_renewals": [
+            3253512957252453
           ]
         },
         "exact_license_report": {
@@ -567463,11 +567472,9 @@
         "Task-specific acceptance covers generated and bound SBOMs, structured logging tests, the staged smoke and migration runner, and the signed storage callback implementation. Before accepting v0.6.0, verify exact final distribution and images, the real configured external log sink, the live recovery checkpoint and staged smoke, and actual protected callback delivery after the storage cutover.",
         "Authenticated SMS.ir report polling is implemented under the owner decision. A live staging query found zero accepted SMS.ir notification receipts and one active tested provider. The exact candidate still needs a matching authenticated real delivery report.",
         "Staging configuration backup and restore, the compiled trace chain test and both edge-header suites meet their task-specific requirements. The exact deployed candidate and protected external collector, live edge, production-equivalent HSTS and whole-service recovery remain release requirements.",
-        "The b15ebc3a9 and 2d363a4e7 hosted image inventories each reported two new package versions. libsystemd0 and libudev1 255.4-1ubuntu8.19 in the Ubuntu Noble amd64 staging PostgreSQL scope require exact dispositions. Their license sets, installed notices and official matching source were verified. Live staging remains on the reviewed 8.18 packages.",
         "Current CI implements both targeted protected checks and a full strict gate. The identical workflow passed all seven strict jobs at 3f8929fdd. The exact frozen release, nightly rollup, package dispositions and final distribution and deployment receipts remain required.",
         "The exact f7c488e16 Linux amd64 app and web passed one isolated paired recovery exercise in 20.862 seconds. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact final release, real off-server paired recovery and protected topology and alert receipts remain open.",
         "The exact f7c488e16 Linux amd64 app and web passed a paired recovery exercise through the versioned EU staging store in 56.234 seconds. Read both pinned EU versions after deleting the local source volume and archive. Recovered exact configuration and two versioned object payloads with their tags, then replayed the encrypted physical PostgreSQL backup and WAL through the confirmed checkpoint. Database RPO was 0.000 seconds. The confirmed after-base commit survived and the later commit was absent. The same recovered state passed 11 HTTPS checks, including the default profile, wallet, all four owned services and logout revocation. Invoice, payment, refund and service identity readbacks were unchanged. The exact frozen release, protected production-equivalent topology and alert receipts remain open.",
-        "The security scanner configuration is accepted. Exact f7c488e16 scanner outputs passed independently. Its report-only inventory again identified the two Ubuntu 8.19 dispositions required by the final strict image gate.",
         "The regular staging timer fired on November 20 at 03:00:00 UTC. The exact running PostgreSQL image published a verified 9,201,269-byte encrypted EU backup. Its manifest and journal matched, and active Prometheus independently read all three updated values with the staging and core database labels. The exact f7c488e16 packaged app used TLS 1.3 on the direct PostgreSQL connection and both PgBouncer connections in an isolated synthetic Docker network. The app and pooler rejected wrong hostnames and untrusted CAs on every applicable connection. An unrelated Docker network could reach neither database endpoint. The staged cutover inputs matched the exact signed image, rollback volume and protected configuration. The command rejected the real pre-window lifecycle result before changing any running container, image manifest, runtime file or NGINX configuration. The exact accepted release and protected topology and delivery gates remain open.",
         "The staged PostgreSQL filesystem recovered above the monitored threshold and the compiled candidate passed 12 localized Orca speech cases covering the four services and high-risk staff and wallet reviews. The exact frozen release, protected topology and delivery receipts remain open.",
         "Staff contract cancellation status now denies session expiry during the financial read. Compiled native and web caller checks passed. Verify the exact deployed candidate.",
@@ -567481,7 +567488,8 @@
         "Five staff cancellation reads now hold the current contract grant and session throughout the database read. Compiled PostgreSQL verified expiry while the preview, latest or specific saved decisions, customer request detail and queue queries were blocked. Each returns 401 without exposing the data. The existing writer access, unauthorized staff denial, rollback, refund and caller cases passed. Wider resource review and the frozen staging gates remain open.",
         "Mapped 132 generated parameterized GET routes to their resource handlers. Saving-plan configuration and hardware inventory now recheck staff session expiry before returning data. Both original 200 responses were reproduced with real blocked PostgreSQL queries, and both now return 401. Existing edits, reservation conflicts and catalogue UI tests passed. Wider delegated and query-only reads and the immutable candidate remain open.",
         "Reviewed 28 additional documented query-identifier GET routes. Contract authoring, legal holds, promotion profile options and staff team candidate reads now keep their existing staff grant and current session through the response. Actual blocked PostgreSQL reads reproduced four old 200 responses; the fixed application returns 401 without exposing the records. The 102 targeted API and 72 web cases passed. Broader resource review and the exact candidate remain open.",
-        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open."
+        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open.",
+        "The owner approved the exact staging PostgreSQL amd64 versions libsystemd0 and libudev1 255.4-1ubuntu8.19 on November 20. The policy carries forward the notices, license choice, corresponding-source and replacement conditions. Re-evaluation of all 857 records in the verified 94648b5c4 hosted inventory found 386 approved, 471 allowed and zero pending. Verify the full strict gate and distribution conditions for the final immutable images."
       ],
       "owner": null,
       "depends_on": [],
@@ -567934,7 +567942,8 @@
           "release-0.6-cancellation-read-authority",
           "release-0.6-saving-catalogue-read-authority",
           "release-0.6-query-read-authority",
-          "release-0.6-staging-edge-probes"
+          "release-0.6-staging-edge-probes",
+          "release-0.6-systemd-license-approval"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -770280,6 +770289,52 @@
           "sha256": "0972e7df8405ec238b9a48c6dd760de09152b7a73b515be8ecb74ac9de36d744"
         }
       ]
+    },
+    "release-0.6-systemd-license-approval": {
+      "batch": "release-0.6-systemd-license-approval",
+      "base_commit": "480dce10fa6f01aa469ad60c0b6431f545ba1e2f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/licenses/release-approvals.json",
+        "docs/security/release-license-review.md"
+      ],
+      "checks": [
+        "All 12 release-license policy tests passed. The policy diff is exactly two scope- and version-bound owner decisions. Replaying the classifier over the verified hosted inventory changed only those two rows."
+      ],
+      "execution_receipts": [
+        {
+          "file": "policy-tests.log",
+          "sha256": "ca076a46ab6ac81b3c52ea494e380f739cde2d7a6f3e566907dc53a7394af7e4"
+        },
+        {
+          "file": "policy-replay.json",
+          "sha256": "60c04852de26d6658235296e61c773251f30ab168d6f393fd5d6b8afd23864e1"
+        }
+      ],
+      "external_evidence": [
+        {
+          "url": "https://github.com/barghsadev/barghsa-core/actions/runs/44704600452/job/136180949728"
+        }
+      ],
+      "limitations": [
+        "Inventory replay verifies classification. It does not replace the final strict scan and image readback."
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "cec43dedd66ba7a6ef72ffbfcddb7340b48de962195eef525b5b858d47864be9"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "a590c94c23266692ef906c0bd1c4bc70a4730f8b15bf41e1a074ecffd6ad99c9"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -775414,13 +775469,13 @@
         "path": "apps/api/src/generate-openapi.ts",
         "sha256": "ef2cac39d5126ed04b155bbf79e9fa85667804df3322f7c0aaad39edb35aba35"
       },
-      "4408457265269910": {
+      "2145286796915912": {
         "path": "docs/security/release-license-review.md",
-        "sha256": "83b55c06ea97891da94e9cb1425e00a5947728a67483f5dac40399c76c4417c7"
+        "sha256": "a590c94c23266692ef906c0bd1c4bc70a4730f8b15bf41e1a074ecffd6ad99c9"
       },
-      "2706798312389763": {
+      "57988567301537": {
         "path": "deploy/licenses/release-approvals.json",
-        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        "sha256": "cec43dedd66ba7a6ef72ffbfcddb7340b48de962195eef525b5b858d47864be9"
       },
       "4022985181171604": {
         "path": "scripts/check-release-licenses.py",
@@ -777229,10 +777284,6 @@
       "3040144816699907": {
         "path": "docs/security/session-location.md",
         "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
-      },
-      "205397931577530": {
-        "path": "docs/security/release-license-review.md",
-        "sha256": "12988ce6b1dbe8ae88ed023278a1ac28a710b2fc7b3cddb16e01d5577d03e425"
       },
       "3535760571433913": {
         "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -785802,10 +785853,6 @@
         "path": "scripts/test_check_release_licenses.py",
         "sha256": "bb556d358519db16e97cfe92f5403e9787985ec72dbb9f33519fac882a940543"
       },
-      "2064846375361020": {
-        "path": "deploy/licenses/release-approvals.json",
-        "sha256": "1d5926bd53e7d8f243012da689d3364e1febb2a7b0b47f171990b3390569468f"
-      },
       "2882020909847356": {
         "path": "deploy/staging/Dockerfile.postgres",
         "sha256": "96ab21e4e52f225b37cbac044190fa769e53916411af8e934675720477a83ca7"
@@ -793448,6 +793495,15 @@
         ],
         "scope": "Adds current readback and package metadata to the review packet. The allowlist, exceptions, policy conditions and original evidence retain their scope."
       },
+      "4048561367915382": {
+        "batch": "release-0.6-systemd-license-approval",
+        "base_commit": "480dce10fa6f01aa469ad60c0b6431f545ba1e2f",
+        "paths": [
+          "deploy/licenses/release-approvals.json",
+          "docs/security/release-license-review.md"
+        ],
+        "scope": "Two exact owner dispositions and the review record changed. The prior package approvals, policy algorithm, runtime code and accepted implementations retain their original source and evidence scope."
+      },
       "2430950203953735": {
         "batch": "release-0.6-browser-coverage-mapping",
         "base_commit": "03a9654cd1906a0a6197a522177138674943b85d",
@@ -796723,6 +796779,14 @@
           "docs/security/release-license-review.md"
         ],
         "scope": "The license packet records two newly observed Ubuntu package versions and unchanged notices. The existing owner approvals, enforced policy and internal review decisions remain intact."
+      },
+      "77188109634050": {
+        "batch": "release-0.6-systemd-license-approval",
+        "base_commit": "480dce10fa6f01aa469ad60c0b6431f545ba1e2f",
+        "paths": [
+          "docs/security/release-license-review.md"
+        ],
+        "scope": "Two exact owner dispositions and the review record changed. The prior package approvals, policy algorithm, runtime code and accepted implementations retain their original source and evidence scope."
       },
       "359379790510643": {
         "batch": "release-0.5-expanded-verification-settings",
@@ -812123,6 +812187,14 @@
           "Dockerfile.web"
         ],
         "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+      },
+      "3253512957252453": {
+        "batch": "release-0.6-systemd-license-approval",
+        "base_commit": "480dce10fa6f01aa469ad60c0b6431f545ba1e2f",
+        "paths": [
+          "deploy/licenses/release-approvals.json"
+        ],
+        "scope": "Two exact owner dispositions and the review record changed. The prior package approvals, policy algorithm, runtime code and accepted implementations retain their original source and evidence scope."
       },
       "1356482214862201": {
         "batch": "release-0.6-environment-indicator",

@@ -3501,6 +3501,23 @@
   },
   {
     "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libsystemd0@255.4-1ubuntu8.19?arch=amd64&distro=ubuntu-24.04",
+    "licenses": [
+      "CC0-1.0",
+      "GPL-2.0-only",
+      "GPL-2.0-only WITH Linux-syscall-note-exception",
+      "GPL-2.0-or-later",
+      "LGPL-2.1-only",
+      "LGPL-2.1-or-later",
+      "MIT",
+      "public-domain"
+    ],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-20-ubuntu-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libsystemd0@255.4-1ubuntu8.19?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Resolve the license choice or exception for shipped files. Confirm notices and applicable source or replacement duties."
+  },
+  {
+    "scope": "postgres-staging",
     "purl": "pkg:deb/ubuntu/libsz2@1.1.2-1build1?arch=amd64&distro=ubuntu-24.04",
     "licenses": [],
     "approvedBy": "Majid Najafi (owner)",
@@ -3581,6 +3598,23 @@
     "approvedBy": "Majid Najafi (owner)",
     "reference": "docs/security/release-license-review.md#owner-approval-on-2026-11-19",
     "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libudev1@255.4-1ubuntu8.18?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Resolve the license choice or exception for shipped files. Confirm notices and applicable source or replacement duties."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libudev1@255.4-1ubuntu8.19?arch=amd64&distro=ubuntu-24.04",
+    "licenses": [
+      "CC0-1.0",
+      "GPL-2.0-only",
+      "GPL-2.0-only WITH Linux-syscall-note-exception",
+      "GPL-2.0-or-later",
+      "LGPL-2.1-only",
+      "LGPL-2.1-or-later",
+      "MIT",
+      "public-domain"
+    ],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-20-ubuntu-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libudev1@255.4-1ubuntu8.19?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Resolve the license choice or exception for shipped files. Confirm notices and applicable source or replacement duties."
   },
   {
     "scope": "postgres-staging",

@@ -1,6 +1,6 @@
 # v0.6.0 package-specific license review
 
-This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved the complete release inventory on November 19, 2026. The policy records 388 exact exceptions, including two refreshed package versions.
+This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved 388 exact exceptions on November 19, 2026, and two additional Ubuntu package versions on November 20.
 
 ## Owner approval on 2026-11-19
 
@@ -9,8 +9,8 @@ Majid Najafi, Barghsa's owner, instructed Codex to "approve the whole license in
 The current build captured NSS 3.133-r0 in the application scope and GnuTLS
 3.8.14-r0 in the PostgreSQL scope. Codex recorded these two exact refreshed
 versions under the same whole-inventory instruction. Their observed license
-sets match those of the previously reviewed versions. The policy contains
-388 exact records. [Hosted build and image reports](https://github.com/barghsadev/barghsa-core/actions/runs/44548133025).
+sets match those of the previously reviewed versions. The November 19 decision
+covers 388 exact records. [Hosted build and image reports](https://github.com/barghsadev/barghsa-core/actions/runs/44548133025).
 
 The exact package URLs, versions, distribution scopes and observed license sets are enumerated in [the approval policy](../../deploy/licenses/release-approvals.json). The policy cites this decision and names the owner as approver. The workbook records the decision date and identifies Codex as the recorder acting under the owner's instruction.
 
@@ -33,10 +33,13 @@ source archives matched their published checksums. Debian's copyright
 file, both new binary notices and both notices installed on staging had
 identical SHA-256 checksums.
 
-The refreshed Linux amd64 package versions still require their exact
-dispositions. Preserve the existing notice, corresponding-source and
-replacement obligations. [Ubuntu source publication](https://lists.ubuntu.com/archives/noble-changes/2026-November/060633.html)
-and [current hosted inventory](https://github.com/barghsadev/barghsa-core/actions/runs/44655936435).
+On November 20, 2026, Majid Najafi instructed Codex to approve both
+`255.4-1ubuntu8.19` entries on his behalf. The policy records each exact
+Ubuntu 24.04 amd64 package under `postgres-staging`. The decision
+retains the applicable notices, license-choice, corresponding-source and
+replacement conditions from the earlier approval. Verify these conditions
+against the files distributed with the final image. [Ubuntu source publication](https://lists.ubuntu.com/archives/noble-changes/2026-November/060633.html)
+and [reviewed hosted inventory](https://github.com/barghsadev/barghsa-core/actions/runs/44704600452/job/136180949728).
 
 ## Staging PostgreSQL supplement
 
