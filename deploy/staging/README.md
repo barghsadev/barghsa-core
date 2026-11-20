@@ -314,10 +314,16 @@ separate object-store cutover with verified source and notice materials. The
 application release requires the running repaired image and its intended data mount.
 
 For the storage cutover, acquire `/run/lock/barghsa-staging-release.lock` and
-quiesce application writers and direct S3 writes at the edge. Stop the old
-object store and retain its original image and volume. Verify the cold copy's
+quiesce the API, worker and inference containers. Return `503` from the shared
+S3 proxy snippet covering both the bucket root and object paths. Validate and
+reload NGINX, then wait for every pre-reload worker to finish. A worker can
+still be handling an upload after the new workers start serving the fence.
+Keep the fence in place while the direct authenticated inventory is captured.
+Stop the old object store and retain its original image and volume. Verify the cold copy's
 checksum before restoring it to a separate `barghsa-staging_objectdata` volume
-with a suffix for the cutover. Set `BARGHSA_STAGING_OBJECTSTORE_IMAGE` to
+with a suffix for the cutover. Use the running Compose configuration as the
+base for the storage-only change. Preserve the PostgreSQL WAL overlay and
+unrelated service settings. Set `BARGHSA_STAGING_OBJECTSTORE_IMAGE` to
 `barghsa-storage-lifecycle:signed-webhooks-454577ed5276` and
 `BARGHSA_STAGING_OBJECTSTORE_VOLUME` to the new volume name in the protected
 staging runtime file. Start only the storage service using the verified local

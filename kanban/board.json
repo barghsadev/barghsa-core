@@ -12556,7 +12556,9 @@
         "The exact reviewed SeaweedFS image passed matching local and native staging tests for alternate shared libraries and the FUSE configuration bind. The ten associated source and recipe payloads match the reviewed archive. The owner workbook still governs recipient access and distribution conditions. Elapsed expiry and recoverable live storage cutover remain open.",
         "The signed final storage build is loaded on staging. An isolated clone of the original synthetic storage volume matched 85 file checksums. The exact new image opened that clone and preserved held and unclassified fixtures. The original tagged object reaches one-day eligibility at 2026-11-20 17:31:14.155718 UTC. Run the exact-image observer then, and verify the recoverable live cutover, fingerprint and selected provider behavior on the accepted candidate.",
         "Staging now has the protected dormant key and notification configuration for the exact signed image. The stored active bucket matched the running storage container, and the API image's node group read the key through a read-only mount. EU archive readback and isolated restore verified all three callback inputs. Delivery is disabled and the active image manifest and runtime remained intact. Complete the exact natural expiry and recoverable live storage cutover.",
-        "The exact signed 4.54 image fetched and verified the encrypted EU version of the synthetic 4.47 cold volume, then started it with the default staging command, 768 MiB limit and protected dormant callback mounts. All 11 versioned byte/tag reads, seven ordered history versions and three protected objects matched. Stage remains on the prior store while the natural age gate runs. Verify live fingerprints and fenced cutover after the exact-image expiry observation."
+        "The exact signed 4.54 image fetched and verified the encrypted EU version of the synthetic 4.47 cold volume, then started it with the default staging command, 768 MiB limit and protected dormant callback mounts. All 11 versioned byte/tag reads, seven ordered history versions and three protected objects matched. Stage remains on the prior store while the natural age gate runs. Verify live fingerprints and fenced cutover after the exact-image expiry observation.",
+        "The private native NGINX rehearsal verified that the shared S3 fence blocks new PUT, DELETE and multipart creation while a pre-reload worker finishes an existing upload. Reopening was explicit. The preliminary live fingerprint still matches all 59 versions, five markers, order, rules, tags and bytes. The EU path uploaded and verified a 31.47 MB encrypted synthetic cold archive in 204 seconds and independently restored it in 14 seconds. Repeat the fully fenced inventory and volume capture after the exact natural expiry gate.",
+        "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -12713,6 +12715,14 @@
         "staging_signed_storage_eu_cold_restore": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-eu-cold-restore-20261120.json",
           "sha256": "e9fbfd73470f96c19fd9199a7ff30abca1ffe543d501486ba1feff20d9d3545d"
+        },
+        "staging_storage_cutover_admission_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-cutover-admission-rehearsal-20261120.json",
+          "sha256": "cdf97b86d6c11c01fe3ca1be0cbf7918ea68a60c0c2c2d57569c61c8781f9122"
+        },
+        "staging_storage_only_compose_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-only-cutover-compose-20261120.json",
+          "sha256": "8cba4a28c3a66cc74d4b23266947cd2717fe624e2072d1ff6eb5702d3e57270a"
         }
       },
       "defect_severity": "P1"
@@ -13395,7 +13405,7 @@
             878789146717865,
             680981381061175,
             3513479427036515,
-            3991342327763850,
+            1206685866573554,
             2577092342995346,
             2645740275209480
           ],
@@ -13403,7 +13413,9 @@
             2534751549455268,
             178137427497833,
             4130285963748962,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "source_renewals": [
             650415283981579,
@@ -13453,7 +13465,9 @@
             638491568431204,
             3181386224650582,
             4458859255345362,
-            4149196523916836
+            4149196523916836,
+            1250914822414554,
+            3011263934478573
           ]
         }
       }
@@ -15641,7 +15655,7 @@
             3664960298222868,
             2719536177275900,
             2960541284577999,
-            3991342327763850,
+            1206685866573554,
             2916731061973370,
             2506773297712354,
             753281310031346,
@@ -15653,7 +15667,9 @@
             2648374651102814,
             161286708135146,
             4130285963748962,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "source_renewals": [
             88825792085133,
@@ -15700,7 +15716,9 @@
             2459822372857812,
             1239819274270615,
             4149196523916836,
-            790021110620565
+            790021110620565,
+            1250914822414554,
+            3011263934478573
           ]
         }
       }
@@ -20166,7 +20184,9 @@
             178137427497833,
             4130285963748962,
             253090249689773,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "source_evidence": [
             1368919690263265,
@@ -20179,7 +20199,7 @@
             1599047804612857,
             3779379415145857,
             2091941185117249,
-            3991342327763850,
+            1206685866573554,
             912713385575125,
             2485658752816053,
             4363839482195469,
@@ -20250,7 +20270,9 @@
             3181386224650582,
             941689725848481,
             1599608966337785,
-            4149196523916836
+            4149196523916836,
+            1250914822414554,
+            3011263934478573
           ]
         }
       }
@@ -21629,14 +21651,16 @@
             2216547240129837,
             178137427497833,
             4130285963748962,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "source_evidence": [
             4363839482195469,
             2014961454363098,
             1220101825772327,
             1599047804612857,
-            3991342327763850,
+            1206685866573554,
             912713385575125,
             2485658752816053,
             3917170407626177,
@@ -21750,7 +21774,9 @@
             638491568431204,
             3181386224650582,
             941689725848481,
-            4149196523916836
+            4149196523916836,
+            1250914822414554,
+            3011263934478573
           ]
         }
       }
@@ -98243,7 +98269,7 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            3991342327763850,
+            1206685866573554,
             912713385575125,
             3667823558989007,
             2960541284577999,
@@ -98357,7 +98383,9 @@
             178137427497833,
             4130285963748962,
             253090249689773,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -98678,7 +98706,9 @@
             1832992762036922,
             983958935467165,
             4149196523916836,
-            1239819274270615
+            1239819274270615,
+            1250914822414554,
+            3011263934478573
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -373133,7 +373163,7 @@
             4071959884264566,
             1186610820846704,
             2236482200561382,
-            3991342327763850,
+            1206685866573554,
             912713385575125,
             3667823558989007,
             2960541284577999,
@@ -373260,7 +373290,9 @@
             178137427497833,
             4130285963748962,
             253090249689773,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -373589,7 +373621,9 @@
             1832992762036922,
             983958935467165,
             4149196523916836,
-            1239819274270615
+            1239819274270615,
+            1250914822414554,
+            3011263934478573
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -386675,7 +386709,7 @@
           "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
           "source_evidence": [
             878789146717865,
-            3991342327763850,
+            1206685866573554,
             680981381061175,
             2577092342995346,
             3513479427036515,
@@ -386686,7 +386720,9 @@
             2534751549455268,
             178137427497833,
             4130285963748962,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "source_renewals": [
             650415283981579,
@@ -386736,7 +386772,9 @@
             638491568431204,
             3181386224650582,
             4458859255345362,
-            4149196523916836
+            4149196523916836,
+            1250914822414554,
+            3011263934478573
           ]
         }
       }
@@ -559531,7 +559569,7 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            3991342327763850,
+            1206685866573554,
             912713385575125,
             1680424996333195,
             3667823558989007,
@@ -559852,7 +559890,9 @@
             4130285963748962,
             580981761638250,
             253090249689773,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "limitations": [],
           "operational_limits": [
@@ -560491,7 +560531,9 @@
             534670550961879,
             4149196523916836,
             4168174308691627,
-            1239819274270615
+            1239819274270615,
+            1250914822414554,
+            3011263934478573
           ],
           "presentation_renewals": [
             {
@@ -561540,7 +561582,7 @@
             164934541064897,
             3504038364200194,
             545918966277009,
-            3991342327763850,
+            1206685866573554,
             912713385575125,
             1680424996333195,
             3667823558989007,
@@ -561860,7 +561902,9 @@
             4130285963748962,
             580981761638250,
             253090249689773,
-            469424028647510
+            469424028647510,
+            601248659294711,
+            2722680406957809
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -562403,7 +562447,9 @@
             534670550961879,
             4149196523916836,
             4168174308691627,
-            1239819274270615
+            1239819274270615,
+            1250914822414554,
+            3011263934478573
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -564982,7 +565028,9 @@
         "The signed storage image, API and worker passed the combined TLS, duplicate, version and rollback evidence. Protected staging storage has the checksum-verified image and source archive. Wait for the natural expiry of the original seeded fixture on the exact signed-image clone and verify the recoverable live storage cutover before acceptance.",
         "The exact b15ebc3a9 Linux API and normal worker passed their native staging rehearsal with signed storage, migration 0297 and a no-op repeat. Three verified HTTPS deliveries produced two encrypted completed receipts and preserved both uploads as provisional. The active v0.5.1 services and manifest were preserved. The timed exact-image lifecycle proof, recoverable live cutover and other acceptance gates remain open.",
         "The exact callback key and configuration are ready on staging with delivery disabled. The installed encrypted configuration backup and native restore verified 56 staged files and 33 tables, including the three new callback inputs, in 5.524 seconds with zero loss for the covered configuration. The natural storage expiry, live cutover, scheduled receipts and final staging gates remain open.",
-        "The exact signed image also booted the checksum-verified versioned EU backup of the synthetic 4.47 cold volume with the default staging command and dormant callback mounts. All 11 byte/tag checks and all protected controls matched. The live storage cutover and exact elapsed expiry remain open."
+        "The exact signed image also booted the checksum-verified versioned EU backup of the synthetic 4.47 cold volume with the default staging command and dormant callback mounts. All 11 byte/tag checks and all protected controls matched. The live storage cutover and exact elapsed expiry remain open.",
+        "Native NGINX verified a complete S3 fence, worker drain and restoration without touching live traffic. The preliminary live inventory of 59 versions and five delete markers still matches the prior fingerprint. The exact cutover transport proved the EU readback and independent recovery with a synthetic archive larger than the current storage volume. Final fenced inventory, live rollout and natural expiry remain required.",
+        "Native Compose rendering rejected using the full release template for the separate storage cutover because it would also change existing CSP, logging, and runtime settings. The verified storage-only model preserves the active PostgreSQL WAL overlay and every unrelated setting. It selects the exact signed image, separate volume and dormant callback mounts. The live file and deployment remain intact pending the natural expiry and cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -565854,6 +565902,14 @@
         "staging_signed_storage_eu_cold_restore": {
           "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-signed-storage-eu-cold-restore-20261120.json",
           "sha256": "e9fbfd73470f96c19fd9199a7ff30abca1ffe543d501486ba1feff20d9d3545d"
+        },
+        "staging_storage_cutover_admission_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-cutover-admission-rehearsal-20261120.json",
+          "sha256": "cdf97b86d6c11c01fe3ca1be0cbf7918ea68a60c0c2c2d57569c61c8781f9122"
+        },
+        "staging_storage_only_compose_rehearsal": {
+          "path": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/staging-storage-only-cutover-compose-20261120.json",
+          "sha256": "8cba4a28c3a66cc74d4b23266947cd2717fe624e2072d1ff6eb5702d3e57270a"
         }
       }
     },
@@ -768759,7 +768815,9 @@
       "580981761638250": "The exact upload fixture passed eight report-only transfer-resume cases and 14 enforced business cases in Chromium and WebKit. See the source-bound staging CSP business rehearsal receipt.",
       "253090249689773": "The signed storage callback receiver and worker passed five final cases on migrated PostgreSQL. The storage, Resend and CSP HTTP boundaries and Resend verifier passed 85 existing cases. See the exact source-bound callback receiver receipt.",
       "1326181805023753": "The existing SQL-rule test and changed-file lint passed after verifying that the schema re-export adds no query text to the reviewed database index.",
-      "469424028647510": "The signed storage artifact, exact license and two callback services passed the isolated native rehearsal. The affected release and rollback suite passed across the initial and corrected focused executions. The reviewed image and source archive were verified after transfer to protected staging storage."
+      "469424028647510": "The signed storage artifact, exact license and two callback services passed the isolated native rehearsal. The affected release and rollback suite passed across the initial and corrected focused executions. The reviewed image and source archive were verified after transfer to protected staging storage.",
+      "601248659294711": "Native staging NGINX blocked new bucket requests while an earlier upload finished, and verified worker drain and restored access. The live NGINX process and included S3 source were unchanged. The exact volume-sized synthetic EU archive verified its immutable version and restore bytes.",
+      "2722680406957809": "Native storage-only Compose model matches the running deployment in its default and rollback modes, retains WAL, and restricts selected image, volume, and mounts to the intended callback and storage paths."
     },
     "source_evidence": {
       "3985308057320810": {
@@ -784481,6 +784539,14 @@
       "2916731061973370": {
         "path": "deploy/staging/test_release_rollback.py",
         "sha256": "9e9f2c3805b00f947fef23871f7f3922231a795213f84e2e72c1f937fc2c3111"
+      },
+      "2767006362502801": {
+        "path": "deploy/staging/README.md",
+        "sha256": "6b94e019e88411c1d4cbb804938aa1d57b8acde809bf3018ee10e736169626dd"
+      },
+      "1206685866573554": {
+        "path": "deploy/staging/README.md",
+        "sha256": "c2c57d72c093eefc454b247d3df1dd70e2bd518e10b1d02b5e118dbba56f7110"
       }
     },
     "source_renewals": {
@@ -817590,6 +817656,22 @@
           "deploy/staging/test_release_rollback.py"
         ],
         "scope": "Retains exact volume, image identity and rollback checks and covers the signed release selection and read-only mount checks. The normalized Compose test verifies unrelated services are unchanged."
+      },
+      "1250914822414554": {
+        "batch": "release-0.6-native-storage-fence-rehearsal",
+        "base_commit": "bf1831dc790d0dbb08877d8d0d21d6156a36aaa5",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "Clarifies how the existing staging S3 proxy is fenced and drained during a separate storage cutover. The exact deployed snippet matched repository bytes. The private native NGINX rehearsal verified new puts, deletes and multipart requests remain blocked while an earlier upload finishes, and verified explicit reopening. No application, rollback or image behaviors changed."
+      },
+      "3011263934478573": {
+        "batch": "release-0.6-storage-only-cutover-compose",
+        "base_commit": "bf1831dc790d0dbb08877d8d0d21d6156a36aaa5",
+        "paths": [
+          "deploy/staging/README.md"
+        ],
+        "scope": "Adds the storage-only Compose base rule to the documented staged cutover. The native render preserves the complete live fallback, PostgreSQL WAL overlay, and every unrelated service setting. Existing staging release, rollback, proxy and source evidence remains valid."
       }
     }
   }
