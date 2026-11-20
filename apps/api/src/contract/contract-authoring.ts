@@ -1,4 +1,5 @@
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { contractUuid } from './contract-validation.js';
 
@@ -11,9 +12,12 @@ export const authoringQuery = z
   .strict();
 
 /** Contract writers need only names and order references, not the CRM's private fields. */
-export async function contractAuthoringOptions(input: z.infer<typeof authoringQuery>) {
+export async function contractAuthoringOptions(
+  input: z.infer<typeof authoringQuery>,
+  client: PoolClient | ReturnType<typeof getDbPool> = getDbPool()
+) {
   if (input.profileId) {
-    const result = await getDbPool().query<{
+    const result = await client.query<{
       id: string;
       serviceType: string;
       createdAt: Date;
@@ -30,7 +34,7 @@ export async function contractAuthoringOptions(input: z.infer<typeof authoringQu
       nextBefore: result.rows.length > 50 ? result.rows[49]!.id : null,
     };
   }
-  const result = await getDbPool().query<{ id: string; title: string; profileType: string }>(
+  const result = await client.query<{ id: string; title: string; profileType: string }>(
     `SELECT id, COALESCE(NULLIF(title,''), NULLIF(concat_ws(' ',first_name,last_name),''),'') AS title,
        profile_type AS "profileType"
      FROM profiles WHERE NOT archived

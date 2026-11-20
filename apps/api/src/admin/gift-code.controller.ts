@@ -38,6 +38,7 @@ import {
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { GiftCodeService, type GiftCodeListFilter } from './gift-code.service.js';
+import { withStaffReadAuthority } from './staff-read-authority.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
@@ -346,7 +347,9 @@ export class GiftCodeController {
       .safeParse({ search, ids });
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid profile search', 400);
-    return this.service.profileOptions(parsed.data.search, parsed.data.ids);
+    return withStaffReadAuthority(req.session, 'admin:promotions:edit', (client) =>
+      this.service.profileOptions(parsed.data.search, parsed.data.ids, client)
+    );
   }
 
   @Get(':id/stats')

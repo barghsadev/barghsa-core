@@ -29,6 +29,7 @@ import sharp from 'sharp';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import { SpanKind, trace, type Context, type SpanOptions, type Tracer } from '@opentelemetry/api';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 import type { ContractService } from '../contract/contract.service.js';
 import type { DocumentService } from './document.service.js';
 import type { UploadService } from '../upload/upload.service.js';
@@ -1186,6 +1187,34 @@ it.each(['clean', 'infected'] as const)(
   },
   60000
 );
+
+it('withholds legal holds when staff authority expires during the read', async () => {
+  const f = await owner();
+  const document = await confirm(await create(f.user), f.user);
+  const path = `admin/document-retention/holds?documentId=${document.id}`;
+  const reason = 'Synthetic legal hold for the session expiry fixture.';
+  const hold = await send('admin/document-retention/holds', 'document-legal', 'POST', {
+    documentId: document.id,
+    reason,
+  });
+  expect(hold.status, http.logs()).toBe(201);
+  const { id } = (await hold.json()) as { id: string };
+  const current = await send(path, 'document-legal');
+  expect(current.status, http.logs()).toBe(200);
+  expect(await current.json()).toMatchObject({ held: true, holds: [{ id, reason }] });
+  const denied = await readAfterStaffSessionExpires(
+    http.pool,
+    'document-legal',
+    (headers) => fetch(`${http.base}/api/${path}`, { headers }),
+    (client) => client.query('LOCK TABLE documents IN ACCESS EXCLUSIVE MODE'),
+    'document_is_held(id) AS held FROM documents'
+  );
+  expect(denied.status, http.logs()).toBe(401);
+  const body = await denied.text();
+  expect(body).not.toContain(document.id);
+  expect(body).not.toContain(id);
+  expect(body).not.toContain(reason);
+}, 12000);
 
 it('keeps document and profile legal holds auditable and applies versioned retention policies', async () => {
   const f = await owner();

@@ -2,6 +2,7 @@ import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>,
   headers: Record<string, string>,
   giftId: string;
@@ -54,6 +55,31 @@ function mutation(action: 'create' | 'update' | 'toggle' | 'archive') {
     }
   );
 }
+it('withholds promotion profile options when staff authority expires during the read', async () => {
+  const id = randomUUID();
+  const title = `Promotion profile expiry ${id}`;
+  await http.pool.query('INSERT INTO profiles(id,user_id,title) VALUES($1,$2,$3)', [
+    id,
+    'gift-admin',
+    title,
+  ]);
+  const path = `${http.base}/api/admin/promotions/gift-codes/profiles?ids=${id}`;
+  const current = await fetch(path, { headers });
+  expect(current.status, http.logs()).toBe(200);
+  expect(await current.json()).toMatchObject([{ id, title }]);
+  const denied = await readAfterStaffSessionExpires(
+    http.pool,
+    'gift-admin',
+    (headers) => fetch(path, { headers }),
+    (client) => client.query('LOCK TABLE profiles IN ACCESS EXCLUSIVE MODE'),
+    'OR ($1::uuid[] IS NULL AND NOT archived'
+  );
+  expect(denied.status, http.logs()).toBe(401);
+  const body = await denied.text();
+  expect(body).not.toContain(title);
+  expect(body).not.toContain(id);
+}, 12000);
+
 it('exposes only editable field identifiers and rejects protected mixed payloads without submitted values', async () => {
   const payload = {
     code: 'PRIVATE-DRAFT',

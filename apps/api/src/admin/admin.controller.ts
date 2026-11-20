@@ -4,7 +4,7 @@ import { rejectContentFields } from './content-input-fields.js';
 import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
 import { assertServiceSettingsFields } from './service-settings-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
-import { recheckStaffAuthorityAfter } from './staff-read-authority.js';
+import { recheckStaffAuthorityAfter, withStaffReadAuthority } from './staff-read-authority.js';
 import {
   readVerificationModeHistory,
   type VerificationModeConfig,
@@ -3364,7 +3364,9 @@ export class AdminController {
       (teamId !== undefined && typeof teamId !== 'string')
     )
       throw new BadRequestException('Invalid staff search');
-    return this.adminService.staffTeamCandidates(q ?? '', teamId);
+    return withStaffReadAuthority(req.session, 'admin:staff-teams:edit', (client) =>
+      this.adminService.staffTeamCandidates(q ?? '', teamId, client)
+    );
   }
 
   @Get('staff-teams')

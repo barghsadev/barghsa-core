@@ -273,9 +273,10 @@ export class GiftCodeService {
 
   async profileOptions(
     search: string,
-    ids?: string[]
+    ids?: string[],
+    client: PoolClient | ReturnType<typeof getDbPool> = getDbPool()
   ): Promise<Array<{ id: string; title: string; profileType: string; archived: boolean }>> {
-    const result = await getDbPool().query<{
+    const result = await client.query<{
       id: string;
       title: string;
       profileType: string;

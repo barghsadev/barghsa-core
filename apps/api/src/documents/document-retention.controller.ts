@@ -15,6 +15,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { z } from 'zod';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
@@ -100,10 +101,10 @@ export class DocumentRetentionController {
     @Query('documentId', new ParseUUIDPipe()) documentId: string
   ) {
     this.authorize(request);
-    return {
-      ...(await this.retention.listHolds(documentId)),
+    return withStaffReadAuthority(request.session, 'admin:documents:edit', async (client) => ({
+      ...(await this.retention.listHolds(documentId, client)),
       canManage: hasStaffPermission(request, 'legal:write'),
-    };
+    }));
   }
 
   @Post('holds')

@@ -3,6 +3,7 @@ import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 import type { ContractService } from './contract.service.js';
 import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 type ProfileOptions = {
@@ -81,6 +82,27 @@ async function create(body?: Awaited<ReturnType<typeof input>>) {
   expect(response.status).toBe(201);
   return (await response.json()) as ContractDto;
 }
+it('withholds contract authoring options when staff authority expires during the read', async () => {
+  const id = await profile();
+  const title = `Contract authoring expiry ${randomUUID()}`;
+  await http.pool.query('UPDATE profiles SET title=$2 WHERE id=$1', [id, title]);
+  const path = '/authoring-options?search=' + encodeURIComponent(title);
+  const current = await send(path);
+  expect(current.status, http.logs()).toBe(200);
+  expect(await current.json()).toMatchObject({ profiles: [{ id, title }] });
+  const denied = await readAfterStaffSessionExpires(
+    http.pool,
+    'contract-legal',
+    (headers) => fetch(http.base + '/api/admin/contracts' + path, { headers }),
+    (client) => client.query('LOCK TABLE profiles IN ACCESS EXCLUSIVE MODE'),
+    'FROM profiles WHERE NOT archived'
+  );
+  expect(denied.status, http.logs()).toBe(401);
+  const body = await denied.text();
+  expect(body).not.toContain(title);
+  expect(body).not.toContain(id);
+}, 12000);
+
 function edit(row: ContractDto) {
   return {
     expectedVersionId: row.currentVersionId,

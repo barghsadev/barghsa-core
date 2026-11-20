@@ -102,7 +102,10 @@ export class ContractController {
   @ApiQuery({ name: 'before', required: false, type: String, format: 'uuid' })
   authoringOptions(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
     this.authorize(req, true);
-    return contractAuthoringOptions(parse(authoringQuery, query));
+    const input = parse(authoringQuery, query);
+    return withStaffReadAuthority(req.session, 'contracts:write', (client) =>
+      contractAuthoringOptions(input, client)
+    );
   }
   @Post()
   @RequiresStepUp()

@@ -3086,13 +3086,16 @@ export class AdminService {
    * users currently in the team, ordered by membership created_at) so the
    * admin surface can render member management without a second call.
    */
-  async staffTeamCandidates(query: string, teamId?: string) {
+  async staffTeamCandidates(
+    query: string,
+    teamId?: string,
+    pool: PoolClient | ReturnType<typeof getDbPool> = getDbPool()
+  ) {
     if (
       query.length > 100 ||
       (teamId && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(teamId))
     )
       throw new BadRequestException('Invalid staff search');
-    const pool = getDbPool();
     const eligible = `u.disabled_at IS NULL AND u.activation_token IS NULL AND
       (u.is_admin OR u.is_staff OR EXISTS (SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id))`;
     const items = await pool.query(

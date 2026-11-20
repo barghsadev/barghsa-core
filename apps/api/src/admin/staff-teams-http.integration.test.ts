@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { readAfterStaffSessionExpires } from '../test/staff-read-expiry.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
@@ -56,6 +57,25 @@ async function team() {
   expect(response.status, http.logs()).toBe(201);
   return (await response.json()) as { id: string; name: string };
 }
+it('withholds team candidates when staff authority expires during the read', async () => {
+  const created = await team();
+  const path = `staff-teams/members?q=member&teamId=${created.id}`;
+  const current = await call(path, 'GET', undefined, 'operator');
+  expect(current.status, http.logs()).toBe(200);
+  expect(await current.json()).toMatchObject({
+    selected: [{ id: 'member', name: 'member@example.test', eligible: true }],
+  });
+  const denied = await readAfterStaffSessionExpires(
+    http.pool,
+    'operator',
+    (headers) => fetch(`${http.base}/api/admin/${path}`, { headers }),
+    (client) => client.query('LOCK TABLE staff_team_members IN ACCESS EXCLUSIVE MODE'),
+    'JOIN staff_team_members m ON m.user_id=u.user_id'
+  );
+  expect(denied.status, http.logs()).toBe(401);
+  expect(await denied.text()).not.toContain('member@example.test');
+}, 12000);
+
 it('returns owned field errors over HTTP without reflecting submitted values', async () => {
   const created = await team();
   for (const [path, method, body, fields] of [

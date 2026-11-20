@@ -152,13 +152,16 @@ export class DocumentRetentionService {
     });
   }
 
-  async listHolds(documentId: string) {
-    const document = await getDbPool().query<{ profile_id: string; held: boolean }>(
+  async listHolds(
+    documentId: string,
+    client: PoolClient | ReturnType<typeof getDbPool> = getDbPool()
+  ) {
+    const document = await client.query<{ profile_id: string; held: boolean }>(
       'SELECT profile_id,document_is_held(id) AS held FROM documents WHERE id=$1',
       [documentId]
     );
     if (!document.rows[0]) throw new NotFoundException('Document not found');
-    const rows = await getDbPool().query<HoldRow>(
+    const rows = await client.query<HoldRow>(
       `SELECT id,document_id,profile_id,reason,initiated_by,initiated_at,expires_at,
         released_by,released_at FROM document_legal_holds
        WHERE document_id=$1 OR profile_id=$2
