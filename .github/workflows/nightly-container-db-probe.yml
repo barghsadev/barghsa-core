@@ -1,55 +1,14 @@
-name: Verify the corrected nightly browser fixture
+name: Verify the nightly browser fixture through runner loopback
 on:
   push:
-    branches: ['codex/verify/v06-nightly-fixture-fix-20261120']
+    branches: ['codex/verify/v06-nightly-loopback-fixture-20261120']
 permissions:
+  actions: read
   contents: read
 jobs:
-  browser-build:
-    name: Build the production browser fixtures once
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    outputs:
-      artifact_id: ${{ steps.upload.outputs.artifact-id }}
-      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: '10.11.1'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-      - name: Build component stories for Playwright
-        run: pnpm --filter @barghsa/ui stories:build
-      - name: Package the compiled fixtures
-        id: package
-        shell: bash
-        run: |
-          printf '%s\n' "$GITHUB_SHA" > .nightly-browser-revision
-          archive="$RUNNER_TEMP/nightly-browser-build.tar.gz"
-          tar -czf "$archive" .nightly-browser-revision apps/*/dist packages/*/dist packages/ui/story-build
-          digest=$(sha256sum "$archive")
-          printf 'archive_sha256=%s\n' "${digest%% *}" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
-        id: upload
-        with:
-          name: nightly-browser-build-attempt-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/nightly-browser-build.tar.gz
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 14
-
   browser-fixture:
-    needs: browser-build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    container:
-      image: mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a
-      options: --shm-size=1g
     defaults:
       run:
         shell: bash
@@ -65,18 +24,20 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v4
         with:
-          artifact-ids: ${{ needs.browser-build.outputs.artifact_id }}
+          artifact-ids: 14670462547
+          run-id: 44818319239
+          github-token: ${{ github.token }}
           path: ${{ runner.temp }}/nightly-browser-build
           merge-multiple: true
       - name: Verify and restore the compiled fixtures
         shell: bash
         env:
-          BROWSER_ARCHIVE_SHA256: ${{ needs.browser-build.outputs.archive_sha256 }}
+          BROWSER_ARCHIVE_SHA256: '8d468357a90487fd832790f57ed20e44aa3b4d4495e014a5250ad337ac445fad'
         run: |
           [[ "$BROWSER_ARCHIVE_SHA256" =~ ^[a-f0-9]{64}$ ]]
           archive="$RUNNER_TEMP/nightly-browser-build/nightly-browser-build.tar.gz"
           printf '%s  %s\n' "$BROWSER_ARCHIVE_SHA256" "$archive" | sha256sum -c
-          test "$(tar -xOzf "$archive" .nightly-browser-revision)" = "$GITHUB_SHA"
+          test "$(tar -xOzf "$archive" .nightly-browser-revision)" = "c1a670e1ff91d5b2ee48994b24e000fb181d492c"
           tar -xzf "$archive" --exclude=.nightly-browser-revision
       - name: Install pinned Firefox runtime
         env:
@@ -91,20 +52,28 @@ jobs:
         run: |
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
-      - name: Exercise authenticated staff cases as the designated browser user
+      - name: Exercise the native database fixture with host loopback
         env:
           BARGHSA_TEST_PREBUILT: '1'
           WEB_CSP_MODE: enforce
         run: |
-          chown pwuser:pwuser apps/web
-          docker_group=$(stat -c '%g' /var/run/docker.sock)
-          setpriv --reuid=pwuser --regid=pwuser --groups "$docker_group" id
-          setpriv --reuid=pwuser --regid=pwuser --groups "$docker_group" \
+          docker run --rm --network host --shm-size=1g \
+            --user "$(id -u):$(id -g)" --group-add "$(stat -c '%g' /var/run/docker.sock)" \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
+            --volume "$RUNNER_TEMP:$RUNNER_TEMP" \
+            --volume "$RUNNER_TOOL_CACHE:$RUNNER_TOOL_CACHE:ro" \
+            --workdir "$GITHUB_WORKSPACE" \
+            --env PATH --env CI --env BARGHSA_TEST_PREBUILT --env BARGHSA_FIREFOX_EXECUTABLE \
+            --env "PLAYWRIGHT_BROWSERS_PATH=${PLAYWRIGHT_BROWSERS_PATH:-/ms-playwright}" \
+            --env TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 \
+            --env WEB_CSP_MODE \
+            mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a \
             node scripts/run-production-browser.mjs admin-settings-live.spec.ts \
               --project=firefox --grep 'favicon upload stays private|contract limits save and reload'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: native-browser-fixture-results
+          name: native-loopback-fixture-results
           path: apps/web/test-results/
           retention-days: 1
