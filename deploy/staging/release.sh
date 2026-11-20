@@ -502,8 +502,8 @@ for health in live ready; do
   verify_public_json "/api/health/$health" "$health" || false
 done
 for route in / /api/health/ready; do
-  curl --fail --silent --show-error --max-time 20 --http1.1 --suppress-connect-headers \
-    --dump-header - --output /dev/null "$APP_PUBLIC_URL$route" |
+  curl --disable --fail --silent --show-error --max-time 20 --max-filesize 10485760 \
+    --http1.1 --suppress-connect-headers --dump-header - --output /dev/null "$APP_PUBLIC_URL$route" |
     python3 -c '
 import http.client, sys
 
@@ -526,9 +526,12 @@ done
 if [[ -n "$commit" ]]; then
   verify_public_json "/release.json?commit=$commit" release || false
 fi
-[[ $(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") == 403 ]] || {
-  echo 'Public S3 gateway did not return AccessDenied' >&2; false;
-}
+if ! storage_status=$(curl --disable --silent --show-error --max-time 20 --max-filesize 65536 \
+  --output /dev/null --write-out '%{http_code}' "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") ||
+  [[ "$storage_status" != 403 ]]; then
+  echo 'Public S3 gateway did not return AccessDenied' >&2
+  false
+fi
 docker run --rm --env-file "$runtime" --network barghsa-staging-private \
   -v /opt/barghsa/staging/check-s3.py:/tmp/barghsa-check-s3.py:ro \
   "$BARGHSA_POSTGRES_IMAGE" python /tmp/barghsa-check-s3.py

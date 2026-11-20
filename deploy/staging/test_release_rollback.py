@@ -848,12 +848,13 @@ verify_running_image() { return 1; }
     def test_public_smoke_checks_candidate_revision_before_promotion(self):
         text = RELEASE.read_text()
         smoke = text[text.index('verify_public_json() {'):
-                     text.index('\n[[ $(curl --silent', text.index('verify_public_json() {'))]
+                     text.index('\nif ! storage_status=')]
         script = f'''set -euo pipefail
 APP_PUBLIC_URL=https://staging.example.test
 commit=$1
 version=0.6.0
 curl() {{
+  [[ "$1" == --disable ]] || return 98
   case "$*" in
     *"--dump-header -"*"$APP_PUBLIC_URL/api/health/ready") printf '%s' "$API_HEADERS" ;;
     *"--dump-header -"*"$APP_PUBLIC_URL/") printf '%s' "$WEB_HEADERS" ;;
@@ -951,10 +952,13 @@ echo promote
                         'promote',
                     ])
 
-    def test_public_json_network_read_refuses_redirect_and_bounds_body(self):
+    def test_public_network_reads_refuse_redirects_and_bound_bodies(self):
         text = RELEASE.read_text()
         public_json = text[text.index('verify_public_json() {'):
                            text.index('\nfor health in live ready; do')]
+        storage_start = text.index('\nif ! storage_status=')
+        storage_probe = text[storage_start:
+                             text.index('\ndocker run --rm --env-file "$runtime"', storage_start)]
         requests = []
 
         class Handler(BaseHTTPRequestHandler):
@@ -963,15 +967,21 @@ echo promote
             def do_GET(self):
                 requests.append((self.path, self.headers.get('Cache-Control')))
                 path = self.path
-                status = 302 if path == '/redirect' else 200
+                if path in ('/redirect', '/storage-redirect/'):
+                    status = 302
+                else:
+                    status = 403 if path.startswith('/storage-') else 200
                 body = b'{"status":"ok"}'
-                if path in ('/limit', '/oversized'):
-                    body = body.ljust(65536 if path == '/limit' else 65537)
+                if path in ('/limit', '/storage-limit/'):
+                    body = body.ljust(65536)
+                if path in ('/oversized', '/storage-oversized/'):
+                    body = body.ljust(65537)
                 self.send_response(status)
                 self.send_header('Content-Type', 'application/json')
                 self.send_header('Connection', 'close')
                 if status == 302:
-                    self.send_header('Location', '/redirect-target')
+                    self.send_header('Location', '/redirect-target' if path == '/redirect'
+                                     else '/storage-denied/')
                 self.end_headers()
                 try:
                     self.wfile.write(body)
@@ -993,18 +1003,34 @@ APP_PUBLIC_URL=http://127.0.0.1:{server.server_port}
 commit=
 version=
 {public_json}
-verify_public_json "$1" live || false
+case "$1" in
+  json) verify_public_json "$2" live || false ;;
+  storage)
+    S3_PUBLIC_ENDPOINT=$APP_PUBLIC_URL
+    S3_BUCKET=$2
+    {storage_probe}
+    ;;
+esac
 '''
-                for path, code in (('/limit', 0), ('/oversized', 1), ('/redirect', 1)):
-                    with self.subTest(path=path):
-                        result = subprocess.run(['bash', '-c', script, 'public-json', path],
+                for probe, path, code in (('json', '/limit', 0), ('json', '/oversized', 1),
+                                          ('json', '/redirect', 1),
+                                          ('storage', 'storage-denied', 0),
+                                          ('storage', 'storage-limit', 0),
+                                          ('storage', 'storage-redirect', 1),
+                                          ('storage', 'storage-oversized', 1)):
+                    with self.subTest(probe=probe, path=path):
+                        result = subprocess.run(['bash', '-c', script, 'public-network', probe, path],
                                                 capture_output=True, text=True, timeout=10,
                                                 env={**os.environ, 'CURL_HOME': home})
                         self.assertEqual(result.returncode, code, result.stderr)
             finally:
                 server.shutdown()
                 thread.join()
-        self.assertEqual(requests, [(path, 'no-cache') for path in ('/limit', '/oversized', '/redirect')])
+        self.assertEqual(requests, [
+            ('/limit', 'no-cache'), ('/oversized', 'no-cache'), ('/redirect', 'no-cache'),
+            ('/storage-denied/', None), ('/storage-limit/', None), ('/storage-redirect/', None),
+            ('/storage-oversized/', None),
+        ])
 
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()

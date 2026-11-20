@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-20T07:09:05+00:00",
+  "updated": "2026-11-20T08:12:04.355380+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -15380,7 +15380,8 @@
         "The release receiver checks that the running WAL archiver and the migration backup share the effective HTTPS endpoint, bucket, region, namespace and passphrase before stopping writers. Separate storage credentials are supported. All 21 staging release and rollback tests passed. The prepared PostgreSQL image admitted matching configuration and rejected stale container settings and a replaced key mount. Approved off-server provisioning, live PITR and exact candidate deployment remain open.",
         "Staging license receipt validation now rejects approved exception rows with missing, blank or non-text review references. The added regression reproduced acceptance on eight invalid application or retained-image cases. All 62 related checks passed. Actual package-specific decisions and the exact enforced staging gate remain open.",
         "Hosted preflight 43655645429 passed staging queue, rollback and notifier cases, then failed one downstream promotion fixture with its review reference absent. The corrected fixture passes all 29 promotion cases, and all 19 guarded-rollout cases passed. Verify the protected-main check on the exact successor and retain final candidate receipts.",
-        "The b15ebc3a9 packaged Linux app, worker, retained staging PostgreSQL image and signed SeaweedFS image passed on a private staging-host network. Migration 0297, no-op repeat, readiness and liveness, original image identity and two exact signed object-version receipts were verified. The final immutable candidate and live release worker receipts remain required."
+        "The b15ebc3a9 packaged Linux app, worker, retained staging PostgreSQL image and signed SeaweedFS image passed on a private staging-host network. Migration 0297, no-op repeat, readiness and liveness, original image identity and two exact signed object-version receipts were verified. The final immutable candidate and live release worker receipts remain required.",
+        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -15474,7 +15475,8 @@
           "release-0.6-staging-service-health",
           "release-0.6-wal-recovery-config",
           "release-0.6-license-receipt-reference",
-          "release-0.6-license-promotion-fixture"
+          "release-0.6-license-promotion-fixture",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": null,
         "native_staging_signed_storage_runtime": {
@@ -15743,7 +15745,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -15752,9 +15755,9 @@
             2426167627219121,
             3664960298222868,
             2719536177275900,
-            2960541284577999,
+            1943955045815573,
             1206685866573554,
-            2916731061973370,
+            3402460186357571,
             2506773297712354,
             753281310031346,
             3317750341468659
@@ -15816,7 +15819,8 @@
             4149196523916836,
             790021110620565,
             1250914822414554,
-            3011263934478573
+            3011263934478573,
+            2151685327028375
           ]
         }
       }
@@ -62350,7 +62354,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -62391,7 +62396,7 @@
             335271907751690,
             1183468454534810,
             738324130165064,
-            2960541284577999,
+            1943955045815573,
             3108623938713492,
             644211720979049,
             1026419847754339,
@@ -63185,7 +63190,8 @@
             1832992762036922,
             1239819274270615,
             4139613294510282,
-            3437707986042905
+            3437707986042905,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -98555,7 +98561,8 @@
           "release-0.6-first-announcement-runtime",
           "release-0.6-async-retry-command-body",
           "release-0.6-wal-recovery-config",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -98655,7 +98662,7 @@
             1206685866573554,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2448746277784920,
@@ -99096,7 +99103,8 @@
             251116967695569,
             2075546320213099,
             552197353518721,
-            3817994007476500
+            3817994007476500,
+            503204402032448
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -362499,7 +362507,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -362546,7 +362555,7 @@
             259494274243887,
             4309141198379617,
             2829329825743575,
-            2960541284577999,
+            1943955045815573,
             1230063180731605,
             3908512161763803,
             4274200221694227,
@@ -362788,7 +362797,8 @@
             983958935467165,
             1239819274270615,
             251116967695569,
-            2344164794407037
+            2344164794407037,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -372486,7 +372496,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -372550,7 +372561,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -372736,7 +372747,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -372874,7 +372886,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -372938,7 +372951,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373124,7 +373137,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -373260,7 +373274,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -373324,7 +373339,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373510,7 +373525,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -373646,7 +373662,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -373710,7 +373727,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -373917,7 +373934,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -374005,7 +374023,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.4-ai-runtime-current-acceptance",
-          "release-0.4-approved-representations"
+          "release-0.4-approved-representations",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "explicitly_deferred",
@@ -374069,7 +374088,7 @@
             1889113257816632,
             3903405558204290,
             3667823558989007,
-            853824260084132,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             4191751383596332,
@@ -374173,7 +374192,8 @@
             1001373331602472,
             3882867979586810,
             556805129145119,
-            1816270634520707
+            1816270634520707,
+            503204402032448
           ]
         },
         "bounded_flash_source_renewal": {
@@ -374268,7 +374288,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -374332,7 +374353,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -374518,7 +374539,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -374737,7 +374759,8 @@
           "release-0.6-first-announcement-runtime",
           "release-0.6-async-retry-command-body",
           "release-0.6-wal-recovery-config",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -374837,7 +374860,7 @@
             1206685866573554,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             1230063180731605,
@@ -375299,7 +375322,8 @@
             251116967695569,
             2075546320213099,
             552197353518721,
-            3817994007476500
+            3817994007476500,
+            503204402032448
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -375590,7 +375614,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -375654,7 +375679,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -375840,7 +375865,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -375975,7 +376001,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -376039,7 +376066,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -376225,7 +376252,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -376361,7 +376389,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -376425,7 +376454,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -376611,7 +376640,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -376748,7 +376778,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -376812,7 +376843,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -377019,7 +377050,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -377154,7 +377186,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -377218,7 +377251,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -377404,7 +377437,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -377539,7 +377573,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-wal-recovery-config"
+          "release-0.6-wal-recovery-config",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -377603,7 +377638,7 @@
             2236482200561382,
             912713385575125,
             3667823558989007,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             3373590423940153,
             2563405803285017,
@@ -377789,7 +377824,8 @@
             2297216828564787,
             983958935467165,
             1239819274270615,
-            2075546320213099
+            2075546320213099,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -383308,7 +383344,8 @@
           "release-0.6-single-edge-security-headers",
           "release-0.6-staging-edge-live-readback",
           "release-0.6-staging-edge-smoke",
-          "release-0.6-verify-configuration-backup-and-checks"
+          "release-0.6-verify-configuration-backup-and-checks",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "kind": "native_verification",
@@ -383325,12 +383362,15 @@
             4476611148532011,
             3591853430902160,
             3709147928938153,
-            2960541284577999,
-            2916731061973370
+            1943955045815573,
+            3402460186357571
           ],
           "checks": [
             3284122391347357,
             2080910576855554
+          ],
+          "source_renewals": [
+            2151685327028375
           ]
         }
       }
@@ -387940,7 +387980,8 @@
         "Verify deployed provider and proxy behavior on the accepted runtime, including the protected OTLP transport. Implemented HTTP provider paths refuse redirects and the S3 client explicitly disables SDK region redirect retries. Confirm the existing storage origin controls with the selected endpoints.",
         "The release notification client rejects every tested HTTP redirect status on staging reads and Telegram requests. The loopback fixture verified that no redirected endpoint received a request. Continue the remaining outbound transport inventory.",
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
-        "The protected promotion checker now refuses redirects before contacting a target and requests fresh staging metadata and readiness. The loopback assertions and live v0.5.1 readback passed. Verify the final accepted candidate with its exact API commit."
+        "The protected promotion checker now refuses redirects before contacting a target and requests fresh staging metadata and readiness. The loopback assertions and live v0.5.1 readback passed. Verify the final accepted candidate with its exact API commit.",
+        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -387973,7 +388014,8 @@
           "release-0.6-s3-response-limits",
           "release-0.6-telegram-receipt-transport",
           "release-0.6-bound-staging-worker-readbacks",
-          "release-0.6-promotion-readback-boundary"
+          "release-0.6-promotion-readback-boundary",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -388030,7 +388072,8 @@
         "The private Telegram transport retains its 10-second deadline, 64 KiB response cap and redirect rejection. An inconsistent HTTP and Bot API status cannot authorize a retry. Actual candidate and the remaining outbound inventory remain open.",
         "The staging host release smoke now enforces a 20-second maximum and 64 KiB response limit on all three public JSON reads. Real curl loopback tests passed the exact limit, oversized response without Content-Length and redirects. The broader outbound provider inventory and exact deployment remain open.",
         "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open.",
-        "A failed signed storage connection probe now closes its unfinished response body promptly. The 35 migrated storage API cases preserve the existing authority, content, credential masking, configuration and version-scoped cleanup safeguards. The outbound inventory and deployed candidate remain open."
+        "A failed signed storage connection probe now closes its unfinished response body promptly. The 35 migrated storage API cases preserve the existing authority, content, credential masking, configuration and version-scoped cleanup safeguards. The outbound inventory and deployed candidate remain open.",
+        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -388071,7 +388114,8 @@
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-payment-recovery-response",
-          "release-0.6-storage-probe-stream"
+          "release-0.6-storage-probe-stream",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -401334,7 +401378,8 @@
           "release-0.6-first-announcement-runtime",
           "release-0.6-staging-service-health",
           "release-0.6-wal-recovery-config",
-          "release-0.6-reconcile-verified-components"
+          "release-0.6-reconcile-verified-components",
+          "release-0.6-staging-edge-probes"
         ],
         "current_acceptance": {
           "kind": "native_verification",
@@ -401342,15 +401387,18 @@
           "source_evidence": [
             1680424996333195,
             4306434327613320,
-            2960541284577999,
+            1943955045815573,
             1870514664343367,
-            2916731061973370,
+            3402460186357571,
             1865315599655079
           ],
           "checks": [
             3585885065300926,
             3074877315116874,
             4458929344129024
+          ],
+          "source_renewals": [
+            2151685327028375
           ]
         },
         "staging_active_database_migration_rehearsal": {
@@ -561923,7 +561971,7 @@
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -562894,7 +562942,8 @@
             3817994007476500,
             3395331315898153,
             1875191364136080,
-            3990378492663856
+            3990378492663856,
+            503204402032448
           ],
           "presentation_renewals": [
             {
@@ -563363,7 +563412,8 @@
           "release-0.6-async-retry-command-body",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wal-recovery-config",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-staging-edge-probes"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -563949,7 +563999,7 @@
             3667823558989007,
             2235556992526387,
             4306434327613320,
-            2960541284577999,
+            1943955045815573,
             3000609939829148,
             1479851929840785,
             3373590423940153,
@@ -564823,7 +564873,8 @@
             3817994007476500,
             3395331315898153,
             1875191364136080,
-            3990378492663856
+            3990378492663856,
+            503204402032448
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
           "presentation_renewals": [
@@ -565309,7 +565360,8 @@
           "release-0.6-async-retry-command-body",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wal-recovery-config",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-staging-edge-probes"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -567428,7 +567480,8 @@
         "Staff electricity price-adjustment history now verifies the current contract grant and session through the database read. An actual row-loading query waited behind a PostgreSQL lock while the requesting session expired. The migrated regression verifies 401 without financial details, preserves write-only access and denies missing grants. Both price-adjustment charge and credit journeys passed. Wider resource read coverage and exact deployed checks remain open.",
         "Five staff cancellation reads now hold the current contract grant and session throughout the database read. Compiled PostgreSQL verified expiry while the preview, latest or specific saved decisions, customer request detail and queue queries were blocked. Each returns 401 without exposing the data. The existing writer access, unauthorized staff denial, rollback, refund and caller cases passed. Wider resource review and the frozen staging gates remain open.",
         "Mapped 132 generated parameterized GET routes to their resource handlers. Saving-plan configuration and hardware inventory now recheck staff session expiry before returning data. Both original 200 responses were reproduced with real blocked PostgreSQL queries, and both now return 401. Existing edits, reservation conflicts and catalogue UI tests passed. Wider delegated and query-only reads and the immutable candidate remain open.",
-        "Reviewed 28 additional documented query-identifier GET routes. Contract authoring, legal holds, promotion profile options and staff team candidate reads now keep their existing staff grant and current session through the response. Actual blocked PostgreSQL reads reproduced four old 200 responses; the fixed application returns 401 without exposing the records. The 102 targeted API and 72 web cases passed. Broader resource review and the exact candidate remain open."
+        "Reviewed 28 additional documented query-identifier GET routes. Contract authoring, legal holds, promotion profile options and staff team candidate reads now keep their existing staff grant and current session through the response. Actual blocked PostgreSQL reads reproduced four old 200 responses; the fixed application returns 401 without exposing the records. The 102 targeted API and 72 web cases passed. Broader resource review and the exact candidate remain open.",
+        "Staging release header and storage denial reads now ignore local curl defaults, keep the 20-second deadline and bound transfers. The storage check requires a complete direct HTTP 403. Native loopback reproduced the old redirect and oversized-response admissions, and all 88 staging tests passed after the fix. Read-only live probes passed on v0.5.1; exact v0.6.0 deployment and broader outbound checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -567880,7 +567933,8 @@
           "release-0.6-price-history-authority",
           "release-0.6-cancellation-read-authority",
           "release-0.6-saving-catalogue-read-authority",
-          "release-0.6-query-read-authority"
+          "release-0.6-query-read-authority",
+          "release-0.6-staging-edge-probes"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -770164,6 +770218,68 @@
         }
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-query-read-authority"
+    },
+    "release-0.6-staging-edge-probes": {
+      "batch": "release-0.6-staging-edge-probes",
+      "base_commit": "94648b5c4a76f721b2d19341a6020e1a01476f32",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.02",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "checks": [
+        "All 88 staging tests passed, including 24 rollout and rollback tests. The native loopback storage probe rejected a redirect without contacting the redirected route and refused a 65,537-byte denial; the 65,536-byte response passed. The staging VPS curl 8.5.0 read the two expected header sets and a complete HTTP 403 from the current gateway. Shell syntax and whitespace checks passed."
+      ],
+      "execution_receipts": [
+        {
+          "file": "staging-rollback-tests.log",
+          "sha256": "6d138b98ed1258c7beaf5d13e39cdf432d045948758f705ee188b42ee198239f"
+        },
+        {
+          "file": "live-edge-readback.log",
+          "sha256": "46d16828be96daa383ffd6139af3ccfc19b5933ca6d68acf8dbd2be5f1ff77aa"
+        }
+      ],
+      "external_evidence": [],
+      "limitations": [
+        "The network readback used the current v0.5.1 staging host. The v0.6.0 release and all final live gates remain open."
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "9ea61c74358719bd9be43451470c74dd27c83e7cbd3c40d02d939ffdc59f5b71"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "0972e7df8405ec238b9a48c6dd760de09152b7a73b515be8ecb74ac9de36d744"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -775338,13 +775454,13 @@
         "path": "docs/runbooks/bad-deployment.md",
         "sha256": "4d49509afa1af4dd865f7f39d2acd6978b70341e98b7ca4998bb58ced8a76720"
       },
-      "2960541284577999": {
+      "1943955045815573": {
         "path": "deploy/staging/release.sh",
-        "sha256": "aa7b8cb616a52376bc7811c5a2a24df1e1a1b84f8451c9ada4326ad92e7111fe"
+        "sha256": "9ea61c74358719bd9be43451470c74dd27c83e7cbd3c40d02d939ffdc59f5b71"
       },
-      "2916731061973370": {
+      "3402460186357571": {
         "path": "deploy/staging/test_release_rollback.py",
-        "sha256": "9e9f2c3805b00f947fef23871f7f3922231a795213f84e2e72c1f937fc2c3111"
+        "sha256": "0972e7df8405ec238b9a48c6dd760de09152b7a73b515be8ecb74ac9de36d744"
       },
       "2506773297712354": {
         "path": "deploy/production/guarded-rollout.py",
@@ -784846,10 +784962,6 @@
         "path": "deploy/staging/compose.yml",
         "sha256": "313320ae3a3550695cf7fb7a6c2e3c1039b4ba77007a627f144aecb9cd0c902d"
       },
-      "853824260084132": {
-        "path": "deploy/staging/release.sh",
-        "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
-      },
       "4191751383596332": {
         "path": "packages/db/src/index.ts",
         "sha256": "92b5c9da3967eff31a8228c7c683d6a30d743d0f59ecd12dbf748c828ebd99a4"
@@ -793644,6 +793756,15 @@
         ],
         "scope": "Retains exact volume, image identity and rollback checks and covers the signed release selection and read-only mount checks. The normalized Compose test verifies unrelated services are unchanged."
       },
+      "2151685327028375": {
+        "batch": "release-0.6-staging-edge-probes",
+        "base_commit": "94648b5c4a76f721b2d19341a6020e1a01476f32",
+        "paths": [
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
+        ],
+        "scope": "Only public edge header reads and the anonymous storage denial read changed. Existing deployment, rollback, AI, notification and authenticated storage evidence retains its original scope."
+      },
       "1872787075134013": {
         "batch": "release-0.6-load-client-address-fixture",
         "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
@@ -800003,6 +800124,14 @@
           "packages/shared/src/auth-delivery/smsir-client.ts"
         ],
         "scope": "Reviewed the additive SMS report fields and journal entry, the worker timer and the existing receipt write. The existing send identity, receipt status, provider configuration and retry grants retain their guarantees. Clean and populated PostgreSQL migration runs, compiled worker callers and the focused report contract passed. Documentation changes cover the approved optional report path."
+      },
+      "503204402032448": {
+        "batch": "release-0.6-staging-edge-probes",
+        "base_commit": "94648b5c4a76f721b2d19341a6020e1a01476f32",
+        "paths": [
+          "deploy/staging/release.sh"
+        ],
+        "scope": "Only public edge header reads and the anonymous storage denial read changed. Existing deployment, rollback, AI, notification and authenticated storage evidence retains its original scope."
       },
       "3685737157540087": {
         "batch": "release-0.6-dashboard-grid-after-entrance",
