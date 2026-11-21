@@ -78,6 +78,8 @@ jobs:
       archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
         with:
           version: '10.11.1'
@@ -85,6 +87,8 @@ jobs:
         with:
           node-version: '24'
           cache: pnpm
+      - name: Verify nightly runner isolation
+        run: node --test scripts/nightly-workflow-safety.test.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - name: Build component stories for Playwright
@@ -125,6 +129,8 @@ jobs:
           - { project: mobile-safari, browser: webkit }
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
         with:
           version: '10.11.1'

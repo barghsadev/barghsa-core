@@ -168,6 +168,8 @@ jobs:
           else
             python3 kanban/scripts/board.py check
           fi
+      - name: Verify nightly runner isolation
+        run: node --test scripts/nightly-workflow-safety.test.mjs
       - name: Verify task inventory and acceptance safety
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - name: Verify staging release, rollback, and production approval controls

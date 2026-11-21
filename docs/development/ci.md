@@ -76,7 +76,7 @@ The web suite pins Playwright 1.65.0 for its driver. This version restores WebKi
 
 The nightly Firefox jobs use Mozilla Firefox 159.0, revision 1575 from Playwright's pinned `1.66.0-alpha-2026-11-10` runtime distribution. The default Firefox revision 1572 crashed during axe analysis on both macOS and hosted Linux. The previous stable runtime could not create a context with the 1.65 driver because its download protocol lacks a required parameter. Local reproduction can use `BARGHSA_FIREFOX_EXECUTABLE` to select the same revision. Retire the pin after the default stable Firefox passes the same accessibility cases and the full hosted matrix.
 
-Nightly browser shards run on GitHub-hosted Linux runners with the selected Playwright runtime. The migrated PostgreSQL tests use the existing loopback fixture. The hosted dependency installation and full scheduled matrix still need a fresh receipt.
+Nightly browser shards run directly on GitHub-hosted Linux runners with the selected Playwright runtime. The migrated PostgreSQL tests use the existing loopback fixture. The required CI check and the nightly build verify direct execution and reject job containers, Docker socket references and host networking in the nightly workflow. Browser build and shard checkouts disable credential persistence.
 
 The primary mobile lab measures populated paint in the page once the login control or first populated history row is visible, fonts are ready, and two animation frames have elapsed. The sample also records when Playwright collected the result. LCP, layout shift and blocking time retain their existing observation window and budgets.
 
