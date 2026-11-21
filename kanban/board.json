@@ -5973,7 +5973,7 @@
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             4310718850880231,
             1329301340858721,
@@ -6003,7 +6003,8 @@
             1130389169366054,
             2208212824833131,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             3723168532346971,
@@ -6048,7 +6049,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -6377,7 +6379,7 @@
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             335271907751690,
             1256540299604531,
@@ -6398,7 +6400,8 @@
             1029453738124796,
             1237989929905277,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             3723168532346971,
@@ -6451,7 +6454,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -14680,7 +14684,7 @@
           "base_commit": "7367f081717675bf5b60fe7796237b06cbda6f13",
           "source_evidence": [
             2282424088653070,
-            3456225966231844,
+            1331781819137375,
             2719536177275900,
             990596215557555,
             4262119068098458
@@ -14690,7 +14694,8 @@
             428464897842920,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             4104756073964730,
@@ -14730,7 +14735,8 @@
             1529355937300869,
             2294135178540376,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -15966,7 +15972,8 @@
         "Nightly run 44278844002 captured an account-menu click moving to an adjacent action in WebKit. Holding the workspace context chunk reproduced a 46px move. The menu actions now appear with the context row. The controlled WebKit check, 51 production browser cases, 22 unit cases and all 105 bundle budgets passed. The full nightly rollup and immutable staging gates remain required.",
         "Scheduled November 20 WebKit shard 3 completed its tests and uploads, then hit the job timeout after a slow system dependency install. The pinned runtime fixes the cold install path and passed five actual production-browser journey cases. Verify the next complete scheduled matrix and separately approved report delivery.",
         "The final non-root container passed native GitHub archive handoff, Bash setup and Chromium, Firefox and WebKit launch. The first root probe exposed Firefox’s GitHub home ownership restriction. The corrected non-root production-browser Firefox journey passed. A full scheduled receipt is still required.",
-        "The native GitHub probe exposed a denied Docker socket in the non-root job container. A root-started container with a user switch still failed to create the Firefox profile. The pinned image now runs the browser step as the hosted runner user with the same runner's actual socket group and loopback, using the pinned pnpm runtime in runner scratch. The corrected native run passed four real migrated PostgreSQL staff cases with zero retries. Verify the full scheduled matrix and authorized report delivery."
+        "The native GitHub probe exposed a denied Docker socket in the non-root job container. A root-started container with a user switch still failed to create the Firefox profile. The pinned image now runs the browser step as the hosted runner user with the same runner's actual socket group and loopback, using the pinned pnpm runtime in runner scratch. The corrected native run passed four real migrated PostgreSQL staff cases with zero retries. Verify the full scheduled matrix and authorized report delivery.",
+        "Restored direct execution on GitHub-hosted runners after review of the wrapper's Docker socket mount and host networking. The workflow matches 456a42367 and retains all 40 shards and their gates. The previous dependency installation delay, full scheduled result and live report delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -21225,11 +21232,12 @@
             3806562288391883,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
             2282424088653070,
-            3456225966231844,
+            1331781819137375,
             2531506698330785,
             4262119068098458,
             2587427218206737,
@@ -21276,7 +21284,8 @@
             1529355937300869,
             2294135178540376,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -21479,7 +21488,8 @@
             3706694951026442,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
             2305895407905316,
@@ -21489,7 +21499,7 @@
             140415148458127,
             1023007210795261,
             2819733290149007,
-            3456225966231844,
+            1331781819137375,
             2531506698330785,
             3756017199169591,
             4262119068098458,
@@ -21539,7 +21549,8 @@
             1529355937300869,
             2294135178540376,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -22683,14 +22694,15 @@
             889985415563243,
             4001011493356895,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
             2282424088653070,
             140415148458127,
             2577599311404581,
             2892540479584878,
-            3456225966231844,
+            1331781819137375,
             4262119068098458,
             3258654476546156,
             419880676812807,
@@ -22789,7 +22801,8 @@
             552197353518721,
             3817994007476500,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -23004,13 +23017,14 @@
             3076177601550596,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
             1280516218074753,
             584927519609571,
             3606048727789392,
-            3456225966231844,
+            1331781819137375,
             990596215557555
           ],
           "source_renewals": [
@@ -23031,7 +23045,8 @@
             4413329622847884,
             3811722477790042,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -394695,7 +394710,7 @@
           "kind": "verified-shared-vitest-configuration-and-reporters",
           "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
           "source_evidence": [
-            3456225966231844,
+            1331781819137375,
             477324644715970,
             2105533778459858,
             895245199081023,
@@ -394717,7 +394732,8 @@
             428464897842920,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             4104756073964730,
@@ -394755,7 +394771,8 @@
             367750437350465,
             2615181021949072,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       },
@@ -394973,7 +394990,7 @@
             2282424088653070,
             4079055684529948,
             2387050658107757,
-            3456225966231844,
+            1331781819137375,
             3915604413551799,
             163369572931233,
             1017543747183681,
@@ -394984,7 +395001,8 @@
             1304130226068841,
             1576852094938995,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             1796455579898282,
@@ -394996,7 +395014,8 @@
             1529355937300869,
             2294135178540376,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -396144,10 +396163,11 @@
             769746505400166,
             4446206801094908,
             3073323863794353,
-            1858170552352750
+            1858170552352750,
+            858068210347968
           ],
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             549371195359892,
             121170738474575,
             1141890046391240,
@@ -396248,7 +396268,8 @@
             3476363656192367,
             3740545211621373,
             2642014990194729,
-            1411840066278558
+            1411840066278558,
+            211978343132867
           ]
         }
       }
@@ -396350,7 +396371,8 @@
             3300891258387005,
             3752206633400328,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
             4242550041861226,
@@ -396368,7 +396390,7 @@
             3302252881812883,
             3108623938713492,
             2282424088653070,
-            3456225966231844,
+            1331781819137375,
             4143315087508196,
             3643682573927758,
             2523759399682353
@@ -396406,7 +396428,8 @@
             1529355937300869,
             2294135178540376,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       },
@@ -396456,7 +396479,7 @@
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
           "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
           "source_evidence": [
-            3456225966231844,
+            1331781819137375,
             220217333430592,
             3342576612015275,
             1345875911635862,
@@ -396471,7 +396494,8 @@
             428464897842920,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             3497207963980936,
@@ -396490,7 +396514,8 @@
             4413329622847884,
             3811722477790042,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       },
@@ -396540,7 +396565,7 @@
           "kind": "verified-parallel-postgres-isolation",
           "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
           "source_evidence": [
-            3456225966231844,
+            1331781819137375,
             220217333430592,
             3342576612015275,
             1345875911635862,
@@ -396555,7 +396580,8 @@
             428464897842920,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             3497207963980936,
@@ -396574,7 +396600,8 @@
             4413329622847884,
             3811722477790042,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       },
@@ -396642,7 +396669,7 @@
             3938782728449213,
             3971980083992363,
             2923259893179372,
-            3456225966231844,
+            1331781819137375,
             2796305546764647,
             2055165527269399,
             2776135047547976,
@@ -396660,7 +396687,8 @@
             889985415563243,
             705212389183949,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             3078093964805817,
@@ -396697,7 +396725,8 @@
             3437623834728936,
             4237167931214162,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       },
@@ -397669,7 +397698,7 @@
             3938782728449213,
             3971980083992363,
             2923259893179372,
-            3456225966231844,
+            1331781819137375,
             2796305546764647,
             2055165527269399,
             2776135047547976,
@@ -397688,7 +397717,8 @@
             889985415563243,
             705212389183949,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             3078093964805817,
@@ -397725,7 +397755,8 @@
             3437623834728936,
             4237167931214162,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       },
@@ -397781,7 +397812,7 @@
             2127152501229974,
             271984339233944,
             335271907751690,
-            3456225966231844,
+            1331781819137375,
             1431430280711142,
             738324130165064
           ],
@@ -397793,7 +397824,8 @@
             1539244305539768,
             2088559116918760,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             4474087314598578,
@@ -397813,7 +397845,8 @@
             3811722477790042,
             4001758071527365,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -398375,7 +398408,7 @@
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
           "reviewed_sha": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             4368684968752415,
             432402897659717,
             3306871816619358,
@@ -398394,7 +398427,8 @@
             1282638247948815,
             889985415563243,
             580981761638250,
-            1858170552352750
+            1858170552352750,
+            858068210347968
           ],
           "source_renewals": [
             3968121688949526,
@@ -398409,7 +398443,8 @@
             2607445134387421,
             3740545211621373,
             2642014990194729,
-            1411840066278558
+            1411840066278558,
+            211978343132867
           ]
         }
       }
@@ -398624,10 +398659,10 @@
           "kind": "source-bound-playwright-and-ci-configuration",
           "reviewed_sha": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             335271907751690,
-            3456225966231844,
+            1331781819137375,
             626369684325614,
             1344381631436728,
             4217801687597905,
@@ -398640,7 +398675,8 @@
             1931632308198842,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             4104756073964730,
@@ -398676,7 +398712,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -398754,7 +398791,7 @@
             2981019163871709,
             3306871816619358,
             335271907751690,
-            3456225966231844,
+            1331781819137375,
             738324130165064
           ],
           "checks": [
@@ -398768,7 +398805,8 @@
             1539244305539768,
             2088559116918760,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             419392989975921,
@@ -398791,7 +398829,8 @@
             3811722477790042,
             4001758071527365,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -401200,7 +401239,7 @@
           "kind": "native_verification",
           "source_evidence": [
             2282424088653070,
-            3456225966231844,
+            1331781819137375,
             3830507931348172
           ],
           "checks": [
@@ -401208,7 +401247,8 @@
             4008990306353900,
             2045748196058454,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_renewals": [
             1818024753601110,
@@ -401230,7 +401270,8 @@
             1529355937300869,
             2294135178540376,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -401885,10 +401926,11 @@
             3170166350632158,
             3141462911362460,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             1256540299604531,
             2088482174620949,
@@ -401965,7 +402007,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         },
         "storage_p1_board_tests": {
@@ -402182,10 +402225,11 @@
             2050524275341634,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             1220101825772327,
             1256540299604531,
@@ -402279,7 +402323,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -402620,7 +402665,7 @@
           "kind": "source-bound-clean-hosted-browser-rollup",
           "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             335271907751690,
             3108623938713492,
             4217801687597905,
@@ -402637,7 +402682,8 @@
             3733859844439153,
             2694848607270379,
             4227519844947789,
-            1858170552352750
+            1858170552352750,
+            858068210347968
           ],
           "source_renewals": [
             2008223350684073,
@@ -402657,7 +402703,8 @@
             3239468737812509,
             3740545211621373,
             2642014990194729,
-            1411840066278558
+            1411840066278558,
+            211978343132867
           ]
         }
       }
@@ -402854,10 +402901,11 @@
             1794879113671000,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             1256540299604531,
             2974370710122,
@@ -402922,7 +402970,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -402994,10 +403043,11 @@
             1794879113671000,
             889985415563243,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "source_evidence": [
-            4120761755321603,
+            4389548210889094,
             2282424088653070,
             1256540299604531,
             2974370710122,
@@ -403062,7 +403112,8 @@
             3740545211621373,
             2642014990194729,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ]
         }
       }
@@ -546490,7 +546541,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -546527,7 +546578,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Full-page individual/legal/both checkbox chooser, canonical selection order, owner-bound durable request key, resume and lost-receipt recovery verified.",
           "limitations": [
@@ -546584,7 +546636,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -546886,7 +546939,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -546923,7 +546976,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Required personal identity and checksum, optional title, dependent province/city, address/postal validation, save-before-step server drafts, review and exact submission receipt verified.",
           "limitations": [
@@ -546980,7 +547034,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -547282,7 +547337,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -547319,7 +547374,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Representative and company identity, required/unique national identifier, company type, optional localized registration date/contact/economic fields, required dependent address, optional verified document workflow, review and persisted verification status verified.",
           "limitations": [
@@ -547376,7 +547432,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -547679,7 +547736,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -547716,7 +547773,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Aggregate persisted profile summaries, first initial dashboard choice, explicit alternate selection, saved context, exact final receipt and current /app dashboard entry verified.",
           "limitations": [
@@ -547773,7 +547831,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -548075,7 +548134,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -548112,7 +548171,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Customer /app and nested availability guard redirects empty accounts to onboarding; unavailable reads fail rather than inventing an empty account; staff context remains independent.",
           "limitations": [
@@ -548169,7 +548229,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -548471,7 +548532,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -548508,7 +548569,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Active legal-profile directory verifies initials avatars, masked contacts, role/status badges, actual/unknown invitation/join/sign-in dates, owner crown and transfer entry.",
           "limitations": [
@@ -548565,7 +548627,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -548867,7 +548930,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -548904,7 +548967,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Invitation username/role and optional bounded plain-text message, local validation, self/existing-member safeguards, current authority, retained failure draft and safe note display verified.",
           "limitations": [
@@ -548961,7 +549025,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -549264,7 +549329,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -549301,7 +549366,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Member/invitation detail dialogs verify scoped identity and public activity, role editing, guarded removal, withdrawal, current ownership and captured step-up/receipt recovery.",
           "limitations": [
@@ -549358,7 +549424,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -549660,7 +549727,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -549697,7 +549764,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Account-bound pending invitations identify company/inviter and remain until accept/decline. Onboarding acceptance requires no new profile, binds company/role and opens the accepted context explicitly.",
           "limitations": [
@@ -549754,7 +549822,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -550056,7 +550125,7 @@
             2009581771508804,
             2387050658107757,
             873968149302210,
-            3456225966231844,
+            1331781819137375,
             1099662859020587,
             3837379060627309,
             223933290064692,
@@ -550093,7 +550162,8 @@
             889985415563243,
             4441824344814146,
             1858170552352750,
-            1312003817999946
+            1312003817999946,
+            858068210347968
           ],
           "criterion_result": "Owner rows cannot be removed or edited through ordinary member actions. Bound ownership transfer, current authority, step-up, stale/expiry/retry and last-owner safeguards verified.",
           "limitations": [
@@ -550150,7 +550220,8 @@
             1956284524345204,
             3476363656192367,
             1411840066278558,
-            3917151634109845
+            3917151634109845,
+            211978343132867
           ],
           "presentation_renewals": [
             {
@@ -568017,7 +568088,8 @@
         "The final non-root container passed native GitHub archive handoff, Bash setup and Chromium, Firefox and WebKit launch. The first root probe exposed Firefox’s GitHub home ownership restriction. The corrected non-root production-browser Firefox journey passed. A full scheduled receipt is still required.",
         "Verified the enforcing CSP staff rehearsal against migrated disposable PostgreSQL. Eight contract and reconciliation cases, four corrected favicon publication cases, and eight report-only controls passed in Chromium and WebKit. The live CSP release gate remains open.",
         "The nightly browser runner passed its native migrated PostgreSQL fixture after preserving runner loopback and the non-root browser identity. Four Firefox contract-limit and favicon cases passed in Persian and English. The complete scheduled matrix and delivery receipts remain open.",
-        "The protected direct-main CI workflow now enables the existing strict license policy. Verified 12 license checks and the previous exact hosted image inventory. The exact new hosted check and immutable release distribution still require evidence."
+        "The protected direct-main CI workflow now enables the existing strict license policy. Verified 12 license checks and the previous exact hosted image inventory. The exact new hosted check and immutable release distribution still require evidence.",
+        "Restored the prior native browser workflow after reviewing the Docker socket mount and host networking. GitHub run 44819179728 is evidence for the historical wrapper. The restored workflow requires fresh scheduled results."
       ],
       "owner": null,
       "depends_on": [],
@@ -774389,7 +774461,8 @@
       "1348616652009183": "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures.",
       "2088559116918760": "Four enforced favicon and eight report-only favicon and storage cases passed on the reviewed fixtures in Chromium and WebKit, in Persian and English. The enforcement baseline also passed all eight contract-limit and reconciliation cases before the fixture correction.",
       "1858170552352750": "Native run 44819179728 verified the pinned browser command with the real migrated PostgreSQL fixture. All four Firefox staff cases passed in Persian and English without retries. Actionlint, formatting, two browser selector cases and three result parser cases passed.",
-      "1312003817999946": "All 12 license policy tests passed, including pending-license rejection with report preservation. Actionlint and formatting passed. The exact previous protected source artifact independently verified all five image, SBOM and scan identities and 857 package dispositions."
+      "1312003817999946": "All 12 license policy tests passed, including pending-license rejection with report preservation. Actionlint and formatting passed. The exact previous protected source artifact independently verified all five image, SBOM and scan identities and 857 package dispositions.",
+      "858068210347968": "The nightly workflow matches 456a42367 byte for byte. Actionlint, formatting, two browser selector tests and three result parser tests passed. A fresh scheduled matrix remains open."
     },
     "source_evidence": {
       "3985308057320810": {
@@ -790211,6 +790284,14 @@
       "3456225966231844": {
         "path": "docs/development/ci.md",
         "sha256": "3be12d336740a6eac0b736efa3817efabc4a0ccb9642c9a784ec06bf70f390ad"
+      },
+      "4389548210889094": {
+        "path": ".github/workflows/browser-nightly.yml",
+        "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
+      },
+      "1331781819137375": {
+        "path": "docs/development/ci.md",
+        "sha256": "bfad20ba85fa305581c89a77a2e9d241fd0662e56e382b37006ec5f72b38e186"
       }
     },
     "source_renewals": {
@@ -824382,6 +824463,15 @@
           "docs/development/ci.md"
         ],
         "scope": "The protected monorepo workflow now enables its existing strict license rule on both preflight and main pushes. Image scanning, approved exact exceptions, affected tests and failure artifact upload stay intact. The CI guide documents enforcement and inventory preservation."
+      },
+      "211978343132867": {
+        "batch": "release-0.6-restore-native-nightly-runner",
+        "base_commit": "eabfb137fb21c10d7d9c68b7944bf0f72743a663",
+        "paths": [
+          ".github/workflows/browser-nightly.yml",
+          "docs/development/ci.md"
+        ],
+        "scope": "Restored the reviewed native-runner workflow from 456a42367. The 40 browser shards, migrated fixtures, reports and strict assertions are preserved. Prior evidence about the Docker wrapper applies to its historical source only."
       }
     }
   }

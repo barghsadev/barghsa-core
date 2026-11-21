@@ -111,9 +111,6 @@ jobs:
     name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }} of 8
     needs: browser-build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -131,7 +128,6 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: '10.11.1'
-          dest: ${{ runner.temp }}/setup-pnpm
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -152,13 +148,16 @@ jobs:
           printf '%s  %s\n' "$BROWSER_ARCHIVE_SHA256" "$archive" | sha256sum -c
           test "$(tar -xOzf "$archive" .nightly-browser-revision)" = "$GITHUB_SHA"
           tar -xzf "$archive" --exclude=.nightly-browser-revision
+      - name: Install browser runtimes
+        if: matrix.browser != 'firefox'
+        run: pnpm --filter @barghsa/web exec playwright install --with-deps "${{ matrix.browser }}"
       - name: Install pinned Firefox runtime
         if: matrix.browser == 'firefox'
         env:
           PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/barghsa-firefox
         run: |
           # Firefox 1572 crashes during axe analysis. Revision 1575 passes the same cases.
-          pnpm dlx playwright@1.66.0-alpha-2026-11-10 install firefox
+          pnpm dlx playwright@1.66.0-alpha-2026-11-10 install --with-deps firefox
           firefox="$PLAYWRIGHT_BROWSERS_PATH/firefox-1575/firefox/firefox"
           test -x "$firefox"
           printf 'PLAYWRIGHT_BROWSERS_PATH=%s\nBARGHSA_FIREFOX_EXECUTABLE=%s\n' "$PLAYWRIGHT_BROWSERS_PATH" "$firefox" >> "$GITHUB_ENV"
@@ -167,20 +166,7 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: |
-          # Keep the browser fixture's published PostgreSQL port on runner loopback.
-          docker run --rm --network host --shm-size=1g \
-            --user "$(id -u):$(id -g)" --group-add "$(stat -c '%g' /var/run/docker.sock)" \
-            --volume /var/run/docker.sock:/var/run/docker.sock \
-            --volume "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
-            --volume "$RUNNER_TEMP:$RUNNER_TEMP" \
-            --volume "$RUNNER_TOOL_CACHE:$RUNNER_TOOL_CACHE:ro" \
-            --workdir "$GITHUB_WORKSPACE" \
-            --env PATH --env CI --env BARGHSA_TEST_PREBUILT --env BARGHSA_FIREFOX_EXECUTABLE \
-            --env "PLAYWRIGHT_BROWSERS_PATH=${PLAYWRIGHT_BROWSERS_PATH:-/ms-playwright}" \
-            --env TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 \
-            mcr.microsoft.com/playwright:v1.65.0-resolute@sha256:916c9fb63a8340822589dd5c821dae82e8012106bb8515a72f278d97f277446a \
-            node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}/8"
+        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}/8"
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes
