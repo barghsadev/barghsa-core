@@ -54,6 +54,50 @@ async function inspect(page: Page, locale: string, project: string, domain: stri
       path: `/tmp/barghsa-category-query-${domain}-${dark ? 'dark' : 'light'}.png`,
     });
 }
+for (const locale of ['en', 'fa'] as const) {
+  for (const domain of ['knowledge', 'policy'] as const) {
+    test(`${domain} group settings reopen the saved editor and detail (${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale, false);
+      const knowledge = domain === 'knowledge';
+      const group = knowledge ? knowledgeGroup : policyGroup;
+      const route = knowledge ? 'knowledge-bases' : 'policies';
+      const kind = knowledge ? 'kb-groups' : 'policy-groups';
+      const word = (key: string) => t(`admin.${knowledge ? 'kb' : 'policies'}.${key}`, locale);
+      await page.route(`**/api/admin/${kind}`, (route) => route.fulfill({ json: [group] }));
+      await page.route(`**/api/admin/${route}`, (route) =>
+        route.fulfill({ json: [knowledge ? knowledgeBase : policyEntry] })
+      );
+      await page.route(`**/api/admin/${kind}/${group.id}`, (route) =>
+        route.fulfill({ json: { ...group, members: [] } })
+      );
+      await page.goto(`/admin/${route}?kind=${kind}`);
+      await page
+        .getByRole('button', { name: `${word('edit')} ${group.title}`, exact: true })
+        .click();
+      const title = page.locator(knowledge ? '#kb-title' : '#policy-title');
+      await expect(page).toHaveURL((url) => url.searchParams.get('editing') === group.id);
+      await expect(title).toHaveValue(group.title);
+      await page
+        .getByRole('button', { name: `${word('open')} ${group.title}`, exact: true })
+        .click();
+      await expect(page).toHaveURL((url) => url.searchParams.get('viewing') === group.id);
+      const detail = page.getByRole('region', {
+        name: knowledge ? group.title : word('members'),
+        exact: true,
+      });
+      await expect(detail).toBeVisible();
+      await page.reload();
+      await expect(title).toHaveValue(group.title);
+      await expect(detail).toBeVisible();
+      await page.goBack();
+      await expect(detail).toHaveCount(0);
+      await expect(title).toHaveValue(group.title);
+    });
+  }
+}
+
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true])
     for (const domain of ['product', 'knowledge', 'policy'] as const) {

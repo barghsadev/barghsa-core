@@ -41,6 +41,68 @@ async function inspect(page: Page, label: string, locale: string, project: strin
 for (const locale of ['en', 'fa'] as const) {
   const u = (key: string) => t(`admin.staff.${key}`, locale),
     g = (key: string) => t(`admin.teams.${key}`, locale);
+  test(`staff role, permission and team records have restorable URLs (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/staff-access', (route) => route.fulfill({ json: staffAccess }));
+    await page.route('**/api/admin/staff-role-options', (route) =>
+      route.fulfill({ json: staffRoles })
+    );
+    await page.route('**/api/admin/staff?*', (route) =>
+      route.fulfill({ json: { items: [staffUser], total: 1 } })
+    );
+    await page.route(`**/api/admin/users/${staffUser.userId}/effective-permissions`, (route) =>
+      route.fulfill({
+        json: {
+          userId: staffUser.userId,
+          isAdmin: false,
+          roleIds: staffRoles.map((role) => role.roleId),
+          roleNames: staffRoles.map((role) => role.name),
+          permissions: [{ permission: 'finance:read', group: 'finance' }],
+          isWildcard: false,
+        },
+      })
+    );
+    await page.goto('/admin/users');
+    await page.getByRole('button', { name: u('editRoles'), exact: true }).click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('roleEditor') === staffUser.userId);
+    const reason = page.locator('#staff-role-reason');
+    await reason.fill('Inactive draft reason');
+    await page.reload();
+    await expect(reason).toHaveValue('');
+    await page
+      .getByRole('button', { name: t('admin.roles.effective.inspect', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(
+      (url) => url.searchParams.get('permissionView') === staffUser.userId
+    );
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('finance:read');
+    await page.reload();
+    await expect(dialog).toContainText('finance:read');
+    await page.goBack();
+    await expect(dialog).toHaveCount(0);
+    await expect(reason).toHaveValue('');
+
+    await page.route('**/api/admin/staff-teams', (route) => route.fulfill({ json: [staffTeam] }));
+    await page.route('**/api/admin/staff-teams/members?*', (route) =>
+      route.fulfill({ json: { items: [staffMember], selected: [staffMember], hasMore: false } })
+    );
+    await page.route('**/api/admin/config/assignment-rules', (route) =>
+      route.fulfill({ json: staffRoutingRules })
+    );
+    await page.goto('/admin/staff-teams');
+    await page.getByRole('button', { name: g('edit'), exact: true }).click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === staffTeamId);
+    const teamName = page.locator('#staff-team-name');
+    await expect(teamName).toHaveValue(staffTeam.name);
+    await page.reload();
+    await expect(teamName).toHaveValue(staffTeam.name);
+    await page.goBack();
+    await expect(teamName).toHaveValue('');
+  });
+
   test(`staff list retries preserve creation fields and permission denial clears work (${locale})`, async ({
     page,
   }, info) => {

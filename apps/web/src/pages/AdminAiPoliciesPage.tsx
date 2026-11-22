@@ -1,4 +1,6 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { useRecordAddress } from '../hooks/useRecordAddress.js';
+import type { CatalogueWorkspace } from '../lib/catalogue-workspace.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useCatalogueConfirmationRead } from '../hooks/useCatalogueConfirmationRead.js';
@@ -120,6 +122,7 @@ function draftFor(row?: Entry): Draft {
   };
 }
 type CataloguePageProps = {
+  workspace?: CatalogueWorkspace;
   initialKind?: PolicyCatalogueKind;
   focusCategory?: boolean;
   onKindChange?: (value: PolicyCatalogueKind) => void;
@@ -133,6 +136,7 @@ function OwnedAiPoliciesPage({
   initialKind = 'policies',
   onKindChange,
   focusCategory = false,
+  workspace,
 }: CataloguePageProps = {}) {
   const locale = useLocale(),
     label = (key: string) => t(`admin.policies.${key}`, locale);
@@ -220,6 +224,7 @@ function OwnedAiPoliciesPage({
     membershipBasis.current = null;
     setAction(null);
   }, [setAction]);
+  const clearAddress = workspace?.clear;
   const clearWork = useCallback(() => {
     clearSelection();
     setDraft(null);
@@ -232,7 +237,15 @@ function OwnedAiPoliciesPage({
     validationBusy.current = false;
     form.setValidationPending(false);
     onPendingChange(false);
-  }, [clearSelection, setAction, setDraft, form.setValidationPending, onPendingChange]);
+    clearAddress?.();
+  }, [
+    clearSelection,
+    setAction,
+    setDraft,
+    form.setValidationPending,
+    onPendingChange,
+    clearAddress,
+  ]);
   const scope = useCatalogueScope(clearWork);
   const confirmationRead = useCatalogueConfirmationRead(scope);
   const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
@@ -260,6 +273,37 @@ function OwnedAiPoliciesPage({
     policies = kind === 'policies' ? rows : (choices.data ?? []),
     members = selectedRead.data?.members ?? [];
   const disabled = scope.denied || list.loading || list.error;
+  const selectDraft = useRecordAddress(
+    workspace?.editor,
+    rows,
+    (row) => row.id,
+    !disabled && list.data !== null,
+    (row) => {
+      if (row) edit(row, false);
+      else {
+        generation.current++;
+        formCapture.current = null;
+        setAction(null);
+        setDraft(null);
+        draftBasis.current = null;
+        setUncertain(false);
+        setChanged(false);
+        validationBusy.current = false;
+        form.setValidationPending(false);
+        onPendingChange(false);
+      }
+    }
+  );
+  const selectDetail = useRecordAddress(
+    workspace?.detail,
+    rows,
+    (row) => row.id,
+    kind === 'policy-groups' && !disabled && list.data !== null,
+    (row) => {
+      if (row) setSelected(row.id);
+      else clearSelection();
+    }
+  );
   const detailDisabled = disabled || selectedRead.loading || selectedRead.error;
   const memberDisabled = detailDisabled || choices.loading || choices.error;
   const work = useRef({ selected, draft, action, disabled, detailDisabled, memberDisabled });
@@ -294,7 +338,10 @@ function OwnedAiPoliciesPage({
       setAction(null);
       commandTarget.current = null;
     }
-    if (current.selected && !list.data.some((row) => row.id === current.selected)) clearSelection();
+    if (current.selected && !list.data.some((row) => row.id === current.selected)) {
+      clearSelection();
+      selectDetail(null, true);
+    }
   }, [list.data, clearSelection, setAction, form.setValidationPending]);
   useEffect(() => {
     if (!selectedRead.data) return;
@@ -344,14 +391,16 @@ function OwnedAiPoliciesPage({
       return;
     clearSelection();
     setSelected(value);
+    selectDetail(value);
   }
-  function edit(entry?: Entry) {
+  function edit(entry?: Entry, publish = true) {
     if (
-      disabled ||
-      networkPending.current ||
-      validationBusy.current ||
-      actionRef.current ||
-      uncertain
+      publish &&
+      (disabled ||
+        networkPending.current ||
+        validationBusy.current ||
+        actionRef.current ||
+        uncertain)
     )
       return;
     generation.current++;
@@ -362,6 +411,7 @@ function OwnedAiPoliciesPage({
     setDraft(draftFor(entry));
     draftBasis.current = entry ? JSON.stringify(draftFor(entry)) : null;
     setNotice(false);
+    if (publish) selectDraft(entry?.id ?? null);
   }
   function refresh() {
     if (networkPending.current) return;
@@ -1006,7 +1056,10 @@ function OwnedAiPoliciesPage({
                       type="button"
                       variant="outline"
                       disabled={uncertain}
-                      onClick={() => setDraft(null)}
+                      onClick={() => {
+                        setDraft(null);
+                        selectDraft(null);
+                      }}
                     >
                       {label('cancel')}
                     </Button>
@@ -1297,13 +1350,16 @@ function OwnedAiPoliciesPage({
             if (command.body && typeof command.body === 'object' && 'title' in command.body) {
               setDraft(null);
               draftBasis.current = null;
+              selectDraft(null, true);
             }
             if (command.path.endsWith('/members')) {
               setMember('');
               setMemberPriority('');
             }
-            if (command.method === 'DELETE' && command.path === `/api/admin/${kind}/${selected}`)
+            if (command.method === 'DELETE' && command.path === `/api/admin/${kind}/${selected}`) {
               clearSelection();
+              selectDetail(null, true);
+            }
             setNotice(true);
             list.retry();
             choices.retry();

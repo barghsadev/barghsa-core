@@ -2,6 +2,7 @@ import { CommandFeedback } from '../components/CommandFeedback.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
+import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
@@ -59,7 +60,7 @@ import {
   type RoutingDraft,
 } from '../lib/staff-team-form.js';
 
-export default function AdminStaffTeamsPage() {
+export default function AdminStaffTeamsPage({ selection }: { selection?: RecordAddress } = {}) {
   const locale = useLocale();
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -210,6 +211,7 @@ export default function AdminStaffTeamsPage() {
     rulesSnapshot.current = null;
     editedTeam.current = null;
     setEditing(null);
+    selectTeam(null, true);
     resetTeam(emptyTeamDraft());
     setMembers([]);
     setKnown({});
@@ -481,7 +483,14 @@ export default function AdminStaffTeamsPage() {
       controller.abort();
     };
   }, [search, editing, memberRevision]);
-  function edit(team?: Team) {
+  const selectTeam = useRecordAddress(
+    selection,
+    teams,
+    (team) => team.id,
+    !loading && !error && !denied,
+    (team) => edit(team ?? undefined, false)
+  );
+  function edit(team?: Team, publish = true) {
     clearAction();
     editedTeam.current = team ?? null;
     setEditing(team?.id ?? null);
@@ -489,7 +498,8 @@ export default function AdminStaffTeamsPage() {
     setTeamStale(false);
     setSearch('');
     setSaved(false);
-    formHeading.current?.focus();
+    if (publish) selectTeam(team?.id ?? null);
+    if (publish || team) formHeading.current?.focus();
   }
   function toggleMember(id: string, checked: boolean) {
     setDraft((previous) => ({
@@ -1129,6 +1139,7 @@ export default function AdminStaffTeamsPage() {
               ) {
                 editedTeam.current = null;
                 setEditing(null);
+                selectTeam(null, true);
                 resetTeam(emptyTeamDraft());
                 setTeamStale(false);
               }

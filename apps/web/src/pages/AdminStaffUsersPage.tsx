@@ -5,6 +5,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffEffectivePermissions } from '../components/StaffEffectivePermissions.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
@@ -84,7 +85,13 @@ const validStaff = (row: Staff) =>
     (role) => !!role && typeof role.roleId === 'string' && typeof role.name === 'string'
   );
 
-export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBinding } = {}) {
+export default function AdminStaffUsersPage({
+  queries,
+  workspace,
+}: {
+  queries?: ListQueryBinding;
+  workspace?: { roles: RecordAddress; permissions: RecordAddress; clear: () => void };
+} = {}) {
   const read = useStaffQueryRead('profiles');
   const deniedRead = (failure: unknown) =>
     failure instanceof ServerQueryError && [401, 403].includes(failure.status);
@@ -219,6 +226,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     setCreated(null);
     setHistory(null);
     setPermissionTarget(null);
+    workspace?.clear();
     setSaved(false);
     setActivationNotice(false);
     setLoading(false);
@@ -265,6 +273,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         if (accessRef.current && JSON.stringify(accessRef.current) !== JSON.stringify(next))
           clearAction();
         if (accessRef.current && accessRef.current.userId !== next.userId) {
+          workspace?.clear();
           clearRecovery();
           setCreated(null);
           setDraft(blank());
@@ -280,7 +289,10 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           setDraft(blank());
           setCreated(null);
         }
-        if (!next.canEditRoles || !next.canView) setPermissionTarget(null);
+        if (!next.canEditRoles || !next.canView) {
+          setPermissionTarget(null);
+          workspace?.clear();
+        }
         if (!next.canEditRoles) {
           setEditing(null);
           setRoleIds([]);
@@ -342,11 +354,14 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           throw new Error('Invalid staff list');
         if (controller.signal.aborted || !accessRef.current) return;
         const inspected = permissionTargetRef.current;
-        if (inspected && !data.items.some((row) => staffBasis(row) === staffBasis(inspected)))
+        if (inspected && !data.items.some((row) => staffBasis(row) === staffBasis(inspected))) {
           setPermissionTarget(null);
+          selectPermissions(null, true);
+        }
         const selected = editingRef.current;
         if (selected && !data.items.some((row) => staffBasis(row) === staffBasis(selected))) {
           setEditing(null);
+          selectRoleEditor(null, true);
           setRoleIds([]);
           setReason('');
           clearAction();
@@ -453,6 +468,41 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     !!permissionTarget ||
     validationPending;
   const rolesDisabled = disabled || optionsLoading || optionsError;
+  const staffReady =
+    !!access?.canView &&
+    access.canEditRoles &&
+    !loading &&
+    !error &&
+    !accessLoading &&
+    !accessError;
+  const selectRoleEditor = useRecordAddress(
+    workspace?.roles,
+    list.items,
+    (staff) => staff.userId,
+    staffReady && !optionsLoading && !optionsError,
+    (staff) => {
+      clearAction();
+      if (staff) openRoleEditor(staff, false);
+      else {
+        setEditing(null);
+        roleForm.form.reset({ roleIds: [], reason: '' });
+      }
+    }
+  );
+  const selectPermissions = useRecordAddress(
+    workspace?.permissions,
+    list.items,
+    (staff) => staff.userId,
+    staffReady,
+    setPermissionTarget
+  );
+  function openRoleEditor(staff: Staff, publish = true) {
+    setEditing(staff);
+    roleForm.form.reset({ roleIds: staff.roles.map((role) => role.roleId), reason: '' });
+    setShowCreate(false);
+    setSaved(false);
+    if (publish) selectRoleEditor(staff.userId);
+  }
   useEffect(() => {
     const target = validationFocus.current;
     if (!target || validationPending) return;
@@ -685,6 +735,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               onClick={(event) => {
                 permissionTrigger.current = event.currentTarget;
                 setPermissionTarget(staff);
+                selectPermissions(staff.userId);
               }}
             >
               {t('admin.roles.effective.inspect', locale)}
@@ -729,13 +780,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               disabled={rolesDisabled}
               onClick={() => {
                 if (validationOwner.current || actionRef.current) return;
-                setEditing(staff);
-                roleForm.form.reset({
-                  roleIds: staff.roles.map((role) => role.roleId),
-                  reason: '',
-                });
-                setShowCreate(false);
-                setSaved(false);
+                openRoleEditor(staff);
               }}
             >
               {label('editRoles')}
@@ -788,6 +833,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               if (validationOwner.current || actionRef.current) return;
               setShowCreate(true);
               setEditing(null);
+              selectRoleEditor(null);
               setCreated(null);
               setSaved(false);
             }}
@@ -995,9 +1041,13 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               finalFocus={() =>
                 permissionTrigger.current?.isConnected ? permissionTrigger.current : false
               }
-              onClose={() => setPermissionTarget(null)}
+              onClose={() => {
+                setPermissionTarget(null);
+                selectPermissions(null);
+              }}
               onDenied={(status) => {
                 setPermissionTarget(null);
+                selectPermissions(null, true);
                 if (status === 401) denyAccess();
                 else refreshAccess();
               }}
@@ -1148,7 +1198,14 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                     pending={roleForm.pending}
                     disabled={rolesDisabled}
                   />
-                  <Button type="button" variant="outline" onClick={() => setEditing(null)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setEditing(null);
+                      selectRoleEditor(null);
+                    }}
+                  >
                     {label('cancel')}
                   </Button>
                 </div>
@@ -1254,6 +1311,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               throw new Error('Unconfirmed staff disable');
             }
             setEditing(null);
+            selectRoleEditor(null, true);
             setSaved(true);
             refreshAccess();
           }}
