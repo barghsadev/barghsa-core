@@ -1,4 +1,4 @@
-import { act, type ComponentType } from 'react';
+import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Route as Preferences } from './index.js';
@@ -17,6 +17,11 @@ vi.mock('@tanstack/react-router', () => ({
     useRouteContext: () => ({ isStaff: false }),
   }),
   useLocation: () => ({ pathname: '/settings' }),
+  Link: ({ children, to, ...props }: { children: ReactNode; to: string }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }));
 vi.mock('../../../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (value: string) => value }),
