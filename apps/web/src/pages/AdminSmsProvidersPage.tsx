@@ -1,4 +1,9 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import {
+  providerSelectionKey,
+  type ProviderSelection,
+  type ProviderWorkspace,
+} from '../lib/provider-workspace.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   useProviderCatalogue,
@@ -6,7 +11,7 @@ import {
   useProviderCommandGuard,
   useProviderCommandRecovery,
 } from '../hooks/useProviderCatalogue.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
@@ -49,7 +54,10 @@ import {
   type SmsProvider,
 } from '../lib/sms-providers-api.js';
 
-export default function AdminSmsProvidersPage({ embedded = false }: { embedded?: boolean } = {}) {
+export default function AdminSmsProvidersPage({
+  embedded = false,
+  workspace,
+}: { embedded?: boolean; workspace?: ProviderWorkspace } = {}) {
   const Heading = embedded ? 'h2' : 'h1';
   const locale = useLocale(),
     time = useAccountTime();
@@ -68,6 +76,10 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
   const [showEditor, setShowEditor] = useState(false),
     [selected, setSelected] = useState<string | null>(null),
     [firstEvent, setFirstEvent] = useState('');
+  const address = useRef('');
+  const requested = useRef({ key: '', restore: false });
+  const requestedPanel = workspace?.selection?.panel;
+  const requestedId = workspace?.selection?.id;
   const [testContact, setTestContact] = useState<{ basis: string; value: string } | null>(null);
   const [error, setError] = useState<string | null>(null),
     [notice, setNotice] = useState<string | null>(null);
@@ -128,6 +140,8 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
   );
   const resetForm = form.form.reset;
   const clearPrivate = useCallback(() => {
+    address.current = '';
+    requested.current = { key: '', restore: false };
     form.form.reset(editorFor());
     setShowEditor(false);
     generation.current++;
@@ -354,6 +368,7 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
           setEditor(null);
           setSelected(saved.id);
           setFirstEvent(saved.config.template_mappings[0]?.event_key ?? '');
+          navigateEditor({ panel: 'preview', id: saved.id }, true);
           setNotice(text('saved'));
           await refresh();
         },
@@ -393,6 +408,7 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
         )
           throw new ProviderRequestError(false, [], true);
         setSelected(null);
+        navigateEditor(undefined, true);
         setNotice(text(operation === 'rollback' ? 'restoredDraft' : 'changed'));
         await refresh();
       },
@@ -451,7 +467,12 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
       form.form.getValues('mappings').map((m) => (m.id === id ? { ...m, ...change } : m))
     );
   }
-  function open(row?: SmsProvider, clone = false) {
+  function navigateEditor(selection: ProviderSelection | undefined, replace = false) {
+    address.current = providerSelectionKey(selection);
+    requested.current.restore = false;
+    workspace?.set(selection, replace);
+  }
+  function open(row?: SmsProvider, clone = false, publish = true) {
     generation.current++;
     command.reset();
     form.setValidationPending(false);
@@ -460,7 +481,41 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
     setSelected(null);
     setError(null);
     setNotice(null);
+    if (publish)
+      navigateEditor(row ? { panel: clone ? 'clone' : 'edit', id: row.id } : { panel: 'new' });
   }
+  function openPreview(row: SmsProvider, publish = true) {
+    setSelected(row.id);
+    setFirstEvent(row.config.template_mappings[0]?.event_key ?? '');
+    setNotice(null);
+    setError(null);
+    if (publish) navigateEditor({ panel: 'preview', id: row.id });
+  }
+  useLayoutEffect(() => {
+    if (!workspace || scope.denied) return;
+    const selection = workspace.selection;
+    const key = providerSelectionKey(selection);
+    if (requested.current.key !== key) {
+      const restore = address.current !== key;
+      if (restore) {
+        clearPrivate();
+        command.reset();
+      }
+      requested.current = { key, restore };
+    }
+    if (!requested.current.restore) return;
+    if (selection && (loading || loadFailed || !catalogue.data)) return;
+    requested.current.restore = false;
+    address.current = key;
+    if (selection?.panel === 'new') open(undefined, false, false);
+    else if (selection) {
+      const row = catalogue.data?.find((provider) => provider.id === selection.id);
+      if (row && selection.panel === 'clone' && row.status !== 'draft') open(row, true, false);
+      else if (row?.status === 'draft' && selection.panel === 'edit') open(row, false, false);
+      else if (row?.status === 'draft' && selection.panel === 'preview') openPreview(row, false);
+      else setError(text('stale'));
+    }
+  }, [requestedPanel, requestedId, scope.denied, loading, loadFailed, catalogue.data]);
 
   const providerFields = [
     {
@@ -541,12 +596,7 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
           <Button
             variant="outline"
             disabled={disabled || !!editor || !p.config.template_mappings.length}
-            onClick={() => {
-              setSelected(p.id);
-              setFirstEvent(p.config.template_mappings[0]?.event_key ?? '');
-              setNotice(null);
-              setError(null);
-            }}
+            onClick={() => openPreview(p)}
           >
             {text('preview')}
           </Button>
@@ -710,6 +760,7 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
                 if (editor.id && row?.status !== 'draft') {
                   command.reset();
                   setEditor(null);
+                  navigateEditor(undefined, true);
                 } else open(row, editor.id === null && !!row);
               }}
             >
@@ -966,7 +1017,14 @@ export default function AdminSmsProvidersPage({ embedded = false }: { embedded?:
                 disabled={disabled || !eventsReady || staleEditor || uncertain}
                 label={text('save')}
               />
-              <Button type="button" variant="outline" onClick={() => setEditor(null)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setEditor(null);
+                  navigateEditor(undefined);
+                }}
+              >
                 {text('cancel')}
               </Button>
             </div>

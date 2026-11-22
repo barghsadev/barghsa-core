@@ -1,4 +1,9 @@
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
+import {
+  providerSelectionKey,
+  type ProviderSelection,
+  type ProviderWorkspace,
+} from '../lib/provider-workspace.js';
 import { LoadingStatus, Button, DateCell, ListPage, TextCell } from '@barghsa/ui';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
@@ -14,7 +19,7 @@ import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
 import { providerText } from '@barghsa/i18n/providers';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { cloneElement, type FormEvent, type ReactElement } from 'react';
 import { useWizardForm, type WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -86,7 +91,10 @@ const TEST_COLORS: Record<TestStatus, string> = {
 // Component
 // ---------------------------------------------------------------------------
 
-export default function AdminEmailProvidersPage({ embedded = false }: { embedded?: boolean } = {}) {
+export default function AdminEmailProvidersPage({
+  embedded = false,
+  workspace,
+}: { embedded?: boolean; workspace?: ProviderWorkspace } = {}) {
   const Heading = embedded ? 'h2' : 'h1';
   const time = useAccountTime();
   const uiLocale = useLocale();
@@ -107,6 +115,11 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
   // Editor state
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const address = useRef('');
+  const requested = useRef({ key: '', restore: false });
+  const onSelect = workspace?.set;
+  const requestedPanel = workspace?.selection?.panel;
+  const requestedId = workspace?.selection?.id;
   const [, setEditStatus] = useState<Status | null>(null);
   const [transport, setTransport] = useState<Transport>('smtp');
   const messages = Object.fromEntries(
@@ -149,6 +162,8 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
 
   const resetForm = editor.form.reset;
   const clearPrivate = useCallback(() => {
+    address.current = '';
+    requested.current = { key: '', restore: false };
     setShowEditor(false);
     setEditId(null);
     setEditBasis(null);
@@ -249,7 +264,12 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
     command.reset();
     editor.setValidationPending(false);
   }
-  function openCreate() {
+  function navigateEditor(selection: ProviderSelection | undefined, replace = false) {
+    address.current = providerSelectionKey(selection);
+    requested.current.restore = false;
+    onSelect?.(selection, replace);
+  }
+  function openCreate(publish = true) {
     resetRecovery();
     setEditId(null);
     setEditBasis(null);
@@ -260,9 +280,10 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
     setError(null);
     setNotice(null);
     setShowEditor(true);
+    if (publish) navigateEditor({ panel: 'new' });
   }
 
-  function openEdit(p: EmailProvider) {
+  function openEdit(p: EmailProvider, publish = true) {
     // Superseded/disabled versions are read-only; only drafts may be edited.
     if (p.status !== 'draft') {
       setError(providerText('admin.providers.supersededNote', uiLocale));
@@ -284,16 +305,43 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
     setError(null);
     setNotice(null);
     setShowEditor(true);
+    if (publish) navigateEditor({ panel: 'edit', id: p.id });
   }
 
-  function closeEditor() {
+  function closeEditor(publish = true, replace = false) {
     resetRecovery();
     setShowEditor(false);
     editor.form.reset(emptyEmailDraft());
     setEditId(null);
     setEditBasis(null);
     setEditStatus(null);
+    if (publish) navigateEditor(undefined, replace);
   }
+
+  useLayoutEffect(() => {
+    if (!workspace || scope.denied) return;
+    const selection = workspace.selection;
+    const key = providerSelectionKey(selection);
+    if (requested.current.key !== key) {
+      const restore = address.current !== key;
+      if (restore) {
+        closeEditor(false);
+        protectedDispatched.current = false;
+        setProtectedAction(null);
+      }
+      requested.current = { key, restore };
+    }
+    if (!requested.current.restore) return;
+    if (selection && (loading || loadFailed || !catalogue.data)) return;
+    requested.current.restore = false;
+    address.current = key;
+    if (selection?.panel === 'new') openCreate(false);
+    else if (selection?.panel === 'edit') {
+      const row = catalogue.data?.find((provider) => provider.id === selection.id);
+      if (row?.status === 'draft') openEdit(row, false);
+      else setError(providerText('admin.providers.stale', uiLocale));
+    }
+  }, [requestedPanel, requestedId, scope.denied, loading, loadFailed, catalogue.data]);
 
   function handleTransportChange(next: Transport) {
     setTransport(next);
@@ -385,7 +433,7 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
         setTestOutcome({});
         await fetchAll();
         if (!owned()) return;
-        closeEditor();
+        closeEditor(true, true);
         setNotice(providerFormText('saved', uiLocale));
       };
       try {
@@ -726,7 +774,7 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
         </div>
         {!showEditor && (
           <button
-            onClick={openCreate}
+            onClick={() => openCreate()}
             disabled={actionsDisabled}
             className="px-4 py-2 bg-primary text-primary-foreground rounded hover:shadow-md"
           >
@@ -905,7 +953,7 @@ export default function AdminEmailProvidersPage({ embedded = false }: { embedded
               />
               <button
                 type="button"
-                onClick={closeEditor}
+                onClick={() => closeEditor()}
                 disabled={busy || !!protectedAction || uncertain}
                 className="px-4 py-2 border border-input rounded text-sm hover:bg-muted disabled:opacity-50"
               >

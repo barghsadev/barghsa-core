@@ -29,6 +29,55 @@ const sms = {
   },
 };
 for (const locale of ['en', 'fa'] as const) {
+  test(`provider routes reopen the saved editor and preview (${locale})`, async ({ page }) => {
+    await crmShell(page, locale);
+    const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+    const emailText = (key: string) => providerText(`admin.providers.${key}`, locale);
+    await page.route('**/api/admin/email-providers', (route) => route.fulfill({ json: [email] }));
+    await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [sms] }));
+    await page.route('**/api/admin/sms-providers/template-event-keys', (route) =>
+      route.fulfill({ json: ['auth.otp'] })
+    );
+    await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+      route.fulfill({ json: [{ eventKey: 'auth.otp', locale, variables: ['code'] }] })
+    );
+    await page.goto('/admin/providers');
+    await page.getByRole('button', { name: emailText('update'), exact: true }).click();
+    const emailLabel = page.locator('#email-provider-label');
+    const apiKey = page.getByLabel(emailText('field.apiKey'), { exact: false });
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get('panel') === 'edit' && url.searchParams.get('selected') === 'email'
+    );
+    await emailLabel.fill('Unsaved label');
+    await apiKey.fill('temporary-secret');
+    await page.reload();
+    await expect(emailLabel).toHaveValue(email.label);
+    await expect(apiKey).toHaveValue('');
+    await page.getByRole('tab', { name: text('sms'), exact: true }).click();
+    const preview = page.getByRole('button', { name: text('preview'), exact: true });
+    await preview.click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get('channel') === 'sms' &&
+        url.searchParams.get('panel') === 'preview' &&
+        url.searchParams.get('selected') === 'sms'
+    );
+    const recipient = page.getByLabel(text('testRecipient'), { exact: true });
+    await recipient.fill('+989121234567');
+    await page.reload();
+    await expect(recipient).toHaveValue('');
+    await expect(page.getByRole('tab', { name: text('sms'), exact: true })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await page.goBack();
+    await expect(recipient).toHaveCount(0);
+    await expect(preview).toBeVisible();
+    await page.goBack();
+    await expect(emailLabel).toHaveValue(email.label);
+  });
+
   test(`an authorized empty SMS catalogue shows its next action (${locale})`, async ({ page }) => {
     await crmShell(page, locale);
     const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
