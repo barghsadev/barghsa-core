@@ -49,7 +49,8 @@ import {
   type SmsProvider,
 } from '../lib/sms-providers-api.js';
 
-export default function AdminSmsProvidersPage() {
+export default function AdminSmsProvidersPage({ embedded = false }: { embedded?: boolean } = {}) {
+  const Heading = embedded ? 'h2' : 'h1';
   const locale = useLocale(),
     time = useAccountTime();
   const { number } = useNumberFormatting(locale);
@@ -630,9 +631,9 @@ export default function AdminSmsProvidersPage() {
       )}
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 id="sms-title" className="text-2xl font-bold">
+          <Heading id="sms-title" className="text-xl font-semibold">
             {text('title')}
-          </h1>
+          </Heading>
           <p className="text-muted-foreground">{text('subtitle')}</p>
         </div>
         <Button disabled={disabled || !!editor} onClick={() => open()}>

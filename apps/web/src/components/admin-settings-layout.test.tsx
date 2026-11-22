@@ -83,7 +83,8 @@ it('selects the matching configuration ancestor without accepting a partial segm
 it('waits for confirmation, rejects an injected destination and focuses the opened section', async () => {
   await render();
   const select = host.querySelector<HTMLSelectElement>('select')!;
-  const open = host.querySelector<HTMLButtonElement>('button[type=submit]')!;
+  const open = host.querySelector<HTMLButtonElement>('button[type=button]')!;
+  expect(host.querySelector('form')).toBeNull();
   const option = new Option('Unsafe', 'https://foreign.test');
   select.append(option);
   select.value = option.value;

@@ -52,7 +52,14 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: [] });
     });
     await page.goto('/admin/providers');
-    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    const emailTab = page.getByRole('tab', { name: text('email'), exact: true });
+    const smsTab = page.getByRole('tab', { name: text('sms'), exact: true });
+    await emailTab.focus();
+    await emailTab.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
+    await expect(smsTab).toBeFocused();
+    await expect(emailTab).toHaveAttribute('aria-selected', 'true');
+    expect(reads).toBe(0);
+    await smsTab.press('Enter');
     const panel = page.getByRole('region', { name: text('title'), exact: true });
     const content = panel.locator('[data-slot="list-content"]');
     const empty = content.getByText(text('empty'), { exact: true });
@@ -131,8 +138,11 @@ for (const locale of ['en', 'fa'] as const) {
       page.getByText(smsProviderText('healthProbe', locale), { exact: true })
     ).toHaveCount(0);
     await expect(
-      page.getByRole('heading', { level: 1, name: smsProviderText('title', locale), exact: true })
+      page.getByRole('heading', { level: 2, name: smsProviderText('title', locale), exact: true })
     ).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      providerText('admin.providers.overview', locale)
+    );
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
     );

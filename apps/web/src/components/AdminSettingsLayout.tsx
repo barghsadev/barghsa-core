@@ -37,17 +37,7 @@ export function AdminSettingsLayout({
   const destination = choice && items.some((item) => item.to === choice) ? choice : current;
   return (
     <div className="flex min-w-0 flex-col gap-6" data-testid="admin-settings-layout">
-      <form
-        className="space-y-2 lg:hidden"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (destination === current) return;
-          requested.current = destination;
-          void navigate({ to: destination }).catch(() => {
-            if (requested.current === destination) requested.current = null;
-          });
-        }}
-      >
+      <div className="space-y-2 lg:hidden">
         <Label htmlFor="admin-settings-section">{navigationLabel}</Label>
         <div className="flex flex-wrap gap-2">
           <NativeSelect
@@ -67,15 +57,22 @@ export function AdminSettingsLayout({
             ))}
           </NativeSelect>
           <Button
-            type="submit"
+            type="button"
             variant="outline"
             className="min-h-11"
             disabled={destination === current}
+            onClick={() => {
+              if (destination === current) return;
+              requested.current = destination;
+              void navigate({ to: destination }).catch(() => {
+                if (requested.current === destination) requested.current = null;
+              });
+            }}
           >
             {t('admin.settings.openSection', locale)}
           </Button>
         </div>
-      </form>
+      </div>
       <div
         ref={content}
         role="region"

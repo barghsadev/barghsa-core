@@ -86,7 +86,8 @@ const TEST_COLORS: Record<TestStatus, string> = {
 // Component
 // ---------------------------------------------------------------------------
 
-export default function AdminEmailProvidersPage() {
+export default function AdminEmailProvidersPage({ embedded = false }: { embedded?: boolean } = {}) {
+  const Heading = embedded ? 'h2' : 'h1';
   const time = useAccountTime();
   const uiLocale = useLocale();
   const [invalidConfig, setInvalidConfig] = useState(false);
@@ -713,7 +714,9 @@ export default function AdminEmailProvidersPage() {
       {time.notice}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{providerText('admin.providers.title', uiLocale)}</h1>
+          <Heading className="text-xl font-semibold">
+            {providerText('admin.providers.title', uiLocale)}
+          </Heading>
           <p className="text-sm text-muted-foreground mt-1">
             {providerText('admin.providers.subtitle', uiLocale)}
           </p>
