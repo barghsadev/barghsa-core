@@ -240,7 +240,7 @@ function Workspace({
             to="/contracts"
             search={{ state: undefined }}
             activeOptions={{ exact: true }}
-            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
+            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
             aria-current={initialState ? undefined : 'page'}
           >
             {word('all')}
@@ -253,7 +253,7 @@ function Workspace({
             to="/contracts"
             search={{ state: 'Active' }}
             activeOptions={{ exact: true }}
-            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
+            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
             aria-current={initialState ? 'page' : undefined}
           >
             {word('Active')}

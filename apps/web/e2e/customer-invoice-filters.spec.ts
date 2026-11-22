@@ -6,8 +6,10 @@ import {
   applyHistoryFilters,
 } from './history-filter-reset';
 import { test, expect } from './coverage-fixture';
+import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { dateRangePreset } from '@barghsa/ui';
+import { brandSettings } from '../src/test/branding-settings-fixtures';
 import type { Route } from '@playwright/test';
 
 const first = '30000000-0000-4000-8000-000000000001';
@@ -20,6 +22,15 @@ for (const locale of ['en', 'fa'] as const) {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          ...brandSettings,
+          primaryColor: '#2563eb',
+          themeMode: locale === 'fa' ? 'dark' : 'light',
+        },
+      })
+    );
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
         json: {
@@ -107,6 +118,17 @@ for (const locale of ['en', 'fa'] as const) {
     await held!.fulfill({ json: body(first, first) });
     held = undefined;
     await expect(link(first)).toBeVisible();
+    await expect(page.locator('html')).toHaveCSS('--primary', '#2563eb');
+    const views = main.getByRole('navigation', { name: t('invoices.title', locale), exact: true });
+    await expect(views.getByRole('link', { name: copy('unpaid'), exact: true })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    const contrast = await new AxeBuilder({ page })
+      .include('main nav')
+      .withRules(['color-contrast'])
+      .analyze();
+    expect(contrast.violations).toEqual([]);
     await page.getByRole('button', { name: copy('more'), exact: true }).click();
     await expect(link(older)).toBeVisible();
     await expect(link(first)).toBeVisible();
@@ -250,7 +272,6 @@ for (const locale of ['en', 'fa'] as const) {
     expect(queries.at(-1)?.get('status')).toBe('unpaid');
     expect(queries.at(-1)?.has('q')).toBe(false);
     expect(queries.at(-1)?.get('sort')).toBe('created_at:asc');
-    const views = main.getByRole('navigation', { name: t('invoices.title', locale), exact: true });
     await expect(views.locator('[aria-current="page"]')).toHaveText(copy('unpaid'));
   });
 }

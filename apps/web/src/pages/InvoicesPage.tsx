@@ -210,7 +210,7 @@ export function InvoicesPage({
           to="/invoices"
           search={{ status: undefined }}
           activeOptions={{ exact: true }}
-          className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
+          className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
           aria-current={unpaidOnly ? undefined : 'page'}
         >
           {t('invoices.filter.all', locale)}
@@ -219,7 +219,7 @@ export function InvoicesPage({
           to="/invoices"
           search={{ status: 'unpaid' }}
           activeOptions={{ exact: true }}
-          className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
+          className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
           aria-current={unpaidOnly ? 'page' : undefined}
         >
           {t('invoices.filter.unpaid', locale)}
