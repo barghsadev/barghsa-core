@@ -209,6 +209,7 @@ export function InvoicesPage({
         <Link
           to="/invoices"
           search={{ status: undefined }}
+          activeOptions={{ exact: true }}
           className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
           aria-current={unpaidOnly ? undefined : 'page'}
         >
@@ -217,6 +218,7 @@ export function InvoicesPage({
         <Link
           to="/invoices"
           search={{ status: 'unpaid' }}
+          activeOptions={{ exact: true }}
           className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
           aria-current={unpaidOnly ? 'page' : undefined}
         >
@@ -352,16 +354,29 @@ export function InvoicesPage({
             </div>
           }
           emptyView={
-            <p className="rounded-lg border border-dashed border-input bg-card text-card-foreground p-8 text-center text-sm text-muted-foreground">
-              {t(
-                filtered
-                  ? 'historyDates.empty'
-                  : unpaidOnly
-                    ? 'invoices.filter.unpaidEmpty'
-                    : 'invoices.empty',
-                locale
-              )}
-            </p>
+            <div className="space-y-3 rounded-lg border border-dashed border-input bg-card p-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  filtered
+                    ? 'historyDates.empty'
+                    : unpaidOnly
+                      ? 'invoices.filter.unpaidEmpty'
+                      : 'invoices.empty',
+                  locale
+                )}
+              </p>
+              {filtered && onClearFilters ? (
+                <Button
+                  variant="outline"
+                  onClick={(event) => {
+                    event.currentTarget.closest('main')?.focus();
+                    onClearFilters();
+                  }}
+                >
+                  {t('historyFilters.clearAll', locale)}
+                </Button>
+              ) : null}
+            </div>
           }
         >
           {view === 'table' ? (

@@ -237,5 +237,20 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(main.getByText(t('historyDates.empty', locale), { exact: true })).toBeVisible();
     await expect(denial).toHaveCount(0);
     expect(queries.at(-1)?.toString()).toBe(deniedQuery.toString());
+    const clear = main.locator('[data-slot="list-content"]').getByRole('button', {
+      name: t('historyFilters.clearAll', locale),
+      exact: true,
+    });
+    result = 'rows';
+    await clear.focus();
+    await page.keyboard.press('Enter');
+    await expect(link(filtered)).toBeVisible();
+    await expect(clear).toHaveCount(0);
+    await expect(main).toBeFocused();
+    expect(queries.at(-1)?.get('status')).toBe('unpaid');
+    expect(queries.at(-1)?.has('q')).toBe(false);
+    expect(queries.at(-1)?.get('sort')).toBe('created_at:asc');
+    const views = main.getByRole('navigation', { name: t('invoices.title', locale), exact: true });
+    await expect(views.locator('[aria-current="page"]')).toHaveText(copy('unpaid'));
   });
 }

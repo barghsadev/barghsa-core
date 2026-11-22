@@ -272,5 +272,25 @@ for (const locale of ['en', 'fa'] as const) {
       main.getByRole('alert').filter({ hasText: contractText('denied', locale) })
     ).toHaveCount(0);
     expect(queries.at(-1)?.toString()).toBe(deniedQuery.toString());
+    const results = main.locator('[data-slot="list-content"]');
+    await expect(results.getByText(t('historyDates.empty', locale), { exact: true })).toBeVisible();
+    const clear = results.getByRole('button', {
+      name: t('historyFilters.clearAll', locale),
+      exact: true,
+    });
+    result = 'rows';
+    await clear.focus();
+    await page.keyboard.press('Enter');
+    await expect(reference(filtered)).toBeVisible();
+    await expect(clear).toHaveCount(0);
+    await expect(main).toBeFocused();
+    expect(queries.at(-1)?.get('state')).toBe('Active');
+    expect(queries.at(-1)?.has('q')).toBe(false);
+    expect(queries.at(-1)?.get('sort')).toBe('published_at:asc');
+    const views = main.getByRole('navigation', {
+      name: contractText('title', locale),
+      exact: true,
+    });
+    await expect(views.locator('[aria-current="page"]')).toHaveText(contractText('Active', locale));
   });
 }

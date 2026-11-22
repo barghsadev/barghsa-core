@@ -228,7 +228,10 @@ function Workspace({
         description={word(staff ? 'staffDescription' : 'description')}
       />
       {!staff ? (
-        <nav className="flex gap-4 text-sm" aria-label={word('title')}>
+        <nav
+          className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b pb-2 text-sm"
+          aria-label={word('title')}
+        >
           <Link
             onClick={(event) => {
               if (coordination.blocked()) event.preventDefault();
@@ -236,7 +239,8 @@ function Workspace({
             aria-disabled={locked}
             to="/contracts"
             search={{ state: undefined }}
-            className="touch-action text-primary underline underline-offset-4"
+            activeOptions={{ exact: true }}
+            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
             aria-current={initialState ? undefined : 'page'}
           >
             {word('all')}
@@ -248,7 +252,8 @@ function Workspace({
             aria-disabled={locked}
             to="/contracts"
             search={{ state: 'Active' }}
-            className="touch-action text-primary underline underline-offset-4"
+            activeOptions={{ exact: true }}
+            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
             aria-current={initialState ? 'page' : undefined}
           >
             {word('Active')}
@@ -406,6 +411,14 @@ function ContractResults({
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => contractText(key, locale);
+  const hasHistoryFilters = !!(
+    customerHistory?.query.q ||
+    customerHistory?.query.serviceType ||
+    customerHistory?.statuses.length ||
+    customerHistory?.dateRange.from ||
+    customerHistory?.dateRange.to
+  );
+  const clearHistoryFilters = customerHistory?.onClear;
   const [reload, setReload] = useState(0);
   const [retryRevision, setRetryRevision] = useState(0);
   const legacy = useCursorHistory<ContractSummary>(`${staff}:${query}`);
@@ -786,7 +799,31 @@ function ContractResults({
             )}
           </div>
         }
-        emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
+        emptyView={
+          <EmptyState
+            title={word('empty')}
+            description={
+              hasHistoryFilters || (staff && query)
+                ? appText('historyDates.empty', locale)
+                : word(staff ? 'staffEmptyHint' : 'emptyHint')
+            }
+            action={
+              hasHistoryFilters && clearHistoryFilters ? (
+                <Button
+                  variant="outline"
+                  disabled={locked}
+                  onClick={(event) => {
+                    if (coordination.blocked()) return;
+                    event.currentTarget.closest('main')?.focus();
+                    clearHistoryFilters();
+                  }}
+                >
+                  {appText('historyFilters.clearAll', locale)}
+                </Button>
+              ) : undefined
+            }
+          />
+        }
       >
         {items.length ? (
           !staff && view === 'table' ? (
