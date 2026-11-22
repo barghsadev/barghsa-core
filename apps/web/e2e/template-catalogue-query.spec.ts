@@ -115,7 +115,13 @@ for (const locale of ['en', 'fa'] as const)
       await page.reload();
       await expect(page.locator('#document-template-search')).toHaveValue('Unapplied');
       await expect(page.locator('#document-template-category')).toHaveValue('invoice');
-      await expect(page.locator('#document-template-title')).toHaveCount(0);
+      await expect(page.locator('#document-template-title')).toHaveValue(templateRow.title);
+      await expect(summary).toHaveValue('');
+      expect(
+        await page
+          .locator('#document-template-files')
+          .evaluate((input: HTMLInputElement) => input.files?.length)
+      ).toBe(0);
       await page.goBack();
       await expect(page.locator('#document-template-search')).toHaveValue('Agreement');
       await page.goForward();

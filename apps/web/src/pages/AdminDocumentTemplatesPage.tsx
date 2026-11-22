@@ -2,7 +2,7 @@ import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import {
   LoadingStatus,
   Button,
@@ -60,14 +60,22 @@ function templateAccessDenied(error: unknown) {
   return error instanceof DocumentRequestError && [401, 403].includes(error.status);
 }
 
-export default function AdminDocumentTemplatesPage(props: { queries?: ListQueryBinding } = {}) {
+type WorkspaceAddress = { id: string | null; edit: boolean };
+type DocumentTemplatesProps = {
+  queries?: ListQueryBinding;
+  selection?: WorkspaceAddress & {
+    set: (id: string | null, edit: boolean, replace?: boolean) => void;
+  };
+};
+
+export default function AdminDocumentTemplatesPage(props: DocumentTemplatesProps = {}) {
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
   return (
     <OwnedAdminDocumentTemplatesPage key={JSON.stringify([actor, contextRevision])} {...props} />
   );
 }
-function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBinding } = {}) {
+function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplatesProps) {
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
   const locale = useLocale();
@@ -84,6 +92,11 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     if (queries) setSearchInput(search);
   }, [search]);
   const [selected, setSelected] = useState<string | null>(null);
+  const address = useRef<WorkspaceAddress>({ id: null, edit: false });
+  const editAfterRead = useRef(false);
+  const workspace = useRef<HTMLDivElement>(null);
+  const routeId = selection?.id;
+  const routeEdit = selection?.edit;
   const [rows, setRows] = useState<Template[] | null>(null);
   const [detail, setDetail] = useState<Template | null>(null);
   const [editing, setEditing] = useState(false);
@@ -121,7 +134,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
       validationUnavailableMessage: word('validationUnavailable'),
     }
   );
-  const draft = editing ? metadata.watch() : null;
+  const draft = editing && (selected !== null || rows !== null) ? metadata.watch() : null;
   const { retainedFileIds: retained, files } = version.watch();
   const [linkError, setLinkError] = useState(false);
   const [links, setLinks] = useState<Record<string, string>>({});
@@ -175,17 +188,19 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
       captured.current = null;
     }
   }
-  function editMetadata(value: Draft) {
+  function editMetadata(value: Draft, id = selected) {
     if (owner.current) return;
     metadata.reset(value);
     setEditing(true);
+    address.current = { id, edit: true };
+    selection?.set(id, true);
   }
 
-  function choose(id: string | null, force = false) {
-    if (owner.current && !force) return;
+  function resetWorkspace(id: string | null) {
     retireLinks();
     ++linkGeneration.current;
     acceptedDetail.current = null;
+    editAfterRead.current = false;
     setSelected(id);
     setDetail(null);
     setEditing(false);
@@ -194,6 +209,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     owner.current = null;
     captured.current = null;
     errorFocus.current = null;
+    setValidating(false);
     setUncertain(false);
     setLinks({});
     setPendingLinks([]);
@@ -203,6 +219,20 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     setSaved(false);
     setDetailRevision((value) => value + 1);
   }
+  function choose(id: string | null, force = false) {
+    if (owner.current && !force) return;
+    resetWorkspace(id);
+    address.current = { id, edit: false };
+    selection?.set(id, false, force);
+  }
+  useLayoutEffect(() => {
+    if (routeId === undefined || routeEdit === undefined) return;
+    if (address.current.id === routeId && address.current.edit === routeEdit) return;
+    resetWorkspace(routeId);
+    address.current = { id: routeId, edit: routeEdit };
+    if (routeEdit && routeId) editAfterRead.current = true;
+    if (routeEdit && !routeId) setEditing(true);
+  }, [routeId, routeEdit]);
   function denyAccess() {
     accessDenied.current = true;
     listRequest.current?.abort();
@@ -288,6 +318,15 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
         }
         acceptedDetail.current = next;
         setDetail(next);
+        if (editAfterRead.current) {
+          editAfterRead.current = false;
+          metadata.reset({
+            title: next.title,
+            description: next.description,
+            category: next.category,
+          });
+          setEditing(true);
+        }
         setDetailState('ready');
       })
       .catch((reason: unknown) => {
@@ -326,8 +365,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
         });
       })(event);
     } finally {
-      setValidating(false);
-      if (!captured.current) owner.current = null;
+      if (generation === linkGeneration.current) {
+        setValidating(false);
+        if (!captured.current) owner.current = null;
+      }
     }
   }
 
@@ -365,8 +406,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
         });
       })(event);
     } finally {
-      setValidating(false);
-      if (!captured.current) owner.current = null;
+      if (generation === linkGeneration.current) {
+        setValidating(false);
+        if (!captured.current) owner.current = null;
+      }
     }
   }
 
@@ -508,8 +551,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                 <Button
                   disabled={locked || rows === null || state === 'denied'}
                   onClick={() => {
-                    choose(null);
-                    editMetadata(blank());
+                    if (owner.current) return;
+                    resetWorkspace(null);
+                    editMetadata(blank(), null);
+                    workspace.current?.focus();
                   }}
                 >
                   {word('add')}
@@ -560,6 +605,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                       onClick={() => {
                         if (owner.current && !uncertain) return;
                         choose(row.id);
+                        workspace.current?.focus();
                       }}
                     >
                       <TextCell value={row.title} />
@@ -599,7 +645,13 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
               </ListPage.Content>
             </div>
           </div>
-          <div className="min-w-0 space-y-7" role="region" aria-label={word('workspaceTitle')}>
+          <div
+            ref={workspace}
+            className="min-w-0 scroll-mt-20 space-y-7 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
+            role="region"
+            aria-label={word('workspaceTitle')}
+            tabIndex={-1}
+          >
             {detailState === 'loading' && <LoadingStatus>{word('loadingDetail')}</LoadingStatus>}
             {detailState === 'error' && (
               <div role="alert" className="space-y-2">
@@ -730,7 +782,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                       variant="outline"
                       disabled={locked}
                       onClick={() => {
-                        if (!owner.current) setEditing(false);
+                        if (owner.current) return;
+                        setEditing(false);
+                        address.current = { id: selected, edit: false };
+                        selection?.set(selected, false);
                       }}
                     >
                       {word('cancel')}
@@ -740,12 +795,12 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
               </Form>
             ) : null}
             {detail ? (
-              <>
+              <div className="grid items-start gap-6 xl:grid-cols-2">
                 <Form {...version}>
                   <form
                     key={`version-${linkGeneration.current}`}
                     noValidate
-                    className="space-y-4 border-y py-5"
+                    className="min-w-0 space-y-4 rounded-lg border bg-card p-4"
                     onSubmit={createVersion}
                     aria-label={word('publishVersion')}
                     onChangeCapture={(event) => {
@@ -896,7 +951,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                     </FormSubmit>
                   </form>
                 </Form>
-                <section className="space-y-4" aria-label={word('history')}>
+                <section
+                  className="min-w-0 space-y-4 rounded-lg border bg-card p-4"
+                  aria-label={word('history')}
+                >
                   <h3 className="text-lg font-semibold">{word('history')}</h3>
                   {detail.versions?.length ? (
                     detail.versions.map((version) => (
@@ -997,7 +1055,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                     <p className="text-sm text-muted-foreground">{word('noVersions')}</p>
                   )}
                 </section>
-              </>
+              </div>
             ) : null}
           </div>
         </div>

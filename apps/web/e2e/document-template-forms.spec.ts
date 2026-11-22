@@ -78,6 +78,38 @@ async function inspect(page: Page, locale: string, info: TestInfo, kind: string)
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`document template record and edit mode survive navigation (${locale})`, async ({
+    page,
+  }) => {
+    const { word } = await setup(page, locale);
+    const workspace = page.getByRole('region', { name: word('workspaceTitle') });
+    const title = workspace.getByRole('textbox', { name: word('name'), exact: true });
+    const heading = workspace.getByRole('heading', { name: templateDetail.title, exact: true });
+    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === templateDetail.id);
+    await page.reload();
+    await expect(heading).toBeVisible();
+    await workspace.getByRole('button', { name: word('edit'), exact: true }).click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get('selected') === templateDetail.id &&
+        url.searchParams.get('mode') === 'edit'
+    );
+    await page.reload();
+    await expect(title).toHaveValue(templateDetail.title);
+    await page.goBack();
+    await expect(title).toHaveCount(0);
+    await expect(heading).toBeVisible();
+    await page.goForward();
+    await expect(title).toHaveValue(templateDetail.title);
+    await page.goto('/admin/document-templates?selected=new&category=contract');
+    await expect(title).toHaveValue('');
+    await workspace.getByRole('button', { name: word('cancel'), exact: true }).click();
+    await expect(page).toHaveURL(
+      (url) => !url.searchParams.has('selected') && url.searchParams.get('category') === 'contract'
+    );
+    await expect(title).toHaveCount(0);
+  });
+
   test(`template file link announces its pending read and can retry (${locale})`, async ({
     page,
   }, info) => {
