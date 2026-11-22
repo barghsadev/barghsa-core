@@ -89,6 +89,11 @@ for (const locale of ['en', 'fa'] as const) {
           .filter({ hasText: t('dashboard.overview.loadError', locale) })
           .getByRole('button', { name: t('dashboard.overview.retry', locale), exact: true });
         await expect(retryContext).toBeVisible();
+        const heading = page.getByRole('heading', { level: 1 });
+        await expect(heading).toHaveText(t('dashboard.nav.overview', locale));
+        await expect(
+          page.getByRole('group', { name: t('dashboard.overview.quickActions', locale) })
+        ).toHaveCount(0);
         const connectionNotice = page
           .locator('[data-sonner-toast][data-type="info"]')
           .filter({ hasText: loadingText('connectionRetry', locale) });
@@ -99,6 +104,9 @@ for (const locale of ['en', 'fa'] as const) {
         await retryContext.click();
         await expect(connectionNotice).toHaveCount(1);
         await expect.poll(() => contextReads).toBe(2);
+        await expect(heading).toHaveText(
+          t('dashboard.overview.welcome', locale).replace('{name}', 'Ari Buyer')
+        );
         const orders = page.getByRole('region', { name: dashboardText('orders.title', locale) });
         const invoices = page.getByRole('region', { name: dashboardText('invoice.title', locale) });
         const wallet = page.getByRole('region', {

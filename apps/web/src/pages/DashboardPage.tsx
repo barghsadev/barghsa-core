@@ -28,6 +28,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useNavigation } from '../hooks/useNavigation.js';
 import './dashboard-intro.css';
 
 interface DashboardContext {
@@ -296,42 +297,51 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   const documentLocale = useLocale();
   const locale = localeOverride ?? documentLocale;
   const time = useAccountTime(locale);
+  const navigation = useNavigation();
   const context = useAsyncData<unknown>('/api/dashboard/context');
   const dashboard = context.status === 'ready' && validContext(context.data) ? context.data : null;
-  const profileName = dashboard?.profile.name || t('dashboard.profile.unnamed', locale);
-  const actions = [
-    { label: shellText('buyElectricity', locale), href: '/electricity', icon: Zap },
-    { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet', icon: Wallet },
-    { label: t('dashboard.overview.supportTicket', locale), href: '/tickets', icon: LifeBuoy },
-  ] as const;
+  const profileName = dashboard?.profile.name;
+  const actions = (
+    [
+      { label: shellText('buyElectricity', locale), href: '/electricity', icon: Zap },
+      { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet', icon: Wallet },
+      { label: t('dashboard.overview.supportTicket', locale), href: '/tickets', icon: LifeBuoy },
+    ] as const
+  ).filter(({ href }) => navigation?.area === 'customer' && navigation.paths.includes(href));
 
   return (
     <div className="flex flex-col gap-5 lg:gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="overflow-hidden rounded-2xl border bg-card">
         <div className="dashboard-intro bg-brand-panel px-5 py-6 text-brand-panel-foreground sm:px-7 sm:py-8">
           <h1 className="max-w-3xl text-[clamp(1.625rem,3.2vw,2.625rem)] font-bold leading-tight wrap-anywhere">
-            {t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
+            {profileName
+              ? t('dashboard.overview.welcome', locale).replace('{name}', profileName)
+              : t('dashboard.nav.overview', locale)}
           </h1>
           <p className="mt-2 max-w-xl text-sm text-brand-panel-muted sm:text-base">
             {shellText('dashboardDescription', locale)}
           </p>
         </div>
-        <div
-          role="group"
-          aria-label={t('dashboard.overview.quickActions', locale)}
-          className="flex flex-wrap gap-2 px-4 py-3 sm:px-6"
-        >
-          {actions.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              to={href}
-              className={buttonVariants({ variant: href === '/electricity' ? 'default' : 'ghost' })}
-            >
-              <Icon data-icon="inline-start" aria-hidden="true" />
-              {label}
-            </Link>
-          ))}
-        </div>
+        {actions.length > 0 && (
+          <div
+            role="group"
+            aria-label={t('dashboard.overview.quickActions', locale)}
+            className="flex flex-wrap gap-2 px-4 py-3 sm:px-6"
+          >
+            {actions.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                to={href}
+                className={buttonVariants({
+                  variant: href === '/electricity' ? 'default' : 'ghost',
+                })}
+              >
+                <Icon data-icon="inline-start" aria-hidden="true" />
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
       </header>
       {context.status === 'loading' ? (
         <LoadingSkeleton label={loadingText('loading', locale)} variant="cards" />

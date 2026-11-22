@@ -5,6 +5,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { expectRegisteredNavigationLinks } from './registered-navigation';
 import { shellText } from '@barghsa/i18n/shell';
+import { t } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import type { NavigationConfiguration } from '../src/lib/navigation-config.js';
@@ -57,6 +58,12 @@ for (const locale of ['en', 'fa'] as const) {
     };
     await shell(page, 'customer', locale, () => configuration);
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/app');
+    const dashboardActions = page.getByRole('group', {
+      name: t('dashboard.overview.quickActions', locale),
+    });
+    await expect(dashboardActions.getByRole('link')).toHaveCount(1);
+    await expect(dashboardActions.getByRole('link')).toHaveAttribute('href', '/wallet');
     await page.goto('/invoices');
     const quick = page.getByRole('navigation', { name: shellText('quickNavigation', locale) });
     await expect(quick.getByRole('link')).toHaveCount(4);
@@ -83,6 +90,9 @@ for (const locale of ['en', 'fa'] as const) {
     expect(
       (await new AxeBuilder({ page }).include('#dashboard-navigation').analyze()).violations
     ).toEqual([]);
+    await page.goto('/app');
+    await expect(dashboardActions.getByRole('link')).toHaveCount(1);
+    await expect(dashboardActions.getByRole('link')).toHaveAttribute('href', '/tickets');
   });
   test(`a restricted staff menu uses its granted pages and spreads three mobile links across the bar (${locale})`, async ({
     page,
