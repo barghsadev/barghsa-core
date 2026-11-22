@@ -400,7 +400,7 @@
   --danger-text: var(--brand-canvas-text, var(--destructive));
   --destructive-foreground: hsl(0 0% 100%);
   --border: var(--palette-neutral-300);
-  --input: color-mix(in srgb, var(--palette-neutral-600), var(--foreground));
+  --input: color-mix(in srgb, var(--palette-neutral-600) 25%, var(--foreground));
   --ring: var(--foreground);
   --success: var(--palette-success-600);
   --success-soft: var(--palette-success-100);
@@ -580,7 +580,7 @@
   --destructive: var(--palette-danger-600);
   --destructive-foreground: hsl(347.5 30.769231% 15.294118%);
   --border: var(--palette-neutral-300);
-  --input: var(--palette-neutral-600);
+  --input: color-mix(in srgb, var(--palette-neutral-600) 60%, var(--foreground));
   --success: var(--palette-success-600);
   --success-soft: var(--palette-success-100);
   --warning: var(--palette-warning-600);

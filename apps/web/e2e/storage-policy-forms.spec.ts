@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
+import { checkRoutePresentation } from './route-presentation';
 import { t } from '@barghsa/i18n/admin-ui';
 import { storagePolicyFormText, storageRecoveryText } from '@barghsa/i18n/storage-policy-forms';
 import { policyLimit, uploadPolicy } from '../src/test/policy-catalogue-fixtures';
@@ -210,9 +211,11 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('dialog')
           .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
           .click();
-      await page.goto('/admin/storage');
+      await page.goto('/admin/storage', { waitUntil: 'domcontentloaded' });
       const bucket = page.locator('#storage-bucket'),
         secret = page.locator('#storage-secret');
+      await expect(secret).toBeVisible();
+      await checkRoutePresentation(page, info, locale);
       for (const id of ['storage-bucket', 'storage-region', 'storage-cleanup-hours'])
         await expect(page.locator(`#${id}`)).toHaveAttribute('aria-required', 'true');
       await expect(page.locator('#storage-endpoint')).not.toHaveAttribute('aria-required', 'true');

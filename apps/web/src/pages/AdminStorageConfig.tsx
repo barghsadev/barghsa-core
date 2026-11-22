@@ -612,6 +612,7 @@ export default function AdminStorageConfig() {
             <Button
               type="button"
               variant="outline"
+              className="h-auto min-h-11 max-w-full py-2 text-center whitespace-normal"
               aria-expanded={openRecovery === 'cleanup'}
               aria-controls={openRecovery === 'cleanup' ? 'cleanup-recovery' : undefined}
               disabled={busy || storageRecoveryBusy || !cleanupReady}
