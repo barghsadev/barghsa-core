@@ -79,7 +79,7 @@ export function BottomTabBar({
             to={to}
             activeOptions={{ exact: true }}
             aria-current={current?.to === to ? 'page' : undefined}
-            className="flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-xs text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary aria-[current=page]:bg-primary/10 aria-[current=page]:font-semibold aria-[current=page]:text-primary"
+            className="shell-bottom-tab"
           >
             <Icon className="size-5 shrink-0" aria-hidden="true" />
             <span className="line-clamp-2">{label}</span>
@@ -92,7 +92,7 @@ export function BottomTabBar({
             aria-haspopup="dialog"
             aria-expanded={open}
             aria-current={current && !primaryActive ? 'page' : undefined}
-            className="flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-xs text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary aria-[current=page]:bg-primary/10 aria-[current=page]:font-semibold aria-[current=page]:text-primary"
+            className="shell-bottom-tab"
             onClick={() => {
               onOpen();
               setOpen(true);

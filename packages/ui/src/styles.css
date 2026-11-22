@@ -843,6 +843,12 @@
   .shell-navigation-fallback {
     @apply flex min-h-16 shrink-0 items-center justify-between gap-3 border-t bg-card px-4 pb-[env(safe-area-inset-bottom)];
   }
+  .shell-bottom-tab {
+    @apply flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-xs text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground;
+  }
+  .shell-bottom-tab[aria-current='page'] {
+    @apply bg-sidebar-active font-semibold text-sidebar-active-foreground;
+  }
   .app-shell-sidebar {
     @apply hidden max-h-[55dvh] min-h-0 min-w-0 shrink-0 overflow-y-auto overscroll-contain scroll-py-1 border-b bg-sidebar p-4 text-sidebar-foreground md:col-start-1 md:row-start-2 md:block md:max-h-none md:border-e md:border-b-0 lg:row-span-2 lg:row-start-1 lg:px-4 lg:pt-3;
   }

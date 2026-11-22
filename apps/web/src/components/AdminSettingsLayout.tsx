@@ -1,6 +1,6 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from '@tanstack/react-router';
-import { Label, NativeSelect, NativeSelectOptGroup, NativeSelectOption } from '@barghsa/ui';
+import { Button, Label, NativeSelect, NativeSelectOptGroup, NativeSelectOption } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { activeAdminSettingsPath, adminSettingsGroups } from '../lib/admin-settings-navigation.js';
 import type { NavigationGroup } from './AppShell.js';
@@ -19,9 +19,11 @@ export function AdminSettingsLayout({
     navigate = useNavigate();
   const settings = adminSettingsGroups(groups, locale),
     current = activeAdminSettingsPath(pathname);
+  const [choice, setChoice] = useState<string | null>(null);
   const requested = useRef<string | null>(null),
     content = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    setChoice(null);
     if (requested.current === pathname) {
       requested.current = null;
       content.current?.focus();
@@ -30,26 +32,29 @@ export function AdminSettingsLayout({
   if (!current) return <>{children}</>;
   const items = settings.flatMap((group) => group.items),
     label = items.find((item) => item.to === current)?.label;
-  if (!label) return <>{children}</>;
+  if (!label || items.length < 2) return <>{children}</>;
   const navigationLabel = t('admin.settings.navigation', locale);
+  const destination = choice && items.some((item) => item.to === choice) ? choice : current;
   return (
     <div className="flex min-w-0 flex-col gap-6" data-testid="admin-settings-layout">
-      <div className="flex min-w-0 flex-1 flex-col gap-6">
-        <div className="flex flex-col gap-2 lg:hidden">
-          <Label htmlFor="admin-settings-section">{navigationLabel}</Label>
+      <form
+        className="space-y-2 lg:hidden"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (destination === current) return;
+          requested.current = destination;
+          void navigate({ to: destination }).catch(() => {
+            if (requested.current === destination) requested.current = null;
+          });
+        }}
+      >
+        <Label htmlFor="admin-settings-section">{navigationLabel}</Label>
+        <div className="flex flex-wrap gap-2">
           <NativeSelect
             id="admin-settings-section"
-            className="w-full"
-            tabIndex={0}
-            value={current}
-            onChange={(event) => {
-              const target = event.target.value;
-              if (target === current || !items.some((item) => item.to === target)) return;
-              requested.current = target;
-              void navigate({ to: target }).catch(() => {
-                requested.current = null;
-              });
-            }}
+            className="min-w-0 flex-1"
+            value={destination}
+            onChange={(event) => setChoice(event.target.value)}
           >
             {settings.map((group) => (
               <NativeSelectOptGroup key={group.label} label={group.label}>
@@ -61,16 +66,24 @@ export function AdminSettingsLayout({
               </NativeSelectOptGroup>
             ))}
           </NativeSelect>
+          <Button
+            type="submit"
+            variant="outline"
+            className="min-h-11"
+            disabled={destination === current}
+          >
+            {t('admin.settings.openSection', locale)}
+          </Button>
         </div>
-        <div
-          ref={content}
-          role="region"
-          aria-label={label}
-          tabIndex={-1}
-          className="min-w-0 outline-none"
-        >
-          {children}
-        </div>
+      </form>
+      <div
+        ref={content}
+        role="region"
+        aria-label={label}
+        tabIndex={-1}
+        className="min-w-0 outline-none"
+      >
+        {children}
       </div>
     </div>
   );

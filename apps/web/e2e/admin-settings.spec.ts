@@ -3,6 +3,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { shellText } from '@barghsa/i18n/shell';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import { electricityLimits } from '../src/test/contract-settings-fixtures';
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
@@ -58,6 +59,9 @@ for (const width of [390, 1440]) {
           await page.goto('/admin/contract-limits');
           const layout = page.getByTestId('admin-settings-layout');
           const select = layout.getByRole('combobox');
+          const openSection = layout.getByRole('button', {
+            name: tWorkspace('admin.settings.openSection', locale),
+          });
           const nav = page.locator('#admin-navigation').getByRole('navigation');
           await expect(layout.locator('nav')).toHaveCount(0);
           const topbar = page.locator('header.shell-topbar');
@@ -83,7 +87,13 @@ for (const width of [390, 1440]) {
             ).toHaveCount(1);
             await select.focus();
             await expect(select).toBeFocused();
+            await expect(openSection).toBeDisabled();
             await select.selectOption('/admin/verification');
+            await expect(page).toHaveURL(/\/admin\/contract-limits$/);
+            await expect(select).toBeFocused();
+            await page.keyboard.press('Tab');
+            await expect(openSection).toBeFocused();
+            await page.keyboard.press('Enter');
           } else {
             await expect(nav).toBeVisible();
             await expect(select).toBeHidden();
@@ -101,15 +111,19 @@ for (const width of [390, 1440]) {
           }
           await expect(page).toHaveURL(/\/admin\/verification$/);
           if (width < 1024) {
-            await expect(layout.locator(':scope > div > [role=region]')).toBeFocused();
+            await expect(layout.locator(':scope > [role=region]')).toBeFocused();
+            await expect(select).toHaveValue('/admin/verification');
+            await expect(openSection).toBeDisabled();
           } else {
             await expect(nav.locator('a[href="/admin/verification"]')).toHaveAttribute(
               'aria-current',
               'page'
             );
           }
-          if (width < 1024) await select.selectOption('/admin/contract-limits');
-          else await nav.locator('a[href="/admin/contract-limits"]').click();
+          if (width < 1024) {
+            await select.selectOption('/admin/contract-limits');
+            await openSection.click();
+          } else await nav.locator('a[href="/admin/contract-limits"]').click();
           await expect(page).toHaveURL(/\/admin\/contract-limits$/);
           const lead = page.locator('#contract-limit-leadTimeDays');
           await lead.fill('14');

@@ -669,6 +669,7 @@ export const fa: Record<string, string> = {
   'admin.settings.historyError':
     'تاریخچه تنظیمات تأیید نشد. پیش از ذخیره یا انتشار دوباره تلاش کنید.',
   'admin.settings.navigation': 'بخش تنظیمات',
+  'admin.settings.openSection': 'باز کردن بخش',
   'admin.settings.previousSection': 'بخش قبلی',
   'admin.settings.nextSection': 'بخش بعدی',
   'admin.settings.noActive': 'تنظیمات پیش‌فرض منتشر شده‌اند. هنوز نسخه ذخیره‌شده‌ای فعال نیست.',
@@ -1430,6 +1431,7 @@ export const en: Record<string, string> = {
   'admin.settings.historyError':
     'Could not verify settings history. Retry before saving or publishing.',
   'admin.settings.navigation': 'Settings section',
+  'admin.settings.openSection': 'Open section',
   'admin.settings.previousSection': 'Previous section',
   'admin.settings.nextSection': 'Next section',
   'admin.settings.noActive': 'Default settings are published. No saved version is active.',

@@ -80,20 +80,27 @@ it('selects the matching configuration ancestor without accepting a partial segm
   expect(host.querySelector('nav')).toBeNull();
   expect(host.querySelector<HTMLSelectElement>('select')!.value).toBe('/admin/contract-limits');
 });
-it('rejects an injected destination and focuses new content after valid section navigation', async () => {
+it('waits for confirmation, rejects an injected destination and focuses the opened section', async () => {
   await render();
   const select = host.querySelector<HTMLSelectElement>('select')!;
+  const open = host.querySelector<HTMLButtonElement>('button[type=submit]')!;
   const option = new Option('Unsafe', 'https://foreign.test');
   select.append(option);
   select.value = option.value;
   await act(async () => select.dispatchEvent(new Event('change', { bubbles: true })));
+  expect(open.disabled).toBe(true);
+  await act(async () => open.click());
   expect(router.navigate).not.toHaveBeenCalled();
   select.value = '/admin/verification';
   await act(async () => select.dispatchEvent(new Event('change', { bubbles: true })));
+  expect(router.navigate).not.toHaveBeenCalled();
+  expect(open.disabled).toBe(false);
+  await act(async () => open.click());
   expect(router.navigate).toHaveBeenCalledWith({ to: '/admin/verification' });
   router.path = '/admin/verification';
   await render();
   expect(document.activeElement).toBe(host.querySelector('[role=region]'));
+  expect(open.disabled).toBe(true);
 });
 it('offers the same destinations with Persian category labels and omits unavailable roles', async () => {
   await render('fa');
