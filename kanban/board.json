@@ -443639,12 +443639,10 @@
         "story": "07-ui-ux-design.md#spec-b323af587a93"
       },
       "requirement": "| **T-07.04.02.04** | ⚠️ Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. | L |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Extend the 2144 passing populated width checks on 38 paths to the complete canonical route inventory at the eight required widths. The full-route acceptance remains open."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -443696,11 +443694,21 @@
             2848560385815343,
             2919229560033151,
             4154241568764246,
-            3672759044141935,
+            2597845308047410,
             4353667903982030,
             3905279575319458,
-            1222092316441510,
-            3145819669624327
+            1217180354242960,
+            3145819669624327,
+            4486896628523766,
+            3859352097581101,
+            1390227936452629,
+            3981270944485631,
+            977476263038697,
+            3277948807098918,
+            3367586455022227,
+            2345038593578370,
+            2724374172274792,
+            1796193731336497
           ],
           "checks": [
             1845853708716069,
@@ -443710,7 +443718,11 @@
             2781547588672723,
             954060991557303,
             3730273832634661,
-            3114273928414720
+            3114273928414720,
+            1465306705507536,
+            447305226623345,
+            1287381999048695,
+            2515005113415611
           ],
           "criterion_result": "All eight required widths passed in English and Persian on Chromium and mobile Safari. No rendered text overlap, clipping or horizontal overflow was reported. All additional fractional touch reports retained both 44px computed minima and at least 44 CSS pixels of physical area.",
           "limitations": [
@@ -443750,7 +443762,8 @@
           ],
           "source_renewals": [
             3685737157540087,
-            4242622172012557
+            4242622172012557,
+            118306337696394
           ]
         }
       }
@@ -569947,7 +569960,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Complete route-level presentation review beyond the 38 populated paths measured after the shell and palette changes. Review outstanding conditional, keyboard, loading, empty and error states."
+        "Complete the remaining conditional presentation review for role-specific, loading, empty, error and stale states. All 93 canonical populated routes have current eight-width geometry evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -777923,6 +777936,10 @@
       "954060991557303": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json",
       "3730273832634661": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-archive-touch-targets/proof.json",
       "3114273928414720": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json",
+      "1465306705507536": "The populated viewport matrix contains 2,976 passing required cells across the 93 canonical routes, eight widths, two languages and Chromium/mobile Safari.",
+      "447305226623345": "Used only passing geometry measurements. Current fixtures replaced measurements blocked by older workflow assertions or missing local assets. Raw receipts preserve those attempts.",
+      "1287381999048695": "Later input token changes only affect color. Reran the storage geometry after wrapping its Persian recovery action and verified the changed invoice list at all eight widths on the final build. The final local build also passed 84 critical accessibility cases.",
+      "2515005113415611": "Combined report /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/responsive-width-census/barghsa-width-combined-final.json (SHA-256 2e65ec9d1fa10aeab79f29221cbb6ad46d1856d2d110df6125f88cb196934b09).",
       "53498923067319": "The root router shell keeps the skip link through loading, error and not-found fallbacks. Standalone fallbacks own the canonical main; workspace fallbacks inherit the existing main. Real Tab/Enter confirms the first focusable skip link and unique main in both languages.",
       "1206701821302523": "48 zero-retry Chromium cases and 10 WebKit cases on the final build. Covers all 20 strict critical aXe cases, pending/error/not-found skip behavior in both languages, fresh customer/staff expiry, normal sign-in, finance retry and current-CSRF assertions, and responsive navigation at all eight widths.",
       "3919143053622472": "Real dark payment-return link and real automatic-verification button in both themes pass aXe contrast. The provider remains unavailable in actual configuration; the test controls the existing UI response only. A separate pending case verifies no auto-approval action.",
@@ -792505,14 +792522,6 @@
         "path": "packages/i18n/src/settings-forms.ts",
         "sha256": "7dde6c2a6493b5d64090bd31879c1b25ab51d0af966afceba3e8472fb838ef5d"
       },
-      "3672759044141935": {
-        "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-        "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
-      },
-      "1222092316441510": {
-        "path": "apps/web/src/pages/DashboardPage.tsx",
-        "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
-      },
       "3145819669624327": {
         "path": "packages/i18n/src/dashboard.ts",
         "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
@@ -794077,6 +794086,10 @@
         "path": "apps/web/src/components/AuthLayout.tsx",
         "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
       },
+      "3672759044141935": {
+        "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+        "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
+      },
       "984231062597611": {
         "path": "apps/web/src/lib/customer-saving-catalogue.ts",
         "sha256": "f4e0dc7f2a7b7d6bcd2e350604a8662b230fc8ec9684cf7a18c374010946306b"
@@ -794108,6 +794121,10 @@
       "2004087926492385": {
         "path": "apps/web/src/pages/ConsultationsPage.tsx",
         "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+      },
+      "1222092316441510": {
+        "path": "apps/web/src/pages/DashboardPage.tsx",
+        "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
       },
       "1583084014244094": {
         "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -823647,6 +823664,25 @@
           "packages/shared/src/admin/brand-palette.ts"
         ],
         "scope": "Renewed the changed source bindings for the grid-blue and amber default palette, authentication, workspace layouts and service entry presentation. Source review preserved the surrounding domain handlers, permission gates, record selection and exact amount formatting. Only the revised presentation, default branding and their tested callers were revalidated in this batch. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122."
+      },
+      "118306337696394": {
+        "base_commit": "3fd75da6db07b77850f4f775066a8d077a5f7604",
+        "batch": "release-0.6-populated-viewport-census",
+        "paths": [
+          "apps/web/e2e/route-presentation.ts",
+          "apps/web/e2e/storage-policy-forms.spec.ts",
+          "apps/web/src/components/AppShell.tsx",
+          "apps/web/src/components/AuthLayout.tsx",
+          "apps/web/src/components/auth-layout.css",
+          "apps/web/src/components/dashboard/DashboardWidget.tsx",
+          "apps/web/src/pages/AdminStorageConfig.tsx",
+          "apps/web/src/pages/DashboardPage.tsx",
+          "apps/web/src/pages/InvoicesPage.tsx",
+          "apps/web/src/pages/TicketsPage.tsx",
+          "apps/web/src/pages/WalletPage.tsx",
+          "packages/ui/src/styles.css"
+        ],
+        "scope": "Renewed the populated-width requirement and the layout sources it uses. Broader conditional presentation remains under verification."
       },
       "2187244105997662": {
         "batch": "release-0.6-critical-review-accessibility",
