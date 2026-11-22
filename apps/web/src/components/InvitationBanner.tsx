@@ -108,10 +108,12 @@ function AccountInvitations({ locale }: { locale: Locale }) {
   return (
     <section
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
-      className="flex flex-col gap-3"
+      className="max-h-[40dvh] shrink-0 space-y-3 overflow-y-auto overscroll-contain px-4 py-2"
       aria-label={t('invitation.banner.heading', locale)}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to scroll the independently sized banner.
+      tabIndex={0}
     >
-      {time.notice}
+      {invitations.length > 0 && time.notice}
       {(scope.denied || resource.error || failed) && (
         <div
           role="alert"

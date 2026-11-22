@@ -9,6 +9,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { contractText } from '@barghsa/i18n/contracts';
 import { shellText } from '@barghsa/i18n/shell';
 import { t as teamText } from '@barghsa/i18n/team';
+import { timezoneText } from '@barghsa/i18n/timezone';
 import { t as workspaceText } from '@barghsa/i18n/workspace';
 import { teamCatalogue, teamInvitation } from '../src/test/team-catalogue-fixtures';
 
@@ -372,6 +373,68 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(page.getByRole('status').filter({ hasText: 'Dashboard company' })).toBeVisible();
     if (decision === 'accept')
       await expect(page.getByRole('button', { name: 'Open profile', exact: true })).toBeVisible();
+  });
+
+  test(`invitation recovery keeps mobile workspace content reachable (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.route('**/api/invoices{,?*}', (route) => route.fulfill({ json: { invoices: [] } }));
+    let failInvitations = true;
+    let failTimezone = true;
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill(
+        failTimezone ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } }
+      )
+    );
+    await page.route('**/api/invitations/pending', (route) =>
+      route.fulfill(
+        failInvitations
+          ? { status: 503, json: {} }
+          : {
+              json: {
+                invitations: [1, 2, 3].map((index) => ({
+                  id: `aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa${index}`,
+                  profileId,
+                  profileName: `Dashboard company ${index}`,
+                  role: 'Finance',
+                  invitedBy: 'owner',
+                  inviterName: 'owner@example.test',
+                  createdAt: '2026-09-01T01:00:00Z',
+                  expiresAt: '2099-09-08T01:00:00Z',
+                })),
+              },
+            }
+      )
+    );
+    await page.goto('/invoices');
+    const main = page.getByRole('main');
+    const invitations = page.getByRole('region', {
+      name: workspaceText('invitation.banner.heading', locale),
+    });
+    const timezoneError = timezoneText('error.load', locale);
+    await expect(
+      invitations.getByText(workspaceText('invitation.banner.loadError', locale))
+    ).toBeVisible();
+    await expect(main.getByText(timezoneError, { exact: false })).toHaveCount(1);
+    await expect(invitations.getByText(timezoneError, { exact: false })).toHaveCount(0);
+
+    failInvitations = false;
+    await invitations.getByRole('button', { name: workspaceText('team.retry', locale) }).click();
+    await expect(invitations.getByText('Dashboard company 3', { exact: false })).toBeAttached();
+    const dateError = invitations.getByRole('alert').filter({ hasText: timezoneError });
+    await expect(dateError).toBeVisible();
+    failTimezone = false;
+    await dateError.getByRole('button', { name: timezoneText('retry', locale) }).click();
+    await expect(dateError).toHaveCount(0);
+    await expect(invitations.locator('time').first()).not.toHaveText(
+      timezoneText('display.pending', locale)
+    );
+    expect((await main.boundingBox())?.height).toBeGreaterThan(160);
+    await invitations.focus();
+    await page.keyboard.press('PageDown');
+    await expect.poll(() => invitations.evaluate((region) => region.scrollTop)).toBeGreaterThan(0);
   });
 
   test(`invitation modal previews the entity, cancels safely and retries without losing input (${locale})`, async ({
