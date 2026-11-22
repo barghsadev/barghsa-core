@@ -571722,18 +571722,16 @@
         "Cover RTL/LTR, both themes, desktop/mobile, keyboard, forms, filters, empty/error/loading and stale context.",
         "Record route-level completion rather than a single misleading dashboard percentage."
       ],
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the exact reviewed source bindings and scoped conditional reviews with the 98 canonical route entries. All 93 canonical renderable routes retain eight-width geometry evidence."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "current_acceptance": {
           "kind": "current_per_route_ui_adoption",
-          "reviewed_sha": "ebec4566628b62b158ff0d66c0201fdad8386fef",
+          "reviewed_sha": "508860141fdecc7461a136c3a5a39b74c703627a",
           "checks": [
             2234367107698747,
             2704306515176866,
@@ -571761,7 +571759,8 @@
             3929319615339668,
             2342568638581728,
             312247064655804,
-            1359207424524655
+            1359207424524655,
+            3270380559830846
           ],
           "source_evidence": [
             4368684968752415,
@@ -571775,11 +571774,11 @@
             335271907751690,
             3778620331385195,
             1935265036825118,
-            4253319929511083,
+            3981270944485631,
             3785833823243961,
             4340623536940702,
             4466158079029432,
-            4182333678501352,
+            4255473487831119,
             3504579329735050,
             4372929545949791,
             1904903437052126,
@@ -571793,7 +571792,7 @@
             1177150609726193,
             603526436925846,
             2702458894261040,
-            4455091962394521,
+            3710648296238511,
             4067826664917914,
             3578760035422357,
             3089763354897614,
@@ -571811,7 +571810,7 @@
             3657462450192961,
             1757641472279730,
             1345985288571562,
-            3261278711368752,
+            1039614738639682,
             1408300001479135,
             3126800061976968,
             1413550102794099,
@@ -571833,11 +571832,11 @@
             3636470188160173,
             2147589246760059,
             1371745339130108,
-            4065899639008627,
+            3737056256867569,
             2314800146726131,
             2643806372921654,
             621811018103608,
-            3672759044141935,
+            2597845308047410,
             3757077474608190,
             4124225700950065,
             3905279575319458,
@@ -571897,21 +571896,21 @@
             257230933813777,
             402297519474700,
             2886022136509559,
-            2337733037984163,
+            3586638051623725,
             4199427763410709,
             2199389727638489,
             683610205892955,
             3319254673892542,
             1170682802235103,
-            4346196191568377,
-            406827587944606,
+            3458088859866884,
+            701155251074694,
             3768262410262271,
             2133886040472864,
             3111303581596588,
             4074681076788513,
             3916855983991195,
             1423038282525126,
-            1099171677772775,
+            2652486535518911,
             555682442749320,
             2071692859958057,
             4343357496961977,
@@ -571924,13 +571923,13 @@
             2302026946380216,
             2002583778095871,
             2878288708475162,
-            2106469893144914,
+            2023761051166117,
             3347216925655642,
             3228097722348556,
             2931996043672577,
             3150253960473044,
             2212411582000469,
-            4043172283590996,
+            3277948807098918,
             2109279412785011,
             256260165147690,
             1140432859176151,
@@ -571941,12 +571940,12 @@
             3928074953968215,
             4013938552092480,
             2725317419944913,
-            2004087926492385,
+            2522726656935457,
             932986914339271,
             3166540419913351,
             2919229560033151,
             4032737341658226,
-            1222092316441510,
+            3285599618098807,
             3763787440604562,
             4206914428208910,
             4210271880064873,
@@ -571954,23 +571953,23 @@
             862842536478568,
             2552590867285383,
             1356400424113999,
-            1583084014244094,
+            949618979517783,
             4222539632876813,
             26212978874798,
             4300427506877589,
             3113034355243306,
-            3931784051792847,
+            1029927809071659,
             3034816395689722,
             2925456843742084,
             2473816024542466,
             314026899249223,
-            3487444213570320,
+            4219274115264193,
             4485178036466359,
             2565826216196692,
             370293177965050,
-            4253252629971582,
+            2345038593578370,
             1605573439851322,
-            3484316928383940,
+            2724374172274792,
             2297169524859672,
             3960473396836783,
             3833067919406948,
@@ -571981,7 +571980,7 @@
             2665293997269176,
             3766196302231451,
             604025962671127,
-            760675733950742,
+            1068785632281795,
             955173804462978,
             1540592881086819,
             847471777046656,
@@ -571994,10 +571993,10 @@
             1229089344545203,
             472016080714434,
             4290377112899437,
-            3105179075941614,
+            187776458113975,
             373432455737086,
             726206738654578,
-            1441821996929617,
+            3950778731122446,
             1196360505560104,
             1219364313137071,
             1005141303779801,
@@ -572007,7 +572006,7 @@
             698163947736049,
             1356123016567301,
             2794002585401148,
-            3659112860348760,
+            4223292599015113,
             591949958500135,
             2871792815858709,
             4028774339189017,
@@ -572059,15 +572058,15 @@
             2981309145528129,
             2944222786666155,
             549759178630104,
-            4374730664483432,
+            4452299647293078,
             4449739548925513,
-            733441065766695,
+            4346943571878551,
             70637272759603,
             1023293931889561,
             1516384033715553,
             2009581771508804,
-            1505535132915374,
-            3907650179291942,
+            2048646056012575,
+            2221292273523009,
             1565368198806676,
             2796791649264930,
             4346764567358180,
@@ -572078,19 +572077,22 @@
             1328756448656795,
             3700233627438166,
             1079662255570347,
-            810423307085727,
+            2405467338784667,
             1209735790932782,
             1955263049059572,
-            3420871246597543,
+            1807549562693668,
             2938165311850542,
-            669740848695218,
+            4374657073867232,
             17491757723886,
             4153336002400261,
             3108623938713492,
-            2903135416101318
+            2903135416101318,
+            189294182556871,
+            3241133002347952,
+            1946319332269535
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls",
-          "route_matrix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/route-adoption-receipts.json",
+          "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/route-adoption-reconciliation",
+          "route_matrix": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/route-adoption-reconciliation/current-route-adoption-receipts.json",
           "source_renewals": [
             1768542645387891,
             3814774925584482,
@@ -572126,7 +572128,8 @@
             2764106535779115,
             2688092399472925,
             1735775986935962,
-            3476363656192367
+            3476363656192367,
+            3595653368589644
           ]
         },
         "batches": [
@@ -779982,6 +779985,7 @@
       "2342568638581728": "Mobile settings navigation uses a button instead of a form. The specialist baseline recorded 26 provider failures caused by the extra form or submit action. All 144 browser recovery cases now pass for delivery and email providers, geography, gift codes, VAT, contract settings and notification templates. Another 32 browser cases pass for section navigation and verified saves, provider forms and responsive provider tables. Delivery providers has a stable page heading, a visible runbook action and keyboard tabs that fetch SMS settings only after explicit activation. Eight targeted probes cover 128 populated provider geometry cells in Chromium and mobile Safari across eight widths, both languages and both themes. Four hundred thirty-one focused web units, 141 localization tests, app and auth builds and 105 route budgets passed. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/specialist-settings-presentation.",
       "312247064655804": "Branding Settings groups the light and dark palettes. Staff can compare the published version and local draft in either theme while retaining the current public policy. Wide screens keep the preview beside the editor. On narrow screens a keyboard link moves focus to the preview. The publication, rollback, upload and access flows retain their exact assertions. The compiled app passed 174 Chromium and mobile Safari cases for branding, versioned settings, storage, retention, limits, service policy and verification requirements. Eight active-draft probes cover 64 geometry cells at eight widths in both languages and themes. Forty-six focused web units, 141 localization tests and all 105 route budgets passed. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/branding-presentation.",
       "1359207424524655": "Selected views in Contracts and Invoices use the tested workspace selection foreground and background pair. The preceding compiled app reproduced the hosted English Contracts failure in Chromium and mobile Safari. The new Invoices regression also reproduced the same 4.19:1 contrast at a supported custom primary color in both engines. The fixed compiled app passed all 84 critical accessibility and interaction cases and 28 history and recovery cases across both browsers. Fifty-seven related web tests and all 105 route budgets passed. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/customer-view-contrast.",
+      "3270380559830846": "Reconciled all 98 canonical routes, including 91 conditional routes, two static media routes and five redirects. The original route-state receipts and five shared acceptance areas are retained. All 2,976 required responsive cells across the 93 renderable routes are accounted for. The exact current production build passed 336 named Chromium and mobile Safari cases for current route conditions, with 1,208 current width and theme observations. The matrix identifies 51 changed direct source paths and the exact proof for each. This is application UI adoption evidence. Hosted workflow, publication, launch and operational gates are tracked separately. Receipt: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/route-adoption-reconciliation/current-route-adoption-receipts.json.",
       "998259225949799": "All official changed-line and branch floors passed on acd15602 with 153 fresh Chromium cases, 723 fresh web unit cases and retained evidence for unchanged source. The separate failed browser group supplied no coverage. The only follow-up implementation-test delta is a solar cancellation assertion, verified in both languages and engines.",
       "1299171292351730": "The hosted critical WCAG accessibility step passed on acd15602. Targeted Chromium and mobile Safari checks cover current bilingual onboarding, financial and service branches with original safeguards. The linked source and receipts distinguish the actual checks and their scope.",
       "2628736734998927": "On the verified 573-file production build, a manual keyboard check in English desktop and Persian mobile confirmed first focus on Skip to main content, a single main landmark, then focus and names for username and password. Persian mobile content fits the 390px viewport.",
@@ -795912,30 +795916,6 @@
         "path": "kanban/RELEASES.md",
         "sha256": "32a8bbc64c1fca97d03a6752eb887255638f6a806667876c9fa4bb5ae3fab6f6"
       },
-      "4253319929511083": {
-        "path": "apps/web/src/components/AuthLayout.tsx",
-        "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
-      },
-      "4182333678501352": {
-        "path": "apps/web/src/components/ContractsWorkspace.tsx",
-        "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
-      },
-      "4455091962394521": {
-        "path": "apps/web/src/components/InvitationBanner.tsx",
-        "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
-      },
-      "3261278711368752": {
-        "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-        "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
-      },
-      "4065899639008627": {
-        "path": "apps/web/src/components/TrustedDevices.tsx",
-        "sha256": "290825c87519f0f7eb95723ebae5de922d58c7237e152b104b10a38659db8be4"
-      },
-      "3672759044141935": {
-        "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-        "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
-      },
       "984231062597611": {
         "path": "apps/web/src/lib/customer-saving-catalogue.ts",
         "sha256": "f4e0dc7f2a7b7d6bcd2e350604a8662b230fc8ec9684cf7a18c374010946306b"
@@ -795952,105 +795932,9 @@
         "path": "apps/web/src/lib/service-intake-records.ts",
         "sha256": "9b5b05176f6c3974d8cf9bb5d0320d6071204c71d57736bcd05770ad282f7a37"
       },
-      "2337733037984163": {
-        "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
-        "sha256": "208f7a96f4a7a29edfd525ad9bee05fae1fd90e9582dff5dab7c09cda167b5d2"
-      },
-      "4346196191568377": {
-        "path": "apps/web/src/pages/AdminDashboard.tsx",
-        "sha256": "68f1ff2b4d92335a5e4616850eeec90a7066301fc569bd86df9b00c3b8aad2f2"
-      },
-      "406827587944606": {
-        "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
-        "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
-      },
-      "1099171677772775": {
-        "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-        "sha256": "1fa82cbf5343d7c70df300ce3df28b12378393e1fb21ecb23f12e1ef6c2ab675"
-      },
-      "2106469893144914": {
-        "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-        "sha256": "db4834831bd4ab651ddfe1ae9550d6943f999c437d62074eb746db6d49da506d"
-      },
-      "4043172283590996": {
-        "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-        "sha256": "fe973e878c05c3a745e447443b88763979965cd6e2ff0ba17e24f1c168d08716"
-      },
-      "2004087926492385": {
-        "path": "apps/web/src/pages/ConsultationsPage.tsx",
-        "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
-      },
-      "1222092316441510": {
-        "path": "apps/web/src/pages/DashboardPage.tsx",
-        "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
-      },
-      "1583084014244094": {
-        "path": "apps/web/src/pages/InvoicesPage.tsx",
-        "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
-      },
-      "3931784051792847": {
-        "path": "apps/web/src/pages/SavingsPage.tsx",
-        "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
-      },
-      "3487444213570320": {
-        "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-        "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
-      },
-      "4253252629971582": {
-        "path": "apps/web/src/pages/TicketsPage.tsx",
-        "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
-      },
-      "3484316928383940": {
-        "path": "apps/web/src/pages/WalletPage.tsx",
-        "sha256": "a9e1a4962c12e822a631bd843e3cfeeb155a707e1b6fcfc7935759aa45dc37c9"
-      },
-      "760675733950742": {
-        "path": "apps/web/src/routes/_app/electricity/index.tsx",
-        "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
-      },
-      "3105179075941614": {
-        "path": "apps/web/src/routes/_app/settings/index.tsx",
-        "sha256": "47ff271f5d9cf0235d0388d30fa2db1383836f074dd59666c868cfbd91a7cc4d"
-      },
-      "1441821996929617": {
-        "path": "apps/web/src/routes/_app/settings/security.tsx",
-        "sha256": "3eca7a4c63e3515ed34bf156a9ae500e2ab449b0fbf5bd7ea375e3b26054eddb"
-      },
-      "3659112860348760": {
-        "path": "apps/web/src/routes/activate.tsx",
-        "sha256": "632b0f4040b5c3c92268d2e5190ad2b717bc5749022e3f7997d36c03e7e5ad8a"
-      },
-      "4374730664483432": {
-        "path": "apps/web/src/routes/forgot-password.tsx",
-        "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
-      },
-      "733441065766695": {
-        "path": "apps/web/src/routes/login.tsx",
-        "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
-      },
-      "1505535132915374": {
-        "path": "apps/web/src/routes/register/index.tsx",
-        "sha256": "6e12a80e227d41ab4fd633a24f7026c7b68b654a7841c7cea0ccd7c37a3ded2b"
-      },
-      "3907650179291942": {
-        "path": "apps/web/src/routes/register/verify.tsx",
-        "sha256": "4a7633d847ca5de962b59ace71ec38f4a10527417c4f2c852b921b21876a0fcd"
-      },
-      "810423307085727": {
-        "path": "packages/i18n/src/password-recovery-forms.ts",
-        "sha256": "63a19b260b5d652b3c8385363e2a3b262166a42a55948a4e10556a81375d2f70"
-      },
-      "3420871246597543": {
-        "path": "packages/i18n/src/solar.ts",
-        "sha256": "8031d86e84103e0a41b0095526ae781c7d703e29e25c986a93c9ba7a23be1caf"
-      },
       "2938165311850542": {
         "path": "packages/i18n/src/storage-policy-forms.ts",
         "sha256": "d02bb121baa9bdb4802c267b0a20273c2ef768d223b1343a8834e1a086515d89"
-      },
-      "669740848695218": {
-        "path": "packages/i18n/src/workspace-admin-messages.ts",
-        "sha256": "9dafa35d69a7ae3eb1429bbe821c96105e65636d995628d0556f6669bc15bd5b"
       },
       "2334494457855760": {
         "path": "apps/web/src/components/ElectricityRejectionPanel.tsx",
@@ -831796,6 +831680,43 @@
           "packages/i18n/src/storage-policy-forms.ts"
         ],
         "scope": "OpenAPI is additive for the three cleanup recovery routes. The storage settings page adds a lazy localized recovery panel. Migrated HTTP and focused web and browser suites renewed ordinary storage settings, current authority and related form behavior. Runtime worker policy and provider configuration contracts retain their existing scope."
+      },
+      "3595653368589644": {
+        "base_commit": "508860141fdecc7461a136c3a5a39b74c703627a",
+        "batch": "release-0.6-route-adoption-reconciliation",
+        "paths": [
+          "apps/web/src/components/AuthLayout.tsx",
+          "apps/web/src/components/ContractsWorkspace.tsx",
+          "apps/web/src/components/InvitationBanner.tsx",
+          "apps/web/src/components/ProfileLifecyclePanel.tsx",
+          "apps/web/src/components/TrustedDevices.tsx",
+          "apps/web/src/components/dashboard/DashboardWidget.tsx",
+          "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "apps/web/src/pages/AdminDashboard.tsx",
+          "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "apps/web/src/pages/AdminStorageConfig.tsx",
+          "apps/web/src/pages/ConsultationsPage.tsx",
+          "apps/web/src/pages/DashboardPage.tsx",
+          "apps/web/src/pages/InvoicesPage.tsx",
+          "apps/web/src/pages/SavingsPage.tsx",
+          "apps/web/src/pages/SolarRequestsPage.tsx",
+          "apps/web/src/pages/TicketsPage.tsx",
+          "apps/web/src/pages/WalletPage.tsx",
+          "apps/web/src/routes/_app/electricity/index.tsx",
+          "apps/web/src/routes/_app/settings/index.tsx",
+          "apps/web/src/routes/_app/settings/security.tsx",
+          "apps/web/src/routes/activate.tsx",
+          "apps/web/src/routes/forgot-password.tsx",
+          "apps/web/src/routes/login.tsx",
+          "apps/web/src/routes/register/index.tsx",
+          "apps/web/src/routes/register/verify.tsx",
+          "packages/i18n/src/password-recovery-forms.ts",
+          "packages/i18n/src/solar.ts",
+          "packages/i18n/src/workspace-admin-messages.ts"
+        ],
+        "scope": "Reconciled the original route matrix and exact scoped redesign evidence against the compiled candidate. Receipt: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/route-adoption-reconciliation/current-route-adoption-receipts.json."
       },
       "3047977897222665": {
         "batch": "release-0.6-provider-redirects-and-response-caps",

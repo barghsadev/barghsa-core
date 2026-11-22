@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1271 | Accepted with unchanged source bindings. |
-| verify | 1 | Existing work may be complete; inspect evidence before building. |
+| done | 1272 | Accepted with unchanged source bindings. |
+| verify | 0 | Existing work may be complete; inspect evidence before building. |
 | partial | 91 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -644,7 +644,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-04.01` | verify | Recorded batch work | Verify full customer and admin UI adoption |
+| `release-readiness#R-04.01` | done | Recorded batch work | Verify full customer and admin UI adoption |
 | `release-readiness#R-04.02` | done | Recorded batch work | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |
