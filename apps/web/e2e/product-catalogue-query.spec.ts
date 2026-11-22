@@ -108,6 +108,7 @@ for (const locale of ['en', 'fa'] as const)
       await records.first().getByRole('button').click();
       const title = page.locator('#catalogue-titleEn');
       await expect(title).toHaveValue(rows[55]!.title.en);
+      await expect(page).toHaveURL((url) => url.searchParams.get('selected') === rows[55]!.id);
       await title.fill('  Retained out-of-filter product draft  ');
       const selectedReads = detailReads.length;
       await next.click();
@@ -177,6 +178,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page).toHaveURL(/page=2/);
       await page.reload();
       await expect(records).toHaveCount(3);
+      await expect(title).toHaveValue(rows[55]!.title.en);
       await expect(search).toHaveValue('Panel%_');
       await expect(filters.getByLabel(copy('filter_status'))).toHaveValue('active');
       await expect(filters.getByLabel(copy('filter_sort'))).toHaveValue('price');

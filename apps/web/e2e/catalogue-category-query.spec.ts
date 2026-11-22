@@ -182,7 +182,8 @@ for (const locale of ['en', 'fa'] as const)
         await expect(
           page.locator('[data-slot="list-content"]').getByRole('button').first()
         ).toBeVisible();
-        await expect(input).toHaveCount(0);
+        if (product) await expect(input).toHaveValue(catalogueProduct('electricity').title.en);
+        else await expect(input).toHaveCount(0);
         expect(new URL(page.url()).searchParams.get(key)).toBe(selected);
         await category(fallback).click();
         await expect(category(fallback)).toHaveAttribute(
@@ -224,6 +225,11 @@ for (const locale of ['en', 'fa'] as const)
         await page.goBack();
         await expect(page.getByRole('dialog')).toHaveCount(0);
         await expect(input).toHaveCount(0);
+        if (product) {
+          await expect(category(selected)).toHaveAttribute('aria-selected', 'true');
+          await expect(page).toHaveURL((url) => !url.searchParams.has('selected'));
+          await page.goBack();
+        }
         await expect(category(fallback)).toHaveAttribute(
           product ? 'aria-selected' : 'aria-pressed',
           'true'

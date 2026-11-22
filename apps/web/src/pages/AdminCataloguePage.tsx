@@ -4,7 +4,7 @@ import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import {
   LoadingStatus,
   Button,
@@ -57,11 +57,13 @@ export default function AdminCataloguePage({
   initialType = 'consultation',
   onTypeChange,
   focusCategory = false,
+  selection,
 }: {
   queries?: ListQueryBinding;
   initialType?: ProductCatalogueType;
   focusCategory?: boolean;
   onTypeChange?: (value: ProductCatalogueType) => void;
+  selection?: { id: string | null; set: (id: string | null, replace?: boolean) => void };
 } = {}) {
   const preference = useTimezone();
   const locale = useLocale();
@@ -72,7 +74,9 @@ export default function AdminCataloguePage({
     [rows, setRows] = useState<Product[]>([]);
   const [hardwareOptions, setHardwareOptions] = useState<Product[]>([]);
   const [preventActiveDuplicates, setPreventActiveDuplicates] = useState(true);
-  const [editor, setEditor] = useState<string | null>(null),
+  const requestedId = selection?.id;
+  const address = useRef(requestedId ?? null);
+  const [editor, setEditor] = useState<string | null>(requestedId ?? null),
     [detail, setDetail] = useState<Detail | null>(null);
   const [hasDraft, setHasDraft] = useState(false);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading'),
@@ -310,24 +314,12 @@ export default function AdminCataloguePage({
   const money = (value: string | null) => (value === null ? label('unset') : numbers.money(value));
   const dateText = (value: string) => new Date(value).toLocaleString(locale, { timeZone: zone });
   function denyAccess() {
-    generation.current++;
-    invalidFocus.current = null;
-    source.current = null;
-    acceptedReferences.current = null;
-    priceForm.form.reset(priceDefaults);
-    setUncertainCreate(false);
+    choose(null, 'settled');
     setRequiredRead(null);
-    setSaved(false);
     accessDenied.current = true;
     setState('denied');
     setRows([]);
     setHardwareOptions([]);
-    setEditor(null);
-    setDraft(null);
-    setDetail(null);
-    setReferences(null);
-    setPriceOpen(false);
-    setAction(null);
   }
   useEffect(() => {
     const abort = new AbortController();
@@ -568,7 +560,7 @@ export default function AdminCataloguePage({
       setAction(null);
     }
   }, [hardwareOptions, hardwareState, action]);
-  function choose(value: string | null) {
+  function choose(value: string | null, origin: 'user' | 'route' | 'settled' = 'user') {
     generation.current++;
     invalidFocus.current = null;
     source.current = null;
@@ -584,7 +576,14 @@ export default function AdminCataloguePage({
     setInvalidDate(false);
     setEditor(value);
     setDetailRevision((value) => value + 1);
+    if (address.current !== value) {
+      address.current = value;
+      if (origin !== 'route') selection?.set(value, origin === 'settled');
+    }
   }
+  useLayoutEffect(() => {
+    if (requestedId !== undefined && requestedId !== address.current) choose(requestedId, 'route');
+  }, [requestedId]);
   function refresh() {
     if (commandPending) return;
     if (preference.status === 'error') preference.retry();
@@ -894,36 +893,40 @@ export default function AdminCataloguePage({
                           <h2 className="break-words text-xl font-semibold">{title(detail)}</h2>
                         )}
                         {detail?.systemKey && <p role="note">{label('system')}</p>}
-                        {(['titleFa', 'titleEn'] as const).map((field) => (
-                          <div key={field}>
-                            <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                            <Input
-                              id={`catalogue-${field}`}
-                              dir={field === 'titleFa' ? 'rtl' : 'ltr'}
-                              {...productForm.bind(field)}
-                              value={draft[field]}
-                              onChange={(event) =>
-                                setDraft({ ...draft, [field]: event.target.value })
-                              }
-                            />
-                            {feedback(field)}
-                          </div>
-                        ))}
-                        {(['descriptionFa', 'descriptionEn'] as const).map((field) => (
-                          <div key={field}>
-                            <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                            <Textarea
-                              id={`catalogue-${field}`}
-                              dir={field === 'descriptionFa' ? 'rtl' : 'ltr'}
-                              {...productForm.bind(field)}
-                              value={draft[field]}
-                              onChange={(event) =>
-                                setDraft({ ...draft, [field]: event.target.value })
-                              }
-                            />
-                            {feedback(field)}
-                          </div>
-                        ))}
+                        <div className="grid items-start gap-4 sm:grid-cols-2">
+                          {(['titleFa', 'titleEn'] as const).map((field) => (
+                            <div key={field}>
+                              <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
+                              <Input
+                                id={`catalogue-${field}`}
+                                dir={field === 'titleFa' ? 'rtl' : 'ltr'}
+                                {...productForm.bind(field)}
+                                value={draft[field]}
+                                onChange={(event) =>
+                                  setDraft({ ...draft, [field]: event.target.value })
+                                }
+                              />
+                              {feedback(field)}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="grid items-start gap-4 sm:grid-cols-2">
+                          {(['descriptionFa', 'descriptionEn'] as const).map((field) => (
+                            <div key={field}>
+                              <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
+                              <Textarea
+                                id={`catalogue-${field}`}
+                                dir={field === 'descriptionFa' ? 'rtl' : 'ltr'}
+                                {...productForm.bind(field)}
+                                value={draft[field]}
+                                onChange={(event) =>
+                                  setDraft({ ...draft, [field]: event.target.value })
+                                }
+                              />
+                              {feedback(field)}
+                            </div>
+                          ))}
+                        </div>
                         {editor === 'new' && (
                           <div>
                             <Label htmlFor="catalogue-initial-price">{label('initialPrice')}</Label>
@@ -1512,6 +1515,7 @@ export default function AdminCataloguePage({
                         variant="outline"
                         className="min-h-11"
                         aria-label={`${label('edit')} ${title(row)}`}
+                        aria-current={editor === row.id ? 'page' : undefined}
                         disabled={blocked}
                         onClick={() => choose(row.id)}
                       >
@@ -1632,7 +1636,7 @@ export default function AdminCataloguePage({
                     ? result === null
                     : matchesProductReceipt(action.body, result, selected, type);
             if (!matched) throw new Error('Invalid catalogue acknowledgement');
-            choose(action.path.endsWith('/duplicate-policy') ? editor : null);
+            choose(action.path.endsWith('/duplicate-policy') ? editor : null, 'settled');
             setSaved(true);
             setRevision((value) => value + 1);
           })(commandVersion.current, detail, commandKind.current)}
