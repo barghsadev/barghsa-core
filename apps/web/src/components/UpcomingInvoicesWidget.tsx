@@ -39,6 +39,16 @@ export function UpcomingInvoicesWidget({
   embedded?: boolean;
 }) {
   const Frame = embedded ? 'div' : 'section';
+  const now = Date.now();
+  const payable = (invoice: UpcomingInvoice) =>
+    !invoice.payableFrom || Date.parse(invoice.payableFrom) <= now;
+  const payableAmount =
+    invoices.length > 1
+      ? invoices.reduce(
+          (total, invoice) => total + (payable(invoice) ? BigInt(invoice.remainingAmount) : 0n),
+          0n
+        )
+      : 0n;
   return (
     <Frame
       className={embedded ? 'space-y-4' : 'space-y-4 rounded-xl border bg-card p-5'}
@@ -61,74 +71,94 @@ export function UpcomingInvoicesWidget({
       {invoices.length === 0 ? (
         <p className="text-sm text-muted-foreground">{dashboardText('invoice.empty', locale)}</p>
       ) : (
-        <ul className="divide-y">
-          {invoices.map((invoice) => {
-            const days =
-              invoice.dueAt && time.status === 'ready'
-                ? daysUntil(invoice.dueAt, time.timezone)
-                : null;
-            const urgency =
-              days === null
-                ? null
-                : days < 0
-                  ? dashboardText('invoice.overdue', locale)
-                  : days === 0
-                    ? dashboardText('invoice.dueToday', locale)
-                    : dashboardText('invoice.daysRemaining', locale).replace(
-                        '{count}',
-                        new Intl.NumberFormat(locale).format(days)
-                      );
-            const canPay = !invoice.payableFrom || Date.parse(invoice.payableFrom) <= Date.now();
-            const action = dashboardText(canPay ? 'invoice.payNow' : 'invoice.view', locale);
-            return (
-              <li
-                key={invoice.invoiceId}
-                className="flex flex-wrap items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
-              >
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">
-                    {dashboardText('invoice.label', locale).replace(
-                      '{id}',
-                      invoice.invoiceId.slice(0, 8).toUpperCase()
-                    )}
-                  </p>
-                  <p className="text-base font-semibold tabular-nums">
-                    {formatCurrencyIrr(invoice.remainingAmount, locale)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {dashboardText('invoice.dueDate', locale)}:{' '}
-                    {time.format(invoice.dueAt, {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </p>
-                  {urgency && (
-                    <p
-                      className={
-                        days !== null && days <= 0
-                          ? 'text-sm font-medium text-destructive'
-                          : days !== null && days <= 3
-                            ? 'text-sm font-medium text-amber-700 dark:text-amber-300'
-                            : 'text-sm text-muted-foreground'
-                      }
+        <div className="@container">
+          <div
+            className={
+              payableAmount > 0n
+                ? 'grid gap-3 @min-[30rem]:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]'
+                : undefined
+            }
+          >
+            {payableAmount > 0n && (
+              <dl className="self-start rounded-lg bg-muted px-3 py-2">
+                <dt className="text-sm text-muted-foreground">
+                  {dashboardText('invoice.payableInList', locale)}
+                </dt>
+                <dd className="mt-1 text-lg font-semibold wrap-anywhere tabular-nums">
+                  {formatCurrencyIrr(payableAmount, locale)}
+                </dd>
+              </dl>
+            )}
+            <ul className="divide-y">
+              {invoices.map((invoice) => {
+                const days =
+                  invoice.dueAt && time.status === 'ready'
+                    ? daysUntil(invoice.dueAt, time.timezone)
+                    : null;
+                const urgency =
+                  days === null
+                    ? null
+                    : days < 0
+                      ? dashboardText('invoice.overdue', locale)
+                      : days === 0
+                        ? dashboardText('invoice.dueToday', locale)
+                        : dashboardText('invoice.daysRemaining', locale).replace(
+                            '{count}',
+                            new Intl.NumberFormat(locale).format(days)
+                          );
+                const canPay = payable(invoice);
+                const action = dashboardText(canPay ? 'invoice.payNow' : 'invoice.view', locale);
+                return (
+                  <li
+                    key={invoice.invoiceId}
+                    className="flex flex-wrap items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
+                  >
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">
+                        {dashboardText('invoice.label', locale).replace(
+                          '{id}',
+                          invoice.invoiceId.slice(0, 8).toUpperCase()
+                        )}
+                      </p>
+                      <p className="text-base font-semibold tabular-nums">
+                        {formatCurrencyIrr(invoice.remainingAmount, locale)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {dashboardText('invoice.dueDate', locale)}:{' '}
+                        {time.format(invoice.dueAt, {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </p>
+                      {urgency && (
+                        <p
+                          className={
+                            days !== null && days <= 0
+                              ? 'text-sm font-medium text-destructive'
+                              : days !== null && days <= 3
+                                ? 'text-sm font-medium text-amber-700 dark:text-amber-300'
+                                : 'text-sm text-muted-foreground'
+                          }
+                        >
+                          {urgency}
+                        </p>
+                      )}
+                    </div>
+                    <Link
+                      to="/invoices/$invoiceId"
+                      params={{ invoiceId: invoice.invoiceId }}
+                      className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      aria-label={`${action} · ${invoice.invoiceId}`}
                     >
-                      {urgency}
-                    </p>
-                  )}
-                </div>
-                <Link
-                  to="/invoices/$invoiceId"
-                  params={{ invoiceId: invoice.invoiceId }}
-                  className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  aria-label={`${action} · ${invoice.invoiceId}`}
-                >
-                  {action}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                      {action}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       )}
     </Frame>
   );

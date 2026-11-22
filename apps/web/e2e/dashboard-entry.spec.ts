@@ -83,7 +83,7 @@ test('staff work cards open the matching pending queues', async ({ page }) => {
   await page.goto('/');
   const ticketLink = page.locator('a[href="/admin/tickets?status=active"]');
   await expect(ticketLink).toBeVisible();
-  await expect(page.locator('a[href="/admin/saving-orders"].rounded-xl')).toBeVisible();
+  await expect(page.getByRole('main').locator('a[href="/admin/saving-orders"]')).toBeVisible();
   const ticketRequest = page.waitForRequest(
     (request) =>
       request.url().includes('/api/staff/tickets?') && request.url().includes('status=active')

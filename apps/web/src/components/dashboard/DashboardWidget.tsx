@@ -21,6 +21,8 @@ export function DashboardWidget<T>({
   locale,
   empty,
   emptyMessage,
+  tall = false,
+  wide = false,
   children,
 }: {
   title: string;
@@ -30,6 +32,8 @@ export function DashboardWidget<T>({
   locale: Locale;
   empty?: (data: T) => boolean;
   emptyMessage?: string;
+  tall?: boolean;
+  wide?: boolean;
   children: (data: T) => ReactNode;
 }) {
   const id = useId();
@@ -39,9 +43,9 @@ export function DashboardWidget<T>({
       variant="widget"
       role="region"
       aria-labelledby={id}
-      className="h-[24rem] min-w-0 gap-3 pt-4 pb-3 [--card-spacing:1rem] sm:[--card-spacing:1.25rem]"
+      className={`${tall ? 'h-96' : 'h-[19rem]'} ${wide ? 'xl:col-span-2' : ''} min-w-0 gap-2 py-3 [--card-spacing:1rem] sm:[--card-spacing:1.25rem]`}
     >
-      <CardHeader className="flex min-h-11 flex-row flex-wrap items-center justify-between gap-x-2 gap-y-0 border-b pb-2">
+      <CardHeader className="flex min-h-11 flex-row flex-wrap items-center justify-between gap-x-2 gap-y-0 border-b pb-1.5">
         <h2 id={id} className="flex min-w-0 items-center gap-2 text-base font-semibold">
           <Icon aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
           {title}

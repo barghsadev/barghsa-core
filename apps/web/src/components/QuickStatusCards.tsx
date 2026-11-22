@@ -63,7 +63,7 @@ export function QuickStatusCards({
   return (
     <div
       className={
-        embedded ? 'grid grid-cols-2 gap-2' : 'grid h-full grid-cols-1 gap-4 sm:grid-cols-2'
+        embedded ? 'grid grid-cols-2 gap-1.5' : 'grid h-full grid-cols-1 gap-4 sm:grid-cols-2'
       }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -78,7 +78,7 @@ export function QuickStatusCards({
             >
               <Icon
                 className={cn(
-                  'size-5 shrink-0',
+                  embedded ? 'size-4 shrink-0' : 'size-5 shrink-0',
                   key === 'contracts' && count > 0
                     ? 'text-success'
                     : key !== 'contracts' && count > 2
@@ -102,7 +102,7 @@ export function QuickStatusCards({
               ) : null}
             </div>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="text-sm text-muted-foreground">{t(label, locale)}</p>
+              <p className="text-sm leading-snug text-muted-foreground">{t(label, locale)}</p>
               {!embedded && (
                 <p className="text-3xl font-semibold tabular-nums">{numbers.number(count)}</p>
               )}
@@ -112,7 +112,7 @@ export function QuickStatusCards({
         const className = cn(
           'flex min-w-0 flex-col rounded-xl border text-card-foreground',
           embedded
-            ? 'gap-2 bg-muted/45 p-2'
+            ? 'gap-1 bg-muted/45 px-2 py-1.5'
             : 'gap-5 bg-card p-5 shadow-sm transition-shadow hover:border-input hover:shadow-md'
         );
         return href ? (
@@ -127,33 +127,25 @@ export function QuickStatusCards({
         ) : (
           <div key={key} className={className}>
             {content}
-            <div
-              className={cn('flex flex-wrap gap-x-4 text-sm font-medium', !embedded && 'gap-y-2')}
-            >
-              <Link
-                to="/electricity/orders"
-                search={{ status: 'pending' }}
-                className={cn(
-                  'text-primary underline underline-offset-4',
-                  embedded && 'inline-flex min-h-11 items-center'
-                )}
-              >
-                {t('electricity.orders.title', locale)}
-              </Link>
-              <Link
-                to="/savings/orders"
-                search={{ status: 'pending' }}
-                className={cn(
-                  'text-primary underline underline-offset-4',
-                  embedded && 'inline-flex min-h-11 items-center'
-                )}
-              >
-                {tSaving('orders', locale)}
-              </Link>
-            </div>
           </div>
         );
       })}
+      <div className="col-span-full grid grid-cols-2 gap-x-2 border-t text-sm leading-snug font-medium">
+        <Link
+          to="/electricity/orders"
+          search={{ status: 'pending' }}
+          className="inline-flex min-h-11 min-w-0 items-center break-words text-primary underline underline-offset-4"
+        >
+          {t('electricity.orders.title', locale)}
+        </Link>
+        <Link
+          to="/savings/orders"
+          search={{ status: 'pending' }}
+          className="inline-flex min-h-11 min-w-0 items-center break-words text-primary underline underline-offset-4"
+        >
+          {tSaving('orders', locale)}
+        </Link>
+      </div>
     </div>
   );
 }

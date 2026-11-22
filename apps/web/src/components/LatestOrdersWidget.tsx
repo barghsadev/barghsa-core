@@ -53,7 +53,7 @@ export function LatestOrdersWidget({
   const Frame = embedded ? 'div' : 'section';
   return (
     <Frame
-      className={embedded ? 'space-y-4' : 'space-y-4 rounded-xl border bg-card p-5'}
+      className={embedded ? 'space-y-2' : 'space-y-4 rounded-xl border bg-card p-5'}
       aria-labelledby={embedded ? undefined : 'recent-orders-title'}
     >
       {!embedded && (
@@ -68,7 +68,7 @@ export function LatestOrdersWidget({
           {orders.map((order) => (
             <li
               key={`${order.kind}-${order.orderId}`}
-              className="flex flex-wrap items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
+              className="flex flex-wrap items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
             >
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
@@ -114,7 +114,7 @@ export function LatestOrdersWidget({
           ))}
         </ul>
       )}
-      <div className="flex flex-wrap gap-x-5 gap-y-2 border-t pt-4 text-sm font-medium">
+      <div className="grid grid-cols-2 gap-2 border-t pt-2 text-sm leading-snug font-medium">
         <Link
           to="/electricity/orders"
           className="touch-action pointer-coarse:min-h-[45px]! text-primary underline underline-offset-4"

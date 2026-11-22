@@ -1,6 +1,8 @@
 import { fulfillDashboard } from './dashboard-fixture';
 import { test, expect } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
+import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { dashboardText } from '@barghsa/i18n/dashboard';
 
 test('dashboard shows invoices, orders and contracts, then clears them after switching profiles', async ({
   page,
@@ -160,6 +162,8 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
   await page.goto('/app');
   const invoices = page.getByRole('region', { name: 'Upcoming invoices' });
   await expect(invoices).toBeVisible();
+  await expect(invoices.getByRole('term')).toHaveText(dashboardText('invoice.payableInList', 'en'));
+  await expect(invoices.getByRole('definition')).toHaveText(formatCurrencyIrr(300000, 'en'));
   await expect(invoices.getByText('3 days remaining')).toBeVisible();
   await expect(invoices.getByText('Overdue')).toHaveClass(/text-destructive/);
   await expect(invoices.getByRole('link', { name: `Pay now · ${invoiceId}` })).toHaveAttribute(

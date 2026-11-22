@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { DashboardMetricRow, dashboardMetricLink } from './dashboard/DashboardMetricRow.js';
 
 export interface QueueCounts {
   pendingTickets: number | null;
@@ -41,34 +42,22 @@ export function StaffWorkQueueWidget({
       {!embedded && (
         <h3 className="text-base font-semibold">{t('dashboard.admin.work.queueTitle', locale)}</h3>
       )}
-      <div
-        className={embedded ? 'grid grid-cols-2 gap-3' : 'grid gap-3 sm:grid-cols-2 xl:grid-cols-4'}
-      >
+      <div className="grid divide-y">
         {counts.pendingTickets !== null && (
-          <Link
-            to="/admin/tickets"
-            search={{ status: 'active' }}
-            className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            <span className="block text-2xl font-semibold">
-              {numbers.number(counts.pendingTickets)}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {t('dashboard.admin.work.pendingTickets', locale)}
-            </span>
+          <Link to="/admin/tickets" search={{ status: 'active' }} className={dashboardMetricLink}>
+            <DashboardMetricRow
+              count={numbers.number(counts.pendingTickets)}
+              label={t('dashboard.admin.work.pendingTickets', locale)}
+            />
           </Link>
         )}
         {cards.map(({ count, to, label }) =>
           count === null ? null : (
-            <Link
-              key={label}
-              to={to}
-              className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <span className="block text-2xl font-semibold">{numbers.number(count)}</span>
-              <span className="text-sm text-muted-foreground">
-                {t(`dashboard.admin.work.${label}`, locale)}
-              </span>
+            <Link key={label} to={to} className={dashboardMetricLink}>
+              <DashboardMetricRow
+                count={numbers.number(count)}
+                label={t(`dashboard.admin.work.${label}`, locale)}
+              />
             </Link>
           )
         )}
@@ -76,14 +65,12 @@ export function StaffWorkQueueWidget({
           <Link
             to="/admin/consultations"
             search={{ assignment: 'unassigned' }}
-            className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className={dashboardMetricLink}
           >
-            <span className="block text-2xl font-semibold">
-              {numbers.number(counts.unassignedConsultations)}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {t('dashboard.admin.work.unassignedConsultations', locale)}
-            </span>
+            <DashboardMetricRow
+              count={numbers.number(counts.unassignedConsultations)}
+              label={t('dashboard.admin.work.unassignedConsultations', locale)}
+            />
           </Link>
         )}
       </div>

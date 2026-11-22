@@ -1,6 +1,7 @@
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { DashboardMetricRow, dashboardMetricLink } from './dashboard/DashboardMetricRow.js';
 
 export interface FailedWorkCounts {
   failedJobs: number | null;
@@ -43,28 +44,18 @@ export function FailedJobsWidget({
       {!embedded && (
         <h3 className="text-base font-semibold">{t('dashboard.admin.failures.title', locale)}</h3>
       )}
-      <div className={embedded ? 'grid gap-3' : 'grid gap-3 sm:grid-cols-2 xl:grid-cols-3'}>
+      <div className="grid divide-y">
         {visible.map(({ key, href, label }) => {
           const count = counts[key]!;
           return (
-            <a
-              key={key}
-              href={href}
-              className={`rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${count > 0 ? 'border-destructive/40' : ''}`}
-            >
-              <span
-                className={`block text-2xl font-semibold ${count > 0 ? 'text-destructive' : ''}`}
-              >
-                {numbers.number(count)}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {t(`dashboard.admin.failures.${label}`, locale)}
-              </span>
-              {count > 0 && (
-                <span className="mt-2 block text-xs font-medium text-destructive">
-                  {t('dashboard.admin.failures.needsAttention', locale)}
-                </span>
-              )}
+            <a key={key} href={href} className={dashboardMetricLink}>
+              <DashboardMetricRow
+                count={numbers.number(count)}
+                label={t(`dashboard.admin.failures.${label}`, locale)}
+                attention={
+                  count > 0 ? t('dashboard.admin.failures.needsAttention', locale) : undefined
+                }
+              />
             </a>
           );
         })}

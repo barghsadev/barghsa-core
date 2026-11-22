@@ -67,10 +67,10 @@ it.each(['en', 'fa'] as const)(
     const paths = [...container.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     expect(paths).toEqual([
       '/contracts?state=Active',
-      '/electricity/orders?status=pending',
-      '/savings/orders?status=pending',
       '/tickets?status=active&scope=active',
       '/invoices?status=unpaid',
+      '/electricity/orders?status=pending',
+      '/savings/orders?status=pending',
     ]);
     expect(container.querySelector('[dir]')?.getAttribute('dir')).toBe(
       locale === 'fa' ? 'rtl' : 'ltr'

@@ -136,34 +136,37 @@ function PendingVerification() {
       icon={ShieldCheck}
       locale={locale}
       resource={resource}
+      tall
       viewAll={
         resource.status === 'ready' ? (
-          <Link
-            to="/admin/crm"
-            search={{ verification: 'PENDING' }}
-            className="text-sm font-medium text-primary hover:underline"
-            aria-label={t('dashboard.admin.pendingVerification.aria.showAll', locale)}
-          >
-            {t('dashboard.admin.pendingVerification.showAll', locale)}
-          </Link>
+          <div className="flex flex-wrap items-center gap-x-2">
+            <p
+              className="rounded-md bg-muted px-2 py-0.5 text-sm font-semibold tabular-nums"
+              aria-label={t('dashboard.admin.pendingVerification.aria.count', locale)}
+            >
+              {numbers.number(resource.data.count)}
+            </p>
+            <Link
+              to="/admin/crm"
+              search={{ verification: 'PENDING' }}
+              className="text-sm font-medium text-primary hover:underline"
+              aria-label={t('dashboard.admin.pendingVerification.aria.showAll', locale)}
+            >
+              {t('dashboard.admin.pendingVerification.showAll', locale)}
+            </Link>
+          </div>
         ) : undefined
       }
     >
       {(data) => (
         <>
-          <p
-            className="mb-4 text-2xl font-bold"
-            aria-label={t('dashboard.admin.pendingVerification.aria.count', locale)}
-          >
-            {numbers.number(data.count)}
-          </p>
           {data.profiles.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               {dashboardText('verification.empty', locale)}
             </p>
           ) : (
             <ul
-              className="space-y-2"
+              className="divide-y"
               aria-label={t('dashboard.admin.pendingVerification.recent', locale)}
             >
               {data.profiles.map((profile) => (
@@ -171,7 +174,7 @@ function PendingVerification() {
                   <Link
                     to="/admin/crm/profiles/$profileId"
                     params={{ profileId: profile.id }}
-                    className="block rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    className="block min-h-11 px-2 py-1 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
                   >
                     <span className="block break-words font-medium" dir="auto">
                       {pendingProfileName(profile, locale)}

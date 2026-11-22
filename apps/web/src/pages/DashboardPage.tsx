@@ -217,6 +217,7 @@ function InvoicesWidget({
       icon={ReceiptText}
       resource={resource}
       locale={locale}
+      wide
       empty={(invoices) => invoices.length === 0}
       emptyMessage={dashboardText('invoice.empty', locale)}
       viewAll={
@@ -311,8 +312,8 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
 
   return (
     <div className="flex flex-col gap-5 lg:gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="overflow-hidden rounded-2xl border bg-card">
-        <div className="dashboard-intro bg-brand-panel px-5 py-6 text-brand-panel-foreground sm:px-7 sm:py-8">
+      <header className="overflow-hidden rounded-2xl border bg-card xl:grid xl:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="dashboard-intro bg-brand-panel px-5 py-5 text-brand-panel-foreground sm:px-7 sm:py-6">
           <h1 className="max-w-3xl text-[clamp(1.625rem,3.2vw,2.625rem)] font-bold leading-tight wrap-anywhere">
             {profileName
               ? t('dashboard.overview.welcome', locale).replace('{name}', profileName)
@@ -326,7 +327,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
           <div
             role="group"
             aria-label={t('dashboard.overview.quickActions', locale)}
-            className="flex flex-wrap gap-2 px-4 py-3 sm:px-6"
+            className="flex flex-wrap items-center gap-2 px-4 py-3 sm:px-6 xl:flex-nowrap"
           >
             {actions.map(({ href, label, icon: Icon }) => (
               <Link
@@ -334,9 +335,15 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
                 to={href}
                 className={buttonVariants({
                   variant: href === '/electricity' ? 'default' : 'ghost',
+                  size: 'sm',
+                  className: 'min-h-11',
                 })}
               >
-                <Icon data-icon="inline-start" aria-hidden="true" />
+                <Icon
+                  data-icon="inline-start"
+                  aria-hidden="true"
+                  className={href === '/electricity' ? undefined : 'hidden sm:block'}
+                />
                 {label}
               </Link>
             ))}
@@ -362,10 +369,10 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
             {dashboard.access.wallet && (
               <WalletWidget profileId={dashboard.profile.id} locale={locale} />
             )}
-            <StatusWidget profileId={dashboard.profile.id} locale={locale} />
             {dashboard.access.invoices && (
               <InvoicesWidget profileId={dashboard.profile.id} locale={locale} time={time} />
             )}
+            <StatusWidget profileId={dashboard.profile.id} locale={locale} />
             {dashboard.access.orders && (
               <OrdersWidget profileId={dashboard.profile.id} locale={locale} time={time} />
             )}

@@ -84,28 +84,28 @@ it('links unresolved refunds and flags failed work for the permitted staff roles
   });
   const financeLinks = container.querySelectorAll('a[href="/admin/contracts#refund-obligations"]');
   expect(financeLinks).toHaveLength(2);
-  expect(financeLinks[0]?.textContent).toContain('Unresolved refunds');
-  expect(financeLinks[0]?.textContent).toContain('4');
-  expect(financeLinks[1]?.textContent).toContain('Failed refunds');
-  expect(financeLinks[1]?.textContent).toContain('1');
+  expect(financeLinks[0]?.textContent).toContain('Failed refunds');
+  expect(financeLinks[0]?.textContent).toContain('1');
+  expect(financeLinks[1]?.textContent).toContain('Unresolved refunds');
+  expect(financeLinks[1]?.textContent).toContain('4');
   expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
-    '2Failed background jobs'
+    'Failed background jobsNeeds attention2'
   );
   expect(container.querySelector('a[href="/admin/failed-notifications"]')?.textContent).toContain(
-    '3Undelivered notifications'
+    'Undelivered notificationsNeeds attention3'
   );
   expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
     'Needs attention'
   );
   expect(container.querySelector('a[href="/admin/tickets?status=active"]')?.textContent).toContain(
-    '3Pending tickets'
+    'Pending tickets3'
   );
   expect(container.querySelector('a[href="/admin/saving-orders"]')?.textContent).toContain(
-    '2Saving orders awaiting review'
+    'Saving orders awaiting review2'
   );
   expect(
     container.querySelector('a[href="/admin/consultations?assignment=unassigned"]')?.textContent
-  ).toContain('1Unassigned consultations');
+  ).toContain('Unassigned consultations1');
 });
 
 it('hides finance widgets when the server withholds their counts', async () => {

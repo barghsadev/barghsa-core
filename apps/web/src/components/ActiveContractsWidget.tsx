@@ -60,7 +60,12 @@ export function ActiveContractsWidget({
           {contracts.map((contract) => {
             const percent = elapsedPercent(contract);
             return (
-              <li key={contract.contractId} className="space-y-3 rounded-lg border p-4">
+              <li
+                key={contract.contractId}
+                className={
+                  embedded ? 'space-y-2 rounded-lg border p-3' : 'space-y-3 rounded-lg border p-4'
+                }
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-medium">
                     {contractText(contract.serviceType, locale)} ·{' '}
@@ -85,7 +90,7 @@ export function ActiveContractsWidget({
                     {dashboardText('contracts.progressUnavailable', locale)}
                   </p>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <p
                       id={`contract-progress-${contract.contractId}`}
                       className="text-sm text-muted-foreground"

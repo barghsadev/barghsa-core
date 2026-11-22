@@ -5,6 +5,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
 import { DashboardWidget } from './dashboard/DashboardWidget.js';
+import { DashboardMetricRow, dashboardMetricLink } from './dashboard/DashboardMetricRow.js';
 import { FailedJobsWidget, type FailedWorkCounts } from './FailedJobsWidget.js';
 import { StaffWorkQueueWidget, type QueueCounts } from './StaffWorkQueueWidget.js';
 
@@ -73,6 +74,7 @@ function WorkQueue() {
       icon={ListTodo}
       resource={resource}
       locale={locale}
+      wide
     >
       {(counts) => <StaffWorkQueueWidget counts={counts} embedded />}
     </DashboardWidget>
@@ -91,32 +93,23 @@ function OpenWork() {
       locale={locale}
     >
       {(counts) => (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid divide-y">
           {cards.map(({ key, route, label }) =>
             counts[key] === null ? null : (
-              <Link
-                key={key}
-                to={route}
-                className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                <span className="block text-2xl font-semibold">{numbers.number(counts[key])}</span>
-                <span className="text-sm text-muted-foreground">
-                  {t(`dashboard.admin.work.${label}`, locale)}
-                </span>
+              <Link key={key} to={route} className={dashboardMetricLink}>
+                <DashboardMetricRow
+                  count={numbers.number(counts[key])}
+                  label={t(`dashboard.admin.work.${label}`, locale)}
+                />
               </Link>
             )
           )}
           {counts.refundObligations !== null && (
-            <a
-              href="/admin/contracts#refund-obligations"
-              className="rounded-xl border bg-card p-3 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <span className="block text-2xl font-semibold">
-                {numbers.number(counts.refundObligations)}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {t('dashboard.admin.work.refundObligations', locale)}
-              </span>
+            <a href="/admin/contracts#refund-obligations" className={dashboardMetricLink}>
+              <DashboardMetricRow
+                count={numbers.number(counts.refundObligations)}
+                label={t('dashboard.admin.work.refundObligations', locale)}
+              />
             </a>
           )}
         </div>
@@ -145,8 +138,8 @@ export function AdminBusinessWorkCounts() {
   return (
     <>
       <WorkQueue />
-      <OpenWork />
       <Failures />
+      <OpenWork />
     </>
   );
 }

@@ -14,7 +14,7 @@ import {
 } from '../lib/content-form.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
@@ -80,14 +80,29 @@ const draftOf = (row: ContractTemplateDto): Draft => ({
   description: row.description ?? '',
   status: row.status,
 });
-export default function AdminContractTemplatesPage() {
+export default function AdminContractTemplatesPage({
+  selection,
+}: {
+  selection?: { id: string | null; set: (id: string | null, replace?: boolean) => void };
+} = {}) {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const deleteTrigger = useRef<HTMLButtonElement | null>(null);
   const listHeading = useRef<HTMLHeadingElement>(null);
   const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [localSelected, setLocalSelected] = useState<string | null>(null);
+  const selected = selection ? selection.id : localSelected;
+  const onSelect = selection?.set;
+  const editorSelection = useRef(selected);
+  const select = useCallback(
+    (id: string | null, replace = false) => {
+      editorSelection.current = id;
+      if (onSelect) onSelect(id, replace);
+      else setLocalSelected(id);
+    },
+    [onSelect]
+  );
   const formText = (key: Parameters<typeof contentFormText>[0]) => contentFormText(key, locale);
   const messages = {
     name: formText('name'),
@@ -144,11 +159,10 @@ export default function AdminContractTemplatesPage() {
     actionRef.current = null;
     setAction(null);
   }, [editor.setValidationPending]);
-  const clearEditor = useCallback(() => {
+  const resetEditor = useCallback(() => {
     closeAction();
     fileGeneration.current++;
     acceptedDetail.current = null;
-    setSelected(null);
     resetTemplate(emptyContractTemplateDraft());
     setNeedsReset(false);
     setUncertain(false);
@@ -159,6 +173,15 @@ export default function AdminContractTemplatesPage() {
     setSaved(false);
     if (fileInput.current) fileInput.current.value = '';
   }, [closeAction, resetTemplate]);
+  const clearEditor = useCallback(() => {
+    resetEditor();
+    if (editorSelection.current !== null) select(null, true);
+  }, [resetEditor, select]);
+  useLayoutEffect(() => {
+    if (editorSelection.current === selected) return;
+    editorSelection.current = selected;
+    resetEditor();
+  }, [selected, resetEditor]);
   const denied = useCallback(() => {
     acceptedRows.current = null;
     clearEditor();
@@ -254,9 +277,8 @@ export default function AdminContractTemplatesPage() {
       if (history.error) history.retry();
       return;
     }
-    clearEditor();
-    setSelected(value);
-    if (value === 'new') resetTemplate(emptyContractTemplateDraft());
+    resetEditor();
+    select(value);
   }
   function refresh() {
     if (validationBusy.current || uncertain) closeAction();

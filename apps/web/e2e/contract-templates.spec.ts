@@ -1,6 +1,47 @@
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
-import { contractTemplate } from '../src/test/contract-settings-fixtures';
+import { contractTemplate, contractTemplateDetail } from '../src/test/contract-settings-fixtures';
+import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`contract template selection survives reload and browser history (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    const list = '/admin/contract-templates';
+    const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
+    const detailReads: string[] = [];
+    await page.route('**/api/admin/contract-templates', (route) =>
+      route.fulfill({ json: [contractTemplate] })
+    );
+    await page.route('**/api/admin/contract-templates/*', (route) => {
+      expect(route.request().method()).toBe('GET');
+      detailReads.push(new URL(route.request().url()).pathname);
+      return route.fulfill({ json: contractTemplateDetail });
+    });
+    await page.goto(list + '?selected=invalid');
+    const open = page.getByRole('button', { name: `${label('open')} ${contractTemplate.name}` });
+    const name = page.getByRole('textbox', { name: label('name'), exact: true });
+    await expect(open).toBeVisible();
+    expect(detailReads).toEqual([]);
+    await page.goto(list);
+    await open.click();
+    await expect(page).toHaveURL(
+      (url) => url.pathname === list && url.searchParams.get('selected') === contractTemplate.id
+    );
+    await expect(name).toHaveValue(contractTemplate.name);
+    expect(detailReads).toHaveLength(1);
+    await page.reload();
+    await expect(name).toHaveValue(contractTemplate.name);
+    expect(detailReads).toHaveLength(2);
+    await page.goBack();
+    await expect(name).toHaveCount(0);
+    await page.goForward();
+    await expect(name).toHaveValue(contractTemplate.name);
+    expect([...new Set(detailReads)]).toEqual(['/api' + list + '/' + contractTemplate.id]);
+  });
+}
+
 for (const locale of ['en', 'fa'])
   test(`template editor retries captured metadata (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
