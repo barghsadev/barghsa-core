@@ -244,7 +244,7 @@ export function SolarRequestsPage({
               <p role="alert">
                 {history.error === 'denied'
                   ? t('historyPagination.accessDenied', locale)
-                  : copy('notFound')}
+                  : copy('requestsLoadError')}
               </p>
               <Button variant="outline" onClick={history.retry}>
                 {copy('retry')}

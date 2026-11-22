@@ -382,6 +382,7 @@ const en: Record<string, string> = {
   retry: 'Try again',
   loading: 'Loading…',
   notFound: 'Request could not be loaded.',
+  requestsLoadError: 'Could not load your solar requests.',
 };
 
 const fa: Record<string, string> = {
@@ -766,6 +767,7 @@ const fa: Record<string, string> = {
   retry: 'تلاش دوباره',
   loading: 'در حال بارگذاری…',
   notFound: 'درخواست بارگذاری نشد.',
+  requestsLoadError: 'درخواست‌های خورشیدی شما بارگذاری نشدند.',
 };
 
 export function tSolar(key: string, locale: 'fa' | 'en'): string {

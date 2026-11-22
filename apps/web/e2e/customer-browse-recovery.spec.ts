@@ -121,6 +121,8 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       }
       const list = main.locator('[data-slot="list-page"]').first();
       const content = list.locator('[data-slot="list-content"]');
+      const electricityOrderLabel = t('electricity.catalogue.createDraft', locale);
+      const electricityOrder = content.getByRole('link', { name: electricityOrderLabel });
       await expect(content.getByRole('alert')).toBeVisible();
       if (kind === 'consultation')
         await expect(
@@ -148,6 +150,7 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
         await content.locator('summary').click();
         await expect(content.getByText('Accepted text', { exact: true })).toBeVisible();
       }
+      if (kind === 'electricity') await expect(electricityOrder).toBeVisible();
       hold = true;
       const refreshButton = list.getByRole('button', { name: copy(refresh, locale), exact: true });
       await refreshButton.click();
@@ -159,18 +162,24 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
         await expect(
           content.getByRole('link', { name: tSaving('startOrder', locale) })
         ).toHaveCount(0);
+      if (kind === 'electricity') {
+        await expect(electricityOrder).toHaveCount(0);
+        await expect(content.getByRole('button', { name: electricityOrderLabel })).toBeDisabled();
+      }
       if (kind === 'consultation')
         await expect(
           main.getByRole('button', { name: tConsultation('request', locale), exact: true })
         ).toBeDisabled();
       await held!.fulfill({ status: 503, json: {} });
       await expect(content.getByRole('alert')).toBeVisible();
+      if (kind === 'electricity') await expect(electricityOrder).toHaveCount(0);
       const failedQuery = queries.at(-1),
         profiles = profileReads,
         histories = historyReads;
       hold = false;
       await content.getByRole('button', { name: retry(locale), exact: true }).click();
       await expect(content.getByRole('alert')).toHaveCount(0);
+      if (kind === 'electricity') await expect(electricityOrder).toBeVisible();
       expect(queries.at(-1)).toBe(failedQuery);
       expect(profileReads).toBe(profiles);
       expect(historyReads).toBe(histories);
@@ -212,8 +221,11 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       await expect(content.getByRole('alert')).toContainText(copy(denied, locale));
       await expect(content.getByText(title[locale], { exact: true })).toHaveCount(0);
       await expect(content.getByRole('button')).toHaveCount(0);
-      if (kind === 'saving') {
-        const startOrder = content.getByRole('link', { name: tSaving('startOrder', locale) });
+      if (kind === 'saving' || kind === 'electricity') {
+        const startOrder =
+          kind === 'saving'
+            ? content.getByRole('link', { name: tSaving('startOrder', locale) })
+            : electricityOrder;
         status = 200;
         await refreshButton.click();
         await expect(startOrder).toBeVisible();

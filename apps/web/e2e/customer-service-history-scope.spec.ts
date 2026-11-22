@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { tSolar } from '@barghsa/i18n/solar';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
@@ -225,6 +226,8 @@ for (const locale of ['en', 'fa'] as const)
       await held!.fulfill({ status: 503, json: {} });
       held = undefined;
       await expect(retry()).toBeVisible();
+      if (kind === 'solar')
+        await expect(content.getByRole('alert')).toContainText(tSolar('requestsLoadError', locale));
       await expect(record(first)).toBeVisible();
       mode = 'success';
       await retry().click();

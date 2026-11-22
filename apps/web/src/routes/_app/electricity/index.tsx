@@ -1,4 +1,4 @@
-import { readWithDeadline } from '../../../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../../../lib/server-query-client.js';
 import {
   isElectricityCatalogue,
   type ElectricityCatalogueProduct,
@@ -36,7 +36,7 @@ function ElectricityIndexPage() {
     setState('loading');
     void readWithDeadline(abort.signal, async (signal) => {
       const response = await fetch('/api/products/electricity', { signal });
-      if (!response.ok) throw new Error(String(response.status));
+      if (!response.ok) throw new ServerQueryError(response.status);
       const data: unknown = await response.json();
       if (!isElectricityCatalogue(data)) throw new Error('Invalid catalogue');
       return data;
@@ -49,7 +49,7 @@ function ElectricityIndexPage() {
       })
       .catch((cause: unknown) => {
         if (abort.signal.aborted) return;
-        if (cause instanceof Error && cause.message === '403') {
+        if (cause instanceof ServerQueryError && (cause.status === 401 || cause.status === 403)) {
           setProducts([]);
           setState('denied');
         } else setState('error');
@@ -180,9 +180,13 @@ function ElectricityIndexPage() {
                   ) : null}
                   {product.simpleOrderable ? (
                     <CardFooter>
-                      <Link to="/electricity/order" className={buttonVariants()}>
-                        {t('electricity.catalogue.createDraft', locale)}
-                      </Link>
+                      {state === 'ready' ? (
+                        <Link to="/electricity/order" className={buttonVariants()}>
+                          {t('electricity.catalogue.createDraft', locale)}
+                        </Link>
+                      ) : (
+                        <Button disabled>{t('electricity.catalogue.createDraft', locale)}</Button>
+                      )}
                     </CardFooter>
                   ) : null}
                 </Card>
