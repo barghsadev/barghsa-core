@@ -1,4 +1,5 @@
 import type { NumberStyle } from '@barghsa/i18n/numbers';
+import { defaultBrandPalette } from '@barghsa/shared/admin';
 import { isThemeMode, type ThemeMode } from './theme.js';
 
 export interface BrandConfig {
@@ -35,11 +36,7 @@ export const DEFAULT_BRAND_CONFIG: BrandConfig = {
   supportPhone: '',
   supportMobile: '',
   slogan: '',
-  primaryColor: '#176b5b',
-  secondaryColor: '#547467',
-  accentColor: '#d6a74e',
-  backgroundColor: '#f6f7f4',
-  darkBackgroundColor: '#15201c',
+  ...defaultBrandPalette,
   fontFamily: 'vazirmatn',
   borderRadiusRem: 0.75,
   spacingScale: 1,
@@ -52,13 +49,13 @@ export const DEFAULT_BRAND_CONFIG: BrandConfig = {
 };
 
 export const BRAND_SURFACES = {
-  light: ['#fdfefb', '#edf0eb'],
-  dark: ['#1d2c25', '#293a30'],
+  light: ['#fcfdff', '#eaf0f6', '#edf2f8'],
+  dark: ['#1b2a3e', '#26364a', '#162336'],
 } as const;
 
 /** Text colors are checked against active brand surfaces before becoming CSS tokens. */
 export const DANGER_TEXT_COLORS = ['#a42c35', '#ffafb2'] as const;
-export const MUTED_TEXT_COLORS = ['#5f6e65', '#afc0b2'] as const;
+export const MUTED_TEXT_COLORS = ['#53647a', '#b0bfd2'] as const;
 
 export function brandName(config: BrandConfig, locale: 'fa' | 'en'): string {
   return locale === 'fa' ? config.appTitleFa : config.appTitle;

@@ -12437,18 +12437,18 @@ export interface operations {
                 "application/json": {
                     /** @description Brand configuration */
                     config: {
-                        /** @default #d6a74e */
+                        /** @default #eeb04d */
                         accentColor?: string;
                         /** @default Barghsa */
                         appTitle?: string;
                         /** @default برقسا */
                         appTitleFa?: string;
-                        /** @default #f6f7f4 */
+                        /** @default #f4f6f9 */
                         backgroundColor?: string;
                         /** @default 0.75 */
                         borderRadiusRem?: number;
                         darkAccentColor?: string;
-                        /** @default #15201c */
+                        /** @default #121c2b */
                         darkBackgroundColor?: string;
                         /** @default false */
                         darkMode?: boolean;
@@ -12473,9 +12473,9 @@ export interface operations {
                          * @enum {string}
                          */
                         numberStyle?: "locale" | "persian" | "western";
-                        /** @default #176b5b */
+                        /** @default #204c80 */
                         primaryColor?: string;
-                        /** @default #547467 */
+                        /** @default #516783 */
                         secondaryColor?: string;
                         /** @default  */
                         slogan?: string;

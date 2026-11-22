@@ -38,13 +38,13 @@ export function BottomTabBar({
     const closeOnDesktop = () => {
       if (media.matches) {
         setOpen(false);
-        document.getElementById(`${area}-content`)?.focus();
+        document.getElementById('main-content')?.focus();
       }
     };
     closeOnDesktop();
     media.addEventListener('change', closeOnDesktop);
     return () => media.removeEventListener('change', closeOnDesktop);
-  }, [open, area]);
+  }, [open]);
   useEffect(() => {
     if (!open || Sheet) return;
     let cancelled = false;

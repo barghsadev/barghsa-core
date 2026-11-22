@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { publicShellText } from '@barghsa/i18n/public-shell';
-import { ArrowUpRight } from 'lucide-react';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
+import './auth-layout.css';
 
 export interface AuthLayoutProps {
   locale?: Locale;
@@ -16,68 +16,29 @@ export interface AuthLayoutProps {
 export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps) {
   const { brandConfig } = useBrandConfig();
   return (
-    <div
-      className="grid min-h-dvh grid-rows-[auto_1fr] bg-card md:grid-cols-2 md:grid-rows-1"
-      dir={locale === 'fa' ? 'rtl' : 'ltr'}
-    >
-      <aside className="relative flex flex-col overflow-hidden bg-brand-panel p-5 text-brand-panel-foreground md:p-10 lg:p-14">
-        <Link
-          to="/"
-          className="relative z-10 w-fit no-underline"
-          aria-label={brandName(brandConfig, locale)}
-        >
-          <BrandMark inverse />
-        </Link>
-        <div className="relative z-10 my-auto hidden py-16 md:block">
-          <p className="mb-5 text-sm font-medium text-energy">
-            {publicShellText('authEyebrow', locale)}
-          </p>
-          <h2 className="max-w-lg whitespace-pre-line text-[clamp(2.5rem,4.4vw,4.5rem)] leading-[1.25] font-medium tracking-tight">
-            {publicShellText('authTitle', locale)}
-          </h2>
-          <p className="mt-6 max-w-sm text-base leading-relaxed text-brand-panel-muted">
-            {brandConfig.slogan || t('auth.brand.slogan', locale)}
-          </p>
-          <ul className="mt-10 flex max-w-md flex-col divide-y divide-brand-panel-muted/20 border-y border-brand-panel-muted/20">
-            {(['value1', 'value2', 'value3'] as const).map((key) => (
-              <li key={key} className="flex items-center justify-between gap-4 py-4 text-sm">
-                <span>{t(`auth.brand.${key}`, locale)}</span>
-                <ArrowUpRight
-                  className="size-4 shrink-0 text-energy rtl:-rotate-90"
-                  aria-hidden="true"
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <svg
-          className="pointer-events-none absolute -bottom-24 -end-24 hidden size-[28rem] text-brand-panel-muted/10 md:block"
-          viewBox="0 0 400 400"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle cx="200" cy="200" r="80" stroke="currentColor" />
-          <circle cx="200" cy="200" r="120" stroke="currentColor" />
-          <circle cx="200" cy="200" r="160" stroke="currentColor" />
-          <circle cx="200" cy="200" r="199" stroke="currentColor" />
-          <path d="M0 200h400M200 0v400" stroke="currentColor" />
-        </svg>
-        <p className="relative hidden text-xs text-brand-panel-muted md:block">
-          &copy; {new Date().getFullYear()} {brandName(brandConfig, locale)}
-        </p>
-      </aside>
+    <div className="auth-layout grid min-h-dvh bg-card" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <div className="flex min-w-0 flex-col">
-        <div className="flex items-center justify-end px-5 py-4 md:px-10 md:py-6" data-toast-anchor>
+        <header
+          className="flex items-center justify-between gap-3 px-5 py-4 sm:px-9 lg:px-10 lg:py-6"
+          data-toast-anchor
+        >
+          <Link
+            to="/"
+            className="inline-flex min-h-11 min-w-0 items-center rounded-md"
+            aria-label={brandName(brandConfig, locale)}
+          >
+            <BrandMark />
+          </Link>
           <LanguageSwitcher />
-        </div>
+        </header>
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex flex-1 items-center justify-center px-6 pb-10 pt-4 sm:px-10 md:py-12"
+          className="flex flex-1 justify-center px-5 pt-8 pb-10 sm:px-10 lg:items-center lg:py-12"
         >
           <div className="auth-form w-full max-w-(--auth-panel-max-width)">
             {children}
-            <div className="mt-8 flex flex-col gap-5 border-t pt-6">
+            <div className="mt-7 flex flex-col gap-2 border-t pt-4">
               {footer}
               <Link
                 to="/support"
@@ -88,16 +49,30 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
             </div>
           </div>
         </main>
-        <div className="space-y-2 px-6 pb-6 text-center text-xs text-muted-foreground">
-          <p>{publicShellText('authNote', locale)}</p>
+        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t px-5 py-4 text-xs text-muted-foreground lg:border-t-0">
+          <p className="min-w-0 wrap-anywhere">
+            &copy; {new Date().getFullYear()} {brandName(brandConfig, locale)}
+          </p>
           <p>
             {publicShellText('appVersion', locale)}{' '}
             <bdi dir="ltr" data-app-version>
               v{__BARGHSA_VERSION__}
             </bdi>
           </p>
-        </div>
+        </footer>
       </div>
+      <aside className="auth-brand-panel hidden overflow-hidden rounded-2xl bg-brand-panel text-brand-panel-foreground">
+        <div className="auth-brand-image" aria-hidden="true" />
+        <div className="auth-brand-caption">
+          <div aria-hidden="true" className="mb-5 h-1 w-11 rounded-full bg-energy" />
+          <p className="auth-brand-title font-bold text-balance">
+            {publicShellText('authTitle', locale)}
+          </p>
+          <p className="mt-4 max-w-sm text-base leading-relaxed text-brand-panel-muted">
+            {brandConfig.slogan || publicShellText('authServiceSummary', locale)}
+          </p>
+        </div>
+      </aside>
     </div>
   );
 }

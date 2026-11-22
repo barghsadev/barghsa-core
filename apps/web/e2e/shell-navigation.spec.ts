@@ -86,6 +86,13 @@ for (const locale of ['en', 'fa'])
       await expect(
         page.locator(area === 'admin' ? 'main[data-area=admin]' : 'main[data-area=dashboard]')
       ).toBeFocused();
+      await page.setViewportSize({ width: 900, height: 768 });
+      const main = page.getByRole('main');
+      await expect(nav).toHaveCSS('width', '60px');
+      const mainWidth = await main.evaluate((element) => element.clientWidth);
+      await nav.getByRole('navigation').getByRole('link').first().focus();
+      await expect(nav).toHaveCSS('width', area === 'admin' ? '256px' : '248px');
+      expect(await main.evaluate((element) => element.clientWidth)).toBe(mainWidth);
       await page.setViewportSize({ width: 1280, height: 720 });
       await expect(menu).toBeHidden();
       await expect(nav).toBeVisible();

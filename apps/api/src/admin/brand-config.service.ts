@@ -7,6 +7,7 @@ import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import { defaultBrandPalette } from '@barghsa/shared/admin';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import type { BrandConfigDto } from './admin.controller.js';
@@ -85,11 +86,7 @@ export class BrandConfigService {
         supportPhone: '021-26658042',
         supportMobile: '09002550292',
         slogan: '',
-        primaryColor: '#176b5b',
-        secondaryColor: '#547467',
-        accentColor: '#d6a74e',
-        backgroundColor: '#f6f7f4',
-        darkBackgroundColor: '#15201c',
+        ...defaultBrandPalette,
         fontFamily: 'vazirmatn',
         borderRadiusRem: 0.75,
         spacingScale: 1,

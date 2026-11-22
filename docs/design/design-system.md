@@ -2,11 +2,11 @@
 
 ## Product direction
 
-Barghsa serves Persian-speaking electricity customers and the staff who review their orders, payments, profiles and support requests. Screens should make amounts, current status and the next available action easy to identify. The agreed direction is calm and precise, with warm neutral surfaces, deep teal actions and restrained amber accents.
+Barghsa serves Persian-speaking energy customers and the staff who review their orders, payments, profiles and support requests. Screens make amounts, current status and the next action easy to identify. The default palette combines cool neutral surfaces, grid-blue actions and warm amber highlights.
 
 Vazirmatn is used throughout, including Latin text. It is self-hosted in `packages/ui/src/fonts` with its SIL Open Font License. The Arabic and Latin variable-font subsets cover weights 100–900. No third-party font request is made at runtime. Monetary values continue to use the existing exact IRR formatters and user numeral preferences.
 
-This work changes the authentication, customer application and admin shells. Existing feature page sections, forms, lists and workflow order remain in place. Their shared controls, feedback colors and table treatments now follow this system.
+The authentication, customer and admin shells share the same palette and controls. The electricity, energy savings, solar and consultation entry pages put their existing actions and history links near the title. Forms and workflow steps retain their service-specific order.
 
 See [forms and final confirmation](forms-and-confirmation.md) for field validation, saved wizard reviews, typed destructive approval and financial acknowledgement.
 
@@ -38,21 +38,22 @@ Shared Avatar now supplies identity fallback in profile choices, the user menu a
 
 Use semantic classes in components. Keep literal colors in the token stylesheet or validated brand configuration.
 
-| Role             | Light     | Dark      | Use                                  |
-| ---------------- | --------- | --------- | ------------------------------------ |
-| Background       | `#f6f7f4` | `#15201c` | Workspace canvas                     |
-| Foreground       | `#203631` | `#e7eee6` | Main text                            |
-| Card             | `#fdfefb` | `#1d2c25` | Forms, records and widgets           |
-| Muted            | `#edf0eb` | `#293a30` | Secondary surfaces                   |
-| Muted foreground | `#5f6e65` | `#afc0b2` | Descriptions and secondary text      |
-| Primary          | `#176b5b` | `#8acfb0` | Main action                          |
-| Border           | `#dbe2da` | `#374b3e` | Surface boundaries                   |
-| Input            | `#85958a` | `#819889` | Identifiable field boundaries        |
-| Success          | `#236c45` | `#9cdbb1` | Verified or completed                |
-| Warning          | `#83500f` | `#f2ca83` | Attention or waiting                 |
-| Destructive      | `#a42c35` | `#ffafb2` | Failure or destructive action        |
-| Info             | `#285f91` | `#a5c9ed` | Processing or informational feedback |
-| Purple           | `#704995` | `#d1b4ee` | Premium classification               |
+| Role             | Light              | Dark      | Use                                  |
+| ---------------- | ------------------ | --------- | ------------------------------------ |
+| Background       | `#f4f6f9`          | `#121c2b` | Workspace canvas                     |
+| Foreground       | `#203631`          | `#e7eee6` | Main text                            |
+| Card             | `#fcfdff`          | `#1b2a3e` | Forms, records and widgets           |
+| Muted            | `#eaf0f6`          | `#26364a` | Secondary surfaces                   |
+| Muted foreground | `#53647a`          | `#b0bfd2` | Descriptions and secondary text      |
+| Primary          | `#204c80`          | `#a2c7ff` | Main action                          |
+| Accent           | `#eeb04d`          | `#ffc66a` | Highlights and interactive selection |
+| Border           | `#d7e0ea`          | `#394c64` | Surface boundaries                   |
+| Input            | Mixed for contrast | `#a5bad2` | Identifiable field boundaries        |
+| Success          | `#236c45`          | `#9cdbb1` | Verified or completed                |
+| Warning          | `#83500f`          | `#f2ca83` | Attention or waiting                 |
+| Destructive      | `#a42c35`          | `#ffafb2` | Failure or destructive action        |
+| Info             | `#285f91`          | `#a5c9ed` | Processing or informational feedback |
+| Purple           | `#704995`          | `#d1b4ee` | Premium classification               |
 
 Pair feedback text with its matching soft background, such as `text-warning bg-warning-soft`. Never assign business status from a color alone. Labels remain visible. The dashboard preserves its existing high-count attention threshold with a restrained icon treatment.
 
@@ -82,20 +83,20 @@ Persian text has natural letter spacing and a relaxed line height. Avoid upperca
 
 ## Space and shape
 
-The existing design context in `.impeccable.md` and this document retains Vazirmatn for both languages, a 72px topbar and a 448px auth panel. These replace Epic 07’s earlier Inter/64px/480px defaults; the installed Base UI preset also remains in use.
+The visible form column stays at most 448px wide. The shell header has a 64px minimum and grows when navigation wraps. The installed Base UI preset supplies the form controls.
 
 Use the existing 4px spacing grid. Related controls use 8–12px gaps, field groups use 16–24px, and major sections use 24–32px. A card normally has 24px padding, with the existing compact size available for dense content.
 
-| Token                    | Value  |
-| ------------------------ | ------ |
-| `--sidebar-width`        | 280px  |
-| `--topbar-height`        | 72px   |
-| `--container-max-width`  | 1280px |
-| `--auth-panel-max-width` | 448px  |
-| `--radius`               | 12px   |
-| `--duration-fast`        | 150ms  |
-| `--duration-normal`      | 200ms  |
-| `--duration-slow`        | 300ms  |
+| Token                    | Value                       |
+| ------------------------ | --------------------------- |
+| `--sidebar-width`        | 248px customer, 256px admin |
+| `--topbar-height`        | 64px minimum                |
+| `--container-max-width`  | 1280px                      |
+| `--auth-panel-max-width` | 448px                       |
+| `--radius`               | 12px                        |
+| `--duration-fast`        | 150ms                       |
+| `--duration-normal`      | 200ms                       |
+| `--duration-slow`        | 300ms                       |
 
 Typography tokens cover xs–4xl, normal/medium/semibold/bold and tight/normal/relaxed leading. `--spacing-1` through `--spacing-16` follow the configured 4px base. Shadows cover sm–2xl; motion exposes fast/normal/slow durations and in/out/in-out easing.
 
@@ -117,11 +118,11 @@ Use borders before shadows. Shadows identify raised cards and overlays. Do not a
 
 Both customer and admin areas use AppShell. Its responsibilities are the brand, current-page context, language switch, grouped navigation, mobile disclosure, scrolling and skip link. Callers supply routes, profile controls, notification actions and existing banners.
 
-The mobile menu remains an inline disclosure. It is not a modal and does not trap focus. The trigger exposes its expanded state. Escape closes the menu and restores focus to the trigger; selecting a link closes it. On desktop the sidebar remains visible and scrolls independently. This keeps long admin route lists reachable by keyboard.
+On phones, the inline menu disclosure exposes its expanded state. Escape closes the menu and restores focus to its trigger. Selecting a link closes it. Tablets have a 60px icon rail that expands over the page on hover, focus, or activation. The desktop sidebar runs alongside the header and content and scrolls independently.
 
-The admin route inventory is unchanged. API permission checks and existing access gates remain authoritative. Role-filtered navigation is still a separate Epic 07 item; the design refresh does not imply that every visible admin link is authorized.
+Sign-in, registration and recovery share a form-first layout. Desktop adds a panel with a generated solar installation image. Phones and tablets use the full width for the form. The image is decorative and the panel has a solid background in high-contrast modes.
 
-Customer navigation hides the existing placeholder-only AI, Documents and Videos pages. Their routes remain available for later implementation. Do not expose new navigation until the destination has a working user flow. The profile switcher, invitation and ownership banners, terms gates and notification bell keep their original data ownership.
+The customer and admin shells display the destinations permitted by the current account and profile context. The maintenance, notification and profile controls keep their existing read and write permissions.
 
 The language switch changes the document locale without navigation, preserving in-progress form values. Existing entry-bundle locale handoff continues to work. This control does not introduce a persisted account-language preference.
 

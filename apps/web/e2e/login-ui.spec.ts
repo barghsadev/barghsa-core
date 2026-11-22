@@ -176,20 +176,22 @@ for (const locale of ['fa', 'en'])
         expect(
           await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)
         ).toBeLessThanOrEqual(1);
-        const aside = page.locator('aside');
-        await expect(aside).toBeVisible();
-        await expect(aside.locator('a[href="/"]')).toBeVisible();
-        const brandBounds = (await aside.boundingBox())!;
         const formBounds = (await page.getByRole('main').boundingBox())!;
-        // The shared-layout requirement calls for a single-column mobile stack,
-        // with branding linked home, and separate columns on desktop.
-        if (testInfo.project.use.isMobile) {
-          expect(brandBounds.y + brandBounds.height).toBeLessThanOrEqual(formBounds.y + 1);
-        } else {
+        const header = page.getByRole('banner');
+        const panel = page.getByRole('complementary');
+        await expect(header.locator('a[href="/"]')).toBeVisible();
+        const headerBounds = (await header.boundingBox())!;
+        expect(headerBounds.y + headerBounds.height).toBeLessThanOrEqual(formBounds.y + 1);
+        if (await page.evaluate(() => matchMedia('(min-width: 64rem)').matches)) {
+          await expect(panel).toBeVisible();
+          const panelBounds = (await panel.boundingBox())!;
           expect(
-            brandBounds.x + brandBounds.width <= formBounds.x + 1 ||
-              formBounds.x + formBounds.width <= brandBounds.x + 1
+            panelBounds.x + panelBounds.width <= formBounds.x + 1 ||
+              formBounds.x + formBounds.width <= panelBounds.x + 1
           ).toBe(true);
+        } else {
+          await expect(panel).toBeHidden();
+          expect(formBounds.width).toBeCloseTo(await page.evaluate(() => innerWidth), 0);
         }
         await page.screenshot({
           path:

@@ -40,8 +40,8 @@ export function Topbar({
     </>
   );
   return (
-    <header className="shell-topbar" data-area={area} data-toast-anchor>
-      {(!isWide || area === 'admin') && (
+    <header className="shell-topbar" data-toast-anchor>
+      {!isWide && (
         <Link to="/app" aria-label={shellText('workspace', locale)} className="shell-topbar-brand">
           <BrandMark compact={!isWide} />
         </Link>

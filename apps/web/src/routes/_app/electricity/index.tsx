@@ -16,6 +16,7 @@ import {
   CardTitle,
   EmptyState,
   ListPage,
+  PageHeader,
   PageLoading,
   buttonVariants,
 } from '@barghsa/ui';
@@ -57,22 +58,21 @@ function ElectricityIndexPage() {
   }, [revision]);
 
   return (
-    <div className="flex flex-col gap-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {t('electricity.catalogue.title', locale)}
-        </h1>
-        <p className="text-muted-foreground">{t('electricity.catalogue.description', locale)}</p>
-        <Link
-          to="/electricity/orders"
-          className="touch-action w-fit text-sm text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
-        >
-          {t('electricity.orders.title', locale)}
-        </Link>
-        <Link to="/electricity/advanced" className={buttonVariants({ variant: 'outline' })}>
-          {t('electricity.catalogue.advancedOrder', locale)}
-        </Link>
-      </header>
+    <div className="flex flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <PageHeader
+        title={t('electricity.catalogue.title', locale)}
+        description={t('electricity.catalogue.description', locale)}
+        actions={
+          <>
+            <Link to="/electricity/advanced" className={buttonVariants({ variant: 'outline' })}>
+              {t('electricity.catalogue.advancedOrder', locale)}
+            </Link>
+            <Link to="/electricity/orders" className={buttonVariants({ variant: 'ghost' })}>
+              {t('electricity.orders.title', locale)}
+            </Link>
+          </>
+        }
+      />
       <ListPage>
         <ListPage.Toolbar
           actions={
@@ -135,21 +135,39 @@ function ElectricityIndexPage() {
                     </div>
                     {description ? <CardDescription>{description}</CardDescription> : null}
                   </CardHeader>
-                  <CardContent className="flex flex-1 flex-col gap-2 text-sm">
-                    <p>
-                      <span className="text-muted-foreground">
-                        {t('electricity.catalogue.price', locale)}:{' '}
-                      </span>
-                      {product.price !== null
-                        ? numbers.money(product.price)
-                        : t('electricity.catalogue.priceUnavailable', locale)}
-                    </p>
-                    <p className="text-muted-foreground">
-                      {t('electricity.catalogue.limits', locale)}:{' '}
-                      {product.limits.minKwh === '0' && product.limits.maxKwh === '0'
-                        ? t('electricity.catalogue.noLimits', locale)
-                        : `${numbers.irrDigits(product.limits.minKwh)}–${product.limits.maxKwh === '0' ? '∞' : numbers.irrDigits(product.limits.maxKwh)} kWh`}
-                    </p>
+                  <CardContent className="flex-1 text-sm">
+                    <dl className="flex flex-col gap-3 border-t pt-4">
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <dt className="text-muted-foreground">
+                          {t('electricity.catalogue.price', locale)}
+                        </dt>
+                        <dd className="font-semibold tabular-nums">
+                          {product.price !== null ? (
+                            <bdi>{numbers.money(product.price)}</bdi>
+                          ) : (
+                            t('electricity.catalogue.priceUnavailable', locale)
+                          )}
+                        </dd>
+                      </div>
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <dt className="text-muted-foreground">
+                          {t('electricity.catalogue.limits', locale)}
+                        </dt>
+                        <dd>
+                          {product.limits.minKwh === '0' && product.limits.maxKwh === '0' ? (
+                            t('electricity.catalogue.noLimits', locale)
+                          ) : (
+                            <bdi dir="ltr">
+                              {numbers.irrDigits(product.limits.minKwh)}–
+                              {product.limits.maxKwh === '0'
+                                ? '∞'
+                                : numbers.irrDigits(product.limits.maxKwh)}{' '}
+                              kWh
+                            </bdi>
+                          )}
+                        </dd>
+                      </div>
+                    </dl>
                   </CardContent>
                   {product.systemKey === 'thermal' &&
                   product.orderable &&

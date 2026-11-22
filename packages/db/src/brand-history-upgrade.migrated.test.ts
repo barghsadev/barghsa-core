@@ -91,13 +91,54 @@ describe('fresh branding installations', () => {
     await database?.close();
   });
 
-  it('retains a coherent active version and superseded seed history', async () => {
+  it('publishes the new default as a revision and retains the earlier seed history', async () => {
     const rows = (
-      await database.pool.query('SELECT version,status FROM brand_config ORDER BY version')
+      await database.pool.query(
+        `SELECT version, status, config->>'primaryColor' AS primary,
+                config->>'darkPrimaryColor' AS dark_primary
+         FROM brand_config WHERE version >= 2 ORDER BY version`
+      )
     ).rows;
     expect(rows).toEqual([
-      { version: 1, status: 'superseded' },
-      { version: 2, status: 'active' },
+      { version: 2, status: 'superseded', primary: '#176b5b', dark_primary: null },
+      { version: 3, status: 'active', primary: '#204c80', dark_primary: '#a2c7ff' },
     ]);
+    expect(
+      (await database.pool.query('SELECT status FROM brand_config WHERE version = 1')).rows
+    ).toEqual([{ status: 'superseded' }]);
   });
+
+  it.each(['staff publication', 'custom dark palette', 'unpublished draft', 'new default'])(
+    'leaves the branding history unchanged for %s',
+    async (scenario) => {
+      const sql = readFileSync('drizzle/production/0299_default_brand_palette.sql', 'utf8');
+      const client = await database.pool.connect();
+      const history = 'SELECT * FROM brand_config ORDER BY version';
+      try {
+        await client.query('BEGIN');
+        if (scenario !== 'new default') {
+          await client.query('DELETE FROM brand_config WHERE version = 3');
+          await client.query("UPDATE brand_config SET status = 'active' WHERE version = 2");
+        }
+        if (scenario === 'staff publication')
+          await client.query("UPDATE brand_config SET created_by = 'editor' WHERE version = 2");
+        if (scenario === 'custom dark palette')
+          await client.query(
+            `UPDATE brand_config SET config = config || '{"darkPrimaryColor":"#89a3bc"}'::jsonb
+             WHERE version = 2`
+          );
+        if (scenario === 'unpublished draft')
+          await client.query(
+            `INSERT INTO brand_config (config, version, status, created_by)
+             VALUES ('{"primaryColor":"#344766"}'::jsonb, 3, 'draft', 'editor')`
+          );
+        const before = (await client.query(history)).rows;
+        await client.query(sql);
+        expect((await client.query(history)).rows).toEqual(before);
+      } finally {
+        await client.query('ROLLBACK');
+        client.release();
+      }
+    }
+  );
 });

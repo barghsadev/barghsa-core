@@ -1,7 +1,15 @@
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { tSaving } from '@barghsa/i18n/saving';
-import { LoadingStatus, Button, Card, CardContent, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Card,
+  CardContent,
+  ListPage,
+  PageHeader,
+  buttonVariants,
+} from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -65,13 +73,18 @@ export function SavingsPage() {
 
   return (
     <div
-      className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-8"
+      className="mx-auto flex w-full max-w-5xl flex-col gap-6"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{copy('title')}</h1>
-        <p className="max-w-2xl text-muted-foreground">{copy('introduction')}</p>
-      </header>
+      <PageHeader
+        title={copy('title')}
+        description={copy('introduction')}
+        actions={
+          <Link to="/savings/orders" className={buttonVariants({ variant: 'outline' })}>
+            {copy('orders')}
+          </Link>
+        }
+      />
       <ListPage>
         <ListPage.Toolbar
           actions={
@@ -177,12 +190,6 @@ export function SavingsPage() {
           </div>
         </ListPage.Content>
       </ListPage>
-      <Link
-        to="/savings/orders"
-        className="touch-action inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
-      >
-        {copy('orders')}
-      </Link>
     </div>
   );
 }

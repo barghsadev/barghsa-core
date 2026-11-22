@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1272 | Accepted with unchanged source bindings. |
-| verify | 0 | Existing work may be complete; inspect evidence before building. |
+| done | 1270 | Accepted with unchanged source bindings. |
+| verify | 2 | Existing work may be complete; inspect evidence before building. |
 | partial | 91 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -644,7 +644,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-04.01` | done | Recorded batch work | Verify full customer and admin UI adoption |
+| `release-readiness#R-04.01` | verify | Recorded batch work | Verify full customer and admin UI adoption |
 | `release-readiness#R-04.02` | done | Recorded batch work | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |
@@ -719,7 +719,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.04.02.01` | done | Recorded batch work | On mobile (< `lg`): sidebar becomes a bottom tab bar with 4–5 primary navigation icons (Home, Orders, Wallet, Profile, More). "More" opens a sheet with all remaining navigation items. |
 | `07-ui-ux-design.md#T-07.04.02.02` | done | Recorded batch work | On mobile: topbar shows only hamburger menu, app logo/title, notification bell, and profile avatar. All secondary actions move into the "More" drawer or overflow menus. |
 | `07-ui-ux-design.md#T-07.04.02.03` | done | Recorded batch work | On tablet (`md`–`lg`): sidebar collapses to icon-only rail (60px wide). Expand on hover or tap. |
-| `07-ui-ux-design.md#T-07.04.02.04` | done | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
+| `07-ui-ux-design.md#T-07.04.02.04` | verify | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
 | `07-ui-ux-design.md#T-07.05.01.01` | done | Recorded batch work | Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`. |
 | `07-ui-ux-design.md#T-07.05.01.02` | done | Recorded batch work | Ensure all interactive elements have visible focus indicators. Define a custom focus ring via `:focus-visible` in CSS: `outline: 2px solid var(--ring)`, `outline-offset: 2px`. Never use `outline: none` without a visible replacement. |
 | `07-ui-ux-design.md#T-07.05.01.03` | done | Recorded batch work | Implement a `FocusTrap` component for modals, sheets, and dropdowns. When open, Tab/Shift+Tab cycles within the dialog. Focus returns to trigger on close. |

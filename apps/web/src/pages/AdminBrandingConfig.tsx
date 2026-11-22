@@ -504,7 +504,7 @@ export default function AdminBrandingConfig() {
             historyRead.accept(acceptBrandRevision(history, dto));
             setEditing(false);
             setNeedsReset(false);
-            setConfig({ ...DEFAULT_CONFIG, ...dto.config });
+            setConfig(dto.config);
             setMessage({ type: 'success', text: text('saved') });
             closeAction();
           }}

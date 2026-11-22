@@ -1,4 +1,5 @@
 import type { NumberStyle } from '@barghsa/i18n/numbers';
+import { defaultBrandPalette } from '@barghsa/shared/admin';
 import { Controller, Get, Logger } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BrandConfigService } from '../admin/brand-config.service.js';
@@ -91,21 +92,25 @@ export class PublicBrandingController {
       supportPhone: (brandConfig.supportPhone as string) ?? '021-26658042',
       supportMobile: (brandConfig.supportMobile as string) ?? '09002550292',
       slogan: (brandConfig.slogan as string) ?? '',
-      primaryColor: (brandConfig.primaryColor as string) ?? '#176b5b',
-      secondaryColor: (brandConfig.secondaryColor as string) ?? '#547467',
-      accentColor: (brandConfig.accentColor as string) ?? '#d6a74e',
+      primaryColor: (brandConfig.primaryColor as string) ?? defaultBrandPalette.primaryColor,
+      secondaryColor: (brandConfig.secondaryColor as string) ?? defaultBrandPalette.secondaryColor,
+      accentColor: (brandConfig.accentColor as string) ?? defaultBrandPalette.accentColor,
       darkPrimaryColor:
         (brandConfig.darkPrimaryColor as string) ??
         (brandConfig.primaryColor as string) ??
-        '#176b5b',
+        defaultBrandPalette.darkPrimaryColor,
       darkSecondaryColor:
         (brandConfig.darkSecondaryColor as string) ??
         (brandConfig.secondaryColor as string) ??
-        '#547467',
+        defaultBrandPalette.darkSecondaryColor,
       darkAccentColor:
-        (brandConfig.darkAccentColor as string) ?? (brandConfig.accentColor as string) ?? '#d6a74e',
-      backgroundColor: (brandConfig.backgroundColor as string) ?? '#f6f7f4',
-      darkBackgroundColor: (brandConfig.darkBackgroundColor as string) ?? '#15201c',
+        (brandConfig.darkAccentColor as string) ??
+        (brandConfig.accentColor as string) ??
+        defaultBrandPalette.darkAccentColor,
+      backgroundColor:
+        (brandConfig.backgroundColor as string) ?? defaultBrandPalette.backgroundColor,
+      darkBackgroundColor:
+        (brandConfig.darkBackgroundColor as string) ?? defaultBrandPalette.darkBackgroundColor,
       fontFamily: brandConfig.fontFamily === 'tahoma' ? 'tahoma' : 'vazirmatn',
       borderRadiusRem:
         typeof brandConfig.borderRadiusRem === 'number' ? brandConfig.borderRadiusRem : 0.75,

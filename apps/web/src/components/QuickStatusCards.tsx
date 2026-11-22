@@ -63,17 +63,22 @@ export function QuickStatusCards({
   return (
     <div
       className={
-        embedded ? 'grid h-full grid-cols-2 gap-3' : 'grid h-full grid-cols-1 gap-4 sm:grid-cols-2'
+        embedded ? 'grid grid-cols-2 gap-2' : 'grid h-full grid-cols-1 gap-4 sm:grid-cols-2'
       }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {cards.map(({ key, icon: Icon, label, href, search, count }) => {
         const content = (
           <>
-            <div className="flex items-center justify-between gap-3">
+            <div
+              className={cn(
+                'flex justify-between',
+                embedded ? 'items-start gap-2' : 'items-center gap-3'
+              )}
+            >
               <Icon
                 className={cn(
-                  'size-5',
+                  'size-5 shrink-0',
                   key === 'contracts' && count > 0
                     ? 'text-success'
                     : key !== 'contracts' && count > 2
@@ -86,7 +91,9 @@ export function QuickStatusCards({
                 aria-hidden="true"
               />
               {embedded ? (
-                <p className="text-2xl font-semibold tabular-nums">{numbers.number(count)}</p>
+                <p className="min-w-0 text-xl leading-none font-semibold wrap-anywhere tabular-nums">
+                  {numbers.number(count)}
+                </p>
               ) : href ? (
                 <ArrowUpRight
                   className="size-4 text-muted-foreground rtl:-rotate-90"
@@ -103,17 +110,26 @@ export function QuickStatusCards({
           </>
         );
         const className = cn(
-          'group flex min-w-0 flex-col rounded-xl border bg-card text-card-foreground shadow-sm transition-shadow hover:border-input hover:shadow-md',
-          embedded ? 'gap-3 p-3' : 'gap-5 p-5'
+          'flex min-w-0 flex-col rounded-xl border text-card-foreground',
+          embedded
+            ? 'gap-2 bg-muted/45 p-2'
+            : 'gap-5 bg-card p-5 shadow-sm transition-shadow hover:border-input hover:shadow-md'
         );
         return href ? (
-          <Link key={key} to={href} search={search} className={className}>
+          <Link
+            key={key}
+            to={href}
+            search={search}
+            className={cn(className, embedded && 'hover:border-input hover:bg-muted')}
+          >
             {content}
           </Link>
         ) : (
           <div key={key} className={className}>
             {content}
-            <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium">
+            <div
+              className={cn('flex flex-wrap gap-x-4 text-sm font-medium', !embedded && 'gap-y-2')}
+            >
               <Link
                 to="/electricity/orders"
                 search={{ status: 'pending' }}

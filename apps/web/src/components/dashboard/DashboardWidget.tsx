@@ -35,15 +35,20 @@ export function DashboardWidget<T>({
   const id = useId();
   const profileChanged = resource.status === 'error' && resource.error.code === 'READ_CONFLICT';
   return (
-    <Card variant="widget" role="region" aria-labelledby={id} className="h-[32rem] min-w-0">
-      <CardHeader className="flex min-h-12 flex-row flex-wrap items-center justify-between gap-3">
+    <Card
+      variant="widget"
+      role="region"
+      aria-labelledby={id}
+      className="h-[24rem] min-w-0 gap-3 pt-4 pb-3 [--card-spacing:1rem] sm:[--card-spacing:1.25rem]"
+    >
+      <CardHeader className="flex min-h-11 flex-row flex-wrap items-center justify-between gap-x-2 gap-y-0 border-b pb-2">
         <h2 id={id} className="flex min-w-0 items-center gap-2 text-base font-semibold">
           <Icon aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
           {title}
         </h2>
         {viewAll}
       </CardHeader>
-      <CardContent className="min-h-0 flex-1 overflow-y-auto" tabIndex={0}>
+      <CardContent className="min-h-0 flex-1 overflow-y-auto py-1" tabIndex={0}>
         {resource.status === 'loading' ? (
           <LoadingSkeleton label={loadingText('loading', locale)} variant="table" />
         ) : resource.status === 'error' ? (

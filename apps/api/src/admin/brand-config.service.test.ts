@@ -68,8 +68,9 @@ describe('BrandConfigService', () => {
       expect(result.id).toBe('default');
       expect(result.version).toBe(0);
       expect(result.config.appTitle).toBe('Barghsa');
-      expect(result.config.primaryColor).toBe('#176b5b');
-      expect(result.config.backgroundColor).toBe('#f6f7f4');
+      expect(result.config.primaryColor).toBe('#204c80');
+      expect(result.config.darkPrimaryColor).toBe('#a2c7ff');
+      expect(result.config.backgroundColor).toBe('#f4f6f9');
       expect(result.config.fontFamily).toBe('vazirmatn');
     });
   });

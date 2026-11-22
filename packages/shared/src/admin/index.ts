@@ -11,3 +11,4 @@ export * from './operational-retention.js';
 
 export * from './staff-permissions.js';
 export * from './config-audit.js';
+export * from './brand-palette.js';

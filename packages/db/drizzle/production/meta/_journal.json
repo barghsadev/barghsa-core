@@ -1534,6 +1534,13 @@
       "when": 1795139243914,
       "tag": "0298_sms_delivery_report",
       "breakpoints": true
+    },
+    {
+      "idx": 299,
+      "version": "7",
+      "when": 1795310560642,
+      "tag": "0299_default_brand_palette",
+      "breakpoints": true
     }
   ]
 }

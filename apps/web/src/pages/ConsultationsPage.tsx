@@ -2,7 +2,7 @@ import { toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
-import { LoadingStatus, ListPage } from '@barghsa/ui';
+import { LoadingStatus, ListPage, PageHeader, buttonVariants } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -692,13 +692,23 @@ export function ConsultationsPage({
   ];
   return (
     <section
-      className={`mx-auto w-full min-w-0 space-y-8 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
+      className={`mx-auto w-full min-w-0 space-y-6 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold">{copy('title')}</h1>
-        <p className="max-w-2xl text-muted-foreground">{copy('intro')}</p>
-      </header>
+      <PageHeader
+        title={copy('title')}
+        description={copy('intro')}
+        actions={
+          !loading && !loadError && profile ? (
+            <a
+              href="#consultation-requests-title"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {copy('myRequests')}
+            </a>
+          ) : null
+        }
+      />
       {time.notice}
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && (
@@ -911,7 +921,7 @@ export function ConsultationsPage({
           </Form>
 
           <section className="space-y-3" aria-labelledby="consultation-requests-title">
-            <h2 id="consultation-requests-title" className="text-xl font-semibold">
+            <h2 id="consultation-requests-title" tabIndex={-1} className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
             <ListPage>

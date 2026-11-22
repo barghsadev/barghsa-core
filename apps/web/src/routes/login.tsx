@@ -347,33 +347,19 @@ function LoginPage() {
             </button>
           </p>
         ) : (
-          <div className="space-y-2">
-            <p className="text-center text-sm text-muted-foreground">
-              {t('auth.login.registerLink', locale)}{' '}
-              <Link
-                to="/register"
-                onClick={(event) => {
-                  if (model.busy) event.preventDefault();
-                }}
-                className="touch-action font-medium text-primary dark:text-foreground underline-offset-4 hover:underline"
-                aria-label={t('auth.login.registerLinkLabel', locale)}
-              >
-                {t('auth.login.registerLinkLabel', locale)}
-              </Link>
-            </p>
-            <p className="text-center text-sm">
-              <Link
-                to="/forgot-password"
-                onClick={(event) => {
-                  if (model.busy) event.preventDefault();
-                }}
-                className="touch-action text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
-                aria-label={t('auth.register.forgotPasswordLabel', locale)}
-              >
-                {t('auth.register.forgotPasswordLink', locale)}
-              </Link>
-            </p>
-          </div>
+          <p className="text-center text-sm text-muted-foreground">
+            {t('auth.login.registerLink', locale)}{' '}
+            <Link
+              to="/register"
+              onClick={(event) => {
+                if (model.busy) event.preventDefault();
+              }}
+              className="touch-action font-medium text-primary underline underline-offset-4"
+              aria-label={t('auth.login.registerLinkLabel', locale)}
+            >
+              {t('auth.login.registerLinkLabel', locale)}
+            </Link>
+          </p>
         )
       }
     >
@@ -582,6 +568,20 @@ function LoginPage() {
                 locale
               )}
             </Button>
+            {stage === 'credentials' && (
+              <div className="text-center">
+                <Link
+                  to="/forgot-password"
+                  onClick={(event) => {
+                    if (model.busy) event.preventDefault();
+                  }}
+                  className="touch-action text-sm font-medium text-primary underline underline-offset-4"
+                  aria-label={t('auth.register.forgotPasswordLabel', locale)}
+                >
+                  {t('auth.register.forgotPasswordLink', locale)}
+                </Link>
+              </div>
+            )}
             {stage === 'otp' && (
               <>
                 {attemptCooldown > 0 && (

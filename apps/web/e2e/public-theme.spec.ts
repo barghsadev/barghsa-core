@@ -51,6 +51,7 @@ for (const locale of ['fa', 'en'] as const) {
         })
       );
       for (const path of [
+        '/login',
         '/register',
         '/forgot-password',
         '/activate',

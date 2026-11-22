@@ -84,6 +84,7 @@ import {
   STAFF_ASSIGNMENT_MAX_FALLBACKS,
   MAX_ESCALATION_DELAY_HOURS,
   ESCALATION_CHANNELS,
+  defaultBrandPalette,
 } from '@barghsa/shared/admin';
 
 const STAFF_CONTENT_MAX_LENGTH = 65_536;
@@ -293,17 +294,17 @@ export const UpsertBrandConfigSchema = z.strictObject({
         .string()
         .regex(hexColorRe, 'Must be a valid 6-char hex color')
         .optional()
-        .default('#176b5b'),
+        .default(defaultBrandPalette.primaryColor),
       secondaryColor: z
         .string()
         .regex(hexColorRe, 'Must be a valid 6-char hex color')
         .optional()
-        .default('#547467'),
+        .default(defaultBrandPalette.secondaryColor),
       accentColor: z
         .string()
         .regex(hexColorRe, 'Must be a valid 6-char hex color')
         .optional()
-        .default('#d6a74e'),
+        .default(defaultBrandPalette.accentColor),
       darkPrimaryColor: z.string().regex(hexColorRe).optional(),
       darkSecondaryColor: z.string().regex(hexColorRe).optional(),
       darkAccentColor: z.string().regex(hexColorRe).optional(),
@@ -312,13 +313,13 @@ export const UpsertBrandConfigSchema = z.strictObject({
         .regex(hexColorRe)
         .refine(readableBackground('#203631'), 'Background must contrast with light-mode text')
         .optional()
-        .default('#f6f7f4'),
+        .default(defaultBrandPalette.backgroundColor),
       darkBackgroundColor: z
         .string()
         .regex(hexColorRe)
         .refine(readableBackground('#e7eee6'), 'Background must contrast with dark-mode text')
         .optional()
-        .default('#15201c'),
+        .default(defaultBrandPalette.darkBackgroundColor),
       fontFamily: z.enum(['vazirmatn', 'tahoma']).optional().default('vazirmatn'),
       borderRadiusRem: z.number().min(0).max(1.5).optional().default(0.75),
       spacingScale: z.number().min(0.875).max(1.25).optional().default(1),

@@ -47,17 +47,27 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
     {
       label: shellText('services', locale),
       items: [
-        { to: '/electricity', label: t('dashboard.nav.electricity', locale), icon: Zap },
-        { to: '/savings', label: t('dashboard.nav.savings', locale), icon: Sprout },
+        { to: '/electricity', label: shellText('buyElectricity', locale), icon: Zap },
+        { to: '/savings', label: shellText('energySavings', locale), icon: Sprout },
         { to: '/solar/requests', label: t('dashboard.nav.solarRequests', locale), icon: Sun },
         {
           to: '/consultations',
           label: t('dashboard.nav.consultations', locale),
           icon: MessagesSquare,
         },
+      ],
+    },
+    {
+      label: shellText('finance', locale),
+      items: [
         { to: '/wallet', label: t('dashboard.nav.wallet', locale), icon: Wallet },
         { to: '/invoices', label: t('dashboard.nav.invoices', locale), icon: ReceiptText },
         { to: '/contracts', label: t('dashboard.nav.contracts', locale), icon: FileText },
+      ],
+    },
+    {
+      label: shellText('support', locale),
+      items: [
         { to: '/documents', label: t('dashboard.nav.documentsList', locale), icon: FileText },
         { to: '/tickets', label: t('tickets.title', locale), icon: LifeBuoy },
         { to: '/ai', label: t('assistant.open', locale), icon: BookOpenText },

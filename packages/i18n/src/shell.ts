@@ -28,6 +28,8 @@ const fa = {
   skip: 'رفتن به محتوای اصلی',
   overview: 'نمای کلی',
   services: 'خدمات',
+  buyElectricity: 'خرید برق',
+  energySavings: 'بهینه‌سازی مصرف',
   account: 'حساب کاربری',
   accountMenu: 'فهرست حساب کاربری',
   myProfile: 'پروفایل من',
@@ -66,9 +68,7 @@ const fa = {
   analyticsLoading: 'در حال بارگذاری انتخاب شما…',
   analyticsRetry: 'تلاش دوباره',
   analyticsError: 'ذخیره انتخاب شما ناموفق بود. دوباره تلاش کنید.',
-  dashboardEyebrow: 'حساب شما در یک نگاه',
   dashboardDescription: 'وضعیت سفارش‌ها، پرداخت‌ها و درخواست‌های پشتیبانی را دنبال کنید.',
-  quickActionsDescription: 'دسترسی مستقیم به کارهای روزمره',
   view: 'مشاهده',
 };
 const en: Record<keyof typeof fa, string> = {
@@ -99,6 +99,8 @@ const en: Record<keyof typeof fa, string> = {
   skip: 'Skip to main content',
   overview: 'Overview',
   services: 'Services',
+  buyElectricity: 'Buy electricity',
+  energySavings: 'Energy savings',
   account: 'Account',
   accountMenu: 'Account menu',
   myProfile: 'My profile',
@@ -136,9 +138,7 @@ const en: Record<keyof typeof fa, string> = {
   analyticsLoading: 'Loading your choice…',
   analyticsRetry: 'Retry',
   analyticsError: 'Could not save your choice. Please try again.',
-  dashboardEyebrow: 'Your account at a glance',
   dashboardDescription: 'Keep track of orders, payments and support requests.',
-  quickActionsDescription: 'A shorter path to everyday tasks',
   view: 'View',
 };
 export function shellText(key: keyof typeof fa, locale: 'en' | 'fa'): string {

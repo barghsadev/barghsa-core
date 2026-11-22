@@ -1,15 +1,8 @@
-import {
-  PageHeader,
-  Alert,
-  AlertDescription,
-  Button,
-  buttonVariants,
-  LoadingSkeleton,
-} from '@barghsa/ui';
+import { Alert, AlertDescription, Button, buttonVariants, LoadingSkeleton } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { dashboardText } from '@barghsa/i18n/dashboard';
-import { ArrowUpRight, Wallet, Gauge, ReceiptText, Package, FileCheck2 } from 'lucide-react';
+import { Zap, Wallet, Gauge, ReceiptText, Package, FileCheck2, LifeBuoy } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/workspace';
@@ -35,6 +28,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import './dashboard-intro.css';
 
 interface DashboardContext {
   profile: { id: string; name: string };
@@ -306,18 +300,39 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   const dashboard = context.status === 'ready' && validContext(context.data) ? context.data : null;
   const profileName = dashboard?.profile.name || t('dashboard.profile.unnamed', locale);
   const actions = [
-    { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
-    { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet' },
-    { label: t('dashboard.overview.supportTicket', locale), href: '/tickets' },
-  ];
+    { label: shellText('buyElectricity', locale), href: '/electricity', icon: Zap },
+    { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet', icon: Wallet },
+    { label: t('dashboard.overview.supportTicket', locale), href: '/tickets', icon: LifeBuoy },
+  ] as const;
 
   return (
-    <div className="flex flex-col gap-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <PageHeader
-        eyebrow={shellText('dashboardEyebrow', locale)}
-        title={t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
-        description={shellText('dashboardDescription', locale)}
-      />
+    <div className="flex flex-col gap-5 lg:gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <header className="overflow-hidden rounded-2xl border bg-card">
+        <div className="dashboard-intro bg-brand-panel px-5 py-6 text-brand-panel-foreground sm:px-7 sm:py-8">
+          <h1 className="max-w-3xl text-[clamp(1.625rem,3.2vw,2.625rem)] font-bold leading-tight wrap-anywhere">
+            {t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
+          </h1>
+          <p className="mt-2 max-w-xl text-sm text-brand-panel-muted sm:text-base">
+            {shellText('dashboardDescription', locale)}
+          </p>
+        </div>
+        <div
+          role="group"
+          aria-label={t('dashboard.overview.quickActions', locale)}
+          className="flex flex-wrap gap-2 px-4 py-3 sm:px-6"
+        >
+          {actions.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              to={href}
+              className={buttonVariants({ variant: href === '/electricity' ? 'default' : 'ghost' })}
+            >
+              <Icon data-icon="inline-start" aria-hidden="true" />
+              {label}
+            </Link>
+          ))}
+        </div>
+      </header>
       {context.status === 'loading' ? (
         <LoadingSkeleton label={loadingText('loading', locale)} variant="cards" />
       ) : !dashboard ? (
@@ -350,26 +365,6 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
           </DashboardLayout>
         </>
       )}
-      <section className="border-t pt-6">
-        <h2 className="mb-1 text-lg font-semibold">
-          {t('dashboard.overview.quickActions', locale)}
-        </h2>
-        <p className="mb-4 text-sm text-muted-foreground">
-          {shellText('quickActionsDescription', locale)}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          {actions.map((action) => (
-            <Link
-              key={action.href}
-              to={action.href}
-              className={buttonVariants({ variant: 'outline' })}
-            >
-              {action.label}
-              <ArrowUpRight data-icon="inline-end" aria-hidden="true" className="rtl:-rotate-90" />
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

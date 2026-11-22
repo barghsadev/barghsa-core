@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
-import { Separator, Animated } from '@barghsa/ui';
-import { ArrowUpRight, type LucideIcon } from 'lucide-react';
+import { Animated } from '@barghsa/ui';
+import type { LucideIcon } from 'lucide-react';
 import { BrandMark } from './BrandMark.js';
 import { Topbar } from './Topbar.js';
 import { shellText } from '@barghsa/i18n/shell';
@@ -52,7 +52,7 @@ export function AppShell({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const sidebar = useRef<HTMLElement>(null);
-  const { pathname } = useLocation();
+  const pathname = useLocation({ select: (location) => location.pathname });
   const router = useRouter();
   const compact = useSyncExternalStore(subscribeCompactNavigation, compactNavigation, () => false);
   const [CompactBar, setCompactBar] = useState<CompactBarComponent | null>(null);
@@ -97,33 +97,33 @@ export function AppShell({
   const shell = (
     <div
       className="app-shell"
+      data-area={area}
       data-no-navigation={groups.length === 0 || undefined}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {banners}
       <AnalyticsConsentBanner />
-      <Topbar
-        area={area}
-        locale={locale}
-        isWide={!compact}
-        breadcrumbs={
-          <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
-        }
-        actions={actions}
-        profileBadge={profileBadge}
-        menuOpen={menuOpen}
-        menuButton={menuButton}
-        onMenuToggle={() => setMenuOpen(!menuOpen)}
-        onAccountOpen={closeMenu}
-        navigationId={`${area}-navigation`}
-      />
-      <div className="shell-body">
+      <div className="shell-frame">
+        <Topbar
+          area={area}
+          locale={locale}
+          isWide={!compact}
+          breadcrumbs={
+            <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
+          }
+          actions={actions}
+          profileBadge={profileBadge}
+          menuOpen={menuOpen}
+          menuButton={menuButton}
+          onMenuToggle={() => setMenuOpen(!menuOpen)}
+          onAccountOpen={closeMenu}
+          navigationId={`${area}-navigation`}
+        />
         <aside
           ref={sidebar}
           id={`${area}-navigation`}
-          data-area={area}
           data-expanded={menuOpen}
-          className="group/sidebar app-shell-sidebar scroll-py-1"
+          className="app-shell-sidebar"
         >
           <Link
             to="/app"
@@ -133,10 +133,7 @@ export function AppShell({
             <BrandMark compact={compact && !menuOpen} />
           </Link>
           {profile ? (
-            <div className="mb-5 shell-sidebar-panel">
-              {profile}
-              <Separator aria-hidden="true" className="mt-4" />
-            </div>
+            <div className="shell-sidebar-detail shell-sidebar-profile">{profile}</div>
           ) : null}
           <nav aria-label={shellText('navigation', locale)} className="shell-sidebar-navigation">
             {navigationUnavailable && (
@@ -153,10 +150,8 @@ export function AppShell({
             )}
             {groups.map((group) => (
               <div key={group.label} className="shell-sidebar-group">
-                <p className="mb-2 px-3 text-xs font-medium text-muted-foreground shell-sidebar-panel">
-                  {group.label}
-                </p>
-                <ul className="flex flex-col gap-1">
+                <p className="shell-sidebar-detail">{group.label}</p>
+                <ul>
                   {group.items.map(({ to, label, icon: Icon }) => (
                     <li key={to}>
                       <Link
@@ -164,16 +159,11 @@ export function AppShell({
                         activeOptions={{ exact: true }}
                         className="shell-navigation-link"
                         aria-label={label}
-                        title={label}
                         aria-current={currentPath === to ? 'page' : undefined}
                         onClick={closeMenu}
                       >
-                        <Icon
-                          className="size-[1.125rem] shrink-0"
-                          strokeWidth={1.7}
-                          aria-hidden="true"
-                        />
-                        <span className="shell-sidebar-label">{label}</span>
+                        <Icon strokeWidth={1.7} aria-hidden="true" />
+                        <span className="shell-sidebar-detail">{label}</span>
                       </Link>
                     </li>
                   ))}
@@ -181,20 +171,6 @@ export function AppShell({
               </div>
             ))}
           </nav>
-          {area === 'dashboard' && (
-            <div className="mt-6">
-              <Separator aria-hidden="true" className="mb-4" />
-              <Link
-                to="/tickets"
-                className="shell-navigation-link"
-                aria-label={shellText('support', locale)}
-                title={shellText('support', locale)}
-              >
-                <ArrowUpRight className="size-4 shrink-0 rtl:-rotate-90" aria-hidden="true" />
-                <span className="shell-sidebar-label">{shellText('support', locale)}</span>
-              </Link>
-            </div>
-          )}
         </aside>
         {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
         <main

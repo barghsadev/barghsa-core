@@ -40,6 +40,7 @@ for (const isStaff of [false, true]) {
       await expect(page.locator('#admin-navigation a[href="/wallet"]')).toHaveCount(0);
       await page.goto('/wallet');
       await expect(page).toHaveURL(/\/app$/);
+      await expect(page.locator('main[data-area="admin"]')).toBeVisible();
       await page.goto('/electricity/order');
     } else {
       await expect(page.locator('#dashboard-navigation a[href="/wallet"]')).toHaveCount(1);

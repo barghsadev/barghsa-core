@@ -185,9 +185,9 @@ it('keeps the default dark text readable before branding is available', async ()
   const { style, classList } = document.documentElement;
   expect(classList.contains('dark')).toBe(true);
   expect(host.textContent).toBe('Barghsa');
-  expect(style.getPropertyValue('--primary')).toBe('#176b5b');
-  expect(style.getPropertyValue('--brand-primary-text-dark')).toBe('var(--foreground)');
-  expect(style.getPropertyValue('--brand-primary-text-light')).toBe('#176b5b');
+  expect(style.getPropertyValue('--primary')).toBe('#a2c7ff');
+  expect(style.getPropertyValue('--brand-primary-text-dark')).toBe('#a2c7ff');
+  expect(style.getPropertyValue('--brand-primary-text-light')).toBe('#204c80');
 });
 
 it('ignores malformed branding instead of partially applying it', async () => {
@@ -294,12 +294,12 @@ it('uses layout defaults for older published branding and rejects unreadable bac
   vi.stubGlobal('fetch', request);
   await mount();
   expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe(
-    '#f6f7f4'
+    '#f4f6f9'
   );
   expect(document.documentElement.style.getPropertyValue('--app-font')).toBe("'Vazirmatn'");
   await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
   expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe(
-    '#f6f7f4'
+    '#f4f6f9'
   );
 });
 

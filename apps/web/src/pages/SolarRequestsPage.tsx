@@ -1,4 +1,4 @@
-import { LoadingStatus, ListPage, Button } from '@barghsa/ui';
+import { LoadingStatus, ListPage, Button, PageHeader, buttonVariants } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -165,16 +165,17 @@ export function SolarRequestsPage({
   ];
   return (
     <div
-      className={`mx-auto w-full min-w-0 space-y-5 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-3xl'}`}
+      className={`mx-auto w-full min-w-0 space-y-5 ${view === 'table' ? 'max-w-7xl' : 'max-w-3xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
-      <Link
-        to="/solar/requests/new"
-        className="touch-action inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground pointer-coarse:min-h-[45px]!"
-      >
-        {copy('submit')}
-      </Link>
+      <PageHeader
+        title={copy('myRequests')}
+        actions={
+          <Link to="/solar/requests/new" className={buttonVariants()}>
+            {copy('submit')}
+          </Link>
+        }
+      />
       {time.notice}
       <ListPage>
         <ListPage.Toolbar

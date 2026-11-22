@@ -1017,7 +1017,7 @@
                     "description": "Brand configuration",
                     "properties": {
                       "accentColor": {
-                        "default": "#d6a74e",
+                        "default": "#eeb04d",
                         "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },
@@ -1034,7 +1034,7 @@
                         "type": "string"
                       },
                       "backgroundColor": {
-                        "default": "#f6f7f4",
+                        "default": "#f4f6f9",
                         "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },
@@ -1049,7 +1049,7 @@
                         "type": "string"
                       },
                       "darkBackgroundColor": {
-                        "default": "#15201c",
+                        "default": "#121c2b",
                         "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },
@@ -1102,12 +1102,12 @@
                         "type": "string"
                       },
                       "primaryColor": {
-                        "default": "#176b5b",
+                        "default": "#204c80",
                         "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },
                       "secondaryColor": {
-                        "default": "#547467",
+                        "default": "#516783",
                         "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },

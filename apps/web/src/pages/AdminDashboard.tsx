@@ -11,7 +11,7 @@ import { AdminMaintenanceSummary } from '../components/AdminMaintenanceSummary.j
 import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
 import { DashboardWidget } from '../components/dashboard/DashboardWidget.js';
 import { dashboardText } from '@barghsa/i18n/dashboard';
-import { Button } from '@barghsa/ui';
+import { Button, PageHeader } from '@barghsa/ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
 import { localizedAsyncReadError } from '../hooks/useAsyncData.js';
@@ -269,9 +269,13 @@ function ChargebackWarning() {
 export default function AdminDashboard() {
   const locale = useLocale();
   return (
-    <div dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h1 className="mb-4 text-2xl font-bold">{t('dashboard.admin.title', locale)}</h1>
-      <p className="mb-6 text-muted-foreground">{t('dashboard.admin.description', locale)}</p>
+    <div className="flex flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <div className="border-b pb-5">
+        <PageHeader
+          title={t('dashboard.admin.title', locale)}
+          description={t('dashboard.admin.description', locale)}
+        />
+      </div>
       <DashboardLayout>
         <AdminBusinessWorkCounts />
         <PendingVerification />

@@ -1,0 +1,27 @@
+.dashboard-intro {
+  position: relative;
+  isolation: isolate;
+}
+.dashboard-intro::after {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(38%, 25rem);
+  content: '';
+  pointer-events: none;
+  background-image:
+    linear-gradient(transparent calc(100% - 1px), var(--brand-panel-muted) 1px),
+    linear-gradient(90deg, transparent calc(100% - 1px), var(--brand-panel-muted) 1px);
+  background-size: 2rem 2rem;
+  mask-image: linear-gradient(to left, #000, transparent);
+  opacity: 0.16;
+}
+[dir='rtl'] .dashboard-intro::after {
+  mask-image: linear-gradient(to right, #000, transparent);
+}
+@media (prefers-contrast: more), (forced-colors: active) {
+  .dashboard-intro::after {
+    display: none;
+  }
+}
