@@ -4,7 +4,7 @@ import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { toast } from '../lib/toast-api.js';
-import { Skeleton, Alert, AlertDescription } from '@barghsa/ui';
+import { Skeleton, Alert, AlertDescription, Button } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useReceiptForm } from '../hooks/useReceiptForm.js';
@@ -42,9 +42,9 @@ const BankReceiptTopUpReviewDialog = lazy(
   () => import('../components/BankReceiptTopUpReviewDialog.js')
 );
 
-const formCardClass = 'space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm';
+const formCardClass = 'min-w-0 space-y-4 rounded-xl border bg-card p-5 text-card-foreground';
 const fieldLabelClass = 'block text-sm font-medium text-foreground';
-const amountInputClass =
+const fieldInputClass =
   'mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40';
 
 interface WalletBalance {
@@ -601,13 +601,13 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
 
   return (
     <div
-      className="mx-auto max-w-lg space-y-6"
+      className="mx-auto max-w-4xl space-y-6"
       dir={isRtl ? 'rtl' : 'ltr'}
       data-testid="wallet-page"
     >
       <header>
-        <h1 className="text-2xl font-bold text-foreground">{walletText('title')}</h1>
-        <p className="mt-2 text-muted-foreground">{walletText('subtitle')}</p>
+        <h1 className="text-3xl font-semibold">{walletText('title')}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{walletText('subtitle')}</p>
         {returnInvoiceId && (
           <a
             className="mt-3 inline-block text-sm font-medium text-primary underline"
@@ -634,11 +634,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           <Skeleton className="h-40 rounded-lg" data-testid="wallet-loading" />
         </div>
       ) : (
-        <div className="space-y-6" data-testid="wallet-loaded">
+        <div
+          className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 [&>:not(form)]:col-span-full"
+          data-testid="wallet-loaded"
+        >
           {wallet && (
-            <section className="rounded-lg bg-card text-card-foreground p-6 shadow-sm">
+            <section className={formCardClass}>
               <p className="text-sm text-muted-foreground">{walletText('currentBalance')}</p>
-              <p className="mt-1 text-3xl font-bold text-foreground" data-testid="wallet-balance">
+              <p className="text-3xl font-semibold" data-testid="wallet-balance">
                 {wallet.currency === 'IRR' ? (
                   <Currency amount={wallet.balance} showToman variant="large" locale={locale} />
                 ) : (
@@ -692,7 +695,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setAmountInput(normalizeIrrAmountDigits(event.target.value));
                   }}
-                  className={amountInputClass}
+                  className={fieldInputClass}
                 />
                 <p id="top-up-amount-hint" className="mt-2 text-sm text-muted-foreground">
                   {advertisedLimit === 0
@@ -717,17 +720,17 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   </p>
                 )}
               </div>
-              <button
+              <Button
                 type="submit"
                 data-testid="wallet-submit"
                 disabled={onlineSubmitDisabled}
                 aria-busy={onlineBusy || undefined}
-                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-dark disabled:opacity-60"
+                className="w-full"
               >
                 {onlineBusy
                   ? walletText(onlineReview ? 'submitting' : 'reviewLoading')
                   : walletText('submit')}
-              </button>
+              </Button>
             </form>
           )}
 
@@ -783,7 +786,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value));
                   }}
-                  className={amountInputClass}
+                  className={fieldInputClass}
                 />
                 {receiptFieldError('amount')}
                 {receiptTomanPreview !== null && (
@@ -813,7 +816,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptDate(event.target.value);
                   }}
-                  className={amountInputClass}
+                  className={fieldInputClass}
                 />
                 {receiptFieldError('paymentDate')}
               </div>
@@ -836,7 +839,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptPayerRef(event.target.value);
                   }}
-                  className={amountInputClass}
+                  className={fieldInputClass}
                 />
                 {receiptFieldError('payerReference')}
               </div>
@@ -857,7 +860,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptBankName(event.target.value);
                   }}
-                  className="mt-2 w-full rounded-lg border border-border bg-background p-3 text-foreground"
+                  className={fieldInputClass}
                 />
                 {receiptFieldError('bankName')}
               </div>
@@ -925,15 +928,15 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 {receiptFieldError('customerNote')}
               </div>
 
-              <button
+              <Button
                 type="submit"
                 data-testid="wallet-receipt-submit"
                 disabled={receiptLocked}
                 aria-busy={receiptBusy || undefined}
-                className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
+                className="w-full"
               >
                 {receiptBusy ? walletText('receiptSubmitting') : walletText('receiptSubmit')}
-              </button>
+              </Button>
             </form>
           )}
 

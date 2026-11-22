@@ -666,10 +666,16 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     >
       {time.notice}
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold">{text(staff ? 'staffTitle' : 'title')}</h1>
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {text(staff ? 'staffTitle' : 'title')}
+          </h1>
+          {staff && <p className="mt-2 text-sm text-muted-foreground">{text('targetNote')}</p>}
+        </div>
         {!staff && (
           <Button
-            className="hover:bg-primary"
+            aria-controls={queueAccessDenied ? undefined : 'customer-ticket-intake'}
+            aria-expanded={creating && !queueAccessDenied}
             disabled={busy || queueAccessDenied}
             onClick={() => {
               if (commandRef.current.coordination.isLocked()) return;
@@ -693,7 +699,6 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           </Link>
         </p>
       )}
-      {staff && <p className="text-sm text-muted-foreground">{text('targetNote')}</p>}
       {command.uncertain && (
         <div role="alert" className="flex flex-col gap-2">
           <p>{tTicketForms('uncertain', locale)}</p>
@@ -717,7 +722,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       )}
       <CommandFeedback message={saved ? text('saved') : null} />
       {!staff && !queueAccessDenied && (
-        <div hidden={!creating}>
+        <div id="customer-ticket-intake" hidden={!creating}>
           <TicketIntakeForm
             key={identity + editorRevision}
             actor={actor}

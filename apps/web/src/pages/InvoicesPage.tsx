@@ -189,23 +189,27 @@ export function InvoicesPage({
     { id: 'due', label: t('invoices.list.due', locale), render: (item) => time.format(item.dueAt) },
   ];
   return (
-    <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="mx-auto max-w-4xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
       {time.notice}
-      <header className="flex items-center gap-2">
-        <ReceiptIcon className="h-6 w-6 text-foreground" aria-hidden="true" />
+      <header className="flex items-start gap-3">
+        <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+          <ReceiptIcon className="size-5" aria-hidden="true" />
+        </div>
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{t('invoices.title', locale)}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t('invoices.description', locale)}</p>
+          <h1 className="text-3xl font-semibold tracking-tight">{t('invoices.title', locale)}</h1>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {t('invoices.description', locale)}
+          </p>
         </div>
       </header>
       <nav
-        className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
+        className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b pb-2 text-sm"
         aria-label={t('invoices.title', locale)}
       >
         <Link
           to="/invoices"
           search={{ status: undefined }}
-          className="touch-action text-primary underline underline-offset-4"
+          className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
           aria-current={unpaidOnly ? undefined : 'page'}
         >
           {t('invoices.filter.all', locale)}
@@ -213,14 +217,14 @@ export function InvoicesPage({
         <Link
           to="/invoices"
           search={{ status: 'unpaid' }}
-          className="touch-action text-primary underline underline-offset-4"
+          className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
           aria-current={unpaidOnly ? 'page' : undefined}
         >
           {t('invoices.filter.unpaid', locale)}
         </Link>
         <Link
           to="/invoices/receipts"
-          className="touch-action text-primary underline underline-offset-4"
+          className="touch-action rounded-md px-3 py-2 font-medium text-primary underline underline-offset-4 sm:ms-auto"
         >
           {t('invoices.receipts.title', locale)}
         </Link>
