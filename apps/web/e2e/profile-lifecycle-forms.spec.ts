@@ -97,11 +97,23 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(owner.getByRole('status')).toContainText(t('settings.privacy.loading', locale));
     await expect(owner.getByRole('alert')).toHaveCount(0);
     await retry!.fulfill({ json: value });
+    const clear = owner.locator('details');
+    const activeOrder = owner.getByText(t('settings.privacy.blocker.activeOrder', locale), {
+      exact: true,
+    });
     await expect(
-      owner.getByText(t('settings.privacy.blocker.activeOrder', locale), { exact: true })
+      owner.getByText(lifecycleFormText('noRequests', locale), { exact: true })
     ).toBeVisible();
+    await expect(
+      owner.getByText(t('settings.privacy.blocker.securityReview', locale), { exact: true })
+    ).toBeVisible();
+    await expect(activeOrder).toBeHidden();
+    await clear.locator('summary').press('Enter');
+    await expect(activeOrder).toBeVisible();
     await expect(owner.locator('li')).toHaveCount(11);
     await quality(page, 'profile-lifecycle');
+    await clear.locator('summary').press('Enter');
+    await expect(activeOrder).toBeHidden();
     await capture(page, owner, info.outputPath('customer-blockers.png'));
     const closure = owner.getByRole('button', {
       name: t('settings.privacy.closure.action', locale),
@@ -119,10 +131,16 @@ for (const locale of ['en', 'fa'] as const) {
       owner.getByRole('button', { name: t('settings.privacy.export.action', locale), exact: true })
     ).toBeDisabled();
     expect(writes).toHaveLength(1);
-    await owner
-      .getByRole('button', { name: lifecycleFormText('retry', locale), exact: true })
-      .click();
+    const resume = owner.getByRole('button', {
+      name: lifecycleFormText('retry', locale),
+      exact: true,
+    });
+    await expect(resume).toBeFocused();
+    await resume.press('Enter');
     await expect(owner.locator(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeVisible();
+    await expect(
+      owner.getByText(lifecycleFormText('noRequests', locale), { exact: true })
+    ).toHaveCount(0);
     await expect(success(page)).toHaveText(confirmationText('recorded', locale));
     expect(writes).toHaveLength(2);
     expect(writes[1]).toEqual(writes[0]);

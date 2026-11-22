@@ -59,7 +59,9 @@ it('shows distinct export and closure actions with blockers and the responsible 
   expect(container.textContent).toContain(
     'Support will verify identity and access before closure.'
   );
-  expect(container.textContent).toContain('No outstanding items');
+  const clear = container.querySelector('details')!;
+  expect(clear.open).toBe(false);
+  expect(clear.querySelector('summary')?.textContent).toContain('Checks with no outstanding items');
   await act(async () => {
     document.documentElement.lang = 'fa';
   });

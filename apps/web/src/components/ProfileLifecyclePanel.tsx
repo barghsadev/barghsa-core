@@ -4,7 +4,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useId, useRef, useState } from 'react';
-import { LoadingStatus, Card, CardContent, Button } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  LoadingStatus,
+  PageHeader,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -61,6 +70,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     busy = useRef(false),
     alive = useRef(true);
   const commandRequest = useRef<AbortController | null>(null);
+  const retryButton = useRef<HTMLButtonElement>(null);
   const permitted = () => alive.current && authorized();
   function denied(response: Response) {
     if (![401, 403].includes(response.status) || !permitted()) return false;
@@ -131,6 +141,9 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       reads.current.clear();
     };
   }, []);
+  useEffect(() => {
+    if (submitError && !submitting) retryButton.current?.focus();
+  }, [submitError, submitting]);
   async function run(next?: Command) {
     if (busy.current || !permitted() || (next && (command.current || state !== 'ready'))) return;
     if (next) command.current = next;
@@ -240,22 +253,27 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       stage: 'export',
     });
   }
+  const blockers = preview?.blockers.filter((blocker) => blocker.count > 0) ?? [];
+  const clearChecks = preview?.blockers.filter((blocker) => blocker.count === 0) ?? [];
   return (
     <div
       data-slot="profile-lifecycle"
-      className="container mx-auto max-w-3xl space-y-6 px-4 py-8"
+      className="mx-auto flex max-w-5xl flex-col gap-6"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{t('settings.privacy.title', locale)}</h1>
-      <p className="text-muted-foreground">{t('settings.privacy.intro', locale)}</p>
+      <PageHeader
+        title={t('settings.privacy.title', locale)}
+        description={t('settings.privacy.intro', locale)}
+      />
       {state === 'loading' && (
         <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>
       )}
       {state === 'error' && (
-        <div role="alert">
-          <p>{t('settings.privacy.error', locale)}</p>
+        <Alert variant="destructive">
+          <AlertDescription>{t('settings.privacy.error', locale)}</AlertDescription>
           <Button
             type="button"
+            variant="outline"
             disabled={submitting !== null}
             onClick={() => {
               if (busy.current || !permitted()) return;
@@ -274,121 +292,171 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
           >
             {lifecycleFormText('refresh', locale)}
           </Button>
-        </div>
+        </Alert>
       )}
-      {state === 'ownerOnly' && <p role="alert">{t('settings.privacy.ownerOnly', locale)}</p>}
+      {state === 'ownerOnly' && (
+        <Alert>
+          <AlertDescription>{t('settings.privacy.ownerOnly', locale)}</AlertDescription>
+        </Alert>
+      )}
       {state === 'ready' && preview && (
         <>
-          <Card>
-            <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-semibold">
-                {t('settings.privacy.export.title', locale)}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {t('settings.privacy.export.description', locale)}
-              </p>
+          {pending && (
+            <div className="space-y-3 rounded-lg border bg-card p-4">
+              {submitError && (
+                <p role="alert" className="text-sm text-destructive">
+                  {lifecycleFormText('uncertain', locale)}
+                </p>
+              )}
               <Button
+                ref={retryButton}
                 type="button"
-                disabled={submitting !== null || pending}
-                onClick={() => void request('export')}
+                variant="outline"
+                loading={submitting !== null}
+                onClick={() => void run()}
               >
-                {t('settings.privacy.export.action', locale)}
+                {lifecycleFormText('retry', locale)}
               </Button>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="space-y-4 pt-6">
-              <h2 className="text-lg font-semibold">
-                {t('settings.privacy.closure.title', locale)}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {t('settings.privacy.closure.description', locale)}
-              </p>
-              <ul className="space-y-2">
-                {preview.blockers.map((blocker) => (
-                  <li key={blocker.code} className="rounded-lg border p-3 text-sm">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <strong>{t(`settings.privacy.blocker.${blocker.code}`, locale)}</strong>
-                      <span
-                        className={blocker.count > 0 ? 'text-destructive' : 'text-muted-foreground'}
-                      >
-                        {blocker.count > 0
-                          ? t('settings.privacy.blocked', locale).replace(
+            </div>
+          )}
+          <div className="grid items-start gap-5 lg:grid-cols-2">
+            <div className="min-w-0 space-y-5">
+              <Card>
+                <CardContent className="space-y-3">
+                  <h2 className="text-lg font-semibold">
+                    {t('settings.privacy.export.title', locale)}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.privacy.export.description', locale)}
+                  </p>
+                  <Button
+                    type="button"
+                    disabled={submitting !== null || pending}
+                    loading={submitting === 'export' && !pending && !!command.current?.body}
+                    onClick={() => void request('export')}
+                  >
+                    {t('settings.privacy.export.action', locale)}
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="space-y-3">
+                  <h2 id="profile-lifecycle-requests" className="text-lg font-semibold">
+                    {t('settings.privacy.requests', locale)}
+                  </h2>
+                  {preview.requests.length ? (
+                    <ul className="space-y-2" aria-labelledby="profile-lifecycle-requests">
+                      {preview.requests.map((item) => (
+                        <li key={item.ticketId} className="space-y-3 rounded-lg border p-3">
+                          <a
+                            className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-sm"
+                            href={`/tickets?ticketId=${item.ticketId}`}
+                          >
+                            <span className="text-sm text-primary underline underline-offset-4">
+                              {t(`settings.privacy.${item.type}.title`, locale)}
+                            </span>
+                            <Badge>{t(`tickets.${item.status}`, locale)}</Badge>
+                          </a>
+                          {item.type === 'export' &&
+                            item.exportJobId &&
+                            (item.exportExpiresAt &&
+                            new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
+                              <p className="text-sm text-muted-foreground">
+                                {t('settings.privacy.export.expired', locale)}
+                              </p>
+                            ) : (
+                              <JobProgress jobId={item.exportJobId} />
+                            ))}
+                          {item.type === 'export' && !item.exportJobId && (
+                            <Button
+                              type="button"
+                              disabled={submitting !== null || pending}
+                              loading={
+                                submitting === 'export' &&
+                                !pending &&
+                                command.current?.body === null &&
+                                command.current.ticketId === item.ticketId
+                              }
+                              onClick={() => {
+                                startExport(item.ticketId);
+                              }}
+                            >
+                              {t('settings.privacy.export.prepare', locale)}
+                            </Button>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      {lifecycleFormText('noRequests', locale)}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+            <Card>
+              <CardContent className="space-y-4">
+                <h2 className="text-lg font-semibold">
+                  {t('settings.privacy.closure.title', locale)}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {t('settings.privacy.closure.description', locale)}
+                </p>
+                {blockers.length > 0 ? (
+                  <ul className="space-y-2">
+                    {blockers.map((blocker) => (
+                      <li key={blocker.code} className="space-y-2 rounded-lg border p-3 text-sm">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <strong>{t(`settings.privacy.blocker.${blocker.code}`, locale)}</strong>
+                          <Badge variant="warning">
+                            {t('settings.privacy.blocked', locale).replace(
                               '{count}',
                               numbers.number(blocker.count)
-                            )
-                          : t('settings.privacy.clear', locale)}
-                      </span>
-                    </div>
-                    {blocker.count > 0 && (
-                      <p className="mt-1 text-muted-foreground">
-                        {t(`settings.privacy.owner.${blocker.owner}`, locale)} ·{' '}
-                        {t(`settings.privacy.step.${blocker.nextStep}`, locale)}
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                type="button"
-                disabled={submitting !== null || pending}
-                onClick={() => void request('closure')}
-              >
-                {t('settings.privacy.closure.action', locale)}
-              </Button>
-            </CardContent>
-          </Card>
-          {submitError && (
-            <p role="alert" className="text-destructive">
-              {pending
-                ? lifecycleFormText('uncertain', locale)
-                : t('settings.privacy.submitError', locale)}
-            </p>
-          )}
-          {pending && (
-            <Button type="button" disabled={submitting !== null} onClick={() => void run()}>
-              {lifecycleFormText('retry', locale)}
-            </Button>
-          )}
-          {preview.requests.length > 0 && (
-            <section className="space-y-2" aria-label={t('settings.privacy.requests', locale)}>
-              <h2 className="text-lg font-semibold">{t('settings.privacy.requests', locale)}</h2>
-              <ul className="space-y-2">
-                {preview.requests.map((item) => (
-                  <li key={item.ticketId} className="space-y-2 rounded-lg border p-3">
-                    <a
-                      className="text-primary underline underline-offset-2"
-                      href={`/tickets?ticketId=${item.ticketId}`}
-                    >
-                      {t(`settings.privacy.${item.type}.title`, locale)} ·{' '}
-                      {t(`tickets.${item.status}`, locale)}
-                    </a>
-                    {item.type === 'export' &&
-                      item.exportJobId &&
-                      (item.exportExpiresAt &&
-                      new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
-                        <p className="text-sm text-muted-foreground">
-                          {t('settings.privacy.export.expired', locale)}
+                            )}
+                          </Badge>
+                        </div>
+                        <p className="text-muted-foreground">
+                          {t(`settings.privacy.owner.${blocker.owner}`, locale)}
                         </p>
-                      ) : (
-                        <JobProgress jobId={item.exportJobId} />
+                        <p>{t(`settings.privacy.step.${blocker.nextStep}`, locale)}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.privacy.clear', locale)}
+                  </p>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={submitting !== null || pending}
+                  loading={submitting === 'closure' && !pending}
+                  onClick={() => void request('closure')}
+                >
+                  {t('settings.privacy.closure.action', locale)}
+                </Button>
+                {clearChecks.length > 0 && (
+                  <details className="rounded-lg border text-sm">
+                    <summary className="min-h-11 cursor-pointer px-3 py-2.5 font-medium">
+                      {lifecycleFormText('clearChecks', locale).replace(
+                        '{count}',
+                        numbers.number(clearChecks.length)
+                      )}
+                    </summary>
+                    <ul className="divide-y border-t px-3">
+                      {clearChecks.map((blocker) => (
+                        <li key={blocker.code} className="py-2 text-muted-foreground">
+                          {t(`settings.privacy.blocker.${blocker.code}`, locale)}
+                        </li>
                       ))}
-                    {item.type === 'export' && !item.exportJobId && (
-                      <Button
-                        type="button"
-                        disabled={submitting !== null || pending}
-                        onClick={() => {
-                          startExport(item.ticketId);
-                        }}
-                      >
-                        {t('settings.privacy.export.prepare', locale)}
-                      </Button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+                    </ul>
+                  </details>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </>
       )}
     </div>

@@ -15,6 +15,8 @@ const en = {
   retry: 'Retry the original request',
   changed: 'The closure review has changed. Refresh the review and confirm it again.',
   refresh: 'Refresh requests',
+  clearChecks: 'Checks with no outstanding items ({count})',
+  noRequests: 'Your export and closure requests will appear here.',
 };
 const fa: Record<keyof typeof en, string> = {
   roleChangedTitle: 'نقش‌های شما در تیم تغییر کرد',
@@ -32,6 +34,8 @@ const fa: Record<keyof typeof en, string> = {
   retry: 'تلاش دوباره با همان درخواست',
   changed: 'اطلاعات بررسی بستن پروفایل تغییر کرده است. بررسی را تازه و دوباره تأیید کنید.',
   refresh: 'تازه‌سازی درخواست‌ها',
+  clearChecks: 'بررسی‌های بدون مانع ({count})',
+  noRequests: 'درخواست‌های دریافت داده و بستن پروفایل اینجا نمایش داده می‌شوند.',
 };
 export function lifecycleFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];
