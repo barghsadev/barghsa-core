@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { LoadingStatus, Button } from '@barghsa/ui';
+import { Badge, LoadingStatus, Button } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText, type TrustedDeviceTextKey } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
@@ -79,11 +79,7 @@ export function TrustedDevices({
               <span className="text-sm font-medium">
                 {deviceName(device.userAgent ?? undefined, locale)}
               </span>
-              {device.isCurrentDevice && (
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
-                  {text('current')}
-                </span>
-              )}
+              {device.isCurrentDevice && <Badge>{text('current')}</Badge>}
             </div>
             <Button
               type="button"

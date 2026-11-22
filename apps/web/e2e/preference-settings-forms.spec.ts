@@ -16,6 +16,62 @@ const action = (page: Page, locale: Locale, key: string) =>
   page.getByRole('button', { name: copy(key, locale), exact: true });
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`account settings group links and place time-zone recovery beside dated preferences (${locale})`, async ({
+    page,
+  }) => {
+    const state = await setup(page, locale);
+    await page.setViewportSize({ width: 320, height: 900 });
+    let timezoneUnavailable = true;
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill(
+        timezoneUnavailable ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } }
+      )
+    );
+    await page.goto('/settings');
+    const main = page.getByRole('main');
+    const account = main.getByRole('navigation', { name: preferencesText('account', locale) });
+    await expect(account.getByRole('link')).toHaveCount(6);
+    const marketing = main.getByRole('form', { name: t('settings.marketing.title', locale) });
+    const email = marketing.getByRole('switch', {
+      name: t('settings.marketing.optInEmailLabel', locale),
+    });
+    await expect(email).toBeEnabled();
+    const timezoneError = main
+      .getByRole('alert')
+      .filter({ hasText: timezoneText('error.load', locale) });
+    await expect(timezoneError).toHaveCount(0);
+
+    state.marketing.channels.email.lastChangedAt = '2026-10-05T00:00:00Z';
+    const marketingCard = marketing.locator('xpath=ancestor::*[@data-slot="card"][1]');
+    await marketingCard.getByRole('button', { name: copy('refresh', locale), exact: true }).click();
+    await expect(timezoneError).toBeVisible();
+    await expect(marketingCard.getByRole('alert')).toHaveCount(1);
+    timezoneUnavailable = false;
+    await timezoneError.getByRole('button', { name: timezoneText('retry', locale) }).click();
+    await expect(timezoneError).toHaveCount(0);
+    await expect(marketing.locator('#marketing-email')).not.toContainText(
+      timezoneText('display.pending', locale)
+    );
+    await checkView(page);
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const accountCard = account.locator('xpath=ancestor::*[@data-slot="card"][1]');
+    const notificationCard = main
+      .getByRole('form', { name: t('settings.notifications.title', locale) })
+      .locator('xpath=ancestor::*[@data-slot="card"][1]');
+    const [accountBox, notificationBox] = await Promise.all([
+      accountCard.boundingBox(),
+      notificationCard.boundingBox(),
+    ]);
+    expect(accountBox).not.toBeNull();
+    expect(notificationBox).not.toBeNull();
+    expect(accountBox!.y).toBeCloseTo(notificationBox!.y, 0);
+    expect(accountBox!.x > notificationBox!.x).toBe(locale === 'fa');
+    await account.getByRole('link', { name: t('settings.security.title', locale) }).press('Enter');
+    await expect(page).toHaveURL(/\/settings\/security$/);
+    expect(state.writes).toEqual([]);
+  });
+
   for (const family of ['notifications', 'marketing-consent', 'timezone'] as const) {
     test(`${family} write deadline offers an owned status check (${locale})`, async ({ page }) => {
       await page.clock.install();
@@ -156,7 +212,10 @@ async function setup(page: Page, locale: Locale) {
           {
             id: profileId,
             profileType: 'LEGAL',
-            title: 'Preferences',
+            title: locale === 'fa' ? 'شرکت نمونه' : 'Sample company',
+            firstName: null,
+            lastName: null,
+            nationalId: null,
             isDefault: true,
             status: 'ACTIVE',
           },

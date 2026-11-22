@@ -6,7 +6,7 @@ import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { MonitorIcon, SmartphoneIcon, GlobeIcon, Trash2Icon, ShieldAlertIcon } from 'lucide-react';
-import { LoadingStatus, Button } from '@barghsa/ui';
+import { Badge, LoadingStatus, Button } from '@barghsa/ui';
 import { TrustedDevices } from '../../../components/TrustedDevices.js';
 import { SecurityRevocationDialog } from '../../../components/SecurityRevocationDialog.js';
 import { usePreferenceSettingsOwner } from '../../../hooks/usePreferenceSettingsForm.js';
@@ -248,9 +248,7 @@ function SettingsSecurityPage() {
                   <span className="text-sm font-medium">
                     {getDeviceName(current.deviceInfo?.userAgent, locale)}
                   </span>
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                    {t('settings.security.currentSession', locale)}
-                  </span>
+                  <Badge>{t('settings.security.currentSession', locale)}</Badge>
                 </div>
                 <SessionDetails session={current} locale={locale} formatTimestamp={time.format} />
               </div>
