@@ -127,6 +127,19 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
   }
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`maintenance settings reopen the same capability after refresh (${locale})`, async ({
+    page,
+  }) => {
+    const { word, row } = await setup(page, locale);
+    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === row().capability);
+    const owner = page.getByRole('textbox', { name: word('owner'), exact: true });
+    await owner.fill('Temporary reviewer');
+    await page.reload();
+    await expect(owner).toHaveValue(row().owner ?? '');
+    await page.goBack();
+    await expect(owner).toHaveCount(0);
+  });
+
   test(`maintenance restores history into a separate reviewed draft (${locale})`, async ({
     page,
   }, info) => {

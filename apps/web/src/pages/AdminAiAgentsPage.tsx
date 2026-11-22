@@ -5,8 +5,10 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
+import type { RecordAddress } from '../hooks/useRecordAddress.js';
 import {
   useEffect,
+  useLayoutEffect,
   useId,
   useState,
   useRef,
@@ -67,7 +69,7 @@ import {
   matchesAgentReceipt,
   matchesAgentDetail,
 } from '../lib/ai-agent-form.js';
-export default function AdminAiAgentsPage() {
+export default function AdminAiAgentsPage({ selection }: { selection?: RecordAddress } = {}) {
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
   return (
@@ -75,6 +77,7 @@ export default function AdminAiAgentsPage() {
       key={JSON.stringify([actor, contextRevision])}
       actor={actor}
       contextRevision={contextRevision}
+      {...(selection ? { selection } : {})}
     />
   );
 }
@@ -82,9 +85,11 @@ export default function AdminAiAgentsPage() {
 function OwnedAiAgentsPage({
   actor,
   contextRevision,
+  selection,
 }: {
   actor: string | null;
   contextRevision: number;
+  selection?: RecordAddress;
 }) {
   const client = useQueryClient();
   const reader = useId();
@@ -95,6 +100,9 @@ function OwnedAiAgentsPage({
   const [rows, setRows] = useState<Agent[]>([]),
     [options, setOptions] = useState<Options | null>(null),
     [editor, setEditor] = useState<string | null>(null);
+  const address = useRef<string | null>(null);
+  const requested = selection?.id;
+  const onSelect = selection?.set;
   const copy = (key: Parameters<typeof aiAgentFormText>[0]) => aiAgentFormText(key, locale);
   const messages: Record<keyof Draft, string> = {
     title: copy('title'),
@@ -204,7 +212,11 @@ function OwnedAiAgentsPage({
     setUncertain(false);
     uncertainRef.current = false;
     setRecovered(false);
-  }, [withdraw, setDraft]);
+    if (address.current !== null) {
+      address.current = null;
+      onSelect?.(null, true);
+    }
+  }, [withdraw, setDraft, onSelect]);
   function acceptRead(kind: keyof typeof freshReads.current, revision: number) {
     freshReads.current[kind] = revision;
     if (
@@ -391,7 +403,7 @@ function OwnedAiAgentsPage({
       requests.current.delete(controller);
     };
   }, [editor, detailRevision, read, withdraw, setDraft]);
-  function chooseEditor(value: string | null) {
+  function chooseEditor(value: string | null, publish = true) {
     withdraw();
     detailBasis.current = null;
     savedDetail.current = null;
@@ -400,7 +412,14 @@ function OwnedAiAgentsPage({
     setSaved(false);
     setDetailError(false);
     setChanged(false);
+    if (address.current !== value) {
+      address.current = value;
+      if (publish) onSelect?.(value);
+    }
   }
+  useLayoutEffect(() => {
+    if (requested !== undefined && requested !== address.current) chooseEditor(requested, false);
+  }, [requested]);
   const unavailable =
     denied || loading || error || optionsLoading || optionsError || detailLoading || detailError;
   const disabled = unavailable || changed || uncertain;
@@ -988,6 +1007,10 @@ function OwnedAiAgentsPage({
               if (command.method !== 'DELETE' || command.path.endsWith(`/${work.current.editor}`)) {
                 setEditor(null);
                 setDraft(null);
+                if (address.current !== null) {
+                  address.current = null;
+                  onSelect?.(null, true);
+                }
                 detailBasis.current = null;
                 savedDetail.current = null;
               }

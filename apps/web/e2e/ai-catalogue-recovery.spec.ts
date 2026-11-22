@@ -19,6 +19,44 @@ async function inspect(page: Page, name: string, locale: 'en' | 'fa', project: s
 for (const locale of ['en', 'fa'] as const) {
   const m = (key: string) => t(`admin.aiModels.${key}`, locale),
     a = (key: string) => t(`admin.agents.${key}`, locale);
+  test(`AI model, budget and agent editors reopen their saved settings (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, false);
+    await page.route('**/api/admin/ai-models', (route) => route.fulfill({ json: [aiModel] }));
+    await page.goto('/admin/ai-models');
+    await page.getByRole('button', { name: m('edit'), exact: true }).click();
+    const modelTitle = page.locator('#ai-model-title');
+    await expect(modelTitle).toHaveValue(aiModel.title);
+    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === aiModel.id);
+    await page.getByRole('button', { name: m('budgetEdit'), exact: true }).click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get('selected') === aiModel.id && url.searchParams.get('mode') === 'budget'
+    );
+    const limit = page.locator('#ai-model-monthlyTokenLimit');
+    await limit.fill('99999');
+    await page.reload();
+    await expect(limit).toHaveValue(String(aiModel.budget.monthlyTokenLimit));
+    await page.goBack();
+    await expect(modelTitle).toHaveValue(aiModel.title);
+    await expect(limit).toHaveCount(0);
+
+    await page.route('**/api/admin/agents', (route) => route.fulfill({ json: [aiAgent] }));
+    await page.route('**/api/admin/agents/options', (route) => route.fulfill({ json: aiOptions }));
+    await page.route(`**/api/admin/agents/${aiAgent.id}`, (route) =>
+      route.fulfill({ json: aiDetail })
+    );
+    await page.goto('/admin/agents');
+    await page.getByRole('button', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === aiAgent.id);
+    await page.reload();
+    const prompt = page.locator('#agent-system-prompt');
+    await expect(prompt).toHaveValue(aiDetail.systemPrompt);
+    await page.goBack();
+    await expect(prompt).toHaveCount(0);
+  });
+
   test(`model drafts, budgets and frozen decisions recover without retaining denied work (${locale})`, async ({
     page,
   }, info) => {

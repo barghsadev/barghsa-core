@@ -119,6 +119,40 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: refresh, exact: true }).click();
     await expect(page.locator('#staffUserId')).toHaveValue('');
   });
+  test(`upload policy URLs reopen the category editor and its history (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/upload-policies/access', (route) =>
+      route.fulfill({ json: { canEdit: true } })
+    );
+    await page.route('**/api/admin/upload-policies/limits', (route) =>
+      route.fulfill({ json: [policyLimit] })
+    );
+    await page.route('**/api/admin/upload-policies', (route) =>
+      route.fulfill({ json: [uploadPolicy] })
+    );
+    await page.goto('/admin/upload-policies');
+    const history = page
+      .locator('details:visible')
+      .filter({ has: page.getByText(u('history'), { exact: true }) });
+    await history.locator('summary').click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('history') === 'document');
+    await page
+      .getByRole('button', { name: `${u('edit')} ${u('category.document')}`, exact: true })
+      .click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === 'document');
+    const dialog = page.getByRole('dialog');
+    const size = dialog.locator('#upload-policy-size');
+    const persistedSize = await size.inputValue();
+    await size.fill('1.5');
+    await page.reload();
+    await expect(size).toHaveValue(persistedSize);
+    await page.goBack();
+    await expect(dialog).toHaveCount(0);
+    await expect(history).toHaveAttribute('open', '');
+  });
+
   test(`upload policy editor and confirmation recover in place and discard changed or denied work (${locale})`, async ({
     page,
   }, info) => {

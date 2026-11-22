@@ -1,4 +1,6 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, DatePicker, Input, Label } from '@barghsa/ui';
 import {
@@ -29,7 +31,7 @@ import {
   type MaintenanceSetting,
 } from '../lib/maintenance-form.js';
 
-export default function AdminMaintenancePage() {
+export default function AdminMaintenancePage({ selection }: { selection?: RecordAddress } = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tMaintenance(key, locale);
@@ -79,10 +81,20 @@ export default function AdminMaintenancePage() {
   const zoneChanged = time.status === 'ready' && draftZone !== time.timezone;
   const locked = validating || !!action || uncertain;
   const canEdit = state === 'ready' && time.status === 'ready' && !stale && !zoneChanged;
+  const selectCapability = useRecordAddress(
+    selection,
+    settings,
+    (setting) => setting.capability,
+    state === 'ready' && time.status === 'ready',
+    (setting) => {
+      if (setting) edit(setting, false);
+      else clearPrivate(false);
+    }
+  );
   const deadlineId = 'maintenance-deadline';
   const deadlineErrorId = form.formState.errors.deadline ? `${deadlineId}-message` : undefined;
 
-  function clearPrivate() {
+  function clearPrivate(publish = true, replace = true) {
     ++generation.current;
     owned.current = false;
     captured.current = null;
@@ -92,8 +104,10 @@ export default function AdminMaintenancePage() {
     setRecoveryDraft(null);
     form.reset(maintenanceDraft(null, time.timezone));
     setAction(null);
+    setValidating(false);
     setUncertain(false);
     setSaved(false);
+    if (publish) selectCapability(null, replace);
   }
   useEffect(() => {
     const controller = new AbortController();
@@ -138,7 +152,7 @@ export default function AdminMaintenancePage() {
     []
   );
 
-  function edit(setting: MaintenanceSetting) {
+  function edit(setting: MaintenanceSetting, publish = true) {
     if (owned.current || reading.current || state !== 'ready' || time.status !== 'ready') return;
     ++generation.current;
     setSelected(setting);
@@ -147,6 +161,7 @@ export default function AdminMaintenancePage() {
     setDraftZone(time.timezone);
     form.reset(maintenanceDraft(setting, time.timezone));
     setSaved(false);
+    if (publish) selectCapability(setting.capability);
   }
   function loadRecovery(draft: MaintenanceRecoveryDraft) {
     if (
@@ -195,8 +210,10 @@ export default function AdminMaintenancePage() {
         });
       })(event);
     } finally {
-      setValidating(false);
-      if (!captured.current) owned.current = false;
+      if (current === generation.current) {
+        setValidating(false);
+        if (!captured.current) owned.current = false;
+      }
     }
   }
   function unconfirmed() {
@@ -495,9 +512,19 @@ export default function AdminMaintenancePage() {
               {form.formState.errors.root?.validation?.message && (
                 <p role="alert">{form.formState.errors.root.validation.message}</p>
               )}
-              <FormSubmit loading={validating} disabled={locked || !canEdit}>
-                {copy(recoveryDraft ? 'activateRecovery' : 'save')}
-              </FormSubmit>
+              <div className="flex flex-wrap gap-2">
+                <FormSubmit loading={validating} disabled={locked || !canEdit}>
+                  {copy(recoveryDraft ? 'activateRecovery' : 'save')}
+                </FormSubmit>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={locked}
+                  onClick={() => clearPrivate(true, false)}
+                >
+                  {confirmationText('cancel', locale)}
+                </Button>
+              </div>
             </fieldset>
           </form>
         </Form>

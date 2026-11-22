@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { AiModelRecordTable } from '../components/AiModelRecordTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -51,7 +52,7 @@ import {
   matchesBudgetReceipt,
   readModelTestReceipt,
 } from '../lib/ai-model-form.js';
-export default function AdminAiModelsPage() {
+export default function AdminAiModelsPage({ selection }: { selection?: RecordAddress } = {}) {
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
   return (
@@ -59,6 +60,7 @@ export default function AdminAiModelsPage() {
       key={JSON.stringify([actor, contextRevision])}
       actor={actor}
       contextRevision={contextRevision}
+      {...(selection ? { selection } : {})}
     />
   );
 }
@@ -66,9 +68,11 @@ export default function AdminAiModelsPage() {
 function OwnedAiModelsPage({
   actor,
   contextRevision,
+  selection,
 }: {
   actor: string | null;
   contextRevision: number;
+  selection?: RecordAddress;
 }) {
   const client = useQueryClient();
   const reader = useId();
@@ -197,6 +201,7 @@ function OwnedAiModelsPage({
     setRecovered(false);
     setDraft(null);
     setBudgetDraft(null);
+    selectRecord(null, true);
     setAction(null);
     setResult(null);
     commandBasis.current = null;
@@ -287,6 +292,22 @@ function OwnedAiModelsPage({
   const unavailable = loading || error || denied;
   const disabled = unavailable || changed || uncertain;
   const busy = modelForm.pending || budgetForm.pending || !!action;
+  const budgetMode = selection?.id?.startsWith('budget:') === true;
+  const selectRecord = useRecordAddress(
+    selection,
+    models,
+    (model) => `${budgetMode ? 'budget' : 'model'}:${model.id}`,
+    !unavailable,
+    (model) => {
+      withdraw();
+      if (model && budgetMode) editBudget(model, false);
+      else if (model) editModel(model, false);
+      else {
+        setDraft(null);
+        setBudgetDraft(null);
+      }
+    }
+  );
   function refresh() {
     if (networkPending.current) return;
     if (validating.current) withdraw();
@@ -306,10 +327,12 @@ function OwnedAiModelsPage({
     if (draft) {
       const fresh = models.find((m) => m.id === draft.id);
       setDraft(draft.id ? (fresh ? modelDraftFor(fresh) : null) : blank());
+      if (draft.id && !fresh) selectRecord(null, true);
     }
     if (budgetDraft) {
       const fresh = models.find((m) => m.id === budgetDraft.modelId);
       setBudgetDraft(fresh ? budgetDraftFor(fresh) : null);
+      if (!fresh) selectRecord(null, true);
     }
     setChanged(false);
     setUncertain(false);
@@ -407,13 +430,22 @@ function OwnedAiModelsPage({
     actionRef.current = next;
     setAction(next);
   }
-  function editBudget(model: Model) {
-    if (disabled || busy) return;
+  function editModel(model: Model, publish = true) {
+    generation.current++;
+    setBudgetDraft(null);
+    setDraft(modelDraftFor(model));
+    setChanged(false);
+    setResult(null);
+    if (publish) selectRecord(`model:${model.id}`);
+  }
+  function editBudget(model: Model, publish = true) {
+    if (publish && (disabled || busy)) return;
     generation.current++;
     setDraft(null);
     setBudgetDraft(budgetDraftFor(model));
     setChanged(false);
     setResult(null);
+    if (publish) selectRecord(`budget:${model.id}`);
   }
   async function submitBudget(event: FormEvent) {
     event.preventDefault();
@@ -500,6 +532,7 @@ function OwnedAiModelsPage({
                 generation.current++;
                 setDraft(blank());
                 setBudgetDraft(null);
+                selectRecord(null);
                 setResult(null);
               }}
             >
@@ -682,6 +715,7 @@ function OwnedAiModelsPage({
                     onClick={() => {
                       withdraw();
                       setDraft(null);
+                      selectRecord(null);
                     }}
                   >
                     {label('cancel')}
@@ -754,6 +788,7 @@ function OwnedAiModelsPage({
                     onClick={() => {
                       withdraw();
                       setBudgetDraft(null);
+                      selectRecord(null);
                     }}
                   >
                     {label('cancel')}
@@ -796,13 +831,7 @@ function OwnedAiModelsPage({
                     <Button
                       variant="outline"
                       disabled={disabled || busy}
-                      onClick={() => {
-                        generation.current++;
-                        setBudgetDraft(null);
-                        setDraft(modelDraftFor(model));
-                        setChanged(false);
-                        setResult(null);
-                      }}
+                      onClick={() => editModel(model)}
                     >
                       {label('edit')}
                     </Button>
@@ -905,9 +934,14 @@ function OwnedAiModelsPage({
                 }
               }
               setResult(result);
-              if (command.body && typeof command.body === 'object' && 'config' in command.body)
+              if (command.body && typeof command.body === 'object' && 'config' in command.body) {
                 setDraft(null);
-              if (command.path.endsWith('/budget')) setBudgetDraft(null);
+                selectRecord(null, true);
+              }
+              if (command.path.endsWith('/budget')) {
+                setBudgetDraft(null);
+                selectRecord(null, true);
+              }
               commandBasis.current = null;
               setRevision((v) => v + 1);
               return result.ok ? label('success') : undefined;

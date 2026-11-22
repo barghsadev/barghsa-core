@@ -1,4 +1,5 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
@@ -102,7 +103,16 @@ function basis(limit: Limit, policies: UploadPolicyDto[]) {
   });
 }
 const mib = 1024 * 1024;
-export default function AdminUploadPoliciesPage() {
+export default function AdminUploadPoliciesPage({
+  workspace,
+}: {
+  workspace?: {
+    editor: RecordAddress;
+    clear: () => void;
+    history: readonly string[];
+    toggleHistory: (category: string) => void;
+  };
+} = {}) {
   const readQuery = useStaffQueryRead('catalogue');
   const deniedRead = (reason: unknown) =>
     reason instanceof ServerQueryError && [401, 403].includes(reason.status);
@@ -114,7 +124,10 @@ export default function AdminUploadPoliciesPage() {
     storagePolicyFormText(key, locale);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
-  const [expandedHistory, setExpandedHistory] = useState<string[]>([]);
+  const [localHistory, setLocalHistory] = useState<string[]>([]);
+  const expandedHistory = workspace?.history ?? localHistory;
+  const onSelect = workspace?.editor.set;
+  const clearAddress = workspace?.clear;
   const limitRef = useRef<Limit | null>(null);
   const form = useWizardForm<UploadPolicyDraft>(
     async () => {
@@ -183,16 +196,20 @@ export default function AdminUploadPoliciesPage() {
     actionBasis.current = null;
     onPendingChange(false);
   }, [form.setValidationPending, onPendingChange]);
-  const clearWork = useCallback(() => {
-    withdraw();
-    setEditor(null);
-    limitRef.current = null;
-    resetPolicy(emptyPolicyDraft());
-    setNeedsReset(false);
-    setUncertain(false);
-    setRecoveryReady(false);
-    setNotice(false);
-  }, [withdraw, resetPolicy]);
+  const clearWork = useCallback(
+    (publish = true) => {
+      withdraw();
+      setEditor(null);
+      limitRef.current = null;
+      resetPolicy(emptyPolicyDraft());
+      setNeedsReset(false);
+      setUncertain(false);
+      setRecoveryReady(false);
+      setNotice(false);
+      if (publish) onSelect?.(null, true);
+    },
+    [withdraw, resetPolicy, onSelect]
+  );
   const deny = useCallback(() => {
     accessRequest.current?.abort();
     listRequest.current?.abort();
@@ -200,13 +217,14 @@ export default function AdminUploadPoliciesPage() {
     setCanEdit(false);
     setLimits([]);
     setPolicies([]);
-    setExpandedHistory([]);
+    setLocalHistory([]);
     setAccessLoading(false);
     setAccessError(false);
     setLoading(false);
     setError(false);
-    clearWork();
-  }, [clearWork]);
+    clearWork(false);
+    clearAddress?.();
+  }, [clearWork, clearAddress]);
   useEffect(
     () => () => {
       generation.current++;
@@ -310,6 +328,20 @@ export default function AdminUploadPoliciesPage() {
     readQuery,
   ]);
   const disabled = !canEdit || loading || error || accessLoading || accessError;
+  const selectEditor = useRecordAddress(
+    workspace?.editor,
+    limits,
+    (limit) => limit.category,
+    !disabled,
+    (limit) => {
+      if (limit) {
+        const current = policies.find(
+          (policy) => policy.category === limit.category && policy.status === 'current'
+        );
+        edit(limit, current, false);
+      } else cancelEditor(false);
+    }
+  );
   const refresh = () => {
     if (dialogBusy.current) return;
     if (validationBusy.current || uncertain) withdraw();
@@ -354,8 +386,8 @@ export default function AdminUploadPoliciesPage() {
       )}
     </div>
   );
-  function edit(limit: Limit, current: UploadPolicyDto | undefined) {
-    if (disabled || uncertain || actionRef.current || validationBusy.current) return;
+  function edit(limit: Limit, current: UploadPolicyDto | undefined, publish = true) {
+    if (publish && (disabled || uncertain || actionRef.current || validationBusy.current)) return;
     withdraw();
     setNeedsReset(false);
     setNotice(false);
@@ -365,6 +397,7 @@ export default function AdminUploadPoliciesPage() {
       limit,
       basis: basis(limit, policies),
     });
+    if (publish) selectEditor(limit.category);
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -417,6 +450,7 @@ export default function AdminUploadPoliciesPage() {
     if (disabled || uncertain || validationBusy.current || actionRef.current || needsReset) return;
     generation.current++;
     setEditor(null);
+    selectEditor(null);
     actionBasis.current = { category: limit.category, basis: basis(limit, policies) };
     actionGeneration.current = generation.current;
     setNotice(false);
@@ -469,12 +503,22 @@ export default function AdminUploadPoliciesPage() {
     setRecoveryReady(false);
     setAccessRevision((value) => value + 1);
   }
-  function cancelEditor() {
+  function cancelEditor(publish = true) {
     withdraw();
     setEditor(null);
     limitRef.current = null;
     resetPolicy(emptyPolicyDraft());
     setNeedsReset(false);
+    if (publish) selectEditor(null);
+  }
+  function toggleHistory(category: string) {
+    if (workspace) workspace.toggleHistory(category);
+    else
+      setLocalHistory((values) =>
+        values.includes(category)
+          ? values.filter((value) => value !== category)
+          : [...values, category]
+      );
   }
   return (
     <section className="min-w-0 space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -602,13 +646,7 @@ export default function AdminUploadPoliciesPage() {
                   <QueueRecordDetails
                     label={label('history')}
                     open={expandedHistory.includes(limit.category)}
-                    onToggle={() =>
-                      setExpandedHistory((values) =>
-                        values.includes(limit.category)
-                          ? values.filter((value) => value !== limit.category)
-                          : [...values, limit.category]
-                      )
-                    }
+                    onToggle={() => toggleHistory(limit.category)}
                   >
                     <ol className="mt-2 space-y-3">
                       {policies
@@ -773,7 +811,7 @@ export default function AdminUploadPoliciesPage() {
                 message={text('size')}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={cancelEditor}>
+                <Button type="button" variant="outline" onClick={() => cancelEditor()}>
                   {label('cancel')}
                 </Button>
                 <CatalogueSaveButton
