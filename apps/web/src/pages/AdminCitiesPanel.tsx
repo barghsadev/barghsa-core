@@ -26,7 +26,12 @@ import {
   type Province,
 } from '../lib/geography-api.js';
 import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
-import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
+import {
+  GeographyDialog,
+  useGeographyEditorAddress,
+  type GeographyEditorAddress,
+  type GeographyModal,
+} from './AdminGeographyDialog.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   geographyBasis,
@@ -248,6 +253,7 @@ export function CitiesPanel({
   parentRecovery,
   onClose,
   query,
+  editorAddress,
 }: {
   province: Province;
   scope?: GeographyScope;
@@ -255,6 +261,7 @@ export function CitiesPanel({
   parentRecovery?: ReactNode;
   onClose?: () => void;
   query?: ListQueryBinding;
+  editorAddress?: GeographyEditorAddress;
 }) {
   const locale = useLocale();
   const { number } = useNumberFormatting(locale);
@@ -323,15 +330,26 @@ export function CitiesPanel({
   const modalPage = useRef(1),
     acceptedCriteria = useRef(criteria),
     previousProvince = useRef(geographyBasis(province));
-  useEffect(() => {
-    if (
+  const publishEditor = useGeographyEditorAddress(
+    editorAddress,
+    cities,
+    ready &&
+      list.acceptedPage === page &&
       acceptedCriteria.current === criteria &&
-      previousProvince.current === geographyBasis(province)
-    )
-      return;
+      previousProvince.current === geographyBasis(province),
+    heading,
+    (value) => {
+      if (value) openModal(value, false);
+      else setModal(null);
+    }
+  );
+  useEffect(() => {
+    const nextProvince = geographyBasis(province);
+    if (acceptedCriteria.current === criteria && previousProvince.current === nextProvince) return;
+    if (modal && acceptedCriteria.current === criteria) publishEditor(null, true);
     savedTrigger.current = null;
     acceptedCriteria.current = criteria;
-    previousProvince.current = geographyBasis(province);
+    previousProvince.current = nextProvince;
     setModal(null);
     setImportTrigger(null);
   }, [criteria, province]);
@@ -345,13 +363,18 @@ export function CitiesPanel({
     )
       return;
     const next = list.data.rows.find((row) => row.id === modal.province?.id);
-    if (!next || geographyBasis(next) !== geographyBasis(modal.province)) setModal(null);
+    if (!next || geographyBasis(next) !== geographyBasis(modal.province)) closeModal(true);
   }, [list.data, list.acceptedPage, loading, error, modal]);
-  function openModal(value: GeographyModal) {
+  function openModal(value: GeographyModal, publish = true) {
     if (!ready) return;
     savedTrigger.current = null;
     modalPage.current = list.acceptedPage;
     setModal(value);
+    if (publish && value.kind !== 'deactivate') publishEditor(value.province?.id ?? 'new');
+  }
+  function closeModal(replace = false) {
+    setModal(null);
+    publishEditor(null, replace);
   }
   function refresh() {
     if (scope.denied) scope.recover();
@@ -378,7 +401,7 @@ export function CitiesPanel({
   }, [ready, modal, importTrigger]);
   function saved() {
     savedTrigger.current = modal?.trigger ?? importTrigger;
-    setModal(null);
+    closeModal(true);
     setImportTrigger(null);
     list.retry();
   }
@@ -550,7 +573,7 @@ export function CitiesPanel({
           readReady={ready}
           recovery={recovery}
           onDenied={scope.deny}
-          onClose={() => setModal(null)}
+          onClose={() => closeModal()}
           onSaved={saved}
         />
       )}

@@ -6,6 +6,34 @@ import { t as appText } from '@barghsa/i18n/app';
 import { adminTosText } from '../src/pages/admin-tos-text';
 import { notificationTemplate, termsVersion } from '../src/test/content-catalogue-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
+for (const locale of ['en', 'fa'] as const) {
+  test(`terms version view and editor restore independently (${locale})`, async ({ page }) => {
+    await crmShell(page, locale);
+    const row = termsVersion();
+    const text = adminTosText(locale);
+    await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [row] }));
+    await page.goto('/admin/tos');
+    const history = page.getByRole('list', { name: text.history, exact: true });
+    await history.getByRole('button', { name: text.edit, exact: true }).click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('editing') === row.id);
+    const english = page.getByRole('textbox', { name: text.english, exact: true });
+    await expect(english).toContainText(row.contentEn);
+    await history.getByRole('button', { name: text.view, exact: true }).click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get('editing') === row.id && url.searchParams.get('viewing') === row.id
+    );
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.goBack();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(english).toContainText(row.contentEn);
+    await page.goBack();
+    await expect(english).toHaveCount(0);
+  });
+}
+
 for (const domain of ['templates', 'terms'] as const)
   for (const locale of ['en', 'fa'] as const)
     for (const theme of ['light', 'dark'] as const) {

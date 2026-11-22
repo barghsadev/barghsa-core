@@ -6,7 +6,12 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { listProvinces } from '../lib/geography-api.js';
 import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
 import { CitiesPanel } from './AdminCitiesPanel.js';
-import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
+import {
+  GeographyDialog,
+  useGeographyEditorAddress,
+  type GeographyEditorAddress,
+  type GeographyModal,
+} from './AdminGeographyDialog.js';
 const selectClass =
   'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
@@ -16,6 +21,8 @@ export interface GeographyQueryBinding {
   provinces: ListQueryBinding;
   cities: ListQueryBinding;
   expanded: string | null;
+  provinceEditor: GeographyEditorAddress;
+  cityEditor: GeographyEditorAddress;
   setExpanded: (id: string | null, replace?: boolean) => void;
   clear: () => void;
 }
@@ -48,6 +55,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
   }, []);
   const repairPage = useCallback((value: number) => setPage(value, true), [setPage]);
   const [modal, setModal] = useState<GeographyModal | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
   const savedTrigger = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (query) return;
@@ -85,6 +93,16 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
   const ready = !scope.denied && !!list.data && !loading && !error;
   const modalPage = useRef(1),
     acceptedCriteria = useRef(criteria);
+  const publishEditor = useGeographyEditorAddress(
+    query?.provinceEditor,
+    provinces,
+    ready && list.acceptedPage === page && acceptedCriteria.current === criteria,
+    heading,
+    (value) => {
+      if (value) openModal(value, false);
+      else setModal(null);
+    }
+  );
   useEffect(() => {
     if (acceptedCriteria.current === criteria) return;
     savedTrigger.current = null;
@@ -97,7 +115,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
     if (expanded && !list.data.rows.some((row) => row.id === expanded)) setExpanded(null, true);
     if (modal?.province && list.acceptedPage === modalPage.current) {
       const next = list.data.rows.find((row) => row.id === modal.province?.id);
-      if (!next || geographyBasis(next) !== geographyBasis(modal.province)) setModal(null);
+      if (!next || geographyBasis(next) !== geographyBasis(modal.province)) closeModal(true);
     }
   }, [list.data, list.acceptedPage, loading, error, expanded, modal]);
   useEffect(() => {
@@ -110,11 +128,16 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
     });
     return () => cancelAnimationFrame(frame);
   }, [ready, modal]);
-  function openModal(value: GeographyModal) {
+  function openModal(value: GeographyModal, publish = true) {
     if (!ready) return;
     savedTrigger.current = null;
     modalPage.current = list.acceptedPage;
     setModal(value);
+    if (publish && value.kind !== 'deactivate') publishEditor(value.province?.id ?? 'new');
+  }
+  function closeModal(replace = false) {
+    setModal(null);
+    publishEditor(null, replace);
   }
   function refresh() {
     if (scope.denied) scope.recover();
@@ -137,7 +160,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
       aria-labelledby="province-heading"
     >
       <header className="flex flex-wrap items-center justify-between gap-4">
-        <h1 id="province-heading" className="text-2xl font-bold">
+        <h1 ref={heading} tabIndex={-1} id="province-heading" className="text-2xl font-bold">
           {t('title')}
         </h1>
         <div className="flex flex-wrap gap-2">
@@ -267,7 +290,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
                       );
                       trigger?.focus();
                     }}
-                    {...(query ? { query: query.cities } : {})}
+                    {...(query ? { query: query.cities, editorAddress: query.cityEditor } : {})}
                   />
                 </div>
               )}
@@ -311,10 +334,10 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
           readReady={ready}
           recovery={recovery}
           onDenied={scope.deny}
-          onClose={() => setModal(null)}
+          onClose={() => closeModal()}
           onSaved={() => {
             savedTrigger.current = modal.trigger;
-            setModal(null);
+            closeModal(true);
             list.retry();
           }}
         />

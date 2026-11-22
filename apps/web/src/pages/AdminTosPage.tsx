@@ -25,7 +25,7 @@ import {
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { withCsrf } from '../lib/csrf.js';
-import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
@@ -73,7 +73,12 @@ import { isVersion, type TosVersion } from '../lib/content-catalogues.js';
  * Lists all TOS versions with create, edit, publish, view, and discard actions.
  * Read-only version detail view shows full Persian and English content.
  */
-export default function AdminTosPage() {
+type TosAddress = { editing: string | null; viewing: string | null };
+export type TosWorkspace = TosAddress & {
+  set: (patch: Partial<TosAddress>, replace?: boolean) => void;
+};
+
+export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace } = {}) {
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const read = useManualServerRead();
@@ -118,6 +123,10 @@ export default function AdminTosPage() {
   // Draft editor state
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const address = useRef<string | null>(null);
+  const requested = useRef<{ id: string | null; restore: boolean }>({ id: null, restore: false });
+  const requestedEdit = workspace?.editing;
+  const changeAddress = workspace?.set;
   const [editRevision, setEditRevision] = useState<string | null>(null);
   const [editConflict, setEditConflict] = useState(false);
   const [discarding, setDiscarding] = useState(false);
@@ -141,8 +150,11 @@ export default function AdminTosPage() {
 
   // Version detail view state (T-09.03.02)
   const viewTrigger = useRef<HTMLButtonElement>(null);
-  const [viewVersion, setViewVersion] = useState<TosVersion | null>(null);
-  const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa');
+  const [localView, setViewVersion] = useState<TosVersion | null>(null);
+  const viewVersion = workspace
+    ? (versions.find((version) => version.id === workspace.viewing) ?? null)
+    : localView;
+  const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>(locale);
 
   const resetEditorBusy = useCallback(() => {
     busyTokens.current.save++;
@@ -151,6 +163,9 @@ export default function AdminTosPage() {
     editor.setValidationPending(false);
   }, [editor.setValidationPending]);
   const clearPrivate = useCallback(() => {
+    const hadEditor = address.current !== null;
+    address.current = null;
+    requested.current = { id: null, restore: false };
     resetEditorBusy();
     busyTokens.current.publish++;
     busyTokens.current.discard++;
@@ -178,7 +193,8 @@ export default function AdminTosPage() {
     setPreviewReady(false);
     setViewVersion(null);
     setError({ key: 'denied' });
-  }, [resetEditorBusy, resetTerms]);
+    if (hadEditor || viewTrigger.current) changeAddress?.({ editing: null, viewing: null }, true);
+  }, [resetEditorBusy, resetTerms, changeAddress]);
   const scope = useCatalogueScope(clearPrivate);
   const confirmDestruction = useDestructiveConfirm(locale, scope.version);
   useEffect(() => {
@@ -310,7 +326,25 @@ export default function AdminTosPage() {
   const savedDraft = versions.find((v) => v.status === 'draft');
   const hasDraft = !!savedDraft;
 
-  function openCreate() {
+  function navigateEditor(id: string | null, replace = false) {
+    address.current = id;
+    requested.current.restore = false;
+    changeAddress?.({ editing: id }, replace);
+  }
+
+  function resetEditor() {
+    editorGeneration.current++;
+    resetEditorBusy();
+    draftController.current?.abort();
+    setShowEditor(false);
+    setEditId(null);
+    setEditRevision(null);
+    setEditConflict(false);
+    setUncertainSave(false);
+    resetTerms(emptyTermsDraft());
+  }
+
+  function openCreate(publish = true) {
     if (!historyReady || loading) return;
     editorGeneration.current++;
     resetEditorBusy();
@@ -320,9 +354,10 @@ export default function AdminTosPage() {
     resetTerms(emptyTermsDraft());
     setUncertainSave(false);
     setShowEditor(true);
+    if (publish) navigateEditor('new');
   }
 
-  function openEdit(v: TosVersion) {
+  function openEdit(v: TosVersion, publish = true) {
     if (!historyReady || loading) return;
     if (!v.revision) {
       setError({ key: 'previewRequired' });
@@ -336,18 +371,36 @@ export default function AdminTosPage() {
     resetTerms({ versionId: v.versionId, contentFa: v.contentFa, contentEn: v.contentEn });
     setUncertainSave(false);
     setShowEditor(true);
+    if (publish) navigateEditor(v.id);
   }
 
   function openView(v: TosVersion, trigger: HTMLButtonElement) {
     if (!historyReady || loading || scope.denied) return;
     viewTrigger.current = trigger;
-    setViewVersion(v);
+    if (changeAddress) changeAddress({ viewing: v.id });
+    else setViewVersion(v);
     setDetailLocale(locale);
   }
 
   function closeView() {
-    setViewVersion(null);
+    if (changeAddress) changeAddress({ viewing: null });
+    else setViewVersion(null);
   }
+
+  useLayoutEffect(() => {
+    if (requestedEdit === undefined || scope.denied) return;
+    if (requested.current.id !== requestedEdit) {
+      const restore = address.current !== requestedEdit;
+      if (restore) resetEditor();
+      requested.current = { id: requestedEdit, restore };
+    }
+    if (!requested.current.restore || !historyReady || loading) return;
+    requested.current.restore = false;
+    address.current = requestedEdit;
+    if (requestedEdit === 'new' && !savedDraft) openCreate(false);
+    else if (savedDraft && savedDraft.id === requestedEdit) openEdit(savedDraft, false);
+    else if (requestedEdit !== null) setError({ key: 'draftChanged' });
+  }, [requestedEdit, historyReady, loading, savedDraft, scope.denied]);
 
   async function writeVersion(path: string, init: RequestInit) {
     const controller = new AbortController();
@@ -470,6 +523,7 @@ export default function AdminTosPage() {
 
       if (!current()) return;
       setShowEditor(false);
+      navigateEditor(null, true);
       toast.success(confirmationText('recorded', locale));
       await fetchVersions();
     } catch (err) {
@@ -530,6 +584,7 @@ export default function AdminTosPage() {
       }
       if (result.status !== 'draft') {
         setShowEditor(false);
+        navigateEditor(null, true);
         await fetchVersions();
         return;
       }
@@ -685,7 +740,7 @@ export default function AdminTosPage() {
         <h1 className="text-2xl font-bold">{text.title}</h1>
         {!hasDraft && !showEditor && (
           <Button
-            onClick={openCreate}
+            onClick={() => openCreate()}
             disabled={!historyReady || loading}
             className="px-4 py-2 bg-primary text-primary-foreground rounded"
           >
@@ -745,7 +800,7 @@ export default function AdminTosPage() {
                 <form
                   noValidate
                   onSubmit={handleSave}
-                  className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
+                  className="min-w-0 space-y-4 rounded-lg border border-border bg-card p-4 text-card-foreground sm:p-6"
                 >
                   <h2 className="text-lg font-semibold">
                     {editId ? text.editDraft : text.createNewDraft}
@@ -756,13 +811,13 @@ export default function AdminTosPage() {
                   )}
                   {uncertainSave && <Alert variant="destructive">{formText('unverified')}</Alert>}
                   {uncertainSave && historyReady && !loading && !hasDraft && !editId && (
-                    <Button type="button" variant="outline" onClick={openCreate}>
+                    <Button type="button" variant="outline" onClick={() => openCreate()}>
                       {formText('reset')}
                     </Button>
                   )}
                   <fieldset
                     disabled={saving || !historyReady || loading || editConflict || uncertainSave}
-                    className="space-y-4"
+                    className="min-w-0 space-y-4"
                   >
                     <div>
                       <label
@@ -799,58 +854,60 @@ export default function AdminTosPage() {
                     </div>
 
                     <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
-                      <div className="space-y-2">
-                        <p className="font-medium">
-                          {text.persian} <span aria-hidden="true">*</span>
-                        </p>
-                        <TosRichText
-                          text={text}
-                          key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
-                          binding={editor.bind('contentFa')}
-                          value={contentFa}
-                          onChange={setContentFa}
-                          label={text.persian}
-                          language="fa"
-                          disabled={
-                            saving || !historyReady || loading || editConflict || uncertainSave
-                          }
-                        />
-                        {editor.errors.contentFa && (
-                          <p
-                            id={editor.errorId('contentFa')}
-                            role="alert"
-                            className="text-sm text-destructive"
-                          >
-                            {editor.errors.contentFa.message}
+                      <div className="grid min-w-0 items-start gap-5 xl:grid-cols-2">
+                        <div className="min-w-0 space-y-2">
+                          <p className="font-medium">
+                            {text.persian} <span aria-hidden="true">*</span>
                           </p>
-                        )}
+                          <TosRichText
+                            text={text}
+                            key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
+                            binding={editor.bind('contentFa')}
+                            value={contentFa}
+                            onChange={setContentFa}
+                            label={text.persian}
+                            language="fa"
+                            disabled={
+                              saving || !historyReady || loading || editConflict || uncertainSave
+                            }
+                          />
+                          {editor.errors.contentFa && (
+                            <p
+                              id={editor.errorId('contentFa')}
+                              role="alert"
+                              className="text-sm text-destructive"
+                            >
+                              {editor.errors.contentFa.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="min-w-0 space-y-2">
+                          <p className="font-medium">
+                            {text.english} <span aria-hidden="true">*</span>
+                          </p>
+                          <TosRichText
+                            text={text}
+                            key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}
+                            binding={editor.bind('contentEn')}
+                            value={contentEn}
+                            onChange={setContentEn}
+                            label={text.english}
+                            language="en"
+                            disabled={
+                              saving || !historyReady || loading || editConflict || uncertainSave
+                            }
+                          />
+                          {editor.errors.contentEn && (
+                            <p
+                              id={editor.errorId('contentEn')}
+                              role="alert"
+                              className="text-sm text-destructive"
+                            >
+                              {editor.errors.contentEn.message}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <p className="font-medium">
-                          {text.english} <span aria-hidden="true">*</span>
-                        </p>
-                        <TosRichText
-                          text={text}
-                          key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}
-                          binding={editor.bind('contentEn')}
-                          value={contentEn}
-                          onChange={setContentEn}
-                          label={text.english}
-                          language="en"
-                          disabled={
-                            saving || !historyReady || loading || editConflict || uncertainSave
-                          }
-                        />
-                      </div>
-                      {editor.errors.contentEn && (
-                        <p
-                          id={editor.errorId('contentEn')}
-                          role="alert"
-                          className="text-sm text-destructive"
-                        >
-                          {editor.errors.contentEn.message}
-                        </p>
-                      )}
                     </Suspense>
                   </fieldset>
 
@@ -896,8 +953,8 @@ export default function AdminTosPage() {
                     <Button
                       type="button"
                       onClick={() => {
-                        editorGeneration.current++;
-                        setShowEditor(false);
+                        resetEditor();
+                        navigateEditor(null);
                       }}
                       disabled={saving}
                       className="px-4 py-2 border border-input rounded hover:bg-muted"

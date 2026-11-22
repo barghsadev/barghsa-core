@@ -1,6 +1,6 @@
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { ConfirmationFields } from '@barghsa/ui';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -36,8 +36,46 @@ import {
 export type GeographyModal = {
   kind: 'add' | 'edit' | 'deactivate';
   province: Province | null;
-  trigger: HTMLElement;
+  trigger: HTMLElement | null;
 };
+
+export type GeographyEditorAddress = {
+  id: string | null;
+  set: (id: string | null, replace?: boolean) => void;
+};
+
+export function useGeographyEditorAddress(
+  selection: GeographyEditorAddress | undefined,
+  rows: readonly Province[],
+  ready: boolean,
+  trigger: React.RefObject<HTMLElement | null>,
+  restore: (value: GeographyModal | null) => void
+) {
+  const applied = useRef<string | null>(null);
+  const request = useRef<{ id: string | null; restore: boolean }>({ id: null, restore: false });
+  const id = selection?.id;
+  useLayoutEffect(() => {
+    if (id === undefined) return;
+    if (request.current.id !== id) {
+      const pending = applied.current !== id;
+      if (pending) restore(null);
+      request.current = { id, restore: pending };
+    }
+    if (!request.current.restore || !ready) return;
+    const record = rows.find((row) => row.id === id);
+    if (id !== null && id !== 'new' && !record) return;
+    request.current.restore = false;
+    applied.current = id;
+    if (id === 'new') restore({ kind: 'add', province: null, trigger: trigger.current });
+    else if (record) restore({ kind: 'edit', province: record, trigger: trigger.current });
+  }, [id, rows, ready]);
+  return (next: string | null, replace = false) => {
+    if (!selection || (applied.current === next && !request.current.restore)) return;
+    applied.current = next;
+    request.current.restore = false;
+    selection.set(next, replace);
+  };
+}
 const selectClass =
   'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
 function failureKey(error: unknown): GeographyTextKey {

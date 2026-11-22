@@ -117,6 +117,42 @@ async function inspect(page: Page, name: string, locale: string, project: string
       fullPage: true,
     });
 }
+for (const locale of ['en', 'fa'] as const) {
+  test(`province and city editors reopen from their URLs (${locale})`, async ({ page }) => {
+    await shell(page, locale, false);
+    const word = (key: Parameters<typeof geographyText>[0]) => geographyText(key, locale);
+    await page.route('**/api/admin/geography/provinces?*', (route) =>
+      route.fulfill({ json: { provinces: [province], total: 1 } })
+    );
+    await page.route('**/api/admin/geography/provinces/p1/cities?*', (route) =>
+      route.fulfill({ json: { cities: [city], total: 1 } })
+    );
+    await page.goto('/admin/geography');
+    const dialog = page.getByRole('dialog');
+    const englishName = dialog.getByLabel(word('nameEn'), { exact: true });
+    await page.getByRole('button', { name: word('edit'), exact: true }).click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('provinceEditor') === province.id);
+    await englishName.fill('Local province name');
+    await page.reload();
+    await expect(englishName).toHaveValue(province.nameEn);
+    await page.goBack();
+    await expect(dialog).toHaveCount(0);
+    await page.getByRole('button', { name: word('cities'), exact: true }).click();
+    const cityWorkspace = page.locator('#cities-p1');
+    await cityWorkspace.getByRole('button', { name: word('edit'), exact: true }).click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get('province') === province.id &&
+        url.searchParams.get('cityEditor') === city.id
+    );
+    await page.reload();
+    await expect(englishName).toHaveValue(city.nameEn);
+    await page.goBack();
+    await expect(dialog).toHaveCount(0);
+    await expect(cityWorkspace).toBeVisible();
+  });
+}
+
 for (const [locale, darkMode] of [
   ['en', false],
   ['fa', false],
