@@ -412958,7 +412958,7 @@
             1617330653885514,
             1312104955077758,
             216812763450337,
-            3799129110339173,
+            293870123292230,
             2015370855096008,
             2196708194842159,
             1636099573057206
@@ -412968,7 +412968,8 @@
             1588283350619908,
             3810967564503424,
             2689672081647735,
-            2201291801792273
+            2201291801792273,
+            3435543400513314
           ],
           "source_renewals": [
             1872091724219701,
@@ -412983,7 +412984,8 @@
             3273388812860485,
             1396145296701241,
             4010570759631961,
-            3613915422274983
+            3613915422274983,
+            1617778411199380
           ]
         }
       }
@@ -413052,7 +413054,7 @@
             1617330653885514,
             1312104955077758,
             216812763450337,
-            3799129110339173,
+            293870123292230,
             2015370855096008,
             2196708194842159,
             1636099573057206
@@ -413062,7 +413064,8 @@
             1588283350619908,
             3810967564503424,
             2689672081647735,
-            2201291801792273
+            2201291801792273,
+            3435543400513314
           ],
           "source_renewals": [
             1872091724219701,
@@ -413077,7 +413080,8 @@
             3273388812860485,
             1396145296701241,
             4010570759631961,
-            3613915422274983
+            3613915422274983,
+            1617778411199380
           ]
         }
       }
@@ -413148,7 +413152,7 @@
             1617330653885514,
             1312104955077758,
             216812763450337,
-            3799129110339173,
+            293870123292230,
             2015370855096008,
             2196708194842159,
             1636099573057206
@@ -413158,7 +413162,8 @@
             1588283350619908,
             3810967564503424,
             2689672081647735,
-            2201291801792273
+            2201291801792273,
+            3435543400513314
           ],
           "source_renewals": [
             1872091724219701,
@@ -413173,7 +413178,8 @@
             3273388812860485,
             1396145296701241,
             4010570759631961,
-            3613915422274983
+            3613915422274983,
+            1617778411199380
           ]
         }
       }
@@ -413379,7 +413385,7 @@
             1617330653885514,
             1312104955077758,
             216812763450337,
-            3799129110339173,
+            293870123292230,
             2015370855096008,
             2196708194842159,
             1636099573057206
@@ -413389,7 +413395,8 @@
             1588283350619908,
             3810967564503424,
             2689672081647735,
-            2201291801792273
+            2201291801792273,
+            3435543400513314
           ],
           "source_renewals": [
             1872091724219701,
@@ -413404,7 +413411,8 @@
             3273388812860485,
             1396145296701241,
             4010570759631961,
-            3613915422274983
+            3613915422274983,
+            1617778411199380
           ]
         }
       }
@@ -442394,7 +442402,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -442532,7 +442540,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Customer primary tabs are Home/Electricity orders/Wallet/Profile plus More when authorized; staff tabs prioritize actual operation grants. All granted remaining pages remain reachable exactly once. Native server grants and client allowlist prevent manufacturing missing links. Initial compact bar, deferred More/error fallback and exact active-page markers verified in FA/EN and both browser projects.",
           "limitations": [
@@ -442583,7 +442592,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -442901,7 +442911,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -443039,7 +443049,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Compact topbar retains linked brand icon, hamburger, notification bell and account avatar/profile identity with the required operating-context marker. Theme/language and secondary account actions remain in the account menu. Eight-width no-overflow, permission/context and keyboard checks pass.",
           "limitations": [
@@ -443090,7 +443101,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -443407,7 +443419,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -443545,7 +443557,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Tablet768–1023px uses a60px rail with accessible labels and at least44x44 targets. It expands by tap/menu, keyboard focus and hover on hover-capable devices. Phone drawer and full desktop sidebar remain available; current page and focus/More recovery are retained.",
           "limitations": [
@@ -443596,7 +443609,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -501303,7 +501317,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -501441,7 +501455,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Rich profile dropdown shows active initials/name/type, current accessible choices with avatar/name/type/verification badges, checked selection and profile-management link. Fresh account/revision-owned reads use the existing strict parser and cancel obsolete reads. Lazy-choice failure preserves context and offers explicit reload; no POST occurs during this failure.",
           "limitations": [
@@ -501492,7 +501507,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -501809,7 +501825,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -501947,7 +501963,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Compact ProfileBadge uses the same account-owned directory as the picker, shows current initials/type icon/name, truncates safely with full-name title and preserves the separate visible customer/staff marker. Missing/unavailable profile metadata is withheld rather than borrowing another scope.",
           "limitations": [
@@ -501998,7 +502015,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -502315,7 +502333,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -502453,7 +502471,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "A captured, target-bound switch blocks the workspace with a full-page non-dismissible loading/recovery view, including inert fallback before modal code loads. Exact response plus fresh current directory must confirm the target. Unknown replies hold without replay, recheck usesGET only, accepted changes persist backend preference and reset private queries/requests/tabs. Existing default-setting and invitation CSRF tests retained.",
           "limitations": [
@@ -502504,7 +502523,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -502821,7 +502841,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -502959,7 +502979,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Unverified profiles can be selected/read while existing verification banner and server commercial-order guards remain authoritative. Status badges expose verified/unverified without granting permissions. Native profile verification/context cases and existing verification sources retained; no commercial gate changed.",
           "limitations": [
@@ -503010,7 +503031,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -503331,7 +503353,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -503469,7 +503491,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Owner approved on2026-11-06 the existing explicit-ID or server-owned active-preference representation. Current ownership/active-agent checks, exact target receipt plus fresh confirmation, old-response suppression and cross-tab reset verified. Native foreign/suspended/agent contexts and late old wallet/notification values remain isolated; no profile header migration or financial-rule change.",
           "limitations": [
@@ -503520,7 +503543,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -503837,7 +503861,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -503975,7 +503999,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "AppShell retains shared directional flex layout, existing sidebar/topbar CSS variables, scrollable bounded main content, skip link and account banners. Desktop sidebar and responsive rail/phone surfaces verified; event/media/Escape logic retained byte-exact.",
           "limitations": [
@@ -504026,7 +504051,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -504344,7 +504370,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -504482,7 +504508,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Sidebar now includes brand at its head, profile picker below when expanded, grouped permitted links, directional icons, active marker and responsive expansion. Labels remain accessible in collapsed mode. Administrative links reflect actual backend grants rather than a frontend role-name assumption.",
           "limitations": [
@@ -504533,7 +504560,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -504851,7 +504879,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -504989,7 +505017,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Topbar retains language/theme controls, current notification bell and account popover, with compact preferences in that popover. Current profile identity is supplied through a customer-only slot; staff does not fetch customer profile authority. Root auth BrandMark default rendering remains exact and login light/dark FA/EN checks pass.",
           "limitations": [
@@ -505040,7 +505069,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -505358,7 +505388,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -505496,7 +505526,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "ProfileMenu keeps current account avatar/name/email/mobile, My Profile/settings/logout, explicit operating-context indicator and authorized staff/customer switch. Current authority/error recovery and session CSRF/one-context behavior remain unchanged; native and both browser contexts pass.",
           "limitations": [
@@ -505547,7 +505578,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -505865,7 +505897,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -506003,7 +506035,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Bottom bar shows up to four granted primary destinations plus More, reflects the true active route, preserves every remaining granted link, closes on navigation/desktop transition and restores focus. Phone/desktop/keyboard/RTL and failed bar/sheet recovery pass. Its initial payload remains counted under original page limits.",
           "limitations": [
@@ -506054,7 +506087,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -506372,7 +506406,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -506510,7 +506544,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Existing BreadcrumbBar keeps current route/path, localized root and safe detail label, collapsed parent disclosure, Escape/focus restoration and true list-return links. Raw record IDs never appear as breadcrumb labels. Real route/consent recovery tests retained across both projects.",
           "limitations": [
@@ -506561,7 +506596,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -506879,7 +506915,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -507017,7 +507053,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Navigation is resolved from current server grants and profile type. Client local labels/icons only filter known routes from that configuration; missing or wrong-area configuration fails closed and can refresh. Native per-permission/operating-context tests and restricted-menu browser cases pass.",
           "limitations": [
@@ -507068,7 +507105,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -507386,7 +507424,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -507524,7 +507562,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Customer service/account destinations and staff operations/settings groups remain backend-filtered, including all four services, CRM, document templates and finance/administration where granted. Personal customer work and staff operations retain their explicit authorized operating-context boundary.",
           "limitations": [
@@ -507575,7 +507614,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -507893,7 +507933,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -508031,7 +508071,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Legal profiles expose legal-profile/team/agent routes only with corresponding current grants; Individual profiles expose personal-profile/saving routes. Shared service links retain their own server permission boundaries. Current backend navigation tests and FA/EN customer/staff menu checks pass.",
           "limitations": [
@@ -508082,7 +508123,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -508400,7 +508442,7 @@
             3817337598802695,
             2825177464443560,
             1105298191990069,
-            4044366107232073,
+            1693868695781577,
             4336739995083235,
             1974132224437163,
             362681589982718,
@@ -508538,7 +508580,8 @@
             2476130794768768,
             1675498984252896,
             236994289988159,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Owner approved current router-context reuse with fresh authority on navigation/profile/permission changes instead of immutable session-long grants. Existing current-session/navigation parsers/providers and backend permission resolution remain byte-exact. Revocation, restricted configuration and context change tests pass.",
           "limitations": [
@@ -508589,7 +508632,8 @@
             4259610104572512,
             1360522389668641,
             1692694182211127,
-            98712094368476
+            98712094368476,
+            3874633115195424
           ],
           "presentation_renewals": [
             {
@@ -524470,7 +524514,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -524565,7 +524609,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Responsive1/2/3-column DashboardLayout, mounted Card headers with icon/title/optional navigation and independently rendered customer/staff bodies verified.",
           "limitations": [
@@ -524608,7 +524653,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -524850,7 +524896,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -524945,7 +524991,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Each authorized widget owns loading/error/retry/empty/data behavior. Customer server-query and staff useAsyncData readers independently fetch, validate ownership and fence account/profile changes. No sibling read depends on a failed resource.",
           "limitations": [
@@ -524988,7 +525035,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -525230,7 +525278,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -525325,7 +525373,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Mounted widgets reserve32rem card height across loading/error/empty/ready; browser geometry checks verify unchanged coordinates and sizes during independent widget loads, with keyboard-scrollable long bodies.",
           "limitations": [
@@ -525368,7 +525417,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -525608,7 +525658,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -525703,7 +525753,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Exact available/posted/reserved IRR and toman, all-outstanding-invoice low-funds warning, charge navigation and isolated failed-wallet alert/retry verified using current native and shared money evidence.",
           "limitations": [
@@ -525746,7 +525797,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -525986,7 +526038,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -526081,7 +526133,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Four localized counts with icons/color and exact filtered navigation: active contracts, orders in progress, customer open tickets, unpaid invoices. Current permissions and native no-double-count union retained.",
           "limitations": [
@@ -526124,7 +526177,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -526366,7 +526420,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -526461,7 +526515,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Current crm:verify permission, policy-enabled pending count, latest five non-archived profiles with deterministic timestamp ties, detail/show-all navigation, empty/disabled/malformed/denied behavior verified.",
           "limitations": [
@@ -526504,7 +526559,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -526745,7 +526801,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -526840,7 +526896,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Account-bound customer invitations persist above shared dashboard header until explicit accept/decline; previously accepted bilingual private-details, recovery, native invitation and owner-bound action evidence matches current sources.",
           "limitations": [
@@ -526883,7 +526940,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -527124,7 +527182,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -527219,7 +527277,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Latest five submitted electricity/saving orders merge in deterministic chronological order with localized status/date, exact invoice amount or explicit missing amount and service-specific view-all/detail links. Electricity submit transaction atomically establishes contract/invoice, so pre-publication submitted orders are included.",
           "limitations": [
@@ -527262,7 +527321,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -527503,7 +527563,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -527598,7 +527658,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "First three next-due invoices show exact remaining amount, due date and timezone-based days/urgency. Payment availability text distinguishes future payable dates; pay links open guarded invoice details and profile changes clear old rows.",
           "limitations": [
@@ -527641,7 +527702,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -527882,7 +527944,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -527977,7 +528039,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Active published contracts retain recorded service end dates/status, bounded elapsed-term progress, explicit missing/invalid-date fallback and contract links. Progress does not fabricate fulfillment.",
           "limitations": [
@@ -528020,7 +528083,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -528261,7 +528325,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -528356,7 +528420,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Staff queue independently reads current-grant ticket/order/unassigned-consultation counts with appropriate filtered links; tickets:assigned is constrained to that actor and concurrent grant removal withdraws results.",
           "limitations": [
@@ -528399,7 +528464,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -528640,7 +528706,7 @@
             3658519592743295,
             2706697447244272,
             1045103932132918,
-            3799129110339173,
+            293870123292230,
             2649057651073255,
             4134335073616775,
             2809933752356871,
@@ -528735,7 +528801,8 @@
             889985415563243,
             4441824344814146,
             1675498984252896,
-            3030968892058719
+            3030968892058719,
+            3435543400513314
           ],
           "criterion_result": "Admin dashboard exposes unresolved refund obligations in open business work and failed/exhausted subset in failures alongside failed background jobs and open delivery dead letters. Severity, links, independent retry, permission denial and stale-zero handling verified.",
           "limitations": [
@@ -528778,7 +528845,8 @@
             3288945720525475,
             2927939502738672,
             3339064979477663,
-            4328462315991181
+            4328462315991181,
+            1617778411199380
           ],
           "presentation_renewals": [
             {
@@ -570364,7 +570432,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Complete conditional presentation review outside the verified dashboard, profile, shared loading, service entry and customer catalogue, history and detail cases. All 93 canonical populated routes retain eight-width geometry evidence."
+        "Complete conditional presentation review outside the verified dashboard, profile, shared loading, service entry, customer catalogue, history and detail, and reviewed staff queue cases. All 93 canonical populated routes retain eight-width geometry evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570390,7 +570458,8 @@
             2297830686301027,
             208148079785314,
             3030968892058719,
-            1231107851008918
+            1231107851008918,
+            1716764749355738
           ],
           "source_evidence": [
             4368684968752415,
@@ -778173,6 +778242,7 @@
       "3534241205969675": "All 13 configured alerts have a specific runbook_url annotation. An authenticated read of remote main confirmed the four referenced runbook files. Structural review verified 73 repository links and 19 exact runbook assertions. Removing only the added annotation keys produces the same rules and fixture assertions as the previous source.",
       "4029323975010126": "Promtool on the existing pinned image accepted both exact rule files and passed the entire existing rule fixture. Input hashes were read back in the disposable container. Formatting and diff checks passed.",
       "3923700058641131": "The repository and rule-link review is complete. The dashboard criterion remains open for usable per-alert dashboard targets and deployed operator-facing receipt checks. No live monitoring update or external notification was sent in this batch.",
+      "3435543400513314": "The staff dashboard keeps the public maintenance summary available and offers the maintenance settings link only with current staff navigation access. The compiled change passed 22 navigation, maintenance and staff dashboard cases in Chromium and mobile Safari, including restricted and full staff access in Persian and English. All 105 route and interaction budgets passed.",
       "3992303700919363": "The compiled API passed all three capability maintenance integration cases with isolated migrated PostgreSQL. During electricity checkout maintenance, the guarded submit returned the typed 503, unrelated saving remained reachable, unauthenticated liveness and readiness both returned 200 and PostgreSQL remained healthy. The existing test verified resumption after clearing the flag. Wallet isolation, validation, staff authority, step-up, versioning and audit cases still passed.",
       "1539230747347807": "Nine read-only rollout observer tests passed. The smoke reads exact public release and health metadata before using the protected synthetic account, then checks owned dashboard, wallet and all four service reads. A readiness HTTP 503 from the isolated fixture made the observer fail before sending any credential. The operator documentation describes the write-pause behavior.",
       "519134268959866": "The release policy documents a ten-year default for canonical audit, security and financial evidence and no automatic expiry. Operational telemetry retention and eligible-document disposal have separate data paths. Permanent financial and contractual document bytes retain their existing guards.",
@@ -778571,6 +778641,7 @@
       "2466544677444937": "Passed 72 targeted units and 28 Chromium and mobile Safari production-bundle cases using controlled API responses. Critical source coverage passed with 440/477 lines and 492/564 branches. All 101 transfer budgets, formatting, lint and web typecheck passed.",
       "208148079785314": "The broader pre-change conditional run passed 84 browser cases for shared loading, identity, dashboard widgets, profile switches and service entry. The final dashboard and navigation rerun verifies the source changes found in that review. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/dashboard-conditional-review.",
       "1231107851008918": "Electricity retains accepted product details during refresh and temporary failure while its per-product order action is disabled. A successful refresh restores the action; 401 and 403 remove stale catalogue data. Solar request history reports a collection-specific retry message. The compiled build passed 100 customer catalogue, history, detail, profile and simple-order cases in Chromium and mobile Safari. Eight targeted viewport probes passed for electricity refresh and solar history recovery, with eight focused units, 141 localization tests and all 105 existing route budgets. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/customer-service-conditional-review.",
+      "1716764749355738": "The staff dashboard keeps the public maintenance summary available and offers the maintenance settings link only with current staff navigation access. The compiled change passed 22 navigation, maintenance and staff dashboard cases in Chromium and mobile Safari, including restricted and full staff access in Persian and English. All 105 route and interaction budgets passed. On the unchanged queue implementations at da8ebb12c78899a20cf48a81d8b55870ad50f6d9, 140 Chromium and mobile Safari checks passed for staff service and solar queues, job and notification recovery, support, approvals, invoices, bank receipt queues and staff/team administration. These checks exercise retry isolation, draft preservation, stale responses, permission loss and critical approval accessibility. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/staff-conditional-review.",
       "998259225949799": "All official changed-line and branch floors passed on acd15602 with 153 fresh Chromium cases, 723 fresh web unit cases and retained evidence for unchanged source. The separate failed browser group supplied no coverage. The only follow-up implementation-test delta is a solar cancellation assertion, verified in both languages and engines.",
       "1299171292351730": "The hosted critical WCAG accessibility step passed on acd15602. Targeted Chromium and mobile Safari checks cover current bilingual onboarding, financial and service branches with original safeguards. The linked source and receipts distinguish the actual checks and their scope.",
       "2628736734998927": "On the verified 573-file production build, a manual keyboard check in English desktop and Persian mobile confirmed first focus on Skip to main content, a single main landmark, then focus and names for username and password. Persian mobile content fits the 390px viewport.",
@@ -792161,6 +792232,10 @@
         "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
         "sha256": "8058cbcbbe8775e5e2e7ef3adde17c31e5635ea352af7bd849f68f4dfbdc0e87"
       },
+      "293870123292230": {
+        "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+        "sha256": "24df452a3650398b864b71cd5053c943ece9e6a63111110a100b5475e69f27c3"
+      },
       "1636099573057206": {
         "path": "apps/web/src/lib/maintenance-form.ts",
         "sha256": "de6d21c09bd8216b4d003908c62b588ba8fec525ac9ad23aa56035b67e2d780d"
@@ -792881,9 +792956,9 @@
         "path": "apps/api/src/auth/navigation.test.ts",
         "sha256": "7f19fe890877b983592f70fd3e7cb03076689f2473439ada59be297b00b00c3a"
       },
-      "4044366107232073": {
+      "1693868695781577": {
         "path": "apps/web/e2e/navigation-access.spec.ts",
-        "sha256": "27c6c58d560b9abf887e3bf5f08ca7eadcb1724ddaf50b4e83d1b32e97c4e995"
+        "sha256": "76ff172750b4a8e5b791e7ff6c472309e848570ef1f2f72b3a4bc055c836a63c"
       },
       "687293100612529": {
         "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -822883,6 +822958,14 @@
         ],
         "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
       },
+      "1617778411199380": {
+        "base_commit": "da8ebb12c78899a20cf48a81d8b55870ad50f6d9",
+        "batch": "release-0.6-staff-conditional-presentation",
+        "paths": [
+          "apps/web/src/components/AdminMaintenanceSummary.tsx"
+        ],
+        "scope": "Renewed the maintenance dashboard and staff navigation test bindings only. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/staff-conditional-review."
+      },
       "178770132462665": {
         "batch": "release-0.6-native-journey-availability",
         "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
@@ -824148,6 +824231,14 @@
           "apps/web/e2e/navigation-access.spec.ts"
         ],
         "scope": "Renewed the verified dashboard presentation and its targeted caller checks. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/dashboard-conditional-review."
+      },
+      "3874633115195424": {
+        "base_commit": "da8ebb12c78899a20cf48a81d8b55870ad50f6d9",
+        "batch": "release-0.6-staff-conditional-presentation",
+        "paths": [
+          "apps/web/e2e/navigation-access.spec.ts"
+        ],
+        "scope": "Renewed the maintenance dashboard and staff navigation test bindings only. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/staff-conditional-review."
       },
       "118306337696394": {
         "base_commit": "3fd75da6db07b77850f4f775066a8d077a5f7604",

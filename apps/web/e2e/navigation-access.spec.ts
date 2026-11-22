@@ -8,6 +8,7 @@ import { shellText } from '@barghsa/i18n/shell';
 import { t } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
 import { feedbackText } from '@barghsa/i18n/feedback';
+import { tMaintenance } from '@barghsa/i18n/maintenance';
 import type { NavigationConfiguration } from '../src/lib/navigation-config.js';
 
 async function shell(
@@ -103,8 +104,17 @@ for (const locale of ['en', 'fa'] as const) {
     };
     await shell(page, 'staff', locale, () => configuration);
     await page.route('**/api/staff/tickets?*', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/maintenance', (route) =>
+      route.fulfill({ json: { capabilities: [] } })
+    );
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/admin/tickets');
+    await page.goto('/app');
+    const maintenance = page.getByRole('region', { name: tMaintenance('adminTitle', locale) });
+    const manageMaintenance = maintenance.getByRole('link', {
+      name: tMaintenance('manage', locale),
+    });
+    await expect(maintenance.getByText(tMaintenance('noActive', locale))).toBeVisible();
+    await expect(manageMaintenance).toHaveCount(0);
     const quick = page.getByRole('navigation', { name: shellText('quickNavigation', locale) });
     await expect(quick.getByRole('link')).toHaveCount(3);
     await expectRegisteredNavigationLinks(quick);
@@ -115,9 +125,12 @@ for (const locale of ['en', 'fa'] as const) {
     const aside = page.locator('#admin-navigation');
     await expect(aside.locator('a[href="/admin/roles"]')).toHaveCount(0);
     await expect(aside.locator('a[href="/admin/crm"]')).toHaveCount(0);
+    await quick.locator('a[href="/admin/tickets"]').click();
+    await expect(quick.locator('a[href="/admin/tickets"]')).toHaveAttribute('aria-current', 'page');
     configuration = fullNavigation('staff');
     await quick.locator('a[href="/app"]').click();
     await expect(page).toHaveURL(/\/app$/);
+    await expect(manageMaintenance).toHaveAttribute('href', '/admin/maintenance');
     await expect(aside.locator('a[href="/admin/roles"]')).toHaveCount(1);
     await expect(aside.locator('a[href="/admin/crm"]')).toHaveCount(1);
     await page.setViewportSize({ width: 1280, height: 844 });

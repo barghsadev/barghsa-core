@@ -3,6 +3,7 @@ import { Wrench } from 'lucide-react';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { useLocale } from '../hooks/useLocale.js';
 import type { PublicMaintenanceSetting } from '../hooks/useMaintenance.js';
+import { useNavigation } from '../hooks/useNavigation.js';
 import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
 import { DashboardWidget } from './dashboard/DashboardWidget.js';
 
@@ -36,8 +37,10 @@ const readMaintenance = staffDashboardReader<PublicMaintenanceSetting[]>((value)
 
 export function AdminMaintenanceSummary() {
   const locale = useLocale();
+  const navigation = useNavigation();
   const resource = useStaffDashboardData('/api/maintenance', readMaintenance);
   if (!resource) return null;
+  const canManage = navigation?.area === 'staff' && navigation.paths.includes('/admin/maintenance');
   return (
     <DashboardWidget
       title={tMaintenance('adminTitle', locale)}
@@ -47,9 +50,11 @@ export function AdminMaintenanceSummary() {
       empty={(active) => active.length === 0}
       emptyMessage={tMaintenance('noActive', locale)}
       viewAll={
-        <Link to="/admin/maintenance" className="text-sm font-medium text-primary underline">
-          {tMaintenance('manage', locale)}
-        </Link>
+        canManage ? (
+          <Link to="/admin/maintenance" className="text-sm font-medium text-primary underline">
+            {tMaintenance('manage', locale)}
+          </Link>
+        ) : undefined
       }
     >
       {(active) => (
