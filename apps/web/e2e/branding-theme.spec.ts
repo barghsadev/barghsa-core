@@ -142,6 +142,34 @@ for (const locale of ['fa', 'en'] as const)
           .locator(':scope > div')
       ).toHaveCSS('background-color', darkMode ? 'rgb(244, 247, 242)' : 'rgb(20, 33, 26)');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
+      const previewMode = preview.getByRole('combobox', {
+        name: brandingText('previewMode', locale),
+        exact: true,
+      });
+      const previewLink = page.getByRole('link', {
+        name: brandingText('preview', locale),
+        exact: true,
+      });
+      await previewLink.press('Enter');
+      await expect(page.locator('#branding-preview')).toBeFocused();
+      for (const [mode, background] of [
+        ['light', 'rgb(244, 247, 242)'],
+        ['dark', 'rgb(20, 33, 26)'],
+      ]) {
+        await previewMode.selectOption(mode);
+        for (const version of ['current', 'draft'] as const) {
+          await expect(
+            preview
+              .getByRole('group', {
+                name: settingsText(`admin.settings.${version}`, locale),
+                exact: true,
+              })
+              .locator(':scope > div')
+          ).toHaveCSS('background-color', background);
+        }
+        await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
+      }
+      await previewMode.selectOption('auto');
       await scan();
       const accountMenu = page.getByRole('button', {
         name: shellText('accountMenu', locale),

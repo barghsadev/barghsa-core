@@ -12,6 +12,7 @@ import {
   Button,
   NativeSelect,
   NativeSelectOption,
+  PageHeader,
 } from '@barghsa/ui';
 import {
   getContrastForeground,
@@ -64,6 +65,27 @@ const DEFAULT_CONFIG = DEFAULT_BRAND_CONFIG;
 // Color picker component
 // ---------------------------------------------------------------------------
 
+const palettes = [
+  {
+    title: 'lightPalette',
+    fields: [
+      ['primary', 'primaryColor'],
+      ['secondary', 'secondaryColor'],
+      ['accent', 'accentColor'],
+      ['background', 'backgroundColor'],
+    ],
+  },
+  {
+    title: 'darkPalette',
+    fields: [
+      ['darkPrimaryColor', 'darkPrimaryColor', 'primaryColor'],
+      ['darkSecondaryColor', 'darkSecondaryColor', 'secondaryColor'],
+      ['darkAccentColor', 'darkAccentColor', 'accentColor'],
+      ['darkBackground', 'darkBackgroundColor'],
+    ],
+  },
+] as const;
+
 function ColorInput({
   label,
   value,
@@ -76,8 +98,8 @@ function ColorInput({
   const controlId = useId();
   const locale = useLocale();
   return (
-    <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-3">
-      <label htmlFor={controlId} className="text-sm font-medium text-foreground col-span-3">
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-1.5">
+      <label htmlFor={controlId} className="col-span-2 text-sm font-medium text-foreground">
         {label}
       </label>
       <input
@@ -85,17 +107,19 @@ function ColorInput({
         type="color"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-10 h-10 rounded border border-input cursor-pointer p-0.5"
+        className="size-11 cursor-pointer rounded-md border border-input p-0.5"
       />
       <input
         aria-label={brandingText('hex', locale).replace('{label}', label)}
         type="text"
+        dir="ltr"
+        spellCheck={false}
+        autoComplete="off"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-background text-foreground border border-input rounded px-2 py-1 text-sm w-28 font-mono"
+        onChange={(event) => onChange(event.target.value)}
+        className="h-11 w-full min-w-0 rounded-md border border-input bg-background px-2 font-mono text-sm text-foreground"
         placeholder="#RRGGBB"
       />
-      <div className="w-16 h-8 rounded border border-border" style={{ backgroundColor: value }} />
     </div>
   );
 }
@@ -105,6 +129,7 @@ function ColorInput({
 // ---------------------------------------------------------------------------
 
 export default function AdminBrandingConfig() {
+  const [previewMode, setPreviewMode] = useState<'auto' | 'light' | 'dark'>('auto');
   const [config, setConfig] = useState<BrandConfig>(DEFAULT_CONFIG);
   const locale = useLocale();
   const text = (key: Parameters<typeof brandingText>[0]) => brandingText(key, locale);
@@ -388,8 +413,6 @@ export default function AdminBrandingConfig() {
     }
   };
 
-  const heading = <h1 className="text-2xl font-bold text-foreground">{text('title')}</h1>;
-
   const savedConfig = activeConfig ? parseBrandConfig(activeConfig.config) : null;
   const changedConfig =
     !savedConfig ||
@@ -510,44 +533,43 @@ export default function AdminBrandingConfig() {
           }}
         />
       )}
-      <Button
-        type="button"
-        onClick={refresh}
-        disabled={action !== null || uploading || loading || historyRead.loading}
-      >
-        {text('refresh')}
-      </Button>
+      <PageHeader
+        title={text('title')}
+        description={text('description')}
+        actions={
+          <Button
+            type="button"
+            variant="outline"
+            onClick={refresh}
+            disabled={action !== null || uploading || loading || historyRead.loading}
+          >
+            {text('refresh')}
+          </Button>
+        }
+      />
       {requiredRead && !action && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
-      <div className="flex items-center justify-between">
-        <div>
-          {heading}
-          <p className="text-sm text-muted-foreground mt-1">
-            {text('description')}
-            {draftInfo && (
-              <span className="ms-2 text-foreground">
-                {text('draftVersion').replace('{version}', versionText(draftInfo.version))}
-                {timezone.status === 'ready' && (
-                  <>
-                    {' '}
-                    ·{' '}
-                    <time dateTime={draftInfo.updatedAt}>
-                      {text('savedAt').replace(
-                        '{date}',
-                        formatInTimezone(draftInfo.updatedAt, timezone.timezone, locale)
-                      )}
-                    </time>
-                  </>
-                )}
-              </span>
-            )}
-            {activeConfig?.status === 'active' && (
-              <span className="ms-2 text-foreground">
-                {text('activeVersion').replace('{version}', versionText(activeConfig.version))}
-              </span>
-            )}
-          </p>
+      {(draftInfo || activeConfig?.status === 'active') && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+          {activeConfig?.status === 'active' && (
+            <span className="rounded-md bg-muted px-2.5 py-1 font-medium">
+              {text('activeVersion').replace('{version}', versionText(activeConfig.version))}
+            </span>
+          )}
+          {draftInfo && (
+            <span className="rounded-md bg-muted px-2.5 py-1 font-medium">
+              {text('draftVersion').replace('{version}', versionText(draftInfo.version))}
+            </span>
+          )}
+          {draftInfo && timezone.status === 'ready' && (
+            <time dateTime={draftInfo.updatedAt} className="text-muted-foreground">
+              {text('savedAt').replace(
+                '{date}',
+                formatInTimezone(draftInfo.updatedAt, timezone.timezone, locale)
+              )}
+            </time>
+          )}
         </div>
-      </div>
+      )}
 
       {loadError && (
         <div role="alert">
@@ -702,437 +724,463 @@ export default function AdminBrandingConfig() {
         </div>
       )}
       {!scope.denied && activeConfig && (
-        <fieldset
-          disabled={!editing || !!action || uploading}
-          className="flex min-w-0 flex-col gap-6"
+        <div
+          className={`grid min-w-0 items-start gap-6 ${historyRead.data ? 'xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]' : ''}`}
         >
-          <legend className="sr-only">{text('title')}</legend>
-          {/* ── App Identity ──────────────────────────────────────────────── */}
-          <section className="bg-background rounded-lg border border-border p-6 space-y-5">
-            <h2 className="text-lg font-semibold text-foreground">{text('identity')}</h2>
+          <fieldset
+            disabled={!editing || !!action || uploading}
+            className="flex min-w-0 flex-col gap-6"
+          >
+            <legend className="sr-only">{text('title')}</legend>
+            {/* ── App Identity ──────────────────────────────────────────────── */}
+            <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-foreground">{text('identity')}</h2>
 
-            <div>
-              <label
-                htmlFor="adminbrandingconfig-field-2"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {text('appTitle')}
-              </label>
-              <input
-                id="adminbrandingconfig-field-2"
-                type="text"
-                value={config.appTitle}
-                onChange={(e) => updateConfig('appTitle', e.target.value)}
-                className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="branding-title-fa" className="block text-sm font-medium mb-1">
-                {text('appTitleFa')}
-              </label>
-              <input
-                id="branding-title-fa"
-                type="text"
-                dir="rtl"
-                lang="fa"
-                value={config.appTitleFa}
-                onChange={(e) => updateConfig('appTitleFa', e.target.value)}
-                className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="adminbrandingconfig-field-3"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {text('slogan')}
-              </label>
-              <input
-                id="adminbrandingconfig-field-3"
-                type="text"
-                value={config.slogan}
-                onChange={(e) => updateConfig('slogan', e.target.value)}
-                className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
-                placeholder={text('sloganPlaceholder')}
-              />
-            </div>
-          </section>
-
-          <section className="bg-background rounded-lg border border-border p-6 space-y-5">
-            <h2 className="text-lg font-semibold text-foreground">{text('supportContacts')}</h2>
-            {(['supportEmail', 'supportPhone', 'supportMobile'] as const).map((field) => (
-              <div key={field}>
-                <label htmlFor={field} className="block text-sm font-medium mb-1">
-                  {text(field)}
+              <div>
+                <label
+                  htmlFor="adminbrandingconfig-field-2"
+                  className="block text-sm font-medium text-foreground mb-1"
+                >
+                  {text('appTitle')}
                 </label>
                 <input
-                  id={field}
-                  type={field === 'supportEmail' ? 'email' : 'tel'}
-                  dir="ltr"
-                  value={config[field]}
-                  onChange={(e) => updateConfig(field, e.target.value)}
+                  id="adminbrandingconfig-field-2"
+                  type="text"
+                  value={config.appTitle}
+                  onChange={(e) => updateConfig('appTitle', e.target.value)}
                   className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
                 />
               </div>
-            ))}
-          </section>
 
-          {/* ── Colors ────────────────────────────────────────────────────── */}
-          <section className="bg-background rounded-lg border border-border p-6 space-y-5">
-            <h2 className="text-lg font-semibold text-foreground">{text('colors')}</h2>
-
-            <ColorInput
-              label={text('primary')}
-              value={config.primaryColor}
-              onChange={(v) => updateConfig('primaryColor', v)}
-            />
-            <ColorInput
-              label={text('secondary')}
-              value={config.secondaryColor}
-              onChange={(v) => updateConfig('secondaryColor', v)}
-            />
-            <ColorInput
-              label={text('accent')}
-              value={config.accentColor}
-              onChange={(v) => updateConfig('accentColor', v)}
-            />
-            {(['primary', 'secondary', 'accent'] as const).map((color) => {
-              const field = {
-                primary: 'darkPrimaryColor',
-                secondary: 'darkSecondaryColor',
-                accent: 'darkAccentColor',
-              } as const;
-              return (
-                <ColorInput
-                  key={color}
-                  label={text(field[color])}
-                  value={brandColor(config, color, 'dark')}
-                  onChange={(value) => updateConfig(field[color], value)}
-                />
-              );
-            })}
-            {(['light', 'dark'] as const).some(
-              (mode) =>
-                getBrandTextColor(brandColor(config, 'primary', mode), [
-                  mode === 'dark' ? config.darkBackgroundColor : config.backgroundColor,
-                  ...BRAND_SURFACES[mode],
-                ]) === 'var(--foreground)'
-            ) && (
-              <p role="status" className="text-sm text-muted-foreground">
-                {text('contrastAdjusted')}
-              </p>
-            )}
-            <ColorInput
-              label={text('background')}
-              value={config.backgroundColor}
-              onChange={(v) => updateConfig('backgroundColor', v)}
-            />
-            <ColorInput
-              label={text('darkBackground')}
-              value={config.darkBackgroundColor}
-              onChange={(v) => updateConfig('darkBackgroundColor', v)}
-            />
-            <p className="text-xs text-muted-foreground">{text('backgroundHint')}</p>
-          </section>
-
-          <section className="bg-background rounded-lg border border-border p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-foreground">{text('shapeAndType')}</h2>
-            <div className="space-y-1 text-sm font-medium">
-              <label htmlFor="branding-font-family">{text('fontFamily')}</label>
-              <NativeSelect
-                id="branding-font-family"
-                value={config.fontFamily}
-                onChange={(event) => updateConfig('fontFamily', event.target.value)}
-                className="w-full"
-              >
-                <option value="vazirmatn">Vazirmatn</option>
-                <option value="tahoma">Tahoma</option>
-              </NativeSelect>
-            </div>
-            <div className="space-y-1 text-sm font-medium">
-              <label htmlFor="branding-border-radius">{text('borderRadius')}</label>
-              <NativeSelect
-                id="branding-border-radius"
-                value={config.borderRadiusRem}
-                onChange={(event) => updateConfig('borderRadiusRem', Number(event.target.value))}
-                className="w-full"
-              >
-                {[0, 0.25, 0.5, 0.75, 1, 1.25, 1.5].map((value) => (
-                  <option key={value} value={value}>
-                    {value} rem
-                  </option>
-                ))}
-              </NativeSelect>
-            </div>
-            <div className="space-y-1 text-sm font-medium">
-              <label htmlFor="branding-spacing-scale">{text('spacingScale')}</label>
-              <NativeSelect
-                id="branding-spacing-scale"
-                value={config.spacingScale}
-                onChange={(event) => updateConfig('spacingScale', Number(event.target.value))}
-                className="w-full"
-              >
-                {[0.875, 1, 1.125, 1.25].map((value) => (
-                  <option key={value} value={value}>
-                    {Math.round(value * 100)}%
-                  </option>
-                ))}
-              </NativeSelect>
-            </div>
-            {!validConfig && (
-              <p role="alert" className="text-sm text-destructive">
-                {text('invalidTheme')}
-              </p>
-            )}
-          </section>
-
-          {/* ── Logo ──────────────────────────────────────────────────────── */}
-          <section
-            id="branding-assets"
-            className="bg-background rounded-lg border border-border p-6 space-y-5"
-          >
-            <h2 className="text-lg font-semibold text-foreground">{text('logo')}</h2>
-
-            <div className="flex flex-wrap items-start gap-6">
-              <div className="min-w-0 flex-1">
-                <label
-                  htmlFor="adminbrandingconfig-field-4"
-                  className="block text-sm font-medium text-foreground mb-2"
-                >
-                  {text('upload')}
+              <div>
+                <label htmlFor="branding-title-fa" className="block text-sm font-medium mb-1">
+                  {text('appTitleFa')}
                 </label>
                 <input
-                  id="adminbrandingconfig-field-4"
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  aria-describedby="branding-logo-hint"
-                  disabled={action !== null}
-                  onChange={(event) => void handleImageUpload(event, 'logo')}
-                  className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
+                  id="branding-title-fa"
+                  type="text"
+                  dir="rtl"
+                  lang="fa"
+                  value={config.appTitleFa}
+                  onChange={(e) => updateConfig('appTitleFa', e.target.value)}
+                  className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
                 />
-                <p id="branding-logo-hint" className="text-xs text-muted-foreground mt-1">
-                  {text('logoHint')}
-                </p>
               </div>
 
-              {displayedLogo && (
-                <div className="shrink-0">
-                  <img
-                    src={displayedLogo}
-                    alt={text('logoPreview')}
-                    className="max-w-32 max-h-16 object-contain border border-border rounded"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={action !== null || uploading}
-                    onClick={() => {
-                      setLogoFile(null);
-                      setLogoUploadKey(null);
-                      updateConfig('logoUrl', null);
-                    }}
-                    className="text-xs text-destructive underline mt-1"
-                  >
-                    {text('remove')}
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="branding-dark-logo-upload" className="block text-sm font-medium">
-                {text('uploadDarkLogo')}
-              </label>
-              <input
-                id="branding-dark-logo-upload"
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                disabled={action !== null}
-                onChange={(event) => void handleImageUpload(event, 'logoDark')}
-                aria-describedby="branding-dark-logo-hint"
-                className="block w-full text-sm file:me-4 file:rounded-lg file:border-0 file:bg-muted file:px-4 file:py-2 file:text-foreground"
-              />
-              <p id="branding-dark-logo-hint" className="text-xs text-muted-foreground">
-                {text('logoHint')} {text('darkLogoHint')}
-              </p>
-              {displayedLogoDark && (
-                <div>
-                  <img
-                    src={displayedLogoDark}
-                    alt={text('darkLogoPreview')}
-                    className="max-h-16 max-w-32 rounded border border-border object-contain"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={action !== null || uploading}
-                    onClick={() => {
-                      setLogoDarkFile(null);
-                      setLogoDarkUploadKey(null);
-                      updateConfig('logoDarkUrl', null);
-                    }}
-                  >
-                    {text('remove')}
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="branding-favicon-upload"
-                className="block text-sm font-medium text-foreground"
-              >
-                {text('uploadFavicon')}
-              </label>
-              <input
-                id="branding-favicon-upload"
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                disabled={action !== null}
-                onChange={(event) => void handleImageUpload(event, 'favicon')}
-                aria-describedby="branding-favicon-hint"
-                className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
-              />
-              <p id="branding-favicon-hint" className="text-xs text-muted-foreground">
-                {text('logoHint')}
-              </p>
-              {displayedFavicon && (
-                <div>
-                  <img
-                    src={displayedFavicon}
-                    alt={text('faviconPreview')}
-                    className="size-8 object-contain border border-border rounded"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={action !== null || uploading}
-                    onClick={() => {
-                      setFaviconFile(null);
-                      setFaviconUploadKey(null);
-                      updateConfig('faviconUrl', null);
-                    }}
-                    className="text-xs text-destructive underline mt-1"
-                  >
-                    {text('remove')}
-                  </Button>
-                </div>
-              )}
-              <label
-                htmlFor="adminbrandingconfig-field-5"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {text('favicon')}
-              </label>
-              <input
-                id="adminbrandingconfig-field-5"
-                type="text"
-                disabled={action !== null || uploading}
-                value={config.faviconUrl ?? ''}
-                onChange={(e) => {
-                  setFaviconFile(null);
-                  setFaviconUploadKey(null);
-                  updateConfig('faviconUrl', e.target.value || null);
-                }}
-                className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm font-mono"
-                placeholder="https://cdn.example.com/favicon.ico"
-              />
-            </div>
-          </section>
-
-          {/* ── Dark Mode ─────────────────────────────────────────────────── */}
-          <section className="bg-background rounded-lg border border-border p-6 space-y-3">
-            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">{text('themePolicy')}</h2>
-                <p id="branding-theme-policy-hint" className="text-sm text-muted-foreground">
-                  {text('themePolicyHint')}
-                </p>
-              </div>
-              <NativeSelect
-                aria-label={text('themePolicy')}
-                aria-describedby="branding-theme-policy-hint"
-                value={config.themeMode ?? (config.darkMode ? 'dark' : 'light')}
-                onChange={(event) => updateConfig('themeMode', event.target.value)}
-              >
-                <NativeSelectOption value="light">{text('themeLight')}</NativeSelectOption>
-                <NativeSelectOption value="dark">{text('themeDark')}</NativeSelectOption>
-                <NativeSelectOption value="system">{text('themeSystem')}</NativeSelectOption>
-              </NativeSelect>
-            </div>
-            {config.themeMode === 'system' && (
-              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-                <label htmlFor="branding-theme-default" className="text-sm font-medium">
-                  {text('themeDefault')}
-                </label>
-                <NativeSelect
-                  id="branding-theme-default"
-                  value={config.themeDefault ?? 'system'}
-                  onChange={(event) => updateConfig('themeDefault', event.target.value)}
+                <label
+                  htmlFor="adminbrandingconfig-field-3"
+                  className="block text-sm font-medium text-foreground mb-1"
                 >
-                  <NativeSelectOption value="system">{text('themeDevice')}</NativeSelectOption>
-                  <NativeSelectOption value="light">
-                    {shellText('themeLight', locale)}
-                  </NativeSelectOption>
-                  <NativeSelectOption value="dark">
-                    {shellText('themeDark', locale)}
-                  </NativeSelectOption>
+                  {text('slogan')}
+                </label>
+                <input
+                  id="adminbrandingconfig-field-3"
+                  type="text"
+                  value={config.slogan}
+                  onChange={(e) => updateConfig('slogan', e.target.value)}
+                  className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
+                  placeholder={text('sloganPlaceholder')}
+                />
+              </div>
+            </section>
+
+            <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-foreground">{text('supportContacts')}</h2>
+              {(['supportEmail', 'supportPhone', 'supportMobile'] as const).map((field) => (
+                <div key={field}>
+                  <label htmlFor={field} className="block text-sm font-medium mb-1">
+                    {text(field)}
+                  </label>
+                  <input
+                    id={field}
+                    type={field === 'supportEmail' ? 'email' : 'tel'}
+                    dir="ltr"
+                    value={config[field]}
+                    onChange={(e) => updateConfig(field, e.target.value)}
+                    className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </section>
+
+            {/* ── Colors ────────────────────────────────────────────────────── */}
+            <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 className="text-lg font-semibold text-foreground">{text('colors')}</h2>
+                {historyRead.data && (
+                  <a
+                    className="touch-action text-sm font-medium text-primary underline underline-offset-4 xl:hidden"
+                    href="#branding-preview"
+                  >
+                    {text('preview')}
+                  </a>
+                )}
+              </div>
+              <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+                {palettes.map(({ title, fields }) => (
+                  <div key={title} className="min-w-0 space-y-4 rounded-lg border bg-muted/25 p-3">
+                    <h3 className="text-sm font-semibold">{text(title)}</h3>
+                    {fields.map(([label, field, fallback]) => (
+                      <ColorInput
+                        key={field}
+                        label={text(label)}
+                        value={config[field] ?? (fallback ? config[fallback] : '')}
+                        onChange={(value) => updateConfig(field, value)}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+              {(['light', 'dark'] as const).some(
+                (mode) =>
+                  getBrandTextColor(brandColor(config, 'primary', mode), [
+                    mode === 'dark' ? config.darkBackgroundColor : config.backgroundColor,
+                    ...BRAND_SURFACES[mode],
+                  ]) === 'var(--foreground)'
+              ) && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {text('contrastAdjusted')}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground">{text('backgroundHint')}</p>
+            </section>
+
+            <section className="bg-background rounded-lg border border-border p-6 space-y-4">
+              <h2 className="text-lg font-semibold text-foreground">{text('shapeAndType')}</h2>
+              <div className="space-y-1 text-sm font-medium">
+                <label htmlFor="branding-font-family">{text('fontFamily')}</label>
+                <NativeSelect
+                  id="branding-font-family"
+                  value={config.fontFamily}
+                  onChange={(event) => updateConfig('fontFamily', event.target.value)}
+                  className="w-full"
+                >
+                  <option value="vazirmatn">Vazirmatn</option>
+                  <option value="tahoma">Tahoma</option>
                 </NativeSelect>
               </div>
-            )}
-          </section>
+              <div className="space-y-1 text-sm font-medium">
+                <label htmlFor="branding-border-radius">{text('borderRadius')}</label>
+                <NativeSelect
+                  id="branding-border-radius"
+                  value={config.borderRadiusRem}
+                  onChange={(event) => updateConfig('borderRadiusRem', Number(event.target.value))}
+                  className="w-full"
+                >
+                  {[0, 0.25, 0.5, 0.75, 1, 1.25, 1.5].map((value) => (
+                    <option key={value} value={value}>
+                      {value} rem
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
+              <div className="space-y-1 text-sm font-medium">
+                <label htmlFor="branding-spacing-scale">{text('spacingScale')}</label>
+                <NativeSelect
+                  id="branding-spacing-scale"
+                  value={config.spacingScale}
+                  onChange={(event) => updateConfig('spacingScale', Number(event.target.value))}
+                  className="w-full"
+                >
+                  {[0.875, 1, 1.125, 1.25].map((value) => (
+                    <option key={value} value={value}>
+                      {Math.round(value * 100)}%
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
+              {!validConfig && (
+                <p role="alert" className="text-sm text-destructive">
+                  {text('invalidTheme')}
+                </p>
+              )}
+            </section>
 
-          <section className="bg-background rounded-lg border border-border p-6 space-y-3">
-            <label
-              htmlFor="branding-number-style"
-              className="block text-lg font-semibold text-foreground"
+            {/* ── Logo ──────────────────────────────────────────────────────── */}
+            <section
+              id="branding-assets"
+              className="bg-background rounded-lg border border-border p-6 space-y-5"
             >
-              {text('numberStyle')}
-            </label>
-            <p id="branding-number-style-help" className="text-sm text-muted-foreground">
-              {text('numberStyleHint')}
-            </p>
-            <NativeSelect
-              id="branding-number-style"
-              aria-describedby="branding-number-style-help"
-              value={config.numberStyle}
-              onChange={(event) => updateConfig('numberStyle', event.target.value)}
-              className="max-w-full"
+              <h2 className="text-lg font-semibold text-foreground">{text('logo')}</h2>
+
+              <div className="flex flex-wrap items-start gap-6">
+                <div className="min-w-0 flex-1">
+                  <label
+                    htmlFor="adminbrandingconfig-field-4"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
+                    {text('upload')}
+                  </label>
+                  <input
+                    id="adminbrandingconfig-field-4"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    aria-describedby="branding-logo-hint"
+                    disabled={action !== null}
+                    onChange={(event) => void handleImageUpload(event, 'logo')}
+                    className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
+                  />
+                  <p id="branding-logo-hint" className="text-xs text-muted-foreground mt-1">
+                    {text('logoHint')}
+                  </p>
+                </div>
+
+                {displayedLogo && (
+                  <div className="shrink-0">
+                    <img
+                      src={displayedLogo}
+                      alt={text('logoPreview')}
+                      className="max-w-32 max-h-16 object-contain border border-border rounded"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={action !== null || uploading}
+                      onClick={() => {
+                        setLogoFile(null);
+                        setLogoUploadKey(null);
+                        updateConfig('logoUrl', null);
+                      }}
+                      className="text-xs text-destructive underline mt-1"
+                    >
+                      {text('remove')}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="branding-dark-logo-upload" className="block text-sm font-medium">
+                  {text('uploadDarkLogo')}
+                </label>
+                <input
+                  id="branding-dark-logo-upload"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  disabled={action !== null}
+                  onChange={(event) => void handleImageUpload(event, 'logoDark')}
+                  aria-describedby="branding-dark-logo-hint"
+                  className="block w-full text-sm file:me-4 file:rounded-lg file:border-0 file:bg-muted file:px-4 file:py-2 file:text-foreground"
+                />
+                <p id="branding-dark-logo-hint" className="text-xs text-muted-foreground">
+                  {text('logoHint')} {text('darkLogoHint')}
+                </p>
+                {displayedLogoDark && (
+                  <div>
+                    <img
+                      src={displayedLogoDark}
+                      alt={text('darkLogoPreview')}
+                      className="max-h-16 max-w-32 rounded border border-border object-contain"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={action !== null || uploading}
+                      onClick={() => {
+                        setLogoDarkFile(null);
+                        setLogoDarkUploadKey(null);
+                        updateConfig('logoDarkUrl', null);
+                      }}
+                    >
+                      {text('remove')}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="branding-favicon-upload"
+                  className="block text-sm font-medium text-foreground"
+                >
+                  {text('uploadFavicon')}
+                </label>
+                <input
+                  id="branding-favicon-upload"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  disabled={action !== null}
+                  onChange={(event) => void handleImageUpload(event, 'favicon')}
+                  aria-describedby="branding-favicon-hint"
+                  className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
+                />
+                <p id="branding-favicon-hint" className="text-xs text-muted-foreground">
+                  {text('logoHint')}
+                </p>
+                {displayedFavicon && (
+                  <div>
+                    <img
+                      src={displayedFavicon}
+                      alt={text('faviconPreview')}
+                      className="size-8 object-contain border border-border rounded"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={action !== null || uploading}
+                      onClick={() => {
+                        setFaviconFile(null);
+                        setFaviconUploadKey(null);
+                        updateConfig('faviconUrl', null);
+                      }}
+                      className="text-xs text-destructive underline mt-1"
+                    >
+                      {text('remove')}
+                    </Button>
+                  </div>
+                )}
+                <label
+                  htmlFor="adminbrandingconfig-field-5"
+                  className="block text-sm font-medium text-foreground mb-1"
+                >
+                  {text('favicon')}
+                </label>
+                <input
+                  id="adminbrandingconfig-field-5"
+                  type="text"
+                  disabled={action !== null || uploading}
+                  value={config.faviconUrl ?? ''}
+                  onChange={(e) => {
+                    setFaviconFile(null);
+                    setFaviconUploadKey(null);
+                    updateConfig('faviconUrl', e.target.value || null);
+                  }}
+                  className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm font-mono"
+                  placeholder="https://cdn.example.com/favicon.ico"
+                />
+              </div>
+            </section>
+
+            {/* ── Dark Mode ─────────────────────────────────────────────────── */}
+            <section className="bg-background rounded-lg border border-border p-6 space-y-3">
+              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">{text('themePolicy')}</h2>
+                  <p id="branding-theme-policy-hint" className="text-sm text-muted-foreground">
+                    {text('themePolicyHint')}
+                  </p>
+                </div>
+                <NativeSelect
+                  aria-label={text('themePolicy')}
+                  aria-describedby="branding-theme-policy-hint"
+                  value={config.themeMode ?? (config.darkMode ? 'dark' : 'light')}
+                  onChange={(event) => updateConfig('themeMode', event.target.value)}
+                >
+                  <NativeSelectOption value="light">{text('themeLight')}</NativeSelectOption>
+                  <NativeSelectOption value="dark">{text('themeDark')}</NativeSelectOption>
+                  <NativeSelectOption value="system">{text('themeSystem')}</NativeSelectOption>
+                </NativeSelect>
+              </div>
+              {config.themeMode === 'system' && (
+                <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                  <label htmlFor="branding-theme-default" className="text-sm font-medium">
+                    {text('themeDefault')}
+                  </label>
+                  <NativeSelect
+                    id="branding-theme-default"
+                    value={config.themeDefault ?? 'system'}
+                    onChange={(event) => updateConfig('themeDefault', event.target.value)}
+                  >
+                    <NativeSelectOption value="system">{text('themeDevice')}</NativeSelectOption>
+                    <NativeSelectOption value="light">
+                      {shellText('themeLight', locale)}
+                    </NativeSelectOption>
+                    <NativeSelectOption value="dark">
+                      {shellText('themeDark', locale)}
+                    </NativeSelectOption>
+                  </NativeSelect>
+                </div>
+              )}
+            </section>
+
+            <section className="bg-background rounded-lg border border-border p-6 space-y-3">
+              <label
+                htmlFor="branding-number-style"
+                className="block text-lg font-semibold text-foreground"
+              >
+                {text('numberStyle')}
+              </label>
+              <p id="branding-number-style-help" className="text-sm text-muted-foreground">
+                {text('numberStyleHint')}
+              </p>
+              <NativeSelect
+                id="branding-number-style"
+                aria-describedby="branding-number-style-help"
+                value={config.numberStyle}
+                onChange={(event) => updateConfig('numberStyle', event.target.value)}
+                className="max-w-full"
+              >
+                <option value="locale">{text('numberLocale')}</option>
+                <option value="persian">{text('numberPersian')}</option>
+                <option value="western">{text('numberWestern')}</option>
+              </NativeSelect>
+              <p>
+                <output aria-label={text('numberPreview')}>
+                  {formatCurrencyIrr('123456789', locale, { numberStyle: config.numberStyle })}
+                </output>
+              </p>
+            </section>
+          </fieldset>
+          {historyRead.data && (
+            <div
+              id="branding-preview"
+              tabIndex={-1}
+              className="min-w-0 scroll-mt-20 xl:top-20 xl:[@media(min-height:800px)]:sticky"
             >
-              <option value="locale">{text('numberLocale')}</option>
-              <option value="persian">{text('numberPersian')}</option>
-              <option value="western">{text('numberWestern')}</option>
-            </NativeSelect>
-            <p>
-              <output aria-label={text('numberPreview')}>
-                {formatCurrencyIrr('123456789', locale, { numberStyle: config.numberStyle })}
-              </output>
-            </p>
-          </section>
-        </fieldset>
-      )}
-      {!scope.denied && activeConfig && historyRead.data && (
-        <ConfigPreviewCard
-          title={text('preview')}
-          current={
-            published || activeConfig.version === 0 ? (
-              <BrandingPreview config={published?.config ?? activeConfig.config} locale={locale} />
-            ) : (
-              <p>{word('noActive')}</p>
-            )
-          }
-          draft={
-            <BrandingPreview
-              config={config}
-              locale={locale}
-              logo={displayedLogo}
-              logoDark={displayedLogoDark}
-            />
-          }
-        />
+              <ConfigPreviewCard
+                title={text('preview')}
+                stacked
+                controls={
+                  <div className="space-y-1.5">
+                    <label htmlFor="branding-preview-mode" className="block text-sm font-medium">
+                      {text('previewMode')}
+                    </label>
+                    <NativeSelect
+                      id="branding-preview-mode"
+                      value={previewMode}
+                      className="w-full"
+                      onChange={(event) => {
+                        const mode = event.target.value;
+                        setPreviewMode(mode === 'light' || mode === 'dark' ? mode : 'auto');
+                      }}
+                    >
+                      <NativeSelectOption value="auto">
+                        {text('previewAutomatic')}
+                      </NativeSelectOption>
+                      <NativeSelectOption value="light">
+                        {shellText('themeLight', locale)}
+                      </NativeSelectOption>
+                      <NativeSelectOption value="dark">
+                        {shellText('themeDark', locale)}
+                      </NativeSelectOption>
+                    </NativeSelect>
+                  </div>
+                }
+                current={
+                  published || activeConfig.version === 0 ? (
+                    <BrandingPreview
+                      config={published?.config ?? activeConfig.config}
+                      locale={locale}
+                      mode={previewMode}
+                    />
+                  ) : (
+                    <p>{word('noActive')}</p>
+                  )
+                }
+                draft={
+                  <BrandingPreview
+                    config={config}
+                    locale={locale}
+                    mode={previewMode}
+                    logo={displayedLogo}
+                    logoDark={displayedLogoDark}
+                  />
+                }
+              />
+            </div>
+          )}
+        </div>
       )}
       {!scope.denied && activeConfig && (
         <AuditLogViewer
@@ -1148,23 +1196,28 @@ export default function AdminBrandingConfig() {
 function BrandingPreview({
   config,
   locale,
+  mode,
   logo,
   logoDark,
 }: {
   config: BrandConfig;
   locale: 'fa' | 'en';
+  mode: 'auto' | 'light' | 'dark';
   logo?: string | null;
   logoDark?: string | null;
 }) {
   const safe = parseBrandConfig(config) ?? DEFAULT_CONFIG;
   const { systemTheme } = useBrandConfig();
-  const previewDark =
-    resolveTheme(
-      safe.themeMode ?? (safe.darkMode ? 'dark' : 'light'),
-      'system',
-      systemTheme === 'dark',
-      safe.themeDefault
-    ) === 'dark';
+  const theme =
+    mode === 'auto'
+      ? resolveTheme(
+          safe.themeMode ?? (safe.darkMode ? 'dark' : 'light'),
+          'system',
+          systemTheme === 'dark',
+          safe.themeDefault
+        )
+      : mode;
+  const previewDark = theme === 'dark';
   const image =
     (previewDark
       ? (logoDark ??
@@ -1178,7 +1231,7 @@ function BrandingPreview({
       style={{
         backgroundColor: previewDark ? safe.darkBackgroundColor : safe.backgroundColor,
         color: previewDark ? 'var(--theme-dark-foreground)' : 'var(--theme-light-foreground)',
-        borderColor: brandColor(safe, 'primary', previewDark ? 'dark' : 'light'),
+        borderColor: brandColor(safe, 'primary', theme),
         borderRadius: `${safe.borderRadiusRem}rem`,
         padding: `${1.25 * safe.spacingScale}rem`,
         fontFamily: safe.fontFamily === 'tahoma' ? 'Tahoma, sans-serif' : 'Vazirmatn, sans-serif',
@@ -1205,8 +1258,8 @@ function BrandingPreview({
             key={key}
             className="rounded px-3 py-2"
             style={{
-              backgroundColor: brandColor(safe, key, previewDark ? 'dark' : 'light'),
-              color: getContrastForeground(brandColor(safe, key, previewDark ? 'dark' : 'light')),
+              backgroundColor: brandColor(safe, key, theme),
+              color: getContrastForeground(brandColor(safe, key, theme)),
             }}
           >
             {brandingText(key, locale)}

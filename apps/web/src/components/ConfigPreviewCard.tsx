@@ -9,11 +9,15 @@ export function ConfigPreviewCard({
   description,
   current,
   draft,
+  controls,
+  stacked = false,
 }: {
   title: string;
   description?: ReactNode;
   current: ReactNode;
   draft: ReactNode;
+  controls?: ReactNode;
+  stacked?: boolean;
 }) {
   const locale = useLocale(),
     id = useId();
@@ -25,8 +29,9 @@ export function ConfigPreviewCard({
             <h2 id={id}>{title}</h2>
           </CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
+          {controls}
         </CardHeader>
-        <CardContent className="grid min-w-0 gap-6 xl:grid-cols-2">
+        <CardContent className={`grid min-w-0 gap-6 ${stacked ? '' : 'xl:grid-cols-2'}`}>
           {(
             [
               ['current', current],
