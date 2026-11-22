@@ -257,8 +257,8 @@ for (const locale of ['en', 'fa'] as const) {
         history.getByRole('cell', { name: label(`status.${key}`), exact: true })
       ).toBeVisible();
     await expect(history.locator('time').first()).toHaveAttribute('datetime', from);
-    await expect(page.getByRole('heading', { level: 1 }).locator('..')).toHaveAttribute(
-      'dir',
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS(
+      'direction',
       locale === 'fa' ? 'rtl' : 'ltr'
     );
     expect(

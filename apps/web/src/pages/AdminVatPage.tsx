@@ -27,6 +27,7 @@ import {
 } from '@barghsa/shared/finance';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -43,6 +44,9 @@ type Editor =
   | { kind: 'rate' }
   | { kind: 'override' }
   | { kind: 'endRate' | 'endOverride'; id: string; title: string };
+function editorKey(editor: Editor) {
+  return 'id' in editor ? `${editor.kind}/${editor.id}` : editor.kind;
+}
 const categories = [...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY];
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -195,12 +199,16 @@ function matchesReceipt(
     sameVersion
   );
 }
-export default function AdminVatPage() {
+export default function AdminVatPage({ selection }: { selection?: RecordAddress } = {}) {
   const preference = useTimezone();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => tVat(`admin.vat.${key}`, locale);
   const [editor, setEditor] = useState<Editor | null>(null);
+  const editorHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (editor) editorHeading.current?.focus();
+  }, [editor]);
   const validationContext = useRef<VatFormContext>({
     kind: 'rate',
     categories,
@@ -321,6 +329,33 @@ export default function AdminVatPage() {
       : kind === 'endOverride'
         ? overrideDisabled
         : rateDisabled;
+  const productTitle = (id: string) => {
+    const product = products.find((row) => row.id === id);
+    return product?.title[locale] || product?.title.en || product?.title.fa || label('product');
+  };
+  const addressedEditors: Editor[] = [];
+  const [mode, selectedId] = selection?.id?.split('/') ?? [];
+  if ((mode === 'rate' || mode === 'override') && !commandDisabled(mode)) {
+    addressedEditors.push({ kind: mode });
+  }
+  if (mode === 'endRate' && !rateDisabled) {
+    const row = rates.find((rate) => rate.id === selectedId && rate.effectiveUntil === null);
+    if (row) {
+      addressedEditors.push({ kind: mode, id: row.id, title: label(`category.${row.category}`) });
+    }
+  }
+  if (mode === 'endOverride' && !overrideDisabled && !productRead.loading) {
+    const row = overrides.find((value) => value.id === selectedId && value.effectiveUntil === null);
+    if (row) addressedEditors.push({ kind: mode, id: row.id, title: productTitle(row.productId) });
+  }
+  const publishEditor = useRecordAddress(selection, addressedEditors, editorKey, true, (next) => {
+    clearEditor();
+    setSaved(false);
+    setEditor(next);
+  });
+  useEffect(() => {
+    if (scope.denied && selection?.id) publishEditor(null, true);
+  }, [scope.denied, selection?.id]);
   const work = useRef({
     editor,
     action,
@@ -368,6 +403,7 @@ export default function AdminVatPage() {
       const rows = ending.kind === 'endRate' ? rateRead.data : overrideRead.data;
       if (rows && !rows.some((row) => row.id === ending.id && row.effectiveUntil === null)) {
         clearEditor();
+        publishEditor(null, true);
         return;
       }
     }
@@ -465,10 +501,6 @@ export default function AdminVatPage() {
       )}
     </fieldset>
   );
-  const productTitle = (id: string) => {
-    const product = products.find((row) => row.id === id);
-    return product?.title[locale] || product?.title.en || product?.title.fa || label('product');
-  };
   const dateText = (value: string) =>
     hasZone ? new Date(value).toLocaleString(locale, { timeZone: zone }) : label('timezoneLoading');
   function overrideStatus(row: VatProductOverrideDto) {
@@ -490,6 +522,7 @@ export default function AdminVatPage() {
     clearEditor();
     setSaved(false);
     setEditor(next);
+    publishEditor(editorKey(next));
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -611,16 +644,16 @@ export default function AdminVatPage() {
       className="mx-auto flex w-full max-w-5xl min-w-0 flex-col gap-6 p-4 md:p-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
-      <p className="text-sm text-muted-foreground">{label('precedence')}</p>
-      <p className="text-sm">
-        {preference.status === 'ready' && (
-          <>
-            {label('timezone')}: <bdi>{zone}</bdi>
-          </>
-        )}
-      </p>
-      <div>
+      <header className="flex flex-wrap items-start justify-between gap-4 border-b pb-5">
+        <div className="max-w-2xl space-y-2">
+          <h1 className="text-2xl font-semibold">{label('title')}</h1>
+          <p className="text-sm text-muted-foreground">{label('precedence')}</p>
+          {preference.status === 'ready' && (
+            <p className="text-sm font-medium">
+              {label('timezone')}: <bdi>{zone}</bdi>
+            </p>
+          )}
+        </div>
         <Button
           variant="outline"
           disabled={
@@ -633,7 +666,7 @@ export default function AdminVatPage() {
         >
           {label('refresh')}
         </Button>
-      </div>
+      </header>
       {requiredRead && !action && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
       {scope.denied && <p role="alert">{label('denied')}</p>}
       {!scope.denied && (
@@ -676,13 +709,17 @@ export default function AdminVatPage() {
               noValidate
               onSubmit={submit}
               aria-busy={locked || undefined}
-              className="flex flex-col gap-4 border-y py-5"
+              className="flex flex-col gap-4 rounded-2xl border bg-card p-4 sm:p-6"
             >
               <fieldset
                 disabled={locked || action !== null}
                 className="flex min-w-0 flex-col gap-4 border-0 p-0"
               >
-                {'title' in editor && <h2 className="font-semibold">{editor.title}</h2>}
+                <h2 ref={editorHeading} tabIndex={-1} className="text-lg font-semibold">
+                  {'title' in editor
+                    ? editor.title
+                    : label(editor.kind === 'rate' ? 'addRate' : 'addOverride')}
+                </h2>
                 {editor.kind === 'rate' && (
                   <>
                     <div className="flex min-w-0 flex-col gap-2">
@@ -893,7 +930,14 @@ export default function AdminVatPage() {
                           : 'save'
                     )}
                   </Button>
-                  <Button type="button" variant="outline" onClick={clearEditor}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      clearEditor();
+                      publishEditor(null);
+                    }}
+                  >
                     {label('cancel')}
                   </Button>
                 </div>
@@ -1057,6 +1101,7 @@ export default function AdminVatPage() {
             if (!matchesReceipt(action, result, rates, overrides))
               throw new Error('Invalid VAT acknowledgement');
             clearEditor();
+            publishEditor(null, true);
             setSaved(true);
             rateRead.retry();
             overrideRead.retry();

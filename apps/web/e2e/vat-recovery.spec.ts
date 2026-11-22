@@ -38,6 +38,60 @@ async function inspect(page: Page, name: string, locale: string, project: string
 }
 for (const locale of ['en', 'fa'] as const) {
   const label = (key: string) => tVat(`admin.vat.${key}`, locale);
+  test(`VAT links restore authorized rate and override editors (${locale})`, async ({ page }) => {
+    await shell(page, locale);
+    let denied = false;
+    let ended = false;
+    const writes: string[] = [];
+    await page.route('**/api/admin/finance/vat**', (route) => {
+      const { pathname } = new URL(route.request().url());
+      if (route.request().method() !== 'GET') {
+        writes.push(pathname);
+        return route.fulfill({ status: 500, json: {} });
+      }
+      if (denied) return route.fulfill({ status: 403, json: {} });
+      if (pathname.endsWith('/products')) return route.fulfill({ json: [vatProduct] });
+      if (pathname.endsWith('/overrides')) return route.fulfill({ json: [vatOverride] });
+      return route.fulfill({
+        json: [
+          ended ? { ...vatRate, effectiveUntil: '2026-04-01T00:00:00.000Z' } : vatRate,
+          electricityVatRate,
+        ],
+      });
+    });
+    await page.goto('/admin/vat');
+    const editor = page.getByRole('form', { name: label('editor'), exact: true });
+    const hardware = label('category.hardware');
+    await page.getByRole('button', { name: `${label('end')} ${hardware}`, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`mode=endRate&selected=${vatRate.id}$`));
+    await expect(editor.getByRole('heading', { name: hardware, exact: true })).toBeFocused();
+    await editor.getByRole('button', { name: label('end'), exact: true }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.reload();
+    await expect(editor.getByRole('heading', { name: hardware, exact: true })).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.goBack();
+    await expect(editor).toHaveCount(0);
+    await page.goForward();
+    await expect(editor.getByRole('heading', { name: hardware, exact: true })).toBeVisible();
+    ended = true;
+    await page.getByRole('button', { name: label('refresh'), exact: true }).click();
+    await expect(editor).toHaveCount(0);
+    await expect(page).toHaveURL(/\/admin\/vat$/);
+    const product = vatProduct.title[locale];
+    await page
+      .getByRole('button', { name: `${label('endOverride')} ${product}`, exact: true })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`mode=endOverride&selected=${vatOverride.id}$`));
+    await page.reload();
+    await expect(editor.getByRole('heading', { name: product, exact: true })).toBeVisible();
+    denied = true;
+    await page.reload();
+    await expect(page.getByRole('alert')).toHaveText(label('denied'));
+    await expect(editor).toHaveCount(0);
+    await expect(page).toHaveURL(/\/admin\/vat$/);
+    expect(writes).toEqual([]);
+  });
   test(`VAT rate draft and frozen decision recover independently (${locale})`, async ({
     page,
   }, info) => {
