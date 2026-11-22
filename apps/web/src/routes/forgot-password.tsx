@@ -33,13 +33,18 @@ function ForgotPasswordPage() {
   const copy = (key: string) => passwordRecoveryText(key, locale);
   const validationError = form.formState.errors.root?.validation?.message;
   const error = model.error ?? validationError ?? null;
+  const title = {
+    request: 'auth.forgotPassword.title',
+    verify: 'auth.forgotPassword.otpTitle',
+    reset: 'auth.resetPassword.title',
+  }[model.stage];
   return (
     <AuthLayout
       locale={locale}
       footer={
         <Link
           to="/login"
-          className="touch-action justify-center text-sm text-foreground underline"
+          className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4"
           onClick={(event) => {
             if (model.busy) event.preventDefault();
           }}
@@ -49,9 +54,22 @@ function ForgotPasswordPage() {
       }
     >
       <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-        <h1 className="text-xl font-semibold">
-          {t(model.challenge ? 'auth.resetPassword.title' : 'auth.forgotPassword.title', locale)}
-        </h1>
+        <div className="space-y-2">
+          <h1 className="tracking-tight">{t(title, locale)}</h1>
+          {model.stage === 'request' && (
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {copy('requestInstructions')}
+            </p>
+          )}
+          {model.stage === 'verify' && model.challenge && (
+            <p className="space-y-1 text-sm leading-relaxed text-muted-foreground">
+              <span className="block">{t('auth.forgotPassword.sent', locale)}</span>
+              <span className="block wrap-anywhere font-medium text-foreground">
+                <bdi dir="ltr">{maskDestination(model.challenge.destination)}</bdi>
+              </span>
+            </p>
+          )}
+        </div>
         {error && model.stage !== 'verify' && (
           <Alert variant="destructive" role="alert">
             <AlertDescription>{error}</AlertDescription>
@@ -90,12 +108,6 @@ function ForgotPasswordPage() {
               />
             ) : (
               <>
-                <p className="text-sm text-muted-foreground">
-                  {t('auth.forgotPassword.sent', locale)}
-                </p>
-                <p className="text-sm" dir="ltr">
-                  {maskDestination(model.challenge!.destination)}
-                </p>
                 {model.stage === 'verify' ? (
                   <div id="reset-otp">
                     <FormField

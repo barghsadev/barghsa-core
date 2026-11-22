@@ -53,13 +53,22 @@ for (const locale of ['fa', 'en'] as const) {
     );
     await page.goto('/forgot-password');
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      authText('auth.forgotPassword.title', locale)
+    );
     await page.locator('#username').fill('Recovery@Example.test');
     const [issued] = await Promise.all([
       page.waitForRequest('**/api/auth/forgot-password'),
       page.getByRole('button', { name: authText('auth.forgotPassword.submit', locale) }).click(),
     ]);
     expect(issued.postDataJSON()).toEqual({ username: 'recovery@example.test' });
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      authText('auth.forgotPassword.otpTitle', locale)
+    );
     await enterCode(page, locale);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      authText('auth.resetPassword.title', locale)
+    );
     await page.locator('#new-password').fill('New-browser-password-123!');
     await page.locator('#confirm-password').fill('Does-not-match-123!');
     await page.locator('button[type="submit"]').click();

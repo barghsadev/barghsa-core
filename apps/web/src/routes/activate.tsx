@@ -128,16 +128,23 @@ function ActivatePage() {
       footer={
         <Link
           to="/login"
-          className="touch-action justify-center text-sm text-foreground underline pointer-coarse:min-h-[45px]!"
+          className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4 pointer-coarse:min-h-[45px]!"
         >
           {t('auth.forgotPassword.backToLogin', locale)}
         </Link>
       }
     >
       <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-        <h1 className="text-xl font-semibold">
-          {t(outcome === 'complete' ? 'auth.activate.success' : 'auth.activate.title', locale)}
-        </h1>
+        <div className="space-y-2">
+          <h1 className="tracking-tight">
+            {t(outcome === 'complete' ? 'auth.activate.success' : 'auth.activate.title', locale)}
+          </h1>
+          {outcome === null && validInvitation && (
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {passwordRecoveryText('activationInstructions', locale)}
+            </p>
+          )}
+        </div>
         {outcome === 'complete' ? (
           <p role="status">{t('auth.resetPassword.signIn', locale)}</p>
         ) : outcome === 'unconfirmed' ? (

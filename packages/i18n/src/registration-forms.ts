@@ -1,6 +1,8 @@
 import type { Locale } from './index.js';
 const dictionary = {
   en: {
+    introduction:
+      'Enter your email or mobile number, then choose a password and verify your contact details.',
     codeInvalid: 'Enter all six digits of the verification code.',
     validationUnavailable: 'Validation is unavailable. Your entries are kept; try again.',
     uncertain:
@@ -8,6 +10,8 @@ const dictionary = {
     restart: 'Start a new registration',
   },
   fa: {
+    introduction:
+      'ایمیل یا شماره موبایل خود را وارد کنید، سپس رمز عبور بسازید و راه ارتباطی خود را تأیید کنید.',
     codeInvalid: 'هر شش رقم کد تأیید را وارد کنید.',
     validationUnavailable: 'اعتبارسنجی در دسترس نیست. اطلاعات شما حفظ شده است؛ دوباره تلاش کنید.',
     uncertain:

@@ -365,7 +365,7 @@ function LoginPage() {
     >
       <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <div className={'space-y-1.5' + (stage === 'otp' ? ' text-center' : '')}>
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="tracking-tight">
             {t(
               stage === 'credentials'
                 ? 'auth.login.title'

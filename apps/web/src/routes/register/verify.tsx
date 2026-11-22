@@ -214,7 +214,7 @@ function OtpVerifyPage() {
     return (
       <AuthLayout locale={locale}>
         <div className="space-y-4 text-center" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-          <h1 ref={existingAccountHeading} tabIndex={-1} className="text-xl font-semibold">
+          <h1 ref={existingAccountHeading} tabIndex={-1} className="tracking-tight">
             {t('auth.register.error.usernameTaken', locale)}
           </h1>
           <div className="flex flex-col items-center gap-2">
@@ -238,7 +238,7 @@ function OtpVerifyPage() {
       footer={
         <Link
           to="/register"
-          className="touch-action justify-center text-muted-foreground underline"
+          className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4"
           onClick={(event) => {
             if (model.busy) event.preventDefault();
           }}
@@ -250,7 +250,7 @@ function OtpVerifyPage() {
     >
       <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <div className="space-y-1.5 text-center">
-          <h1 className="text-xl font-semibold tracking-tight">{t('auth.otp.title', locale)}</h1>
+          <h1 className="tracking-tight">{t('auth.otp.title', locale)}</h1>
           <p className="text-sm text-muted-foreground">
             {t('auth.otp.sentTo', locale).replace('{destination}', destination)}
           </p>

@@ -4,7 +4,10 @@ from io import StringIO
 import unittest
 from unittest.mock import patch
 
-from board import ROOT, blocking_defects, main, pack_acceptance, read, render, sha, unpack_acceptance, validate
+from board import (
+    ROOT, blocking_defects, main, pack_acceptance, read, render, sha,
+    unpack_acceptance, unresolved_launch_tasks, validate,
+)
 from test_definition_of_done import record
 
 
@@ -46,6 +49,21 @@ class AcceptanceStorageTests(unittest.TestCase):
 class BoardIntegrityTests(unittest.TestCase):
     def setUp(self):
         self.board = copy.deepcopy(read())
+
+    def accept_v051_fixture(self):
+        releases = self.board['releases']
+        index = next(i for i, release in enumerate(releases) if release['version'] == '0.5.1')
+        scope = {release['version'] for release in releases[:index + 1]}
+        source = 'kanban/README.md'
+        # Each acceptance case starts with its prerequisites satisfied in the fixture alone.
+        for task in unresolved_launch_tasks(self.board['tasks'], scope):
+            task.update(status='done', remaining=[])
+            task['evidence']['current_acceptance'] = {
+                'checks': ['Fixture prerequisite accepted'],
+                'source_evidence': [{'path': source, 'sha256': sha(ROOT / source)}],
+            }
+        releases[index].update(status='accepted', acceptance={'gates': {'fixture': 'verified'}},
+                               published_commit=None, staging_receipt=None, telegram_receipt=None)
 
     def rejects(self, pattern):
         with self.assertRaisesRegex(ValueError, pattern):
@@ -107,9 +125,7 @@ class BoardIntegrityTests(unittest.TestCase):
         self.rejects('Invalid release dependency')
 
     def test_accepted_release_requires_completed_dependency_receipts(self):
-        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
-        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}},
-                       published_commit=None, staging_receipt=None, telegram_receipt=None)
+        self.accept_v051_fixture()
         validate(self.board)
         dependency = next(r for r in self.board['releases'] if r['version'] == '0.5.0')
         dependency.update(status='accepted', published_commit=None, staging_receipt=None, telegram_receipt=None)
@@ -136,8 +152,7 @@ class BoardIntegrityTests(unittest.TestCase):
                 self.rejects(f"v0.6.0 has an open {severity} defect: {defect['key']}")
 
     def test_candidate_gate_preserves_severity_scope_and_resolution(self):
-        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
-        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        self.accept_v051_fixture()
         open_minor = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'superseded')
         resolved = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'done')
         future = next(t for t in self.board['tasks'] if t['release'] == '0.9.0' and t['status'] != 'done')
@@ -156,8 +171,7 @@ class BoardIntegrityTests(unittest.TestCase):
         )
 
     def test_candidate_rejects_required_work_in_current_and_earlier_releases(self):
-        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
-        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        self.accept_v051_fixture()
         for version in ('0.5.0', '0.5.1'):
             with self.subTest(version=version):
                 task = next(t for t in self.board['tasks'] if t['release'] == version
@@ -167,8 +181,7 @@ class BoardIntegrityTests(unittest.TestCase):
                 task['status'] = 'done'
 
     def test_candidate_rejects_an_expired_exception_in_scope(self):
-        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
-        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        self.accept_v051_fixture()
         task = next(t for t in self.board['tasks'] if t['release'] == '0.3.0' and t['status'] == 'done')
         exception = record(task=task['key'], approved_at='2024-10-11T08:00:00Z',
                            expires_at='2024-10-12T08:00:00Z')

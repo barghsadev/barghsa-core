@@ -123,9 +123,12 @@ function RegisterPage() {
     >
       <>
         <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            {t('auth.register.title', locale)}
-          </h1>
+          <div className="space-y-2">
+            <h1 className="tracking-tight">{t('auth.register.title', locale)}</h1>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {registrationFormText('introduction', locale)}
+            </p>
+          </div>
           <Form {...form}>
             <form
               key={model.draftKey}
