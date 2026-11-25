@@ -307,6 +307,19 @@ for (const locale of ['en', 'fa'] as const)
           .analyze();
         expect(tableScan.violations).toEqual([]);
         await verifyClippedContrast(page, tableScan);
+        const receiptAction = table
+          .locator('td[data-table-actions]')
+          .getByRole('button', { name: word('details'), exact: true });
+        await expect(receiptAction).toHaveAttribute('aria-expanded', 'true');
+        await receiptAction.focus();
+        await expect(receiptAction).toBeInViewport();
+        await receiptAction.press('Enter');
+        await expect(receiptAction).toHaveAttribute('aria-expanded', 'false');
+        await expect(details).toHaveCount(0);
+        await receiptAction.press('Enter');
+        await expect(receiptAction).toHaveAttribute('aria-expanded', 'true');
+        await expect(details).toHaveAttribute('open', '');
+        await expect(details).toContainText(receiptId);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
           true
         );
@@ -585,7 +598,9 @@ for (const locale of ['en', 'fa'] as const)
         await openHistoryFilters(page, locale);
         await page.getByRole('dialog').locator('select[name="state"]').selectOption('Pending');
         await applyHistoryFilters(page, locale);
-        await details.locator(':scope > summary').click();
+        await expect(receiptAction).toHaveAttribute('aria-expanded', 'false');
+        await receiptAction.click();
+        await expect(receiptAction).toHaveAttribute('aria-expanded', 'true');
         await expect(details).toContainText(word('awaiting.second_approval'));
         await expect(details).not.toContainText(word('confirmed'));
         await expect(details).not.toContainText('Please provide a readable deposit reference');

@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import {
   Badge,
+  Button,
   Card,
   CardHeader,
   CardTitle,
@@ -16,6 +17,8 @@ import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import {
   ArrowDownLeft,
   ArrowUpRight,
+  Eye,
+  EyeOff,
   LockKeyhole,
   LockKeyholeOpen,
   RotateCcw,
@@ -27,6 +30,7 @@ import { Currency } from './Currency.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { HistoryTable } from './HistoryTable.js';
+import { TableActionIcon } from './TableActionIcon.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 import { WalletReceiptHistoryDetails } from './WalletReceiptHistoryDetails.js';
 
@@ -68,6 +72,7 @@ export function WalletTransactionRecords({
   formatTime: ReturnType<typeof useAccountTime>['format'];
   staff?: boolean;
 }) {
+  const detailsPrefix = useId();
   const [opened, setOpened] = useState<ReadonlySet<string>>(new Set());
   useEffect(() => {
     const ids = new Set(items.map((item) => item.id));
@@ -199,24 +204,27 @@ export function WalletTransactionRecords({
   const deposit = (item: WalletTransaction) => (
     <ReceiptDepositDate value={item.bankReceipt?.paymentDate} locale={locale} />
   );
+  const detailsId = (item: WalletTransaction) => `${detailsPrefix}-${item.id}`;
+  function changeDetails(id: string, open: boolean) {
+    setOpened((current) => {
+      if (current.has(id) === open) return current;
+      const next = new Set(current);
+      if (open) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
   const details = (item: WalletTransaction) =>
     item.bankReceipt ? (
       <WalletReceiptHistoryDetails
+        id={detailsId(item)}
         receiptId={item.id}
         profileId={profileId}
         receipt={item.bankReceipt}
         locale={locale}
         formatTime={formatTime}
         open={opened.has(item.id)}
-        onOpenChange={(open) =>
-          setOpened((current) => {
-            if (current.has(item.id) === open) return current;
-            const next = new Set(current);
-            if (open) next.add(item.id);
-            else next.delete(item.id);
-            return next;
-          })
-        }
+        onOpenChange={(open) => changeDetails(item.id, open)}
       />
     ) : null;
   if (view === 'table')
@@ -225,6 +233,7 @@ export function WalletTransactionRecords({
         caption={`${word('title')} · ${t('historyView.table', locale)}`}
         items={items}
         rowKey={(item) => item.id}
+        renderExpandedRow={staff ? undefined : (item) => opened.has(item.id) && details(item)}
         columns={[
           { id: 'date', label: word('date'), render: date },
           { id: 'type', label: word('type'), render: type },
@@ -251,7 +260,29 @@ export function WalletTransactionRecords({
                   label: receiptLabel('payerReference'),
                   render: (item: WalletTransaction) => identity(item.bankReceipt?.payerReference),
                 },
-                { id: 'details', label: receiptLabel('details'), render: details, actions: true },
+                {
+                  id: 'details',
+                  label: <span className="sr-only">{receiptLabel('details')}</span>,
+                  actions: true,
+                  render: (item: WalletTransaction) => {
+                    if (!item.bankReceipt) return null;
+                    const open = opened.has(item.id);
+                    return (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        aria-expanded={open}
+                        aria-controls={open ? detailsId(item) : undefined}
+                        data-table-action-tooltip={receiptLabel('details')}
+                        onClick={() => changeDetails(item.id, !open)}
+                      >
+                        <TableActionIcon icon={open ? EyeOff : Eye}>
+                          {receiptLabel('details')}
+                        </TableActionIcon>
+                      </Button>
+                    );
+                  },
+                },
               ]),
         ]}
       />

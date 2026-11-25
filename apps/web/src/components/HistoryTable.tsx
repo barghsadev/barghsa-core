@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { cn, ScrollArea } from '@barghsa/ui';
 import type { LucideIcon } from 'lucide-react';
 
@@ -26,7 +26,7 @@ export function TableCellDetails({
 
 export interface HistoryColumn<Item> {
   id: string;
-  label: string;
+  label: ReactNode;
   render: (item: Item) => ReactNode;
   actions?: boolean;
 }
@@ -37,11 +37,13 @@ export function HistoryTable<Item>({
   items,
   columns,
   rowKey,
+  renderExpandedRow,
 }: {
   caption: string;
   items: readonly Item[];
   columns: readonly HistoryColumn<Item>[];
   rowKey: (item: Item) => string;
+  renderExpandedRow?: ((item: Item) => ReactNode) | undefined;
 }) {
   const orderedColumns = [
     ...columns.filter((column) => !column.actions),
@@ -52,7 +54,10 @@ export function HistoryTable<Item>({
       role="region"
       aria-label={caption}
       scrollbarOrientation="horizontal"
-      className="min-w-0 max-w-full rounded-xl border bg-card"
+      className={cn(
+        'min-w-0 max-w-full rounded-xl border bg-card',
+        renderExpandedRow && '@container'
+      )}
     >
       <table className="w-full text-start text-sm">
         <caption className="sr-only">{caption}</caption>
@@ -71,26 +76,39 @@ export function HistoryTable<Item>({
           </tr>
         </thead>
         <tbody className="divide-y">
-          {items.map((item) => (
-            <tr key={rowKey(item)} className="hover:bg-muted/40 focus-within:bg-muted/40">
-              {orderedColumns.map((column, index) => {
-                const Cell = index === 0 ? 'th' : 'td';
-                return (
-                  <Cell
-                    key={column.id}
-                    scope={index === 0 ? 'row' : undefined}
-                    data-table-actions={column.actions ? '' : undefined}
-                    className={cn(
-                      'min-w-28 px-4 py-3 text-start align-top',
-                      index === 0 && 'font-semibold'
-                    )}
-                  >
-                    {column.render(item)}
-                  </Cell>
-                );
-              })}
-            </tr>
-          ))}
+          {items.map((item) => {
+            const expanded = renderExpandedRow?.(item);
+            return (
+              <Fragment key={rowKey(item)}>
+                <tr className="hover:bg-muted/40 focus-within:bg-muted/40">
+                  {orderedColumns.map((column, index) => {
+                    const Cell = index === 0 ? 'th' : 'td';
+                    return (
+                      <Cell
+                        key={column.id}
+                        scope={index === 0 ? 'row' : undefined}
+                        data-table-actions={column.actions ? '' : undefined}
+                        className={cn(
+                          'px-4 py-3 text-start align-top',
+                          !column.actions && 'min-w-28',
+                          index === 0 && 'font-semibold'
+                        )}
+                      >
+                        {column.render(item)}
+                      </Cell>
+                    );
+                  })}
+                </tr>
+                {expanded && (
+                  <tr>
+                    <td colSpan={orderedColumns.length}>
+                      <div className="sticky start-0 w-[100cqi] px-3 py-2">{expanded}</div>
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            );
+          })}
         </tbody>
       </table>
     </ScrollArea>

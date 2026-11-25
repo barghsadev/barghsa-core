@@ -16,6 +16,7 @@ const WalletReceiptTimeline = lazy(async () => ({
 }));
 
 export function WalletReceiptHistoryDetails({
+  id,
   receiptId,
   profileId,
   receipt,
@@ -24,6 +25,7 @@ export function WalletReceiptHistoryDetails({
   open,
   onOpenChange,
 }: {
+  id?: string | undefined;
   receiptId: string;
   profileId: string;
   receipt: WalletBankReceiptHistory;
@@ -35,6 +37,7 @@ export function WalletReceiptHistoryDetails({
   const word = (key: string) => t(`wallet.receipt.${key}`, locale);
   return (
     <details
+      id={id}
       data-slot="wallet-receipt-details"
       open={open}
       onToggle={(event) => onOpenChange(event.currentTarget.open)}
