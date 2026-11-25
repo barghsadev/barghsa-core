@@ -1,3 +1,4 @@
+import type * as RouterModule from '@tanstack/react-router';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -30,7 +31,7 @@ const harness = vi.hoisted(() => ({
   activation: null as ComponentProps<typeof ContractActivationPanel> | null,
 }));
 vi.mock('@tanstack/react-router', async (importOriginal) => {
-  const router = await importOriginal<typeof import('@tanstack/react-router')>();
+  const router = await importOriginal<typeof RouterModule>();
   return {
     ...router,
     Link: ({

@@ -1,3 +1,4 @@
+import type * as RouterModule from '@tanstack/react-router';
 import { electricityCancellationText } from '@barghsa/i18n/electricity-cancellation-customer';
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
@@ -293,7 +294,7 @@ it.each(['confirmed', 'retry', 'already-cancelled', 'step-up required'] as const
 );
 
 vi.mock('@tanstack/react-router', async (importOriginal) => {
-  const { interpolatePath } = await importOriginal<typeof import('@tanstack/react-router')>();
+  const { interpolatePath } = await importOriginal<typeof RouterModule>();
   return {
     useBlocker: vi.fn(),
     Link: ({
