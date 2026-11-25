@@ -13,8 +13,10 @@ import {
   isGiftCodeStats,
   matchesGiftReceipt,
 } from '../lib/gift-code-catalogue.js';
+type RouterModule = typeof import('@tanstack/react-router');
+
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
+  ...(await importOriginal<RouterModule>()),
   Link: ({ children }: { children: ReactNode }) => <a href="/admin/gift-codes">{children}</a>,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));

@@ -21,8 +21,10 @@ const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   confirmation: null as Confirmation | null,
 }));
+type RouterModule = typeof import('@tanstack/react-router');
+
 vi.mock('@tanstack/react-router', async (original) => ({
-  ...(await original<typeof import('@tanstack/react-router')>()),
+  ...(await original<RouterModule>()),
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
     <a href={to}>{children}</a>
   ),

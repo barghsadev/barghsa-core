@@ -455,6 +455,12 @@ for (const [locale, darkMode] of [
     await expect(approve).toBeFocused();
     await expect(approve).toBeChecked();
     await expect(approve).toHaveAttribute('required', '');
+    const reject = page.locator('input[name="case-decision"][value="Rejected"]');
+    await page.keyboard.press('ArrowDown');
+    await expect(reject).toBeChecked();
+    await expect(page.locator('#case-notes')).toHaveAttribute('aria-required', 'true');
+    await page.keyboard.press('ArrowUp');
+    await expect(approve).toBeChecked();
     await page.keyboard.press('Tab');
     await expect(page.locator('#case-notes')).toBeFocused();
     await expect(page.locator('#case-notes')).not.toHaveAttribute('aria-required', 'true');
@@ -503,7 +509,7 @@ for (const [locale, darkMode] of [
       )
     ).toBeVisible();
     await expect(evidence).toHaveCount(0);
-    await page.locator('input[name="case-decision"][value="Rejected"]').check();
+    await reject.check();
     await expect(page.locator('#case-notes')).toHaveAttribute('aria-required', 'true');
     await expect(review).toBeDisabled();
     await page.locator('#case-notes').fill('Resubmit evidence');
@@ -516,7 +522,9 @@ for (const [locale, darkMode] of [
     expect(decisions).toHaveLength(2);
     await expect(heading).toBeFocused();
     closed = true;
-    await page.getByRole('button', { name: crmText('crm.list.refresh', locale), exact: true }).click();
+    await page
+      .getByRole('button', { name: crmText('crm.list.refresh', locale), exact: true })
+      .click();
     await expect(page.locator('#case-decision')).toHaveCount(0);
     expect(decisions).toHaveLength(2);
   });

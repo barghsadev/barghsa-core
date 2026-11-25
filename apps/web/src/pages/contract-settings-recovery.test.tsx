@@ -18,8 +18,10 @@ const captured = vi.hoisted(() => ({
   close: null as (() => void) | null,
   disabled: false,
 }));
+type RouterModule = typeof import('@tanstack/react-router');
+
 vi.mock('@tanstack/react-router', async (original) => ({
-  ...(await original<typeof import('@tanstack/react-router')>()),
+  ...(await original<RouterModule>()),
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
     <a href={to}>{children}</a>
   ),

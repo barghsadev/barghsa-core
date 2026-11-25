@@ -9,8 +9,10 @@ import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 import { QueryComponentProvider } from '../../test/query-provider.js';
 
 vi.mock('../../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
+type RouterModule = typeof import('@tanstack/react-router');
+
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
+  ...(await importOriginal<RouterModule>()),
   Link: ({
     to,
     params,
