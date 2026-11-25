@@ -34,8 +34,15 @@ const settingsCopy: Record<string, string> = {
 };
 
 export default function ElectricitySettingRecovery(props: Props) {
-  const { setting, label, disabled, onBusyChange, onDenied, onActivated, showRevisions = false } =
-    props;
+  const {
+    setting,
+    label,
+    disabled,
+    onBusyChange,
+    onDenied,
+    onActivated,
+    showRevisions = false,
+  } = props;
   const numbers = useNumberFormatting(useLocale());
   const title = setting === 'wizard-draft-ttl' ? 'retentionRecoveryTitle' : 'templateRecoveryTitle';
   const common = {

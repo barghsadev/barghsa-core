@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import * as argon2 from 'argon2';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { StaffAuditResult } from './admin.service.js';
+import type { searchStaffAccounts } from './staff-account-search.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let adminHeaders: Record<string, string>;
@@ -774,10 +775,10 @@ it('searches staff by name or username with a bounded, private directory respons
      FROM generate_series(1,12) AS n`,
     [marker]
   );
-  const matches = await (await fetch(search(marker), { headers: adminHeaders })).json();
+  const matches = (await (
+    await fetch(search(marker), { headers: adminHeaders })
+  ).json()) as Awaited<ReturnType<typeof searchStaffAccounts>>;
   expect(matches).toMatchObject({ hasMore: true });
   expect(matches.items).toHaveLength(10);
-  expect(matches.items.every((account: { userId: string }) => account.userId !== customerId)).toBe(
-    true
-  );
+  expect(matches.items.every((account) => account.userId !== customerId)).toBe(true);
 });

@@ -4,7 +4,11 @@ import { FileText, Paperclip, X } from 'lucide-react';
 import { tCrmForm } from '@barghsa/i18n/crm-forms';
 import type { Locale } from '@barghsa/i18n/app';
 import { isAllowedInvoiceReceiptFile } from '../lib/invoice-bank-receipt-fields.js';
-import { recordFilePicker, recordFilePickerAction, recordFilePickerHelp } from './RecordEditorLayout.js';
+import {
+  recordFilePicker,
+  recordFilePickerAction,
+  recordFilePickerHelp,
+} from './RecordEditorLayout.js';
 
 export function VerificationEvidencePicker({
   id,

@@ -139,7 +139,10 @@ export function KnowledgeBaseUpload(props: Props) {
             <div className="relative min-w-0 max-w-full rounded-lg focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 has-[:disabled]:opacity-60">
               <span
                 aria-hidden="true"
-                className={buttonVariants({ variant: 'outline', className: recordFilePickerAction })}
+                className={buttonVariants({
+                  variant: 'outline',
+                  className: recordFilePickerAction,
+                })}
               >
                 <PaperclipIcon className="size-4 shrink-0" />
                 {fileAction}

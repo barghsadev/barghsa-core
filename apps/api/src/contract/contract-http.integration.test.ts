@@ -357,7 +357,7 @@ it('lists only eligible invoice references for a current draft and its order', a
     nextBefore: null,
   });
   const earlier = await send(path + '&before=' + [direct, orderInvoice].sort().at(-1));
-  expect((await earlier.json()).invoices).toEqual([
+  expect(((await earlier.json()) as { invoices: unknown }).invoices).toEqual([
     { id: [direct, orderInvoice].sort()[0], createdAt: expect.any(String) },
   ]);
 });

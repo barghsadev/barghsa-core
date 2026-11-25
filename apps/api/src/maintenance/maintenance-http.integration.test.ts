@@ -197,7 +197,7 @@ it('requires staff authority and step-up, versions changes, and records the audi
   const privateInput = { ...body, reason: privateReason, publishReason: false, expectedVersion: 1 };
   const savedPrivate = await put(privateInput);
   expect(savedPrivate.status, http.logs()).toBe(200);
-  const receipt = await savedPrivate.json();
+  const receipt = (await savedPrivate.json()) as Record<string, unknown>;
   expect(receipt).toMatchObject({ active: true, reason: standardMaintenanceNotice, version: 2 });
   expect(JSON.stringify(receipt)).not.toContain(privateReason.en);
   await http.pool.query(

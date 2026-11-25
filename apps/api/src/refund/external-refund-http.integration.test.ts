@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
-import type { RefundDto } from './refund.service.js';
+import type { RefundDto, RefundService } from './refund.service.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 const sessions: Record<string, string> = {};
@@ -165,15 +165,17 @@ it('looks up an exact refund within its invoice and destination', async () => {
       headers: headers[user]!,
     });
 
+  const readBody = async (response: Response) =>
+    (await response.json()) as Awaited<ReturnType<RefundService['refundsForInvoice']>>;
   const exact = await read('external-refunds', f.id, target.id);
   expect(exact.status).toBe(200);
-  const data = await exact.json();
+  const data = await readBody(exact);
   expect(data.invoice.availableAmount).toBe('50');
-  expect(data.refunds.map((refund: RefundDto) => refund.id)).toEqual([target.id]);
+  expect(data.refunds.map((refund) => refund.id)).toEqual([target.id]);
   expect(data.nextBefore).toBeNull();
-  expect((await (await read('external-refunds', f.id, wallet.id)).json()).refunds).toEqual([]);
-  expect((await (await read('external-refunds', other.id, target.id)).json()).refunds).toEqual([]);
-  expect((await (await read('wallet-refunds', f.id, wallet.id)).json()).refunds).toMatchObject([
+  expect((await readBody(await read('external-refunds', f.id, wallet.id))).refunds).toEqual([]);
+  expect((await readBody(await read('external-refunds', other.id, target.id))).refunds).toEqual([]);
+  expect((await readBody(await read('wallet-refunds', f.id, wallet.id))).refunds).toMatchObject([
     { id: wallet.id },
   ]);
   expect((await read('external-refunds', f.id, target.id, 'refund-support')).status).toBe(403);

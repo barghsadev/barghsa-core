@@ -188,7 +188,9 @@ for (const locale of ['en', 'fa'] as const)
       });
       const chooserPromise = page.waitForEvent('filechooser');
       await file.press('Enter');
-      await (await chooserPromise).setFiles({
+      await (
+        await chooserPromise
+      ).setFiles({
         name: uploaded.fileName,
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-test'),

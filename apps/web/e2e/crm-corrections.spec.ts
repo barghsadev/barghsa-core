@@ -144,7 +144,9 @@ for (const [locale, darkMode] of [
     await page.locator('#correction-reason').fill('Document checked');
     const chooserPromise = page.waitForEvent('filechooser');
     await picker.press('Enter');
-    await (await chooserPromise).setFiles([
+    await (
+      await chooserPromise
+    ).setFiles([
       {
         name: 'unsupported.exe',
         mimeType: 'application/octet-stream',

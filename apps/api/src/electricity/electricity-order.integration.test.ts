@@ -4963,7 +4963,9 @@ it.each(['charge', 'credit'] as const)(
       ],
     });
     expect((await fetch(`${staffPath}/${proposed.adjustmentId}`, { headers })).status).toBe(403);
-    expect((await fetch(`${staffPath}/${randomUUID()}`, { headers: staffHeaders })).status).toBe(404);
+    expect((await fetch(`${staffPath}/${randomUUID()}`, { headers: staffHeaders })).status).toBe(
+      404
+    );
     const disclosedResponse = await fetch(customerPath, { headers });
     expect(disclosedResponse.status, http.logs()).toBe(200);
     expect(await disclosedResponse.json()).toMatchObject({

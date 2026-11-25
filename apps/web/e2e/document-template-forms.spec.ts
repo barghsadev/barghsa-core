@@ -319,7 +319,9 @@ for (const locale of ['en', 'fa'] as const) {
     await upload.focus();
     const chooserPromise = page.waitForEvent('filechooser');
     await upload.press('Enter');
-    await (await chooserPromise).setFiles({
+    await (
+      await chooserPromise
+    ).setFiles({
       name: 'Addendum.pdf',
       mimeType: 'application/pdf',
       buffer: bytes,

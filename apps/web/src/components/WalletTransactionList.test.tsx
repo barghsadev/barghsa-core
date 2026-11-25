@@ -114,9 +114,9 @@ describe('WalletTransactionList', () => {
     expect(fetcher.mock.calls[0]![0]).toBe(
       '/api/admin/reconciliation/wallets/profile-a/transactions?sort=desc&limit=25'
     );
-    expect(
-      host.querySelector(`a[href="/admin/invoices/${invoice}"]`)?.textContent
-    ).toContain(invoice);
+    expect(host.querySelector(`a[href="/admin/invoices/${invoice}"]`)?.textContent).toContain(
+      invoice
+    );
     expect(host.querySelector('a[href^="/invoices/"]')).toBeNull();
     expect(host.textContent).toContain('-9,007,199,254,740,993');
     await click('Table');

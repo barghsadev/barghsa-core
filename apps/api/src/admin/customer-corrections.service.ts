@@ -1,5 +1,6 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient, QueryResult } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
@@ -11,19 +12,18 @@ const columns = `id,address,profile_id AS "profileId",created_at AS "createdAt",
 @Injectable()
 export class CustomerCorrectionsService {
   async list(actor: FailedNotificationActor, completed: boolean, offset: number) {
-    return this.read(
-      actor,
-      `SELECT ${columns} FROM email_customer_corrections
+    return this.read(actor, (client) =>
+      client.query(
+        `SELECT ${columns} FROM email_customer_corrections
         WHERE (resolved_at IS NOT NULL)=$1 ORDER BY created_at DESC,id DESC LIMIT 26 OFFSET $2`,
-      [completed, offset]
+        [completed, offset]
+      )
     );
   }
 
   async get(actor: FailedNotificationActor, id: string) {
-    const [record] = await this.read(
-      actor,
-      `SELECT ${columns} FROM email_customer_corrections WHERE id=$1`,
-      [id]
+    const [record] = await this.read(actor, (client) =>
+      client.query(`SELECT ${columns} FROM email_customer_corrections WHERE id=$1`, [id])
     );
     if (!record) throw new HttpException({ statusCode: 404, error: 'NOT_FOUND' }, 404);
     return record;
@@ -31,15 +31,14 @@ export class CustomerCorrectionsService {
 
   private async read(
     actor: FailedNotificationActor,
-    statement: string,
-    parameters: (string | number | boolean)[]
+    query: (client: PoolClient) => Promise<QueryResult>
   ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:view');
       await requireCurrentSession(client, actor);
-      const result = await client.query(statement, parameters);
+      const result = await query(client);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return result.rows;

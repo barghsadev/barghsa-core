@@ -3,7 +3,11 @@ import { Button, DynamicFieldArray, cn } from '@barghsa/ui';
 import { FileText, Upload } from 'lucide-react';
 import { useFileSelectionKey } from '../hooks/useFileSelectionKey.js';
 import { FilePreview } from './FilePreview.js';
-import { recordFilePicker, recordFilePickerAction, recordFilePickerHelp } from './RecordEditorLayout.js';
+import {
+  recordFilePicker,
+  recordFilePickerAction,
+  recordFilePickerHelp,
+} from './RecordEditorLayout.js';
 import { documentText } from '@barghsa/i18n/documents';
 import type { Locale } from '@barghsa/i18n/app';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -147,9 +151,7 @@ export function FileUpload({
           {word(maxFiles > 1 ? 'chooseFiles' : value.length ? 'changeSelectedFile' : 'chooseFile')}
         </Button>
         <div className={recordFilePickerHelp}>
-          {!blocked && (
-            <p className="hidden [@media(pointer:fine)]:block">{word('dropHere')}</p>
-          )}
+          {!blocked && <p className="hidden [@media(pointer:fine)]:block">{word('dropHere')}</p>}
           <p id={`${id}-rules`}>{requirements}</p>
         </div>
       </div>
