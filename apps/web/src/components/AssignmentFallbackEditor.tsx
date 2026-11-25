@@ -1,4 +1,6 @@
 import { Button, Label, NativeSelect } from '@barghsa/ui';
+import { ArrowDown, ArrowUp, X } from 'lucide-react';
+import type { ReactNode } from 'react';
 import {
   STAFF_ASSIGNMENT_MAX_FALLBACKS,
   STAFF_ASSIGNMENT_STRATEGIES,
@@ -14,6 +16,8 @@ export function AssignmentFallbackEditor({
   label,
   onChange,
   feedback,
+  children,
+  number,
 }: {
   workType: string;
   rule: StaffAssignmentRule;
@@ -21,6 +25,8 @@ export function AssignmentFallbackEditor({
   label: (key: string) => string;
   onChange: (rule: StaffAssignmentRule) => void;
   feedback?: { 'aria-invalid': boolean | undefined; 'aria-describedby': string };
+  children: ReactNode;
+  number: (value: number) => string;
 }) {
   const choices: StaffAssignmentChoice[] = rule.teamId
     ? [{ teamId: rule.teamId, strategy: rule.strategy }, ...(rule.fallbacks ?? [])]
@@ -37,33 +43,52 @@ export function AssignmentFallbackEditor({
     [next[index], next[target]] = [next[target]!, next[index]!];
     replace(next);
   };
-  const available = teams.find(
+  const available = teams.filter(
     (team) => team.isActive && !choices.some((choice) => choice.teamId === team.id)
   );
+  const canAdd = available.length > 0 && choices.length <= STAFF_ASSIGNMENT_MAX_FALLBACKS;
+  const addId = `add-fallback-team-${workType}`;
   return (
-    <div className="w-full space-y-3">
-      <p className="text-sm text-muted-foreground">{label('fallbackHelp')}</p>
-      {choices.length > 1 && (
-        <Button type="button" variant="outline" onClick={() => move(0, 1)}>
-          {label('moveDown')} 1
-        </Button>
-      )}
+    <div className="min-w-0 space-y-3">
+      <div className="min-w-0 space-y-1.5">
+        {rule.teamId && (
+          <div className="flex items-center justify-between gap-2">
+            <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-foreground">
+              {label('primary')}
+            </span>
+            {choices.length > 1 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label={`${label('moveDown')} ${number(1)}`}
+                title={label('moveDown')}
+                onClick={() => move(0, 1)}
+              >
+                <ArrowDown aria-hidden="true" />
+              </Button>
+            )}
+          </div>
+        )}
+        {children}
+      </div>
       {choices.slice(1).map((choice, index) => {
         const position = index + 1;
-        const number = position + 1;
-        const teamId = `fallback-team-${workType}-${number}`;
-        const strategyId = `fallback-strategy-${workType}-${number}`;
+        const rank = position + 1;
+        const rankLabel = number(rank);
+        const teamId = `fallback-team-${workType}-${rank}`;
+        const strategyId = `fallback-strategy-${workType}-${rank}`;
         return (
           <fieldset
-            key={number}
-            className="min-w-0 flex flex-wrap items-end gap-3 rounded border p-3"
+            key={rank}
+            className="grid min-w-0 items-end gap-2 rounded-lg border bg-muted/25 p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
           >
-            <legend>
-              {label('priority')} {number}
+            <legend className="px-1 text-xs font-medium text-muted-foreground">
+              {label('priority')} {rankLabel}
             </legend>
-            <div className="min-w-0 w-full sm:w-fit">
+            <div className="min-w-0 space-y-1">
               <Label htmlFor={teamId}>
-                {label('team')} {number}
+                {label('team')} {rankLabel}
               </Label>
               <NativeSelect
                 {...feedback}
@@ -96,9 +121,9 @@ export function AssignmentFallbackEditor({
                 )}
               </NativeSelect>
             </div>
-            <div className="min-w-0 w-full sm:w-fit">
+            <div className="min-w-0 space-y-1">
               <Label htmlFor={strategyId}>
-                {label('strategy')} {number}
+                {label('strategy')} {rankLabel}
               </Label>
               <NativeSelect
                 {...feedback}
@@ -122,37 +147,73 @@ export function AssignmentFallbackEditor({
                 ))}
               </NativeSelect>
             </div>
-            <Button type="button" variant="outline" onClick={() => move(position, -1)}>
-              {label('moveUp')} {number}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={position === choices.length - 1}
-              onClick={() => move(position, 1)}
-            >
-              {label('moveDown')} {number}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => replace(choices.filter((_, i) => i !== position))}
-            >
-              {label('removeFallback')} {number}
-            </Button>
+            <div className="flex flex-wrap items-center justify-end">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label={`${label('moveUp')} ${rankLabel}`}
+                title={label('moveUp')}
+                onClick={() => move(position, -1)}
+              >
+                <ArrowUp aria-hidden="true" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label={`${label('moveDown')} ${rankLabel}`}
+                title={label('moveDown')}
+                disabled={position === choices.length - 1}
+                onClick={() => move(position, 1)}
+              >
+                <ArrowDown aria-hidden="true" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label={`${label('removeFallback')} ${rankLabel}`}
+                title={label('removeFallback')}
+                onClick={() => replace(choices.filter((_, i) => i !== position))}
+              >
+                <X aria-hidden="true" />
+              </Button>
+            </div>
           </fieldset>
         );
       })}
-      <Button
-        type="button"
-        variant="outline"
-        disabled={!rule.teamId || !available || choices.length > STAFF_ASSIGNMENT_MAX_FALLBACKS}
-        onClick={() => {
-          if (available) replace([...choices, { teamId: available.id, strategy: 'round_robin' }]);
-        }}
-      >
-        {label('addFallback')}
-      </Button>
+      {rule.teamId && (
+        <div className="max-w-sm space-y-1">
+          <Label htmlFor={addId}>{label('addFallback')}</Label>
+          <NativeSelect
+            id={addId}
+            value=""
+            disabled={!canAdd}
+            className="w-full"
+            onChange={(event) => {
+              const team = available.find((candidate) => candidate.id === event.target.value);
+              if (!canAdd || !team) return;
+              const form = event.currentTarget.form;
+              replace([...choices, { teamId: team.id, strategy: 'round_robin' }]);
+              requestAnimationFrame(() => {
+                form
+                  ?.querySelector<HTMLElement>(
+                    `#fallback-strategy-${workType}-${choices.length + 1}`
+                  )
+                  ?.focus();
+              });
+            }}
+          >
+            <option value="">{label(canAdd ? 'chooseFallback' : 'fallbackUnavailable')}</option>
+            {available.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </NativeSelect>
+        </div>
+      )}
     </div>
   );
 }

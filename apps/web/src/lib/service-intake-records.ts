@@ -8,6 +8,13 @@ export interface IntakeAddress {
   mainAddress: boolean;
 }
 
+export function defaultIntakeAddressId(addresses: readonly IntakeAddress[]): string {
+  return (
+    addresses.find((address) => address.mainAddress)?.id ??
+    (addresses.length === 1 ? (addresses[0]?.id ?? '') : '')
+  );
+}
+
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }

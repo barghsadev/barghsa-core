@@ -5,6 +5,8 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, Input, Label } from '@barghsa/ui';
+import { ArrowUpRight, CircleCheck, Send } from 'lucide-react';
+import { t } from '@barghsa/i18n/app';
 import { telegramText } from '@barghsa/i18n/telegram';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -20,17 +22,22 @@ import {
   telegramStatus,
   type TelegramStatus,
 } from '../lib/telegram-link.js';
+import {
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 type Scope = ReturnType<typeof usePreferenceSettingsOwner>;
 type Action = 'create' | 'confirm' | 'revoke';
-export default function TelegramLinkPanel(props: { scope: Scope }) {
+export default function TelegramLinkPanel(props: { scope: Scope; standalone?: boolean }) {
   return (
     <ConfirmProvider>
       <OwnedTelegramLinkPanel {...props} />
     </ConfirmProvider>
   );
 }
-function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
+function OwnedTelegramLinkPanel({ scope, standalone }: { scope: Scope; standalone?: boolean }) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readGate = useOwnedGateRead(JSON.stringify([scope.key, scope.denied]), actor, revision);
@@ -96,7 +103,10 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
     setUncertain(false);
     setLoading(true);
     const controller = new AbortController();
-    if (current.current.isCurrent()) void readRef.current(controller.signal);
+    queueMicrotask(() => {
+      if (!controller.signal.aborted && current.current.isCurrent())
+        void readRef.current(controller.signal);
+    });
     return () => {
       controller.abort();
       commandTransport.current?.abort();
@@ -132,7 +142,8 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
     try {
       if (
         action === 'revoke' &&
-        (!(await confirmDestruction(copy('revoke'), copy('revoke'))) || !scope.owns(family))
+        (!(await confirmDestruction(copy('revoke'), copy('unlinkDescription'))) ||
+          !scope.owns(family))
       )
         return;
       if (action === 'confirm' && !/^\d{6}$/.test(captured.code)) {
@@ -264,8 +275,10 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
     setLoading(true);
     setError(null);
     try {
-      if (await read()) {
-        setUncertain(false);
+      const fresh = await read();
+      if (!fresh || !scope.owns(family)) return;
+      setUncertain(false);
+      if (uncertain || !fresh.intent || fresh.intent.id !== source?.intent?.id) {
         setUrl(null);
         setCode('');
       }
@@ -273,159 +286,219 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
       scope.release(family);
     }
   }
+  const Title = standalone ? 'h1' : 'h2';
+  const activeUrl = url && source?.intent?.id === url.id ? url.value : null;
+  const formDisabled = scope.locked || uncertain;
+  const awaitingCode = source?.intent?.status === 'claimed';
+  const proof = needsPassword ?? (awaitingCode ? 'confirm' : null);
+  const canStart = source?.available && !needsPassword;
+  const canCheck = scope.locked || loading || error || source?.intent || source?.latestDelivery;
+  const reconnecting = source?.link || source?.intent;
+  const chatLink = activeUrl && (
+    <Button
+      variant={awaitingCode ? 'outline' : 'default'}
+      className="h-auto min-h-11 max-w-full whitespace-normal"
+      render={
+        <a
+          href={activeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          referrerPolicy="no-referrer"
+          aria-label={copy('open')}
+        />
+      }
+      nativeButton={false}
+      role="link"
+      disabled={formDisabled}
+    >
+      {copy('open')}
+      <ArrowUpRight aria-hidden="true" className="rtl:-scale-x-100" />
+    </Button>
+  );
+  const hasNextStep = Boolean(proof || chatLink);
+  const restart = canStart && (
+    <Button
+      type="button"
+      variant={hasNextStep ? 'ghost' : source.link ? 'outline' : 'default'}
+      disabled={formDisabled}
+      onClick={() => void act('create')}
+    >
+      {copy(reconnecting ? 'restartLink' : 'connect')}
+    </Button>
+  );
+  const checkStatus = canCheck ? (
+    <Button
+      type="button"
+      variant={uncertain || (!source && error) ? 'default' : 'ghost'}
+      disabled={scope.locked || loading}
+      onClick={() => void refresh()}
+    >
+      {copy('refresh')}
+    </Button>
+  ) : null;
+  const unlink = source?.link && !needsPassword && (
+    <Button
+      type="button"
+      variant="ghost"
+      className="text-destructive hover:text-destructive"
+      disabled={formDisabled}
+      onClick={() => void act('revoke')}
+    >
+      {copy('revoke')}
+    </Button>
+  );
   return (
     <section
       aria-labelledby={id + '-title'}
-      className="rounded-xl border bg-card p-4 space-y-4"
+      className={recordEditorSurface}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h2 id={id + '-title'} className="text-lg font-semibold">
-        {copy('title')}
-      </h2>
-      <p className="text-sm text-muted-foreground">{copy('scope')}</p>
+      <header className="flex items-start gap-3 px-4 pt-4 pb-3 sm:px-6">
+        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-primary">
+          <Send aria-hidden="true" className="size-4" />
+        </span>
+        <div className="min-w-0 space-y-1">
+          <Title id={id + '-title'} className="text-lg leading-tight font-semibold">
+            {copy('title')}
+          </Title>
+          <p className="text-sm text-muted-foreground">{copy('scope')}</p>
+        </div>
+      </header>
       {scope.isCurrent() && (
         <>
-          {loading && <LoadingStatus>{securitySettingsText('loading', locale)}</LoadingStatus>}
-          {source && !source.available && <p>{copy('unavailable')}</p>}
-          {source?.link && (
-            <div role="status" className="text-sm space-y-1">
-              <p>
-                {copy('linked')} <bdi>{source.link.telegram_user_id}</bdi>
-              </p>
-              {source.link.profile_id !== source.profileId && <p>{copy('otherProfile')}</p>}
-            </div>
-          )}
-          {source?.intent && (
-            <p id={id + '-pending'} className="text-sm">
-              {copy(source.intent.status === 'claimed' ? 'claimed' : 'pending')}
-            </p>
-          )}
-          {url && source?.intent?.id === url.id && (
-            <Button
-              render={
-                <a
-                  href={url.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  referrerPolicy="no-referrer"
-                  aria-label={copy('open')}
-                />
-              }
-              nativeButton={false}
-              role="link"
-              disabled={scope.locked || uncertain}
-            >
-              {copy('open')}
-            </Button>
-          )}
-          {source?.intent?.status === 'claimed' && !needsPassword && (
-            <form
-              onSubmit={(event) => void act('confirm', event)}
-              className="space-y-2"
-              aria-busy={scope.locked}
-            >
-              <Label htmlFor={id + '-code'}>{copy('code')}</Label>
-              <Input
-                id={id + '-code'}
-                ref={codeInput}
-                value={code}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={6}
-                dir="ltr"
-                aria-required="true"
-                aria-describedby={id + '-pending' + (error ? ' ' + id + '-error' : '')}
-                aria-invalid={error === copy('invalidCode')}
-                disabled={scope.locked || uncertain}
-                onChange={(event) => {
-                  if (scope.isCurrent() && !scope.isLocked())
-                    setCode(telegramCode(event.target.value));
-                }}
-              />
-              <Button type="submit" disabled={scope.locked || uncertain}>
-                {copy('confirm')}
-              </Button>
-            </form>
-          )}
-          {needsPassword && (
-            <form
-              onSubmit={(event) => void act(needsPassword, event)}
-              className="space-y-2"
-              aria-busy={scope.locked}
-            >
-              <Label htmlFor={id + '-password'}>
-                {securitySettingsText('passwordRequired', locale)}
-              </Label>
-              <Input
-                id={id + '-password'}
-                ref={passwordInput}
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                disabled={scope.locked || uncertain}
-                aria-required="true"
-                aria-describedby={error ? id + '-error' : undefined}
-                onChange={(event) => {
-                  if (scope.isCurrent() && !scope.isLocked()) setPassword(event.target.value);
-                }}
-              />
-              <Button type="submit" disabled={scope.locked || uncertain}>
-                {copy(
-                  needsPassword === 'revoke'
-                    ? 'revoke'
-                    : needsPassword === 'confirm'
-                      ? 'confirm'
-                      : 'connect'
+          <div className="space-y-3 px-4 py-3 empty:hidden sm:px-6">
+            {loading && <LoadingStatus>{securitySettingsText('loading', locale)}</LoadingStatus>}
+            {source && !source.available && (
+              <p className="text-sm text-muted-foreground">{copy('unavailable')}</p>
+            )}
+            {source?.link && (
+              <div
+                role="status"
+                className="flex items-start gap-2 rounded-lg bg-success-soft px-3 py-2.5 text-sm"
+              >
+                <CircleCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-success" />
+                <div className="space-y-0.5">
+                  <p className="font-medium">
+                    {copy('linked')} <bdi>{source.link.telegram_user_id}</bdi>
+                  </p>
+                  {source.link.profile_id !== source.profileId && <p>{copy('otherProfile')}</p>}
+                </div>
+              </div>
+            )}
+            {source?.intent && !needsPassword && (
+              <div className="space-y-1.5 rounded-lg border bg-muted/30 px-3 py-2.5 text-sm">
+                <p id={id + '-pending'}>{copy(awaitingCode ? 'claimed' : 'pending')}</p>
+                {!awaitingCode && !activeUrl && (
+                  <p className="text-muted-foreground">{copy('pendingNoLink')}</p>
                 )}
-              </Button>
-            </form>
-          )}
-          {error && (
-            <p id={id + '-error'} role="alert" className="text-sm text-destructive">
-              {error}
-            </p>
-          )}
-          <div className="flex flex-wrap gap-2">
-            {source?.available && !needsPassword && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={scope.locked || uncertain}
-                onClick={() => void act('create')}
-              >
-                {copy('connect')}
-              </Button>
+              </div>
             )}
-            {source?.link && !needsPassword && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={scope.locked || uncertain}
-                onClick={() => void act('revoke')}
+            {awaitingCode && !needsPassword && (
+              <form
+                onSubmit={(event) => void act('confirm', event)}
+                id={id + '-proof'}
+                aria-busy={scope.locked}
               >
-                {copy('revoke')}
-              </Button>
+                <div className={recordEditorField}>
+                  <Label htmlFor={id + '-code'}>{copy('code')}</Label>
+                  <Input
+                    id={id + '-code'}
+                    ref={codeInput}
+                    value={code}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    dir="ltr"
+                    className="min-h-11 max-w-40 font-mono tracking-widest text-center"
+                    placeholder="000000"
+                    aria-required="true"
+                    aria-describedby={id + '-pending' + (error ? ' ' + id + '-error' : '')}
+                    aria-invalid={error === copy('invalidCode')}
+                    disabled={formDisabled}
+                    onChange={(event) => {
+                      if (!scope.isCurrent() || scope.isLocked()) return;
+                      setCode(telegramCode(event.target.value));
+                      if (error === copy('invalidCode')) setError(null);
+                    }}
+                  />
+                </div>
+              </form>
             )}
-            <Button
-              type="button"
-              variant="ghost"
-              disabled={scope.locked}
-              onClick={() => void refresh()}
-            >
-              {copy('refresh')}
-            </Button>
+            {needsPassword && (
+              <form
+                onSubmit={(event) => void act(needsPassword, event)}
+                id={id + '-proof'}
+                aria-busy={scope.locked}
+              >
+                <div className={`${recordEditorField} w-full max-w-64`}>
+                  <Label htmlFor={id + '-password'}>
+                    {t('settings.security.passwordLabel', locale)}
+                  </Label>
+                  <Input
+                    id={id + '-password'}
+                    ref={passwordInput}
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    disabled={formDisabled}
+                    aria-required="true"
+                    aria-describedby={error ? id + '-error' : undefined}
+                    onChange={(event) => {
+                      if (scope.isCurrent() && !scope.isLocked()) setPassword(event.target.value);
+                    }}
+                  />
+                </div>
+              </form>
+            )}
+            {error && (
+              <p
+                id={id + '-error'}
+                role="alert"
+                className="rounded-md bg-danger-soft px-3 py-2 text-sm text-destructive"
+              >
+                {error}
+              </p>
+            )}
+            {source?.latestDelivery?.status === 'unknown' && (
+              <p role="status" className="text-sm">
+                {copy('deliveryUnknown')}
+              </p>
+            )}
+            {source?.latestDelivery?.status === 'failed' && (
+              <p role="status" className="text-sm">
+                {copy('deliveryFailed')}
+              </p>
+            )}
           </div>
+          {hasNextStep ? (
+            <RecordEditorActions className="[&>div]:w-full">
+              <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  {proof && (
+                    <Button type="submit" form={id + '-proof'} disabled={formDisabled}>
+                      {copy(
+                        proof === 'revoke' ? 'revoke' : proof === 'confirm' ? 'confirm' : 'connect'
+                      )}
+                    </Button>
+                  )}
+                  {!needsPassword && chatLink}
+                </div>
+                <div className="flex min-w-0 flex-wrap items-center gap-x-1 empty:hidden">
+                  {checkStatus}
+                  {restart}
+                  {unlink}
+                </div>
+              </div>
+            </RecordEditorActions>
+          ) : (
+            (canCheck || canStart || unlink) && (
+              <RecordEditorActions secondary={checkStatus}>
+                {restart}
+                {unlink}
+              </RecordEditorActions>
+            )
+          )}
         </>
-      )}
-      {source?.latestDelivery?.status === 'unknown' && (
-        <p role="status" className="text-sm">
-          {copy('deliveryUnknown')}
-        </p>
-      )}
-      {source?.latestDelivery?.status === 'failed' && (
-        <p role="status" className="text-sm">
-          {copy('deliveryFailed')}
-        </p>
       )}
     </section>
   );

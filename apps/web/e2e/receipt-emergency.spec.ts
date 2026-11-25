@@ -69,7 +69,7 @@ for (const locale of ['en', 'fa'] as const) {
         });
     });
     await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { verified: true } }));
-    await page.goto('/admin/wallet-receipts');
+    await page.goto(`/admin/wallet-receipts/${first}/emergency`);
     const action = page.getByTestId('wallet-receipt-emergency-confirm');
     await expect(action).toBeEnabled();
     await expect(page.getByTestId('admin-wallet-receipts-page')).toHaveAttribute(
@@ -97,13 +97,11 @@ for (const locale of ['en', 'fa'] as const) {
     await action.click();
     await confirmFinancialReview(page, locale);
     await expect.poll(() => actions.length).toBe(1);
-    await expect(
-      page
-        .getByRole('row')
-        .filter({ hasText: 'RECEIPT-B' })
-        .getByRole('button')
-        .or(page.getByRole('button').filter({ hasText: 'RECEIPT-B' }))
-    ).toBeDisabled();
+    await expect(page.getByText('RECEIPT-B', { exact: true })).toHaveCount(0);
+    await page
+      .getByTestId('wallet-receipt-back-to-review')
+      .evaluate((link: HTMLAnchorElement) => link.click());
+    await expect(page).toHaveURL(new RegExp(`/admin/wallet-receipts/${first}/emergency$`));
     await expect(reason).toBeDisabled();
     release();
     const dialog = page.getByRole('dialog');

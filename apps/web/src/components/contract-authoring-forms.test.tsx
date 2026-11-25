@@ -1,3 +1,4 @@
+import { openManualRecordDateTime } from '../test/record-date-time.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, StrictMode, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -329,7 +330,8 @@ it('preserves the captured UTC context body/key through timezone loading/new pre
     />
   );
   await render(node());
-  await click(en.editContext);
+  await openManualRecordDateTime('contract-context-start');
+  await openManualRecordDateTime('contract-context-end');
   await edit(en.serviceEndsAt, '2026-11-22T03:30');
   await edit(en.contextReason, ' Extend ');
   await click(en.saveContext);
@@ -375,7 +377,7 @@ it('gates context readiness and preserves unchanged raw dates through evaluation
     />
   );
   await render(node());
-  await click(en.editContext);
+  await openManualRecordDateTime('contract-context-start');
   await edit(en.contextReason, ' Private reason ');
   harness.timeStatus = 'error';
   await render(node());
@@ -421,7 +423,7 @@ it('withdraws a current denied activation source and ignores an obsolete held sc
     />
   );
   const invoice = host.querySelector<HTMLAnchorElement>('a[href]')!;
-  expect(invoice.href).toContain('/admin/invoices?invoiceId=' + ORDER);
+  expect(invoice.href).toContain('/admin/invoices/' + ORDER);
   await act(async () => {
     expect(coordination.acquire(claim)).toBe(true);
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });

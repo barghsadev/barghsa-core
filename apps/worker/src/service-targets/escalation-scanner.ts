@@ -416,7 +416,7 @@ async function escalateOne(
         service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
         item_id: candidate.item_id,
         ...(domain.serviceType === 'consultation'
-          ? { link_route: `/admin/consultations?requestId=${candidate.item_id}` }
+          ? { link_route: `/admin/consultations/${candidate.item_id}` }
           : {}),
         escalation_level: toLevel,
       },

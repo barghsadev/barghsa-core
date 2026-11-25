@@ -2,7 +2,13 @@ import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { groupPermissions, type EffectivePermissions } from '../lib/staff-permissions.js';
 
-export function EffectivePermissionsView({ data }: { data: EffectivePermissions }) {
+export function EffectivePermissionsView({
+  data,
+  headingLevel = 'h3',
+}: {
+  data: EffectivePermissions;
+  headingLevel?: 'h2' | 'h3';
+}) {
   const locale = useLocale();
   const text = (key: string) => t(`admin.roles.effective.${key}`, locale);
   const roles = data.roleIds.map((id, index) => {
@@ -10,6 +16,7 @@ export function EffectivePermissionsView({ data }: { data: EffectivePermissions 
       value = t(key, locale);
     return value === key ? (data.roleNames[index] ?? id) : value;
   });
+  const GroupHeading = headingLevel;
   return (
     <div className="min-w-0 space-y-4" data-testid="effective-permissions">
       <div className="flex flex-wrap items-center gap-3">
@@ -37,7 +44,9 @@ export function EffectivePermissionsView({ data }: { data: EffectivePermissions 
               label = t(key, locale);
             return (
               <section key={group.group} className="min-w-0 border-t pt-3">
-                <h3 className="text-sm font-semibold">{label === key ? group.group : label}</h3>
+                <GroupHeading className="text-sm font-semibold">
+                  {label === key ? group.group : label}
+                </GroupHeading>
                 <ul className="mt-2 space-y-1">
                   {group.permissions.map((permission) => (
                     <li key={permission} className="break-all text-sm">

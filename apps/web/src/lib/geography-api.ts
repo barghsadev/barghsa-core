@@ -20,7 +20,7 @@ function record(value: unknown): Record<string, unknown> | null {
     ? (value as Record<string, unknown>)
     : null;
 }
-function isProvince(value: unknown): value is Province {
+export function isProvince(value: unknown): value is Province {
   const row = record(value);
   return (
     !!row &&
@@ -118,7 +118,7 @@ export interface City extends Province {
 function cityPath(provinceId: string) {
   return `/${encodeURIComponent(provinceId)}/cities`;
 }
-function isCity(value: unknown): value is City {
+export function isCity(value: unknown): value is City {
   return isProvince(value) && typeof record(value)?.provinceId === 'string';
 }
 export async function listCities(

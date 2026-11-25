@@ -18,6 +18,7 @@ vi.mock('./staff-mutation-permission.js', () => ({
 }));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
+import { Readable } from 'node:stream';
 import type { ContractTemplateService as ServiceType } from './contract-template.service.js';
 
 /**
@@ -110,12 +111,37 @@ async function loadService(pool: { query: ReturnType<typeof vi.fn>; connect: () 
   const { ContractTemplateService: Svc } = await import('./contract-template.service.js');
   const correlationIdProvider = { getCorrelationId: () => 'corr-template-test-1' };
   const storage = {
+    getObject: vi.fn(),
     putObject: vi.fn().mockResolvedValue(undefined),
     deleteObject: vi.fn().mockResolvedValue(undefined),
   };
   const service = new Svc(correlationIdProvider as never, storage as never) as ServiceType;
   return { service, storage };
 }
+
+describe('Saved contract template previews', () => {
+  it('reads only the selected template version and treats HTML as text', async () => {
+    const { service, storage } = await loadService(db.pool);
+    db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }));
+    db.router.on('FROM contract_template_versions', () => ({
+      rows: [
+        versionRow(),
+        versionRow({ version_number: 2, storage_key: 'contract-templates/revised.txt' }),
+      ],
+    }));
+    const text = '<p>سلام {{customerName}}</p>';
+    storage.getObject.mockResolvedValue({ body: Readable.from([Buffer.from(text)]) });
+    await expect(service.previewVersion(TEMPLATE_ID, 2)).resolves.toMatchObject({
+      templateId: TEMPLATE_ID,
+      versionNumber: 2,
+      text,
+      truncated: false,
+    });
+    expect(storage.getObject).toHaveBeenCalledExactlyOnceWith('contract-templates/revised.txt');
+    await expect(service.previewVersion(TEMPLATE_ID, 3)).rejects.toMatchObject({ status: 404 });
+    expect(storage.getObject).toHaveBeenCalledTimes(1);
+  });
+});
 
 let db: ReturnType<typeof makeDb>;
 

@@ -111,7 +111,13 @@ export function WalletBalanceCard({
       )}
 
       {/* Action button */}
-      <span className={cn(buttonVariants({ variant: 'default' }), 'mt-auto w-full')}>
+      <span
+        className={cn(
+          buttonVariants({ variant: 'default' }),
+          'mt-auto w-full',
+          embedded && 'sm:w-fit sm:self-start'
+        )}
+      >
         <Plus data-icon="inline-start" aria-hidden="true" />
         {t('dashboard.overview.chargeWallet', locale)}
       </span>

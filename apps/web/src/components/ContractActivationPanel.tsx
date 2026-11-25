@@ -5,7 +5,14 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { contractAuthoringSource, contractActivationData } from '../lib/contract-authoring-form.js';
 import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { Link } from '@tanstack/react-router';
-import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  PageLoading,
+  StatusBadge,
+  buttonVariants,
+} from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -16,13 +23,12 @@ import {
   type ContractDetailData,
 } from '../lib/contracts.js';
 import { DocumentRequestError } from '../lib/documents.js';
-import { ContractContextEditor } from './ContractContextEditor.js';
 export function ContractActivationPanel({
   id,
   versionId,
   staff,
   editableVersion,
-  onChanged,
+  staffRecordSearch,
   source,
   coordination,
   onDenied,
@@ -32,7 +38,7 @@ export function ContractActivationPanel({
   versionId: string;
   staff: boolean;
   editableVersion?: ContractVersion | undefined;
-  onChanged?: () => void;
+  staffRecordSearch?: Record<string, unknown> | undefined;
   source?: ContractDetailData | undefined;
   refreshRevision?: number | undefined;
   coordination?: ContractFormCoordination | undefined;
@@ -140,7 +146,7 @@ export function ContractActivationPanel({
               {word('initialInvoiceLinked')}{' '}
               {staff ? (
                 <a
-                  href={`/admin/invoices?invoiceId=${encodeURIComponent(data.initialInvoiceId)}`}
+                  href={`/admin/invoices/${encodeURIComponent(data.initialInvoiceId)}`}
                   aria-disabled={blocked || undefined}
                   tabIndex={blocked ? -1 : undefined}
                   onClick={(event) => {
@@ -192,16 +198,19 @@ export function ContractActivationPanel({
           ['Draft', 'ChangesRequested'].includes(data.state) &&
           editableVersion?.id === data.versionId &&
           editableVersion.content &&
-          onChanged &&
           source ? (
-            <ContractContextEditor
-              context={data}
-              version={editableVersion}
-              source={source}
-              coordination={coordination}
-              onDenied={onDenied}
-              onChanged={onChanged}
-            />
+            <Link
+              to="/admin/contracts/$contractId/{-$action}/{-$item}"
+              params={{ contractId: id, action: 'service-dates', item: undefined }}
+              search={staffRecordSearch ?? {}}
+              disabled={blocked}
+              onClick={(event) => {
+                if (callbacks.current.coordination?.blocked()) event.preventDefault();
+              }}
+              className={buttonVariants({ variant: 'outline', className: 'self-start' })}
+            >
+              {word('editContext')}
+            </Link>
           ) : null}
         </>
       )}

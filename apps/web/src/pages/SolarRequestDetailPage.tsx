@@ -1,5 +1,11 @@
 import { toast } from '../lib/toast-api.js';
-import { LoadingStatus } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, buttonVariants, LoadingStatus } from '@barghsa/ui';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,20 +16,27 @@ import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.j
 import { readAsyncResponse } from '../hooks/useAsyncData.js';
 import { announceReadRetry } from '../lib/read-retry-feedback.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { Link, useParams } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
+import { documentText } from '@barghsa/i18n/documents';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
+import { DocumentDetail } from '../components/DocumentDetail.js';
+import { SolarSiteDocumentEditor } from '../components/SolarSiteDocumentEditor.js';
+import {
+  relatedDocumentLocation,
+  type RelatedDocumentEntry,
+} from '../lib/related-document-route.js';
 import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import type { SolarProgress } from '../lib/solar-progress.js';
 import { parseProgress } from '../lib/solar-progress-form.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
-import { solarNextAction } from '../lib/solar-next-action.js';
+import { hasSolarShipment, solarNextAction } from '../lib/solar-next-action.js';
 
 interface SolarRequest {
   id: string;
@@ -64,8 +77,19 @@ function readFailure(reason: unknown) {
   return 'unavailable';
 }
 
-export function SolarRequestDetailPage() {
-  const { requestId } = useParams({ from: '/_app/solar/requests/$requestId' });
+export function SolarRequestDetailPage({
+  requestId,
+  view = 'detail',
+  receiptEditor = false,
+  documentEntry = null,
+  reviewDocuments = false,
+}: {
+  requestId: string;
+  view?: 'detail' | 'documents' | 'shipment';
+  receiptEditor?: boolean;
+  documentEntry?: RelatedDocumentEntry | null;
+  reviewDocuments?: boolean;
+}) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   return (
@@ -73,6 +97,10 @@ export function SolarRequestDetailPage() {
       key={JSON.stringify([actor, profileRevision, requestId])}
       requestId={requestId}
       actor={actor}
+      view={view}
+      receiptEditor={receiptEditor}
+      documentEntry={documentEntry}
+      reviewDocuments={reviewDocuments}
       profileRevision={profileRevision}
     />
   );
@@ -80,10 +108,18 @@ export function SolarRequestDetailPage() {
 
 function SolarRequestDetail({
   requestId,
+  view,
+  receiptEditor,
+  documentEntry,
+  reviewDocuments,
   actor,
   profileRevision,
 }: {
   requestId: string;
+  view: 'detail' | 'documents' | 'shipment';
+  receiptEditor: boolean;
+  documentEntry: RelatedDocumentEntry | null;
+  reviewDocuments: boolean;
   actor: string | null;
   profileRevision: number;
 }) {
@@ -92,6 +128,7 @@ function SolarRequestDetail({
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
+  const documents = view === 'documents';
   const [request, setRequest] = useState<SolarRequest | null>(null);
   const [history, setHistory] = useState<SolarHistory>([]);
   const [progress, setProgress] = useState<SolarProgress | null>(null);
@@ -109,13 +146,23 @@ function SolarRequestDetail({
     requestedDocuments: Array<{ id: string; description: string }>;
   } | null>(null);
   const [allUploaded, setAllUploaded] = useState(false);
+  const [siteUploadState, setSiteUploadState] = useState<'Available' | 'PendingScan' | null>(null);
   const [documentOutcome, setDocumentOutcome] = useState<
     'reviewSent' | 'documentError' | 'documentUnconfirmed' | null
   >(null);
   const [sendingDocuments, setSendingDocuments] = useState(false);
+  const reviewHeading = useRef<HTMLHeadingElement>(null);
   const completionPending = useRef<AbortController | null>(null);
   const completionKey = useRef<string | null>(null);
   useEffect(() => () => completionPending.current?.abort(), []);
+  useEffect(() => {
+    if (!reviewDocuments) {
+      setAllUploaded(false);
+      setDocumentOutcome(null);
+    } else {
+      reviewHeading.current?.focus();
+    }
+  }, [reviewDocuments]);
   const filters = useMemo<DocumentFilters>(
     () => ({
       kind: 'solar_request',
@@ -183,6 +230,7 @@ function SolarRequestDetail({
     },
   });
   const showDocuments =
+    documents &&
     request &&
     ['submitted', 'uploading_documents', 'documents_under_review', 'changes_requested'].includes(
       request.status
@@ -302,6 +350,7 @@ function SolarRequestDetail({
 
   async function completeDocuments(retry = false) {
     if (
+      !reviewDocuments ||
       !allUploaded ||
       !documentsInfo ||
       detailPending.current ||
@@ -390,15 +439,105 @@ function SolarRequestDetail({
           : 4
     : 1;
   const action = request ? solarNextAction(request, locale) : null;
-  return (
-    <div className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <Link
-        className="touch-action text-sm underline pointer-coarse:min-h-[45px]!"
-        to="/solar/requests"
+  const shipmentAvailable = view === 'shipment' && request && hasSolarShipment(request.status);
+  const documentChangeBlocked = sendingDocuments || documentOutcome === 'documentUnconfirmed';
+  const siteDocumentEditorReady =
+    !!documentEntry && !!showDocuments && !!documentsInfo && !documentChangeBlocked;
+  const editorTitle =
+    documentEntry?.mode === 'detail' || documentEntry?.mode === 'decision'
+      ? documentText(documentEntry.mode === 'decision' ? documentEntry.decision : 'details', locale)
+      : copy(
+          documentEntry?.mode === 'replace'
+            ? 'siteDocumentReplace'
+            : documentEntry?.mode === 'upload'
+              ? 'siteDocumentNew'
+              : reviewDocuments
+                ? 'reviewDocumentSet'
+                : receiptEditor
+                  ? 'postalUploadReceipt'
+                  : documents
+                    ? 'documentUploadTitle'
+                    : 'shipmentPageTitle'
+        );
+  const documentReadFailure = documentReadError && (
+    <Alert variant="destructive">
+      <AlertDescription>{copy('documentReadError')}</AlertDescription>
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        disabled={sendingDocuments}
+        onClick={() => {
+          if (documentsPending.current || completionPending.current) return;
+          documentsPending.current = true;
+          if (documentReadError === 'network') announceReadRetry(locale);
+          setDocumentsVersion((value) => value + 1);
+        }}
       >
-        {copy('back')}
+        {copy('retry')}
+      </Button>
+    </Alert>
+  );
+  const editorHeader = (disabled: boolean) => (
+    <header className="space-y-1" data-toast-anchor>
+      <Link
+        {...(documentEntry?.mode === 'replace' || documentEntry?.mode === 'decision'
+          ? relatedDocumentLocation(
+              { kind: 'solar_request', id: requestId },
+              documentEntry.documentId
+            )
+          : {
+              to:
+                documentEntry || reviewDocuments
+                  ? '/solar/requests/$requestId/documents'
+                  : receiptEditor
+                    ? '/solar/requests/$requestId/shipment'
+                    : '/solar/requests/$requestId',
+              params: { requestId },
+            })}
+        disabled={disabled}
+        className="touch-action inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline aria-disabled:opacity-60"
+      >
+        {documentEntry?.mode === 'replace' || documentEntry?.mode === 'decision'
+          ? documentText('backToDocument', locale)
+          : copy(
+              documentEntry || reviewDocuments
+                ? 'backToSolarDocuments'
+                : receiptEditor
+                  ? 'postalBackToShipment'
+                  : 'backToSolarRequest'
+            )}
       </Link>
-      <h1 className="text-3xl font-semibold">{copy('details')}</h1>
+      {!siteDocumentEditorReady && (
+        <h1
+          ref={reviewDocuments ? reviewHeading : undefined}
+          tabIndex={reviewDocuments ? -1 : undefined}
+          className="w-fit rounded-sm text-2xl font-semibold"
+        >
+          {editorTitle}
+        </h1>
+      )}
+    </header>
+  );
+  return (
+    <div
+      className={`mx-auto max-w-3xl space-y-4 px-4 pb-4 sm:pb-5 ${documentEntry ? 'pt-2 sm:pt-4' : 'pt-4 sm:pt-5'}`}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {documents && <RecordCommandGuard blocked={() => completionKey.current !== null} />}
+      {view === 'detail' ? (
+        <>
+          <Link
+            className="touch-action text-sm underline pointer-coarse:min-h-[45px]!"
+            to="/solar/requests"
+          >
+            {copy('back')}
+          </Link>
+          <h1 className="text-2xl font-semibold sm:text-3xl">{copy('details')}</h1>
+        </>
+      ) : shipmentAvailable ? null : (
+        editorHeader(documentChangeBlocked)
+      )}
       {time.notice}
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {detailError && (
@@ -422,300 +561,462 @@ function SolarRequestDetail({
           )}
         </div>
       )}
-      {request && request.id === requestId && (
-        <>
-          <WorkflowStatusBanner
-            locale={locale}
-            submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
-            status={copy(`status_${request.status}`)}
-            happened={
-              request.status_reason ??
-              `${copy('submitted')}: ${time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
-            }
-            nextAction={action!.text}
-            owner={action!.owner}
-            actionHref={action?.href}
-            supportHref={request.support_path ?? '/tickets'}
-          />
-          <div className="rounded-xl border p-5">
-            <p>
-              {copy('currentStage')}: <strong>{copy(stages[currentStage]!)}</strong>
-            </p>
-            {request.status === 'submitted' && (
-              <p className="text-sm text-muted-foreground">{copy('noContract')}</p>
-            )}
-            {request.contract_id && (
-              <div className="flex flex-wrap gap-4 text-sm">
-                {request.contract_published ? (
-                  <Link
-                    className="underline"
-                    to="/contracts"
-                    search={{ contractId: request.contract_id }}
-                  >
-                    {copy('solarViewContract')}
-                  </Link>
-                ) : (
-                  <span>{copy('solarContractAwaitingPublication')}</span>
-                )}
-                {request.initial_invoice_id && (
-                  <Link
-                    className="underline"
-                    to="/invoices/$invoiceId"
-                    params={{ invoiceId: request.initial_invoice_id }}
-                  >
-                    {copy('solarViewInvoice')}
-                  </Link>
-                )}
-              </div>
-            )}
-          </div>
-          <section className="space-y-3 rounded-xl border p-5">
-            <h2 className="text-xl font-semibold">{copy('stages')}</h2>
-            <ol className="list-inside list-decimal space-y-2">
-              {stages.map((stage, index) => (
-                <li
-                  key={stage}
-                  className={index === currentStage ? 'font-semibold text-primary' : ''}
-                >
-                  {copy(stage)}
-                </li>
-              ))}
-            </ol>
-          </section>
-          {progress && progress.requestId === requestId && (
-            <SolarStageProgress progress={progress} />
-          )}
-          <section className="space-y-3 rounded-xl border p-5" aria-label={copy('historyTitle')}>
-            <h2 className="text-xl font-semibold">{copy('historyTitle')}</h2>
-            <ol className="space-y-3">
-              {(history.length
-                ? history
-                : [{ event: 'solar.request.submitted', at: request.submitted_at }]
-              ).map((item, index) => (
-                <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
-                  <p>{copy(`history_${item.event}`)}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {historyContextText(item.actorContext, locale)}
-                  </p>
-                  <time className="text-sm text-muted-foreground" dateTime={item.at}>
-                    {time.format(item.at)}
-                  </time>
-                </li>
-              ))}
-            </ol>
-          </section>
-          {[
-            'submitted',
-            'uploading_documents',
-            'documents_under_review',
-            'changes_requested',
-          ].includes(request.status) && (
-            <section
-              id="solar-documents"
-              className="space-y-4 rounded-xl border p-5"
-              aria-label={copy('documentGuidance')}
-            >
-              <h2 className="text-xl font-semibold">{copy('documentGuidance')}</h2>
-              {!documentsInfo && !documentReadError && (
-                <LoadingStatus>{copy('loading')}</LoadingStatus>
-              )}
-              {documentsInfo && (
+      {request &&
+        request.id === requestId &&
+        (view === 'shipment' ? (
+          shipmentAvailable ? (
+            <SolarPostalPanel
+              requestId={requestId}
+              profileId={request.profile_id}
+              receiptView={receiptEditor ? 'upload' : 'shipment'}
+              siteAddress={request.site_address}
+              editorHeader={(blocked, disabled) => (
                 <>
-                  <p>{documentsInfo.guidance[locale]}</p>
-                  {!!documentsInfo.guidance.suggestions.length && (
-                    <>
-                      <h3 className="font-medium">{copy('suggestedDocuments')}</h3>
-                      <ul className="list-inside list-disc">
-                        {documentsInfo.guidance.suggestions.map((item, index) => (
-                          <li key={index}>{item[locale]}</li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-                  {!!documentsInfo.requestedDocuments.length && (
-                    <>
-                      <h3 className="font-medium">{copy('requestedDocuments')}</h3>
-                      <ul className="list-inside list-disc">
-                        {documentsInfo.requestedDocuments.map((item) => (
-                          <li key={item.id} className="wrap-anywhere">
-                            <bdi>{item.description}</bdi>
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
+                  <RecordCommandGuard blocked={blocked} />
+                  {editorHeader(disabled)}
                 </>
               )}
-              <DocumentResults
-                staff={false}
-                filters={filters}
-                profileId={request.profile_id}
-                association={{ businessRecordType: 'solar_request', businessRecordId: requestId }}
-              />
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={allUploaded}
-                  disabled={sendingDocuments || documentOutcome === 'documentUnconfirmed'}
-                  onChange={(e) => setAllUploaded(e.target.checked)}
+            />
+          ) : (
+            <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+              {copy('shipmentPageUnavailable')}
+            </p>
+          )
+        ) : documents ? (
+          documentEntry ? (
+            siteDocumentEditorReady && documentsInfo ? (
+              documentEntry.mode === 'detail' || documentEntry.mode === 'decision' ? (
+                <DocumentDetail
+                  id={documentEntry.documentId}
+                  staff={false}
+                  profileId={request.profile_id}
+                  solarCustomer
+                  related={{ kind: 'solar_request', id: requestId }}
+                  decision={documentEntry.mode === 'decision' ? documentEntry.decision : undefined}
                 />
-                {copy('allUploaded')}
-              </label>
-              <button
-                type="button"
-                className="rounded-md bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
-                disabled={
-                  !allUploaded ||
-                  !documentsInfo ||
-                  sendingDocuments ||
-                  documentOutcome === 'documentUnconfirmed'
-                }
-                aria-busy={sendingDocuments}
-                onClick={() => void completeDocuments()}
+              ) : (
+                <SolarSiteDocumentEditor
+                  key={documentEntry.mode === 'replace' ? documentEntry.documentId : 'new'}
+                  requestId={requestId}
+                  profileId={request.profile_id}
+                  replacementId={documentEntry.mode === 'replace' ? documentEntry.documentId : null}
+                  siteAddress={request.site_address}
+                  guidance={documentsInfo.guidance[locale]}
+                  requested={documentsInfo.requestedDocuments}
+                  suggested={documentsInfo.guidance.suggestions.map((item) => item[locale])}
+                  onUploaded={(document) => {
+                    setAllUploaded(false);
+                    setSiteUploadState(
+                      document.state === 'Available' ? 'Available' : 'PendingScan'
+                    );
+                  }}
+                />
+              )
+            ) : (
+              (documentReadFailure ??
+              (showDocuments && !documentsInfo ? (
+                <LoadingStatus>{copy('loading')}</LoadingStatus>
+              ) : (
+                <p role="status">{copy('documentStageUnavailable')}</p>
+              )))
+            )
+          ) : reviewDocuments && documentOutcome === 'reviewSent' ? (
+            <div className={recordEditorSurface}>
+              <RecordEditorSection
+                title={copy('reviewSent')}
+                description={copy('documentReviewNext')}
               >
-                {copy('sendReview')}
-              </button>
-              {documentOutcome && (
-                <p role={documentOutcome === 'reviewSent' ? 'status' : 'alert'}>
-                  {copy(documentOutcome)}
-                </p>
-              )}
-              {documentOutcome === 'documentUnconfirmed' && (
-                <button
-                  type="button"
-                  className="rounded-md border px-4 py-2"
-                  disabled={sendingDocuments || !documentsInfo}
-                  onClick={() => void completeDocuments(true)}
+                <p className="text-sm font-medium">{copy(`status_${request.status}`)}</p>
+                <Link
+                  to="/solar/requests/$requestId"
+                  params={{ requestId }}
+                  className={buttonVariants({ size: 'sm', variant: 'outline' })}
                 >
-                  {copy('retryDocumentSubmission')}
-                </button>
-              )}
-              {documentReadError && (
-                <div>
-                  <p role="alert">{copy('documentReadError')}</p>
-                  <button
-                    type="button"
-                    className="rounded-md border px-4 py-2"
-                    disabled={sendingDocuments}
-                    onClick={() => {
-                      if (documentsPending.current || completionPending.current) return;
-                      documentsPending.current = true;
-                      if (documentReadError === 'network') announceReadRetry(locale);
-                      setDocumentsVersion((value) => value + 1);
+                  {copy('backToSolarRequest')}
+                </Link>
+              </RecordEditorSection>
+              <span role="status" className="sr-only">
+                {copy('reviewSent')}
+              </span>
+            </div>
+          ) : showDocuments ? (
+            <>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5 rounded-xl border bg-card px-4 py-3 text-sm sm:px-6">
+                <p className="font-semibold">{copy(`status_${request.status}`)}</p>
+                {request.site_address && (
+                  <p dir="auto" className="text-muted-foreground wrap-anywhere">
+                    {request.site_address}
+                  </p>
+                )}
+                {request.status_reason?.trim() && (
+                  <p
+                    dir="auto"
+                    className="basis-full border-s-2 border-warning/45 ps-3 whitespace-pre-wrap wrap-anywhere"
+                  >
+                    {request.status_reason}
+                  </p>
+                )}
+              </div>
+              <section
+                id="solar-documents"
+                className={recordEditorSurface}
+                aria-label={copy(reviewDocuments ? 'reviewDocumentSet' : 'documentGuidance')}
+              >
+                {!reviewDocuments && (
+                  <div className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-6">
+                    <h2 className="text-base font-semibold">{copy('documentGuidance')}</h2>
+                    {documentsInfo && (
+                      <p className="text-sm whitespace-pre-wrap wrap-anywhere">
+                        {documentsInfo.guidance[locale]}
+                      </p>
+                    )}
+                  </div>
+                )}
+                <div className="space-y-4 px-4 py-4 sm:px-6">
+                  {!documentsInfo && !documentReadError && (
+                    <LoadingStatus>{copy('loading')}</LoadingStatus>
+                  )}
+                  {documentReadFailure}
+                  {documentsInfo &&
+                    (documentsInfo.requestedDocuments.length > 0 ||
+                      (!reviewDocuments && documentsInfo.guidance.suggestions.length > 0)) && (
+                      <div
+                        className={
+                          !reviewDocuments &&
+                          documentsInfo.requestedDocuments.length &&
+                          documentsInfo.guidance.suggestions.length
+                            ? 'grid gap-3 sm:grid-cols-2'
+                            : 'space-y-3'
+                        }
+                      >
+                        {!!documentsInfo.requestedDocuments.length && (
+                          <div className="min-w-0 space-y-1 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2.5 text-sm">
+                            {reviewDocuments ? (
+                              <h2 className="font-semibold">{copy('requestedDocuments')}</h2>
+                            ) : (
+                              <h3 className="font-semibold">{copy('requestedDocuments')}</h3>
+                            )}
+                            <ul className="list-disc space-y-1 ps-5 text-muted-foreground">
+                              {documentsInfo.requestedDocuments.map((item) => (
+                                <li key={item.id} className="wrap-anywhere">
+                                  <bdi>{item.description}</bdi>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {!reviewDocuments && !!documentsInfo.guidance.suggestions.length && (
+                          <div className="min-w-0 space-y-1 rounded-lg border px-3 py-2.5 text-sm">
+                            <h3 className="font-semibold">{copy('suggestedDocuments')}</h3>
+                            <ul className="list-disc space-y-1 ps-5 text-muted-foreground">
+                              {documentsInfo.guidance.suggestions.map((item, index) => (
+                                <li key={index} className="wrap-anywhere">
+                                  {item[locale]}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  <fieldset className="contents" disabled={documentChangeBlocked}>
+                    {!reviewDocuments && siteUploadState && (
+                      <p role="status" className="rounded-lg bg-muted/40 px-3 py-2 text-sm">
+                        {documentText(
+                          siteUploadState === 'Available' ? 'uploadComplete' : 'PendingScan',
+                          locale
+                        )}
+                      </p>
+                    )}
+                    <DocumentResults
+                      staff={false}
+                      filters={filters}
+                      profileId={request.profile_id}
+                      association={{
+                        businessRecordType: 'solar_request',
+                        businessRecordId: requestId,
+                      }}
+                      embedded
+                      {...(reviewDocuments && { summaryLabel: copy('uploadedDocumentSet') })}
+                      relatedLinks={{
+                        context: { kind: 'solar_request', id: requestId },
+                        disabled: documentChangeBlocked || !documentsInfo,
+                        blocked: () => completionKey.current !== null,
+                      }}
+                    />
+                  </fieldset>
+                  {reviewDocuments && documentsInfo?.guidance[locale].trim() && (
+                    <details className="text-sm">
+                      <summary className="touch-action min-h-11 cursor-pointer py-2.5 font-medium text-primary">
+                        {copy('documentGuidance')}
+                      </summary>
+                      <p className="pb-2 whitespace-pre-wrap wrap-anywhere">
+                        {documentsInfo.guidance[locale]}
+                      </p>
+                    </details>
+                  )}
+                </div>
+                {reviewDocuments ? (
+                  <form
+                    aria-label={copy('confirmDocumentSet')}
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void completeDocuments();
                     }}
                   >
-                    {copy('retry')}
-                  </button>
+                    <div className="space-y-2.5 border-t px-4 py-3 sm:px-6">
+                      <label className="touch-label flex items-start gap-2 rounded-lg bg-muted/45 px-3 py-2.5 text-sm font-medium">
+                        <input
+                          type="checkbox"
+                          className="mt-0.5 size-4 shrink-0 accent-primary"
+                          checked={allUploaded}
+                          disabled={sendingDocuments || documentOutcome === 'documentUnconfirmed'}
+                          onChange={(e) => setAllUploaded(e.target.checked)}
+                        />
+                        <span>{copy('allUploaded')}</span>
+                      </label>
+                      <p className="text-sm text-muted-foreground">{copy('documentReviewNext')}</p>
+                      {documentOutcome && (
+                        <p className="text-sm text-destructive" role="alert">
+                          {copy(documentOutcome)}
+                        </p>
+                      )}
+                    </div>
+                    <RecordEditorActions className="max-sm:justify-start">
+                      {documentOutcome === 'documentUnconfirmed' && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={sendingDocuments || !documentsInfo}
+                          onClick={() => void completeDocuments(true)}
+                        >
+                          {copy('retryDocumentSubmission')}
+                        </Button>
+                      )}
+                      <Button
+                        type="submit"
+                        loading={sendingDocuments}
+                        disabled={
+                          !allUploaded ||
+                          !documentsInfo ||
+                          sendingDocuments ||
+                          documentOutcome === 'documentUnconfirmed'
+                        }
+                      >
+                        {copy('sendReview')}
+                      </Button>
+                    </RecordEditorActions>
+                  </form>
+                ) : (
+                  <RecordEditorActions className="max-sm:justify-start">
+                    <Link
+                      to="/solar/requests/$requestId/documents/review"
+                      params={{ requestId }}
+                      disabled={!documentsInfo || documentChangeBlocked}
+                      className={buttonVariants()}
+                    >
+                      {copy('reviewDocumentSet')}
+                    </Link>
+                  </RecordEditorActions>
+                )}
+              </section>
+            </>
+          ) : (
+            <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+              {copy('documentStageUnavailable')}
+            </p>
+          )
+        ) : (
+          <>
+            <WorkflowStatusBanner
+              locale={locale}
+              submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
+              status={copy(`status_${request.status}`)}
+              happened={
+                request.status_reason ??
+                `${copy('submitted')}: ${time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
+              }
+              nextAction={action!.text}
+              owner={action!.owner}
+              actionHref={action?.href}
+              supportHref={request.support_path ?? '/tickets'}
+            />
+            <div className="space-y-1 rounded-xl border bg-card px-4 py-3 sm:px-5">
+              <p>
+                {copy('currentStage')}: <strong>{copy(stages[currentStage]!)}</strong>
+              </p>
+              {request.status === 'submitted' && (
+                <p className="text-sm text-muted-foreground">{copy('noContract')}</p>
+              )}
+              {request.contract_id && (
+                <div className="flex flex-wrap gap-4 text-sm">
+                  {request.contract_published ? (
+                    <Link
+                      className="underline"
+                      to="/contracts/$contractId/{-$action}"
+                      params={{ contractId: request.contract_id }}
+                    >
+                      {copy('solarViewContract')}
+                    </Link>
+                  ) : (
+                    <span>{copy('solarContractAwaitingPublication')}</span>
+                  )}
+                  {request.initial_invoice_id && (
+                    <Link
+                      className="underline"
+                      to="/invoices/$invoiceId"
+                      params={{ invoiceId: request.initial_invoice_id }}
+                    >
+                      {copy('solarViewInvoice')}
+                    </Link>
+                  )}
                 </div>
               )}
+            </div>
+            {hasSolarShipment(request.status) &&
+              request.status !== 'waiting_for_postal_submission' && (
+                <Link
+                  to="/solar/requests/$requestId/shipment"
+                  params={{ requestId }}
+                  className="touch-action w-fit text-sm text-primary underline underline-offset-4"
+                >
+                  {copy('openShipment')}
+                </Link>
+              )}
+            <section className="space-y-2.5 rounded-xl border bg-card px-4 py-3 sm:px-5">
+              <h2 className="text-base font-semibold">{copy('stages')}</h2>
+              <ol className="list-inside list-decimal space-y-2">
+                {stages.map((stage, index) => (
+                  <li
+                    key={stage}
+                    className={index === currentStage ? 'font-semibold text-primary' : ''}
+                  >
+                    {copy(stage)}
+                  </li>
+                ))}
+              </ol>
             </section>
-          )}
-          {[
-            'waiting_for_postal_submission',
-            'postal_documents_received',
-            'final_review',
-            'contract_created',
-          ].includes(request.status) && (
-            <div id="solar-postal">
-              <SolarPostalPanel requestId={requestId} profileId={request.profile_id} />
-            </div>
-          )}
-          <dl className="grid gap-3 rounded-xl border p-5 sm:grid-cols-2">
-            <div>
-              <dt>{copy('instruction')}</dt>
-              <dd>
-                {copy(request.building_type === 'non_household' ? 'nonHousehold' : 'building')}
-              </dd>
-            </div>
-            <div>
-              <dt>{copy('gridType')}</dt>
-              <dd>{copy(request.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}</dd>
-            </div>
-            {request.bill_identifier && (
-              <div>
-                <dt>{copy('billIdentifier')}</dt>
-                <dd dir="ltr">{request.bill_identifier}</dd>
-              </div>
+            {progress && progress.requestId === requestId && (
+              <SolarStageProgress progress={progress} />
             )}
-            {request.property_form && (
+            <section
+              className="space-y-2.5 rounded-xl border bg-card px-4 py-3 sm:px-5"
+              aria-label={copy('historyTitle')}
+            >
+              <h2 className="text-base font-semibold">{copy('historyTitle')}</h2>
+              <ol className="space-y-3">
+                {(history.length
+                  ? history
+                  : [{ event: 'solar.request.submitted', at: request.submitted_at }]
+                ).map((item, index) => (
+                  <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
+                    <p>{copy(`history_${item.event}`)}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {historyContextText(item.actorContext, locale)}
+                    </p>
+                    <time className="text-sm text-muted-foreground" dateTime={item.at}>
+                      {time.format(item.at)}
+                    </time>
+                  </li>
+                ))}
+              </ol>
+            </section>
+            <dl className="grid gap-3 rounded-xl border p-5 sm:grid-cols-2">
               <div>
-                <dt>{copy('propertyForm')}</dt>
-                <dd>{copy(request.property_form)}</dd>
-              </div>
-            )}
-            {request.structural_frame && (
-              <div>
-                <dt>{copy('structuralFrame')}</dt>
-                <dd>{copy(request.structural_frame)}</dd>
-              </div>
-            )}
-            {request.building_completion_date && (
-              <div>
-                <dt>{copy('completionDate')}</dt>
-                <dd>{request.building_completion_date}</dd>
-              </div>
-            )}
-            {request.total_units && (
-              <div>
-                <dt>{copy('totalUnits')}</dt>
-                <dd>{request.total_units}</dd>
-              </div>
-            )}
-            {request.site_category && (
-              <div>
-                <dt>{copy('siteCategory')}</dt>
-                <dd>{copy(request.site_category)}</dd>
-              </div>
-            )}
-            {request.installation_surface && (
-              <div>
-                <dt>{copy('installationSurface')}</dt>
-                <dd>{copy(request.installation_surface)}</dd>
-              </div>
-            )}
-            {request.usable_area_sqm && (
-              <div>
-                <dt>{copy('usableArea')}</dt>
-                <dd>{request.usable_area_sqm}</dd>
-              </div>
-            )}
-            <div>
-              <dt>{copy('address')}</dt>
-              <dd>{request.site_address || copy('addressNotRecorded')}</dd>
-            </div>
-            {request.site_relationship && (
-              <div>
-                <dt>{copy('relationship')}</dt>
+                <dt>{copy('instruction')}</dt>
                 <dd>
-                  {copy(
-                    request.site_relationship === 'authorized_operator'
-                      ? 'authorizedOperator'
-                      : request.site_relationship
-                  )}
+                  {copy(request.building_type === 'non_household' ? 'nonHousehold' : 'building')}
                 </dd>
               </div>
-            )}
-            {request.site_description && (
               <div>
-                <dt>{copy('description')}</dt>
-                <dd>{request.site_description}</dd>
+                <dt>{copy('gridType')}</dt>
+                <dd>{copy(request.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}</dd>
               </div>
-            )}
-            <div>
-              <dt>{copy('acceptedVersion')}</dt>
-              <dd>{request.agreement_version}</dd>
-            </div>
-            <div>
-              <dt>{copy('acceptedAt')}</dt>
-              <dd>{time.format(request.agreement_accepted_at)}</dd>
-            </div>
-            <div>
-              <dt>{copy('agreement')}</dt>
-              <dd>{request.agreement_snapshot}</dd>
-            </div>
-          </dl>
-        </>
-      )}
+              {request.bill_identifier && (
+                <div>
+                  <dt>{copy('billIdentifier')}</dt>
+                  <dd dir="ltr">{request.bill_identifier}</dd>
+                </div>
+              )}
+              {request.property_form && (
+                <div>
+                  <dt>{copy('propertyForm')}</dt>
+                  <dd>{copy(request.property_form)}</dd>
+                </div>
+              )}
+              {request.structural_frame && (
+                <div>
+                  <dt>{copy('structuralFrame')}</dt>
+                  <dd>{copy(request.structural_frame)}</dd>
+                </div>
+              )}
+              {request.building_completion_date && (
+                <div>
+                  <dt>{copy('completionDate')}</dt>
+                  <dd>{request.building_completion_date}</dd>
+                </div>
+              )}
+              {request.total_units && (
+                <div>
+                  <dt>{copy('totalUnits')}</dt>
+                  <dd>{request.total_units}</dd>
+                </div>
+              )}
+              {request.site_category && (
+                <div>
+                  <dt>{copy('siteCategory')}</dt>
+                  <dd>{copy(request.site_category)}</dd>
+                </div>
+              )}
+              {request.installation_surface && (
+                <div>
+                  <dt>{copy('installationSurface')}</dt>
+                  <dd>{copy(request.installation_surface)}</dd>
+                </div>
+              )}
+              {request.usable_area_sqm && (
+                <div>
+                  <dt>{copy('usableArea')}</dt>
+                  <dd>{request.usable_area_sqm}</dd>
+                </div>
+              )}
+              <div>
+                <dt>{copy('address')}</dt>
+                <dd>{request.site_address || copy('addressNotRecorded')}</dd>
+              </div>
+              {request.site_relationship && (
+                <div>
+                  <dt>{copy('relationship')}</dt>
+                  <dd>
+                    {copy(
+                      request.site_relationship === 'authorized_operator'
+                        ? 'authorizedOperator'
+                        : request.site_relationship
+                    )}
+                  </dd>
+                </div>
+              )}
+              {request.site_description && (
+                <div>
+                  <dt>{copy('description')}</dt>
+                  <dd>{request.site_description}</dd>
+                </div>
+              )}
+              <div>
+                <dt>{copy('acceptedVersion')}</dt>
+                <dd>{request.agreement_version}</dd>
+              </div>
+              <div>
+                <dt>{copy('acceptedAt')}</dt>
+                <dd>{time.format(request.agreement_accepted_at)}</dd>
+              </div>
+              <div>
+                <dt>{copy('agreement')}</dt>
+                <dd>{request.agreement_snapshot}</dd>
+              </div>
+            </dl>
+          </>
+        ))}
     </div>
   );
 }

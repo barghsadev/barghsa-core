@@ -1,6 +1,7 @@
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/documents';
+import { t as appText } from '@barghsa/i18n/app';
 import { readFileSync } from 'node:fs';
 
 const PROFILE = '11111111-1111-4111-8111-111111111111';
@@ -105,7 +106,7 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { verified: true } });
     });
     await page.goto('/admin/documents');
-    await page.getByRole('button', { name: 'review.pdf', exact: true }).click();
+    await page.getByRole('link', { name: 'review.pdf', exact: true }).click();
     const detail = page.getByRole('region', { name: words.details });
     await detail.getByRole('button', { name: words.download, exact: true }).click();
     const link = detail.getByRole('link', { name: words.openFile, exact: true });
@@ -125,8 +126,14 @@ for (const locale of ['en', 'fa'] as const) {
         path: test.info().outputPath('details-derived-fa.png'),
         fullPage: true,
       });
-    await detail.getByRole('button', { name: words.approve, exact: true }).click();
+    await detail.getByRole('link', { name: words.approve, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/documents/${ID}/decisions/approve$`));
+    const note = detail.getByRole('textbox', { name: words.decisionNote });
+    await note.fill('The address matches the application.');
+    await detail.getByRole('button', { name: words.reviewDecisionAction, exact: true }).click();
     const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('The address matches the application.');
+    await expect(dialog).toContainText(words.Approved);
     await dialog.getByRole('button', { name: confirm, exact: true }).click();
     await dialog
       .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password', {
@@ -138,7 +145,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(detail.getByText(words.Approved, { exact: true }).first()).toBeVisible();
     expect(attempts).toHaveLength(2);
     expect(attempts[0]).toEqual(attempts[1]);
-    expect(attempts[1]).toMatchObject({ expectedRevision: 4, idempotencyKey: expect.any(String) });
+    expect(attempts[1]).toMatchObject({
+      expectedRevision: 4,
+      idempotencyKey: expect.any(String),
+      reason: 'The address matches the application.',
+    });
   });
   test(`${locale}: customer uploads a document and submits its displayed revision`, async ({
     page,
@@ -270,7 +281,13 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/documents');
     await expect(page.getByRole('heading', { name: words.title, exact: true })).toBeVisible();
-    await page.getByRole('button', { name: words.upload, exact: true }).click();
+    const list = page.getByRole('region', { name: words.listTitle, exact: true });
+    await expect(list.getByRole('searchbox', { name: words.search, exact: true })).toBeVisible();
+    await expect(
+      list.getByRole('button', { name: appText('historyFilters.label', locale), exact: true })
+    ).toHaveAttribute('aria-expanded', 'false');
+    await page.getByRole('link', { name: words.upload, exact: true }).click();
+    await expect(page).toHaveURL('/documents/new');
     const upload = page.getByRole('region', { name: words.upload });
     await expect(upload.locator('input[type="file"]')).toBeEnabled();
     await upload.getByLabel(words.file, { exact: true }).setInputFiles({
@@ -280,17 +297,23 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await upload.getByRole('button', { name: words.upload, exact: true }).click();
     await page.getByRole('dialog').getByRole('button', { name: confirm, exact: true }).click();
-    await expect(page.getByRole('status').filter({ hasText: words.uploadComplete })).toBeVisible();
+    await expect(page).toHaveURL(`/documents/${ID}`);
+    await expect(page.getByText(words.uploadComplete, { exact: true })).toBeVisible();
     const detail = page.getByRole('region', { name: words.details });
     await expect(detail.getByRole('heading', { name: 'proof.pdf' })).toBeVisible();
-    await detail.getByRole('button', { name: words.submit, exact: true }).focus();
+    await detail.getByRole('link', { name: words.submit, exact: true }).focus();
     await page.keyboard.press('Enter');
-    await page.getByRole('dialog').getByRole('button', { name: confirm, exact: true }).click();
+    await expect(page).toHaveURL(`/documents/${ID}/submit`);
+    const submit = detail.getByRole('form', { name: words.submit, exact: true });
+    await expect(submit).toContainText('proof.pdf');
+    await expect(submit.getByRole('textbox')).toHaveCount(0);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await submit.getByRole('button', { name: words.submit, exact: true }).click();
     await expect(detail.getByText(words.SubmittedForReview, { exact: true }).first()).toBeVisible();
     await expect(
       page
         .locator('[dir]')
-        .filter({ has: page.getByRole('heading', { name: words.title, exact: true }) })
+        .filter({ has: page.getByRole('heading', { name: words.submit, exact: true, level: 1 }) })
         .last()
     ).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
   });

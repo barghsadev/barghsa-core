@@ -1,8 +1,10 @@
+import { manualRecordDateTime } from './record-date-time-fixture';
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { t } from '@barghsa/i18n/admin-ui';
+import { adminText as increaseText } from '@barghsa/i18n/electricity-increase-decision-forms';
+import { adminText as priceText } from '@barghsa/i18n/electricity-price-forms';
 import { t as appText } from '@barghsa/i18n/app';
 import {
   changeContractId,
@@ -37,7 +39,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await shell(page, locale);
-    const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
+    const copy = (key: string) => increaseText(`admin.electricityIncreases.${key}`, locale);
     let status = 503,
       hold = false;
     let held: Route | undefined;
@@ -55,6 +57,14 @@ for (const locale of ['en', 'fa'] as const) {
           : route.fulfill({ status, json: {} });
       }
     );
+    let recordStatus = 200;
+    await page.route(
+      `**/api/staff/electricity/increase-requests/${increaseRow.requestId}`,
+      (route) =>
+        recordStatus === 200
+          ? route.fulfill({ json: { ...increaseRow, canReview: true } })
+          : route.fulfill({ status: recordStatus, json: {} })
+    );
     await page.goto('/admin/electricity-increases');
     const main = page.getByRole('main');
     const list = main.getByRole('region', { name: copy('listTitle'), exact: true });
@@ -63,13 +73,10 @@ for (const locale of ['en', 'fa'] as const) {
     status = 200;
     await content.getByRole('button', { name: copy('retry'), exact: true }).click();
     const reason = page.locator(`#increase-reason-${increaseRow.requestId}`);
-    await reason.fill('Capacity explanation');
-    await page.locator(`#increase-effective-${increaseRow.requestId}`).fill('2026-10-06T12:00');
     hold = true;
     await list.getByRole('button', { name: copy('more'), exact: true }).click();
     await expect.poll(() => !!held).toBe(true);
     await expect(content).toHaveAttribute('aria-busy', 'true');
-    await expect(reason).toHaveValue('Capacity explanation');
     await held!.fulfill({ status: 503, json: {} });
     hold = false;
     await expect(content.getByRole('alert')).toBeVisible();
@@ -78,6 +85,16 @@ for (const locale of ['en', 'fa'] as const) {
     await content.getByRole('button', { name: copy('retry'), exact: true }).click();
     await expect(content.getByRole('alert')).toHaveCount(0);
     expect(queries.at(-1)).toBe(failed);
+    await list.getByRole('link', { name: new RegExp(increaseRow.requestId) }).click();
+    await page.getByRole('link', { name: copy('reject'), exact: true }).click();
+    await reason.fill('Capacity explanation');
+    recordStatus = 503;
+    await main.getByRole('button', { name: copy('refresh'), exact: true }).click();
+    await expect(content.getByRole('alert')).toBeVisible();
+    await expect(reason).toHaveValue('Capacity explanation');
+    recordStatus = 200;
+    await content.getByRole('button', { name: copy('retry'), exact: true }).click();
+    await expect(content.getByRole('alert')).toHaveCount(0);
     await expect(reason).toHaveValue('Capacity explanation');
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -88,7 +105,7 @@ for (const locale of ['en', 'fa'] as const) {
         path: '/tmp/barghsa-electricity-increase-fa-mobile-safari.png',
         fullPage: true,
       });
-    status = 403;
+    recordStatus = 403;
     await main.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(content.getByRole('alert')).toContainText(copy('forbidden'));
     await expect(reason).toHaveCount(0);
@@ -98,7 +115,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await shell(page, locale);
-    const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
+    const copy = (key: string) => priceText(`admin.electricityPrice.${key}`, locale);
     let status = 503,
       version = priceState.versionId;
     const publishBodies: Record<string, string>[] = [];
@@ -118,7 +135,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/price-adjustments/review', (route) =>
       route.fulfill({ json: priceReview(route.request().postDataJSON()) })
     );
-    await page.goto(`/admin/electricity-price-adjustments?contractId=${changeContractId}`);
+    await page.goto(`/admin/electricity-price-adjustments/${changeContractId}/new`);
     const main = page.getByRole('main');
     const list = main.getByRole('region', { name: copy('listTitle'), exact: true });
     await expect(list.getByRole('alert')).toBeVisible();
@@ -154,8 +171,9 @@ for (const locale of ['en', 'fa'] as const) {
     version = '99999999-9999-4999-8999-999999999999';
     await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(page.locator('#price-reason')).toHaveValue('Tariff draft');
-    await page.locator('#electricity-price-contract').fill('88888888-8888-4888-8888-888888888888');
-    await main.getByRole('button', { name: copy('open'), exact: true }).click();
+    await page.goto(
+      '/admin/electricity-price-adjustments/88888888-8888-4888-8888-888888888888/new'
+    );
     await expect(page.locator('#price-reason')).toHaveValue('');
     status = 401;
     await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
@@ -164,8 +182,7 @@ for (const locale of ['en', 'fa'] as const) {
     // Reopen an authorized scope before the write; an unknown command cannot be discarded.
     status = 200;
     version = priceState.versionId;
-    await page.locator('#electricity-price-contract').fill(changeContractId);
-    await main.getByRole('button', { name: copy('open'), exact: true }).click();
+    await page.goto(`/admin/electricity-price-adjustments/${changeContractId}/new`);
     await page.locator('#price-percent').fill('10');
     await page.locator('#price-effective').fill('2026-10-06T12:00');
     await page.locator('#price-reason').fill('Tariff draft');
@@ -196,18 +213,21 @@ for (const locale of ['en', 'fa'] as const) {
     expect(publishBodies[0]!.expectedReviewHash).toBe('b'.repeat(64));
     await expect(dialog).toHaveCount(0);
     await expect(page.locator('#price-reason')).toHaveValue('Tariff draft');
-    await expect(page.locator('#electricity-price-contract')).toBeDisabled();
+    await expect(
+      page.getByRole('link', { name: copy('backToHistory'), exact: true })
+    ).toHaveAttribute('aria-disabled', 'true');
   });
   test(`increase decision submits the reviewed hash and retains its key after a failed write (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
-    const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
+    const copy = (key: string) => increaseText(`admin.electricityIncreases.${key}`, locale);
     const reason = 'Capacity reviewed for the requested period';
     const effectiveFrom = '2026-10-06T08:30:00.000Z';
     const writes: Record<string, string>[] = [];
-    await page.route('**/api/staff/electricity/increase-requests?*', (route) =>
-      route.fulfill({ json: { requests: [increaseRow], nextBefore: null } })
+    await page.route(
+      `**/api/staff/electricity/increase-requests/${increaseRow.requestId}`,
+      (route) => route.fulfill({ json: { ...increaseRow, canReview: true } })
     );
     await page.route(`**/increase-requests/${increaseRow.requestId}/approve/review`, (route) => {
       expect(route.request().postDataJSON()).toEqual({ reason, effectiveFrom });
@@ -218,10 +238,12 @@ for (const locale of ['en', 'fa'] as const) {
       writes.push(route.request().postDataJSON());
       return route.fulfill({ status: 503, json: {} });
     });
-    await page.goto('/admin/electricity-increases');
-    await page.locator(`#increase-effective-${increaseRow.requestId}`).fill('2026-10-06T12:00');
+    await page.goto(`/admin/electricity-increases/${increaseRow.requestId}/approve`);
+    await (
+      await manualRecordDateTime(page, `increase-effective-${increaseRow.requestId}`)
+    ).fill('2026-10-06T12:00');
     await page.locator(`#increase-approval-reason-${increaseRow.requestId}`).fill(reason);
-    await page.getByRole('button', { name: copy('approve'), exact: true }).click();
+    await page.getByRole('button', { name: copy('previewApproval'), exact: true }).click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('reviewTitle'));
     const confirm = dialog.getByRole('button', {

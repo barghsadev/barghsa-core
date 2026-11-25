@@ -57,24 +57,32 @@ for (const [locale, darkMode] of [
         },
       })
     );
-    let failList = false,
-      failDetail = false,
+    let failDetail = false,
       listReads = 0,
       detailReads = 0;
     await page.route('**/api/admin/contract-templates', (route) => {
       listReads++;
-      return route.fulfill({ status: failList ? 503 : 200, json: [contractTemplate] });
+      return route.fulfill({ json: [contractTemplate] });
     });
     await page.route(`**/api/admin/contract-templates/${templateId}`, (route) => {
       detailReads++;
       return route.fulfill({ status: failDetail ? 503 : 200, json: contractTemplateDetail });
     });
-    await page.goto('/admin/contract-templates');
-    await page
-      .getByRole('button', { name: `${word('open')} ${contractTemplate.name}`, exact: true })
-      .click();
+    const details = `/admin/contract-templates/${templateId}`;
+    await page.goto(details + '/edit');
+    const save = page.getByRole('button', { name: word('save'), exact: true });
     await page.locator('#template-name').fill('Keep metadata');
     await page.locator('#template-description').fill('Keep explanation');
+    failDetail = true;
+    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
+    await expect(save).toBeDisabled();
+    await expect(page.locator('#template-name')).toHaveValue('Keep metadata');
+    await expect(page.locator('#template-description')).toHaveValue('Keep explanation');
+    failDetail = false;
+    await page.getByRole('button', { name: word('detailRetry'), exact: true }).click();
+    await expect(save).toBeEnabled();
+    expect(listReads).toBe(0);
+    await page.goto(details + '/versions/new');
     const picker = page.getByRole('button', { name: word('chooseFile'), exact: true });
     await expect(picker).toHaveAccessibleDescription(word('fileHelp'));
     await page.locator('#template-file').setInputFiles({
@@ -94,33 +102,22 @@ for (const [locale, darkMode] of [
       mimeType: 'text/plain',
       buffer: Buffer.from('{{customer}}'),
     });
-    await expect(picker).not.toHaveAttribute('aria-invalid', 'true');
+    const change = page.getByRole('button', { name: word('changeFile'), exact: true });
+    await expect(change).toBeEnabled();
+    await expect(change).not.toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByRole('button', { name: word('upload'), exact: true })).toBeEnabled();
-    const before = listReads;
-    await page
-      .getByRole('button', { name: `${word('open')} ${contractTemplate.name}`, exact: true })
-      .click();
-    expect(listReads).toBe(before);
-    failList = true;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#template-name')).toHaveValue('Keep metadata');
-    await expect(page.getByText('terms.txt', { exact: true })).toBeVisible();
+    const attemptsBefore = detailReads;
     await inspect(page, `template-${darkMode ? 'dark' : 'light'}`, locale, info.project.name);
-    failList = false;
-    const detailBefore = detailReads;
-    await page.getByRole('button', { name: word('listRetry'), exact: true }).click();
-    await expect(page.getByRole('alert')).toHaveCount(0);
-    expect(detailReads).toBe(detailBefore);
     failDetail = true;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
     await expect(page.getByRole('button', { name: word('upload'), exact: true })).toBeDisabled();
-    await expect(page.locator('#template-description')).toHaveValue('Keep explanation');
+    await expect(page.getByText('terms.txt', { exact: true })).toBeVisible();
     failDetail = false;
     const listBefore = listReads;
     await page.getByRole('button', { name: word('detailRetry'), exact: true }).click();
     await expect(page.getByRole('button', { name: word('upload'), exact: true })).toBeEnabled();
     expect(listReads).toBe(listBefore);
+    expect(detailReads).toBe(attemptsBefore + 2);
   });
   test(`template confirmation preserves prepared version and rejects changed history (${locale}, dark=${darkMode})`, async ({
     page,
@@ -158,7 +155,7 @@ for (const [locale, darkMode] of [
     );
     await page.route(`**/api/admin/contract-templates/${templateId}`, (route) =>
       route.fulfill({
-        status: failDetail ? 503 : 200,
+        status: denied ? 403 : failDetail ? 503 : 200,
         json: changed
           ? {
               ...contractTemplateDetail,
@@ -169,11 +166,7 @@ for (const [locale, darkMode] of [
           : contractTemplateDetail,
       })
     );
-    await page.goto('/admin/contract-templates');
-    await page
-      .getByRole('button', { name: `${word('open')} ${contractTemplate.name}`, exact: true })
-      .click();
-    await page.locator('#template-name').fill('Keep draft');
+    await page.goto(`/admin/contract-templates/${templateId}/versions/new`);
     await page
       .locator('#template-file')
       .setInputFiles({ name: 'new.txt', mimeType: 'text/plain', buffer: Buffer.from('new terms') });
@@ -189,12 +182,11 @@ for (const [locale, darkMode] of [
     changed = true;
     await dialog.getByRole('button', { name: word('refresh'), exact: true }).click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.locator('#template-name')).toHaveValue('Keep draft');
     await expect(page.getByText('new.txt', { exact: true })).toBeVisible();
     await expect(page.getByText('terms.txt', { exact: true })).toBeVisible();
     denied = true;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.locator('#template-name')).toHaveCount(0);
+    await expect(page.locator('#template-file')).toHaveCount(0);
     await expect(page.getByRole('alert')).toContainText(word('denied'));
     await expect(page.getByText('new.txt', { exact: true })).toHaveCount(0);
   });
@@ -244,7 +236,7 @@ for (const [locale, darkMode] of [
         json: { ...electricityLimits, leadTimeDays: changed ? 7 : 0 },
       });
     });
-    await page.goto('/admin/contract-limits');
+    await page.goto('/admin/contract-limits/edit');
     const lead = page.locator('#contract-limit-leadTimeDays');
     await lead.fill('14');
     fail = true;

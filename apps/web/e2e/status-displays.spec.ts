@@ -103,7 +103,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto(`/electricity/orders/${orderId}`);
     await expect(page.getByText(t('electricity.order.documentsPending', locale))).toBeVisible();
     expect(activationReads).toEqual([]);
-    const contractLink = page.locator(`a[href="/contracts?contractId=${detail.contractId}"]`);
+    const contractLink = page.locator(`a[href="/contracts/${detail.contractId}"]`);
     await expect(contractLink).toHaveCount(0);
     contractState = 'AwaitingSignature';
     await page.reload();

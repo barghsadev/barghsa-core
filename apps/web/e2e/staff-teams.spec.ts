@@ -69,6 +69,10 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ status: 201, json: teams[0] });
     });
     await page.route(`**/api/admin/staff-teams/${id}`, (route) => {
+      if (route.request().method() === 'GET') {
+        const [team] = teams;
+        return route.fulfill(team ? { json: team } : { status: 404, json: {} });
+      }
       if (fail) return route.fulfill({ status: 500, json: {} });
       if (route.request().method() === 'DELETE') teams = [];
       else teams = [{ ...teams[0], ...route.request().postDataJSON() }];
@@ -84,13 +88,18 @@ for (const locale of ['en', 'fa'] as const)
       verified = true;
       return route.fulfill({ json: { verified: true } });
     });
-    await page.goto('/admin/staff-teams');
+    await page.goto('/admin/staff-teams/new');
     await expect(page.locator('section').first()).toHaveAttribute(
       'dir',
       locale === 'fa' ? 'rtl' : 'ltr'
     );
     await page.getByLabel(text.name, { exact: true }).fill('Support');
-    await page.getByLabel('Support Alice', { exact: true }).check();
+    await page
+      .getByRole('button', {
+        name: t('admin.teams.addMember', locale).replace('{name}', 'Support Alice'),
+        exact: true,
+      })
+      .click();
     await page.getByRole('button', { name: text.save, exact: true }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: text.confirm, exact: true }).click();
@@ -100,7 +109,8 @@ for (const locale of ['en', 'fa'] as const)
     expect(bodies).toHaveLength(2);
     expect(bodies[0]).toEqual(bodies[1]);
     expect(teams[0].memberUserIds).toEqual(['staff-a']);
-    await page.getByRole('button', { name: text.edit, exact: true }).click();
+    await page.getByRole('link', { name: 'Support', exact: true }).click();
+    await page.getByRole('link', { name: text.edit, exact: true }).click();
     await page.getByLabel(text.name, { exact: true }).fill('Support revised');
     fail = true;
     await page.getByRole('button', { name: text.save, exact: true }).click();
@@ -120,18 +130,21 @@ for (const locale of ['en', 'fa'] as const)
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(teams[0].name).toBe('Support revised');
+    await page.goto('/admin/staff-teams/assignment');
     await page.getByLabel(text.team, { exact: true }).first().selectOption(id);
     await page.getByLabel(text.strategy, { exact: true }).first().selectOption('load');
     await page.getByRole('button', { name: text.rules, exact: true }).click();
     await dialog.getByRole('button', { name: text.confirm, exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(rules.ticket).toEqual({ teamId: id, strategy: 'load' });
+    await page.goto(`/admin/staff-teams/${id}`);
     await page.getByRole('button', { name: text.remove, exact: true }).click();
     await expect(confirm).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'destructive');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(teams).toEqual([]);
+    await page.goto('/admin/staff-teams/assignment');
     await expect(page.getByLabel(text.team, { exact: true }).first()).toHaveValue(id);
   });
 
@@ -205,31 +218,42 @@ for (const locale of ['en', 'fa'] as const) {
       }
       return route.fulfill({ json: rules });
     });
-    await page.goto('/admin/staff-teams');
+    await page.goto('/admin/staff-teams/assignment');
+    await expect(
+      page.locator('main').getByRole('button', {
+        name: t('admin.teams.refreshRules', locale),
+        exact: true,
+      })
+    ).toHaveCount(1);
     const add = page
-      .getByRole('button', {
-        name: locale === 'fa' ? 'افزودن تیم جایگزین' : 'Add fallback team',
+      .getByRole('combobox', {
+        name: t('admin.teams.addFallback', locale),
         exact: true,
       })
       .first();
-    await add.click();
-    await expect(page.locator('#fallback-team-ticket-2')).toHaveValue(second);
-    await page.locator('#fallback-strategy-ticket-2').selectOption('expertise');
-    await add.click();
-    const up = locale === 'fa' ? 'افزایش اولویت' : 'Move up';
-    await page.getByRole('button', { name: `${up} 3`, exact: true }).click();
-    await page.getByRole('button', { name: `${up} 2`, exact: true }).click();
-    await expect(page.locator('#team-ticket')).toHaveValue(third);
-    await page
-      .getByRole('button', {
-        name: `${locale === 'fa' ? 'کاهش اولویت' : 'Move down'} 1`,
+    const rank = (value: number) => new Intl.NumberFormat(locale).format(value);
+    const movePriority = (direction: 'moveUp' | 'moveDown', value: number) =>
+      page.getByRole('button', {
+        name: `${t(`admin.teams.${direction}`, locale)} ${rank(value)}`,
         exact: true,
-      })
-      .click();
+      });
+    await expect(add).toHaveValue('');
+    await add.selectOption(third);
+    await expect(page.locator('#fallback-team-ticket-2')).toHaveValue(third);
+    await expect(page.locator('#fallback-strategy-ticket-2')).toBeFocused();
+    await add.selectOption(second);
+    await expect(add).toBeDisabled();
+    await page.locator('#fallback-strategy-ticket-3').selectOption('expertise');
+    await movePriority('moveUp', 3).click();
+    await expect(page.locator('#fallback-team-ticket-2')).toHaveValue(second);
+    await movePriority('moveDown', 2).click();
+    await movePriority('moveUp', 2).click();
+    await expect(page.locator('#team-ticket')).toHaveValue(third);
+    await movePriority('moveDown', 1).click();
     await expect(page.locator('#team-ticket')).toHaveValue(first);
     await page
       .getByRole('button', {
-        name: `${locale === 'fa' ? 'حذف اولویت' : 'Remove priority'} 2`,
+        name: `${t('admin.teams.removeFallback', locale)} ${rank(2)}`,
         exact: true,
       })
       .click();

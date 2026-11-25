@@ -1,12 +1,21 @@
+import {
+  Eye as TableEyeIcon,
+  Pencil as TablePencilIcon,
+  Trash2 as TableTrash2Icon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
-import { useRecordAddress } from '../hooks/useRecordAddress.js';
-import type { CatalogueWorkspace } from '../lib/catalogue-workspace.js';
+import type { CatalogueRecordWorkspace } from '../lib/catalogue-workspace.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useCatalogueConfirmationRead } from '../hooks/useCatalogueConfirmationRead.js';
 import { validCatalogueCount, validCataloguePriority } from '../lib/knowledge-documents.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
+import {
+  CatalogueMembershipReview,
+  CatalogueRelationEditor,
+  type ReviewedMembershipCommand,
+} from '../components/CatalogueRelationEditor.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
 import {
   matchesMembership,
@@ -14,12 +23,21 @@ import {
   type MembershipCommand,
 } from '../lib/catalogue-membership.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
+import { FormField } from '@barghsa/ui/form';
+import { RecordListField } from '../components/RecordListField.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
   CatalogueFieldFeedback,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import {
   type PolicyDraft as Draft,
@@ -29,9 +47,24 @@ import {
   policyPriority,
 } from '../lib/knowledge-policy-form.js';
 import type { PolicyCatalogueKind } from '../lib/catalogue-category-query.js';
-import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
+import {
+  Badge,
+  Alert,
+  LoadingStatus,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  ListRefreshButton,
+  NativeSelect,
+  Textarea,
+  buttonVariants,
+} from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
+import { toast } from '../lib/toast-api.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -58,6 +91,11 @@ interface PolicyRow {
 }
 interface Entry extends PolicyRow {
   description: string;
+}
+interface PolicyDetail extends Entry {
+  members?: PolicyRow[];
+  groups?: { id: string; title: string }[];
+  updatedAt?: string;
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -122,7 +160,7 @@ function draftFor(row?: Entry): Draft {
   };
 }
 type CataloguePageProps = {
-  workspace?: CatalogueWorkspace;
+  workspace?: CatalogueRecordWorkspace;
   initialKind?: PolicyCatalogueKind;
   focusCategory?: boolean;
   onKindChange?: (value: PolicyCatalogueKind) => void;
@@ -142,6 +180,19 @@ function OwnedAiPoliciesPage({
     label = (key: string) => t(`admin.policies.${key}`, locale);
   const numbers = useNumberFormatting(locale);
   const [kind, setKind] = useState<Kind>(initialKind);
+  const time = useAccountTime(locale);
+  const recordId = workspace?.recordId;
+  const isList = !workspace || workspace.view === 'list';
+  const heading = useRef<HTMLHeadingElement>(null);
+  const editorInitialized = useRef(false);
+  const linkTo = (id: string, action?: 'edit') => ({
+    to:
+      kind === 'policy-groups'
+        ? ('/admin/policies/groups/$recordId/{-$action}' as const)
+        : ('/admin/policies/$recordId/{-$action}' as const),
+    params: { recordId: id, action },
+  });
+  const listSearch = kind === 'policy-groups' ? { kind: 'policy-groups' as const } : {};
   const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
     knowledgePolicyFormText(key, locale);
   const kindRef = useRef(kind);
@@ -177,8 +228,8 @@ function OwnedAiPoliciesPage({
     requiredRead = useRef(0);
   const formCapture = useRef<{ body: Record<string, unknown>; id?: string } | null>(null);
   const actionRef = useRef<TeamAction | null>(null);
-  const operationCapture = useRef<MembershipCommand | null>(null),
-    uncertainOperation = useRef<MembershipCommand | null>(null);
+  const operationCapture = useRef<ReviewedMembershipCommand | null>(null),
+    uncertainOperation = useRef<ReviewedMembershipCommand | null>(null);
   const requiredOperationRead = useRef<{ detail: number; choices: number | null }>({
     detail: 0,
     choices: null,
@@ -197,10 +248,11 @@ function OwnedAiPoliciesPage({
     setPending(value);
   }, []);
 
-  const [selected, setSelected] = useState<string | null>(null),
+  const [localSelected, setSelected] = useState<string | null>(null),
     [member, setMember] = useState(''),
     [memberPriority, setMemberPriority] = useState(''),
     [memberPriorities, setMemberPriorities] = useState<Record<string, string>>({});
+  const selected = recordId ?? localSelected;
   const [action, updateAction] = useState<TeamAction | null>(null);
   const [notice, setNotice] = useState(false);
   const commandTarget = useRef<{ id: string; basis: string } | null>(null);
@@ -224,7 +276,6 @@ function OwnedAiPoliciesPage({
     membershipBasis.current = null;
     setAction(null);
   }, [setAction]);
-  const clearAddress = workspace?.clear;
   const clearWork = useCallback(() => {
     clearSelection();
     setDraft(null);
@@ -237,73 +288,62 @@ function OwnedAiPoliciesPage({
     validationBusy.current = false;
     form.setValidationPending(false);
     onPendingChange(false);
-    clearAddress?.();
-  }, [
-    clearSelection,
-    setAction,
-    setDraft,
-    form.setValidationPending,
-    onPendingChange,
-    clearAddress,
-  ]);
+    editorInitialized.current = false;
+  }, [clearSelection, setAction, setDraft, form.setValidationPending, onPendingChange]);
   const scope = useCatalogueScope(clearWork);
   const confirmationRead = useCatalogueConfirmationRead(scope);
-  const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
+  const collection = useCatalogueResource(
+    scope,
+    recordId ? null : `/api/admin/${kind}`,
+    validEntries
+  );
   const choices = useCatalogueResource(
     scope,
-    kind === 'policy-groups' ? '/api/admin/policies' : null,
+    kind === 'policy-groups' && (isList || workspace?.view === 'detail')
+      ? '/api/admin/policies'
+      : null,
     validEntries
   );
   const validateDetail = useCallback(
-    (value: unknown): value is { id: string; members: PolicyRow[] } =>
+    (value: unknown): value is PolicyDetail =>
       record(value) &&
       value.id === selected &&
-      Array.isArray(value.members) &&
-      value.members.every(validPolicyRow),
-    [selected]
+      validEntries([value]) &&
+      (kind !== 'policy-groups' ||
+        (Array.isArray(value.members) && value.members.every(validPolicyRow))) &&
+      (value.groups === undefined ||
+        (Array.isArray(value.groups) &&
+          value.groups.every(
+            (group) =>
+              record(group) && typeof group.id === 'string' && typeof group.title === 'string'
+          ))) &&
+      (value.updatedAt === undefined ||
+        (typeof value.updatedAt === 'string' && Number.isFinite(Date.parse(value.updatedAt)))),
+    [kind, selected]
   );
   const selectedRead = useCatalogueResource(
     scope,
-    selected && kind === 'policy-groups'
-      ? `/api/admin/policy-groups/${encodeURIComponent(selected)}`
-      : null,
-    validateDetail
+    selected ? `/api/admin/${kind}/${encodeURIComponent(selected)}` : null,
+    validateDetail,
+    { clearOnMissing: true }
   );
+  const detail = selectedRead.data;
+  const singleRow = useMemo(() => (detail ? [detail] : null), [detail]);
+  const list = recordId ? { ...selectedRead, data: singleRow } : collection;
   const rows = list.data ?? [],
     policies = kind === 'policies' ? rows : (choices.data ?? []),
-    members = selectedRead.data?.members ?? [];
+    members = detail?.members ?? [];
   const disabled = scope.denied || list.loading || list.error;
-  const selectDraft = useRecordAddress(
-    workspace?.editor,
-    rows,
-    (row) => row.id,
-    !disabled && list.data !== null,
-    (row) => {
-      if (row) edit(row, false);
-      else {
-        generation.current++;
-        formCapture.current = null;
-        setAction(null);
-        setDraft(null);
-        draftBasis.current = null;
-        setUncertain(false);
-        setChanged(false);
-        validationBusy.current = false;
-        form.setValidationPending(false);
-        onPendingChange(false);
-      }
-    }
-  );
-  const selectDetail = useRecordAddress(
-    workspace?.detail,
-    rows,
-    (row) => row.id,
-    kind === 'policy-groups' && !disabled && list.data !== null,
-    (row) => {
-      if (row) setSelected(row.id);
-      else clearSelection();
-    }
-  );
+  useEffect(() => {
+    if (!isList) heading.current?.focus({ preventScroll: true });
+  }, [isList, recordId, workspace?.view]);
+  useEffect(() => {
+    if (disabled || editorInitialized.current) return;
+    if (workspace?.view === 'create') edit(undefined, false);
+    else if (workspace?.view === 'edit' && detail) edit(detail, false);
+    else return;
+    editorInitialized.current = true;
+  }, [disabled, workspace?.view, detail]);
   const detailDisabled = disabled || selectedRead.loading || selectedRead.error;
   const memberDisabled = detailDisabled || choices.loading || choices.error;
   const work = useRef({ selected, draft, action, disabled, detailDisabled, memberDisabled });
@@ -340,12 +380,11 @@ function OwnedAiPoliciesPage({
     }
     if (current.selected && !list.data.some((row) => row.id === current.selected)) {
       clearSelection();
-      selectDetail(null, true);
     }
   }, [list.data, clearSelection, setAction, form.setValidationPending]);
   useEffect(() => {
     if (!selectedRead.data) return;
-    const next = selectedRead.data.members,
+    const next = selectedRead.data.members ?? [],
       old = acceptedMembers.current;
     if (membershipBasis.current !== null && membershipBasis.current !== membersBasis(next)) {
       if (!formCapture.current) {
@@ -391,7 +430,6 @@ function OwnedAiPoliciesPage({
       return;
     clearSelection();
     setSelected(value);
-    selectDetail(value);
   }
   function edit(entry?: Entry, publish = true) {
     if (
@@ -411,7 +449,6 @@ function OwnedAiPoliciesPage({
     setDraft(draftFor(entry));
     draftBasis.current = entry ? JSON.stringify(draftFor(entry)) : null;
     setNotice(false);
-    if (publish) selectDraft(entry?.id ?? null);
   }
   function refresh() {
     if (networkPending.current) return;
@@ -424,7 +461,7 @@ function OwnedAiPoliciesPage({
     else {
       list.retry();
       choices.retry();
-      selectedRead.retry();
+      if (!recordId) selectedRead.retry();
     }
   }
   function commandDisabled(path: string, body?: unknown) {
@@ -605,8 +642,11 @@ function OwnedAiPoliciesPage({
         choices.readAttempt === null ||
         choices.readAttempt < requiredOperationRead.current.choices));
   const operationRecovery = operationUncertain && (
-    <div className="space-y-2">
-      <p role="alert">{copy('uncertain')}</p>
+    <div className="space-y-3">
+      <Alert variant="warning">{copy('uncertain')}</Alert>
+      {uncertainOperation.current && (
+        <CatalogueMembershipReview command={uncertainOperation.current} locale={locale} />
+      )}
       <Button
         type="button"
         variant="outline"
@@ -622,6 +662,12 @@ function OwnedAiPoliciesPage({
       </Button>
     </div>
   );
+  function priorityText(override: number | null | undefined, inherited: number | undefined) {
+    if (override != null) return numbers.number(override);
+    return inherited === undefined
+      ? label('inheritPriority')
+      : `${label('inheritPriority')} (${numbers.number(inherited)})`;
+  }
   function proposeMembership(
     operation: MembershipCommand,
     method: 'POST' | 'DELETE',
@@ -636,7 +682,20 @@ function OwnedAiPoliciesPage({
       (operation.choicesRequired ? work.current.memberDisabled : work.current.detailDisabled)
     )
       return;
-    operationCapture.current = operation;
+    const entry = (operation.choicesRequired ? policies : members).find(
+      (item) => item.id === operation.memberId
+    );
+    const nextPriority = operation.expected;
+    const hasNewPriority = typeof nextPriority === 'number' || nextPriority === null;
+    operationCapture.current = {
+      ...operation,
+      memberTitle: entry?.title ?? operation.memberId,
+      groupTitle: detail?.title ?? operation.groupId,
+      ...(hasNewPriority && !operation.choicesRequired
+        ? { currentPriority: priorityText(entry?.priorityOverride, entry?.priority) }
+        : {}),
+      ...(hasNewPriority ? { newPriority: priorityText(nextPriority, entry?.priority) } : {}),
+    };
     propose(
       `/api/admin/policy-groups/${operation.groupId}/members${method === 'DELETE' ? `/${operation.memberId}` : ''}`,
       method,
@@ -668,55 +727,153 @@ function OwnedAiPoliciesPage({
     formCapture.current = null;
     setNotice(false);
   }
+  const actionClass = buttonVariants({ variant: 'outline', className: 'min-h-11' });
+  const ruleList = detail ? draftFor(detail).items.split('\n').filter(Boolean) : [];
+  const ruleFacts = detail?.rules
+    ? Object.entries(detail.rules).filter(
+        ([key, value]) =>
+          ['tone', 'language', 'maxLength', 'maxRequests', 'windowSeconds', 'format'].includes(
+            key
+          ) &&
+          (typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value)))
+      )
+    : [];
+  const recordActions = (entry: PolicyDetail) => (
+    <div className="flex flex-wrap gap-2">
+      <Link
+        {...linkTo(entry.id, 'edit')}
+        className={actionClass}
+        aria-label={`${label('edit')} ${entry.title}`}
+      >
+        {label('edit')}
+      </Link>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={disabled || !!action || pending || operationUncertain}
+        onClick={() =>
+          propose(
+            `/api/admin/${kind}/${entry.id}`,
+            'DELETE',
+            label('delete'),
+            `${entry.title}. ${label('confirmDelete')}`
+          )
+        }
+      >
+        {label('delete')}
+      </Button>
+    </div>
+  );
+  const isEditor = workspace?.view === 'create' || workspace?.view === 'edit';
+  const hasInlineRefresh = isEditor || (workspace?.view === 'detail' && kind === 'policy-groups');
+  const actionReadIssue = list.error || choices.error || selectedRead.error || selectedRead.loading;
   return (
     <div
-      className="mx-auto min-w-0 flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
+      className={`mx-auto flex w-full min-w-0 flex-col p-4 md:px-8 ${isEditor ? 'max-w-3xl gap-4' : 'max-w-5xl gap-6 md:py-8'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
-      <div className="flex flex-wrap gap-2">
-        {(['policies', 'policy-groups'] as const).map((value) => (
-          <Button
-            key={value}
-            autoFocus={focusCategory && kind === value}
-            disabled={pending}
-            aria-pressed={kind === value}
-            variant={kind === value ? 'default' : 'outline'}
-            onClick={() => {
-              if (kind === value) return;
-              clearWork();
-              if (onKindChange) onKindChange(value);
-              else {
-                scope.recover();
-                setKind(value);
-              }
-            }}
+      <header className="flex min-w-0 items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {!isList && (
+            <div className="flex flex-wrap items-center gap-2 text-sm text-primary">
+              <Link
+                to="/admin/policies"
+                search={listSearch}
+                className="underline-offset-4 hover:underline"
+              >
+                {label(kind)}
+              </Link>
+              {detail && workspace?.view === 'edit' && (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <Link {...linkTo(detail.id)} className="underline-offset-4 hover:underline">
+                    <bdi>{detail.title}</bdi>
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+          <h1
+            ref={heading}
+            data-slot="editor-heading"
+            tabIndex={isList ? undefined : -1}
+            className="text-2xl font-semibold outline-none! [overflow-wrap:anywhere]"
           >
-            {label(value)}
+            {workspace?.view === 'edit'
+              ? copy(kind === 'policies' ? 'editPolicy' : 'editGroup')
+              : !isList && detail
+                ? detail.title
+                : label(
+                    workspace?.view === 'create'
+                      ? kind === 'policies'
+                        ? 'addPolicy'
+                        : 'addGroup'
+                      : 'title'
+                  )}
+          </h1>
+        </div>
+        {hasInlineRefresh && (
+          <ListRefreshButton
+            label={label('refresh')}
+            disabled={pending || list.loading || choices.loading || selectedRead.loading}
+            onClick={refresh}
+          />
+        )}
+      </header>
+      {!hasInlineRefresh && (
+        <div className="flex flex-wrap gap-2">
+          {isList &&
+            (['policies', 'policy-groups'] as const).map((value) => (
+              <Button
+                key={value}
+                autoFocus={focusCategory && kind === value}
+                disabled={pending}
+                aria-pressed={kind === value}
+                variant={kind === value ? 'default' : 'outline'}
+                onClick={() => {
+                  if (kind === value) return;
+                  clearWork();
+                  if (onKindChange) onKindChange(value);
+                  else {
+                    scope.recover();
+                    setKind(value);
+                  }
+                }}
+              >
+                {label(value)}
+              </Button>
+            ))}
+          <Button
+            variant="outline"
+            disabled={pending || list.loading || choices.loading || selectedRead.loading}
+            onClick={refresh}
+          >
+            {label('refresh')}
           </Button>
-        ))}
-        <Button
-          variant="outline"
-          disabled={pending || list.loading || choices.loading || selectedRead.loading}
-          onClick={refresh}
-        >
-          {label('refresh')}
-        </Button>
-      </div>
+        </div>
+      )}
       <ListPage>
         {scope.denied ? (
           <p role="alert">{label('denied')}</p>
         ) : (
           <>
             <CommandFeedback message={notice ? label('saved') : null} />
-            <ListPage.Toolbar>
-              <Button
-                disabled={disabled || form.pending || !!action || pending || uncertain}
-                onClick={() => edit()}
-              >
-                {label(kind === 'policies' ? 'addPolicy' : 'addGroup')}
-              </Button>
-            </ListPage.Toolbar>
+            {isList && (
+              <ListPage.Toolbar>
+                {workspace && !disabled && !form.pending && !action && !pending && !uncertain ? (
+                  <Link {...linkTo('new')} className={buttonVariants({ className: 'min-h-11' })}>
+                    {label(kind === 'policies' ? 'addPolicy' : 'addGroup')}
+                  </Link>
+                ) : (
+                  <Button
+                    disabled={disabled || form.pending || !!action || pending || uncertain}
+                    onClick={() => edit()}
+                  >
+                    {label(kind === 'policies' ? 'addPolicy' : 'addGroup')}
+                  </Button>
+                )}
+              </ListPage.Toolbar>
+            )}
             {choices.loading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
             {choices.error && (
               <div role="alert">
@@ -725,9 +882,18 @@ function OwnedAiPoliciesPage({
               </div>
             )}
             {selectedRead.loading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
+            {!isList && !recordId && collection.loading && (
+              <LoadingStatus>{label('loading')}</LoadingStatus>
+            )}
+            {!isList && !recordId && collection.error && (
+              <div role="alert" className="space-y-2">
+                <p>{label('error')}</p>
+                <Button onClick={collection.retry}>{label('retry')}</Button>
+              </div>
+            )}
             {selectedRead.error && (
               <div role="alert">
-                <p>{label('detailError')}</p>
+                <p>{label(selectedRead.missing ? 'missing' : 'detailError')}</p>
                 <Button onClick={selectedRead.retry}>{label('detailRetry')}</Button>
               </div>
             )}
@@ -737,115 +903,143 @@ function OwnedAiPoliciesPage({
                 aria-busy={form.pending || undefined}
                 onSubmit={(event) => void save(event)}
                 aria-label={label('editor')}
-                className="flex flex-col gap-4 border-y py-5"
+                className={recordEditorSurface}
               >
-                {changed && <p role="alert">{copy('changed')}</p>}
-                {uncertain && <p role="alert">{copy('uncertain')}</p>}
-                {catalogueRootMessage(form.errors) && (
-                  <p role="alert">{catalogueRootMessage(form.errors)}</p>
+                {changed && (
+                  <p className="mx-4 mt-4 text-sm text-destructive" role="alert">
+                    {copy('changed')}
+                  </p>
                 )}
-                <fieldset disabled={form.pending || !!action || pending} className="contents">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="policy-title">{label('name')}</Label>
-                    <Input
-                      {...form.bind('title')}
-                      id="policy-title"
-                      value={draft.title}
-                      required
-                      aria-required="true"
-                      maxLength={120}
-                      onChange={(event) =>
-                        form.field('title')[1](event.target.value as Draft['title'])
-                      }
-                    />
-                    <CatalogueFieldFeedback
-                      id={form.errorId('title')}
-                      error={form.errors.title}
-                      message={messages.title}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="policy-description">{label('description')}</Label>
-                    <textarea
-                      {...form.bind('description')}
-                      id="policy-description"
-                      className="min-h-24 rounded-md border bg-background p-3"
-                      maxLength={2000}
-                      value={draft.description}
-                      onChange={(event) =>
-                        form.field('description')[1](event.target.value as Draft['description'])
-                      }
-                    />
-                    <CatalogueFieldFeedback
-                      id={form.errorId('description')}
-                      error={form.errors.description}
-                      message={messages.description}
-                    />
-                  </div>
+                {uncertain && (
+                  <p className="mx-4 mt-4 text-sm text-destructive" role="alert">
+                    {copy('uncertain')}
+                  </p>
+                )}
+                {catalogueRootMessage(form.errors) && (
+                  <p className="mx-4 mt-4 text-sm text-destructive" role="alert">
+                    {catalogueRootMessage(form.errors)}
+                  </p>
+                )}
+                <fieldset disabled={form.pending || !!action || pending} className="min-w-0">
+                  <legend className="sr-only">{label('editor')}</legend>
+                  <RecordEditorSection
+                    title={copy(kind === 'policies' ? 'policyDetails' : 'groupDetails')}
+                  >
+                    <div className={recordEditorField}>
+                      <Label htmlFor="policy-title">{label('name')}</Label>
+                      <Input
+                        {...form.bind('title')}
+                        id="policy-title"
+                        dir="auto"
+                        value={draft.title}
+                        required
+                        aria-required="true"
+                        maxLength={120}
+                        onChange={(event) =>
+                          form.field('title')[1](event.target.value as Draft['title'])
+                        }
+                      />
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('title')}
+                        error={form.errors.title}
+                        message={messages.title}
+                      />
+                    </div>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="policy-description">{label('description')}</Label>
+                      <Textarea
+                        {...form.bind('description')}
+                        id="policy-description"
+                        dir="auto"
+                        rows={2}
+                        placeholder={copy(
+                          kind === 'policies' ? 'policyDescription' : 'groupDescription'
+                        )}
+                        className="max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]"
+                        maxLength={2000}
+                        value={draft.description}
+                        onChange={(event) =>
+                          form.field('description')[1](event.target.value as Draft['description'])
+                        }
+                      />
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('description')}
+                        error={form.errors.description}
+                        message={messages.description}
+                      />
+                    </div>
+                  </RecordEditorSection>
                   {kind === 'policies' && (
-                    <fieldset className="flex flex-col gap-4">
-                      <legend className="mb-3 font-semibold">{label('rules')}</legend>
-                      <div className="flex flex-col gap-2">
-                        <Label htmlFor="policy-type">{label('type')}</Label>
-                        <select
-                          {...form.bind('policyType')}
-                          id="policy-type"
-                          aria-required="true"
-                          className="rounded-md border bg-background p-2"
-                          value={draft.policyType}
-                          onChange={(event) => changePolicyType(event.target.value as PolicyType)}
-                        >
-                          {types.map((type) => (
-                            <option key={type} value={type}>
-                              {label(type)}
-                            </option>
-                          ))}
-                        </select>
-                        <CatalogueFieldFeedback
-                          id={form.errorId('policyType')}
-                          error={form.errors.policyType}
-                          message={messages.policyType}
-                        />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Label htmlFor="policy-priority">{label('priority')}</Label>
-                        <Input
-                          {...form.bind('priority')}
-                          id="policy-priority"
-                          type="text"
-                          inputMode="numeric"
-                          dir="ltr"
-                          min={-1000}
-                          max={1000}
-                          step={1}
-                          required
-                          aria-required="true"
-                          aria-describedby={
-                            form.errors.priority
-                              ? `${form.errorId('priority')} policy-priority-help`
-                              : 'policy-priority-help'
-                          }
-                          value={draft.priority}
-                          onChange={(event) =>
-                            form.field('priority')[1](event.target.value as Draft['priority'])
-                          }
-                        />
-                        <CatalogueFieldFeedback
-                          id={form.errorId('priority')}
-                          error={form.errors.priority}
-                          message={messages.priority}
-                        />
-                        <p id="policy-priority-help" className="text-sm text-muted-foreground">
-                          {label('priorityHelp')}
-                        </p>
+                    <RecordEditorSection title={label('rules')}>
+                      <div className={recordEditorGrid}>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="policy-type">{label('type')}</Label>
+                          <NativeSelect
+                            {...form.bind('policyType')}
+                            id="policy-type"
+                            aria-required="true"
+                            className="w-full"
+                            value={draft.policyType}
+                            onChange={(event) => changePolicyType(event.target.value as PolicyType)}
+                          >
+                            {types.map((type) => (
+                              <option key={type} value={type}>
+                                {label(type)}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                          <CatalogueFieldFeedback
+                            compact
+                            id={form.errorId('policyType')}
+                            error={form.errors.policyType}
+                            message={messages.policyType}
+                          />
+                        </div>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="policy-priority">{label('priority')}</Label>
+                          <Input
+                            {...form.bind('priority')}
+                            id="policy-priority"
+                            type="text"
+                            inputMode="numeric"
+                            dir="ltr"
+                            min={-1000}
+                            max={1000}
+                            step={1}
+                            required
+                            aria-required="true"
+                            aria-describedby={
+                              form.errors.priority
+                                ? `${form.errorId('priority')} policy-priority-help`
+                                : 'policy-priority-help'
+                            }
+                            value={draft.priority}
+                            onChange={(event) =>
+                              form.field('priority')[1](event.target.value as Draft['priority'])
+                            }
+                          />
+                          <CatalogueFieldFeedback
+                            compact
+                            id={form.errorId('priority')}
+                            error={form.errors.priority}
+                            message={messages.priority}
+                          />
+                          <p id="policy-priority-help" className="text-xs text-muted-foreground">
+                            {label('priorityHelp')}
+                          </p>
+                        </div>
                       </div>
                       {draft.policyType === 'response_style' ? (
-                        <>
-                          <div className="flex flex-col gap-2">
+                        <div className={recordEditorGrid}>
+                          <div className={recordEditorField}>
                             <Label htmlFor="policy-tone">{label('tone')}</Label>
                             <Input
                               {...form.bind('tone')}
                               id="policy-tone"
+                              dir="auto"
+                              placeholder={copy('toneExample')}
                               required
                               aria-required="true"
                               maxLength={200}
@@ -855,16 +1049,18 @@ function OwnedAiPoliciesPage({
                               }
                             />
                             <CatalogueFieldFeedback
+                              compact
                               id={form.errorId('tone')}
                               error={form.errors.tone}
                               message={messages.tone}
                             />
                           </div>
-                          <div className="flex flex-col gap-2">
+                          <div className={recordEditorField}>
                             <Label htmlFor="policy-language">{label('language')}</Label>
                             <Input
                               {...form.bind('language')}
                               id="policy-language"
+                              dir="auto"
                               maxLength={50}
                               value={draft.language}
                               onChange={(event) =>
@@ -872,12 +1068,13 @@ function OwnedAiPoliciesPage({
                               }
                             />
                             <CatalogueFieldFeedback
+                              compact
                               id={form.errorId('language')}
                               error={form.errors.language}
                               message={messages.language}
                             />
                           </div>
-                          <div className="flex flex-col gap-2">
+                          <div className={recordEditorField}>
                             <Label htmlFor="policy-length">{label('maxLength')}</Label>
                             <Input
                               {...form.bind('maxLength')}
@@ -894,36 +1091,43 @@ function OwnedAiPoliciesPage({
                               }
                             />
                             <CatalogueFieldFeedback
+                              compact
                               id={form.errorId('maxLength')}
                               error={form.errors.maxLength}
                               message={messages.maxLength}
                             />
                           </div>
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              {...form.bind('requireSources')}
-                              checked={draft.requireSources}
-                              onChange={(event) =>
-                                form.field('requireSources')[1](event.target.checked)
-                              }
-                            />
-                            {label('requireSources')}
-                          </label>
-                          <CatalogueFieldFeedback
-                            id={form.errorId('requireSources')}
-                            error={form.errors.requireSources}
-                            message={messages.requireSources}
-                          />
-                        </>
+                          <div className="self-center">
+                            <label className="flex min-h-8 cursor-pointer items-center gap-2 font-medium">
+                              <input
+                                type="checkbox"
+                                className="size-4 accent-primary"
+                                {...form.bind('requireSources')}
+                                checked={draft.requireSources}
+                                onChange={(event) =>
+                                  form.field('requireSources')[1](event.target.checked)
+                                }
+                              />
+                              {label('requireSources')}
+                            </label>
+                            {form.errors.requireSources && (
+                              <CatalogueFieldFeedback
+                                compact
+                                id={form.errorId('requireSources')}
+                                error={form.errors.requireSources}
+                                message={messages.requireSources}
+                              />
+                            )}
+                          </div>
+                        </div>
                       ) : draft.policyType === 'output_format' ? (
-                        <div className="flex flex-col gap-2">
+                        <div className={recordEditorField}>
                           <Label htmlFor="policy-format">{label('format')}</Label>
-                          <select
+                          <NativeSelect
                             {...form.bind('format')}
                             id="policy-format"
                             aria-required="true"
-                            className="rounded-md border bg-background p-2"
+                            className="w-full"
                             value={draft.format}
                             onChange={(event) =>
                               form.field('format')[1](event.target.value as Draft['format'])
@@ -931,16 +1135,17 @@ function OwnedAiPoliciesPage({
                           >
                             <option value="plain_text">{label('plain_text')}</option>
                             <option value="json_object">{label('json_object')}</option>
-                          </select>
+                          </NativeSelect>
                           <CatalogueFieldFeedback
+                            compact
                             id={form.errorId('format')}
                             error={form.errors.format}
                             message={messages.format}
                           />
                         </div>
                       ) : draft.policyType === 'rate_limit' ? (
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="flex flex-col gap-2">
+                        <div className={recordEditorGrid}>
+                          <div className={recordEditorField}>
                             <Label htmlFor="policy-max-requests">{label('maxRequests')}</Label>
                             <Input
                               {...form.bind('maxRequests')}
@@ -961,12 +1166,13 @@ function OwnedAiPoliciesPage({
                               }
                             />
                             <CatalogueFieldFeedback
+                              compact
                               id={form.errorId('maxRequests')}
                               error={form.errors.maxRequests}
                               message={messages.maxRequests}
                             />
                           </div>
-                          <div className="flex flex-col gap-2">
+                          <div className={recordEditorField}>
                             <Label htmlFor="policy-window-seconds">{label('windowSeconds')}</Label>
                             <Input
                               {...form.bind('windowSeconds')}
@@ -987,6 +1193,7 @@ function OwnedAiPoliciesPage({
                               }
                             />
                             <CatalogueFieldFeedback
+                              compact
                               id={form.errorId('windowSeconds')}
                               error={form.errors.windowSeconds}
                               message={messages.windowSeconds}
@@ -994,298 +1201,491 @@ function OwnedAiPoliciesPage({
                           </div>
                         </div>
                       ) : (
-                        <div className="flex flex-col gap-2">
-                          <Label htmlFor="policy-items">{label(draft.policyType)}</Label>
-                          <textarea
-                            {...form.bind('items')}
-                            id="policy-items"
-                            className="min-h-32 rounded-md border bg-background p-3"
-                            required
-                            aria-required="true"
-                            value={draft.items}
-                            aria-describedby={
-                              form.errors.items
-                                ? `${form.errorId('items')} policy-items-help`
-                                : 'policy-items-help'
-                            }
-                            onChange={(event) =>
-                              form.field('items')[1](event.target.value as Draft['items'])
-                            }
+                        <div className={recordEditorField}>
+                          <FormField
+                            control={form.form.control}
+                            name="items"
+                            render={({ field }) => (
+                              <RecordListField
+                                key={draft.policyType}
+                                id="policy-items"
+                                label={label(draft.policyType)}
+                                value={field.value}
+                                focusRef={field.ref}
+                                onBlur={form.bind('items').onBlur}
+                                onChange={form.field('items')[1]}
+                                limit={200}
+                                rowHelp={copy('policyRowsHelp')}
+                                bulkHelp={label('itemsHelp')}
+                                descriptionId={
+                                  form.errors.items ? form.errorId('items') : undefined
+                                }
+                                invalid={!!form.errors.items}
+                              />
+                            )}
                           />
                           <CatalogueFieldFeedback
+                            compact
                             id={form.errorId('items')}
                             error={form.errors.items}
                             message={messages.items}
                           />
-                          <p id="policy-items-help" className="text-sm text-muted-foreground">
-                            {label('itemsHelp')}
-                          </p>
                         </div>
                       )}
-                      <label className="flex items-center gap-2">
+                      <label className="flex min-h-8 cursor-pointer items-center gap-2 font-medium">
                         <input
                           type="checkbox"
+                          className="size-4 accent-primary"
                           {...form.bind('enabled')}
                           checked={draft.enabled}
                           onChange={(event) => form.field('enabled')[1](event.target.checked)}
                         />
                         {label('enabled')}
                       </label>
-                      <CatalogueFieldFeedback
-                        id={form.errorId('enabled')}
-                        error={form.errors.enabled}
-                        message={messages.enabled}
-                      />
-                    </fieldset>
+                      {form.errors.enabled && (
+                        <CatalogueFieldFeedback
+                          compact
+                          id={form.errorId('enabled')}
+                          error={form.errors.enabled}
+                          message={messages.enabled}
+                        />
+                      )}
+                    </RecordEditorSection>
                   )}
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={resetDisabled}
-                      onClick={resetDraft}
-                    >
-                      {copy('reset')}
-                    </Button>
-                    <CatalogueSaveButton
-                      label={label('save')}
-                      pending={form.pending}
-                      disabled={disabled || changed || uncertain}
-                    />
+                  <RecordEditorActions
+                    secondary={
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={resetDisabled}
+                        onClick={resetDraft}
+                      >
+                        {copy('reset')}
+                      </Button>
+                    }
+                  >
                     <Button
                       type="button"
                       variant="outline"
                       disabled={uncertain}
                       onClick={() => {
                         setDraft(null);
-                        selectDraft(null);
+                        if (workspace && workspace.view !== 'list') {
+                          if (recordId) workspace.showRecord(recordId);
+                          else workspace.showList();
+                        }
                       }}
                     >
                       {label('cancel')}
                     </Button>
-                  </div>
+                    <CatalogueSaveButton
+                      label={label('save')}
+                      pending={form.pending}
+                      disabled={disabled || changed || uncertain}
+                    />
+                  </RecordEditorActions>
                 </fieldset>
               </form>
             )}
-            <ListPage.Content
-              loading={list.loading}
-              error={list.error}
-              empty={!rows.length}
-              retainContent={rows.length > 0}
-              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
-              errorView={
-                <div role="alert">
-                  <p>{label('error')}</p>
-                  <Button onClick={list.retry}>{label('retry')}</Button>
-                </div>
-              }
-              emptyView={<p>{label('empty')}</p>}
-            >
-              <CatalogueRecordTable
-                rows={rows}
-                locale={locale}
-                caption={label(kind)}
-                nameLabel={label('name')}
-                detailsLabel={copy('tableDetails')}
-                actionsLabel={copy('tableActions')}
-                renderDetails={(row) => (
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    {kind === 'policy-groups' && (
-                      <p className="text-sm text-muted-foreground">
-                        {label('members')}:{' '}
-                        {row.memberCount === undefined ? '—' : numbers.number(row.memberCount)}
-                      </p>
-                    )}
-                    {row.policyType && (
-                      <div className="mt-2 flex flex-wrap gap-2 text-sm">
-                        <span className="rounded-full bg-muted px-2 py-1">
-                          {label(row.policyType)}
-                        </span>
-                        <span className="px-2 py-1">
-                          {row.enabled === undefined
-                            ? label('unavailable')
-                            : label(row.enabled ? 'enabled' : 'disabled')}
-                        </span>
-                        <span className="px-2 py-1">
-                          {label('priority')}:{' '}
-                          <bdi>
-                            {row.priority === undefined ? '—' : numbers.number(row.priority)}
-                          </bdi>
-                        </span>
-                      </div>
-                    )}
-                    {kind === 'policies' && !row.policyType && <p>{label('unavailable')}</p>}
+            {isList && (
+              <ListPage.Content
+                loading={list.loading}
+                error={list.error}
+                empty={!rows.length}
+                retainContent={rows.length > 0}
+                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                errorView={
+                  <div role="alert">
+                    <p>{label('error')}</p>
+                    <Button onClick={list.retry}>{label('retry')}</Button>
                   </div>
-                )}
-                renderActions={(row) => (
-                  <>
-                    {kind === 'policy-groups' && (
-                      <Button
-                        variant="outline"
-                        aria-label={`${label('open')} ${row.title}`}
-                        disabled={disabled || form.pending || !!action || pending}
-                        onClick={() => open(row.id)}
-                      >
-                        {label('open')}
-                      </Button>
-                    )}
-                    <Button
-                      variant="outline"
-                      aria-label={`${label('edit')} ${row.title}`}
-                      disabled={disabled || form.pending || !!action || pending}
-                      onClick={() => edit(row)}
-                    >
-                      {label('edit')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      aria-label={`${label('delete')} ${row.title}`}
-                      disabled={disabled || form.pending || !!action || pending}
-                      onClick={() =>
-                        propose(
-                          `/api/admin/${kind}/${row.id}`,
-                          'DELETE',
-                          label('delete'),
-                          `${row.title}. ${label('confirmDelete')}`
-                        )
-                      }
-                    >
-                      {label('delete')}
-                    </Button>
-                  </>
-                )}
-              />
-            </ListPage.Content>
-            {selected && kind === 'policy-groups' && (
-              <section className="flex flex-col gap-4 border-t pt-5" aria-label={label('members')}>
-                <h2 className="break-words text-xl font-semibold">
-                  {rows.find((row) => row.id === selected)?.title}
-                </h2>
-                {operationRecovery}
-                <CatalogueRelationEditor
-                  key={selected}
-                  mode="policy"
+                }
+                emptyView={<p>{label('empty')}</p>}
+              >
+                <CatalogueRecordTable
+                  rows={rows}
                   locale={locale}
-                  id="policy-member"
-                  value={member}
-                  priority={memberPriority}
-                  basis={memberIdsBasis(members)}
-                  epoch={generation.current}
-                  options={policies.filter(
-                    (policy) => !members.some((item) => item.id === policy.id)
+                  caption={label(kind)}
+                  nameLabel={label('name')}
+                  detailsLabel={copy('tableDetails')}
+                  actionsLabel={copy('tableActions')}
+                  {...(workspace && {
+                    renderTitle: (row: Entry) => (
+                      <Link
+                        {...linkTo(row.id)}
+                        className="text-primary underline-offset-4 hover:underline"
+                      >
+                        <bdi>{row.title}</bdi>
+                      </Link>
+                    ),
+                  })}
+                  renderDetails={(row) => (
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      {kind === 'policy-groups' && (
+                        <p className="text-sm text-muted-foreground">
+                          {label('members')}:{' '}
+                          {row.memberCount === undefined ? '—' : numbers.number(row.memberCount)}
+                        </p>
+                      )}
+                      {row.policyType && (
+                        <div className="mt-2 flex flex-wrap gap-2 text-sm">
+                          <span className="rounded-full bg-muted px-2 py-1">
+                            {label(row.policyType)}
+                          </span>
+                          <span className="px-2 py-1">
+                            {row.enabled === undefined
+                              ? label('unavailable')
+                              : label(row.enabled ? 'enabled' : 'disabled')}
+                          </span>
+                          <span className="px-2 py-1">
+                            {label('priority')}:{' '}
+                            <bdi>
+                              {row.priority === undefined ? '—' : numbers.number(row.priority)}
+                            </bdi>
+                          </span>
+                        </div>
+                      )}
+                      {kind === 'policies' && !row.policyType && <p>{label('unavailable')}</p>}
+                    </div>
                   )}
-                  disabled={
-                    memberDisabled || !!action || pending || form.pending || operationUncertain
-                  }
-                  labels={{
-                    member: label('selectPolicy'),
-                    priority: label('priorityOverride'),
-                    inherit: label('inheritPriority'),
-                    save: label('link'),
-                    unavailable: label('unavailable'),
-                  }}
-                  onChange={(id, priority) => {
-                    setMember(id);
-                    setMemberPriority(priority);
-                  }}
-                  onSubmit={(value, owner) =>
-                    proposeMembership(
-                      {
-                        groupId: selected,
-                        memberId: value.memberId,
-                        expected: value.priorityOverride.trim()
-                          ? policyPriority(value.priorityOverride)
-                          : null,
-                        choicesRequired: true,
-                        owner,
-                      },
-                      'POST',
-                      {
-                        policyId: value.memberId,
-                        ...(value.priorityOverride.trim()
-                          ? { priorityOverride: policyPriority(value.priorityOverride) }
-                          : {}),
-                      }
-                    )
-                  }
-                />
-                <ul className="divide-y">
-                  {members.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex flex-wrap items-center justify-between gap-3 py-3"
-                    >
-                      <span className="min-w-0 break-words">{item.title}</span>
-                      <CatalogueRelationEditor
-                        mode="priority"
-                        locale={locale}
-                        id={`member-priority-${item.id}`}
-                        value={item.id}
-                        priority={memberPriorities[item.id] ?? ''}
-                        savedPriority={override(item)}
-                        basis={priorityBasis(item)}
-                        epoch={generation.current}
-                        disabled={
-                          detailDisabled ||
-                          !!action ||
-                          pending ||
-                          form.pending ||
-                          operationUncertain
-                        }
-                        labels={{
-                          member: '',
-                          priority: `${label('priorityOverride')} · ${item.title}`,
-                          inherit: `${label('inheritPriority')} (${item.priority === undefined ? '—' : numbers.number(item.priority)})`,
-                          save: label('updatePriority'),
-                          unavailable: label('unavailable'),
-                        }}
-                        onChange={(_, priority) =>
-                          setMemberPriorities((previous) => ({ ...previous, [item.id]: priority }))
-                        }
-                        onSubmit={(value, owner) =>
-                          proposeMembership(
-                            {
-                              groupId: selected,
-                              memberId: item.id,
-                              expected: value.priorityOverride.trim()
-                                ? policyPriority(value.priorityOverride)
-                                : null,
-                              choicesRequired: false,
-                              owner,
-                            },
-                            'POST',
-                            {
-                              policyId: item.id,
-                              priorityOverride: value.priorityOverride.trim()
-                                ? policyPriority(value.priorityOverride)
-                                : null,
-                            }
-                          )
-                        }
-                      />
+                  renderActions={(row) => (
+                    <>
+                      {workspace && !action && !pending && !disabled && !form.pending ? (
+                        <>
+                          {kind === 'policy-groups' && (
+                            <Link
+                              {...linkTo(row.id)}
+                              className={actionClass}
+                              aria-label={`${label('open')} ${row.title}`}
+                              data-table-action-tooltip={label('open')}
+                            >
+                              <TableActionIcon icon={TableEyeIcon}>{label('open')}</TableActionIcon>
+                            </Link>
+                          )}
+                          <Link
+                            {...linkTo(row.id, 'edit')}
+                            className={actionClass}
+                            aria-label={`${label('edit')} ${row.title}`}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          {kind === 'policy-groups' && (
+                            <Button
+                              variant="outline"
+                              aria-label={`${label('open')} ${row.title}`}
+                              disabled={disabled || form.pending || !!action || pending}
+                              onClick={() => open(row.id)}
+                              data-table-action-tooltip={label('open')}
+                            >
+                              <TableActionIcon icon={TableEyeIcon}>{label('open')}</TableActionIcon>
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            aria-label={`${label('edit')} ${row.title}`}
+                            disabled={disabled || form.pending || !!action || pending}
+                            onClick={() => edit(row)}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Button>
+                        </>
+                      )}
                       <Button
                         variant="outline"
-                        disabled={detailDisabled || !!action || pending || operationUncertain}
-                        aria-label={`${label('unlink')} ${item.title}`}
+                        aria-label={`${label('delete')} ${row.title}`}
+                        disabled={disabled || form.pending || !!action || pending}
                         onClick={() =>
-                          proposeMembership(
-                            {
-                              groupId: selected,
-                              memberId: item.id,
-                              expected: 'absent',
-                              choicesRequired: false,
-                            },
-                            'DELETE'
+                          propose(
+                            `/api/admin/${kind}/${row.id}`,
+                            'DELETE',
+                            label('delete'),
+                            `${row.title}. ${label('confirmDelete')}`
                           )
                         }
+                        data-table-action-tooltip={label('delete')}
                       >
-                        {label('unlink')}
+                        <TableActionIcon icon={TableTrash2Icon}>{label('delete')}</TableActionIcon>
                       </Button>
-                    </li>
+                    </>
+                  )}
+                />
+              </ListPage.Content>
+            )}
+            {workspace?.view === 'detail' && kind === 'policies' && detail && (
+              <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  {detail.policyType && <Badge variant="outline">{label(detail.policyType)}</Badge>}
+                  {detail.enabled !== undefined && (
+                    <Badge variant="secondary">
+                      {label(detail.enabled ? 'enabled' : 'disabled')}
+                    </Badge>
+                  )}
+                </div>
+                {detail.description && (
+                  <p
+                    dir="auto"
+                    className="whitespace-pre-wrap [overflow-wrap:anywhere] text-sm text-muted-foreground"
+                  >
+                    {detail.description}
+                  </p>
+                )}
+                {time.notice}
+                <dl className="grid gap-4 border-y py-4 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt className="text-muted-foreground">{label('priority')}</dt>
+                    <dd>{detail.priority === undefined ? '—' : numbers.number(detail.priority)}</dd>
+                  </div>
+                  {detail.updatedAt && (
+                    <div>
+                      <dt className="text-muted-foreground">{label('lastChanged')}</dt>
+                      <dd>
+                        <time dateTime={detail.updatedAt}>{time.format(detail.updatedAt)}</time>
+                      </dd>
+                    </div>
+                  )}
+                  {ruleFacts.map(([key, value]) => (
+                    <div key={key} className="min-w-0">
+                      <dt className="text-muted-foreground">{label(key)}</dt>
+                      <dd className="[overflow-wrap:anywhere]">
+                        <bdi>
+                          {typeof value === 'number'
+                            ? numbers.number(value)
+                            : key === 'format' &&
+                                (value === 'plain_text' || value === 'json_object')
+                              ? label(value)
+                              : String(value)}
+                        </bdi>
+                      </dd>
+                    </div>
                   ))}
-                </ul>
+                  {(ruleList.length > 0 || detail.rules?.requireSources === true) && (
+                    <div className="sm:col-span-2">
+                      <dt className="font-medium">{label('rules')}</dt>
+                      <dd>
+                        {ruleList.length > 0 && (
+                          <ul className="list-inside list-disc [overflow-wrap:anywhere]">
+                            {ruleList.map((rule, index) => (
+                              <li key={`${index}:${rule}`} dir="auto">
+                                {rule}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {detail.rules?.requireSources === true && <p>{label('requireSources')}</p>}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+                <section className="space-y-2 text-sm">
+                  <h2 className="font-semibold">{label('whereUsed')}</h2>
+                  {detail.groups?.length ? (
+                    <ul className="space-y-1">
+                      {detail.groups.map((group) => (
+                        <li key={group.id}>
+                          <Link
+                            to="/admin/policies/groups/$recordId/{-$action}"
+                            params={{ recordId: group.id, action: undefined }}
+                            className="inline-flex min-h-11 items-center text-primary underline-offset-4 hover:underline"
+                          >
+                            <bdi>{group.title}</bdi>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted-foreground">{label('noGroups')}</p>
+                  )}
+                </section>
+                {recordActions(detail)}
               </section>
             )}
+            {selected &&
+              kind === 'policy-groups' &&
+              (!workspace || (workspace.view === 'detail' && detail)) && (
+                <section
+                  className="flex min-w-0 flex-col gap-4 rounded-xl border bg-card p-4 sm:p-6"
+                  aria-label={label('members')}
+                >
+                  <h2 className="break-words text-xl font-semibold">
+                    {workspace ? label('members') : rows.find((row) => row.id === selected)?.title}
+                  </h2>
+                  {workspace && detail && recordActions(detail)}
+                  {operationRecovery}
+                  <CatalogueRelationEditor
+                    key={selected}
+                    mode="policy"
+                    locale={locale}
+                    id="policy-member"
+                    value={member}
+                    priority={memberPriority}
+                    basis={memberIdsBasis(members)}
+                    epoch={generation.current}
+                    options={policies.filter(
+                      (policy) => !members.some((item) => item.id === policy.id)
+                    )}
+                    disabled={
+                      memberDisabled || !!action || pending || form.pending || operationUncertain
+                    }
+                    labels={{
+                      member: label('selectPolicy'),
+                      priority: label('priorityOverride'),
+                      inherit: '',
+                      save: label('link'),
+                      unavailable: label('unavailable'),
+                    }}
+                    onChange={(id, priority) => {
+                      setMember(id);
+                      setMemberPriority(priority);
+                    }}
+                    onSubmit={(value, owner) =>
+                      proposeMembership(
+                        {
+                          groupId: selected,
+                          memberId: value.memberId,
+                          expected: value.priorityOverride.trim()
+                            ? policyPriority(value.priorityOverride)
+                            : null,
+                          choicesRequired: true,
+                          owner,
+                        },
+                        'POST',
+                        {
+                          policyId: value.memberId,
+                          ...(value.priorityOverride.trim()
+                            ? { priorityOverride: policyPriority(value.priorityOverride) }
+                            : {}),
+                        }
+                      )
+                    }
+                  />
+                  <section
+                    className={recordEditorSurface}
+                    aria-labelledby="policy-group-members-title"
+                  >
+                    <h3
+                      id="policy-group-members-title"
+                      className="border-b bg-muted/30 px-4 py-3 text-base font-semibold"
+                    >
+                      {copy('groupMembers')}
+                    </h3>
+                    {members.length ? (
+                      <ul className="divide-y">
+                        {members.map((item) => (
+                          <li
+                            key={item.id}
+                            className="grid min-w-0 items-start gap-3 px-4 py-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto]"
+                          >
+                            <div className="flex min-w-0 flex-col gap-1">
+                              {workspace ? (
+                                <Link
+                                  to="/admin/policies/$recordId/{-$action}"
+                                  params={{ recordId: item.id, action: undefined }}
+                                  className="min-w-0 break-words text-primary underline-offset-4 hover:underline"
+                                >
+                                  <bdi>{item.title}</bdi>
+                                </Link>
+                              ) : (
+                                <span className="min-w-0 text-sm font-medium [overflow-wrap:anywhere]">
+                                  {item.title}
+                                </span>
+                              )}
+                              <p className="text-xs text-muted-foreground">
+                                {copy('currentPriority')}{' '}
+                                <bdi className="font-medium">
+                                  {priorityText(item.priorityOverride, item.priority)}
+                                </bdi>
+                              </p>
+                            </div>
+                            <CatalogueRelationEditor
+                              mode="priority"
+                              locale={locale}
+                              id={`member-priority-${item.id}`}
+                              value={item.id}
+                              priority={memberPriorities[item.id] ?? ''}
+                              priorityName={`${label('priorityOverride')} · ${item.title}`}
+                              savedPriority={override(item)}
+                              basis={priorityBasis(item)}
+                              epoch={generation.current}
+                              disabled={
+                                detailDisabled ||
+                                !!action ||
+                                pending ||
+                                form.pending ||
+                                operationUncertain
+                              }
+                              labels={{
+                                member: '',
+                                priority: label('priorityOverride'),
+                                inherit: copy('inheritPriorityHint'),
+                                save: label('updatePriority'),
+                                unavailable: label('unavailable'),
+                              }}
+                              onChange={(_, priority) =>
+                                setMemberPriorities((previous) => ({
+                                  ...previous,
+                                  [item.id]: priority,
+                                }))
+                              }
+                              onSubmit={(value, owner) =>
+                                proposeMembership(
+                                  {
+                                    groupId: selected,
+                                    memberId: item.id,
+                                    expected: value.priorityOverride.trim()
+                                      ? policyPriority(value.priorityOverride)
+                                      : null,
+                                    choicesRequired: false,
+                                    owner,
+                                  },
+                                  'POST',
+                                  {
+                                    policyId: item.id,
+                                    priorityOverride: value.priorityOverride.trim()
+                                      ? policyPriority(value.priorityOverride)
+                                      : null,
+                                  }
+                                )
+                              }
+                            />
+                            <Button
+                              variant="ghost"
+                              className="justify-self-start lg:self-center"
+                              disabled={detailDisabled || !!action || pending || operationUncertain}
+                              aria-label={`${label('unlink')} ${item.title}`}
+                              onClick={() =>
+                                proposeMembership(
+                                  {
+                                    groupId: selected,
+                                    memberId: item.id,
+                                    expected: 'absent',
+                                    choicesRequired: false,
+                                  },
+                                  'DELETE'
+                                )
+                              }
+                            >
+                              {label('unlink')}
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="px-4 py-3 text-sm text-muted-foreground">
+                        {copy('emptyMembers')}
+                      </p>
+                    )}
+                  </section>
+                </section>
+              )}
           </>
         )}
       </ListPage>
@@ -1304,7 +1704,28 @@ function OwnedAiPoliciesPage({
             (formCapture.current ? ownedFields(fields) : false)
           }
           onUnconfirmed={unconfirmed}
-          summary={recovery}
+          summary={
+            operationCapture.current ? (
+              <>
+                <CatalogueMembershipReview
+                  command={operationCapture.current}
+                  locale={locale}
+                  refresh={
+                    actionReadIssue
+                      ? undefined
+                      : {
+                          label: label('refresh'),
+                          disabled: pending || list.loading || choices.loading,
+                          onClick: refresh,
+                        }
+                  }
+                />
+                {actionReadIssue && recovery}
+              </>
+            ) : (
+              recovery
+            )
+          }
           onClose={() => {
             generation.current++;
             setAction(null);
@@ -1325,7 +1746,7 @@ function OwnedAiPoliciesPage({
               if (response.status !== 200) throw new Error('Unconfirmed group membership');
               const fresh: unknown = response.value;
               if (actionRef.current !== command) return;
-              if (!validateDetail(fresh) || !matchesMembership(fresh, operation))
+              if (!validateDetail(fresh) || !fresh.members || !matchesMembership(fresh, operation))
                 throw new Error('Unconfirmed group membership');
               if (!selectedRead.accept(fresh)) throw new Error('Obsolete group membership');
               operation.owner?.verified(
@@ -1350,7 +1771,11 @@ function OwnedAiPoliciesPage({
             if (command.body && typeof command.body === 'object' && 'title' in command.body) {
               setDraft(null);
               draftBasis.current = null;
-              selectDraft(null, true);
+              if (workspace && workspace.view !== 'list' && validEntries([value])) {
+                toast.success(label('saved'));
+                workspace.showRecord((value as Entry).id, true);
+                return;
+              }
             }
             if (command.path.endsWith('/members')) {
               setMember('');
@@ -1358,7 +1783,11 @@ function OwnedAiPoliciesPage({
             }
             if (command.method === 'DELETE' && command.path === `/api/admin/${kind}/${selected}`) {
               clearSelection();
-              selectDetail(null, true);
+              if (workspace && workspace.view !== 'list') {
+                toast.success(label('saved'));
+                workspace.showList(true);
+                return;
+              }
             }
             setNotice(true);
             list.retry();

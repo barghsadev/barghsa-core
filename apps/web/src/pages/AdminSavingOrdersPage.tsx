@@ -1,35 +1,50 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
+import { getRouteApi, Link, Navigate, notFound } from '@tanstack/react-router';
 import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { SavingFulfillmentHistory } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
-import { LoadingStatus, ListPage } from '@barghsa/ui';
-import { t as appText } from '@barghsa/i18n/app';
-import { useEffect, useId, useRef, useState, type RefObject } from 'react';
-import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
+import { LoadingStatus, ListPage, ListRefreshButton } from '@barghsa/ui';
+import { lazy, Suspense, useEffect, useId, useRef, useState, type RefObject } from 'react';
+import {
+  Button,
+  buttonVariants,
+  Card,
+  CardContent,
+  FinancialReviewSummary,
+  Input,
+  NativeSelect,
+  Textarea,
+  StatusBadge,
+  statusTone,
+} from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingChange } from '@barghsa/i18n/saving-change';
 import { SavingStaffOperationForm } from '../components/SavingStaffOperationForm.js';
-import type { SavingOperationReview } from '../lib/saving-staff-operation-form.js';
-import { SavingHardwareCommandForm } from '../components/SavingHardwareCommandForm.js';
+import type {
+  SavingOperationDraft,
+  SavingOperationReview,
+} from '../lib/saving-staff-operation-form.js';
+import {
+  savingOrderEditor,
+  savingOperationPath,
+  savingOperations,
+  type SavingOperationRoute,
+  type SavingOrderEditor,
+} from '../lib/saving-operation-route.js';
+import { tSavingOperations } from '@barghsa/i18n/saving-operations';
 import type {
   SavingHardwareDraftCache,
   SavingHardwareOption,
 } from '../lib/saving-hardware-form.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
@@ -41,18 +56,23 @@ import {
   definitiveSavingAddressRejection,
   type SavingAddressDraft,
 } from '../lib/saving-address-amendment-form.js';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import {
   parseSavingAddressAmendmentReview,
   type SavingAddressAmendmentReview,
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
-import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
+import {
+  staffOrderId,
+  type SavingQueueFilters,
+  type StaffOrderListQuery,
+} from '../lib/staff-order-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { QueueEmptyState } from '../components/QueueEmptyState.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { SavingOrderComments } from '../components/SavingOrderComments.js';
+import { OrderDiscussionSection } from '../components/OrderDiscussionSection.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
 import {
   SavingOrderRevisionHistory,
@@ -69,6 +89,7 @@ import {
 import { ContractCancellationRequestQueue } from '../components/ContractCancellationRequestQueue.js';
 import {
   SavingHardwareUpgradeHistory,
+  canCancelSavingHardwareUpgrade,
   type SavingHardwareUpgrade,
 } from '../components/SavingHardwareUpgradeHistory.js';
 
@@ -78,6 +99,12 @@ type StageName =
   | 'installation_and_document_upload'
   | 'equipment_handover'
   | 'process_completion';
+
+const SavingHardwareCommandForm = lazy(() =>
+  import('../components/SavingHardwareCommandForm.js').then((module) => ({
+    default: module.SavingHardwareCommandForm,
+  }))
+);
 interface Order {
   id: string;
   orderId: string;
@@ -167,7 +194,40 @@ function reviewPriceLines(snapshot: Record<string, unknown>) {
     : [];
 }
 
-export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrderListQuery } = {}) {
+export function SavingOrderRecord() {
+  const orderRoute = getRouteApi(savingOperationPath);
+  const params = orderRoute.useParams();
+  const search = orderRoute.useSearch();
+  const orderId = staffOrderId(params.orderId).toLowerCase();
+  const editor = savingOrderEditor(params.operation, params.upgradeId);
+  if (!orderId || ((params.operation || params.upgradeId) && !editor)) throw notFound();
+  const upgradeId = editor?.kind === 'cancel-upgrade' ? editor.upgradeId : undefined;
+  if (params.orderId !== orderId || params.upgradeId !== upgradeId)
+    return (
+      <Navigate
+        to={savingOperationPath}
+        params={{ ...params, orderId, upgradeId }}
+        search={search}
+        replace
+      />
+    );
+  return (
+    <AdminSavingOrdersPage key={orderId} recordId={orderId} queueSearch={search} editor={editor} />
+  );
+}
+
+export default function AdminSavingOrdersPage({
+  queries,
+  recordId,
+  queueSearch,
+  editor,
+}: {
+  queries?: StaffOrderListQuery;
+  recordId?: string;
+  queueSearch?: SavingQueueFilters;
+  editor?: SavingOrderEditor | undefined;
+} = {}) {
+  const operation = editor?.kind === 'operation' ? editor.operation : undefined;
   const client = useQueryClient();
   const reader = useId();
   const readSequence = useRef(0);
@@ -177,6 +237,14 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   const time = useAccountTime(locale);
   const money = useNumberFormatting(locale);
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
+  const statusLabel = (value: string) =>
+    copy(
+      value === 'awaiting_staff_review'
+        ? 'staffReview'
+        : value === 'in_progress'
+          ? 'inProgress'
+          : value
+    );
   const [accepted, setAccepted] = useState<{
     criteria: string;
     actor: string | null;
@@ -186,7 +254,9 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
     nextAfter: string | null;
   } | null>(null);
   const [localLane, setLocalLane] = useState<'review' | 'fulfillment'>('review');
-  const lane = queries?.queue.query.filters.lane || localLane;
+  const lane = queries?.queue.query.filters.lane || queueSearch?.lane || localLane;
+  const otherLane = lane === 'review' ? 'fulfillment' : 'review';
+  const showQueue = !recordId;
   const acceptedCurrent =
     accepted?.criteria === lane &&
     accepted.actor === actor &&
@@ -198,11 +268,14 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   const setAfter = (value: string | null) =>
     queries ? queries.queue.setQuery({ cursor: value ?? '' }) : setLocalAfter(value);
   const [localSelected, setLocalSelected] = useState<string | null>(null);
-  const selected = (queries ? queries.selected : localSelected)?.toLowerCase() ?? null;
-  const setSelected = (id: string | null, replace = false) =>
-    queries ? queries.select(id, replace) : setLocalSelected(id);
+  const selected = recordId ?? (queries ? queries.selected : localSelected)?.toLowerCase() ?? null;
+  const setSelected = (id: string | null, replace = false) => {
+    if (recordId) return;
+    if (queries) queries.select(id, replace);
+    else setLocalSelected(id);
+  };
   const [loadedDetail, setDetail] = useState<Detail | null>(null);
-  const sourceScope = JSON.stringify([actor, profileRevision, selected, lane]);
+  const sourceScope = JSON.stringify([actor, profileRevision, selected, recordId ? null : lane]);
   const currentScope = useRef(sourceScope);
   currentScope.current = sourceScope;
   const withdrawnDraftScope = useRef<string | null>(null);
@@ -268,14 +341,13 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   const readEpoch = useRef(0);
   const queueAbort = useRef<AbortController | null>(null);
   const detailAbort = useRef<AbortController | null>(null);
-  const navigationLocked = () =>
-    !!addressOwner.current &&
-    (!!addressOwner.current.kind ||
-      addressOwner.current.attempted ||
-      addressOwner.current.uncertain);
+  const recordNavigationLocked = () =>
+    !!addressOwner.current?.attempted || !!addressOwner.current?.uncertain;
+  const navigationLocked = () => !!addressOwner.current?.kind || recordNavigationLocked();
 
   const [note, setNote] = useState('');
   const [handover, setHandover] = useState('');
+  const operationDrafts = useRef<Partial<Record<SavingOperationRoute, SavingOperationDraft>>>({});
   const [revision, setRevision] = useState(0);
   const [listRevision, setListRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
@@ -284,6 +356,10 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
 
   function refreshQueue() {
     if (navigationLocked()) return;
+    if (recordId) {
+      setDetailRevision((value) => value + 1);
+      return;
+    }
     setAfter(null);
     setRevision((value) => value + 1);
   }
@@ -305,6 +381,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
     detailAbort.current?.abort();
     addressDraft.current = null;
     hardwareDrafts.current.clear();
+    operationDrafts.current = {};
     setDetail(null);
     setDetailError(true);
     setNote('');
@@ -322,6 +399,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   }
 
   useEffect(() => {
+    if (!showQueue) return;
     const controller = new AbortController();
     queueAbort.current = controller;
     const epoch = readEpoch.current;
@@ -419,12 +497,13 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
       controller.abort();
       controller.signal.removeEventListener('abort', cancel);
     };
-  }, [after, lane, revision, listRevision, actor, profileRevision, client, reader]);
+  }, [after, lane, revision, listRevision, actor, profileRevision, client, reader, showQueue]);
 
   useEffect(() => {
     setNote('');
     setHandover('');
-  }, [selected, lane, actor, profileRevision]);
+    operationDrafts.current = {};
+  }, [sourceScope]);
 
   useEffect(() => {
     setDetailError(false);
@@ -504,146 +583,360 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
     };
   }, [sourceScope, revision, detailRevision, client, reader, actor, profileRevision]);
 
+  function beginCommand() {
+    ++readEpoch.current;
+    queueAbort.current?.abort();
+    detailAbort.current?.abort();
+    if (accepted) setState('ready');
+  }
+  function addressForm(order: Detail, dedicated = false) {
+    return (
+      <PaidSavingAddressForm
+        dedicated={dedicated}
+        key={addressScope}
+        order={order}
+        owner={addressOwner}
+        scope={addressScope}
+        currentScope={addressCurrentScope}
+        draftCache={addressDraft}
+        baseScope={sourceScope}
+        currentBaseScope={currentDraftScope}
+        blocked={() => !!addressOwner.current}
+        notify={() => setAddressLockRevision((value) => value + 1)}
+        onPending={beginCommand}
+        onSuccess={refreshQueue}
+        onWithdraw={(reason) => withdrawSelected(reason, order.id)}
+      />
+    );
+  }
+  function hardwareForm(order: Detail, upgrade?: SavingHardwareUpgrade, dedicated = false) {
+    return (
+      <Suspense fallback={<LoadingStatus>{copy('staffLoading')}</LoadingStatus>}>
+        <SavingHardwareCommandForm
+          dedicated={dedicated}
+          key={`${hardwareScope}:${upgrade?.id ?? 'hardware'}`}
+          {...(upgrade ? { upgrade } : {})}
+          order={order}
+          owner={addressOwner}
+          scope={hardwareScope}
+          currentScope={hardwareCurrentScope}
+          draftCache={hardwareDrafts}
+          baseScope={sourceScope}
+          currentBaseScope={currentDraftScope}
+          blocked={() => !!addressOwner.current}
+          notify={() => setAddressLockRevision((value) => value + 1)}
+          onPending={beginCommand}
+          onSuccess={refreshQueue}
+          onWithdraw={(reason) => withdrawSelected(reason, order.id)}
+        />
+      </Suspense>
+    );
+  }
+  const editorKind = editor?.kind;
+  const upgradeId = editor?.kind === 'cancel-upgrade' ? editor.upgradeId : undefined;
+  const selectedUpgrade = upgradeId
+    ? detail?.hardwareUpgrades?.find((entry) => entry.id === upgradeId)
+    : undefined;
+  const upgrade =
+    selectedUpgrade && canCancelSavingHardwareUpgrade(selectedUpgrade)
+      ? selectedUpgrade
+      : undefined;
+  const recordHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (recordId) recordHeading.current?.focus();
+  }, [recordId, operation, editorKind, upgradeId]);
+  const title = copy(
+    operation
+      ? operation === 'reject'
+        ? 'staffReject'
+        : savingOperations[operation]
+      : editorKind === 'installation-address'
+        ? 'staffAmendAddress'
+        : editorKind === 'hardware'
+          ? 'staffAmendHardware'
+          : editorKind === 'cancel-upgrade'
+            ? 'staffUpgradeCancellationTitle'
+            : 'staffRecordTitle'
+  );
+  const formUnavailable =
+    detail &&
+    ((editorKind === 'installation-address' && !detail.canAmendAddress) ||
+      (editorKind === 'hardware' && !detail.canAmendHardware) ||
+      (editorKind === 'cancel-upgrade' && !upgrade));
+  const Content = showQueue ? ListPage : 'div';
   return (
-    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
-          <p className="text-muted-foreground">{copy('staffDescription')}</p>
-        </div>
-      </header>
-      {time.notice}
-      <ListPage>
-        <ListPage.Toolbar
-          filters={
-            <div className="flex flex-wrap gap-2" aria-label={copy('staffQueue')}>
-              <Button
-                variant={lane === 'review' ? 'secondary' : 'outline'}
-                aria-pressed={lane === 'review'}
-                disabled={navigationLocked()}
-                onClick={() => changeLane('review')}
-              >
-                {copy('staffReviewLane')}
-              </Button>
-              <Button
-                variant={lane === 'fulfillment' ? 'secondary' : 'outline'}
-                aria-pressed={lane === 'fulfillment'}
-                disabled={navigationLocked()}
-                onClick={() => changeLane('fulfillment')}
-              >
-                {copy('staffFulfillmentLane')}
-              </Button>
-            </div>
-          }
-          actions={
-            <Button
-              variant="outline"
-              onClick={refreshQueue}
-              disabled={state === 'loading' || navigationLocked()}
+    <section
+      data-slot={recordId ? 'saving-staff-order' : undefined}
+      className={editor ? 'mx-auto max-w-3xl space-y-4' : 'space-y-5'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {recordId ? (
+        <>
+          <RecordCommandGuard blocked={recordNavigationLocked} />
+          <header className="space-y-3">
+            <Link
+              to={editor ? savingOperationPath : '/admin/saving-orders'}
+              params={
+                editor ? { orderId: recordId, operation: undefined, upgradeId: undefined } : {}
+              }
+              search={queueSearch ?? {}}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+              aria-disabled={recordNavigationLocked() || undefined}
+              onClick={(event) => {
+                if (recordNavigationLocked()) event.preventDefault();
+              }}
             >
-              {copy('staffRefresh')}
-            </Button>
+              {editor ? tSavingOperations('backToOrder', locale) : copy('staffBackToQueue')}
+            </Link>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0 space-y-1">
+                <h1 ref={recordHeading} tabIndex={-1} className="text-2xl font-semibold">
+                  {title}
+                </h1>
+                {editor && detail && (
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <bdi>{detail.customerName}</bdi>
+                    <StatusBadge
+                      state={detail.status}
+                      label={statusLabel(detail.status)}
+                      tone={statusTone(detail.status)}
+                    />
+                  </div>
+                )}
+              </div>
+              {detail && (
+                <ListRefreshButton
+                  label={copy('staffRefresh')}
+                  onClick={refreshQueue}
+                  disabled={navigationLocked()}
+                />
+              )}
+            </div>
+            {detail && !editor && (detail.canAmendAddress || detail.canAmendHardware) && (
+              <nav aria-label={copy('staffOrderSections')} className="flex flex-wrap gap-2">
+                {detail.canAmendAddress && (
+                  <Link
+                    to={savingOperationPath}
+                    params={{ orderId: recordId, operation: 'installation-address' }}
+                    search={queueSearch ?? {}}
+                    disabled={navigationLocked()}
+                    className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                  >
+                    {copy('staffAmendAddress')}
+                  </Link>
+                )}
+                {detail.canAmendHardware && (
+                  <Link
+                    to={savingOperationPath}
+                    params={{ orderId: recordId, operation: 'hardware' }}
+                    search={queueSearch ?? {}}
+                    disabled={navigationLocked()}
+                    className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                  >
+                    {copy('staffAmendHardware')}
+                  </Link>
+                )}
+              </nav>
+            )}
+          </header>
+        </>
+      ) : (
+        <header className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
+            <p className="text-muted-foreground">{copy('staffDescription')}</p>
+          </div>
+        </header>
+      )}
+      {time.notice}
+      <Content>
+        {showQueue && (
+          <ListPage.Toolbar
+            filters={
+              <div className="flex flex-wrap gap-2" aria-label={copy('staffQueue')}>
+                <Button
+                  variant={lane === 'review' ? 'secondary' : 'outline'}
+                  aria-pressed={lane === 'review'}
+                  disabled={navigationLocked()}
+                  onClick={() => changeLane('review')}
+                >
+                  {copy('staffReviewLane')}
+                </Button>
+                <Button
+                  variant={lane === 'fulfillment' ? 'secondary' : 'outline'}
+                  aria-pressed={lane === 'fulfillment'}
+                  disabled={navigationLocked()}
+                  onClick={() => changeLane('fulfillment')}
+                >
+                  {copy('staffFulfillmentLane')}
+                </Button>
+              </div>
+            }
+            actions={
+              <ListRefreshButton
+                label={copy('staffRefresh')}
+                onClick={refreshQueue}
+                disabled={state === 'loading' || navigationLocked()}
+              />
+            }
+          />
+        )}
+        {showQueue && (
+          <ContractCancellationRequestQueue
+            service="savings"
+            onOpenSavingOrder={(id) => {
+              if (navigationLocked()) return;
+              setSelected(id);
+              setNote('');
+              setHandover('');
+            }}
+          />
+        )}
+        <div
+          className={
+            recordId || queueSearch
+              ? 'min-w-0 space-y-5'
+              : 'grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]'
           }
-        />
-        <ContractCancellationRequestQueue
-          service="savings"
-          onOpenSavingOrder={(id) => {
-            if (navigationLocked()) return;
-            setSelected(id);
-            setNote('');
-            setHandover('');
-          }}
-        />
-        <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
-          <div className="space-y-2" aria-label={copy('staffQueue')}>
-            <ListPage.Content
-              loading={state === 'loading'}
-              error={state === 'error' || state === 'forbidden'}
-              empty={orders.length === 0}
-              retainContent={orders.length > 0 && state !== 'forbidden'}
-              loadingView={<LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
-              errorView={
-                state === 'forbidden' ? (
-                  <p role="alert">{copy('staffForbidden')}</p>
-                ) : (
-                  <div className="space-y-2">
-                    <p role="alert">{copy('staffError')}</p>
+        >
+          {showQueue && (
+            <div className="space-y-2" aria-label={copy('staffQueue')}>
+              <ListPage.Content
+                loading={state === 'loading'}
+                error={state === 'error' || state === 'forbidden'}
+                empty={orders.length === 0}
+                retainContent={orders.length > 0 && state !== 'forbidden'}
+                loadingView={<LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
+                errorView={
+                  state === 'forbidden' ? (
+                    <p role="alert">{copy('staffForbidden')}</p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p role="alert">{copy('staffError')}</p>
+                      <Button
+                        variant="outline"
+                        disabled={navigationLocked()}
+                        onClick={() => {
+                          if (!navigationLocked()) setListRevision((value) => value + 1);
+                        }}
+                      >
+                        {t('historyPagination.retry', locale)}
+                      </Button>
+                    </div>
+                  )
+                }
+                emptyView={
+                  after ? (
+                    <p>{copy(lane === 'review' ? 'staffReviewEmpty' : 'staffFulfillmentEmpty')}</p>
+                  ) : (
+                    <QueueEmptyState
+                      locale={locale}
+                      message={copy(
+                        lane === 'review' ? 'staffReviewEmpty' : 'staffFulfillmentEmpty'
+                      )}
+                      alternatives={[
+                        {
+                          value: otherLane,
+                          label: copy(
+                            otherLane === 'review' ? 'staffReviewLane' : 'staffFulfillmentLane'
+                          ),
+                          path: `/api/staff/saving/orders?lane=${otherLane}`,
+                        },
+                      ]}
+                      hasResults={(body) => {
+                        const items = (body as { orders?: unknown } | null)?.orders;
+                        return (
+                          Array.isArray(items) &&
+                          items.some((order) => staffOrderId(order?.id) && order.pricingSnapshot)
+                        );
+                      }}
+                      select={() => changeLane(otherLane)}
+                      disabled={navigationLocked()}
+                    />
+                  )
+                }
+              >
+                {orders.map((order) => {
+                  const className =
+                    'h-auto min-h-11 w-full justify-start whitespace-normal p-4 text-start';
+                  const text = (
+                    <span>
+                      <strong className="block" dir="auto">
+                        {order.customerName}
+                      </strong>
+                      <span className="block text-sm" dir="auto">
+                        {order.pricingSnapshot.plan?.title?.[locale] ?? order.id}
+                      </span>
+                      <span className="block text-xs">
+                        {statusLabel(order.status)} · <bdi>{order.billIdentifier}</bdi>
+                      </span>
+                    </span>
+                  );
+                  return queueSearch ? (
+                    <Link
+                      key={order.id}
+                      to={savingOperationPath}
+                      params={{ orderId: order.id }}
+                      search={queueSearch}
+                      className={buttonVariants({ variant: 'outline', className })}
+                    >
+                      {text}
+                    </Link>
+                  ) : (
                     <Button
-                      variant="outline"
+                      key={order.id}
+                      variant={selected === order.id ? 'secondary' : 'outline'}
+                      className={className}
                       disabled={navigationLocked()}
                       onClick={() => {
-                        if (!navigationLocked()) setListRevision((value) => value + 1);
+                        if (navigationLocked()) return;
+                        setSelected(order.id);
+                        setNote('');
+                        setHandover('');
                       }}
                     >
-                      {appText('historyPagination.retry', locale)}
+                      {text}
                     </Button>
-                  </div>
-                )
-              }
-              emptyView={
-                <p>{copy(lane === 'review' ? 'staffReviewEmpty' : 'staffFulfillmentEmpty')}</p>
-              }
-            >
-              {orders.map((order) => (
-                <Button
-                  key={order.id}
-                  variant={selected === order.id ? 'secondary' : 'outline'}
-                  className="h-auto w-full justify-start whitespace-normal p-4 text-start"
-                  disabled={navigationLocked()}
-                  onClick={() => {
-                    if (navigationLocked()) return;
-                    setSelected(order.id);
-                    setNote('');
-                    setHandover('');
-                  }}
-                >
-                  <span>
-                    <strong className="block">{order.customerName}</strong>
-                    <span className="block text-sm">
-                      {order.pricingSnapshot.plan?.title?.[locale] ?? order.id}
-                    </span>
-                    <span className="block text-xs">
-                      {copy(order.status)} · <bdi>{order.billIdentifier}</bdi>
-                    </span>
-                  </span>
-                </Button>
-              ))}
-            </ListPage.Content>
-            <ListPage.Pagination
-              kind="cursor"
-              hasMore={
-                !navigationLocked() &&
-                !!nextAfter &&
-                state !== 'error' &&
-                state !== 'forbidden' &&
-                (state === 'loading' ||
-                  (nextAfter === after && accepted?.cursor !== after) ||
-                  (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
-              }
-              loading={state === 'loading'}
-              onNext={() => {
-                if (navigationLocked() || !nextAfter) return;
-                if (after === nextAfter && accepted?.cursor !== after)
-                  setListRevision((value) => value + 1);
-                else if (queries) queries.queue.next(nextAfter);
-                else setAfter(nextAfter);
-              }}
-              previous={{
-                enabled:
+                  );
+                })}
+              </ListPage.Content>
+              <ListPage.Pagination
+                kind="cursor"
+                hasMore={
                   !navigationLocked() &&
+                  !!nextAfter &&
+                  state !== 'error' &&
                   state !== 'forbidden' &&
-                  (queries?.queue.hasPrevious ?? false),
-                onClick: () => {
-                  if (!navigationLocked()) queries?.queue.previous();
-                },
-                label: appText('historyPagination.previous', locale),
-              }}
-              label={appText('historyPagination.label', locale)}
-              nextLabel={copy('staffMoreOrders')}
-            />
-          </div>
+                  (state === 'loading' ||
+                    (nextAfter === after && accepted?.cursor !== after) ||
+                    (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
+                }
+                loading={state === 'loading'}
+                onNext={() => {
+                  if (navigationLocked() || !nextAfter) return;
+                  if (after === nextAfter && accepted?.cursor !== after)
+                    setListRevision((value) => value + 1);
+                  else if (queries) queries.queue.next(nextAfter);
+                  else setAfter(nextAfter);
+                }}
+                previous={{
+                  enabled:
+                    !navigationLocked() &&
+                    state !== 'forbidden' &&
+                    (queries?.queue.hasPrevious ?? false),
+                  onClick: () => {
+                    if (!navigationLocked()) queries?.queue.previous();
+                  },
+                  label: t('historyPagination.previous', locale),
+                }}
+                label={t('historyPagination.label', locale)}
+                nextLabel={copy('staffMoreOrders')}
+              />
+            </div>
+          )}
+          {recordId && state === 'forbidden' && <p role="alert">{copy('staffForbidden')}</p>}
           {selected && !detail && !detailError && <p role="status">{copy('staffLoading')}</p>}
-          {selected && detailError && (
+          {selected && detailError && !(recordId && state === 'forbidden') && (
             <div role="alert" className="space-y-2">
               <p>{copy('staffError')}</p>
               <Button
@@ -653,17 +946,74 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                   if (!navigationLocked()) setDetailRevision((value) => value + 1);
                 }}
               >
-                {appText('historyPagination.retry', locale)}
+                {t('historyPagination.retry', locale)}
               </Button>
             </div>
           )}
-          {detail && (
+          {detail && (!editor || operation) && (
+            <SavingStaffOperationForm
+              key={operationScope}
+              order={detail}
+              workflow={
+                recordId ? { orderId: recordId, search: queueSearch ?? {}, operation } : undefined
+              }
+              draft={
+                recordId
+                  ? (operation && operationDrafts.current[operation]) || { note: '', handover: '' }
+                  : { note, handover }
+              }
+              onDraft={(value) => {
+                if (operationCurrentScope.current !== operationScope) return;
+                if (operation) operationDrafts.current[operation] = value;
+                else if (!recordId) {
+                  setNote(value.note);
+                  setHandover(value.handover);
+                }
+              }}
+              owner={addressOwner}
+              scope={operationScope}
+              currentScope={operationCurrentScope}
+              notify={() => setAddressLockRevision((value) => value + 1)}
+              onPending={() => {
+                ++readEpoch.current;
+                queueAbort.current?.abort();
+                detailAbort.current?.abort();
+                setState(acceptedCurrent ? 'ready' : 'error');
+              }}
+              onSuccess={refreshQueue}
+              onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
+              prerequisites={(stage) =>
+                stagePrerequisites(stage, detail).map((reason) => copy(reason))
+              }
+              summary={(review) => <SavingStaffOperationSummary review={review} />}
+            />
+          )}
+          {formUnavailable && (
+            <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+              {selectedUpgrade?.status === 'cancelled'
+                ? copy('hardwareUpgrade.cancelled')
+                : tSavingOperations('actionUnavailable', locale)}
+            </p>
+          )}
+          {detail?.canAmendAddress &&
+            editorKind === 'installation-address' &&
+            addressForm(detail, true)}
+          {detail?.canAmendHardware &&
+            editorKind === 'hardware' &&
+            hardwareForm(detail, undefined, true)}
+          {detail && upgrade && hardwareForm(detail, upgrade, true)}
+          {detail && !editor && (
             <Card>
               <CardContent className="space-y-5 pt-6">
                 <div>
-                  <h2 className="text-xl font-semibold">{detail.customerName}</h2>
-                  <p className="text-sm text-muted-foreground">
-                    {copy(detail.status)} · <bdi>{detail.id}</bdi>
+                  <h2 className="text-xl font-semibold" dir="auto">
+                    {detail.customerName}
+                  </h2>
+                  {recordId && detail.pricingSnapshot.plan?.title?.[locale] && (
+                    <p dir="auto">{detail.pricingSnapshot.plan.title[locale]}</p>
+                  )}
+                  <p className="wrap-anywhere text-sm text-muted-foreground">
+                    {statusLabel(detail.status)} · <bdi dir="ltr">{detail.id}</bdi>
                   </p>
                 </div>
                 <dl className="grid gap-3 text-sm sm:grid-cols-2">
@@ -721,112 +1071,50 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                 />
                 <SavingHardwareUpgradeHistory
                   upgrades={detail.hardwareUpgrades ?? []}
-                  renderCancel={(upgrade) => (
-                    <SavingHardwareCommandForm
-                      key={`${hardwareScope}:${upgrade.id}`}
-                      upgrade={upgrade}
-                      order={detail}
-                      owner={addressOwner}
-                      scope={hardwareScope}
-                      currentScope={hardwareCurrentScope}
-                      draftCache={hardwareDrafts}
-                      baseScope={sourceScope}
-                      currentBaseScope={currentDraftScope}
-                      blocked={() => !!addressOwner.current}
-                      notify={() => setAddressLockRevision((value) => value + 1)}
-                      onPending={() => {
-                        ++readEpoch.current;
-                        queueAbort.current?.abort();
-                        detailAbort.current?.abort();
-                        if (accepted) setState('ready');
-                      }}
-                      onSuccess={refreshQueue}
-                      onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
-                    />
-                  )}
-                />
-                {detail.canAmendAddress && (
-                  <PaidSavingAddressForm
-                    key={addressScope}
-                    order={detail}
-                    owner={addressOwner}
-                    scope={addressScope}
-                    currentScope={addressCurrentScope}
-                    draftCache={addressDraft}
-                    baseScope={sourceScope}
-                    currentBaseScope={currentDraftScope}
-                    blocked={() => !!addressOwner.current?.kind}
-                    notify={() => setAddressLockRevision((value) => value + 1)}
-                    onPending={() => {
-                      ++readEpoch.current;
-                      queueAbort.current?.abort();
-                      detailAbort.current?.abort();
-                      if (accepted) setState('ready');
-                    }}
-                    onSuccess={refreshQueue}
-                    onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
-                  />
-                )}
-                {detail.canAmendHardware && (
-                  <SavingHardwareCommandForm
-                    key={`${hardwareScope}:hardware`}
-                    order={detail}
-                    owner={addressOwner}
-                    scope={hardwareScope}
-                    currentScope={hardwareCurrentScope}
-                    draftCache={hardwareDrafts}
-                    baseScope={sourceScope}
-                    currentBaseScope={currentDraftScope}
-                    blocked={() => !!addressOwner.current}
-                    notify={() => setAddressLockRevision((value) => value + 1)}
-                    onPending={() => {
-                      ++readEpoch.current;
-                      queueAbort.current?.abort();
-                      detailAbort.current?.abort();
-                      if (accepted) setState('ready');
-                    }}
-                    onSuccess={refreshQueue}
-                    onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
-                  />
-                )}
-                <SavingStaffOperationForm
-                  key={operationScope}
-                  order={detail}
-                  draft={{ note, handover }}
-                  onDraft={(value) => {
-                    if (operationCurrentScope.current !== operationScope) return;
-                    setNote(value.note);
-                    setHandover(value.handover);
-                  }}
-                  owner={addressOwner}
-                  scope={operationScope}
-                  currentScope={operationCurrentScope}
-                  notify={() => setAddressLockRevision((value) => value + 1)}
-                  onPending={() => {
-                    ++readEpoch.current;
-                    queueAbort.current?.abort();
-                    detailAbort.current?.abort();
-                    setState(acceptedCurrent ? 'ready' : 'error');
-                  }}
-                  onSuccess={refreshQueue}
-                  onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
-                  prerequisites={(stage) =>
-                    stagePrerequisites(stage, detail).map((reason) => copy(reason))
+                  renderCancel={(upgrade) =>
+                    recordId ? (
+                      <Link
+                        to={savingOperationPath}
+                        params={{
+                          orderId: recordId,
+                          operation: 'cancel-upgrade',
+                          upgradeId: upgrade.id,
+                        }}
+                        search={queueSearch ?? {}}
+                        disabled={navigationLocked()}
+                        className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                      >
+                        {copy('hardwareUpgradeCancel')}
+                      </Link>
+                    ) : (
+                      hardwareForm(detail, upgrade)
+                    )
                   }
-                  summary={(review) => <SavingStaffOperationSummary review={review} />}
                 />
+                {!recordId && detail.canAmendAddress && addressForm(detail)}
+                {!recordId && detail.canAmendHardware && hardwareForm(detail)}
                 <SavingFulfillmentHistory
                   events={detail.events}
                   truncated={detail.eventsTruncated}
                   locale={locale}
                   formatTimestamp={time.format}
                 />
-                <SavingOrderDocuments orderId={detail.orderId} profileId={detail.profileId} staff />
-                <SavingOrderComments
+                <SavingOrderDocuments
+                  orderId={detail.orderId}
+                  recordId={detail.id}
+                  profileId={detail.profileId}
+                  status={detail.status}
+                  staff
+                  search={queueSearch}
+                  disabled={navigationLocked()}
+                  blocked={navigationLocked}
+                />
+                <OrderDiscussionSection
+                  kind="saving"
                   key={detail.id}
                   orderId={detail.id}
                   profileId={detail.profileId}
-                  sourceVersion={JSON.stringify([lane, detail.versionId])}
+                  sourceVersion={JSON.stringify([recordId ? null : lane, detail.versionId])}
                   staff
                   formatTimestamp={time.format}
                 />
@@ -834,7 +1122,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
             </Card>
           )}
         </div>
-      </ListPage>
+      </Content>
     </section>
   );
 }
@@ -982,7 +1270,7 @@ function SavingStaffOperationSummary({ review }: { review: SavingOperationReview
         {
           id: 'transition',
           label: copy('staffStageReviewTransition'),
-          value: `${copy(stageReview.data.currentStatus)} → ${copy(stageReview.data.nextStatus)}`,
+          value: `${copy(stageReview.data.currentStatus === 'in_progress' ? 'inProgress' : stageReview.data.currentStatus)} ${locale === 'fa' ? '←' : '→'} ${copy(stageReview.data.nextStatus)}`,
         },
         {
           id: 'next',
@@ -1135,6 +1423,7 @@ interface SavingAddressCommand {
 }
 function PaidSavingAddressForm({
   order,
+  dedicated = false,
   owner,
   scope,
   currentScope,
@@ -1148,6 +1437,7 @@ function PaidSavingAddressForm({
   onWithdraw,
 }: {
   order: Detail;
+  dedicated?: boolean;
   owner: RefObject<SavingAddressOwner | null>;
   scope: string;
   currentScope: RefObject<string>;
@@ -1205,7 +1495,7 @@ function PaidSavingAddressForm({
       defaultValues:
         draftCache.current?.scope === scope
           ? draftCache.current.value
-          : { addressId: order.installationAddressId, reason: '' },
+          : { addressId: dedicated ? '' : order.installationAddressId, reason: '' },
       validationUnavailableMessage: formCopy('validationUnavailable'),
     }
   );
@@ -1448,75 +1738,110 @@ function PaidSavingAddressForm({
   const frozen = !!captured.current || pending.current || uncertain;
   const command = captured.current;
   return (
-    <div className="space-y-3 rounded-md border p-4" data-testid="saving-staff-address-form">
-      <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
-      <p className="text-sm text-muted-foreground">{copy('staffAmendAddressHelp')}</p>
+    <div className="space-y-3" data-testid="saving-staff-address-form">
       <Form {...form}>
         <form
           noValidate
-          className="space-y-3"
+          className={recordEditorSurface}
+          aria-label={copy('staffAmendAddress')}
           onSubmit={(event) => {
             event.preventDefault();
             prepare();
           }}
         >
-          <FormField
-            control={form.control}
-            name="addressId"
-            render={({ field }) => (
-              <FormItem id="saving-amend-address">
-                <FormLabel>{copy('stepAddress')}</FormLabel>
-                <FormControl>
-                  <select
-                    {...field}
-                    aria-required="true"
-                    disabled={frozen}
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                  >
-                    {order.addressOptions.map((address) => (
-                      <option key={address.id} value={address.id}>
-                        {address.fullAddress} · {address.postalCode}
-                      </option>
-                    ))}
-                  </select>
-                </FormControl>
-                <FormDescription>{formCopy('staffAddressHelp')}</FormDescription>
-                <FormMessage reserveSpace />
-              </FormItem>
+          <div className="space-y-4 px-4 py-4 sm:px-6">
+            {!dedicated && <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>}
+            {dedicated && (
+              <dl className="rounded-lg bg-muted/50 px-3 py-2 text-sm">
+                <dt className="text-muted-foreground">{formCopy('staffCurrentAddress')}</dt>
+                <dd className="wrap-anywhere font-medium" dir="auto">
+                  {order.addressSnapshot.full_address}
+                </dd>
+              </dl>
             )}
-          />
-          <FormField
-            control={form.control}
-            name="reason"
-            render={({ field }) => (
-              <FormItem id="saving-amend-reason">
-                <FormLabel>{copy('staffAmendReason')}</FormLabel>
-                <FormControl>
-                  <Input {...field} aria-required="true" disabled={frozen} />
-                </FormControl>
-                <FormDescription>{formCopy('staffReasonHelp')}</FormDescription>
-                <FormMessage reserveSpace />
-              </FormItem>
+            <FormField
+              control={form.control}
+              name="addressId"
+              render={({ field, fieldState }) => (
+                <FormItem id="saving-amend-address">
+                  <FormLabel>
+                    {dedicated ? formCopy('staffReplacementAddress') : copy('stepAddress')}
+                  </FormLabel>
+                  <FormControl>
+                    <NativeSelect
+                      {...field}
+                      aria-required="true"
+                      disabled={frozen}
+                      className="w-full"
+                    >
+                      {dedicated && <option value="">{formCopy('staffChooseAddress')}</option>}
+                      {order.addressOptions
+                        .filter(
+                          (address) => !dedicated || address.id !== order.installationAddressId
+                        )
+                        .map((address) => (
+                          <option key={address.id} value={address.id}>
+                            {address.fullAddress} · {address.postalCode}
+                          </option>
+                        ))}
+                    </NativeSelect>
+                  </FormControl>
+                  <CompactFieldFeedback
+                    help={formCopy('staffAddressHelp')}
+                    validationMessage={messages.addressId}
+                    invalid={!!fieldState.error?.message}
+                  />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="reason"
+              render={({ field, fieldState }) => (
+                <FormItem id="saving-amend-reason">
+                  <FormLabel>{copy('staffAmendReason')}</FormLabel>
+                  {dedicated && (
+                    <p id="saving-amend-reason-prompt" className="text-sm text-muted-foreground">
+                      {formCopy('staffAddressReasonPrompt')}
+                    </p>
+                  )}
+                  <FormControl>
+                    {dedicated ? (
+                      <Textarea
+                        {...field}
+                        dir="auto"
+                        rows={2}
+                        aria-required="true"
+                        aria-describedby="saving-amend-reason-prompt"
+                        disabled={frozen}
+                      />
+                    ) : (
+                      <Input {...field} aria-required="true" disabled={frozen} />
+                    )}
+                  </FormControl>
+                  <CompactFieldFeedback
+                    help={formCopy('staffReasonHelp')}
+                    validationMessage={messages.reason}
+                    invalid={!!fieldState.error?.message}
+                  />
+                </FormItem>
+              )}
+            />
+            <p className="text-sm text-muted-foreground">{copy('staffAmendAddressHelp')}</p>
+            {error && <p role="alert">{copy('staffReviewError')}</p>}
+            {form.formState.errors.root?.validation && (
+              <p role="alert">{formCopy('validationUnavailable')}</p>
             )}
-          />
-          <Button
-            type="submit"
-            variant="outline"
-            disabled={frozen || busy || blocked()}
-            aria-busy={busy || undefined}
-          >
-            {busy && (
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-              />
-            )}
-            {copy('staffAmendAddress')}
-          </Button>
-          {busy && <p role="status">{formCopy('staffChecking')}</p>}
-          {error && <p role="alert">{copy('staffReviewError')}</p>}
-          {form.formState.errors.root?.validation && (
-            <p role="alert">{formCopy('validationUnavailable')}</p>
+          </div>
+          <RecordEditorActions>
+            <Button type="submit" disabled={frozen || busy || blocked()} loading={busy}>
+              {copy('staffAmendAddress')}
+            </Button>
+          </RecordEditorActions>
+          {busy && (
+            <p className="sr-only" role="status">
+              {formCopy('staffChecking')}
+            </p>
           )}
         </form>
       </Form>

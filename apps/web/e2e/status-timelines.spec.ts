@@ -161,6 +161,7 @@ for (const locale of ['en', 'fa'] as const) {
         route.fulfill({ json: { documents: [], nextBefore: null } })
       );
       await page.goto(`/${staff ? 'admin/' : ''}contracts?contractId=${id}`);
+      if (!staff) await expect(page).toHaveURL(`/contracts/${id}`);
       const timeline = await inspect(page, ['warning', 'success']);
       await expect(timeline).toContainText(word('timeline.contract.published'));
       await expect(timeline).toContainText(word('staff'));
@@ -186,7 +187,7 @@ for (const locale of ['en', 'fa'] as const) {
         });
       denied = true;
       await page.reload();
-      await expect(page).not.toHaveURL(/contractId=/);
+      await expect(page).toHaveURL(staff ? '/admin/contracts' : '/contracts');
       await expect(page.locator('[data-slot="status-timeline"]')).toHaveCount(0);
       await expect(page.locator('body')).not.toContainText('private-note-is-literal');
       await expect(page.locator('body')).not.toContainText('Older version recorded note');

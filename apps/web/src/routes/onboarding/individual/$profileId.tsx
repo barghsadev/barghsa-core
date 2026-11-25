@@ -2,6 +2,7 @@ import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import {
   OnboardingWizard,
+  OnboardingProfileHeader,
   OnboardingReview,
   OnboardingSubmissionNotice,
 } from '../../../components/OnboardingWizard.js';
@@ -15,11 +16,10 @@ import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useCallback } from 'react';
-import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
+import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
-import { ChevronRightIcon } from 'lucide-react';
-import { Input, Label, DependentSelect } from '@barghsa/ui';
+import { Input, Label, DependentSelect, NativeSelect, Textarea } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -205,23 +205,14 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
 
   return (
     <div
-      className="container mx-auto flex min-h-screen items-start justify-center p-4 pt-12"
+      className="container mx-auto flex min-h-dvh items-start justify-center px-4 py-4 sm:py-8"
       dir={isRtl ? 'rtl' : 'ltr'}
     >
-      <div className="w-full max-w-2xl">
-        {/* Back link */}
-        <Link
-          to="/onboarding"
-          className="touch-action mb-4 inline-flex items-center text-sm pointer-coarse:min-h-[45px]! text-muted-foreground hover:text-primary"
-        >
-          <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
-          {t('onboarding.individual.back', locale)}
-        </Link>
-
-        <h1 className="mb-1 text-2xl font-bold">{t('onboarding.individual.title', locale)}</h1>
-        <p className="mb-6 text-sm text-muted-foreground">
-          {t('onboarding.individual.subtitle', locale)}
-        </p>
+      <div className="w-full min-w-0 max-w-2xl">
+        <OnboardingProfileHeader
+          title={t('onboarding.individual.title', locale)}
+          description={t('onboarding.individual.subtitle', locale)}
+        />
 
         <OnboardingSubmissionNotice {...submission} />
 
@@ -242,41 +233,14 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
           steps={[
             {
               label: t('onboarding.wizard.identity', locale),
-              fields: ['title', 'firstName', 'lastName', 'nationalId'],
+              fields: ['firstName', 'lastName', 'nationalId', 'title'],
               content: (
                 <>
                   {' '}
-                  {/* Title (optional) */}
-                  <div className="space-y-2">
-                    <Label htmlFor="title">
-                      {t('onboarding.individual.title.label', locale)}
-                      <span className="text-muted-foreground ml-1 text-xs">
-                        ({t('onboarding.individual.title.placeholder', locale)})
-                      </span>
-                    </Label>
-                    <Input
-                      id="title"
-                      ref={form.register('title').ref}
-                      type="text"
-                      maxLength={50}
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      onBlur={() => handleBlur('title')}
-                      disabled={locked}
-                      placeholder={t('onboarding.individual.title.placeholder', locale)}
-                      aria-invalid={touched.title && !!errors.title}
-                      aria-describedby={touched.title && errors.title ? 'title-error' : undefined}
-                    />
-                    {touched.title && errors.title && (
-                      <p id="title-error" className="text-sm text-destructive" role="alert">
-                        {errors.title}
-                      </p>
-                    )}
-                  </div>
                   {/* Two-column layout for desktop */}
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                     {/* First Name */}
-                    <div className="space-y-2">
+                    <div className="min-w-0 space-y-1">
                       <Label htmlFor="firstName">
                         {t('onboarding.individual.firstName', locale)}
                         <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -285,6 +249,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <Input
                         id="firstName"
+                        autoComplete="given-name"
                         ref={form.register('firstName').ref}
                         type="text"
                         required
@@ -308,7 +273,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </div>
 
                     {/* Last Name */}
-                    <div className="space-y-2">
+                    <div className="min-w-0 space-y-1">
                       <Label htmlFor="lastName">
                         {t('onboarding.individual.lastName', locale)}
                         <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -317,6 +282,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <Input
                         id="lastName"
+                        autoComplete="family-name"
                         ref={form.register('lastName').ref}
                         type="text"
                         required
@@ -339,42 +305,70 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       )}
                     </div>
                   </div>
-                  {/* National ID */}
-                  <div className="space-y-2">
-                    <Label htmlFor="nationalId">
-                      {t('onboarding.individual.nationalId', locale)}
-                      <span aria-hidden="true" className="text-destructive ms-0.5">
-                        *
-                      </span>
-                    </Label>
-                    <Input
-                      id="nationalId"
-                      ref={form.register('nationalId').ref}
-                      type="text"
-                      inputMode="numeric"
-                      required
-                      aria-required="true"
-                      maxLength={10}
-                      value={nationalId}
-                      onChange={(e) => {
-                        const val = normalizeProfileDigits(e.target.value)
-                          .replace(/\D/g, '')
-                          .slice(0, 10);
-                        setNationalId(val);
-                      }}
-                      onBlur={() => handleBlur('nationalId')}
-                      disabled={locked}
-                      placeholder={t('onboarding.individual.nationalId.placeholder', locale)}
-                      aria-invalid={touched.nationalId && !!errors.nationalId}
-                      aria-describedby={
-                        touched.nationalId && errors.nationalId ? 'nationalId-error' : undefined
-                      }
-                    />
-                    {touched.nationalId && errors.nationalId && (
-                      <p id="nationalId-error" className="text-sm text-destructive" role="alert">
-                        {errors.nationalId}
-                      </p>
-                    )}
+                  <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
+                    {/* National ID */}
+                    <div className="min-w-0 space-y-1">
+                      <Label htmlFor="nationalId">
+                        {t('onboarding.individual.nationalId', locale)}
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
+                      </Label>
+                      <Input
+                        id="nationalId"
+                        dir="ltr"
+                        ref={form.register('nationalId').ref}
+                        type="text"
+                        inputMode="numeric"
+                        required
+                        aria-required="true"
+                        maxLength={10}
+                        value={nationalId}
+                        onChange={(e) => {
+                          const val = normalizeProfileDigits(e.target.value)
+                            .replace(/\D/g, '')
+                            .slice(0, 10);
+                          setNationalId(val);
+                        }}
+                        onBlur={() => handleBlur('nationalId')}
+                        disabled={locked}
+                        placeholder={t('onboarding.individual.nationalId.placeholder', locale)}
+                        aria-invalid={touched.nationalId && !!errors.nationalId}
+                        aria-describedby={
+                          touched.nationalId && errors.nationalId ? 'nationalId-error' : undefined
+                        }
+                      />
+                      {touched.nationalId && errors.nationalId && (
+                        <p id="nationalId-error" className="text-sm text-destructive" role="alert">
+                          {errors.nationalId}
+                        </p>
+                      )}
+                    </div>
+                    {/* Title (optional) */}
+                    <div className="min-w-0 space-y-1">
+                      <Label htmlFor="title">
+                        {t('onboarding.individual.title.label', locale)}
+                      </Label>
+                      <Input
+                        id="title"
+                        autoComplete="honorific-prefix"
+                        ref={form.register('title').ref}
+                        type="text"
+                        maxLength={50}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        onBlur={() => handleBlur('title')}
+                        disabled={locked}
+                        placeholder={t('onboarding.individual.title.placeholder', locale)}
+                        aria-invalid={touched.title && !!errors.title}
+                        aria-describedby={touched.title && errors.title ? 'title-error' : undefined}
+                      />
+                      {touched.title && errors.title && (
+                        <p id="title-error" className="text-sm text-destructive" role="alert">
+                          {errors.title}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </>
               ),
@@ -386,9 +380,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                 <>
                   {' '}
                   {/* Province / City */}
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                     {/* Province */}
-                    <div className="space-y-2">
+                    <div className="min-w-0 space-y-1">
                       <Label htmlFor="provinceId">
                         {t('onboarding.individual.province', locale)}
                         <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -401,7 +395,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           {t('onboarding.individual.loading', locale)}
                         </div>
                       ) : (
-                        <select
+                        <NativeSelect
                           id="provinceId"
                           aria-required="true"
                           ref={form.register('provinceId').ref}
@@ -412,7 +406,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           }}
                           onBlur={() => handleBlur('provinceId')}
                           disabled={locked || !provinceOptions.ready}
-                          className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="w-full"
                           aria-invalid={touched.provinceId && !!errors.provinceId}
                           aria-describedby={
                             touched.provinceId && errors.provinceId ? 'provinceId-error' : undefined
@@ -426,7 +420,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                               {isRtl ? p.nameFa : p.nameEn}
                             </option>
                           ))}
-                        </select>
+                        </NativeSelect>
                       )}
                       {touched.provinceId && errors.provinceId && (
                         <p id="provinceId-error" className="text-sm text-destructive" role="alert">
@@ -436,7 +430,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </div>
 
                     {/* City */}
-                    <div className="space-y-2">
+                    <div className="min-w-0 space-y-1">
                       <Label htmlFor="cityId">
                         {t('onboarding.individual.city', locale)}
                         <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -480,32 +474,32 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </div>
                   </div>
                   {/* Full Address */}
-                  <div className="space-y-2">
+                  <div className="min-w-0 space-y-1">
                     <Label htmlFor="fullAddress">
                       {t('onboarding.individual.address', locale)}
                       <span aria-hidden="true" className="text-destructive ms-0.5">
                         *
                       </span>
                     </Label>
-                    <textarea
+                    <Textarea
                       id="fullAddress"
                       ref={form.register('fullAddress').ref}
                       required
                       aria-required="true"
                       maxLength={500}
-                      rows={3}
+                      rows={2}
                       value={fullAddress}
                       onChange={(e) => setFullAddress(e.target.value)}
                       onBlur={() => handleBlur('fullAddress')}
                       disabled={locked}
                       placeholder={t('onboarding.individual.address.placeholder', locale)}
-                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="min-h-14"
                       aria-invalid={touched.fullAddress && !!errors.fullAddress}
                       aria-describedby={
                         touched.fullAddress && errors.fullAddress ? 'fullAddress-error' : undefined
                       }
                     />
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-end text-xs text-muted-foreground">
                       {numbers.number(fullAddress.length)}/{numbers.number(500)}
                     </p>
                     {touched.fullAddress && errors.fullAddress && (
@@ -515,7 +509,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     )}
                   </div>
                   {/* Postal Code */}
-                  <div className="space-y-2">
+                  <div className="min-w-0 space-y-1">
                     <Label htmlFor="postalCode">
                       {t('onboarding.individual.postalCode', locale)}
                       <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -524,6 +518,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     </Label>
                     <Input
                       id="postalCode"
+                      dir="ltr"
+                      autoComplete="postal-code"
+                      className="max-w-[16rem]"
                       ref={form.register('postalCode').ref}
                       type="text"
                       inputMode="numeric"
@@ -604,6 +601,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       step: 2,
                       label: t('onboarding.individual.address', locale),
                       value: fullAddress,
+                      fullWidth: true,
                     },
                     {
                       step: 2,

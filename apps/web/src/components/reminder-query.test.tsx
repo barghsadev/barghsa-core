@@ -67,7 +67,7 @@ async function render(present = true, actor = 'staff-one') {
     root.render(
       <QueryComponentProvider>
         <AccountUserProvider value={actor}>
-          {present ? <ReminderOffsetTogglePanel /> : null}
+          {present ? <ReminderOffsetTogglePanel service="electricity" /> : null}
         </AccountUserProvider>
       </QueryComponentProvider>
     )
@@ -105,7 +105,7 @@ for (const read of ['matrix body', 'error response']) {
       expect(host.querySelector('[role=alert]')).toBeNull();
       if (change !== 'unmount') {
         const switches = Array.from(host.querySelectorAll<HTMLInputElement>('[role=switch]'));
-        expect(switches).toHaveLength(24);
+        expect(switches).toHaveLength(6);
         expect(switches.every((cell) => cell.checked && !cell.disabled)).toBe(true);
       } else expect(host.children).toHaveLength(0);
       expect(vi.mocked(fetch).mock.calls.every(([, init]) => !init?.method && !init?.body)).toBe(

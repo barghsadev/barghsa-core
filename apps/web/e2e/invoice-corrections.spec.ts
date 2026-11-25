@@ -2,6 +2,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { tManualInvoice } from '@barghsa/i18n/manual-invoice';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { tInvoiceCorrections as correctionText } from '../../../packages/i18n/src/invoice-corrections';
 
@@ -255,7 +256,7 @@ for (const locale of ['fa', 'en'] as const)
             verifications++;
             return route.fulfill({ json: { success: true } });
           });
-          await page.goto('/admin/invoices');
+          await page.goto(`/admin/invoices/${originalId}/correction`);
           await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
           await page
             .context()
@@ -263,19 +264,12 @@ for (const locale of ['fa', 'en'] as const)
               { name: 'barghsa_csrf', value: 'correction-csrf', url: new URL(page.url()).origin },
             ]);
           const panel = page.locator('#invoice-corrections-panel');
-          const lookup = panel.getByLabel(fa ? 'شناسه فاکتور اصلی' : 'Original invoice ID', {
+          const reload = panel.getByRole('button', {
+            name: correctionText('load', locale)!,
             exact: true,
+            includeHidden: true,
           });
-          await expect(lookup).toHaveAttribute('aria-required', 'true');
-          const load = panel.getByRole('button', {
-            name: fa ? 'دریافت فاکتور برای اصلاح' : 'Load invoice for correction',
-            exact: true,
-          });
-          await lookup.fill('invalid');
-          await load.click();
-          await expect(panel.getByRole('alert')).toBeVisible();
-          await lookup.fill(originalId);
-          await load.click();
+          await expect(panel.locator('#correction-invoice-id')).toHaveCount(0);
           const reason = panel.getByLabel(
             fa ? 'شرح تغییرات برای مشتری' : 'Explanation shown to customer',
             { exact: true }
@@ -283,14 +277,10 @@ for (const locale of ['fa', 'en'] as const)
           await expect(reason).toBeVisible();
           await expect(reason).toHaveAttribute('aria-required', 'true');
           const issue = panel.getByRole('button', {
-            name:
-              kind === 'replacement'
-                ? fa
-                  ? 'لغو اصل و صدور فاکتور جایگزین'
-                  : 'Cancel original and issue replacement'
-                : fa
-                  ? 'صدور فاکتور اصلاحی'
-                  : 'Issue adjustment',
+            name: correctionText(
+              kind === 'replacement' ? 'replacementIssue' : 'adjustmentIssue',
+              locale
+            )!,
             exact: true,
           });
           await expect(issue).toBeEnabled();
@@ -302,7 +292,7 @@ for (const locale of ['fa', 'en'] as const)
             const price = panel.getByLabel(fa ? 'قیمت واحد (ریال)' : 'Unit price (IRR)', {
               exact: true,
             });
-            const vat = panel.getByLabel(fa ? 'مالیات بر ارزش افزوده (%)' : 'VAT (%)', {
+            const vat = panel.getByLabel(tManualInvoice('admin.manualInvoice.vat', locale), {
               exact: true,
             });
             await expect(price).toHaveAttribute('aria-required', 'true');
@@ -331,6 +321,10 @@ for (const locale of ['fa', 'en'] as const)
               element.getAnimations().map((animation) => animation.finished.catch(() => {}))
             );
           });
+          await panel
+            .locator('header p')
+            .first()
+            .evaluate((element) => element.scrollIntoView({ block: 'center' }));
           const scan = await new AxeBuilder({ page })
             .include('#invoice-corrections-panel')
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -345,6 +339,9 @@ for (const locale of ['fa', 'en'] as const)
             await expect(review).toContainText(
               formatCurrencyIrr(25000n, locale, { numberStyle: fa ? 'persian' : 'western' })
             );
+            await expect(
+              review.getByText(correctionText('amount', locale)!, { exact: true })
+            ).toBeInViewport();
             const confirm = review.getByRole('button', {
               name: correctionText('reviewConfirm', locale),
             });
@@ -358,6 +355,9 @@ for (const locale of ['fa', 'en'] as const)
             await expect(review).toContainText(
               formatCurrencyIrr(5506n, locale, { numberStyle: fa ? 'persian' : 'western' })
             );
+            await expect(
+              review.getByText(correctionText('total', locale)!, { exact: true })
+            ).toBeInViewport();
             const confirm = review.getByRole('button', {
               name: correctionText('replacementReviewConfirm', locale),
             });
@@ -370,7 +370,7 @@ for (const locale of ['fa', 'en'] as const)
             exact: true,
           });
           await expect(dialog).toBeVisible();
-          await expect(lookup).toBeDisabled();
+          await expect(reload).toBeDisabled();
           await expect(reason).toBeDisabled();
           const password = dialog.getByLabel(fa ? 'رمز عبور' : 'Password', { exact: true });
           await expect(password).toHaveAttribute('aria-required', 'true');
@@ -384,7 +384,7 @@ for (const locale of ['fa', 'en'] as const)
           await expect(panel.getByRole('alert')).toContainText(
             fa ? 'نتیجه اصلاح مشخص نیست' : 'The result is unknown'
           );
-          await expect(lookup).toBeDisabled();
+          await expect(reload).toBeDisabled();
           await expect(reason).toBeDisabled();
           await panel
             .getByRole('button', {
@@ -402,7 +402,7 @@ for (const locale of ['fa', 'en'] as const)
               panel.getByRole('link', {
                 name: fa ? 'مشاهده تأییدهای مالی' : 'Open financial approvals',
               })
-            ).toHaveAttribute('href', '/admin/approval-requests');
+            ).toHaveAttribute('href', `/admin/approval-requests/${correctionId}`);
             expect(
               (
                 await new AxeBuilder({ page })
@@ -437,7 +437,7 @@ for (const locale of ['fa', 'en'] as const)
             expect(requests[0]).toHaveProperty('amount', '-25000');
             expect(requests[0]).toHaveProperty('expectedReviewHash', 'c'.repeat(64));
           }
-          await expect(lookup).toBeEnabled();
-          await lookup.fill(correctionId);
+          await expect(reload).toBeEnabled();
+          await page.goto(`/admin/invoices/${correctionId}/correction`);
           await expect(panel.getByRole('status')).not.toBeVisible();
         });

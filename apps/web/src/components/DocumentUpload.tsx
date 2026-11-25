@@ -1,23 +1,26 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
-  Alert,
-  AlertDescription,
-  Button,
-  Field,
-  FieldGroup,
-  FieldLabel,
-  NativeSelect,
-} from '@barghsa/ui';
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
+import { Alert, AlertDescription, Button, Field, FieldLabel, NativeSelect } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { FileUpload } from './FileUpload.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 import {
   readFileUploadPolicy,
   validateUploadFiles,
@@ -51,8 +54,13 @@ interface DocumentUploadProps {
   staff: boolean;
   profileId: string;
   replacement: BusinessDocument | null;
-  association?: ContractDocumentAssociation | OrderDocumentAssociation | SolarDocumentAssociation;
+  association?:
+    ContractDocumentAssociation | OrderDocumentAssociation | SolarDocumentAssociation | undefined;
   imageOnly?: boolean;
+  recordPage?: boolean;
+  recordTitle?: string;
+  recordContext?: ReactNode;
+  recordHeadingRef?: RefObject<HTMLHeadingElement | null>;
   onClose: () => void;
   onUploaded: (document: BusinessDocument) => void;
 }
@@ -82,11 +90,16 @@ function UploadForm({
   replacement,
   association,
   imageOnly = false,
+  recordPage = false,
+  recordTitle,
+  recordContext,
+  recordHeadingRef,
   onClose,
   onUploaded,
 }: DocumentUploadProps) {
   const locale = useLocale(),
     word = (key: string) => documentText(key, locale);
+  const headingId = useId();
   const [file, setFile] = useState<File | null>(null),
     [category, setCategory] = useState(imageOnly ? 'image' : 'document');
   const [action, setAction] = useState<TeamAction | null>(null),
@@ -119,7 +132,8 @@ function UploadForm({
   );
   const controller = useRef<AbortController | null>(null),
     mounted = useRef(false),
-    busy = useRef(false);
+    busy = useRef(false),
+    leaving = useRef(false);
   const denyPreview = useCallback(() => {
     controller.current?.abort();
     setFile(null);
@@ -174,7 +188,8 @@ function UploadForm({
   }, [effectiveCategory, policyRetry, imageOnly, readDocument]);
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (!file || !policy || validateUploadFiles([file], policy, 1)) return;
+    if (denied || action || attempt || !file || !policy || validateUploadFiles([file], policy, 1))
+      return;
     if (!replacement && !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(profileId)) {
       setError(word('invalidReference'));
       return;
@@ -197,7 +212,7 @@ function UploadForm({
         }
       : { ...(association ?? { businessRecordType: 'standalone' }), profileId };
     setAction({
-      title: word(replacement ? 'replace' : 'upload'),
+      title: recordTitle ?? word(replacement ? 'replace' : 'upload'),
       description: file.name,
       path: documentBase(staff),
       method: 'POST',
@@ -253,12 +268,18 @@ function UploadForm({
           !document ||
           document.id !== current.upload.document.id ||
           document.profileId !== current.upload.document.profileId ||
+          !matchesAttachment(document) ||
           !['Available', 'PendingScan'].includes(document.state) ||
           !Number.isInteger(document.revision) ||
           document.revision <= current.upload.document.revision
         )
           throw new Error('Document sealing receipt mismatch');
-        toast.success(confirmationText('recorded', locale));
+        leaving.current = true;
+        toast.success(
+          recordPage
+            ? word(document.state === 'PendingScan' ? 'PendingScan' : 'uploadComplete')
+            : confirmationText('recorded', locale)
+        );
         onUploaded(document);
       }
     } catch (failure) {
@@ -288,6 +309,7 @@ function UploadForm({
     setPhase('paused');
   }
   function close() {
+    leaving.current = true;
     mounted.current = false;
     controller.current?.abort();
     setAction(null);
@@ -295,97 +317,164 @@ function UploadForm({
   }
   const inProgress = phase === 'uploading' || phase === 'confirming';
   const selected = attempt?.file ?? file;
+  const submitLabel = word(replacement ? 'replace' : 'upload');
+  const title = recordTitle ?? submitLabel;
+  const Heading = recordPage ? 'h1' : 'h2';
+  function matchesAttachment(document: BusinessDocument | undefined) {
+    if (
+      association?.businessRecordType !== 'contract' &&
+      association?.businessRecordType !== 'solar_request' &&
+      !(recordPage && association?.businessRecordType === 'order')
+    )
+      return true;
+    if (
+      document?.profileId !== profileId ||
+      document.businessRecordType !== association.businessRecordType ||
+      document.businessRecordId !== association.businessRecordId
+    )
+      return false;
+    return association.businessRecordType === 'contract'
+      ? document.contractVersionId === association.contractVersionId &&
+          document.contractRole === association.contractRole &&
+          (!replacement ||
+            (document.supersedesDocumentId === replacement.id &&
+              document.category === effectiveCategory &&
+              document.uploadedByType === (staff ? 'staff' : 'customer')))
+      : document.category === effectiveCategory &&
+          document.uploadedByType === (staff ? 'staff' : 'customer') &&
+          (!replacement || document.supersedesDocumentId === replacement.id);
+  }
   return (
-    <section
-      className="flex flex-col gap-4 rounded-xl border bg-card p-5"
-      aria-label={word(replacement ? 'replace' : 'upload')}
-    >
-      <h2 className="text-xl font-semibold">{word(replacement ? 'replace' : 'upload')}</h2>
-      {!denied && replacement && <p className="break-words text-sm">{replacement.originalName}</p>}
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+    <section className={recordEditorSurface} aria-labelledby={headingId}>
+      {recordPage && (
+        <RecordCommandGuard
+          blocked={() => !leaving.current && (!!action || !!attempt || busy.current)}
+        />
       )}
-      {policyError && (
-        <Alert variant="destructive">
-          <AlertDescription>{word(denied ? 'denied' : 'policyError')}</AlertDescription>
-          {!denied && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setPolicyRetry((value) => value + 1)}
-            >
-              {word('retry')}
-            </Button>
+      <header className="space-y-1 border-b px-4 py-4 sm:px-6">
+        <Heading
+          id={headingId}
+          ref={recordHeadingRef}
+          data-slot={recordHeadingRef ? 'editor-heading' : undefined}
+          tabIndex={recordHeadingRef ? -1 : undefined}
+          className={recordPage ? 'text-2xl font-semibold outline-none!' : 'text-lg font-semibold'}
+        >
+          {title}
+        </Heading>
+        {!denied && !replacement && !association && (
+          <p className="text-sm text-muted-foreground">{word('uploadAfterReview')}</p>
+        )}
+        {!denied && recordContext}
+      </header>
+      <form onSubmit={submit}>
+        <div className="space-y-4 px-4 py-4 sm:px-6">
+          {!denied && replacement && (
+            <div className="space-y-1 rounded-lg border bg-muted/30 px-3 py-2.5">
+              <p className="text-xs text-muted-foreground">{word('replacingFile')}</p>
+              <p className="text-sm font-medium [overflow-wrap:anywhere]">
+                <bdi>{replacement.originalName}</bdi>
+              </p>
+              {replacement.state === 'Rejected' && replacement.rejectionReason && (
+                <p dir="auto" className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                  {replacement.rejectionReason}
+                </p>
+              )}
+            </div>
           )}
-        </Alert>
-      )}
-      {!denied && (
-        <form onSubmit={submit} className="flex flex-col gap-4">
-          {!attempt &&
-            !replacement &&
-            association?.businessRecordType !== 'contract' &&
-            !imageOnly && (
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="document-category">{word('category')}</FieldLabel>
-                  <NativeSelect
-                    id="document-category"
-                    value={category}
-                    disabled={!!action}
-                    onChange={(event) => setCategory(event.target.value)}
-                  >
-                    <option value="document">{word('document')}</option>
-                    <option value="image">{word('image')}</option>
-                    <option value="video">{word('video')}</option>
-                  </NativeSelect>
-                </Field>
-              </FieldGroup>
-            )}
-          <FileUpload
-            value={selected ? [selected] : []}
-            onChange={(files) => {
-              setFile(files[0] ?? null);
-              setError(null);
-            }}
-            policy={policy}
-            locale={locale}
-            disabled={!!attempt || !!action}
-            onAccessDenied={denyPreview}
-            {...(attempt && phase !== 'idle'
-              ? { progress: [{ file: attempt.file, loaded, total: attempt.file.size, phase }] }
-              : {})}
-          />
-          {!attempt && (
+          {!denied && staff && recordPage && !replacement && !association && (
+            <p className="flex flex-wrap items-baseline gap-x-2 text-xs text-muted-foreground">
+              <span>{word('profile')}</span>
+              <bdi className="font-medium text-foreground [overflow-wrap:anywhere]">
+                {profileId}
+              </bdi>
+            </p>
+          )}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          {policyError && (
+            <Alert variant="destructive" className="space-y-2">
+              <AlertDescription>{word(denied ? 'denied' : 'policyError')}</AlertDescription>
+              {!denied && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPolicyRetry((value) => value + 1)}
+                >
+                  {word('retry')}
+                </Button>
+              )}
+            </Alert>
+          )}
+          {!denied && (
+            <>
+              {!attempt &&
+                !replacement &&
+                association?.businessRecordType !== 'contract' &&
+                !imageOnly && (
+                  <Field className="max-w-xs gap-1.5">
+                    <FieldLabel htmlFor="document-category">{word('category')}</FieldLabel>
+                    <NativeSelect
+                      id="document-category"
+                      className="w-full"
+                      value={category}
+                      disabled={!!action}
+                      onChange={(event) => setCategory(event.target.value)}
+                    >
+                      <option value="document">{word('document')}</option>
+                      <option value="image">{word('image')}</option>
+                      <option value="video">{word('video')}</option>
+                    </NativeSelect>
+                  </Field>
+                )}
+              <FileUpload
+                value={selected ? [selected] : []}
+                onChange={(files) => {
+                  setFile(files[0] ?? null);
+                  setError(null);
+                }}
+                policy={policy}
+                locale={locale}
+                disabled={!!attempt || !!action}
+                onAccessDenied={denyPreview}
+                {...(attempt && phase !== 'idle'
+                  ? { progress: [{ file: attempt.file, loaded, total: attempt.file.size, phase }] }
+                  : {})}
+              />
+            </>
+          )}
+        </div>
+        <RecordEditorActions
+          secondary={
+            <Button type="button" variant="ghost" onClick={close}>
+              {word(attempt ? 'closeUpload' : 'cancel')}
+            </Button>
+          }
+        >
+          {!denied && !attempt && (
             <Button
               type="submit"
               disabled={
                 !file || !policy || !!action || !!validateUploadFiles(file ? [file] : [], policy, 1)
               }
             >
-              {word(replacement ? 'replace' : 'upload')}
+              {submitLabel}
             </Button>
           )}
-        </form>
-      )}
-      {!denied && attempt && (
-        <>
-          {inProgress && (
+          {!denied && attempt && inProgress && (
             <Button type="button" variant="outline" onClick={pause}>
               {word('pauseUpload')}
             </Button>
           )}
-          {(phase === 'failed' || phase === 'paused') && (
+          {!denied && attempt && (phase === 'failed' || phase === 'paused') && (
             <Button type="button" onClick={() => void continueUpload(attempt)}>
               {word(phase === 'paused' ? 'resumeUpload' : 'retryUpload')}
             </Button>
           )}
-        </>
-      )}
-      <Button type="button" variant="ghost" onClick={close}>
-        {word(attempt ? 'closeUpload' : 'cancel')}
-      </Button>
+        </RecordEditorActions>
+      </form>
       {action && (
         <TeamActionDialog
           action={action}
@@ -393,6 +482,8 @@ function UploadForm({
           onSuccess={async (result) => {
             if (!mounted.current || denied) return;
             const reserved = result as Upload;
+            if (!matchesAttachment(reserved?.document))
+              throw new Error('Document reservation mismatch');
             const contentType = policy && file ? uploadContentType(file, policy) : null;
             const upload =
               'presignedUrl' in reserved.upload &&

@@ -44,6 +44,9 @@ for (const isStaff of [false, true]) {
       await page.goto('/electricity/order');
     } else {
       await expect(page.locator('#dashboard-navigation a[href="/wallet"]')).toHaveCount(1);
+      await expect(
+        page.getByRole('main').locator('a[href="/electricity/orders/new"]')
+      ).toBeVisible();
       await page.goto('/admin/branding');
     }
     await expect(page).toHaveURL(/\/app$/);

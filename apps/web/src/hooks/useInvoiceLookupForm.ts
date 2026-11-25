@@ -3,7 +3,8 @@ import { useLocale } from './useLocale.js';
 import { useWizardForm as useDraftForm } from './useWizardForm.js';
 
 export function useInvoiceLookupForm(
-  message: string
+  message: string,
+  invoiceId = ''
 ): ReturnType<typeof useDraftForm<{ invoiceId: string }>> {
   const locale = useLocale();
   return useDraftForm(
@@ -11,7 +12,7 @@ export function useInvoiceLookupForm(
       const { invoiceLookupSchema } = await import('../lib/invoice-form-schemas.js');
       return invoiceLookupSchema(message);
     },
-    { invoiceId: '' },
+    { invoiceId },
     tManualInvoice('admin.manualInvoice.validationUnavailable', locale)
   );
 }

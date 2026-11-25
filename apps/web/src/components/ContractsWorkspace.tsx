@@ -1,7 +1,6 @@
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 import { useListView } from '../hooks/useListView.js';
-import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
 import {
   useEffect,
@@ -27,6 +26,8 @@ import {
   StatusBadge,
   ListViewToggle,
   ListPage,
+  ListRefreshButton,
+  buttonVariants,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
@@ -54,9 +55,15 @@ import { DEFAULT_CONTRACT_LIST_SORT } from '@barghsa/shared/validation';
 import { useCursorHistory } from '../hooks/useCursorHistory.js';
 import { useCursorPageRows } from '../hooks/useCursorPageRows.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { QueueEmptyState } from './QueueEmptyState.js';
 import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';
+import {
+  contractActions,
+  customerContractId,
+  type CustomerContractSearch,
+} from '../lib/customer-contract-search.js';
 
 function validContractSummary(item: ContractSummary) {
   return (
@@ -91,12 +98,16 @@ export function ContractsWorkspace({
   initialState,
   customerHistory,
   selection,
+  recordSearch,
+  staffRecordSearch,
   queries,
 }: {
   staff?: boolean;
   initialState?: 'Active' | undefined;
   customerHistory?: CustomerContractHistoryControls | undefined;
   selection?: Pick<RecordListQuery, 'selected' | 'select'> | undefined;
+  recordSearch?: CustomerContractSearch | undefined;
+  staffRecordSearch?: Record<string, unknown> | undefined;
   queries?: RecordListQuery | undefined;
 }) {
   const revision = useProfileContextRevision();
@@ -108,6 +119,8 @@ export function ContractsWorkspace({
       initialState={initialState}
       customerHistory={customerHistory}
       selection={selection}
+      recordSearch={recordSearch}
+      staffRecordSearch={staffRecordSearch}
       queries={queries}
     />
   );
@@ -117,12 +130,16 @@ function Workspace({
   initialState,
   customerHistory,
   selection,
+  recordSearch,
+  staffRecordSearch,
   queries,
 }: {
   staff: boolean;
   initialState?: 'Active' | undefined;
   customerHistory?: CustomerContractHistoryControls | undefined;
   selection?: Pick<RecordListQuery, 'selected' | 'select'> | undefined;
+  recordSearch?: CustomerContractSearch | undefined;
+  staffRecordSearch?: Record<string, unknown> | undefined;
   queries?: RecordListQuery | undefined;
 }) {
   const owner = useRef<object | null>(null),
@@ -221,6 +238,9 @@ function Workspace({
       event.stopPropagation();
     }
   }
+  const actionView = recordSearch?.statuses === contractActions && !initialState;
+  const tabClass =
+    'touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground';
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <PageHeader
@@ -232,6 +252,17 @@ function Workspace({
           className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b pb-2 text-sm"
           aria-label={word('title')}
         >
+          {recordSearch && (
+            <Link
+              to="/contracts"
+              search={{ statuses: contractActions }}
+              activeOptions={{ exact: true }}
+              className={tabClass}
+              aria-current={actionView ? 'page' : undefined}
+            >
+              {word('needsAction')}
+            </Link>
+          )}
           <Link
             onClick={(event) => {
               if (coordination.blocked()) event.preventDefault();
@@ -240,8 +271,8 @@ function Workspace({
             to="/contracts"
             search={{ state: undefined }}
             activeOptions={{ exact: true }}
-            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
-            aria-current={initialState ? undefined : 'page'}
+            className={tabClass}
+            aria-current={!initialState && !actionView ? 'page' : undefined}
           >
             {word('all')}
           </Link>
@@ -253,7 +284,7 @@ function Workspace({
             to="/contracts"
             search={{ state: 'Active' }}
             activeOptions={{ exact: true }}
-            className="touch-action rounded-md px-3 py-2 font-medium text-muted-foreground hover:text-foreground aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
+            className={tabClass}
             aria-current={initialState ? 'page' : undefined}
           >
             {word('Active')}
@@ -336,7 +367,28 @@ function Workspace({
           </Button>
         </form>
       ) : null}
-      {staff ? (
+      {staffRecordSearch ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            to="/admin/contracts/new"
+            search={staffRecordSearch}
+            className={buttonVariants({ className: 'min-h-11' })}
+            aria-disabled={locked || undefined}
+            onClick={blockCompanion}
+          >
+            {word('draftCreate')}
+          </Link>
+          <Link
+            to="/admin/contracts/refunds"
+            search={staffRecordSearch}
+            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+            aria-disabled={locked || undefined}
+            onClick={blockCompanion}
+          >
+            {word('contractRefunds')}
+          </Link>
+        </div>
+      ) : staff ? (
         <ContractDraftEditor
           coordination={coordination}
           onSaved={(id) => {
@@ -347,6 +399,25 @@ function Workspace({
           }}
         />
       ) : null}
+      <ContractResults
+        key={generation}
+        staff={staff}
+        query={staff ? query : customerParams.toString()}
+        customerHistory={customerHistory}
+        selection={selection}
+        recordSearch={recordSearch}
+        staffRecordSearch={staffRecordSearch}
+        queries={queries}
+        initialSelected={
+          recordSearch || staffRecordSearch
+            ? null
+            : (createdId ?? new URLSearchParams(window.location.search).get('contractId'))
+        }
+        coordination={coordination}
+        locked={locked}
+        readAbort={readAbort}
+        readEpoch={readEpoch}
+      />
       {staff ? (
         <fieldset
           disabled={locked}
@@ -354,24 +425,10 @@ function Workspace({
           onClickCapture={blockCompanion}
           onSubmitCapture={blockCompanion}
         >
-          <ContractRefundQueue />
-          <ContractCancellationRequestQueue />
+          <ContractCancellationRequestQueue recordSearch={staffRecordSearch} />
           <ContractActivationRules />
         </fieldset>
       ) : null}
-      <ContractResults
-        key={generation}
-        staff={staff}
-        query={staff ? query : customerParams.toString()}
-        customerHistory={customerHistory}
-        selection={selection}
-        queries={queries}
-        initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
-        coordination={coordination}
-        locked={locked}
-        readAbort={readAbort}
-        readEpoch={readEpoch}
-      />
     </div>
   );
 }
@@ -381,6 +438,8 @@ function ContractResults({
   query,
   initialSelected,
   selection,
+  recordSearch,
+  staffRecordSearch,
   queries,
   coordination,
   locked,
@@ -391,6 +450,8 @@ function ContractResults({
   query: string;
   customerHistory?: CustomerContractHistoryControls | undefined;
   selection?: Pick<RecordListQuery, 'selected' | 'select'> | undefined;
+  recordSearch?: CustomerContractSearch | undefined;
+  staffRecordSearch?: Record<string, unknown> | undefined;
   initialSelected: string | null;
   coordination: ContractFormCoordination;
   locked: boolean;
@@ -424,9 +485,27 @@ function ContractResults({
   const legacy = useCursorHistory<ContractSummary>(`${staff}:${query}`);
   const clearLegacy = legacy.clear;
   const cursor = queries ? queries.queue.query.cursor : legacy.before;
+  const allStatuses = new URLSearchParams(query);
+  const filteredStatus = allStatuses.get('state');
+  const filteredByStatus = Boolean(filteredStatus || allStatuses.has('statuses'));
+  allStatuses.delete('state');
+  allStatuses.delete('statuses');
+  const clearStatuses =
+    staff && queries
+      ? () => queries.queue.setQuery({ filters: { state: '' } })
+      : customerHistory?.onClearStatuses;
   const urlRows = useCursorPageRows<ContractSummary>(`${staff}:${query}`, cursor || '');
   const [denied, setDenied] = useState(false);
-  const items = denied ? [] : queries ? urlRows.rows : legacy.items;
+  const rows = denied ? [] : queries ? urlRows.rows : legacy.items;
+  const pending = (item: ContractSummary) =>
+    item.state === 'AwaitingCustomerAcceptance' ||
+    item.state === 'AwaitingSignature' ||
+    item.pendingAmendmentState === 'AwaitingCustomerAcceptance' ||
+    item.pendingAmendmentState === 'AwaitingSignature';
+  const items =
+    recordSearch && !hasHistoryFilters && !recordSearch.sort && !recordSearch.state
+      ? [...rows.filter(pending), ...rows.filter((item) => !pending(item))]
+      : rows;
   const next = denied ? null : queries ? urlRows.next : legacy.nextBefore;
   const acceptPage = queries ? urlRows.acceptPage : legacy.acceptPage;
   const loadMore = () => {
@@ -504,19 +583,49 @@ function ContractResults({
     else legacy.reset(true);
     setReload((value) => value + 1);
   }
-  const renderIdentity = (item: ContractSummary) => (
-    <>
-      <Button variant="link" disabled={locked} onClick={() => setSelected(item.id)}>
-        {word(item.serviceType)} · {word('version')} {item.versionNumber.toLocaleString(locale)}
-      </Button>
-      <p className="text-sm text-muted-foreground">
-        {word(item.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
-        <bdi dir="ltr" className="break-all">
-          {item.contractNumber ?? item.id}
-        </bdi>
-      </p>
-    </>
-  );
+  const rowSearch = staff ? staffRecordSearch : recordSearch;
+  const renderIdentity = (item: ContractSummary) => {
+    const label = `${word(item.serviceType)} · ${word('version')} ${item.versionNumber.toLocaleString(locale)}`;
+    return (
+      <>
+        {rowSearch ? (
+          customerContractId(item.id) ? (
+            <Link
+              to={
+                staff
+                  ? '/admin/contracts/$contractId/{-$action}/{-$item}'
+                  : '/contracts/$contractId/{-$action}'
+              }
+              params={{ contractId: item.id }}
+              search={rowSearch}
+              aria-disabled={locked || undefined}
+              onClick={(event) => {
+                if (coordination.blocked()) event.preventDefault();
+              }}
+              className={buttonVariants({
+                variant: 'link',
+                className: 'min-h-11 h-auto max-w-full px-0 whitespace-normal text-start',
+              })}
+            >
+              {label}
+            </Link>
+          ) : (
+            <span>{label}</span>
+          )
+        ) : (
+          <Button variant="link" disabled={locked} onClick={() => setSelected(item.id)}>
+            {label}
+          </Button>
+        )}
+        <p className="text-sm text-muted-foreground">
+          {word(item.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
+          <bdi dir="ltr" className="break-all">
+            {item.contractNumber ?? item.id}
+          </bdi>
+        </p>
+      </>
+    );
+  };
   const renderParty = (item: ContractSummary) => (
     <>
       {item.profileType ? (
@@ -585,7 +694,7 @@ function ContractResults({
             <>
               {' · '}
               <a
-                href={`/admin/invoices?invoiceId=${encodeURIComponent(item.initialInvoiceId)}`}
+                href={`/admin/invoices/${encodeURIComponent(item.initialInvoiceId)}`}
                 className="touch-action text-primary underline underline-offset-4"
               >
                 {word('openInitialInvoice')}
@@ -616,7 +725,7 @@ function ContractResults({
       ) : null}
       {staff && item.serviceType === 'electricity' && item.orderId ? (
         <a
-          href={`/admin/electricity-orders?orderId=${encodeURIComponent(item.orderId)}`}
+          href={`/admin/electricity-orders/${encodeURIComponent(item.orderId)}`}
           className="touch-action text-sm text-primary underline underline-offset-4"
         >
           {word('openLinkedOrder')}
@@ -634,7 +743,7 @@ function ContractResults({
       {staff && item.serviceType === 'electricity' ? (
         <a
           className="touch-action text-sm text-primary underline"
-          href={`/admin/electricity-price-adjustments?contractId=${encodeURIComponent(item.id)}`}
+          href={`/admin/electricity-price-adjustments/${encodeURIComponent(item.id)}`}
         >
           {adminText('admin.electricityPrice.title', locale)}
         </a>
@@ -758,14 +867,12 @@ function ContractResults({
                 }}
               />
             )}
-            <Button
+            <ListRefreshButton
+              label={word('refresh')}
               className="self-start"
-              variant="outline"
               onClick={refresh}
               disabled={loading || locked}
-            >
-              {word('refresh')}
-            </Button>
+            />
           </>
         }
       />
@@ -800,29 +907,55 @@ function ContractResults({
           </div>
         }
         emptyView={
-          <EmptyState
-            title={word('empty')}
-            description={
-              hasHistoryFilters || (staff && query)
-                ? appText('historyDates.empty', locale)
-                : word(staff ? 'staffEmptyHint' : 'emptyHint')
-            }
-            action={
-              hasHistoryFilters && clearHistoryFilters ? (
-                <Button
-                  variant="outline"
-                  disabled={locked}
-                  onClick={(event) => {
-                    if (coordination.blocked()) return;
-                    event.currentTarget.closest('main')?.focus();
-                    clearHistoryFilters();
-                  }}
-                >
-                  {appText('historyFilters.clearAll', locale)}
-                </Button>
-              ) : undefined
-            }
-          />
+          filteredByStatus && !cursor && clearStatuses ? (
+            <QueueEmptyState
+              locale={locale}
+              message={appText('historyDates.empty', locale)}
+              {...(filteredStatus ? { status: word(filteredStatus) } : {})}
+              alternatives={[
+                {
+                  value: 'all',
+                  label: appText('listStatus.all', locale),
+                  path: `${contractBase(staff)}?${allStatuses}`,
+                },
+              ]}
+              hasResults={(body) => {
+                const contracts = (body as { contracts?: unknown } | null)?.contracts;
+                return (
+                  Array.isArray(contracts) &&
+                  contracts.some((contract) => validContractSummary(contract))
+                );
+              }}
+              all={() => {
+                if (!coordination.blocked()) clearStatuses();
+              }}
+              disabled={locked}
+            />
+          ) : (
+            <EmptyState
+              title={word('empty')}
+              description={
+                hasHistoryFilters || (staff && query)
+                  ? appText('historyDates.empty', locale)
+                  : word(staff ? 'staffEmptyHint' : 'emptyHint')
+              }
+              action={
+                hasHistoryFilters && clearHistoryFilters ? (
+                  <Button
+                    variant="outline"
+                    disabled={locked}
+                    onClick={(event) => {
+                      if (coordination.blocked()) return;
+                      event.currentTarget.closest('main')?.focus();
+                      clearHistoryFilters();
+                    }}
+                  >
+                    {appText('historyFilters.clearAll', locale)}
+                  </Button>
+                ) : undefined
+              }
+            />
+          )
         }
       >
         {items.length ? (

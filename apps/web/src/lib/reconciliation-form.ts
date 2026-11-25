@@ -1,6 +1,5 @@
 import { datePickerAtTime, datePickerCalendarDate } from '@barghsa/ui';
 import { RECONCILIATION_STATUSES, RECONCILIATION_SEVERITIES } from '@barghsa/shared/admin';
-import { reconciliationLocalTime } from './decision-queue-query.js';
 import { isInvoiceUuid } from './invoice-uuid.js';
 
 export interface ReconciliationItem {
@@ -116,7 +115,30 @@ export function reconciliationLinks(details: ReconciliationItem['details']) {
   if (typeof details?.invoiceId === 'string' && isInvoiceUuid(details.invoiceId))
     links.push({
       label: 'invoiceLink',
-      href: `/admin/invoices?invoiceId=${details.invoiceId.trim().toLowerCase()}`,
+      href: `/admin/invoices/${details.invoiceId.trim().toLowerCase()}`,
     });
   return links;
+}
+
+export function reconciliationApiQuery(filters: Record<string, string>): string {
+  const params = new URLSearchParams();
+  if (filters.status !== 'all') params.set('status', filters.status || 'open');
+  for (const key of ['severity', 'createdFrom', 'createdBefore'])
+    if (filters[key]) params.set(key, filters[key]);
+  return params.toString();
+}
+/** Display an applied UTC bound without changing its seconds or milliseconds. */
+export function reconciliationLocalTime(value: string, timezone: string): string {
+  if (!value) return '';
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(value));
+  const read = (key: string) => parts.find((part) => part.type === key)?.value;
+  return `${read('year')}-${read('month')}-${read('day')}T${read('hour')}:${read('minute')}`;
 }

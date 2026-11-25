@@ -2,6 +2,7 @@ import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
 test.use({ viewport: { width: 390, height: 844 } });
 
 for (const locale of ['en', 'fa'] as const) {
@@ -14,17 +15,23 @@ for (const locale of ['en', 'fa'] as const) {
       .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'authoring-test' }]);
     await crmShell(page, locale);
     let saved: Record<string, unknown> | null = null;
+    const description = 'Recipient name, as shown on the invoice.\nKeep the original spelling.';
+    const templateId = notificationTemplate().id;
+    await page.route(`**/api/admin/notifications/templates/${templateId}`, (route) =>
+      route.fulfill(saved ? { json: saved } : { status: 404, json: {} })
+    );
     await page.route('**/api/admin/notifications/templates', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: saved ? [saved] : [] });
       const body = route.request().postDataJSON();
       expect(body.eventKey).toBe('auth.refresh_token_reused');
+      expect(body.subject).toBe('Notice for {{user.name}}');
       expect(body.bodyTemplate).toBe('Hello {{user.name}}');
-      expect(body.variables).toEqual([{ name: 'user.name', description: 'Recipient name' }]);
+      expect(body.variables).toEqual([{ name: 'user.name', description }]);
       saved = {
         ...notificationTemplate(),
         ...body,
         subject: body.subject ?? null,
-        id: 'new-event-template',
+        id: templateId,
         status: 'draft',
         isActive: false,
         version: 1,
@@ -35,7 +42,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/notifications');
 
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
       .click();
     const editor = page
       .locator('form')
@@ -50,9 +57,23 @@ for (const locale of ['en', 'fa'] as const) {
       'true'
     );
     await editor.locator('#notification-template-eventKey').fill('auth.refresh_token_reused');
-    await editor.locator('#notification-template-channel').selectOption('in_app');
+    const channel = editor.locator('#notification-template-channel');
+    const title = editor.locator('#notification-template-subject');
+    await channel.selectOption('in_app');
+    await expect(title).toHaveAccessibleName(notificationFormText('inboxTitle', locale));
+    await expect(title).toHaveAccessibleDescription(notificationFormText('inboxTitleHint', locale));
+    await title.fill('Notice for {{user.name}}');
+    await channel.selectOption('sms');
+    await expect(title).toHaveCount(0);
+    await channel.selectOption('in_app');
+    await expect(title).toHaveValue('Notice for {{user.name}}');
     await editor.locator('#notification-template-locale').selectOption(locale);
-    await editor.locator('#notification-template-variablesLabel').fill('user.name: Recipient name');
+    const add = editor.getByRole('button', { name: notificationFormText('addVariable', locale) });
+    const name = editor.locator('[data-variable-name]');
+    await add.click();
+    await expect(name).toBeFocused();
+    await name.fill('user.name');
+    await editor.locator('[data-variable-description]').fill(description);
     const body = editor.locator('#notification-template-bodyTemplate');
     await body.fill('Hello ');
     const variable = editor.getByRole('button', { name: '{{user.name}}', exact: true });
@@ -65,16 +86,91 @@ for (const locale of ['en', 'fa'] as const) {
     await variable.focus();
     await page.keyboard.press('Enter');
     await expect(body).toHaveValue('Hello {{user.name}}');
+    await expect(editor.getByText('Notice for user.name', { exact: true })).toBeVisible();
     await expect(editor).toContainText(t('admin.notifications.insertHint', locale));
+    await add.click();
+    await name.last().fill('user.name');
+    await editor.locator('button[type=submit]').click();
+    await expect(name.last()).toHaveAttribute('aria-invalid', 'true');
+    await expect(name.last()).toBeFocused();
+    expect(saved).toBeNull();
+    await editor
+      .getByRole('button', {
+        name: `${notificationFormText('removeVariable', locale)} user.name`,
+        exact: true,
+      })
+      .last()
+      .click();
+    await expect(name).toBeFocused();
     await editor.locator('button[type=submit]').click();
     await expect(editor).toHaveCount(0);
+    await expect(page).toHaveURL(`/admin/notifications/${templateId}`);
     await expect(
       page
-        .locator(
-          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
-        )
-        .filter({ hasText: 'auth.refresh_token_reused' })
+        .getByRole('main')
+        .getByRole('heading', { name: 'auth.refresh_token_reused', exact: true })
     ).toBeVisible();
     expect(saved).not.toBeNull();
   });
 }
+
+test('a new SMS omits the other channel’s title and an existing SMS can clear its stored subject', async ({
+  page,
+  baseURL,
+}) => {
+  await page
+    .context()
+    .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'sms-title-test' }]);
+  await crmShell(page, 'fa');
+  let saved = {
+    ...notificationTemplate(),
+    channel: 'sms',
+    subject: 'Previously imported subject' as string | null,
+  };
+  const newId = '30000000-0000-4000-8000-000000000002';
+  let created: typeof saved | null = null;
+  const writes: unknown[] = [];
+  await page.route(`**/api/admin/notifications/templates/${newId}`, (route) =>
+    route.fulfill({ json: created })
+  );
+  await page.route(`**/api/admin/notifications/templates/${saved.id}`, (route) => {
+    if (route.request().method() === 'PUT') {
+      const data = route.request().postDataJSON();
+      writes.push(data);
+      saved = { ...saved, ...data };
+    }
+    return route.fulfill({ json: saved });
+  });
+  await page.route('**/api/admin/notifications/templates', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: [saved] });
+    const data = route.request().postDataJSON();
+    writes.push(data);
+    created = { ...saved, ...data, subject: null, id: newId };
+    return route.fulfill({ status: 201, json: created });
+  });
+  await page.goto('/admin/notifications/new');
+  const title = page.locator('#notification-template-subject');
+  const body = page.locator('#notification-template-bodyTemplate');
+  const editor = page.locator('form').filter({ has: body });
+  await title.fill('Unknown {{name}}');
+  await title.blur();
+  await expect(title).toHaveAttribute('aria-invalid', 'true');
+  await editor.locator('#notification-template-channel').selectOption('sms');
+  await expect(title).toHaveCount(0);
+  await body.fill('A new SMS');
+  await editor.locator('button[type=submit]').click();
+  await expect(editor).toHaveCount(0);
+  await expect(page).toHaveURL(`/admin/notifications/${newId}`);
+  expect(writes).toHaveLength(1);
+  expect(writes[0]).toMatchObject({ channel: 'sms', bodyTemplate: 'A new SMS' });
+  expect(writes[0]).not.toHaveProperty('subject');
+
+  await page.goto(`/admin/notifications/${saved.id}/edit`);
+  await expect(title).toHaveAccessibleName(notificationFormText('legacySmsSubject', 'fa'));
+  await expect(title).toHaveValue('Previously imported subject');
+  await title.clear();
+  await expect(title).toBeVisible();
+  await editor.locator('button[type=submit]').click();
+  await expect(editor).toHaveCount(0);
+  expect(writes[1]).toMatchObject({ subject: null, bodyTemplate: saved.bodyTemplate });
+});

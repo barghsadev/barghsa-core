@@ -13,6 +13,7 @@ vi.mock(import('../lib/profile-context.js'), async (importOriginal) => {
 vi.mock('../lib/toast-api.js', () => ({ sendToast: vi.fn() }));
 
 it('does not refresh a new account or show a toast for an obsolete default-profile receipt', async () => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const container = document.createElement('div');
   document.body.append(container);
   const root = createRoot(container);
@@ -59,14 +60,18 @@ it('does not refresh a new account or show a toast for an obsolete default-profi
       </QueryComponentProvider>
     );
   try {
+    await import('./DefaultProfileChoiceDialog.js');
     await act(async () => render());
-    const submit = [...document.querySelectorAll('button')].find(
-      (node) => node.textContent === 'Set as Default'
-    );
-    expect(submit).toBeDefined();
+    const submit = await vi.waitFor(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (node) => node.textContent === 'Set as Default'
+      );
+      if (!button) throw new Error('Default profile action was not rendered');
+      return button;
+    });
     await act(async () => {
-      submit!.click();
-      submit!.click();
+      submit.click();
+      submit.click();
     });
     await vi.waitFor(() => expect(writes).toBe(1));
     expect(signal.aborted).toBe(false);

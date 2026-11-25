@@ -1,7 +1,24 @@
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
-import { useCallback } from 'react';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { useCallback, type ReactNode } from 'react';
+import { Link } from '@tanstack/react-router';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
-import { LoadingStatus, Button, Label, Input, Textarea, Alert } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  ListRefreshButton,
+  Label,
+  Input,
+  Textarea,
+  Alert,
+  buttonVariants,
+} from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueEditor, type CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
@@ -19,8 +36,19 @@ import { record } from '../lib/catalogue-form.js';
 export function SavingAgreementEditor({
   planId,
   onChanged,
+  onProductRefresh,
+  heading,
+  mode = 'inline',
+  search = {},
   ...props
-}: CatalogueEditorProps & { planId: string; onChanged: () => void }) {
+}: CatalogueEditorProps & {
+  planId: string;
+  onChanged: () => void;
+  onProductRefresh?: () => void;
+  heading?: ReactNode;
+  mode?: 'overview' | 'agreement' | 'activate-agreement' | 'inline';
+  search?: Record<string, unknown>;
+}) {
   const locale = useLocale();
   const label = (key: string) => tCatalogue(key, locale);
   const base = `/api/admin/catalogue/saving-plans/${encodeURIComponent(planId)}`;
@@ -50,6 +78,9 @@ export function SavingAgreementEditor({
   const agreements = config?.agreements ?? [];
   const draft = agreements.find((row) => row.status === 'draft');
   const active = agreements.find((row) => row.status === 'active');
+  const inline = mode === 'inline';
+  const overview = mode === 'overview';
+  const publishing = mode === 'activate-agreement';
   const [title, setTitle] = editor.field('title'),
     [body, setBody] = editor.field('body');
   const action = (
@@ -68,24 +99,33 @@ export function SavingAgreementEditor({
   });
   const activation = editor.action?.path.endsWith('/activate');
   const unsaved = !!draft && (title.trim() !== draft.title || body.trim() !== draft.body);
+  const canNavigate = editor.ready && !editor.busy && !editor.uncertain;
   const summary = activation
     ? draft
     : editor.action && record(editor.action.body)
       ? editor.action.body
       : null;
   return (
-    <section className="space-y-4 border-y py-5" aria-label={label('agreement')}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold">{label('agreement')}</h2>
-        <Button
-          type="button"
-          variant="outline"
-          disabled={editor.busy || props.disabled}
-          onClick={editor.refresh}
-        >
-          {label(editor.resource.error || editor.denied ? 'retry' : 'refresh')}
-        </Button>
-      </div>
+    <section className="space-y-3" aria-label={label('agreement')}>
+      {!inline && <RecordCommandGuard blocked={() => editor.commandPending || editor.uncertain} />}
+      <header className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+        {heading ??
+          (overview || inline ? (
+            <h2 className="text-lg font-semibold">{label('agreement')}</h2>
+          ) : null)}
+        {(!overview || editor.resource.error || editor.denied) && (
+          <ListRefreshButton
+            label={label(editor.resource.error || editor.denied ? 'retry' : 'refresh')}
+            disabled={
+              props.disabled ||
+              !!editor.action ||
+              editor.commandPending ||
+              (!onProductRefresh && editor.pending)
+            }
+            onClick={editor.pending && onProductRefresh ? onProductRefresh : editor.refresh}
+          />
+        )}
+      </header>
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
       {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {editor.resource.error && <Alert variant="destructive">{label('agreementLoadError')}</Alert>}
@@ -93,8 +133,10 @@ export function SavingAgreementEditor({
       {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
       {config && (
         <>
-          <p className="text-sm text-muted-foreground">{label('agreementHelp')}</p>
-          {active && (
+          {(overview || inline) && (
+            <p className="text-sm text-muted-foreground">{label('agreementHelp')}</p>
+          )}
+          {(overview || inline || publishing) && active && (
             <details className="rounded-md border p-3">
               <summary className="cursor-pointer font-medium">
                 {label('activeAgreement')}: {active.title}
@@ -102,60 +144,130 @@ export function SavingAgreementEditor({
               <p className="mt-2 whitespace-pre-wrap break-words">{active.body}</p>
             </details>
           )}
-          <form
-            aria-label={label('agreement')}
-            noValidate
-            aria-busy={editor.pending || undefined}
-            onSubmit={(event) =>
-              void editor.submit(event, (values) =>
-                action(`${base}/agreements/draft`, 'saveAgreement', 'confirmAgreementDraft', {
-                  title: values.title.trim(),
-                  body: values.body.trim(),
-                })
-              )
-            }
-            className="space-y-3"
-          >
-            {rootError && <Alert variant="destructive">{rootError}</Alert>}
-            <fieldset disabled={editor.disabled} className="min-w-0 space-y-3 border-0 p-0">
-              <div>
-                <Label htmlFor="saving-agreement-title">{label('agreementTitle')}</Label>
-                <Input
-                  id="saving-agreement-title"
-                  {...editor.bind('title')}
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                />
-                {editor.feedback('title')}
-              </div>
-              <div>
-                <Label htmlFor="saving-agreement-body">{label('agreementBody')}</Label>
-                <Textarea
-                  id="saving-agreement-body"
-                  {...editor.bind('body')}
-                  value={body}
-                  rows={8}
-                  onChange={(event) => setBody(event.target.value)}
-                />
-                {editor.feedback('body')}
-              </div>
-              <Button type="submit" aria-busy={editor.pending || undefined}>
-                {editor.pending && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {label(editor.pending ? 'working' : 'saveAgreement')}
-              </Button>
-            </fieldset>
-          </form>
-          {draft && (
+          {(inline || mode === 'agreement') && (
+            <form
+              aria-label={label('agreement')}
+              noValidate
+              aria-busy={editor.pending || undefined}
+              onSubmit={(event) =>
+                void editor.submit(event, (values) =>
+                  action(`${base}/agreements/draft`, 'saveAgreement', 'confirmAgreementDraft', {
+                    title: values.title.trim(),
+                    body: values.body.trim(),
+                  })
+                )
+              }
+              className={recordEditorSurface}
+            >
+              {rootError && (
+                <Alert variant="destructive" className="m-4">
+                  {rootError}
+                </Alert>
+              )}
+              <fieldset disabled={editor.disabled} className="min-w-0">
+                <legend className="sr-only">{label('agreement')}</legend>
+                <RecordEditorSection
+                  title={label(inline ? 'agreementDraftDetails' : 'agreementContent')}
+                  {...(!inline && { description: label('agreementDraftHelp') })}
+                >
+                  <div className={recordEditorField}>
+                    <Label htmlFor="saving-agreement-title">{label('agreementTitle')}</Label>
+                    <Input
+                      id="saving-agreement-title"
+                      dir="auto"
+                      aria-required="true"
+                      {...editor.bind('title')}
+                      value={title}
+                      placeholder={inline ? undefined : label('agreementTitleExample')}
+                      onChange={(event) => setTitle(event.target.value)}
+                    />
+                    {(inline || editor.errors.title) && editor.feedback('title')}
+                  </div>
+                  <div className={recordEditorField}>
+                    <Label htmlFor="saving-agreement-body">{label('agreementBody')}</Label>
+                    <Textarea
+                      id="saving-agreement-body"
+                      {...editor.bind('body')}
+                      value={body}
+                      dir="auto"
+                      aria-required="true"
+                      rows={inline ? 4 : 3}
+                      className="min-h-20 max-h-72 resize-y placeholder-shown:[direction:inherit]"
+                      placeholder={label('agreementBodyExample')}
+                      onChange={(event) => setBody(event.target.value)}
+                    />
+                    {(inline || editor.errors.body) && editor.feedback('body')}
+                  </div>
+                </RecordEditorSection>
+                <RecordEditorActions>
+                  <Button type="submit" aria-busy={editor.pending || undefined}>
+                    {editor.pending && (
+                      <span
+                        aria-hidden="true"
+                        className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                      />
+                    )}
+                    {label(editor.pending ? 'working' : 'saveAgreement')}
+                  </Button>
+                </RecordEditorActions>
+              </fieldset>
+            </form>
+          )}
+          {!inline && !publishing && canNavigate && (overview || draft) && (
+            <div className="flex flex-wrap gap-2">
+              {overview && (
+                <Link
+                  to="/admin/catalogue/$category/$productId/configuration/{-$operation}"
+                  params={{ category: 'saving_plan', productId: planId, operation: 'agreement' }}
+                  search={search}
+                  className={buttonVariants({ size: 'sm' })}
+                >
+                  {label(draft ? 'editAgreementDraft' : 'createAgreementDraft')}
+                </Link>
+              )}
+              {draft && !unsaved && (
+                <Link
+                  to="/admin/catalogue/$category/$productId/configuration/{-$operation}"
+                  params={{
+                    category: 'saving_plan',
+                    productId: planId,
+                    operation: 'activate-agreement',
+                  }}
+                  search={search}
+                  className={buttonVariants({ size: 'sm', variant: 'outline' })}
+                >
+                  {label('openAgreementActivation')}
+                </Link>
+              )}
+            </div>
+          )}
+          {!inline && !overview && !publishing && unsaved && (
+            <p className="text-sm text-muted-foreground">{label('saveAgreementFirst')}</p>
+          )}
+          {publishing && !draft && (
+            <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+              {label(active ? 'activeAgreementInUse' : 'noSavedDraft')}
+            </p>
+          )}
+          {draft && (inline || publishing) && (
             <div className="rounded-md border p-3">
               <p className="font-medium break-words">
                 {label('draftAgreement')}: {draft.title}
               </p>
-              {unsaved && (
+              {publishing && (
+                <>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {label('agreementActivationHelp')}
+                  </p>
+                  <p
+                    dir="auto"
+                    className="mt-3 max-h-72 overflow-y-auto whitespace-pre-wrap break-words rounded-lg bg-muted/45 p-3 text-sm"
+                  >
+                    {draft.body}
+                  </p>
+                </>
+              )}
+              {inline && unsaved && (
                 <p className="mt-2 text-sm text-muted-foreground">{label('saveAgreementFirst')}</p>
               )}
               <Button
@@ -176,7 +288,7 @@ export function SavingAgreementEditor({
               </Button>
             </div>
           )}
-          {agreements.some((row) => row.status === 'superseded') && (
+          {(overview || inline) && agreements.some((row) => row.status === 'superseded') && (
             <details>
               <summary className="cursor-pointer">{label('agreementHistory')}</summary>
               <ol className="space-y-2">
@@ -196,6 +308,7 @@ export function SavingAgreementEditor({
       {editor.action && (
         <TeamActionDialog
           action={editor.action}
+          toastErrors={inline}
           confirmationDisabled={!editor.ready || editor.uncertain}
           onClose={editor.close}
           onDenied={editor.onDenied}

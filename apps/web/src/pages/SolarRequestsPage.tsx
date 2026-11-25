@@ -1,4 +1,6 @@
 import { LoadingStatus, ListPage, Button, PageHeader, buttonVariants } from '@barghsa/ui';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { ArrowUpRight } from 'lucide-react';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -131,6 +133,7 @@ export function SolarRequestsPage({
     },
     {
       id: 'action',
+      actions: true,
       label: t('workflow.nextAction', locale),
       render: (row) => {
         const action = solarNextAction(row, locale);
@@ -138,10 +141,14 @@ export function SolarRequestsPage({
           ? `/solar/requests/${encodeURIComponent(row.id)}${action.href}`
           : action.href;
         return (
-          <div className="min-w-44 space-y-1">
+          <div className="min-w-32 space-y-1">
             {href ? (
-              <a href={href} className="text-primary underline underline-offset-4">
-                {action.text}
+              <a
+                href={href}
+                data-table-action-tooltip={action.text}
+                className="text-primary underline underline-offset-4"
+              >
+                <TableActionIcon icon={ArrowUpRight}>{action.text}</TableActionIcon>
               </a>
             ) : (
               <p>{action.text}</p>

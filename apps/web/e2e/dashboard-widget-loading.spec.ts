@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { dashboardText } from '@barghsa/i18n/dashboard';
+import { shellText } from '@barghsa/i18n/shell';
 import { loadingText, reloadText } from '@barghsa/i18n/loading-feedback';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
@@ -90,9 +91,9 @@ for (const locale of ['en', 'fa'] as const) {
           .getByRole('button', { name: t('dashboard.overview.retry', locale), exact: true });
         await expect(retryContext).toBeVisible();
         const heading = page.getByRole('heading', { level: 1 });
-        await expect(heading).toHaveText(t('dashboard.nav.overview', locale));
+        await expect(heading).toHaveText(shellText('home', locale));
         await expect(
-          page.getByRole('group', { name: t('dashboard.overview.quickActions', locale) })
+          page.getByRole('region', { name: dashboardText('home.services', locale) })
         ).toHaveCount(0);
         const connectionNotice = page
           .locator('[data-sonner-toast][data-type="info"]')
@@ -104,9 +105,8 @@ for (const locale of ['en', 'fa'] as const) {
         await retryContext.click();
         await expect(connectionNotice).toHaveCount(1);
         await expect.poll(() => contextReads).toBe(2);
-        await expect(heading).toHaveText(
-          t('dashboard.overview.welcome', locale).replace('{name}', 'Ari Buyer')
-        );
+        await expect(heading).toHaveText(shellText('home', locale));
+        await expect(page.getByRole('main').getByText('Ari Buyer', { exact: true })).toBeVisible();
         const orders = page.getByRole('region', { name: dashboardText('orders.title', locale) });
         const invoices = page.getByRole('region', { name: dashboardText('invoice.title', locale) });
         const wallet = page.getByRole('region', {
@@ -198,9 +198,9 @@ for (const locale of ['en', 'fa'] as const) {
           [768, 2],
           [900, 2],
           [1024, 2],
-          [1280, 3],
-          [1440, 3],
-          [1920, 3],
+          [1280, 2],
+          [1440, 2],
+          [1920, 2],
         ] as const) {
           await page.setViewportSize({ width, height: 1000 });
           await page.evaluate(
@@ -213,6 +213,10 @@ for (const locale of ['en', 'fa'] as const) {
             (card) => getComputedStyle(card.parentElement!).gridTemplateColumns.split(' ').length
           );
           expect(count).toBe(columns);
+          const orderColumns = await orders.evaluate(
+            (card) => getComputedStyle(card.parentElement!).gridTemplateColumns.split(' ').length
+          );
+          expect(orderColumns).toBe(columns);
           const summary = page.getByRole('region', { name: dashboardText('status.title', locale) });
           expect(
             await summary
@@ -336,7 +340,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/app');
     const main = page.getByRole('main');
     const orders = main.getByRole('region', { name: dashboardText('orders.title', locale) });
-    await expect(main.getByRole('heading', { level: 1 })).toContainText(profileNames[profileId]);
+    await expect(main.getByText(profileNames[profileId], { exact: true })).toBeVisible();
     const warning = orders.getByRole('alert');
     const action = warning.getByRole('button');
     const warningText = await warning.textContent();
@@ -348,7 +352,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(contextReads).toEqual([profileId, currentId]);
     expect(warningText).toContain(dashboardText('widget.profileChanged', locale));
     expect(actionText).toBe(reloadText('reload', locale));
-    await expect(main.getByRole('heading', { level: 1 })).toContainText(profileNames[currentId]);
+    await expect(main.getByText(profileNames[currentId], { exact: true })).toBeVisible();
     await expect(orders.getByText(dashboardText('orders.empty', locale))).toBeVisible();
     await expect(warning).toHaveCount(0);
     expect(writes).toEqual([]);

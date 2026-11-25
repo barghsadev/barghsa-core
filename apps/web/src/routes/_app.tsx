@@ -6,6 +6,7 @@ import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { NavigationProvider } from '../hooks/useNavigation.js';
 import { readSessionContext, isAccountSettingsPath } from '../lib/session-role.js';
 import { rememberSessionEnded } from '../lib/session-ended-notice.js';
+import { authReturnPath } from '../lib/auth-return.js';
 
 const StaffLayout = lazy(() => import('../pages/AdminLayout.js'));
 
@@ -31,7 +32,11 @@ export const Route = createFileRoute('/_app')({
     const session = context.appSession ?? (await readSessionContext(abortController.signal));
     if (session === null) {
       rememberSessionEnded(preload);
-      throw redirect({ to: '/login', replace: true });
+      throw redirect({
+        to: '/login',
+        search: { returnTo: authReturnPath(location.pathname) },
+        replace: true,
+      });
     }
     const isStaff = session.operatingContext === 'staff';
     if (isStaff && location.pathname !== '/app' && !isAccountSettingsPath(location.pathname))

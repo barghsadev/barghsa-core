@@ -1,5 +1,4 @@
 import { CommandFeedback } from './CommandFeedback.js';
-import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { useCallback, useRef, useState } from 'react';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import {
@@ -21,6 +20,12 @@ import { CONFIG_AUDIT_ID } from '@barghsa/shared/admin';
 import { boundedCatalogueInteger } from '../lib/catalogue-form.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ConfigPreviewCard } from './ConfigPreviewCard.js';
+import { RecordEditorDisclosure, recordEditorGrid } from './RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from './StickyRecordEditorActions.js';
 
 const path = '/api/admin/config/profile-verification-policy';
 type Revision = { id: string; version: number; policy: VerificationPolicy };
@@ -182,7 +187,10 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
           <p>
             {policy[type].expiryDays === null
               ? text('noExpiry')
-              : text('days').replace('{days}', String(policy[type].expiryDays))}
+              : text('days').replace(
+                  '{days}',
+                  numbers.number(policy[type].expiryDays, { useGrouping: false })
+                )}
           </p>
         </div>
       ))}
@@ -200,7 +208,7 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
     verificationPolicyBasis(proposed) === verificationPolicyBasis(state.current.draft);
   return (
     <section
-      className="space-y-4 border-t pt-6"
+      className="space-y-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
       aria-label={text('policyTitle')}
     >
@@ -226,78 +234,83 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
         <form
           noValidate
           aria-label={text('policyTitle')}
+          onFocus={keepRecordFieldVisible}
           onSubmit={(event) => {
             event.preventDefault();
             prepare('draft');
           }}
-          className="space-y-5"
+          className={recordEditorFormSurface}
         >
-          <ConfigPreviewCard
-            title={settingsText('admin.settings.comparison', locale)}
-            current={summary(state.current.active)}
-            draft={summary(proposed ?? draft)}
-          />
-          <fieldset disabled={blocked || busy} className="min-w-0 space-y-5">
-            {VERIFICATION_PROFILE_TYPES.map((type) => (
-              <fieldset key={type} className="min-w-0 space-y-3 rounded border p-4">
-                <legend>{text(type)}</legend>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={draft[type].required}
-                    onChange={(e) =>
-                      edit({ ...draft, [type]: { ...draft[type], required: e.target.checked } })
-                    }
+          <fieldset
+            disabled={blocked || busy}
+            className="m-0 min-w-0 space-y-3 border-0 px-4 py-4 sm:px-6"
+          >
+            <div className={`${recordEditorGrid} gap-y-3`}>
+              {VERIFICATION_PROFILE_TYPES.map((type) => (
+                <fieldset key={type} className="m-0 min-w-0 space-y-2 rounded-lg border px-3 pb-3">
+                  <legend className="px-1 text-sm font-semibold">{text(type)}</legend>
+                  <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={draft[type].required}
+                      onChange={(e) =>
+                        edit({ ...draft, [type]: { ...draft[type], required: e.target.checked } })
+                      }
+                    />
+                    {text('policyRequired')}
+                  </label>
+                  <fieldset className="m-0 min-w-0 space-y-1 border-0 p-0">
+                    <legend className="text-sm font-medium">{text('policyDocuments')}</legend>
+                    {VERIFICATION_DOCUMENT_TYPES.map((doc) => (
+                      <label
+                        key={doc}
+                        className="touch-label flex cursor-pointer items-center gap-2 text-sm"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={draft[type].documents.includes(doc)}
+                          onChange={(e) =>
+                            edit({
+                              ...draft,
+                              [type]: {
+                                ...draft[type],
+                                documents: e.target.checked
+                                  ? [...draft[type].documents, doc]
+                                  : draft[type].documents.filter((value) => value !== doc),
+                              },
+                            })
+                          }
+                        />
+                        {text(doc)}
+                      </label>
+                    ))}
+                  </fieldset>
+                  <Label htmlFor={`verification-expiry-${type}`}>{text('policyExpiry')}</Label>
+                  <Input
+                    ref={(node) => {
+                      if (node) expiryInputs.current[type] = node;
+                      else delete expiryInputs.current[type];
+                    }}
+                    id={`verification-expiry-${type}`}
+                    className="max-w-32"
+                    inputMode="numeric"
+                    dir="ltr"
+                    value={expiry[type]}
+                    onChange={(e) => {
+                      setExpiry({ ...expiry, [type]: e.target.value });
+                      setSaved(false);
+                      setInvalid(false);
+                    }}
+                    aria-describedby="verification-policy-expiry-help"
+                    aria-invalid={invalid || undefined}
                   />
-                  {text('policyRequired')}
-                </label>
-                <fieldset className="space-y-2">
-                  <legend>{text('policyDocuments')}</legend>
-                  {VERIFICATION_DOCUMENT_TYPES.map((doc) => (
-                    <label key={doc} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={draft[type].documents.includes(doc)}
-                        onChange={(e) =>
-                          edit({
-                            ...draft,
-                            [type]: {
-                              ...draft[type],
-                              documents: e.target.checked
-                                ? [...draft[type].documents, doc]
-                                : draft[type].documents.filter((value) => value !== doc),
-                            },
-                          })
-                        }
-                      />
-                      {text(doc)}
-                    </label>
-                  ))}
                 </fieldset>
-                <Label htmlFor={`verification-expiry-${type}`}>{text('policyExpiry')}</Label>
-                <Input
-                  ref={(node) => {
-                    if (node) expiryInputs.current[type] = node;
-                    else delete expiryInputs.current[type];
-                  }}
-                  id={`verification-expiry-${type}`}
-                  inputMode="numeric"
-                  dir="ltr"
-                  value={expiry[type]}
-                  onChange={(e) => {
-                    setExpiry({ ...expiry, [type]: e.target.value });
-                    setSaved(false);
-                    setInvalid(false);
-                  }}
-                  aria-describedby="verification-policy-expiry-help"
-                  aria-invalid={invalid || undefined}
-                />
-              </fieldset>
-            ))}
-            <p id="verification-policy-expiry-help" className="text-sm">
+              ))}
+            </div>
+            <p id="verification-policy-expiry-help" className="text-sm text-muted-foreground">
               {text('policyExpiryHelp')}
             </p>
-            <label className="flex items-center gap-2">
+            <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 checked={draft.autoVerifyStaff}
@@ -305,7 +318,7 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
               />
               {text('policyStaff')}
             </label>
-            <label className="flex items-center gap-2">
+            <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 checked={draft.allowManualOverride}
@@ -315,11 +328,30 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
             </label>
             <p className="text-sm">{text('policyOverrideHelp')}</p>
             {invalid && <Alert variant="destructive">{text('policyInvalidExpiry')}</Alert>}
-            <Button type="submit">{text('save')}</Button>
-            <Button type="button" disabled={!matchesDraft} onClick={() => prepare('activate')}>
+          </fieldset>
+          {proposed && (
+            <RecordEditorDisclosure label={text('policyCompare')}>
+              <ConfigPreviewCard
+                title={text('policyCompare')}
+                hideTitle
+                current={summary(state.current.active)}
+                draft={summary(proposed)}
+              />
+            </RecordEditorDisclosure>
+          )}
+          <StickyRecordEditorActions>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={blocked || busy || !matchesDraft}
+              onClick={() => prepare('activate')}
+            >
               {text('activate')}
             </Button>
-          </fieldset>
+            <Button type="submit" disabled={blocked || busy}>
+              {text('save')}
+            </Button>
+          </StickyRecordEditorActions>
         </form>
       )}
       {state.current && !state.scope.denied && (

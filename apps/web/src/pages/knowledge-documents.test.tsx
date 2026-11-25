@@ -283,6 +283,7 @@ it('reuses verified uploaded bytes after cancellation and owned server feedback'
   await file(new File(['data'], 'guide.txt'));
   await submit('kb-new-document');
   expect(attach).toHaveBeenCalledTimes(1);
+  expect(attach.mock.calls[0]![0]).toEqual({ storageKey, fileName: 'guide.txt' });
   expect(request).toHaveBeenCalledTimes(4);
   await act(async () => {
     expect(attach.mock.calls[0]![1].fields(['storageKey'])).toBe(true);

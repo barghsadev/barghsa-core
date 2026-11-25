@@ -34,22 +34,18 @@ for (const type of catalogueTypes)
           },
         })
       );
-      let timezoneFail = type === 'consultation',
-        timezoneReads = 0;
+      let timezoneReads = 0;
       await page.route('**/api/user/settings/timezone', (route) => {
         timezoneReads++;
-        return timezoneFail
-          ? route.fulfill({ status: 503, json: {} })
-          : route.fulfill({ json: { timezone: 'Asia/Tehran' } });
+        return route.fulfill({ json: { timezone: 'Asia/Tehran' } });
       });
       let held: Route | undefined,
-        holdList = false,
+        holdDetail = false,
         detailFail = true,
         hardwareFail = type === 'saving_plan',
         hardwareReads = 0,
         writes = 0;
-      const listReads: string[] = [],
-        otherReads: string[] = [];
+      const listReads: string[] = [];
       await page.route('**/api/admin/catalogue/**', (route) => {
         const url = new URL(route.request().url());
         if (route.request().method() !== 'GET') {
@@ -65,17 +61,17 @@ for (const type of catalogueTypes)
               : route.fulfill({ json: [catalogueProduct('hardware', hardwareId)] });
           }
           listReads.push(url.pathname + url.search);
-          if (holdList && queried === type) {
+          return route.fulfill({ json: [catalogueProduct(queried)] });
+        }
+        if (url.pathname === `${base}/${id}`) {
+          if (holdDetail) {
             held = route;
             return;
           }
-          return route.fulfill({ json: [catalogueProduct(queried)] });
-        }
-        otherReads.push(url.pathname);
-        if (url.pathname === `${base}/${id}`)
           return detailFail
             ? route.fulfill({ status: 503, json: {} })
             : route.fulfill({ json: catalogueDetail(type) });
+        }
         if (url.pathname.endsWith('/rule-references'))
           return route.fulfill({ json: catalogueReferences });
         if (url.pathname.endsWith('/configuration'))
@@ -96,20 +92,21 @@ for (const type of catalogueTypes)
       const panel = (category: CatalogueType) =>
         page.getByRole('tabpanel', { name: label(category), exact: true });
       await expect(
-        panel('consultation').locator('[data-slot="list-content"]').getByRole('button').first()
+        panel('consultation').locator('[data-slot="list-content"]').getByRole('link').first()
       ).toBeVisible();
       if (type !== 'consultation') {
         await page.getByRole('tab', { name: label(type), exact: true }).click();
       }
       const content = panel(type).locator('[data-slot="list-content"]');
-      await expect(content.getByRole('button').first()).toBeVisible();
+      await expect(content.getByRole('link').first()).toBeVisible();
+      const accountTimeReads = timezoneReads;
       const productTitle = catalogueProduct(type).title[locale];
       await content
-        .getByRole('button', { name: `${label('edit')} ${productTitle}`, exact: true })
+        .getByRole('link', { name: `${label('edit')} ${productTitle}`, exact: true })
         .click();
       const detailError = page.getByRole('alert').filter({ hasText: label('detailError') });
       await expect(detailError).toBeVisible();
-      await expect(content.getByRole('button').first()).toBeVisible();
+      await expect(content).toHaveCount(0);
       const initialLists = listReads.length,
         initialHardware = hardwareReads;
       detailFail = false;
@@ -129,81 +126,35 @@ for (const type of catalogueTypes)
         await expect(titleInput).toHaveValue('Keep product draft');
         expect(listReads).toHaveLength(initialLists);
       }
-      if (timezoneFail) {
-        const error = page.getByRole('alert').filter({ hasText: label('timezoneError') });
-        await expect(error).toBeVisible();
-        await expect(
-          page.getByRole('button', { name: label('addPrice'), exact: true })
-        ).toHaveCount(0);
-        timezoneFail = false;
-        await error.getByRole('button', { name: label('retry'), exact: true }).click();
-        await expect(
-          page.getByRole('button', { name: label('addPrice'), exact: true })
-        ).toBeVisible();
-        await expect(titleInput).toHaveValue('Keep product draft');
-        expect(listReads).toHaveLength(initialLists);
-      }
-      holdList = true;
-      await page
-        .getByRole('button', { name: label('refresh'), exact: true })
-        .first()
-        .click();
+      expect(timezoneReads).toBe(accountTimeReads);
+      holdDetail = true;
+      await page.getByRole('button', { name: label('refresh'), exact: true }).click();
       await expect.poll(() => !!held).toBe(true);
       await expect(titleInput).toHaveValue('Keep product draft');
-      await expect(content).toHaveAttribute('aria-busy', 'true');
-      await expect(content.getByRole('button').first()).toBeVisible();
       await titleInput.fill('Keep refreshed product draft');
-      await page.getByRole('button', { name: label('addPrice'), exact: true }).click();
-      const priceInput = page.locator('#catalogue-price');
-      await priceInput.fill('19000');
-      if (type === 'saving_plan')
-        await expect(page.locator('#saving-agreement-title')).toBeVisible();
-      if (type === 'hardware') await expect(page.locator('#saving-stock-count')).toBeVisible();
       await held!.fulfill({ status: 503, json: {} });
-      held = undefined;
-      const retry = content.getByRole('button', { name: label('retry'), exact: true });
-      await expect(retry).toBeVisible();
-      const reads = otherReads.length,
-        hardware = hardwareReads,
-        timezone = timezoneReads,
-        failedQuery = listReads.at(-1);
-      holdList = false;
-      await retry.click();
-      await expect(retry).toHaveCount(0);
-      expect(listReads.at(-1)).toBe(failedQuery);
-      expect(otherReads).toHaveLength(reads);
-      expect(hardwareReads).toBe(hardware);
-      expect(timezoneReads).toBe(timezone);
+      await expect(detailError).toBeVisible();
+      await expect(page.getByRole('button', { name: label('save'), exact: true })).toBeDisabled();
+      expect(listReads).toHaveLength(initialLists);
+      holdDetail = false;
+      await detailError.getByRole('button', { name: label('retry'), exact: true }).click();
+      await expect(detailError).toHaveCount(0);
       await expect(titleInput).toHaveValue('Keep refreshed product draft');
-      await expect(priceInput).toHaveValue('19000');
-      expect(
-        await page
-          .locator('[data-slot="list-page"]')
-          .evaluate((el) => el.scrollWidth <= el.clientWidth)
-      ).toBe(true);
-      const axe = await new AxeBuilder({ page }).include('[data-slot="list-page"]').analyze();
-      expect(axe.violations).toEqual([]);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       if (locale === 'fa')
         await page.screenshot({
           path: `/tmp/barghsa-catalogue-${type}-fa-${testInfo.project.name}.png`,
           fullPage: true,
         });
-      holdList = true;
-      await page
-        .getByRole('button', { name: label('refresh'), exact: true })
-        .first()
-        .click();
+      holdDetail = true;
+      held = undefined;
+      await page.getByRole('button', { name: label('refresh'), exact: true }).click();
       await expect.poll(() => !!held).toBe(true);
-      await expect(titleInput).toHaveValue('Keep refreshed product draft');
-      if (type === 'saving_plan')
-        await expect(page.getByRole('button', { name: label('save'), exact: true })).toBeEnabled();
-      await page.getByRole('button', { name: label('save'), exact: true }).click();
-      await expect(page.getByRole('dialog')).toBeVisible();
       await held!.fulfill({ status: 403, json: {} });
-      await expect(content.getByRole('alert')).toContainText(label('denied'));
-      await expect(content.getByRole('button')).toHaveCount(0);
+      await expect(page.getByRole('main').getByRole('alert')).toContainText(label('denied'));
       await expect(titleInput).toHaveCount(0);
       await expect(page.getByRole('dialog')).toHaveCount(0);
+      expect(listReads).toHaveLength(initialLists);
       expect(writes).toBe(0);
     });
   }

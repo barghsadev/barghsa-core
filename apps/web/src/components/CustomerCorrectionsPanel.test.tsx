@@ -6,6 +6,9 @@ import CustomerCorrectionsPanel from './CustomerCorrectionsPanel.js';
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (value: string) => value }),
 }));
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ children }: { children: React.ReactNode }) => <a href="/correction">{children}</a>,
+}));
 
 it('retries a stalled staff correction list and never accepts a timed-out private reply', async () => {
   const container = document.createElement('div');
@@ -39,13 +42,15 @@ it('retries a stalled staff correction list and never accepts a timed-out privat
   });
   vi.stubGlobal('fetch', fetcher);
   try {
-    await act(async () => root.render(<CustomerCorrectionsPanel locale="en" />));
+    await act(async () =>
+      root.render(<CustomerCorrectionsPanel locale="en" search={{}} onSearchChange={vi.fn()} />)
+    );
     expect(stalled.aborted).toBe(false);
     await act(async () => vi.advanceTimersByTimeAsync(15_000));
     expect(stalled.aborted).toBe(true);
     expect(container.querySelector('[role=alert]')).not.toBeNull();
     const retry = [...container.querySelectorAll('button')].find(
-      (button) => button.textContent === 'Refresh corrections'
+      (button) => button.getAttribute('aria-label') === 'Refresh corrections'
     );
     expect(retry).toBeDefined();
     await act(async () => retry!.click());

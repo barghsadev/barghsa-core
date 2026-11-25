@@ -47,7 +47,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: locale === 'fa' ? 'تلاش مجدد' : 'Retry', exact: true })
       .click();
     await expect(
-      page.getByRole('button', {
+      page.getByRole('link', {
         name: locale === 'fa' ? 'ارائه‌دهنده جدید' : 'New provider',
         exact: true,
       })
@@ -79,7 +79,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/providers');
 
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: locale === 'fa' ? 'ارائه‌دهنده جدید' : 'New provider',
         exact: true,
       })
@@ -158,11 +158,9 @@ for (const locale of ['en', 'fa'] as const) {
         provider = { ...provider, id: 'new-version', status: 'draft', lastTestStatus: 'pending' };
       return route.fulfill({ json: provider });
     });
-    await page.goto('/admin/providers');
+    await page.goto('/admin/providers/email/provider-1');
 
-    const row = page
-      .locator('table:visible tbody tr, ol[role=list]:visible > li')
-      .filter({ hasText: 'Lifecycle provider' });
+    const row = page.getByRole('main');
     const activate = row.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true });
     const connection = row.getByRole('button', {
       name: fa ? 'ارسال ایمیل آزمایشی' : 'Send test email',
@@ -226,6 +224,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('status').filter({ hasText: providerFormText('rolledBack', locale) })
     ).toHaveText(providerFormText('rolledBack', locale));
+    await expect(page).toHaveURL(/\/admin\/providers\/email\/new-version$/);
     await expect(activate).toBeDisabled();
     expect(provider.id).toBe('new-version');
     expect(testCalls).toBe(2);
@@ -286,7 +285,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/providers');
 
     await page
-      .getByRole('button', { name: fa ? 'ارائه‌دهنده جدید' : 'New provider', exact: true })
+      .getByRole('link', { name: fa ? 'ارائه‌دهنده جدید' : 'New provider', exact: true })
       .click();
     await page.locator('#email-provider-label').fill('Protected provider');
     await page.locator('#email-provider-transport').selectOption('resend');
@@ -363,7 +362,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       verified = route.request().postDataJSON().code === '123456';
       return route.fulfill({ status: verified ? 200 : 401, json: providerOtpProof() });
     });
-    await page.goto('/admin/providers');
+    await page.goto('/admin/providers/email/protected-row');
 
     const names = {
       'test-connection': 'Send test email',
@@ -371,9 +370,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       disable: 'Disable',
       rollback: providerText('admin.providers.rollback', 'en'),
     };
-    const row = page
-      .locator('table:visible tbody tr, ol[role=list]:visible > li')
-      .filter({ hasText: 'Protected row' });
+    const row = page.getByRole('main');
     if (operation === 'test-connection')
       await row.locator('input[type=email]').fill('staff@example.test');
     await press(
@@ -391,7 +388,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
     expect(attempts).toEqual(
       Array(2).fill(`/api/admin/email-providers/protected-row/${operation}`)
     );
-    await expect(row).toBeVisible();
+    await expect(row.getByRole('heading', { name: provider.label, exact: true })).toBeVisible();
     expect(provider.status).toBe(finalState);
     if (operation === 'rollback')
       await expect(row.getByRole('button', { name: 'Activate', exact: true })).toBeDisabled();
@@ -431,13 +428,7 @@ test('provider draft edit preserves its stored secret through step-up', async ({
     verified = true;
     return route.fulfill({ json: providerOtpProof() });
   });
-  await page.goto('/admin/providers');
-
-  await page
-    .locator('table:visible tbody tr, ol[role=list]:visible > li')
-    .filter({ hasText: 'Existing provider' })
-    .getByRole('button', { name: 'Save', exact: true })
-    .click();
+  await page.goto('/admin/providers/email/draft-row/edit');
   await expect(page.getByLabel('API key', { exact: false })).toHaveValue('');
   await page.getByLabel('From email', { exact: false }).fill('changed@example.test');
   await page.locator('button[type="submit"]').click();

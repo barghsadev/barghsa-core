@@ -1482,7 +1482,7 @@ export class ConsultationWorkflowService {
                 body: 'The customer provided additional information.',
               },
             },
-            link: `/admin/consultations`,
+            link: `/admin/consultations/${id}`,
           },
           client
         );

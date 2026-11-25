@@ -23,6 +23,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service.js';
+import type { TicketAccess } from './ticket-actor.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -51,6 +52,15 @@ export class StaffTicketsController {
         'Profile closure approval requires privacy and ticket permissions',
         403
       );
+  }
+
+  private viewer(req: AuthenticatedRequest, access: TicketAccess) {
+    return {
+      userId: req.session.userId,
+      canWrite: access.canWrite,
+      canAssignOthers: access.canAssignOthers,
+      canApproveClosure: access.canAssignOthers && hasStaffPermission(req, 'admin:users:edit'),
+    };
   }
 
   @Get(':id/closure-preview')
@@ -157,14 +167,7 @@ export class StaffTicketsController {
         client
       )),
       responseTargetHours: await this.ticketsService.responseTargetHours(client),
-      viewer: {
-        userId: req.session.userId,
-        canWrite: access.canWrite,
-        canAssignOthers: access.canAssignOthers,
-        canApproveClosure:
-          hasStaffPermission(req, 'admin:users:edit') &&
-          (hasStaffPermission(req, 'tickets:write') || hasStaffPermission(req, 'tickets:*')),
-      },
+      viewer: this.viewer(req, access),
     }));
   }
 
@@ -211,9 +214,10 @@ export class StaffTicketsController {
         403
       );
     }
-    return this.ticketsService.readAs(req.session, 'read', (client, access) =>
-      this.ticketsService.staffGetTicket(id, access.scope, client)
-    );
+    return this.ticketsService.readAs(req.session, 'read', async (client, access) => ({
+      ...(await this.ticketsService.staffGetTicket(id, access.scope, client)),
+      viewer: this.viewer(req, access),
+    }));
   }
 
   /**

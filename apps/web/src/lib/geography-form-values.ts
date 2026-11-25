@@ -13,23 +13,30 @@ export function validGeographyName(value: string, field: 'nameFa' | 'nameEn') {
   );
 }
 
-export function parseCityRows(text: string): { nameFa: string; nameEn: string }[] | null {
+type CityRowIssue = 'importColumns' | 'invalidFa' | 'invalidEn' | 'importDuplicate';
+
+export function inspectCityRows(text: string) {
   if (text.length > 41000) return null;
   const rows = text
-    .trim()
     .split(/\r?\n/)
-    .filter((line) => line.trim());
+    .flatMap((line, index) => (line.trim() ? [{ line, number: index + 1 }] : []));
   if (!rows.length || rows.length > 200) return null;
-  const cities: { nameFa: string; nameEn: string }[] = [];
-  for (const row of rows) {
-    const cells = row.split('\t').map((cell) => cell.trim());
-    if (
-      cells.length !== 2 ||
-      !validGeographyName(cells[0]!, 'nameFa') ||
-      !validGeographyName(cells[1]!, 'nameEn')
-    )
-      return null;
-    cities.push({ nameFa: cells[0]!, nameEn: cells[1]! });
-  }
-  return cities;
+  const names = new Set<string>();
+  return rows.map(({ line, number }) => {
+    const cells = line.split('\t').map((cell) => cell.trim());
+    const [nameFa = '', nameEn = ''] = cells;
+    let issue: CityRowIssue | null = null;
+    if (cells.length !== 2) issue = 'importColumns';
+    else if (!validGeographyName(nameFa, 'nameFa')) issue = 'invalidFa';
+    else if (!validGeographyName(nameEn, 'nameEn')) issue = 'invalidEn';
+    else if (names.has(nameEn)) issue = 'importDuplicate';
+    else names.add(nameEn);
+    return { number, nameFa, nameEn, issue };
+  });
+}
+
+export function parseCityRows(text: string): { nameFa: string; nameEn: string }[] | null {
+  const rows = inspectCityRows(text);
+  if (!rows || rows.some((row) => row.issue)) return null;
+  return rows.map(({ nameFa, nameEn }) => ({ nameFa, nameEn }));
 }

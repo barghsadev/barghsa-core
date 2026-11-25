@@ -1,6 +1,6 @@
 import { contractReview } from './contract-review-fixture';
-import { approveRiskConfirmation } from './confirmation-fixture';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tContractReviewSignature } from '@barghsa/i18n/contract-review-signature';
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
@@ -100,6 +100,7 @@ for (const locale of ['en', 'fa'] as const)
         })
       );
       let uploaded = false;
+      const confirmations: unknown[] = [];
       const document = {
         id: DOCUMENT,
         profileId: PROFILE,
@@ -131,9 +132,14 @@ for (const locale of ['en', 'fa'] as const)
       });
       const originalReview = contractReview('acceptance');
       let financialReview = originalReview;
-      await page.route(`**${base}/${ID}/acceptance-review?*`, (route) =>
-        route.fulfill({ json: financialReview })
+      let releaseFinancialReview = () => {};
+      const heldFinancialReview = new Promise<void>(
+        (resolve) => (releaseFinancialReview = resolve)
       );
+      await page.route(`**${base}/${ID}/acceptance-review?*`, async (route) => {
+        await heldFinancialReview;
+        await route.fulfill({ json: financialReview });
+      });
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
@@ -199,13 +205,20 @@ for (const locale of ['en', 'fa'] as const)
         expect(upload.headers['x-csrf-token']).toBeUndefined();
         expect(upload.headers['if-none-match']).toBe('*');
         expect(upload.body.toString()).toBe('%PDF-1.7');
-        expect(route.request().postDataJSON()).toMatchObject({ expectedRevision: 1 });
+        const command = route.request().postDataJSON();
+        expect(command).toMatchObject({ expectedRevision: 1 });
+        confirmations.push(command);
+        if (confirmations.length === 1)
+          return route.fulfill({
+            json: { ...document, contractVersionId: '55555555-5555-4555-8555-555555555555' },
+          });
+        expect(command).toEqual(confirmations[0]);
         uploaded = true;
         return route.fulfill({ json: document });
       });
       await page.goto(staff ? '/admin/contracts' : '/contracts');
       await page
-        .getByRole('button', {
+        .getByRole('link', {
           name: `${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`,
           exact: true,
         })
@@ -214,36 +227,53 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail.getByText('9007199254740993', { exact: true })).toBeVisible();
       await expect(detail.getByText('deliveryZone', { exact: true })).toBeVisible();
       await expect(detail.getByText('Northern district', { exact: true })).toBeVisible();
+      const acceptHeading = tContractReviewSignature('acceptHeading', locale);
+      const acceptance = page.getByRole('region', { name: acceptHeading, exact: true });
+      const dialog = page.getByRole('dialog');
+      const confirmation = staff
+        ? dialog
+        : acceptance.getByRole('form', { name: words.accept, exact: true });
+      const reviewedContract = acceptance.getByRole('checkbox', {
+        name: `${words.acceptAcknowledgement} ${confirmationText('acknowledge', locale)}`,
+        exact: true,
+      });
       if (!staff) {
         await expect(
-          detail.getByRole('button', { name: words.accept, exact: true })
-        ).toBeDisabled();
-        const acknowledgement = detail.getByRole('checkbox', { name: words.acceptAcknowledgement });
-        await expect(acknowledgement).toHaveAttribute('aria-required', 'true');
-        await acknowledgement.check();
+          detail.getByRole('checkbox', { name: words.acceptAcknowledgement })
+        ).toHaveCount(0);
+        await detail.getByRole('link', { name: acceptHeading, exact: true }).click();
+        await expect(page).toHaveURL(`/contracts/${ID}/accept/${VERSION}`);
+        try {
+          await expect(
+            confirmation.getByRole('button', { name: words.accept, exact: true })
+          ).toBeDisabled();
+          await expect(reviewedContract).toBeDisabled();
+        } finally {
+          releaseFinancialReview();
+        }
+        await expect(acceptance.getByRole('checkbox')).toHaveCount(1);
+        await expect(acceptance.getByText(words.paymentNow, { exact: true })).toBeInViewport();
+        await reviewedContract.check();
+      } else {
+        await detail.getByRole('button', { name: words.publish, exact: true }).click();
       }
-      await detail
-        .getByRole('button', { name: staff ? words.publish : words.accept, exact: true })
+      await confirmation
+        .getByRole('button', { name: staff ? confirm : words.accept, exact: true })
         .click();
-      const dialog = page.getByRole('dialog');
-      if (!staff) {
-        await expect(dialog.getByRole('button', { name: confirm, exact: true })).toBeDisabled();
-        await approveRiskConfirmation(page, locale, 'financial');
-      }
-      await dialog.getByRole('button', { name: confirm, exact: true }).click();
-      await dialog
+      await confirmation
         .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password', {
           exact: true,
         })
         .fill('Test-password');
       if (lostReply) await page.clock.install();
-      await dialog.getByRole('button', { name: confirm, exact: true }).click();
+      await confirmation.getByRole('button', { name: confirm, exact: true }).click();
+      const decision = staff ? detail : acceptance;
       try {
         await expect.poll(() => attempts.length).toBe(2);
         if (lostReply) await page.clock.runFor(15_100);
-        await expect(dialog).toHaveCount(0);
+        await expect(confirmation).toHaveCount(0);
         await expect(
-          detail.getByText(confirmationText('unconfirmed', locale), { exact: true })
+          decision.getByText(confirmationText('unconfirmed', locale), { exact: true })
         ).toBeVisible();
       } finally {
         releaseReply();
@@ -255,35 +285,42 @@ for (const locale of ['en', 'fa'] as const)
         expectedVersionId: VERSION,
         idempotencyKey: expect.any(String),
       });
-      const action = detail.getByRole('button', {
+      const action = decision.getByRole('button', {
         name: staff ? words.publish : words.accept,
         exact: true,
       });
-      await expect(action).toBeDisabled();
-      const check = detail.getByRole('button', {
+      if (staff) await expect(action).toBeDisabled();
+      else await expect(action).toHaveCount(0);
+      const check = decision.getByRole('button', {
         name: confirmationText('checkStatus', locale),
         exact: true,
       });
+      const backToContract = page.getByRole('link', { name: words.backToContract, exact: true });
+      if (!staff) {
+        await expect(backToContract).toHaveAttribute('aria-disabled', 'true');
+        await backToContract.dispatchEvent('click');
+        await expect(page).toHaveURL(`/contracts/${ID}/accept/${VERSION}`);
+        if (locale === 'fa')
+          financialReview = {
+            ...originalReview,
+            hash: 'd'.repeat(64),
+            data: {
+              ...originalReview.data,
+              activation: { ...originalReview.data.activation, ruleRevision: 2 },
+            },
+          };
+      }
       await check.click();
       await expect(check).toHaveCount(0);
       expect(attempts).toHaveLength(2);
       if (!recordedBeforeReply) {
         if (!staff) {
-          await detail.getByRole('checkbox', { name: words.acceptAcknowledgement }).check();
-          if (locale === 'fa')
-            financialReview = {
-              ...originalReview,
-              hash: 'd'.repeat(64),
-              data: {
-                ...originalReview.data,
-                activation: { ...originalReview.data.activation, ruleRevision: 2 },
-              },
-            };
+          await expect(action).toBeDisabled();
+          await reviewedContract.check();
         }
         await action.click();
-        if (!staff) await approveRiskConfirmation(page, locale, 'financial');
-        await dialog.getByRole('button', { name: confirm, exact: true }).click();
-        await expect(dialog).toHaveCount(0);
+        if (staff) await dialog.getByRole('button', { name: confirm, exact: true }).click();
+        await expect(confirmation).toHaveCount(0);
         expect(attempts).toHaveLength(3);
         if (!staff && locale === 'fa') {
           expect(attempts[2]).toMatchObject({ expectedReviewHash: financialReview.hash });
@@ -292,14 +329,24 @@ for (const locale of ['en', 'fa'] as const)
           );
         } else expect(attempts[2]).toEqual(attempts[1]);
       }
+      if (!staff) {
+        await expect(acceptance.getByRole('status')).toContainText(
+          tContractReviewSignature('acceptanceRecorded', locale)
+        );
+        await backToContract.click();
+        await expect(page).toHaveURL(`/contracts/${ID}`);
+      }
       await expect(
         detail
           .getByText(staff ? words.AwaitingCustomerAcceptance : words.Accepted, { exact: true })
           .first()
       ).toBeVisible();
       if (!staff) {
-        await detail.getByRole('button', { name: words.uploadSigned, exact: true }).click();
-        const upload = detail.getByRole('region', { name: documentWords.upload, exact: true });
+        await detail.getByRole('link', { name: words.uploadSigned, exact: true }).click();
+        const uploadPath = `/contracts/${ID}/upload-signed/${VERSION}`;
+        await expect(page).toHaveURL(uploadPath);
+        await page.reload();
+        const upload = page.getByRole('region', { name: words.uploadSigned, exact: true });
         const file = upload.getByLabel(documentWords.file, { exact: true });
         await expect(file).toBeEnabled();
         await file.setInputFiles({
@@ -309,14 +356,20 @@ for (const locale of ['en', 'fa'] as const)
         });
         await upload.getByRole('button', { name: documentWords.upload, exact: true }).click();
         await page.getByRole('dialog').getByRole('button', { name: confirm, exact: true }).click();
-        await expect(detail.getByRole('button', { name: 'signed.pdf', exact: true })).toBeVisible();
+        const retry = upload.getByRole('button', { name: documentWords.retryUpload, exact: true });
+        await expect(retry).toBeEnabled();
+        await expect(page).toHaveURL(uploadPath);
+        await retry.click();
+        await expect(detail.getByRole('link', { name: 'signed.pdf', exact: true })).toBeVisible();
+        await expect(page).toHaveURL(`/contracts/${ID}#contract-documents`);
+        expect(confirmations).toHaveLength(2);
       }
       await expect(
         page
           .locator('[dir]')
           .filter({
             has: page.getByRole('heading', {
-              name: staff ? words.staffTitle : words.title,
+              name: words.recordTitle.replace('{service}', words.electricity),
               exact: true,
             }),
           })

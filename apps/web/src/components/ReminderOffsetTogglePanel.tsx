@@ -1,7 +1,6 @@
 import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
-import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { Button, Input, LoadingStatus } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, Input, LoadingStatus, cn } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -29,12 +28,16 @@ import {
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import {
+  InvoiceTimingServiceList,
+  type InvoiceTimingPanelProps,
+} from './InvoiceTimingServiceList.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 
 /**
  * Admin reminder-offset toggle panel (T-04.1.04.05).
  *
- * Matrix of service types × canonical offsets. Each cell is a switch
- * that PUTs immediately. Missing pairs default to enabled on the API.
+ * Each switch saves independently. Missing pairs default to enabled on the API.
  */
 
 const OFFSET_KEY: Record<InvoiceReminderOffset, string> = {
@@ -234,12 +237,17 @@ function inertOutside(keep: HTMLElement): () => void {
   };
 }
 
-export default function ReminderOffsetTogglePanel() {
+export default function ReminderOffsetTogglePanel(props: InvoiceTimingPanelProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedReminderOffsetTogglePanel key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedReminderOffsetTogglePanel
+      key={JSON.stringify([actor, revision, props.service])}
+      {...props}
+    />
+  );
 }
-function OwnedReminderOffsetTogglePanel() {
+function OwnedReminderOffsetTogglePanel({ onLocked, search, service }: InvoiceTimingPanelProps) {
   const locale = useLocale();
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -278,7 +286,9 @@ function OwnedReminderOffsetTogglePanel() {
   const pendingKeysRef = useRef(new Set<string>());
   const awaitingStepUpRef = useRef<PendingToggle[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [stepUpOpen, setStepUpOpen] = useState(false);
+  const [recorded, setRecorded] = useState(false);
+  const [awaitingStepUp, setAwaitingStepUp] = useState<PendingToggle[]>([]);
+  const stepUpOpen = awaitingStepUp.length > 0;
   const [stepUpPassword, setStepUpPassword] = useState('');
   const [stepUpError, setStepUpError] = useState<string | null>(null);
   const [stepUpSubmitting, setStepUpSubmitting] = useState(false);
@@ -287,6 +297,11 @@ function OwnedReminderOffsetTogglePanel() {
   const stepUpTriggerRef = useRef<HTMLInputElement | null>(null);
   const restoreTriggerRef = useRef(false);
   const stepUpSubmittingRef = useRef(false);
+  const writePending = pendingKeys.size > 0 || stepUpOpen || stepUpSubmitting;
+  useEffect(() => {
+    onLocked?.(writePending);
+    return () => onLocked?.(false);
+  }, [onLocked, writePending]);
 
   function markPending(key: string, pending: boolean) {
     if (pending) pendingKeysRef.current.add(key);
@@ -315,11 +330,12 @@ function OwnedReminderOffsetTogglePanel() {
     restoreTriggerRef.current = false;
     recovery.current = false;
     setPendingKeys(new Set());
-    setStepUpOpen(false);
+    setAwaitingStepUp([]);
     setStepUpSubmitting(false);
     setStepUpPassword('');
     setStepUpError(null);
     setUnconfirmed(false);
+    setRecorded(false);
     setToggles(null);
     setLoadFailed(true);
     setError(t('admin.invoices.reminders.loadFailed', locale));
@@ -357,7 +373,7 @@ function OwnedReminderOffsetTogglePanel() {
         if (result.kind === 'unconfirmed') {
           recovery.current = true;
           setUnconfirmed(true);
-          sendToast('warning', confirmationText('unconfirmed', locale));
+          setRecorded(false);
         }
         return 'done';
       }
@@ -365,8 +381,7 @@ function OwnedReminderOffsetTogglePanel() {
         current ? patchCell(current, item.serviceType, item.offset, result.enabled) : current
       );
       markPending(toggleKey(item.serviceType, item.offset), false);
-      if (alive.current && latest.current === identity)
-        toast.success(confirmationText('recorded', locale));
+      if (alive.current && latest.current === identity) setRecorded(true);
       return 'done';
     } finally {
       writes.current.delete(controller);
@@ -470,13 +485,15 @@ function OwnedReminderOffsetTogglePanel() {
     markPending(key, true);
     setToggles((current) => (current ? patchCell(current, serviceType, offset, enabled) : current));
     setError(null);
+    setRecorded(false);
     const item: PendingToggle = { serviceType, offset, enabled, previousEnabled };
     const outcome = await persistToggle(item);
     if (outcome === 'step_up') {
-      awaitingStepUpRef.current.push(item);
+      const next = [...awaitingStepUpRef.current, item];
+      awaitingStepUpRef.current = next;
       if (!stepUpTriggerRef.current) stepUpTriggerRef.current = trigger;
       restoreTriggerRef.current = true;
-      setStepUpOpen(true);
+      setAwaitingStepUp(next);
     }
   }
 
@@ -485,7 +502,7 @@ function OwnedReminderOffsetTogglePanel() {
     const pending = awaitingStepUpRef.current;
     awaitingStepUpRef.current = [];
     for (const item of pending) revertToggle(item);
-    setStepUpOpen(false);
+    setAwaitingStepUp([]);
     setStepUpPassword('');
     setStepUpError(null);
     setStepUpSubmitting(false);
@@ -512,7 +529,7 @@ function OwnedReminderOffsetTogglePanel() {
       }
       const pending = awaitingStepUpRef.current;
       awaitingStepUpRef.current = [];
-      setStepUpOpen(false);
+      setAwaitingStepUp([]);
       setStepUpPassword('');
       for (const item of pending) {
         if (!ownsWrite(controller)) return;
@@ -549,107 +566,123 @@ function OwnedReminderOffsetTogglePanel() {
 
   return (
     <section
-      className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
+      className={`${recordEditorSurface} scroll-mt-28 text-card-foreground`}
       dir={isRtl ? 'rtl' : 'ltr'}
       aria-labelledby="reminder-offset-heading"
     >
-      <div>
-        <h2 id="reminder-offset-heading" className="text-lg font-semibold">
-          {t('admin.invoices.reminders.title', locale)}
+      <header className="space-y-1 border-b bg-muted/25 px-4 py-3.5 sm:px-6">
+        <h2 id="reminder-offset-heading" className="text-base font-semibold">
+          {t(
+            service ? 'admin.invoices.reminders.schedule' : 'admin.invoices.reminders.serviceCol',
+            locale
+          )}
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t('admin.invoices.reminders.description', locale)}
+        <p className="text-sm text-muted-foreground">
+          {t(
+            service
+              ? 'admin.invoices.reminders.scheduleHelp'
+              : 'admin.invoices.tools.remindersHelp',
+            locale
+          )}
         </p>
-      </div>
+      </header>
 
-      {error && (
-        <div
-          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded"
-          role="alert"
-        >
-          {error}
+      {(error || unconfirmed) && (
+        <div className="px-4 pt-3 sm:px-6">
+          <Alert variant="destructive" role="group" className="gap-2.5">
+            <AlertDescription className="space-y-1">
+              {unconfirmed && <p role="status">{confirmationText('unconfirmed', locale)}</p>}
+              {error && <p role="alert">{error}</p>}
+            </AlertDescription>
+            {(loadFailed || unconfirmed) && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-fit"
+                disabled={loading || pendingKeys.size > 0 || stepUpSubmitting}
+                onClick={() => void load()}
+              >
+                {t('admin.invoices.reminders.reload', locale)}
+              </Button>
+            )}
+          </Alert>
         </div>
       )}
-      {unconfirmed && <p role="status">{confirmationText('unconfirmed', locale)}</p>}
-      {(loadFailed || unconfirmed) && (
-        <Button
-          type="button"
-          variant="outline"
-          disabled={loading || pendingKeys.size > 0 || stepUpSubmitting}
-          onClick={() => void load()}
-        >
-          {t('admin.invoices.reminders.reload', locale)}
-        </Button>
+
+      {toggles && !service && (
+        <InvoiceTimingServiceList
+          section="reminders"
+          search={search}
+          disabled={loading || loadFailed || unconfirmed}
+          summary={(id) =>
+            t('admin.invoices.reminders.activeCount', locale)
+              .replace(
+                '{count}',
+                INVOICE_REMINDER_OFFSETS.filter((offset) =>
+                  isEnabled(toggles, id, offset)
+                ).length.toLocaleString(locale)
+              )
+              .replace('{total}', INVOICE_REMINDER_OFFSETS.length.toLocaleString(locale))
+          }
+        />
       )}
 
-      {toggles && (
-        <div className="relative overflow-x-auto">
-          <table className="min-w-full text-sm border-collapse">
-            <caption className="sr-only">{t('admin.invoices.reminders.title', locale)}</caption>
-            <thead>
-              <tr>
-                <th scope="col" className="text-start font-medium text-muted-foreground py-2 pe-4">
-                  {t('admin.invoices.reminders.serviceCol', locale)}
-                </th>
-                {INVOICE_REMINDER_OFFSETS.map((offset) => (
-                  <th
-                    key={offset}
-                    scope="col"
-                    className="text-center font-medium text-muted-foreground py-2 px-2 whitespace-nowrap"
-                  >
-                    {t(OFFSET_KEY[offset], locale)}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {SERVICE_DUE_PERIOD_TYPES.map((serviceType) => (
-                <tr key={serviceType} className="border-t border-border">
-                  <th scope="row" className="text-start font-medium py-3 pe-4 whitespace-nowrap">
-                    {t(serviceKey(serviceType), locale)}
-                  </th>
-                  {INVOICE_REMINDER_OFFSETS.map((offset) => {
-                    const enabled = isEnabled(toggles, serviceType, offset);
-                    const key = toggleKey(serviceType, offset);
-                    const busy = pendingKeys.has(key);
-                    return (
-                      <td key={offset} className="text-center py-3 px-2">
-                        <label className="touch-label inline-flex items-center justify-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            role="switch"
-                            data-testid={`reminder-toggle-${serviceType}-${offset}`}
-                            aria-label={ariaLabel(locale, serviceType, offset)}
-                            aria-checked={enabled}
-                            aria-busy={busy}
-                            checked={enabled}
-                            disabled={busy || loading || loadFailed || unconfirmed}
-                            onChange={(e) =>
-                              handleToggle(serviceType, offset, e.target.checked, e.currentTarget)
-                            }
-                            className="h-4 w-4 rounded border-input"
-                          />
-                          <span className="sr-only">
-                            {enabled
-                              ? t('admin.invoices.reminders.enabled', locale)
-                              : t('admin.invoices.reminders.disabled', locale)}
-                          </span>
-                        </label>
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {toggles && service && (
+        <>
+          <ul className="divide-y">
+            {INVOICE_REMINDER_OFFSETS.map((offset) => {
+              const enabled = isEnabled(toggles, service, offset);
+              const busy = pendingKeys.has(toggleKey(service, offset));
+              return (
+                <li key={offset}>
+                  <label className="touch-label relative flex min-h-12 items-center justify-between gap-3 px-4 py-2 text-sm transition-colors hover:bg-muted/40 sm:px-6">
+                    <input
+                      type="checkbox"
+                      role="switch"
+                      data-testid={`reminder-toggle-${service}-${offset}`}
+                      aria-label={ariaLabel(locale, service, offset)}
+                      aria-checked={enabled}
+                      aria-busy={busy}
+                      checked={enabled}
+                      disabled={busy || loading || loadFailed || unconfirmed}
+                      onChange={(event) =>
+                        handleToggle(service, offset, event.target.checked, event.currentTarget)
+                      }
+                      className="peer absolute inset-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                    />
+                    <span className="font-medium" aria-hidden="true">
+                      {t(OFFSET_KEY[offset], locale)}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'pointer-events-none inline-flex h-5 w-9 shrink-0 items-center rounded-full border px-0.5 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-foreground peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-disabled:opacity-50',
+                        enabled
+                          ? 'justify-end border-primary bg-primary text-primary-foreground'
+                          : 'justify-start border-input bg-muted text-muted-foreground'
+                      )}
+                    >
+                      <span className="size-3.5 rounded-full bg-current" />
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <p
+            role="status"
+            className={recorded && !error ? 'border-t px-4 py-2.5 text-sm sm:px-6' : 'sr-only'}
+          >
+            {recorded && !error ? confirmationText('recorded', locale) : ''}
+          </p>
+        </>
       )}
 
       {stepUpOpen && (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
         <div
           ref={stepUpDialogRef}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 p-4 supports-backdrop-filter:backdrop-blur-xs"
           role="dialog"
           aria-modal="true"
           aria-labelledby="reminder-step-up-title"
@@ -687,47 +720,73 @@ function OwnedReminderOffsetTogglePanel() {
           }}
         >
           <form
-            className="bg-card text-card-foreground rounded-lg shadow-xl p-6 max-w-sm w-full space-y-4"
+            className={cn(
+              recordEditorSurface,
+              'max-h-full w-full max-w-md overflow-y-auto bg-popover text-popover-foreground shadow-xl'
+            )}
             onSubmit={submitStepUp}
           >
-            <div>
-              <h3 id="reminder-step-up-title" className="text-lg font-semibold text-foreground">
+            <header className="space-y-1 border-b bg-muted/25 px-4 py-3.5 sm:px-6">
+              <h3 id="reminder-step-up-title" className="text-base font-semibold text-foreground">
                 {t('admin.invoices.reminders.stepUp.title', locale)}
               </h3>
-              <p id="reminder-step-up-description" className="text-sm text-muted-foreground mt-1">
+              <p id="reminder-step-up-description" className="text-sm text-muted-foreground">
                 {t('admin.invoices.reminders.stepUp.description', locale)}
               </p>
+            </header>
+            <div className="space-y-3 px-4 py-3.5 sm:px-6">
+              <ul className="divide-y rounded-lg border bg-muted/25 px-3 text-sm">
+                {awaitingStepUp.map((item) => (
+                  <li
+                    key={toggleKey(item.serviceType, item.offset)}
+                    className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 py-2"
+                  >
+                    <span>
+                      {t(serviceKey(item.serviceType), locale)} ·{' '}
+                      {t(OFFSET_KEY[item.offset], locale)}
+                    </span>
+                    <span className="font-medium">
+                      {t(
+                        item.enabled
+                          ? 'admin.invoices.reminders.enabled'
+                          : 'admin.invoices.reminders.disabled',
+                        locale
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="reminder-step-up-password"
+                  className="block text-sm font-medium text-foreground"
+                >
+                  {t('admin.invoices.reminders.stepUp.passwordLabel', locale)}
+                </label>
+                <Input
+                  ref={stepUpPasswordRef}
+                  id="reminder-step-up-password"
+                  data-testid="reminder-step-up-password"
+                  type="password"
+                  autoComplete="current-password"
+                  aria-required="true"
+                  aria-describedby={stepUpError ? 'reminder-step-up-error' : undefined}
+                  value={stepUpPassword}
+                  disabled={stepUpSubmitting}
+                  placeholder={t('admin.invoices.reminders.stepUp.passwordPlaceholder', locale)}
+                  onChange={(event) => {
+                    setStepUpPassword(event.target.value);
+                    setStepUpError(null);
+                  }}
+                />
+                {stepUpError && (
+                  <p id="reminder-step-up-error" className="text-sm text-destructive" role="alert">
+                    {stepUpError}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="reminder-step-up-password"
-                className="block text-sm font-medium text-foreground"
-              >
-                {t('admin.invoices.reminders.stepUp.passwordLabel', locale)}
-              </label>
-              <Input
-                ref={stepUpPasswordRef}
-                id="reminder-step-up-password"
-                data-testid="reminder-step-up-password"
-                type="password"
-                autoComplete="current-password"
-                aria-required="true"
-                aria-describedby={stepUpError ? 'reminder-step-up-error' : undefined}
-                value={stepUpPassword}
-                disabled={stepUpSubmitting}
-                placeholder={t('admin.invoices.reminders.stepUp.passwordPlaceholder', locale)}
-                onChange={(event) => {
-                  setStepUpPassword(event.target.value);
-                  setStepUpError(null);
-                }}
-              />
-              {stepUpError && (
-                <p id="reminder-step-up-error" className="text-sm text-destructive" role="alert">
-                  {stepUpError}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-wrap justify-end gap-3">
+            <RecordEditorActions>
               <Button
                 type="button"
                 variant="secondary"
@@ -746,7 +805,7 @@ function OwnedReminderOffsetTogglePanel() {
                   ? t('admin.invoices.reminders.stepUp.verifying', locale)
                   : t('admin.invoices.reminders.stepUp.submit', locale)}
               </Button>
-            </div>
+            </RecordEditorActions>
           </form>
         </div>
       )}

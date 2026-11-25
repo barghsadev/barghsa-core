@@ -3,16 +3,9 @@ import {
   validateServiceResponseTargets,
   type ServiceResponseTargets,
 } from '@barghsa/shared/admin';
+import { SLOT_KEYS, type SlotKey } from './agent-slot-keys.js';
 
-// These fixed surfaces are seeded by migration 0046 and enforced by the slot API.
-export const SLOT_KEYS = [
-  'individual_chatbot',
-  'legal_entity_chatbot',
-  'staff_chatbot',
-  'website_chatbot',
-  'telegram_chatbot',
-] as const;
-export type SlotKey = (typeof SLOT_KEYS)[number];
+export { SLOT_KEYS, type SlotKey } from './agent-slot-keys.js';
 export interface AgentRef {
   id: string;
   title: string;

@@ -1,6 +1,6 @@
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
-import { test, expect } from './coverage-fixture';
+import { expandListFilters, test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 test.use({ viewport: { width: 390, height: 844 } });
 
@@ -14,7 +14,7 @@ for (const locale of ['en', 'fa'] as const) {
       eventKey: 'fixture.versions',
       channel: 'in_app',
       locale,
-      subject: null,
+      subject: 'Notice for {{user.name}}',
       variables: [{ name: 'user.name', description: 'Recipient name' }],
       publishedAt: null,
     };
@@ -70,11 +70,13 @@ for (const locale of ['en', 'fa'] as const) {
               ],
       })
     );
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/preview');
 
     const version = page.locator('#tpl-preview-version');
     const body = page.locator('pre');
+    const title = page.getByText('Notice for user.name', { exact: true });
     await expect(body).toHaveText('Active user.name');
+    await expect(title).toBeVisible();
     await expect(version).toHaveValue('active-v2');
     await version.selectOption('draft-v3');
     await expect(body).toHaveText('Draft user.name');
@@ -82,13 +84,16 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#tpl-preview-channel').selectOption('sms');
     await expect(version).toHaveValue('sms-v1');
     await expect(body).toHaveText('SMS user.name');
+    await expect(title).toHaveCount(0);
     await page.locator('#tpl-preview-channel').selectOption('in_app');
     await page.locator('#tpl-preview-event').selectOption('fixture.other');
     await page.locator('#tpl-preview-locale').selectOption(locale);
     await expect(version).toHaveValue('other-v1');
     await expect(body).toHaveText('Other user.name');
+    await expect(title).toBeVisible();
     await expect(body).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
     await expect(page.getByText('Recipient name', { exact: true })).toBeVisible();
+    await expandListFilters(page, locale);
     await page
       .getByRole('combobox', { name: t('admin.notifications.allStatus', locale), exact: true })
       .selectOption('archived');

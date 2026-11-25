@@ -1,22 +1,26 @@
-import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
-import { useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
+import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  ListPage,
+  ListRefreshButton,
+  PageLoading,
+  StatusBadge,
+  buttonVariants,
+} from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
-import { confirmationText } from '@barghsa/i18n/confirmation';
-import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
-import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisionControls.js';
-import { RefundFormAlert } from './RefundFormFeedback.js';
-import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
-import { validRefundReceipt } from '../lib/refund-receipt.js';
-import { toast } from '../lib/toast-api.js';
-import type { RefundDecisionValues, RefundOperation } from '../hooks/useRefundForm.js';
 import { t } from '@barghsa/i18n/workspace';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentRequestError } from '../lib/documents.js';
-import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-const loadRefundSummary = () => import('./RefundFinancialReviewSummary.js');
+import { contractRefundOperation } from '../lib/invoice-refund-route.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+
 interface Obligation {
   id: string;
   contractId: string | null;
@@ -25,69 +29,51 @@ interface Obligation {
   destination: 'wallet' | 'external_bank';
   state: string;
   bankReference: string | null;
-  nextAttemptAt: string | null;
   exhausted: boolean;
   orderId: string | null;
 }
-export function ContractRefundQueue() {
+
+export function ContractRefundQueue({
+  search = {},
+  before = null,
+}: {
+  search?: Record<string, unknown>;
+  before?: string | null;
+}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedContractRefundQueue key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedContractRefundQueue
+      key={JSON.stringify([actor, revision, before])}
+      search={search}
+      before={before}
+    />
+  );
 }
-function OwnedContractRefundQueue() {
+
+const recordLink = 'touch-action text-primary underline decoration-primary/35 underline-offset-4';
+const referenceLink = recordLink + ' inline-flex items-baseline gap-1.5';
+function OwnedContractRefundQueue({
+  search,
+  before,
+}: {
+  search: Record<string, unknown>;
+  before: string | null;
+}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readContract = useOwnedContractRead(actor, revision, undefined, 'contract-refunds');
-  useEffect(() => {
-    if (window.location.hash === '#refund-obligations')
-      document.getElementById('refund-obligations')?.scrollIntoView();
-  }, []);
-  const locale = useLocale(),
-    word = (key: string) => contractText(key, locale);
-  const [rows, setRows] = useState<Obligation[]>([]),
-    [cursor, setCursor] = useState<string | null>(null),
-    [next, setNext] = useState<string | null>(null),
-    [reload, setReload] = useState(0);
-  const [loading, setLoading] = useState(true),
-    [error, setError] = useState(false),
-    [denied, setDenied] = useState(false);
-  const acceptedRows = useRef<Obligation[]>([]),
-    selected = useRef<Obligation | null>(null),
-    accessDenied = useRef(false),
-    generation = useRef(0);
-  const drafts = useRef<Record<string, RefundDecisionValues>>({});
-  const [action, setAction] = useState<TeamAction | null>(null),
-    [reviewBusy, setReviewBusy] = useState(false),
-    [reviewError, setReviewError] = useState<string | null>(null),
-    [summary, setSummary] = useState<React.ReactNode>(null);
-  const pending = useRef<number | null>(null),
-    current = useRef<TeamAction | null>(null),
-    reviewController = useRef<AbortController | null>(null),
-    readController = useRef<AbortController | null>(null);
-  const actionTools = useRef<{
-    apply: (fields: unknown[]) => boolean;
-    receipt: (result: unknown) => boolean;
-    reset: () => void;
-  } | null>(null);
-  const financialWord = (key: string) =>
-    adminText(
-      `admin.invoices.${key === 'bankReference' ? 'externalRefunds' : 'walletRefunds'}.${key}`,
-      locale
-    );
-  const formWord = (key: string) =>
-    key === 'bankReference' ? word('cancellationBankReference') : word('cancellation.queue.' + key);
-  useEffect(
-    () => () => {
-      ++generation.current;
-      reviewController.current?.abort();
-    },
-    []
-  );
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const word = (key: string) => contractText(key, locale);
+  const [rows, setRows] = useState<(Obligation & { pageBefore: string | null })[]>([]);
+  const [cursor, setCursor] = useState(before);
+  const [next, setNext] = useState<string | null>(null);
+  const [revisionCount, setRevisionCount] = useState(0);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
+
   useEffect(() => {
     const controller = new AbortController();
-    readController.current = controller;
-    setLoading(true);
-    setError(false);
     void readContract<{ obligations: Obligation[]; nextBefore: string | null }>(
       `/api/admin/wallet-refunds/contract-obligations${cursor ? '?before=' + encodeURIComponent(cursor) : ''}`,
       { signal: controller.signal }
@@ -99,334 +85,200 @@ function OwnedContractRefundQueue() {
           (page.nextBefore !== null && typeof page.nextBefore !== 'string')
         )
           throw new Error('Invalid refund queue');
-        const old = acceptedRows.current;
-        const items = cursor
-          ? [
-              ...old.map((row) => page.obligations.find((item) => item.id === row.id) ?? row),
-              ...page.obligations.filter((row) => !old.some((existing) => existing.id === row.id)),
-            ]
-          : page.obligations;
-        if (
-          selected.current &&
-          !items.some((row) => JSON.stringify(row) === JSON.stringify(selected.current))
-        )
-          clearAction();
-        acceptedRows.current = items;
-        accessDenied.current = false;
-        setDenied(false);
-        setRows(items);
+        const pageRows = page.obligations.map((row) => ({ ...row, pageBefore: cursor }));
+        setRows((previous) =>
+          cursor !== before
+            ? [...new Map([...previous, ...pageRows].map((row) => [row.id, row])).values()]
+            : pageRows
+        );
         setNext(page.nextBefore);
+        setStatus('ready');
       })
-      .catch((failure) => {
+      .catch((error) => {
         if (controller.signal.aborted) return;
-        if (failure instanceof DocumentRequestError && [401, 403, 404].includes(failure.status))
-          deny();
-        else setError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status)) {
+          setRows([]);
+          setNext(null);
+          setStatus('denied');
+        } else {
+          setStatus('error');
+        }
       });
     return () => controller.abort();
-  }, [cursor, reload, readContract]);
-  function refresh() {
-    readController.current?.abort();
-    setLoading(true);
-    setCursor(null);
-    setNext(null);
-    setReload((value) => value + 1);
+  }, [before, cursor, revisionCount, readContract]);
+
+  function reload(resetPage: boolean) {
+    setStatus('loading');
+    if (resetPage) {
+      setCursor(before);
+      setNext(null);
+    }
+    setRevisionCount((value) => value + 1);
   }
-  function clearAction() {
-    ++generation.current;
-    selected.current = null;
-    current.current = null;
-    pending.current = null;
-    reviewController.current?.abort();
-    setReviewBusy(false);
-    setAction(null);
-    setSummary(null);
-  }
-  function deny() {
-    accessDenied.current = true;
-    readController.current?.abort();
-    acceptedRows.current = [];
-    clearAction();
-    drafts.current = {};
-    setRows([]);
-    setNext(null);
-    setDenied(true);
-    setLoading(false);
-  }
-  function choose(row: Obligation, command: RefundOperation, form: RefundDecisionDraft) {
-    if (
-      loading ||
-      error ||
-      accessDenied.current ||
-      pending.current !== null ||
-      current.current ||
-      !(command === 'process'
-        ? row.destination === 'wallet' && row.state === 'Failed' && row.exhausted
-        : row.destination === 'external_bank' &&
-          row.state === (command === 'record-transfer' ? 'Approved' : 'Processing'))
-    )
-      return;
-    const owner = ++generation.current;
-    pending.current = owner;
-    selected.current = row;
-    setReviewBusy(true);
-    setReviewError(null);
-    form.operation.current = command;
-    if (command === 'reconcile') form.form.setValue('bankReference', row.bankReference ?? '');
-    const owns = () =>
-      !accessDenied.current && owner === generation.current && pending.current === owner;
-    const apply = (fields: unknown[]) =>
-      command === 'record-transfer' && form.applyServerErrors(fields);
-    void form.form
-      .handleSubmit(async (values) => {
-        if (!owns()) return;
-        const body = command === 'process' ? {} : { bankReference: values.bankReference.trim() };
-        const actionPath = `/api/admin/${row.destination === 'wallet' ? 'wallet-refunds' : 'external-refunds'}/${row.id}/${command}`;
-        const controller = new AbortController();
-        reviewController.current = controller;
-        try {
-          const value = await readContract(
-            actionPath + '/review',
-            { method: 'POST', signal: controller.signal },
-            (path, options) => requestRefundReview(path, body, options.signal!)
-          );
-          const { parseRefundDecisionReview } = await import('@barghsa/shared/finance');
-          if (!owns()) return;
-          const review = parseRefundDecisionReview(value);
-          if (
-            !review ||
-            review.scope.resourceId !== row.id ||
-            review.data.invoice.id !== row.invoiceId ||
-            review.data.refund.destination !== row.destination ||
-            review.data.refund.amount !== row.amount ||
-            review.data.refund.state !== row.state ||
-            review.data.decision.action !== command ||
-            review.data.decision.bankReference !== (body.bankReference ?? null) ||
-            review.data.decision.reason !== null
-          )
-            throw new Error('Invalid obligation review');
-          const { default: RefundFinancialReviewSummary } = await loadRefundSummary();
-          if (!owns()) return;
-          const chosen: TeamAction = {
-            title: word('cancellation.queue.' + command),
-            description: word(
-              command === 'reconcile'
-                ? 'cancellationQueueReconcileNotice'
-                : 'cancellationQueueRetryNotice'
-            ),
-            path: actionPath,
-            method: 'POST',
-            body: { ...body, expectedReviewHash: review.hash },
-            conflictMessage: word('cancellationConflict'),
-            forbiddenMessage: word('denied'),
-          };
-          current.current = chosen;
-          setAction(chosen);
-          setSummary(<RefundFinancialReviewSummary review={review} word={financialWord} />);
-          actionTools.current = {
-            apply,
-            reset: () => {
-              delete drafts.current[row.id];
-              form.form.reset({ reason: '', bankReference: '' });
-            },
-            receipt: (result) =>
-              validRefundReceipt(
-                result,
-                row,
-                command === 'process'
-                  ? ['Processing', 'Completed', 'Failed']
-                  : [review.data.decision.targetState],
-                body.bankReference,
-                command
-              ),
-          };
-        } catch (failure) {
-          if (!owns()) return;
-          if (failure instanceof DocumentRequestError && [401, 403, 404].includes(failure.status)) {
-            deny();
-            return;
-          }
-          if (failure instanceof RefundReviewError && failure.fields && apply(failure.fields))
-            return;
-          setReviewError(
-            word(
-              failure instanceof DocumentRequestError && failure.status === 409
-                ? 'cancellationConflict'
-                : 'cancellationQueueError'
-            )
-          );
-          if (failure instanceof DocumentRequestError && failure.status === 409) refresh();
-        }
-      })()
-      .finally(() => {
-        if (owns()) {
-          pending.current = null;
-          setReviewBusy(false);
-          if (!current.current) selected.current = null;
-        }
-      });
-  }
-  const actionGeneration = generation.current;
-  const controls = (row: Obligation) => (
-    <RefundDecisionControls
-      row={row}
-      referenceOnly
-      prefix="contract-refund"
-      word={formWord}
-      disabled={loading || error || reviewBusy || !!action}
-      initial={
-        drafts.current[row.id] ?? {
-          reason: '',
-          bankReference: row.state === 'Processing' ? (row.bankReference ?? '') : '',
-        }
-      }
-      saveDraft={(values) => {
-        drafts.current[row.id] = values;
-      }}
-      onChoose={(operation, form) => choose(row, operation, form)}
-    />
-  );
-  if (denied) return null;
+
   return (
-    <section
-      id="refund-obligations"
-      className="flex flex-col gap-4 rounded-xl border bg-card p-5"
-      aria-label={word('cancellationQueue')}
-    >
-      <ListPage>
-        <ListPage.Toolbar>
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-semibold">{word('cancellationQueue')}</h2>
-            <Button variant="ghost" disabled={loading} onClick={refresh}>
-              {word('refresh')}
-            </Button>
-          </div>
-        </ListPage.Toolbar>
-        <p className="text-sm text-muted-foreground">{word('cancellationQueueNotice')}</p>
-        <RefundFormAlert message={reviewError ?? undefined} />
-        <ListPage.Content
-          loading={loading}
-          error={error}
-          empty={!rows.length}
-          retainContent={!!rows.length}
-          loadingView={<PageLoading label={word('loading')} />}
-          errorView={
-            <Alert variant="destructive">
-              <AlertDescription>{word('cancellationQueueError')}</AlertDescription>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setReload((value) => value + 1)}
-              >
-                {word('retry')}
-              </Button>
-            </Alert>
-          }
-          emptyView={<p>{word('cancellationQueueEmpty')}</p>}
+    <div className="mx-auto max-w-3xl space-y-3">
+      <Link to="/admin/contracts" search={search} className={recordLink}>
+        {word('backToContracts')}
+      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-xl font-semibold" id="refund-obligations-heading">
+          {word('cancellationQueue')}
+        </h1>
+        {status !== 'denied' && (
+          <ListRefreshButton
+            label={word('refresh')}
+            refreshing={status === 'loading'}
+            onClick={() => reload(true)}
+          />
+        )}
+      </div>
+      {status === 'denied' ? (
+        <Alert variant="destructive">
+          <AlertDescription>{word('denied')}</AlertDescription>
+        </Alert>
+      ) : (
+        <section
+          id="refund-obligations"
+          aria-labelledby="refund-obligations-heading"
+          className="space-y-3"
         >
-          <ul className="divide-y">
-            {rows.map((row) => (
-              <li key={row.id} className="flex flex-col gap-3 py-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-medium">
-                    <bdi>{new Intl.NumberFormat(locale).format(BigInt(row.amount))}</bdi>{' '}
-                    {word('irr')} · {word('cancellation.' + row.destination)}
-                  </p>
-                  <StatusBadge label={word('cancellation.refund.' + row.state)} />
-                </div>
-                {row.contractId ? (
-                  <p className="break-all text-xs text-muted-foreground">
-                    {word('cancellationQueueContract')}: <bdi>{row.contractId}</bdi>
-                  </p>
-                ) : null}
-                {row.orderId && (
-                  <p className="break-all text-xs text-muted-foreground">
-                    {t('electricity.order.success.order', locale)}: <bdi>{row.orderId}</bdi>
-                  </p>
-                )}
-                <p className="break-all text-xs text-muted-foreground">
-                  {word('cancellationInvoice')}: <bdi>{row.invoiceId}</bdi>
+          <p className="text-sm text-muted-foreground">{word('cancellationQueueNotice')}</p>
+          <ListPage>
+            <ListPage.Content
+              loading={status === 'loading'}
+              error={status === 'error'}
+              empty={!rows.length}
+              retainContent={!!rows.length}
+              loadingView={<PageLoading label={word('loading')} />}
+              errorView={
+                <Alert variant="destructive">
+                  <AlertDescription>{word('cancellationQueueError')}</AlertDescription>
+                  <Button type="button" variant="outline" onClick={() => reload(false)}>
+                    {word('retry')}
+                  </Button>
+                </Alert>
+              }
+              emptyView={
+                <p className="rounded-xl border bg-card px-4 py-6 text-sm">
+                  {word('cancellationQueueEmpty')}
                 </p>
-                {row.destination === 'wallet' &&
-                  row.state === 'Failed' &&
-                  (row.exhausted ? (
-                    <>
-                      <p className="text-sm">{word('cancellationQueueExhausted')}</p>
-                      {controls(row)}
-                    </>
-                  ) : (
-                    <p className="text-sm">{word('cancellationQueueScheduled')}</p>
-                  ))}
-                {row.destination === 'external_bank' &&
-                  ['Approved', 'Processing'].includes(row.state) && (
-                    <>
-                      {row.state === 'Processing' && (
-                        <p className="text-sm">
-                          {word('cancellationBankReference')}: <bdi>{row.bankReference}</bdi>
-                        </p>
+              }
+            >
+              <ul className="divide-y rounded-xl border bg-card">
+                {rows.map((row) => {
+                  const operation = contractRefundOperation(row, row.exhausted);
+                  return (
+                    <li
+                      key={row.id}
+                      className="grid min-w-0 gap-3 px-4 py-3.5 sm:grid-cols-[1fr_auto] sm:items-center"
+                    >
+                      <div className="min-w-0 space-y-2">
+                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                          <strong>{numbers.money(row.amount)}</strong>
+                          <span className="text-sm text-muted-foreground">
+                            {word('cancellation.' + row.destination)}
+                          </span>
+                          <StatusBadge label={word('cancellation.refund.' + row.state)} />
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                          {row.contractId && isInvoiceUuid(row.contractId) && (
+                            <Link
+                              to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                              params={{ contractId: row.contractId }}
+                              search={search}
+                              className={referenceLink}
+                              title={row.contractId}
+                            >
+                              {word('cancellationQueueContract')}{' '}
+                              <bdi>{row.contractId.slice(-8)}</bdi>
+                            </Link>
+                          )}
+                          {isInvoiceUuid(row.invoiceId) && (
+                            <Link
+                              to="/admin/invoices/$invoiceId"
+                              params={{ invoiceId: row.invoiceId }}
+                              className={referenceLink}
+                              title={row.invoiceId}
+                            >
+                              {word('cancellationInvoice')} <bdi>{row.invoiceId.slice(-8)}</bdi>
+                            </Link>
+                          )}
+                          {row.orderId && isInvoiceUuid(row.orderId) && (
+                            <Link
+                              to="/admin/electricity-orders/$orderId"
+                              params={{ orderId: row.orderId }}
+                              className={referenceLink}
+                              title={row.orderId}
+                            >
+                              {t('electricity.order.success.order', locale)}{' '}
+                              <bdi>{row.orderId.slice(-8)}</bdi>
+                            </Link>
+                          )}
+                        </div>
+                        {row.state === 'Failed' && row.destination === 'wallet' && (
+                          <p className="text-sm text-muted-foreground">
+                            {word(
+                              row.exhausted
+                                ? 'cancellationQueueExhausted'
+                                : 'cancellationQueueScheduled'
+                            )}
+                          </p>
+                        )}
+                        {row.state === 'Processing' && row.bankReference && (
+                          <p className="break-all text-sm text-muted-foreground">
+                            {word('cancellationBankReference')}{' '}
+                            <bdi className="font-medium text-foreground">{row.bankReference}</bdi>
+                          </p>
+                        )}
+                      </div>
+                      {operation && isInvoiceUuid(row.id) && isInvoiceUuid(row.invoiceId) && (
+                        <Link
+                          to="/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}"
+                          params={{
+                            invoiceId: row.invoiceId,
+                            action: 'refunds',
+                            destination: row.destination === 'wallet' ? 'wallet' : 'bank',
+                            view: row.id,
+                            operation,
+                          }}
+                          state={{ contractRefundQueue: { before: row.pageBefore, search } }}
+                          disabled={status !== 'ready'}
+                          className={buttonVariants({
+                            size: 'sm',
+                            variant: 'outline',
+                            className: 'min-h-11 w-fit',
+                          })}
+                        >
+                          {word('cancellation.queue.' + operation)}
+                        </Link>
                       )}
-                      {controls(row)}
-                    </>
-                  )}
-              </li>
-            ))}
-          </ul>
-        </ListPage.Content>
-        <ListPage.Pagination
-          kind="cursor"
-          hasMore={!!next && !error}
-          loading={loading}
-          label={word('cancellationQueuePages')}
-          nextLabel={word('next')}
-          onNext={() => {
-            if (next) setCursor(next);
-          }}
-        />
-      </ListPage>
-      {action && (
-        <TeamActionDialog
-          risk="financial"
-          action={action}
-          summary={summary}
-          confirmationDisabled={loading || error || accessDenied.current}
-          onClose={() => {
-            if (actionGeneration === generation.current && current.current === action)
-              clearAction();
-          }}
-          onDenied={() => {
-            if (actionGeneration === generation.current && current.current === action) deny();
-          }}
-          onUnconfirmed={() => {
-            if (actionGeneration !== generation.current || current.current !== action) return;
-            clearAction();
-            setReviewError(confirmationText('unconfirmed', locale));
-            refresh();
-          }}
-          onValidationError={(fields) =>
-            actionGeneration === generation.current &&
-            current.current === action &&
-            !!actionTools.current?.apply(fields)
-          }
-          onSuccess={async (result) => {
-            if (
-              accessDenied.current ||
-              actionGeneration !== generation.current ||
-              current.current !== action
-            )
-              return;
-            const tools = actionTools.current;
-            if (!tools?.receipt(result))
-              throw new Error('Refund obligation acknowledgement mismatch');
-            toast.success(word('refundUpdateRecorded'));
-            tools.reset();
-            clearAction();
-            refresh();
-          }}
-        />
+                    </li>
+                  );
+                })}
+              </ul>
+            </ListPage.Content>
+            <ListPage.Pagination
+              kind="cursor"
+              hasMore={!!next && status !== 'error'}
+              loading={status === 'loading'}
+              label={word('cancellationQueuePages')}
+              nextLabel={word('next')}
+              onNext={() => {
+                if (next) {
+                  setStatus('loading');
+                  setCursor(next);
+                }
+              }}
+            />
+            {before && (
+              <Link to="/admin/contracts/refunds" search={search} className={recordLink}>
+                {word('firstRefundPage')}
+              </Link>
+            )}
+          </ListPage>
+        </section>
       )}
-    </section>
+    </div>
   );
 }

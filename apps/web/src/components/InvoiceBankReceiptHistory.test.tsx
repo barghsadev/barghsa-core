@@ -88,18 +88,20 @@ it('retains accepted rows during a failed page and retries its exact microsecond
   expect(String(fetcher.mock.calls.at(-1)![0])).not.toContain('beforeAt=');
 });
 
-it('reapplying an unchanged invoice filter retries the first page instead of leaving an empty loading state', async () => {
+it('keeps accepted receipt history visible when the same filters are applied', async () => {
   const fetcher = vi.fn(
     async () => new Response(JSON.stringify({ items: [row(first)], nextCursor: null }))
   );
   vi.stubGlobal('fetch', fetcher);
   await render();
-  await act(async () =>
-    host
-      .querySelector('form')!
-      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  );
-  expect(fetcher).toHaveBeenCalledTimes(2);
+  await click('Filters');
+  const apply = [...document.querySelectorAll('[role="dialog"] button')].find(
+    (button) => button.textContent === 'Apply filters'
+  ) as HTMLButtonElement;
+  expect(apply).toBeTruthy();
+  await act(async () => apply.click());
+  expect(document.querySelector('[role="dialog"]')).toBeNull();
+  expect(fetcher).toHaveBeenCalledOnce();
   expect(host.textContent).toContain(first);
   expect(host.querySelector('[data-slot="list-content"]')?.getAttribute('aria-busy')).toBeNull();
 });

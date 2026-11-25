@@ -1,11 +1,17 @@
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
-import { useManualServerRead } from '../hooks/useServerQuery.js';
-import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { queryKeys } from '../lib/query-keys.js';
+import {
+  useWalletBalance,
+  walletBalance,
+  walletReadPacket,
+  type WalletBalance,
+} from '../hooks/useWalletBalance.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { toast } from '../lib/toast-api.js';
-import { Skeleton, Alert, AlertDescription, Button } from '@barghsa/ui';
-import { FormField } from '@barghsa/ui/form';
+import { Skeleton, Alert, AlertDescription, Button, Input, Label } from '@barghsa/ui';
+import { CustomerReceiptFields } from '../components/CustomerReceiptFields.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useReceiptForm } from '../hooks/useReceiptForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -14,8 +20,9 @@ import { TransactionList } from '../components/WalletTransactionList.js';
 import { Currency } from '../components/Currency.js';
 import type { WalletPaymentReturn } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { lazy, Suspense, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { t, type Locale } from '@barghsa/i18n/workspace';
+import { Link, useBlocker } from '@tanstack/react-router';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import {
@@ -41,40 +48,6 @@ const OnlinePaymentReturnPanel = lazy(() =>
 const BankReceiptTopUpReviewDialog = lazy(
   () => import('../components/BankReceiptTopUpReviewDialog.js')
 );
-
-const formCardClass = 'min-w-0 space-y-4 rounded-xl border bg-card p-5 text-card-foreground';
-const fieldLabelClass = 'block text-sm font-medium text-foreground';
-const fieldInputClass =
-  'mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40';
-
-interface WalletBalance {
-  balance: string;
-  postedBalance?: string;
-  reservedBalance?: string;
-  currency: string;
-  onlineTopUpLimit?: number;
-  configVersion?: number;
-}
-
-async function walletReadPacket(path: string, signal: AbortSignal) {
-  const response = await fetch(path, { credentials: 'include', signal });
-  return {
-    ok: response.ok,
-    status: response.status,
-    data: response.ok ? ((await response.json()) as unknown) : null,
-  };
-}
-
-function walletBalance(data: unknown): WalletBalance | null {
-  const balance = data as WalletBalance | null;
-  return balance &&
-    typeof balance.balance === 'string' &&
-    /^[0-9]+$/.test(balance.balance) &&
-    typeof balance.currency === 'string' &&
-    balance.currency.trim()
-    ? balance
-    : null;
-}
 
 /** Advertised per-transaction ceiling, or `null` when GET did not return a valid limit. */
 function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null {
@@ -121,30 +94,59 @@ interface WalletPageProps {
   paymentReturn?: WalletPaymentReturn | undefined;
   returnInvoiceId?: string | undefined;
   historyQuery?: ListQueryBinding;
+  topUpMethod?: 'online' | 'bank-receipt';
+  backSearch?: Record<string, unknown>;
 }
 export function WalletPage(props: WalletPageProps = {}) {
   const revision = useProfileContextRevision();
   const actor = useAccountUser();
-  return <CustomerWalletPage key={JSON.stringify([actor, revision])} {...props} />;
+  return (
+    <CustomerWalletPage key={JSON.stringify([actor, revision, props.topUpMethod])} {...props} />
+  );
 }
-function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: WalletPageProps) {
+function WalletMovementGuard({ locked }: { locked: boolean }) {
+  useBlocker({ shouldBlockFn: () => locked, enableBeforeUnload: false });
+  return null;
+}
+
+function CustomerWalletPage({
+  paymentReturn,
+  returnInvoiceId,
+  historyQuery,
+  topUpMethod,
+  backSearch,
+}: WalletPageProps) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
-  const reader = useId();
-  const readWallet = useManualServerRead();
-  const loadRequest = useRef<AbortController | null>(null);
   const receiptFileInput = useRef<HTMLInputElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (topUpMethod) heading.current?.focus({ preventScroll: true });
+  }, [topUpMethod]);
   const locale = useLocale();
   const walletText = (key: string) => t(`wallet.page.${key}`, locale);
   const maintenance = useMaintenance('wallet_topup');
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
-  const [profileId, setProfileId] = useState<string | null>(null);
+  const {
+    profileId,
+    setProfileId,
+    wallet,
+    setWallet,
+    loading,
+    setLoading,
+    error,
+    setError,
+    load,
+    readWallet,
+    loadRequest,
+    mounted,
+  } = useWalletBalance<PageError>(() => {
+    setOnlineReview(null);
+    setReceiptReview(null);
+  });
   const readFinancial = useOwnedFinancialRead(actor, profileRevision, JSON.stringify([profileId]));
-  const [wallet, setWallet] = useState<WalletBalance | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<PageError | null>(null);
   const online = useDraftForm<{ amount: string }>(
     async () => {
       const { createOnlineTopUpSchema } = await import('../lib/wallet-top-up-form-schema.js');
@@ -168,28 +170,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     walletText('loadError')
   );
   const onlinePending = useRef(false),
-    receiptPending = useRef(false),
-    mounted = useRef(false);
+    receiptPending = useRef(false);
   const liveProfile = useRef(profileId);
   liveProfile.current = profileId;
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-      loadRequest.current?.abort();
-    };
-  }, []);
   const [submitting, setSubmitting] = useState(false);
   const [onlineReview, setOnlineReview] = useState<OnlineTopUpReview | null>(null);
   const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
 
   const receipt = useReceiptForm('wallet', parseBankReceiptTopUpAmountIrR);
-  const [receiptAmountInput, setReceiptAmountInput] = receipt.field('amount');
-  const [receiptDate, setReceiptDate] = receipt.field('paymentDate');
-  const [receiptPayerRef, setReceiptPayerRef] = receipt.field('payerReference');
-  const [receiptNote, setReceiptNote] = receipt.field('customerNote');
-  const [receiptBankName, setReceiptBankName] = receipt.field('bankName');
-  const [, setReceiptFile] = receipt.field('file');
   const [receiptUploaded, setReceiptUploaded] = useState<{
     file: File;
     profileId: string;
@@ -208,99 +196,9 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       ? null
       : Math.round(amountValue / 10);
 
-  const receiptAmountDigits = normalizeIrrAmountDigits(receiptAmountInput);
+  const receiptAmountDigits = normalizeIrrAmountDigits(receipt.values.amount);
   const receiptAmountIrR = parseBankReceiptTopUpAmountIrR(receiptAmountDigits);
   const receiptTomanPreview = receiptAmountIrR === null ? null : receiptAmountIrR / 10n;
-
-  const load = useCallback(async () => {
-    loadRequest.current?.abort();
-    const controller = new AbortController();
-    loadRequest.current = controller;
-    const current = () =>
-      mounted.current && loadRequest.current === controller && !controller.signal.aborted;
-    const read = (key: ServerQueryKey, path: string) => {
-      if (!current()) throw new Error('Abandoned wallet read');
-      return readWallet(key, controller.signal, (signal) => walletReadPacket(path, signal));
-    };
-    const withdraw = () => {
-      setWallet(null);
-      setProfileId(null);
-      setOnlineReview(null);
-      setReceiptReview(null);
-    };
-    setLoading(true);
-    setError(null);
-    try {
-      const profileRes = await read(
-        queryKeys.profiles.authority(
-          {
-            context: 'account',
-            ownerId: actor?.trim() ? actor : reader,
-            accountId: actor,
-            revision: profileRevision,
-          },
-          '/api/profiles'
-        ),
-        '/api/profiles'
-      );
-      if (!current()) return;
-      if (!profileRes.ok) {
-        if ([401, 403, 404].includes(profileRes.status)) withdraw();
-        setError('load');
-        return;
-      }
-      const profileData = profileRes.data as { activeProfileId: string | null } | null;
-      if (
-        !profileData ||
-        (profileData.activeProfileId !== null &&
-          (typeof profileData.activeProfileId !== 'string' || !profileData.activeProfileId.trim()))
-      ) {
-        withdraw();
-        setError('load');
-        return;
-      }
-      if (!profileData.activeProfileId) {
-        setError('no-profile');
-        setProfileId(null);
-        setWallet(null);
-        return;
-      }
-      setProfileId(profileData.activeProfileId);
-      const walletRes = await read(
-        queryKeys.wallet.balance({
-          context: 'customer',
-          ownerId: profileData.activeProfileId,
-          accountId: actor,
-          revision: profileRevision,
-        }),
-        `/api/wallet/${profileData.activeProfileId}`
-      );
-      if (!current()) return;
-      if (!walletRes.ok) {
-        if ([401, 403, 404].includes(walletRes.status)) withdraw();
-        setError('load');
-        return;
-      }
-      const walletData = walletBalance(walletRes.data);
-      if (!walletData) {
-        withdraw();
-        setError('load');
-        return;
-      }
-      setWallet(walletData);
-    } catch {
-      if (current()) setError('load');
-    } finally {
-      if (current()) {
-        setLoading(false);
-        loadRequest.current = null;
-      }
-    }
-  }, [actor, profileRevision, reader, readWallet]);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
 
   const handleSubmit = online.form.handleSubmit(async (values) => {
     if (
@@ -588,26 +486,37 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const tomanPreviewText = (amount: number | bigint) =>
     walletText('tomanPreview').replace('{amount}', numbers.irrDigits(amount));
 
-  function receiptFieldError(field: Parameters<typeof receipt.errorId>[0]) {
-    const error = receipt.errors[field];
-    return (
-      error && (
-        <p id={receipt.errorId(field)} role="alert" className="text-sm text-destructive">
-          {error.message}
-        </p>
-      )
-    );
-  }
-
   return (
     <div
-      className="mx-auto max-w-4xl space-y-6"
+      className={topUpMethod ? 'mx-auto max-w-2xl space-y-4' : 'mx-auto max-w-4xl space-y-6'}
       dir={isRtl ? 'rtl' : 'ltr'}
       data-testid="wallet-page"
     >
-      <header>
-        <h1 className="text-3xl font-semibold">{walletText('title')}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{walletText('subtitle')}</p>
+      {topUpMethod && <WalletMovementGuard locked={onlineBusy || receiptBusy} />}
+      <header className="space-y-2">
+        {topUpMethod && (
+          <Link
+            to="/wallet"
+            search={backSearch ?? {}}
+            className="touch-action text-sm text-primary underline underline-offset-4"
+          >
+            {walletText('backToWallet')}
+          </Link>
+        )}
+        <h1
+          ref={heading}
+          tabIndex={topUpMethod ? -1 : undefined}
+          className="text-2xl font-semibold outline-none sm:text-3xl"
+        >
+          {walletText(
+            topUpMethod === 'online'
+              ? 'onlineTitle'
+              : topUpMethod === 'bank-receipt'
+                ? 'receiptTitle'
+                : 'title'
+          )}
+        </h1>
+        {!topUpMethod && <p className="text-sm text-muted-foreground">{walletText('subtitle')}</p>}
         {returnInvoiceId && (
           <a
             className="mt-3 inline-block text-sm font-medium text-primary underline"
@@ -635,15 +544,25 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
         </div>
       ) : (
         <div
-          className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 [&>:not(form)]:col-span-full"
+          className={
+            topUpMethod
+              ? 'space-y-3'
+              : 'grid grid-cols-1 items-start gap-6 lg:grid-cols-2 [&>:not(form)]:col-span-full'
+          }
           data-testid="wallet-loaded"
         >
           {wallet && (
-            <section className={formCardClass}>
+            <section
+              className={
+                topUpMethod
+                  ? 'flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-1 rounded-xl border bg-muted/35 px-4 py-3'
+                  : 'flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-1 rounded-xl border bg-card px-4 py-4 sm:px-6'
+              }
+            >
               <p className="text-sm text-muted-foreground">{walletText('currentBalance')}</p>
-              <p className="text-3xl font-semibold" data-testid="wallet-balance">
+              <p className="min-w-0 text-base font-semibold" data-testid="wallet-balance">
                 {wallet.currency === 'IRR' ? (
-                  <Currency amount={wallet.balance} showToman variant="large" locale={locale} />
+                  <Currency amount={wallet.balance} showToman locale={locale} />
                 ) : (
                   `${numbers.irrDigits(wallet.balance)} ${wallet.currency}`
                 )}
@@ -663,284 +582,147 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
 
           {maintenance?.active && <MaintenanceNotice setting={maintenance} />}
 
-          {profileId && !maintenance?.active && (
-            <form noValidate onSubmit={handleSubmit} className={formCardClass}>
-              {(validationError ||
-                (errorMessage && error !== 'load' && error !== 'no-profile')) && (
-                <Alert variant="destructive" data-testid="wallet-error">
-                  <AlertDescription>{errorMessage || validationError}</AlertDescription>
-                </Alert>
-              )}
-              <h2 className="text-lg font-semibold text-foreground">{walletText('onlineTitle')}</h2>
-              <div>
-                <label htmlFor="top-up-amount" className={fieldLabelClass}>
-                  {walletText('amountLabel')}
-                </label>
-                <input
-                  {...online.bind('amount')}
-                  id="top-up-amount"
-                  data-testid="wallet-amount"
-                  name="amount"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  dir="ltr"
-                  value={amountInput}
-                  disabled={onlineLocked}
-                  aria-describedby={
-                    online.errors.amount
-                      ? `top-up-amount-hint ${online.errorId('amount')}`
-                      : 'top-up-amount-hint'
-                  }
-                  onChange={(event) => {
-                    setAmountInput(normalizeIrrAmountDigits(event.target.value));
-                  }}
-                  className={fieldInputClass}
-                />
-                <p id="top-up-amount-hint" className="mt-2 text-sm text-muted-foreground">
-                  {advertisedLimit === 0
-                    ? walletText('amountHintBlocked')
-                    : walletText('amountHint').replace(
-                        '{limit}',
-                        advertisedLimit !== null ? numbers.irrDigits(advertisedLimit) : '—'
-                      )}
-                </p>
-                {online.errors.amount && (
-                  <p
-                    id={online.errorId('amount')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {online.errors.amount.message}
-                  </p>
+          {profileId && !maintenance?.active && topUpMethod !== 'bank-receipt' && (
+            <form noValidate onSubmit={handleSubmit} className={recordEditorSurface}>
+              <div className="min-w-0 space-y-3 px-4 py-4 sm:px-6">
+                {(validationError ||
+                  (errorMessage && error !== 'load' && error !== 'no-profile')) && (
+                  <Alert variant="destructive" data-testid="wallet-error">
+                    <AlertDescription>{errorMessage || validationError}</AlertDescription>
+                  </Alert>
                 )}
-                {tomanPreview !== null && (
-                  <p className="mt-1 text-sm text-muted-foreground" data-testid="wallet-toman">
-                    {tomanPreviewText(tomanPreview)}
-                  </p>
+                {!topUpMethod && (
+                  <h2 className="text-base font-semibold">{walletText('onlineTitle')}</h2>
                 )}
+                <div className="min-w-0 space-y-1">
+                  <Label htmlFor="top-up-amount">{walletText('amountLabel')}</Label>
+                  <Input
+                    {...online.bind('amount')}
+                    id="top-up-amount"
+                    data-testid="wallet-amount"
+                    name="amount"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    dir="ltr"
+                    value={amountInput}
+                    disabled={onlineLocked}
+                    aria-describedby={
+                      online.errors.amount
+                        ? `top-up-amount-hint ${online.errorId('amount')}`
+                        : 'top-up-amount-hint'
+                    }
+                    onChange={(event) =>
+                      setAmountInput(normalizeIrrAmountDigits(event.target.value))
+                    }
+                    className="sm:max-w-xs"
+                  />
+                  <p id="top-up-amount-hint" className="text-xs text-muted-foreground">
+                    {advertisedLimit === 0
+                      ? walletText('amountHintBlocked')
+                      : walletText('amountHint').replace(
+                          '{limit}',
+                          advertisedLimit !== null ? numbers.irrDigits(advertisedLimit) : '—'
+                        )}
+                  </p>
+                  {online.errors.amount && (
+                    <p
+                      id={online.errorId('amount')}
+                      role="alert"
+                      className="text-sm text-destructive"
+                    >
+                      {online.errors.amount.message}
+                    </p>
+                  )}
+                </div>
               </div>
-              <Button
-                type="submit"
-                data-testid="wallet-submit"
-                disabled={onlineSubmitDisabled}
-                aria-busy={onlineBusy || undefined}
-                className="w-full"
+              <RecordEditorActions
+                secondary={
+                  tomanPreview === null ? undefined : (
+                    <p className="text-sm text-muted-foreground" data-testid="wallet-toman">
+                      {tomanPreviewText(tomanPreview)}
+                    </p>
+                  )
+                }
               >
-                {onlineBusy
-                  ? walletText(onlineReview ? 'submitting' : 'reviewLoading')
-                  : walletText('submit')}
-              </Button>
+                <Button
+                  type="submit"
+                  data-testid="wallet-submit"
+                  disabled={onlineSubmitDisabled}
+                  aria-busy={onlineBusy || undefined}
+                >
+                  {onlineBusy
+                    ? walletText(onlineReview ? 'submitting' : 'reviewLoading')
+                    : walletText('submit')}
+                </Button>
+              </RecordEditorActions>
             </form>
           )}
 
-          {profileId && !maintenance?.active && (
+          {profileId && !maintenance?.active && topUpMethod !== 'online' && (
             <form
               noValidate
               onSubmit={handleReceiptSubmit}
-              className={formCardClass}
+              className={recordEditorSurface}
               data-testid="wallet-receipt-form"
             >
-              <div>
-                <h2 className="text-lg font-semibold text-foreground">
-                  {walletText('receiptTitle')}
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {walletText('receiptSubtitle')}
-                </p>
-              </div>
-
-              {receiptSuccess && (
-                <div
-                  role="status"
-                  data-testid="wallet-receipt-success"
-                  className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
-                >
-                  {walletText('receiptSuccess')}
-                </div>
-              )}
-
-              {(receiptErrorMessage || receiptValidationError) && (
-                <Alert variant="destructive" data-testid="wallet-receipt-error">
-                  <AlertDescription>
-                    {receiptErrorMessage || receiptValidationError}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <div>
-                <label htmlFor="receipt-amount" className={fieldLabelClass}>
-                  {walletText('receiptAmountLabel')}
-                </label>
-                <input
-                  {...receipt.bind('amount')}
-                  aria-required="true"
-                  id="receipt-amount"
-                  data-testid="wallet-receipt-amount"
-                  name="receiptAmount"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  value={receiptAmountInput}
-                  disabled={receiptLocked}
-                  onChange={(event) => {
-                    setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value));
-                  }}
-                  className={fieldInputClass}
-                />
-                {receiptFieldError('amount')}
-                {receiptTomanPreview !== null && (
-                  <p
-                    className="mt-1 text-sm text-muted-foreground"
-                    data-testid="wallet-receipt-toman"
-                  >
-                    {tomanPreviewText(receiptTomanPreview)}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="receipt-date" className={fieldLabelClass}>
-                  {walletText('receiptDateLabel')}
-                </label>
-                <input
-                  {...receipt.bind('paymentDate')}
-                  aria-required="true"
-                  id="receipt-date"
-                  data-testid="wallet-receipt-date"
-                  name="paymentDate"
-                  type="date"
-                  max={new Date().toISOString().slice(0, 10)}
-                  value={receiptDate}
-                  disabled={receiptLocked}
-                  onChange={(event) => {
-                    setReceiptDate(event.target.value);
-                  }}
-                  className={fieldInputClass}
-                />
-                {receiptFieldError('paymentDate')}
-              </div>
-
-              <div>
-                <label htmlFor="receipt-payer-ref" className={fieldLabelClass}>
-                  {walletText('receiptPayerRefLabel')}
-                </label>
-                <input
-                  {...receipt.bind('payerReference')}
-                  aria-required="true"
-                  id="receipt-payer-ref"
-                  data-testid="wallet-receipt-payer-ref"
-                  name="payerReference"
-                  type="text"
-                  autoComplete="off"
-                  maxLength={128}
-                  value={receiptPayerRef}
-                  disabled={receiptLocked}
-                  onChange={(event) => {
-                    setReceiptPayerRef(event.target.value);
-                  }}
-                  className={fieldInputClass}
-                />
-                {receiptFieldError('payerReference')}
-              </div>
-
-              <div>
-                <label htmlFor="receipt-bank-name" className={fieldLabelClass}>
-                  {t('invoices.details.receiptBankNameLabel', locale)}
-                </label>
-                <input
-                  {...receipt.bind('bankName')}
-                  id="receipt-bank-name"
-                  data-testid="wallet-receipt-bank-name"
-                  type="text"
-                  maxLength={128}
-                  autoComplete="off"
-                  value={receiptBankName}
-                  disabled={receiptLocked}
-                  onChange={(event) => {
-                    setReceiptBankName(event.target.value);
-                  }}
-                  className={fieldInputClass}
-                />
-                {receiptFieldError('bankName')}
-              </div>
-              <div>
-                <label htmlFor="receipt-file" className={fieldLabelClass}>
-                  {walletText('receiptFileLabel')}
-                </label>
-                <FormField
-                  control={receipt.form.control}
-                  name="file"
-                  render={({ field }) => (
-                    <input
-                      ref={(element) => {
-                        field.ref(element);
-                        receiptFileInput.current = element;
-                      }}
-                      onBlur={field.onBlur}
-                      aria-invalid={!!receipt.errors.file || undefined}
-                      aria-required="true"
-                      id="receipt-file"
-                      data-testid="wallet-receipt-file"
-                      name="receiptFile"
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
-                      disabled={receiptLocked}
-                      aria-describedby={
-                        receipt.errors.file
-                          ? `receipt-file-hint ${receipt.errorId('file')}`
-                          : 'receipt-file-hint'
-                      }
-                      onChange={(event) => {
-                        const file = event.target.files?.[0] ?? null;
-                        setReceiptFile(file);
-                        setReceiptUploaded(null);
-                        if (receiptError === 'upload') {
-                          setReceiptError(null);
-                        }
-                      }}
-                      className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
-                    />
+              <div className="min-w-0 space-y-3 px-4 py-4 sm:px-6">
+                <div className="space-y-1">
+                  {!topUpMethod && (
+                    <h2 className="text-base font-semibold">{walletText('receiptTitle')}</h2>
                   )}
-                />
-                <p id="receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
-                  {walletText('receiptFileHint')}
-                </p>
-                {receiptFieldError('file')}
-              </div>
-
-              <div>
-                <label htmlFor="receipt-note" className={fieldLabelClass}>
-                  {walletText('receiptNoteLabel')}
-                </label>
-                <textarea
-                  {...receipt.bind('customerNote')}
-                  id="receipt-note"
-                  data-testid="wallet-receipt-note"
-                  name="customerNote"
-                  rows={3}
-                  maxLength={2000}
-                  value={receiptNote}
+                  <p className="text-sm text-muted-foreground">{walletText('receiptSubtitle')}</p>
+                </div>
+                {receiptSuccess && (
+                  <div
+                    role="status"
+                    data-testid="wallet-receipt-success"
+                    className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
+                  >
+                    {walletText('receiptSuccess')}
+                  </div>
+                )}
+                {(receiptErrorMessage || receiptValidationError) && (
+                  <Alert variant="destructive" data-testid="wallet-receipt-error">
+                    <AlertDescription>
+                      {receiptErrorMessage || receiptValidationError}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                <CustomerReceiptFields
+                  kind="wallet"
+                  draft={receipt}
                   disabled={receiptLocked}
-                  onChange={(event) => setReceiptNote(event.target.value)}
-                  className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  maxDate={new Date().toISOString().slice(0, 10)}
+                  fileInput={receiptFileInput}
+                  onEdit={(name) => {
+                    if (name !== 'file') return;
+                    setReceiptUploaded(null);
+                    if (receiptError === 'upload') setReceiptError(null);
+                  }}
+                  amountHint={
+                    receiptTomanPreview === null ? null : (
+                      <p data-testid="wallet-receipt-toman">
+                        {tomanPreviewText(receiptTomanPreview)}
+                      </p>
+                    )
+                  }
                 />
-                {receiptFieldError('customerNote')}
               </div>
-
-              <Button
-                type="submit"
-                data-testid="wallet-receipt-submit"
-                disabled={receiptLocked}
-                aria-busy={receiptBusy || undefined}
-                className="w-full"
-              >
-                {receiptBusy ? walletText('receiptSubmitting') : walletText('receiptSubmit')}
-              </Button>
+              <RecordEditorActions className="max-sm:justify-start">
+                <Button
+                  type="submit"
+                  data-testid="wallet-receipt-submit"
+                  disabled={receiptLocked}
+                  aria-busy={receiptBusy || undefined}
+                >
+                  {receiptBusy ? walletText('receiptSubmitting') : walletText('receiptSubmit')}
+                </Button>
+              </RecordEditorActions>
             </form>
           )}
 
-          {profileId && (
+          {profileId && !topUpMethod && (
             <TransactionList
               key={`${profileId}-${receiptSuccess}`}
               profileId={profileId}

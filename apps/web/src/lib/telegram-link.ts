@@ -1,4 +1,4 @@
-import { settingsUuid } from './settings-form.js';
+import { settingsUuid } from './settings-profile-directory.js';
 const object = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
 const id = (v: unknown): v is string =>

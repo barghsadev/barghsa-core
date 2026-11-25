@@ -203,6 +203,12 @@ it('allows managers, automatically sets the first main address, and preserves or
     second = await create('manager');
   expect(first.mainAddress).toBe(true);
   expect(second.mainAddress).toBe(false);
+  const access = await request('GET', '/access', 'manager');
+  expect(access.status).toBe(200);
+  expect(await access.json()).toEqual({ profileId, canEdit: true });
+  const detail = await request('GET', `/${second.id}`, 'manager');
+  expect(detail.status).toBe(200);
+  expect(await detail.json()).toMatchObject({ id: second.id, profileId, mainAddress: false });
   const product = (
     await http.pool.query(
       `INSERT INTO products(type,title,status) VALUES ('hardware','{"en":"Fixture"}','active') RETURNING id`
@@ -219,6 +225,7 @@ it('allows managers, automatically sets the first main address, and preserves or
     (await request('PUT', `/${second.id}`, 'manager', { fullAddress: 'Changed address' })).status
   ).toBe(200);
   expect((await request('DELETE', `/${second.id}`, 'manager')).status).toBe(200);
+  expect((await request('GET', `/${second.id}`, 'manager')).status).toBe(404);
   expect((await http.pool.query('SELECT * FROM orders WHERE id=$1', [order.id])).rows[0]).toEqual(
     order
   );
@@ -255,6 +262,8 @@ it('denies unrelated, finance, legal and removed manager address changes', async
     second = await create();
   for (const user of ['stranger', 'finance', 'legal']) {
     expect((await request('GET', '', user)).status).toBe(404);
+    expect((await request('GET', '/access', user)).status).toBe(404);
+    expect((await request('GET', `/${second.id}`, user)).status).toBe(404);
     expect((await request('DELETE', `/${second.id}`, user)).status).toBe(404);
     expect((await request('POST', `/${second.id}/set-main`, user)).status).toBe(404);
   }

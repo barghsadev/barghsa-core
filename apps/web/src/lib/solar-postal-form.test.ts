@@ -31,16 +31,17 @@ const guidance = {
   en: ' Guidance ',
   destinationAddress: ' Address ',
   contactDetails: ' Contact ',
-  originalsFa: ' سند اول \n\n سند دوم ',
-  originalsEn: ' First \n Second ',
+  items: [
+    { fa: ' سند اول ', en: ' First ' },
+    { fa: ' سند دوم ', en: ' Second ' },
+  ],
 };
 const guidanceMessages = {
   fa: 'fa',
   en: 'en',
   destinationAddress: 'address',
   contactDetails: 'contact',
-  originalsFa: 'originals',
-  originalsEn: 'originals',
+  items: 'originals',
 };
 const paths = (value: ReturnType<typeof safeParse>) =>
   value.success ? [] : value.error.issues.map((issue) => issue.path.join('.'));
@@ -140,31 +141,15 @@ for (const [field, limit, required] of [
     ]);
     expect(safeParse(schema, { ...guidance, [field]: '' }).success).toBe(!required);
   });
-it('requires ordered paired original lines, with thirty 200-character lines allowed and empty paired lists valid', () => {
+it('requires paired originals, with thirty 200-character names allowed and an optional empty list', () => {
   const schema = postalGuidanceSchema(guidanceMessages);
-  const lines = Array.from({ length: 30 }, () => 'x'.repeat(200)).join('\n');
-  expect(safeParse(schema, { ...guidance, originalsFa: lines, originalsEn: lines }).success).toBe(
-    true
-  );
+  const items = Array.from({ length: 30 }, () => ({ fa: 'x'.repeat(200), en: 'x'.repeat(200) }));
+  expect(safeParse(schema, { ...guidance, items }).success).toBe(true);
+  expect(paths(safeParse(schema, { ...guidance, items: [...items, items[0]] }))).toEqual(['items']);
   expect(
-    paths(
-      safeParse(schema, {
-        ...guidance,
-        originalsFa: lines + '\nlast',
-        originalsEn: lines + '\nlast',
-      })
-    )
-  ).toEqual(['originalsFa', 'originalsEn']);
-  expect(
-    paths(safeParse(schema, { ...guidance, originalsFa: 'x'.repeat(201) + '\nSecond' }))
-  ).toEqual(['originalsFa']);
-  expect(paths(safeParse(schema, { ...guidance, originalsEn: 'One' }))).toEqual([
-    'originalsFa',
-    'originalsEn',
-  ]);
-  expect(safeParse(schema, { ...guidance, originalsFa: ' \n', originalsEn: '' }).success).toBe(
-    true
-  );
+    paths(safeParse(schema, { ...guidance, items: [{ fa: 'x'.repeat(201), en: '' }] }))
+  ).toEqual(['items.0.fa', 'items.0.en']);
+  expect(safeParse(schema, { ...guidance, items: [] }).success).toBe(true);
   const body = postalGuidanceBody(guidance);
   expect(body).toEqual({
     fa: 'راهنما',

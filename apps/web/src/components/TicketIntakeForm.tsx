@@ -1,9 +1,9 @@
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { LoadingStatus, Button, Input, NativeSelect, Textarea } from '@barghsa/ui';
+import { Button, Input, NativeSelect, Textarea } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -16,7 +16,6 @@ import {
 } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
-import { documentText } from '@barghsa/i18n/documents';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketAttachment,
@@ -30,7 +29,14 @@ import {
   type TicketCoordination,
 } from '../lib/ticket-form.js';
 import { useTicketFormFeedback } from '../hooks/useTicketFormFeedback.js';
-import { FilePreview } from './FilePreview.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
+import { TicketFileField } from './TicketFileField.js';
+import type { TicketRelatedRecord } from '../lib/support-list-query.js';
 const empty: TicketIntakeValues = {
   subject: '',
   body: '',
@@ -45,6 +51,7 @@ export function TicketIntakeForm({
   scope,
   locale,
   open,
+  related,
   locked,
   coordination,
   send,
@@ -56,6 +63,7 @@ export function TicketIntakeForm({
   scope: string;
   locale: Locale;
   open: boolean;
+  related?: TicketRelatedRecord;
   locked: boolean;
   coordination: TicketCoordination;
   send: TicketCommandSender;
@@ -72,16 +80,21 @@ export function TicketIntakeForm({
   current.current = scope;
   const alive = useRef(true),
     uploaded = useRef(new Map<File, string>()),
-    offered = useRef<TicketOptions | null>(null);
+    offered = useRef<TicketOptions | null>(null),
+    prefilled = useRef(false);
   const [optionsResult, setOptionsResult] = useState<{
       key: string;
       options: TicketOptions | null;
       error?: 'forbidden' | 'load';
     } | null>(null),
+    [profileResult, setProfileResult] = useState<{
+      key: string;
+      profiles: TicketOptions['profiles'];
+    } | null>(null),
     [recordPage, setRecordPage] = useState(1),
     [version, setVersion] = useState(0),
     [preview, setPreview] = useState<File | null>(null),
-    [fileVersion, setFileVersion] = useState(0);
+    [relatedUnavailable, setRelatedUnavailable] = useState(false);
   const form = useZodForm<TicketIntakeValues>(
     async () => {
       const token = scope;
@@ -106,9 +119,7 @@ export function TicketIntakeForm({
     text('error'),
     open && !!actor
   );
-  const values = form.watch(),
-    profileId = values.profileId,
-    files = values.files;
+  const { profileId, record: selectedRecordKey, files } = form.watch();
   const pending = locked || form.formState.isSubmitting;
   useEffect(() => {
     alive.current = true;
@@ -128,13 +139,21 @@ export function TicketIntakeForm({
           'ticket-intake-options',
           profileId,
           recordPage,
+          related?.relatedType,
+          related?.relatedId,
           version,
         ])
       : null;
+  const profileKey = JSON.stringify([scope, actor, profileRevision]);
   const result = optionsResult?.key === optionsKey ? optionsResult : null;
   const options = result?.options ?? null;
+  const selectedRecord = options?.records.find((r) => r.type + ':' + r.id === selectedRecordKey);
   const error = result?.error;
   const loading = optionsKey !== null && !result;
+  const profiles =
+    open && actor && error !== 'forbidden' && profileResult?.key === profileKey
+      ? profileResult.profiles
+      : null;
   const optionsQueryKey =
     optionsKey && actor
       ? queryKeys.catalogue.detail(
@@ -152,13 +171,19 @@ export function TicketIntakeForm({
     enabled: false,
     manual: true,
     read: async (signal) => {
-      const response = await fetch(
-        '/api/tickets/options' +
-          (profileId
-            ? '?profileId=' + encodeURIComponent(profileId) + '&recordPage=' + recordPage
-            : ''),
-        { credentials: 'include', signal }
-      );
+      const query = new URLSearchParams();
+      if (profileId) {
+        query.set('profileId', profileId);
+        query.set('recordPage', String(recordPage));
+      }
+      if (related) {
+        query.set('relatedType', related.relatedType);
+        query.set('relatedId', related.relatedId);
+      }
+      const response = await fetch('/api/tickets/options' + (query.size ? '?' + query : ''), {
+        credentials: 'include',
+        signal,
+      });
       if ([401, 403].includes(response.status)) return { status: response.status, value: null };
       if (!response.ok) throw new Error('error');
       return { status: response.status, value: (await response.json()) as unknown };
@@ -167,7 +192,10 @@ export function TicketIntakeForm({
   useEffect(() => {
     setOptionsResult(null);
     offered.current = null;
-    if (!optionsKey) return;
+    if (!optionsKey) {
+      setProfileResult(null);
+      return;
+    }
     const controller = new AbortController(),
       token = scope;
     void optionsQuery
@@ -184,6 +212,19 @@ export function TicketIntakeForm({
         if (!controller.signal.aborted && alive.current && current.current === token) {
           offered.current = parsed;
           setOptionsResult({ key: optionsKey, options: parsed });
+          setProfileResult({ key: profileKey, profiles: parsed.profiles });
+          if (related && !prefilled.current) {
+            if (!profileId && parsed.suggestedProfileId) {
+              form.setValue('profileId', parsed.suggestedProfileId);
+            } else {
+              prefilled.current = true;
+              const record = parsed.records.find(
+                (item) => item.id === related.relatedId && item.type === related.relatedType
+              );
+              if (record) form.setValue('record', record.type + ':' + record.id);
+              else setRelatedUnavailable(true);
+            }
+          }
         }
       })
       .catch((reason: unknown) => {
@@ -198,7 +239,17 @@ export function TicketIntakeForm({
       controller.abort();
       if (optionsQueryKey) void client.cancelQueries({ queryKey: optionsQueryKey, exact: true });
     };
-  }, [open, actor, scope, profileId, recordPage, version, profileRevision]);
+  }, [
+    open,
+    actor,
+    scope,
+    profileId,
+    recordPage,
+    version,
+    profileRevision,
+    related?.relatedId,
+    related?.relatedType,
+  ]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!actor || !options || !offered.current || !coordination.claim('intake')) return;
@@ -252,7 +303,6 @@ export function TicketIntakeForm({
             form.reset(empty);
             uploaded.current.clear();
             setPreview(null);
-            setFileVersion((x) => x + 1);
             setRecordPage(1);
             await onSaved((v as { id: string }).id);
           },
@@ -271,21 +321,27 @@ export function TicketIntakeForm({
   function field(
     name: Exclude<keyof TicketIntakeValues, 'files'>,
     label: string,
-    choices?: { value: string; label: string }[]
+    choices?: { value: string; label: string }[],
+    context?: { disabled?: boolean; help?: ReactNode }
   ) {
     return (
       <FormField
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem id={'ticket-' + (name === 'profileId' ? 'profile' : name)}>
+          <FormItem id={'ticket-' + (name === 'profileId' ? 'profile' : name)} className="min-w-0">
             <FormLabel>{text(label)}</FormLabel>
             <FormControl>
               {choices ? (
                 <NativeSelect
                   {...field}
+                  className={
+                    context?.disabled
+                      ? 'w-full min-w-0 has-[select:disabled]:opacity-100 [&_select]:border-border [&_select]:text-muted-foreground'
+                      : 'w-full min-w-0'
+                  }
                   aria-required={name === 'category' || name === 'priority' || undefined}
-                  disabled={pending}
+                  disabled={pending || context?.disabled}
                   onChange={(e) => {
                     if (coordination.isLocked()) return;
                     field.onChange(e);
@@ -304,11 +360,24 @@ export function TicketIntakeForm({
                   ))}
                 </NativeSelect>
               ) : name === 'body' ? (
-                <Textarea {...field} aria-required="true" disabled={pending} rows={4} />
+                <Textarea
+                  {...field}
+                  aria-required="true"
+                  disabled={pending}
+                  rows={3}
+                  placeholder={copy('bodyExample')}
+                  className="min-h-[4.5rem] max-h-64"
+                />
               ) : (
-                <Input {...field} aria-required="true" disabled={pending} />
+                <Input
+                  {...field}
+                  aria-required="true"
+                  disabled={pending}
+                  placeholder={name === 'subject' ? copy('subjectExample') : undefined}
+                />
               )}
             </FormControl>
+            {context?.help && <FormDescription>{context.help}</FormDescription>}
             <FormMessage />
           </FormItem>
         )}
@@ -323,76 +392,131 @@ export function TicketIntakeForm({
         aria-label={text('submit')}
         noValidate
         onSubmit={(e) => void submit(e)}
-        className="rounded border bg-card text-card-foreground p-4"
+        className={recordEditorSurface}
       >
-        <fieldset disabled={pending || !actor} className="flex flex-col gap-3">
-          {field('subject', 'subject')}
-          {field('body', 'body')}
-          {field(
-            'category',
-            'category',
-            ['general', 'billing', 'orders', 'privacy'].map((v) => ({
-              value: v,
-              label: text('category.' + v),
-            }))
-          )}
-          {field(
-            'priority',
-            'priority',
-            ['normal', 'high'].map((v) => ({ value: v, label: text(v) }))
-          )}
-          {loading ? (
-            <LoadingStatus>{text('loading')}</LoadingStatus>
-          ) : options ? (
-            <>
-              {field('profileId', 'profile', [
-                { value: '', label: text('noProfile') },
-                ...options.profiles.map((p) => ({
-                  value: p.id,
-                  label: p.title ?? text('unnamed'),
-                })),
-              ])}
-              {profileId && (
-                <>
-                  {field('record', 'related', [
-                    { value: '', label: text('none') },
-                    ...options.records.map((r) => ({
-                      value: r.type + ':' + r.id,
-                      label:
-                        text(r.type) + ' · ' + r.id.slice(-8) + ' · ' + formatDate(r.created_at),
-                    })),
-                  ])}
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={recordPage === 1}
-                      onClick={() => {
-                        if (coordination.isLocked()) return;
-                        form.setValue('record', '');
-                        setRecordPage((p) => p - 1);
-                      }}
-                    >
-                      {text('previous')}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={!options.hasMoreRecords}
-                      onClick={() => {
-                        if (coordination.isLocked()) return;
-                        form.setValue('record', '');
-                        setRecordPage((p) => p + 1);
-                      }}
-                    >
-                      {text('next')}
-                    </Button>
-                  </div>
-                </>
+        <fieldset disabled={pending || !actor} className="min-w-0 border-0 p-0">
+          <RecordEditorSection title={copy('requestDetails')}>
+            {field('subject', 'subject')}
+            {field('body', 'body')}
+          </RecordEditorSection>
+          <RecordEditorSection title={copy('routingDetails')}>
+            <div className="grid min-w-0 grid-cols-2 gap-3">
+              {field(
+                'category',
+                'category',
+                ['general', 'billing', 'orders', 'privacy'].map((v) => ({
+                  value: v,
+                  label: text('category.' + v),
+                }))
               )}
-            </>
-          ) : (
-            error && (
+              {field(
+                'priority',
+                'priority',
+                ['normal', 'high'].map((v) => ({ value: v, label: text(v) }))
+              )}
+            </div>
+            {relatedUnavailable && (
+              <p role="status" className="text-sm text-muted-foreground">
+                {copy('relatedUnavailable')}
+              </p>
+            )}
+            <div className={recordEditorGrid}>
+              {field(
+                'profileId',
+                'profile',
+                profiles
+                  ? [
+                      { value: '', label: text('noProfile') },
+                      ...profiles.map((p) => ({
+                        value: p.id,
+                        label: p.title ?? text('unnamed'),
+                      })),
+                    ]
+                  : [
+                      {
+                        value: profileId,
+                        label: copy(loading ? 'profilesLoading' : 'profilesUnavailable'),
+                      },
+                    ],
+                {
+                  disabled: !profiles,
+                  ...(!profileId && profiles?.length ? { help: copy('recordLinkHelp') } : {}),
+                }
+              )}
+              {profileId &&
+                field(
+                  'record',
+                  'related',
+                  options?.records.length
+                    ? [
+                        { value: '', label: text('none') },
+                        ...options.records.map((r) => {
+                          const reference = r.contractNumber ?? `…${r.id.slice(-8)}`;
+                          return {
+                            value: r.type + ':' + r.id,
+                            label: `${text(r.type)} · \u2066${reference}\u2069 · ${formatDate(r.created_at)}`,
+                          };
+                        }),
+                      ]
+                    : [
+                        {
+                          value: '',
+                          label: copy(
+                            loading
+                              ? 'recordsLoading'
+                              : error
+                                ? 'recordsUnavailable'
+                                : 'recordsEmpty'
+                          ),
+                        },
+                      ],
+                  {
+                    disabled: !options?.records.length,
+                    help: selectedRecord && !selectedRecord.contractNumber && (
+                      <>
+                        {copy('recordReference')}{' '}
+                        <bdi dir="ltr" className="[overflow-wrap:anywhere]">
+                          {selectedRecord.id}
+                        </bdi>
+                      </>
+                    ),
+                  }
+                )}
+              {loading && (
+                <p role="status" className="sr-only">
+                  {copy(profileId ? 'recordsLoading' : 'profilesLoading')}
+                </p>
+              )}
+            </div>
+            {profileId && (recordPage > 1 || options?.hasMoreRecords) && (
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={recordPage === 1 || !options}
+                  onClick={() => {
+                    if (coordination.isLocked()) return;
+                    form.setValue('record', '');
+                    setRecordPage((p) => p - 1);
+                  }}
+                >
+                  {text('previous')}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!options?.hasMoreRecords}
+                  onClick={() => {
+                    if (coordination.isLocked()) return;
+                    form.setValue('record', '');
+                    setRecordPage((p) => p + 1);
+                  }}
+                >
+                  {text('next')}
+                </Button>
+              </div>
+            )}
+            {error && (
               <div role="alert">
                 <p>{text(error === 'forbidden' ? 'forbidden' : 'optionsError')}</p>
                 {error !== 'forbidden' && (
@@ -407,58 +531,32 @@ export function TicketIntakeForm({
                   </Button>
                 )}
               </div>
-            )
-          )}
-          <FormField
-            control={form.control}
-            name="files"
-            render={({ field }) => (
-              <FormItem id="ticket-files">
-                <FormLabel>{text('files')}</FormLabel>
-                <FormControl>
-                  <input
-                    key={fileVersion}
-                    ref={field.ref}
-                    name={field.name}
-                    onBlur={field.onBlur}
-                    type="file"
-                    multiple
-                    accept="application/pdf,image/jpeg,image/png"
-                    disabled={pending}
-                    onChange={(e) => {
-                      if (coordination.isLocked()) return;
-                      setPreview(null);
-                      field.onChange(Array.from(e.target.files ?? []));
-                    }}
-                    className="block w-full text-sm"
-                  />
-                </FormControl>
-                <FormDescription>{text('fileHelp')}</FormDescription>
-                <FormMessage />
-                <ul className="flex flex-col gap-2">
-                  {files.filter(isAllowedInvoiceReceiptFile).map((file, index) => (
-                    <li key={index} className="flex min-w-0 flex-wrap items-center gap-2">
-                      <bdi className="min-w-0 flex-1 break-words">{file.name}</bdi>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        aria-label={documentText('preview', locale) + ': ' + file.name}
-                        aria-expanded={preview === file}
-                        onClick={() => {
-                          if (!coordination.isLocked())
-                            setPreview((p) => (p === file ? null : file));
-                        }}
-                      >
-                        {documentText(preview === file ? 'hidePreview' : 'preview', locale)}
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-                {preview && files.includes(preview) && (
-                  <FilePreview
-                    file={preview}
-                    name={preview.name}
+            )}
+          </RecordEditorSection>
+          <div className="space-y-3 px-4 py-3 sm:px-6">
+            <FormField
+              control={form.control}
+              name="files"
+              render={({ field }) => (
+                <FormItem id="ticket-files" className="min-w-0 space-y-2">
+                  <TicketFileField
                     locale={locale}
+                    input={field}
+                    files={files}
+                    preview={preview}
+                    disabled={pending}
+                    isLocked={coordination.isLocked}
+                    onChange={(next) => {
+                      for (const file of files)
+                        if (!next.includes(file)) uploaded.current.delete(file);
+                      if (preview && !next.includes(preview)) setPreview(null);
+                      form.clearErrors('files');
+                      field.onChange(next);
+                    }}
+                    onInvalid={() =>
+                      form.setError('files', { type: 'validate', message: copy('filesInvalid') })
+                    }
+                    onPreview={setPreview}
                     onAccessDenied={() => {
                       form.reset(empty);
                       uploaded.current.clear();
@@ -466,20 +564,22 @@ export function TicketIntakeForm({
                       coordination.denied();
                     }}
                   />
-                )}
-              </FormItem>
-            )}
-          />
-          {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
-          <Button type="submit" disabled={pending || !options}>
-            {pending && (
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-              />
-            )}
-            {text(pending ? 'saving' : 'submit')}
-          </Button>
+                </FormItem>
+              )}
+            />
+            {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
+          </div>
+          <RecordEditorActions>
+            <Button type="submit" disabled={pending || !options}>
+              {pending && (
+                <span
+                  aria-hidden="true"
+                  className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                />
+              )}
+              {text(pending ? 'saving' : 'submit')}
+            </Button>
+          </RecordEditorActions>
         </fieldset>
       </form>
     </Form>

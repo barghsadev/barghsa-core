@@ -434,6 +434,7 @@ it('keeps delivery history and correction decisions in the staff operating conte
         headers,
       }),
       fetch(`${http.base}${correctionsPath}`, { headers }),
+      fetch(`${http.base}${correctionsPath}/${id}`, { headers }),
       fetch(`${http.base}${correctionsPath}/${id}/resolve`, {
         method: 'POST',
         headers,
@@ -483,6 +484,22 @@ it('creates one actionable task per open recipient and exposes it only to author
   expect(await response.json()).toMatchObject([
     { id, address: 'recipient@example.test', resolvedAt: null },
   ]);
+  const detail = `${http.base}${correctionsPath}/${id}`;
+  expect((await fetch(detail)).status).toBe(401);
+  const found = await fetch(detail, { headers: staffHeaders });
+  expect(found.status).toBe(200);
+  expect(await found.json()).toMatchObject({
+    id,
+    address: 'recipient@example.test',
+    resolvedAt: null,
+  });
+  expect(
+    (await fetch(`${http.base}${correctionsPath}/${randomUUID()}`, { headers: staffHeaders }))
+      .status
+  ).toBe(404);
+  expect(
+    (await fetch(`${http.base}${correctionsPath}/not-an-id`, { headers: staffHeaders })).status
+  ).toBe(400);
   expect((await resolveCorrection(id)).status).toBe(403);
 });
 it('resolves with current authority and an atomic audit, keeps suppression and allows later complaints to create a fresh task', async () => {
@@ -494,6 +511,13 @@ it('resolves with current authority and an atomic audit, keeps suppression and a
     expect((await resolveCorrection(id, '   ')).status).toBe(400);
     const responses = await Promise.all([resolveCorrection(id), resolveCorrection(id)]);
     expect(responses.map((r) => r.status)).toEqual([200, 200]);
+    const recorded = await fetch(`${http.base}${correctionsPath}/${id}`, { headers: staffHeaders });
+    expect(recorded.status).toBe(200);
+    expect(await recorded.json()).toMatchObject({
+      id,
+      resolvedAt: expect.any(String),
+      resolutionNote: 'Contact corrected',
+    });
     expect(
       (
         await http.pool.query(

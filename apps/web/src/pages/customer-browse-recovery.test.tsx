@@ -2,9 +2,10 @@ import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
+import { t } from '@barghsa/i18n/workspace';
 import { Route } from '../routes/_app/electricity/index.js';
 import { SavingsPage } from './SavingsPage.js';
-import { ConsultationsPage } from './ConsultationsPage.js';
+import { ConsultationIntakePage, ConsultationsPage } from './ConsultationsPage.js';
 import {
   browseElectricity,
   browseSavingPlan,
@@ -38,7 +39,7 @@ const cases = [
   {
     Page: Electricity,
     api: '/api/products/electricity',
-    refresh: 'Refresh products',
+    refresh: t('electricity.catalogue.refresh', 'en'),
     title: 'thermal electricity',
     response: browseElectricity,
   },
@@ -151,7 +152,7 @@ it('saving catalogue reports malformed prices locally and removes purchase links
     vi.fn(async () => response())
   );
   const { host, close } = await mount(SavingsPage);
-  const orderLink = () => host.querySelector('a[href="/savings/order"]');
+  const orderLink = () => host.querySelector('a[href="/savings/orders/new"]');
   try {
     expect(orderLink()).not.toBeNull();
     for (const plan of [
@@ -187,27 +188,20 @@ it('malformed electricity refresh retains validated cards and reports the failur
   const { host, close } = await mount(Electricity);
   try {
     malformed = true;
-    await act(async () => button(host, 'Refresh products').click());
+    await act(async () => button(host, t('electricity.catalogue.refresh', 'en')).click());
     expect(host.querySelector('[role="alert"]')).not.toBeNull();
     expect(host.textContent).toContain('thermal electricity');
   } finally {
     await close();
   }
 });
-it('profile retry exposes history even when products fail, and product retry reloads only products', async () => {
+it('consultation history and intake retry without loading the other screen', async () => {
   let profileFail = true,
     productFail = true;
   const calls: string[] = [];
-  const allCalls: string[] = [];
-  let walletReads = 0;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) => {
-      allCalls.push(url);
-      if (url.startsWith('/api/wallet/')) {
-        walletReads++;
-        return new Response('{}', { status: 403 });
-      }
       calls.push(url);
       return (url === '/api/profiles' && profileFail) || (url.includes('/products?') && productFail)
         ? new Response('{}', { status: 503 })
@@ -219,27 +213,27 @@ it('profile retry exposes history even when products fail, and product retry rel
     expect(host.textContent).toContain('Could not load your active profile.');
     profileFail = false;
     await act(async () => button(host, 'Try again').click());
-    expect(host.textContent).toContain('Available consultations could not be loaded.');
     expect(host.textContent).toContain('Previous consultation');
-    const reads = calls.length;
-    const allReads = allCalls.length;
-    productFail = false;
-    await act(async () => button(host, 'Try again').click());
-    expect(calls.slice(reads)).toEqual([
-      `/api/consultations/products?profileId=${browseProfileId}`,
-    ]);
-    expect(walletReads).toBe(1);
-    expect(allCalls.slice(allReads)).toEqual([
-      `/api/consultations/products?profileId=${browseProfileId}`,
-      `/api/wallet/${browseProfileId}`,
-    ]);
-    expect(host.textContent).toContain('Generation consultation');
-    expect(host.textContent).toContain('Previous consultation');
+    expect(calls.every((path) => !path.includes('/products?'))).toBe(true);
   } finally {
     await close();
   }
+  const { host: intake, close: closeIntake } = await mount(ConsultationIntakePage);
+  try {
+    expect(intake.textContent).toContain('Available consultations could not be loaded.');
+    const reads = calls.length;
+    productFail = false;
+    await act(async () => button(intake, 'Try again').click());
+    expect(calls.slice(reads)).toEqual([
+      `/api/consultations/products?profileId=${browseProfileId}`,
+    ]);
+    expect(intake.textContent).toContain('Generation consultation');
+    expect(intake.textContent).not.toContain('Previous consultation');
+  } finally {
+    await closeIntake();
+  }
 });
-it('product recovery preserves selected/confirmed consultation and its failed submission key; denied products clear it while history stays', async () => {
+it('product recovery preserves selected/confirmed consultation and its failed submission key; denied products clear it', async () => {
   let status = 200,
     hold = false,
     finish: ((response: Response) => void) | undefined;
@@ -263,7 +257,7 @@ it('product recovery preserves selected/confirmed consultation and its failed su
       return Response.json(consultationData(url));
     })
   );
-  const { host, close } = await mount(ConsultationsPage);
+  const { host, close } = await mount(ConsultationIntakePage);
   try {
     const radio = host.querySelector<HTMLInputElement>('input[type="radio"]')!;
     const confirmation = host.querySelector<HTMLInputElement>('form input[type="checkbox"]')!;
@@ -305,7 +299,7 @@ it('product recovery preserves selected/confirmed consultation and its failed su
     await act(async () => button(host, 'Refresh consultations').click());
     expect(host.querySelector('input[type="radio"]')).toBeNull();
     expect(host.querySelector('form input[type="checkbox"]')).toBeNull();
-    expect(host.textContent).toContain('Previous consultation');
+    expect(host.querySelector('a[href="/consultations"]')).not.toBeNull();
   } finally {
     await close();
   }
@@ -322,7 +316,7 @@ it('a refreshed catalogue without the selected product clears confirmation befor
       )
     )
   );
-  const { host, close } = await mount(ConsultationsPage);
+  const { host, close } = await mount(ConsultationIntakePage);
   try {
     await act(async () => {
       host.querySelector<HTMLInputElement>('input[type="radio"]')!.click();

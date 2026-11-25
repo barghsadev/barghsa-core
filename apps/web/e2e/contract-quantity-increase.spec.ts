@@ -130,16 +130,15 @@ for (const locale of ['en', 'fa'] as const) {
         route.fulfill({ json: { documents: [], nextBefore: null } })
       );
       await page.goto(`/contracts?contractId=${contractId}`);
-      await expect(
-        page.getByRole('button', { name: t('electricity.increase.submit', locale), exact: true })
-      ).toBeVisible();
+      const requestLink = page.getByRole('link', {
+        name: t('electricity.increaseForm.openRequest', locale),
+        exact: true,
+      });
+      await expect(requestLink).toBeVisible();
       await scanCriticalMain(page);
       await checkRoutePresentation(page, info, locale);
-      await page
-        .getByRole('button', { name: t('electricity.increase.submit', locale), exact: true })
-        .click();
       const form = page.getByTestId('electricity-increase-form');
-      await expect(form).toBeVisible();
+      await expect(form).toHaveCount(0);
       await page
         .getByRole('button', {
           name: `${contractText('version', locale)} ${(1).toLocaleString(locale)}`,
@@ -147,6 +146,7 @@ for (const locale of ['en', 'fa'] as const) {
         })
         .click();
       await expect(form).toHaveCount(0);
+      await expect(requestLink).toHaveCount(0);
       expect(state.requestWrites).toEqual([]);
       await page
         .getByRole('button', {
@@ -154,9 +154,8 @@ for (const locale of ['en', 'fa'] as const) {
           exact: true,
         })
         .click();
-      await page
-        .getByRole('button', { name: t('electricity.increase.submit', locale), exact: true })
-        .click();
+      await requestLink.click();
+      await expect(page).toHaveURL(`/electricity/orders/${orderId}/increases/new`);
       const quantity = page.locator('#electricity-increase-kwh');
       await expect(quantity).toBeVisible();
       await quantity.fill('12');
@@ -182,6 +181,7 @@ for (const locale of ['en', 'fa'] as const) {
         idempotencyKey: expect.stringMatching(/^[0-9a-f-]{36}$/),
       });
       await expect(form).toHaveCount(0);
+      await expect(page).toHaveURL(`/electricity/orders/${orderId}`);
       await expect(
         page.getByText(t('electricity.increase.status.pending', locale), { exact: true })
       ).toBeVisible();

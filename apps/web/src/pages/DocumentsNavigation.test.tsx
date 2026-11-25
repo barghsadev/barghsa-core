@@ -1,13 +1,13 @@
 import { QueryProvider } from '../test/query-provider.js';
 import { NavigationProvider } from '../hooks/useNavigation.js';
 import { getProfileContextRevision } from '../lib/profile-context.js';
-import { Route as CustomerRoute } from '../routes/_app/documents.js';
+import { Route as CustomerRoute } from '../routes/_app/documents.index.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import AdminLayout from './AdminLayout.js';
 import { DashboardLayout } from './DashboardLayout.js';
-import { Route as DocumentsRoute } from '../routes/admin/documents.js';
+import { Route as DocumentsRoute } from '../routes/admin/documents.index.js';
 import { createMemoryHistory, createRouter } from '@tanstack/react-router';
 import { routeTree } from '../routeTree.gen.js';
 import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
@@ -55,8 +55,36 @@ it('makes the implemented document workspaces reachable from both existing shell
       routeTree,
       history: createMemoryHistory({ initialEntries: ['/documents'] }),
     });
-    expect(router.matchRoutes('/documents').at(-1)?.routeId).toBe('/_app/documents');
-    expect(router.matchRoutes('/admin/documents').at(-1)?.routeId).toBe('/admin/documents');
+    expect(router.matchRoutes('/documents').at(-1)?.routeId).toBe('/_app/documents/');
+    const record = '/documents/22222222-2222-4222-8222-222222222222';
+    for (const path of [
+      '/documents/new',
+      record,
+      ...['replace', 'submit', 'remove'].map((action) => `${record}/${action}`),
+    ]) {
+      expect(router.matchRoutes(path).at(-1)?.routeId).toBe(
+        '/_app/documents/$documentId/{-$operation}'
+      );
+    }
+    expect(router.matchRoutes('/admin/documents').at(-1)?.routeId).toBe('/admin/documents/');
+    expect(router.matchRoutes('/admin/documents/new').at(-1)?.routeId).toBe(
+      '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+    );
+    expect(router.matchRoutes(`/admin${record}`).at(-1)?.routeId).toBe(
+      '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+    );
+    for (const suffix of [
+      'holds',
+      'holds/new',
+      'holds/release/33333333-3333-4333-8333-333333333333',
+    ]) {
+      expect(router.matchRoutes(`/admin${record}/${suffix}`).at(-1)?.routeId).toBe(
+        '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+      );
+    }
+    expect(router.matchRoutes(`/admin${record}/replace`).at(-1)?.routeId).toBe(
+      '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+    );
     vi.spyOn(DocumentsRoute, 'useSearch').mockReturnValue({ q: 'Review' });
     vi.spyOn(DocumentsRoute, 'useNavigate').mockReturnValue(vi.fn());
     const StaffView = DocumentsRoute.options.component!;

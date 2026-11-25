@@ -105,9 +105,10 @@ for (const locale of ['en', 'fa'] as const)
       const contentBox = await content.boundingBox();
       expect(contentBox!.y + contentBox!.height).toBeLessThanOrEqual(barBox!.y + 1);
       if (area === 'customer') {
-        const guideBox = await page
-          .getByRole('button', { name: t('assistant.open', locale), exact: true })
-          .boundingBox();
+        const guide = page.getByRole('button', { name: t('assistant.open', locale), exact: true });
+        await expect(guide).toHaveCSS('position', 'fixed');
+        expect(await guide.evaluate((element) => element.closest('main'))).toBe(null);
+        const guideBox = await guide.boundingBox();
         expect(guideBox!.y + guideBox!.height).toBeLessThan(barBox!.y);
       }
       expect(sheetRequests).toBe(0);
@@ -251,6 +252,9 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page.getByTestId('admin-settings-layout').locator('nav')).toHaveCount(0);
       const sidebar = page.locator('#admin-navigation').getByRole('navigation');
       await expect(sidebar).toBeVisible();
+      for (const group of await sidebar.locator('.shell-sidebar-group-toggle').all()) {
+        if ((await group.getAttribute('aria-expanded')) === 'false') await group.click();
+      }
       const rows = [];
       for (const high of [false, true]) {
         await page.locator('html').evaluate((node, high) => {
@@ -259,7 +263,7 @@ for (const locale of ['en', 'fa'] as const) {
         }, high);
         await page.mouse.move(640, 1);
         const entries = await sidebar
-          .locator('a.shell-navigation-link, p.text-muted-foreground')
+          .locator('a.shell-navigation-link, .shell-sidebar-group-toggle')
           .all();
         expect(entries.length).toBeGreaterThan(10);
         for (const entry of entries) {

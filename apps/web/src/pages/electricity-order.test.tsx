@@ -16,7 +16,7 @@ const wizardNavigate = async (options: {
   params?: unknown;
   replace?: boolean;
 }) => {
-  if (options.to === '/electricity/order') {
+  if (options.to === '/electricity/orders/new') {
     window.history[options.replace ? 'replaceState' : 'pushState'](
       {},
       '',
@@ -121,7 +121,7 @@ let draft: { currentStep: number; data: Record<string, string> | null };
 beforeEach(() => {
   accountTimezone = 'Asia/Tehran';
   document.documentElement.lang = 'en';
-  window.history.replaceState({}, '', '/electricity/order');
+  window.history.replaceState({}, '', '/electricity/orders/new');
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.clearAllMocks();
   catalogue = [product];
@@ -193,7 +193,7 @@ const submit = () =>
   )!;
 const next = () =>
   [...container.querySelectorAll('button')].find(
-    (button) => button.textContent === t('electricity.order.next', 'en')
+    (button) => button.textContent === t('electricity.order.review', 'en')
   )!;
 const advance = () => act(async () => next().click());
 const orderCalls = () =>
@@ -275,9 +275,7 @@ it.each([
   )!;
   invalid = false;
   await act(async () => retry.click());
-  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
-    t('electricity.order.step1', 'en')
-  );
+  expect(container.querySelector('#electricity-period')).not.toBeNull();
   expect(orderCalls()).toHaveLength(0);
 });
 
@@ -292,23 +290,22 @@ it('shows manual entry, period dates and the server price before one submission'
       },
     });
   await mount();
-  expect(container.textContent).toContain(t('electricity.order.step1', 'en'));
-  await fill('electricity-period-type', 'weekly');
+  expect(container.textContent).toContain(product.title.en);
   await fill('electricity-period', 'next_week');
-  await advance();
   expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
   await fill('electricity-kwh', '10');
   await settlePreview();
-  await advance();
   expect(container.textContent).toContain('2500000');
-  await advance();
   expect(container.textContent).toContain(t('electricity.order.giftCode', 'en'));
+  expect(container.querySelector('#electricity-kwh')).not.toBeNull();
+  expect(container.textContent).toContain(address.fullAddress);
   await advance();
+  expect(window.location.search).toBe('?step=2');
   await approveVisibleConfirmation();
   expect(submit().disabled).toBe(false);
-  expect(
-    container.querySelector(`[aria-label="${t('electricity.order.total', 'en')}"]`)
-  ).not.toBeNull();
+  const price = container.querySelector('[data-review-section="price"]');
+  expect(price?.querySelector('dl dt')?.textContent).toBe(t('electricity.order.total', 'en'));
+  expect(price?.querySelector('dl dd')?.textContent).toContain('2500000');
   expect(container.textContent).toContain('Electricity agreement · Template version 2');
   expect(container.textContent).toContain('Agreement for Buyer: 2500000 IRR.');
   let complete!: (value: Response) => void;
@@ -389,7 +386,10 @@ it('requires the applied gift code and its reviewed discount before advancing fr
     .filter(([url]) => url === '/api/electricity/preview/simple')
     .at(-1);
   expect(JSON.parse(String(preview?.[1]?.body))).toMatchObject({ giftCode: 'OWNER-GIFT' });
-  expect(container.textContent).toContain(`${t('electricity.order.discount', 'en')}: 250000`);
+  expect(container.querySelector('aside dl')?.textContent).toContain(
+    t('electricity.order.discount', 'en')
+  );
+  expect(container.querySelector('aside dl')?.textContent).toContain('250000');
   expect(next().disabled).toBe(false);
   expect(orderCalls()).toHaveLength(0);
 });
@@ -397,7 +397,6 @@ it('requires the applied gift code and its reviewed discount before advancing fr
 it('retries an unavailable estimate without clearing a manual quantity', async () => {
   accountTimezone = 'America/New_York';
   await mount();
-  await advance();
   expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
   await fill('electricity-kwh', '10');
   billDataReply = async () =>
@@ -448,10 +447,8 @@ it('shows the exact mandatory green limit conflict and blocks checkout', async (
       400
     );
   await mount();
-  await advance();
   await fill('electricity-kwh', '100');
   await settlePreview();
-  await advance();
   expect(container.querySelector('[role="alert"]')?.textContent).toContain(
     'This order requires 5 kWh of Green electricity, but the product maximum is 4 kWh.'
   );
@@ -461,11 +458,8 @@ it('shows the exact mandatory green limit conflict and blocks checkout', async (
 
 it('retries a failed submission with the same idempotency key', async () => {
   await mount();
-  await advance();
   await fill('electricity-kwh', '10');
   await settlePreview();
-  await advance();
-  await advance();
   await advance();
   orderReply = async () => {
     throw new TypeError('offline');
@@ -518,13 +512,12 @@ it('blocks submission when the thermal product is unavailable', async () => {
 
 it('resumes saved period and quantity after remounting the page', async () => {
   await mount();
-  await fill('electricity-period-type', 'weekly');
   await fill('electricity-period', 'next_week');
-  await advance();
   await fill('electricity-kwh', '10');
+  await settlePreview();
   await advance();
-  expect(draft).toMatchObject({ currentStep: 3, data: { period: 'next_week', totalKwh: '10' } });
-  expect(new URLSearchParams(window.location.search).get('step')).toBe('3');
+  expect(draft).toMatchObject({ currentStep: 5, data: { period: 'next_week', totalKwh: '10' } });
+  expect(new URLSearchParams(window.location.search).get('step')).toBe('2');
   await act(async () =>
     root.render(
       <QueryProvider>
@@ -539,7 +532,6 @@ it('resumes saved period and quantity after remounting the page', async () => {
 
 it('saves an unfinished first step and restores it from a direct URL', async () => {
   await mount();
-  await fill('electricity-period-type', 'weekly');
   await fill('electricity-period', 'next_week');
   const save = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.saveDraft', 'en')
@@ -570,7 +562,7 @@ it('keeps the current fields when the server confirms a different saved quantity
   expect(
     fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple/guarded')
   ).toHaveLength(1);
-  expect(window.location.search).toBe('?step=2');
+  expect(window.location.search).toBe('?step=1');
   expect(container.querySelector<HTMLInputElement>('#electricity-kwh')?.value).toBe('10');
   expect(
     [...container.querySelectorAll('[role=alert]')].map((alert) => alert.textContent)
@@ -597,7 +589,7 @@ it('freezes the draft snapshot and sends one save until confirmation arrives', a
   ).toHaveLength(1);
   expect(container.querySelector('fieldset')?.disabled).toBe(true);
   await act(async () => finish(response({ ...draft, revision: draftRevision })));
-  expect(window.location.search).toBe('?step=3');
+  expect(window.location.search).toBe('?step=2');
 });
 
 it('retains the submission key when a success response has invalid order references', async () => {
@@ -632,6 +624,7 @@ it('ignores a draft acknowledgement after the order form has unmounted', async (
       finish = resolve;
     });
   await mount();
+  await settlePreview();
   await approveVisibleConfirmation();
   await act(async () => next().click());
   expect(
@@ -639,19 +632,15 @@ it('ignores a draft acknowledgement after the order form has unmounted', async (
   ).toHaveLength(1);
   await act(async () => root.render(null));
   await act(async () => finish(response({ ...draft, revision: draftRevision })));
-  expect(window.location.search).toBe('?step=2');
+  expect(window.location.search).toBe('?step=1');
   expect(navigate).not.toHaveBeenCalled();
 });
 
 async function openFundingReview() {
   await mount();
-  await fill('electricity-period-type', 'weekly');
   await fill('electricity-period', 'next_week');
-  await advance();
   await fill('electricity-kwh', '10');
   await settlePreview();
-  await advance();
-  await advance();
   await advance();
 }
 
@@ -678,6 +667,9 @@ it('keeps the simple financial review and named delivery profile after a definit
   expect(notices.error).toHaveBeenCalledWith(t('electricity.order.error.create', 'en'));
   expect(container.querySelector('[data-review-section=profile] dd')?.textContent).toBe(
     'Delivery owner'
+  );
+  expect(container.querySelector('[data-review-section=quantity]')?.textContent).toContain(
+    '0.05952381 kW'
   );
   expect(container.textContent).toContain(address.fullAddress);
   expect(container.textContent).not.toContain(t('electricity.order.retrySubmission', 'en'));

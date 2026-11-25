@@ -5,7 +5,7 @@ import {
   type CalendarInstant,
   type CalendarLocale,
 } from '@barghsa/i18n/calendar';
-import { timezoneText } from '@barghsa/i18n/timezone';
+import { timezoneDisplayText } from '@barghsa/i18n/timezone-display';
 import { useCalendar } from '../hooks/useCalendar.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -43,7 +43,7 @@ function ZonedDateDisplay({
       </time>
     );
   } catch {
-    return <span {...props}>{timezoneText('display.invalid', calendar.locale)}</span>;
+    return <span {...props}>{timezoneDisplayText('display.invalid', calendar.locale)}</span>;
   }
 }
 
@@ -54,7 +54,7 @@ function AccountDateDisplay(props: DateDisplayProps) {
     return (
       <>
         <span className={props.className} aria-busy={time.status === 'loading' || undefined}>
-          {timezoneText('display.pending', props.locale ?? locale)}
+          {timezoneDisplayText('display.pending', props.locale ?? locale)}
         </span>
         {time.notice}
       </>
@@ -71,7 +71,7 @@ function InvalidDateDisplay({
   ...props
 }: DateDisplayProps) {
   const locale = useLocale();
-  return <span {...props}>{timezoneText('display.invalid', localeOverride ?? locale)}</span>;
+  return <span {...props}>{timezoneDisplayText('display.invalid', localeOverride ?? locale)}</span>;
 }
 
 export function DateDisplay(props: DateDisplayProps) {
@@ -112,6 +112,6 @@ export function RelativeTime({ date, locale: localeOverride, ...props }: Timesta
       </time>
     );
   } catch {
-    return <span {...props}>{timezoneText('display.invalid', locale)}</span>;
+    return <span {...props}>{timezoneDisplayText('display.invalid', locale)}</span>;
   }
 }

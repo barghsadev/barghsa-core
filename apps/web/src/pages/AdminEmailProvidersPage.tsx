@@ -1,10 +1,31 @@
+import {
+  Ban as TableBanIcon,
+  CheckCircle as TableCheckCircleIcon,
+  Pencil as TablePencilIcon,
+  RotateCcw as TableRotateCcwIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { FlaskConical } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import {
+  providerDestination,
   providerSelectionKey,
   type ProviderSelection,
   type ProviderWorkspace,
 } from '../lib/provider-workspace.js';
-import { LoadingStatus, Button, DateCell, ListPage, TextCell } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Input,
+  Label,
+  NativeSelect,
+  buttonVariants,
+  DateCell,
+  ListPage,
+  TextCell,
+  cn,
+} from '@barghsa/ui';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   useProviderCatalogue,
@@ -14,6 +35,7 @@ import {
 } from '../hooks/useProviderCatalogue.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { DeliveryProviderDetail } from '../components/DeliveryProviderDetail.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
@@ -27,6 +49,16 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+} from '../components/RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
 import { providerFormText } from '@barghsa/i18n/provider-forms';
 import {
   emptyEmailDraft,
@@ -98,7 +130,7 @@ export default function AdminEmailProvidersPage({
   const Heading = embedded ? 'h2' : 'h1';
   const time = useAccountTime();
   const uiLocale = useLocale();
-  const [invalidConfig, setInvalidConfig] = useState(false);
+  const [invalidConfigRead, setInvalidConfigRead] = useState<number | null>(null);
   const [editBasis, setEditBasis] = useState<string | null>(null);
   const inFlight = useRef(false);
   const protectedDispatched = useRef(false);
@@ -177,7 +209,7 @@ export default function AdminEmailProvidersPage({
     setTestRecipients({});
     setError(null);
     setNotice(null);
-    setInvalidConfig(false);
+    setInvalidConfigRead(null);
     setBusy(false);
   }, [resetForm, editor.setValidationPending]);
   const scope = useCatalogueScope(clearPrivate);
@@ -208,7 +240,8 @@ export default function AdminEmailProvidersPage({
     });
   }, [catalogue.data]);
   const loading = catalogue.loading;
-  const loadFailed = catalogue.error || invalidConfig;
+  const loadFailed =
+    catalogue.error || (invalidConfigRead !== null && invalidConfigRead === catalogue.readAttempt);
   const rowBasis = (p: EmailProvider, test = true) =>
     providerBasis({
       id: p.id,
@@ -234,10 +267,7 @@ export default function AdminEmailProvidersPage({
         },
         false
       );
-  const fetchAll = useCallback(async () => {
-    setInvalidConfig(false);
-    await catalogue.refresh();
-  }, [catalogue.refresh]);
+  const fetchAll = catalogue.refresh;
   useEffect(() => {
     if (protectedAction && protectedAction.basis !== basis && !protectedDispatched.current)
       setProtectedAction(null);
@@ -246,9 +276,15 @@ export default function AdminEmailProvidersPage({
     if (scope.denied) return scope.recover();
     await fetchAll();
   };
-  const recovery = (
+  const recovery = (compact = false) => (
     <div className="space-y-2">
-      <Button type="button" variant="outline" disabled={loading || busy} onClick={recover}>
+      <Button
+        type="button"
+        variant={compact ? 'ghost' : 'outline'}
+        size={compact ? 'sm' : 'default'}
+        disabled={loading || busy}
+        onClick={recover}
+      >
         {providerText(
           loadFailed || scope.denied ? 'admin.providers.retry' : 'admin.providers.refresh',
           uiLocale
@@ -287,14 +323,14 @@ export default function AdminEmailProvidersPage({
     // Superseded/disabled versions are read-only; only drafts may be edited.
     if (p.status !== 'draft') {
       setError(providerText('admin.providers.supersededNote', uiLocale));
-      return;
+      return false;
     }
     let saved: TransportForm;
     try {
       saved = savedForm(p);
     } catch {
-      setInvalidConfig(true);
-      return;
+      setInvalidConfigRead(catalogue.readAttempt);
+      return false;
     }
     resetRecovery();
     setEditId(p.id);
@@ -306,6 +342,7 @@ export default function AdminEmailProvidersPage({
     setNotice(null);
     setShowEditor(true);
     if (publish) navigateEditor({ panel: 'edit', id: p.id });
+    return true;
   }
 
   function closeEditor(publish = true, replace = false) {
@@ -315,7 +352,8 @@ export default function AdminEmailProvidersPage({
     setEditId(null);
     setEditBasis(null);
     setEditStatus(null);
-    if (publish) navigateEditor(undefined, replace);
+    if (publish)
+      navigateEditor(workspace && editId ? { panel: 'detail', id: editId } : undefined, replace);
   }
 
   useLayoutEffect(() => {
@@ -333,14 +371,14 @@ export default function AdminEmailProvidersPage({
     }
     if (!requested.current.restore) return;
     if (selection && (loading || loadFailed || !catalogue.data)) return;
+    if (selection?.panel === 'new') openCreate(false);
+    if (selection?.panel === 'edit') {
+      const row = catalogue.data?.find((provider) => provider.id === selection.id);
+      if (row?.status !== 'draft') setError(providerText('admin.providers.stale', uiLocale));
+      else if (!openEdit(row, false)) return;
+    }
     requested.current.restore = false;
     address.current = key;
-    if (selection?.panel === 'new') openCreate(false);
-    else if (selection?.panel === 'edit') {
-      const row = catalogue.data?.find((provider) => provider.id === selection.id);
-      if (row?.status === 'draft') openEdit(row, false);
-      else setError(providerText('admin.providers.stale', uiLocale));
-    }
   }, [requestedPanel, requestedId, scope.denied, loading, loadFailed, catalogue.data]);
 
   function handleTransportChange(next: Transport) {
@@ -411,8 +449,10 @@ export default function AdminEmailProvidersPage({
       );
       const accept = async (result: unknown) => {
         if (!current()) throw new ProviderRequestError(false, [], true);
+        let savedId: string;
         try {
           const saved = validateProviderResult(result, 'draft', id ?? undefined);
+          savedId = saved.id;
           if (saved.transport !== kind || saved.label !== draft.label.trim())
             throw new ProviderRequestError();
           const savedDraft = savedForm(saved);
@@ -433,7 +473,8 @@ export default function AdminEmailProvidersPage({
         setTestOutcome({});
         await fetchAll();
         if (!owned()) return;
-        closeEditor(true, true);
+        closeEditor(!workspace, true);
+        if (workspace) navigateEditor({ panel: 'detail', id: savedId }, true);
         setNotice(providerFormText('saved', uiLocale));
       };
       try {
@@ -500,11 +541,12 @@ export default function AdminEmailProvidersPage({
     setNotice(null);
     const accept = async (result: unknown, validatedTest?: TestConnectionOutcome) => {
       if (!current()) throw new ProviderRequestError(false, [], true);
+      let restoredId: string | undefined;
       if (operation === 'test') {
         const outcome = validatedTest ?? validateConnectionResult(result, p.id);
         setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
       } else {
-        if (operation === 'rollback') validateRestoredDraft(result, p.id);
+        if (operation === 'rollback') restoredId = validateRestoredDraft(result, p.id).id;
         else validateProviderResult(result, operation === 'disable' ? 'disabled' : 'active', p.id);
         setNotice(
           providerFormText(
@@ -518,6 +560,8 @@ export default function AdminEmailProvidersPage({
         );
       }
       await fetchAll();
+      if (restoredId && workspace && owned())
+        navigateEditor({ panel: 'detail', id: restoredId }, true);
     };
     try {
       if (
@@ -692,13 +736,28 @@ export default function AdminEmailProvidersPage({
         {/* Draft row actions */}
         {p.status === 'draft' && (
           <>
-            <button
-              onClick={() => openEdit(p)}
-              disabled={actionsDisabled}
-              className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
-            >
-              {providerText('admin.providers.update', uiLocale)}
-            </button>
+            {workspace && !actionsDisabled ? (
+              <Link
+                {...providerDestination('email', { panel: 'edit', id: p.id })}
+                className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                data-table-action-tooltip={providerText('admin.providers.update.title', uiLocale)}
+              >
+                <TableActionIcon icon={TablePencilIcon}>
+                  {providerText('admin.providers.update.title', uiLocale)}
+                </TableActionIcon>
+              </Link>
+            ) : (
+              <button
+                onClick={() => openEdit(p)}
+                disabled={actionsDisabled}
+                className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
+                data-table-action-tooltip={providerText('admin.providers.update', uiLocale)}
+              >
+                <TableActionIcon icon={TablePencilIcon}>
+                  {providerText('admin.providers.update', uiLocale)}
+                </TableActionIcon>
+              </button>
+            )}
             <EmailTestRow
               provider={p}
               recipient={recipient?.basis === recipientBasis(p) ? recipient.value : ''}
@@ -715,14 +774,16 @@ export default function AdminEmailProvidersPage({
             <button
               onClick={() => runProviderAction(p, 'activate')}
               disabled={actionsDisabled || p.lastTestStatus !== 'passed'}
-              title={
+              data-table-action-tooltip={
                 p.lastTestStatus !== 'passed'
                   ? providerText('admin.providers.activateHint', uiLocale)
-                  : undefined
+                  : providerText('admin.providers.activate', uiLocale)
               }
               className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs hover:shadow-md disabled:opacity-40 w-full text-start pointer-coarse:min-h-[45px]!"
             >
-              {providerText('admin.providers.activate', uiLocale)}
+              <TableActionIcon icon={TableCheckCircleIcon}>
+                {providerText('admin.providers.activate', uiLocale)}
+              </TableActionIcon>
             </button>
           </>
         )}
@@ -738,8 +799,11 @@ export default function AdminEmailProvidersPage({
               onClick={() => runProviderAction(p, 'disable')}
               disabled={actionsDisabled}
               className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-danger-soft-hover disabled:opacity-50 w-full text-start"
+              data-table-action-tooltip={providerText('admin.providers.disable', uiLocale)}
             >
-              {providerText('admin.providers.disable', uiLocale)}
+              <TableActionIcon icon={TableBanIcon}>
+                {providerText('admin.providers.disable', uiLocale)}
+              </TableActionIcon>
             </button>
           </>
         )}
@@ -749,39 +813,54 @@ export default function AdminEmailProvidersPage({
             onClick={() => runProviderAction(p, 'rollback')}
             disabled={actionsDisabled}
             className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
+            data-table-action-tooltip={providerText('admin.providers.rollback', uiLocale)}
           >
-            {providerText('admin.providers.rollback', uiLocale)}
+            <TableActionIcon icon={TableRotateCcwIcon}>
+              {providerText('admin.providers.rollback', uiLocale)}
+            </TableActionIcon>
           </button>
         )}
       </div>
     );
   };
 
+  const showingRecord = workspace?.selection !== undefined;
+  const detail =
+    requestedPanel === 'detail' && providers.find((provider) => provider.id === requestedId);
+  const failed = loadFailed || scope.denied;
+
   return (
     <div className="min-w-0 space-y-6" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Heading className="text-xl font-semibold">
-            {providerText('admin.providers.title', uiLocale)}
-          </Heading>
-          <p className="text-sm text-muted-foreground mt-1">
-            {providerText('admin.providers.subtitle', uiLocale)}
-          </p>
-          <p className="text-sm text-muted-foreground mt-1">
-            {providerText('admin.providers.test.notice', uiLocale)}
-          </p>
+      {!showingRecord && (
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <Heading className="text-xl font-semibold">
+              {providerText('admin.providers.title', uiLocale)}
+            </Heading>
+            <p className="text-sm text-muted-foreground mt-1">
+              {providerText('admin.providers.subtitle', uiLocale)}
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {providerText('admin.providers.test.notice', uiLocale)}
+            </p>
+          </div>
+          {workspace && !actionsDisabled ? (
+            <Link
+              {...providerDestination('email', { panel: 'new' })}
+              className={buttonVariants({ className: 'min-h-11' })}
+            >
+              {providerText('admin.providers.new', uiLocale)}
+            </Link>
+          ) : (
+            !showEditor && (
+              <Button onClick={() => openCreate()} disabled={actionsDisabled}>
+                {providerText('admin.providers.new', uiLocale)}
+              </Button>
+            )
+          )}
         </div>
-        {!showEditor && (
-          <button
-            onClick={() => openCreate()}
-            disabled={actionsDisabled}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:shadow-md"
-          >
-            {providerText('admin.providers.new', uiLocale)}
-          </button>
-        )}
-      </div>
+      )}
 
       {error && (
         <div
@@ -818,38 +897,49 @@ export default function AdminEmailProvidersPage({
         </div>
       )}
 
+      {showingRecord && !failed && recovery(true)}
+
       {/* Editor */}
       {showEditor && (
         <form
           noValidate
           onSubmit={handleSave}
-          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
-        >
-          {staleEditor && <p role="alert">{providerText('admin.providers.stale', uiLocale)}</p>}
-          {uncertain && <p role="alert">{providerFormText('uncertain', uiLocale)}</p>}
-          {(staleEditor || uncertain) && (
-            <Button
-              type="button"
-              variant="outline"
-              disabled={
-                loading ||
-                loadFailed ||
-                busy ||
-                !!protectedAction ||
-                (uncertain && !command.canReview)
-              }
-              onClick={() => {
-                const row = providers.find((p) => p.id === editId);
-                if (row?.status === 'draft') openEdit(row);
-                else if (editId) closeEditor();
-                else openCreate();
-              }}
-            >
-              {providerFormText('reset', uiLocale)}
-            </Button>
+          onFocus={keepRecordFieldVisible}
+          aria-label={providerText(
+            editId ? 'admin.providers.update.title' : 'admin.providers.create.title',
+            uiLocale
           )}
-          {catalogueRootMessage(editor.errors) && (
-            <p role="alert">{catalogueRootMessage(editor.errors)}</p>
+          className={recordEditorFormSurface}
+        >
+          {(staleEditor || uncertain || catalogueRootMessage(editor.errors)) && (
+            <div className="space-y-2 border-b bg-muted/35 px-4 py-3 sm:px-6">
+              {staleEditor && <p role="alert">{providerText('admin.providers.stale', uiLocale)}</p>}
+              {uncertain && <p role="alert">{providerFormText('uncertain', uiLocale)}</p>}
+              {(staleEditor || uncertain) && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={
+                    loading ||
+                    loadFailed ||
+                    busy ||
+                    !!protectedAction ||
+                    (uncertain && !command.canReview)
+                  }
+                  onClick={() => {
+                    const row = providers.find((p) => p.id === editId);
+                    if (row?.status === 'draft') openEdit(row);
+                    else if (editId) closeEditor();
+                    else openCreate();
+                  }}
+                >
+                  {providerFormText('reset', uiLocale)}
+                </Button>
+              )}
+              {catalogueRootMessage(editor.errors) && (
+                <p role="alert">{catalogueRootMessage(editor.errors)}</p>
+              )}
+            </div>
           )}
           <fieldset
             disabled={
@@ -860,64 +950,66 @@ export default function AdminEmailProvidersPage({
               uncertain ||
               scope.denied
             }
-            className="space-y-4"
+            className="min-w-0"
           >
-            <h2 className="text-lg font-semibold">
+            <legend className="sr-only">
               {editId
                 ? providerText('admin.providers.update.title', uiLocale)
                 : providerText('admin.providers.create.title', uiLocale)}
-            </h2>
+            </legend>
 
-            <div>
-              <label
-                htmlFor="email-provider-label"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {providerText('admin.providers.label', uiLocale)}{' '}
-                <span aria-hidden="true" className="text-destructive">
-                  *
-                </span>
-              </label>
-              <input
-                {...editor.bind('label')}
-                type="text"
-                id="email-provider-label"
-                value={label}
-                onChange={(e) => setLabel(e.target.value)}
-                className="w-full border border-input rounded px-3 py-2"
-                required
-                aria-required="true"
-              />
-              {editor.errors.label && (
-                <p id={editor.errorId('label')} role="alert" className="text-sm text-destructive">
-                  {editor.errors.label.message}
-                </p>
-              )}
-            </div>
+            <RecordEditorSection title={providerFormText('providerDetails', uiLocale)}>
+              <div className={recordEditorGrid}>
+                <div className={recordEditorField}>
+                  <Label htmlFor="email-provider-label">
+                    {providerText('admin.providers.label', uiLocale)}{' '}
+                    <span aria-hidden="true" className="text-destructive">
+                      *
+                    </span>
+                  </Label>
+                  <Input
+                    {...editor.bind('label')}
+                    type="text"
+                    id="email-provider-label"
+                    dir="auto"
+                    value={label}
+                    onChange={(e) => setLabel(e.target.value)}
+                    className="w-full"
+                    required
+                    aria-required="true"
+                  />
+                  {editor.errors.label && (
+                    <p
+                      id={editor.errorId('label')}
+                      role="alert"
+                      className="text-sm text-destructive"
+                    >
+                      {editor.errors.label.message}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label
-                htmlFor="email-provider-transport"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {providerText('admin.providers.transport', uiLocale)}{' '}
-                <span aria-hidden="true" className="text-destructive">
-                  *
-                </span>
-              </label>
-              <select
-                id="email-provider-transport"
-                aria-required="true"
-                value={transport}
-                onChange={(e) => handleTransportChange(e.target.value as Transport)}
-                className="w-full border border-input rounded px-3 py-2"
-                disabled={editId !== null}
-              >
-                <option value="smtp">SMTP</option>
-                <option value="resend">Resend</option>
-              </select>
-            </div>
-
+                <div className={recordEditorField}>
+                  <Label htmlFor="email-provider-transport">
+                    {providerText('admin.providers.transport', uiLocale)}{' '}
+                    <span aria-hidden="true" className="text-destructive">
+                      *
+                    </span>
+                  </Label>
+                  <NativeSelect
+                    id="email-provider-transport"
+                    aria-required="true"
+                    value={transport}
+                    onChange={(e) => handleTransportChange(e.target.value as Transport)}
+                    className="w-full"
+                    disabled={editId !== null}
+                  >
+                    <option value="smtp">SMTP</option>
+                    <option value="resend">Resend</option>
+                  </NativeSelect>
+                </div>
+              </div>
+            </RecordEditorSection>
             {transport === 'smtp' ? (
               <SmtpFields
                 form={form}
@@ -934,7 +1026,15 @@ export default function AdminEmailProvidersPage({
               />
             )}
 
-            <div className="flex gap-3 pt-2">
+            <StickyRecordEditorActions>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => closeEditor()}
+                disabled={busy || !!protectedAction || uncertain}
+              >
+                {providerText('admin.providers.cancel', uiLocale)}
+              </Button>
               <CatalogueSaveButton
                 pending={editor.pending}
                 disabled={
@@ -951,15 +1051,7 @@ export default function AdminEmailProvidersPage({
                   uiLocale
                 )}
               />
-              <button
-                type="button"
-                onClick={() => closeEditor()}
-                disabled={busy || !!protectedAction || uncertain}
-                className="px-4 py-2 border border-input rounded text-sm hover:bg-muted disabled:opacity-50"
-              >
-                {providerText('admin.providers.cancel', uiLocale)}
-              </button>
-            </div>
+            </StickyRecordEditorActions>
           </fieldset>
         </form>
       )}
@@ -987,7 +1079,7 @@ export default function AdminEmailProvidersPage({
                   )}
                 </p>
               )}
-              {recovery}
+              {recovery()}
             </>
           }
           onUnconfirmed={() => command.mark(protectedAction.kind)}
@@ -1008,45 +1100,80 @@ export default function AdminEmailProvidersPage({
         />
       )}
 
-      <ListPage>
-        <ListPage.Toolbar>{!loadFailed && !scope.denied && recovery}</ListPage.Toolbar>
-        <ListPage.Content
-          loading={loading}
-          error={loadFailed || scope.denied}
-          empty={false}
-          emptyView={null}
-          retainContent={catalogue.data !== null}
-          loadingView={
-            <LoadingStatus>{providerText('admin.providers.loading', uiLocale)}</LoadingStatus>
-          }
-          errorView={
-            <div role="alert" className="space-y-2">
-              {providerText(
-                scope.denied ? 'admin.providers.denied' : 'admin.providers.error.load',
-                uiLocale
-              )}
-              {recovery}
-            </div>
-          }
-        >
-          <DeliveryProviderTable
-            rows={providers}
-            caption={providerText('admin.providers.title', uiLocale)}
-            scrollLabel={providerText('admin.providers.table', uiLocale)}
-            labelHeader={providerText('admin.providers.col.label', uiLocale)}
-            actionHeader={providerText('admin.providers.col.actions', uiLocale)}
-            fields={providerFields}
-            renderActions={providerActions}
+      {showingRecord && loading && (
+        <LoadingStatus>{providerText('admin.providers.loading', uiLocale)}</LoadingStatus>
+      )}
+      {showingRecord && failed && (
+        <div role="alert" className="space-y-2">
+          {providerText(
+            scope.denied ? 'admin.providers.denied' : 'admin.providers.error.load',
+            uiLocale
+          )}
+          {recovery()}
+        </div>
+      )}
+      {requestedPanel === 'detail' &&
+        !loading &&
+        !failed &&
+        (detail ? (
+          <DeliveryProviderDetail provider={detail} fields={providerFields}>
+            {providerActions(detail)}
+          </DeliveryProviderDetail>
+        ) : (
+          <p role="alert">{providerText('admin.providers.missing', uiLocale)}</p>
+        ))}
+      {!showingRecord && (
+        <ListPage>
+          <ListPage.Toolbar>{!loadFailed && !scope.denied && recovery()}</ListPage.Toolbar>
+          <ListPage.Content
             loading={loading}
-            emptyMessage={
-              loading || loadFailed || scope.denied
-                ? ''
-                : providerText('admin.providers.empty', uiLocale)
+            error={loadFailed || scope.denied}
+            empty={false}
+            emptyView={null}
+            retainContent={catalogue.data !== null}
+            loadingView={
+              <LoadingStatus>{providerText('admin.providers.loading', uiLocale)}</LoadingStatus>
             }
-            tableClassName="min-w-[64rem]"
-          />
-        </ListPage.Content>
-      </ListPage>
+            errorView={
+              <div role="alert" className="space-y-2">
+                {providerText(
+                  scope.denied ? 'admin.providers.denied' : 'admin.providers.error.load',
+                  uiLocale
+                )}
+                {recovery()}
+              </div>
+            }
+          >
+            <DeliveryProviderTable
+              rows={providers}
+              caption={providerText('admin.providers.title', uiLocale)}
+              scrollLabel={providerText('admin.providers.table', uiLocale)}
+              labelHeader={providerText('admin.providers.col.label', uiLocale)}
+              actionHeader={providerText('admin.providers.col.actions', uiLocale)}
+              fields={providerFields}
+              {...(workspace
+                ? {
+                    renderLabel: (p: EmailProvider) => (
+                      <Link
+                        {...providerDestination('email', { panel: 'detail', id: p.id })}
+                        className="inline-flex min-h-11 items-center text-primary underline underline-offset-4"
+                      >
+                        <TextCell value={p.label} />
+                      </Link>
+                    ),
+                  }
+                : { renderActions: providerActions })}
+              loading={loading}
+              emptyMessage={
+                loading || loadFailed || scope.denied
+                  ? ''
+                  : providerText('admin.providers.empty', uiLocale)
+              }
+              tableClassName="min-w-[64rem]"
+            />
+          </ListPage.Content>
+        </ListPage>
+      )}
     </div>
   );
 }
@@ -1070,144 +1197,160 @@ function SmtpFields({
   const set = (k: keyof SmtpForm, v: string) => setField(k, v);
   const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Field
-        binding={feedback.bind('host')}
-        error={feedback.errors.host?.message}
-        errorId={feedback.errorId('host')}
-        label={sec('host')}
-        required
-      >
-        <input
-          type="text"
-          value={form.host}
-          onChange={(e) => set('host', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('port')}
-        error={feedback.errors.port?.message}
-        errorId={feedback.errorId('port')}
-        label={sec('port')}
-        required
-      >
-        <input
-          type="number"
-          value={form.port}
-          onChange={(e) => set('port', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('security')}
-        error={feedback.errors.security?.message}
-        errorId={feedback.errorId('security')}
-        label={sec('security')}
-      >
-        <select
-          value={form.security}
-          onChange={(e) => set('security', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        >
-          <option value="STARTTLS">STARTTLS</option>
-          <option value="TLS">TLS</option>
-        </select>
-      </Field>
-      {(['connectionTimeout', 'commandTimeout'] as const).map((key) => (
-        <Field
-          key={key}
-          binding={feedback.bind(key)}
-          error={feedback.errors[key]?.message}
-          errorId={feedback.errorId(key)}
-          label={sec(key)}
-          required
-        >
-          <input
-            type="number"
-            min={1}
-            max={600}
-            step={1}
+    <>
+      <RecordEditorSection title={providerFormText('connection', uiLocale)}>
+        <div className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-[minmax(0,1fr)_7rem_10rem] sm:gap-x-5">
+          <Field
+            binding={feedback.bind('host')}
+            error={feedback.errors.host?.message}
+            errorId={feedback.errorId('host')}
+            label={sec('host')}
+            className="col-span-2 sm:col-span-1"
             required
-            value={form[key]}
-            onChange={(e) => set(key, e.target.value)}
-            className="w-full border border-input rounded px-3 py-2"
-          />
-        </Field>
-      ))}
-      <Field
-        binding={feedback.bind('username')}
-        error={feedback.errors.username?.message}
-        errorId={feedback.errorId('username')}
-        label={sec('username')}
-      >
-        <input
-          type="text"
-          value={form.username}
-          onChange={(e) => set('username', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('password')}
-        error={feedback.errors.password?.message}
-        errorId={feedback.errorId('password')}
-        label={sec('password')}
-        secret
-      >
-        <input
-          type="password"
-          value={form.password}
-          onChange={(e) => set('password', e.target.value)}
-          placeholder={
-            editing ? providerText('admin.providers.field.secretPlaceholder', uiLocale) : undefined
-          }
-          autoComplete="new-password"
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('fromName')}
-        error={feedback.errors.fromName?.message}
-        errorId={feedback.errorId('fromName')}
-        label={sec('fromName')}
-      >
-        <input
-          type="text"
-          value={form.fromName}
-          onChange={(e) => set('fromName', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('fromEmail')}
-        error={feedback.errors.fromEmail?.message}
-        errorId={feedback.errorId('fromEmail')}
-        label={sec('fromEmail')}
-        required
-      >
-        <input
-          type="email"
-          dir="ltr"
-          value={form.fromEmail}
-          onChange={(e) => set('fromEmail', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('replyTo')}
-        error={feedback.errors.replyTo?.message}
-        errorId={feedback.errorId('replyTo')}
-        label={sec('replyTo')}
-      >
-        <input
-          type="email"
-          value={form.replyTo}
-          onChange={(e) => set('replyTo', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-    </div>
+          >
+            <Input
+              type="text"
+              dir="ltr"
+              placeholder="smtp.example.com"
+              value={form.host}
+              onChange={(e) => set('host', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('port')}
+            error={feedback.errors.port?.message}
+            errorId={feedback.errorId('port')}
+            label={sec('port')}
+            required
+          >
+            <Input
+              type="number"
+              dir="ltr"
+              min={1}
+              max={65535}
+              value={form.port}
+              onChange={(e) => set('port', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('security')}
+            error={feedback.errors.security?.message}
+            errorId={feedback.errorId('security')}
+            label={sec('security')}
+          >
+            <NativeSelect
+              className="w-full"
+              value={form.security}
+              onChange={(e) => set('security', e.target.value)}
+            >
+              <option value="STARTTLS">STARTTLS</option>
+              <option value="TLS">TLS</option>
+            </NativeSelect>
+          </Field>
+        </div>
+      </RecordEditorSection>
+      <RecordEditorSection title={providerFormText('credentials', uiLocale)}>
+        <div className={recordEditorGrid}>
+          <Field
+            binding={feedback.bind('username')}
+            error={feedback.errors.username?.message}
+            errorId={feedback.errorId('username')}
+            label={sec('username')}
+          >
+            <Input
+              type="text"
+              dir="ltr"
+              value={form.username}
+              onChange={(e) => set('username', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('password')}
+            error={feedback.errors.password?.message}
+            errorId={feedback.errorId('password')}
+            label={sec('password')}
+            description={editing ? providerFormText('keepCredential', uiLocale) : undefined}
+          >
+            <Input
+              type="password"
+              dir="ltr"
+              value={form.password}
+              onChange={(e) => set('password', e.target.value)}
+              autoComplete="new-password"
+            />
+          </Field>
+        </div>
+      </RecordEditorSection>
+      <RecordEditorSection title={providerFormText('senderDetails', uiLocale)}>
+        <div className={recordEditorGrid}>
+          <Field
+            binding={feedback.bind('fromName')}
+            error={feedback.errors.fromName?.message}
+            errorId={feedback.errorId('fromName')}
+            label={sec('fromName')}
+          >
+            <Input
+              type="text"
+              dir="auto"
+              value={form.fromName}
+              onChange={(e) => set('fromName', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('fromEmail')}
+            error={feedback.errors.fromEmail?.message}
+            errorId={feedback.errorId('fromEmail')}
+            label={sec('fromEmail')}
+            required
+          >
+            <Input
+              type="email"
+              dir="ltr"
+              value={form.fromEmail}
+              onChange={(e) => set('fromEmail', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('replyTo')}
+            error={feedback.errors.replyTo?.message}
+            errorId={feedback.errorId('replyTo')}
+            label={sec('replyTo')}
+          >
+            <Input
+              type="email"
+              dir="ltr"
+              value={form.replyTo}
+              onChange={(e) => set('replyTo', e.target.value)}
+            />
+          </Field>
+        </div>
+      </RecordEditorSection>
+      <RecordEditorSection title={providerFormText('timeouts', uiLocale)}>
+        <div className="grid max-w-sm grid-cols-2 gap-x-3 gap-y-2 sm:gap-x-5">
+          {(['connectionTimeout', 'commandTimeout'] as const).map((key) => (
+            <Field
+              key={key}
+              binding={feedback.bind(key)}
+              error={feedback.errors[key]?.message}
+              errorId={feedback.errorId(key)}
+              label={sec(key)}
+              required
+            >
+              <Input
+                type="number"
+                min={1}
+                max={600}
+                step={1}
+                required
+                dir="ltr"
+                value={form[key]}
+                onChange={(e) => set(key, e.target.value)}
+              />
+            </Field>
+          ))}
+        </div>
+      </RecordEditorSection>
+    </>
   );
 }
 
@@ -1226,80 +1369,85 @@ function ResendFields({
   const set = (k: keyof ResendForm, v: string) => setField(k, v);
   const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Field
-        binding={feedback.bind('apiKey')}
-        error={feedback.errors.apiKey?.message}
-        errorId={feedback.errorId('apiKey')}
-        label={sec('apiKey')}
-        required={!editing}
-        secret
-      >
-        <input
-          type="password"
-          value={form.apiKey}
-          onChange={(e) => set('apiKey', e.target.value)}
-          placeholder={
-            editing ? providerText('admin.providers.field.secretPlaceholder', uiLocale) : undefined
-          }
-          autoComplete="new-password"
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('fromName')}
-        error={feedback.errors.fromName?.message}
-        errorId={feedback.errorId('fromName')}
-        label={sec('fromName')}
-      >
-        <input
-          type="text"
-          value={form.fromName}
-          onChange={(e) => set('fromName', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('fromEmail')}
-        error={feedback.errors.fromEmail?.message}
-        errorId={feedback.errorId('fromEmail')}
-        label={sec('fromEmail')}
-        required
-      >
-        <input
-          type="email"
-          value={form.fromEmail}
-          onChange={(e) => set('fromEmail', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('replyTo')}
-        error={feedback.errors.replyTo?.message}
-        errorId={feedback.errorId('replyTo')}
-        label={sec('replyTo')}
-      >
-        <input
-          type="email"
-          value={form.replyTo}
-          onChange={(e) => set('replyTo', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-      <Field
-        binding={feedback.bind('sendingDomain')}
-        error={feedback.errors.sendingDomain?.message}
-        errorId={feedback.errorId('sendingDomain')}
-        label={sec('sendingDomain')}
-      >
-        <input
-          type="text"
-          value={form.sendingDomain}
-          onChange={(e) => set('sendingDomain', e.target.value)}
-          className="w-full border border-input rounded px-3 py-2"
-        />
-      </Field>
-    </div>
+    <>
+      <RecordEditorSection title={providerFormText('credentials', uiLocale)}>
+        <div className={recordEditorGrid}>
+          <Field
+            binding={feedback.bind('apiKey')}
+            error={feedback.errors.apiKey?.message}
+            errorId={feedback.errorId('apiKey')}
+            label={sec('apiKey')}
+            required={!editing}
+            description={editing ? providerFormText('keepCredential', uiLocale) : undefined}
+          >
+            <Input
+              type="password"
+              dir="ltr"
+              value={form.apiKey}
+              onChange={(e) => set('apiKey', e.target.value)}
+              autoComplete="new-password"
+            />
+          </Field>
+        </div>
+      </RecordEditorSection>
+      <RecordEditorSection title={providerFormText('senderDetails', uiLocale)}>
+        <div className={recordEditorGrid}>
+          <Field
+            binding={feedback.bind('fromName')}
+            error={feedback.errors.fromName?.message}
+            errorId={feedback.errorId('fromName')}
+            label={sec('fromName')}
+          >
+            <Input
+              type="text"
+              dir="auto"
+              value={form.fromName}
+              onChange={(e) => set('fromName', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('fromEmail')}
+            error={feedback.errors.fromEmail?.message}
+            errorId={feedback.errorId('fromEmail')}
+            label={sec('fromEmail')}
+            required
+          >
+            <Input
+              type="email"
+              dir="ltr"
+              value={form.fromEmail}
+              onChange={(e) => set('fromEmail', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('replyTo')}
+            error={feedback.errors.replyTo?.message}
+            errorId={feedback.errorId('replyTo')}
+            label={sec('replyTo')}
+          >
+            <Input
+              type="email"
+              dir="ltr"
+              value={form.replyTo}
+              onChange={(e) => set('replyTo', e.target.value)}
+            />
+          </Field>
+          <Field
+            binding={feedback.bind('sendingDomain')}
+            error={feedback.errors.sendingDomain?.message}
+            errorId={feedback.errorId('sendingDomain')}
+            label={sec('sendingDomain')}
+          >
+            <Input
+              type="text"
+              dir="ltr"
+              value={form.sendingDomain}
+              onChange={(e) => set('sendingDomain', e.target.value)}
+            />
+          </Field>
+        </div>
+      </RecordEditorSection>
+    </>
   );
 }
 
@@ -1349,21 +1497,24 @@ function EmailTestRow({
       <button
         onClick={() => onTest(provider, recipient.trim())}
         disabled={disabled || !recipient.trim()}
+        data-table-action-tooltip={providerText('admin.providers.test.run', uiLocale)}
         className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
       >
-        {busy ? (
-          providerText('admin.providers.test.running', uiLocale)
-        ) : (
-          <>
-            {providerText('admin.providers.test.run', uiLocale)}
-            {recipient.trim() && (
-              <>
-                {' '}
-                · <bdi dir="ltr">{recipient.trim()}</bdi>
-              </>
-            )}
-          </>
-        )}
+        <TableActionIcon icon={FlaskConical}>
+          {busy ? (
+            providerText('admin.providers.test.running', uiLocale)
+          ) : (
+            <>
+              {providerText('admin.providers.test.run', uiLocale)}
+              {recipient.trim() && (
+                <>
+                  {' '}
+                  · <bdi dir="ltr">{recipient.trim()}</bdi>
+                </>
+              )}
+            </>
+          )}
+        </TableActionIcon>
       </button>
     </div>
   );
@@ -1376,24 +1527,27 @@ function EmailTestRow({
 function Field({
   label,
   required,
-  secret,
   children,
   binding,
   error,
   errorId,
+  description,
+  className,
 }: {
   label: string;
   required?: boolean;
-  secret?: boolean;
   children: ReactElement<Record<string, unknown>>;
   binding: WizardFieldBinding;
   error?: string | undefined;
   errorId: string;
+  description?: string | undefined;
+  className?: string;
 }) {
   const id = `email-provider-${binding.name}`;
+  const descriptionId = description ? `${id}-hint` : undefined;
   return (
-    <div className="block">
-      <label htmlFor={id} className="block text-sm font-medium text-foreground mb-1">
+    <div className={cn(recordEditorField, className)}>
+      <Label htmlFor={id}>
         {label}
         {required && (
           <span aria-hidden="true" className="text-destructive">
@@ -1401,17 +1555,24 @@ function Field({
             *
           </span>
         )}
-        {secret && <span className="ml-1 text-xs text-muted-foreground" />}
-      </label>
+      </Label>
       {cloneElement(children, {
         ...binding,
         id,
+        required: required || undefined,
         'aria-required': required || undefined,
+        'aria-describedby':
+          [binding['aria-describedby'], descriptionId].filter(Boolean).join(' ') || undefined,
       })}
       {error && (
         <span id={errorId} role="alert" className="block text-sm text-destructive">
           {error}
         </span>
+      )}
+      {description && (
+        <p id={descriptionId} className="text-xs text-muted-foreground">
+          {description}
+        </p>
       )}
     </div>
   );

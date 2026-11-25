@@ -3,9 +3,9 @@ import { useAccountUser } from './useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useServerDetailQuery } from './useServerQuery.js';
+import type { MaintenanceCapability } from '../lib/maintenance-capabilities.js';
 
-export type MaintenanceCapability =
-  'electricity_checkout' | 'saving_orders' | 'solar_requests' | 'wallet_topup' | 'ai_chat';
+export type { MaintenanceCapability } from '../lib/maintenance-capabilities.js';
 
 export interface PublicMaintenanceSetting {
   capability: MaintenanceCapability;

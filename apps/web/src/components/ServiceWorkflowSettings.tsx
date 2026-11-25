@@ -1,6 +1,18 @@
 import { CommandFeedback } from './CommandFeedback.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Link } from '@tanstack/react-router';
+import { ChevronRight } from 'lucide-react';
+import {
+  LoadingStatus,
+  Alert,
+  Badge,
+  Button,
+  Input,
+  Label,
+  ListRefreshButton,
+  NativeSelect,
+} from '@barghsa/ui';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import {
   DEFAULT_SERVICE_WORKFLOWS,
@@ -15,6 +27,14 @@ import {
   type ServiceWorkflowTarget,
 } from '@barghsa/shared/admin';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
+import {
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
 import { useCatalogueResource } from '../hooks/useCatalogueResource.js';
 import { boundedCatalogueInteger } from '../lib/catalogue-form.js';
@@ -22,6 +42,14 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import type { CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
 
 const path = '/api/admin/config/service-workflows';
+const workflowGroups = [
+  ['ticketWorkflows', ['ticket_urgent', 'ticket_high', 'ticket_normal', 'ticket_low']],
+  [
+    'requestWorkflows',
+    ['verification', 'consultation', 'electricity_order', 'saving_order', 'solar_order'],
+  ],
+  ['contractWorkflows', ['electricity_contract', 'saving_contract', 'solar_contract']],
+] as const satisfies readonly (readonly [string, readonly ServiceWorkflowKey[]])[];
 type Revision = { id: string; version: number; value: ServiceWorkflowPolicy };
 type RevisionPage = { items: Revision[]; nextBeforeVersion: number | null };
 type WorkflowAction = TeamAction & { reviewedPolicy: ServiceWorkflowPolicy };
@@ -72,14 +100,25 @@ export function ServiceWorkflowSettings({
   disabled = false,
   onBusyChange,
   onDenied,
-}: CatalogueEditorProps) {
+  showComparison = false,
+  heading,
+  workflow,
+}: CatalogueEditorProps & {
+  showComparison?: boolean;
+  heading?: ReactNode;
+  workflow?: ServiceWorkflowKey;
+}) {
   const locale = useLocale(),
     text = (key: string) => tServiceSettings(`workflow.${key}`, locale);
+  const numbers = useNumberFormatting(locale);
   const [draft, setDraft] = useState<ServiceWorkflowPolicy>(
     structuredClone(DEFAULT_SERVICE_WORKFLOWS)
   );
   const [raw, setRaw] = useState<Times>(() => times(DEFAULT_SERVICE_WORKFLOWS));
-  const [selected, setSelected] = useState<ServiceWorkflowKey>('ticket_urgent');
+  const [localSelection, setSelected] = useState<ServiceWorkflowKey>('ticket_urgent');
+  const selected = workflow ?? localSelection;
+  const overview = !!heading && !workflow;
+  const SectionHeading = workflow ? 'h2' : 'h3';
   const [action, setAction] = useState<WorkflowAction | null>(null),
     [pending, setPending] = useState(false);
   const [invalid, setInvalid] = useState(false),
@@ -155,6 +194,10 @@ export function ServiceWorkflowSettings({
     const { policy, key } = proposal();
     if (!policy) {
       setInvalid(true);
+      if (workflow && workflow !== key) {
+        requestAnimationFrame(() => document.getElementById('workflow-error')?.focus());
+        return;
+      }
       setSelected(key);
       const r = draft[key]?.escalation;
       let id = `workflow-hours-${key}`;
@@ -219,7 +262,6 @@ export function ServiceWorkflowSettings({
   }
   const target = draft[selected],
     rule = target?.escalation;
-  const inputClass = 'h-10 w-full min-w-0 rounded-md border bg-background px-3 text-foreground';
   function timeInput(part: 'target' | 'rule', label: string) {
     const id = part === 'target' ? `workflow-hours-${selected}` : `workflow-timeout-${selected}`;
     const value = raw[selected][part];
@@ -229,8 +271,8 @@ export function ServiceWorkflowSettings({
       setInvalid(false);
     };
     return (
-      <div className="grid min-w-0 grid-cols-2 gap-3">
-        <div className="space-y-2">
+      <div className="flex min-w-0 flex-wrap items-start gap-3">
+        <div className={`${recordEditorField} w-28`}>
           <Label htmlFor={id}>{text(label)}</Label>
           <Input
             id={id}
@@ -243,20 +285,21 @@ export function ServiceWorkflowSettings({
             onChange={(e) => change({ ...value, value: e.target.value })}
           />
         </div>
-        <div className="space-y-2">
+        <div className={recordEditorField}>
           <Label htmlFor={`${id}-unit`}>
-            {text('unit')} · {text(label)}
+            {text('unit')}
+            <span className="sr-only"> · {text(label)}</span>
           </Label>
-          <select
+          <NativeSelect
             id={`${id}-unit`}
             aria-required="true"
-            className={inputClass}
+            className="w-full"
             value={value.unit}
             onChange={(e) => change({ ...value, unit: e.target.value as Duration['unit'] })}
           >
             <option value="hours">{text('hours')}</option>
             <option value="days">{text('days')}</option>
-          </select>
+          </NativeSelect>
         </div>
       </div>
     );
@@ -273,10 +316,10 @@ export function ServiceWorkflowSettings({
         <Label className="sr-only" htmlFor={`workflow-${side}`}>
           {text(side)}
         </Label>
-        <select
+        <NativeSelect
           id={`workflow-${side}`}
           aria-required="true"
-          className={inputClass}
+          className="w-full"
           value={a.kind}
           onChange={(e) => {
             const kind = e.target.value as WorkflowAudience['kind'];
@@ -288,15 +331,15 @@ export function ServiceWorkflowSettings({
           </option>
           <option value="role">{text('role')}</option>
           <option value="team">{text('team')}</option>
-        </select>
+        </NativeSelect>
         {(a.kind === 'role' || a.kind === 'team') && (
           <>
             <Label className="sr-only" htmlFor={`workflow-${side}-reference`}>
               {text(side)} · {text(a.kind)}
             </Label>
-            <select
+            <NativeSelect
               id={`workflow-${side}-reference`}
-              className={inputClass}
+              className="w-full"
               value={a.id}
               aria-invalid={(invalid && invalidField === `workflow-${side}-reference`) || undefined}
               aria-describedby={
@@ -314,7 +357,7 @@ export function ServiceWorkflowSettings({
                   {o.name}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </>
         )}
       </fieldset>
@@ -326,21 +369,24 @@ export function ServiceWorkflowSettings({
           (o) => o.id === a.id
         )?.name ?? text('choose'))
       : text(a.kind);
-  const summary = (p: ServiceWorkflowPolicy) => (
+  const summary = (
+    p: ServiceWorkflowPolicy,
+    keys: readonly ServiceWorkflowKey[] = SERVICE_WORKFLOW_KEYS
+  ) => (
     <dl className="space-y-2">
-      {SERVICE_WORKFLOW_KEYS.map((key) => (
+      {keys.map((key) => (
         <div key={key}>
           <dt className="font-medium">{text(key)}</dt>
           <dd>
             {p[key]
-              ? `${p[key]!.hours} ${text('hours')} · ${text(p[key]!.notification)}${p[key]!.email ? ' · ' + text('email') : ''}`
+              ? `${numbers.number(p[key]!.hours)} ${text('hours')} · ${text(p[key]!.notification)}${p[key]!.email ? ' · ' + text('email') : ''}`
               : text('disabled')}
           </dd>
           {p[key]?.escalation && (
             <dd className="text-sm">
-              {text(p[key]!.escalation!.condition)} · {p[key]!.escalation!.afterHours}{' '}
-              {text('hours')} ·{audienceName(p[key]!.escalation!.from)} →{' '}
-              {audienceName(p[key]!.escalation!.to)}
+              {text(p[key]!.escalation!.condition)} ·{' '}
+              {numbers.number(p[key]!.escalation!.afterHours)} {text('hours')} ·
+              {audienceName(p[key]!.escalation!.from)} → {audienceName(p[key]!.escalation!.to)}
               {p[key]!.escalation!.email ? ' · ' + text('email') : ''}
             </dd>
           )}
@@ -348,40 +394,117 @@ export function ServiceWorkflowSettings({
       ))}
     </dl>
   );
+  const reviewedDraft = !overview && state.current ? proposal() : null;
+  const savedPolicy = state.current?.policy;
+  const proposalPolicy = reviewedDraft?.policy;
+  const hasChanges = !!(
+    proposalPolicy &&
+    state.current &&
+    serviceWorkflowBasis(proposalPolicy) !== serviceWorkflowBasis(state.current.policy)
+  );
+  const invalidWorkflow =
+    invalid && workflow && reviewedDraft?.key !== workflow ? reviewedDraft?.key : undefined;
   return (
     <section className="space-y-4" aria-label={text('title')} dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h2 className="text-xl font-semibold">{text('title')}</h2>
-      <p className="text-sm text-muted-foreground">{text('note')}</p>
+      {heading && <RecordCommandGuard blocked={() => pending || state.uncertain} />}
+      <header className="flex min-w-0 items-end justify-between gap-3">
+        {heading ?? (
+          <div className="min-w-0 space-y-1">
+            <h2 className="text-lg font-semibold">{text('title')}</h2>
+            <p className="text-sm text-muted-foreground">{text('note')}</p>
+          </div>
+        )}
+        <ListRefreshButton
+          ref={refreshRef}
+          label={text('refresh')}
+          onClick={state.refresh}
+          disabled={busy}
+          refreshing={state.resource.loading}
+        />
+      </header>
+      {overview && (
+        <div className="space-y-1">
+          <p className="text-sm text-muted-foreground">{text('overviewHelp')}</p>
+          <details className="text-sm text-muted-foreground">
+            <summary className="w-fit cursor-pointer text-primary">{text('policyHelp')}</summary>
+            <p className="mt-1">{text('note')}</p>
+          </details>
+        </div>
+      )}
+      {showComparison && !workflow && state.current && (
+        <Badge variant="secondary">
+          {text('savedVersion').replace('{version}', numbers.number(version))}
+        </Badge>
+      )}
       {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {state.resource.error && <Alert variant="destructive">{text('error')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
       <CommandFeedback message={saved ? text('saved') : null} />
       {(state.changed || state.uncertain) && (
-        <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changed')}</Alert>
+        <Alert variant="destructive">
+          <p>{text(state.uncertain ? 'unverified' : 'changed')}</p>
+          {overview && (
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-2 w-fit"
+              onClick={state.resetSaved}
+              disabled={busy || !state.ready || (state.uncertain && !state.recovered)}
+            >
+              {text('reset')}
+            </Button>
+          )}
+        </Alert>
       )}
-      <div className="flex flex-wrap gap-3">
-        <Button
-          ref={refreshRef}
-          type="button"
-          variant="outline"
-          onClick={state.refresh}
-          disabled={busy || state.resource.loading}
-        >
-          {text('refresh')}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={state.resetSaved}
-          disabled={busy || !state.ready || (state.uncertain && !state.recovered)}
-        >
-          {text('reset')}
-        </Button>
-      </div>
-      {state.current && !state.scope.denied && (
+      {overview && savedPolicy && !state.scope.denied && (
+        <div className="space-y-3">
+          {workflowGroups.map(([title, keys]) => (
+            <section
+              key={title}
+              className="rounded-xl border bg-card"
+              aria-labelledby={`workflow-${title}`}
+            >
+              <h2
+                id={`workflow-${title}`}
+                className="border-b px-4 py-2.5 text-sm font-semibold sm:px-5"
+              >
+                {text(title)}
+              </h2>
+              <ul className="grid divide-y md:grid-cols-2 md:divide-y-0">
+                {keys.map((key) => {
+                  const entry = savedPolicy[key];
+                  const limit = entry && duration(entry.hours);
+                  return (
+                    <li key={key} className="min-w-0 md:border-b md:odd:border-e">
+                      <Link
+                        to="/admin/service-targets/$section/{-$workflow}"
+                        params={{ section: 'workflows', workflow: key }}
+                        disabled={busy || state.uncertain}
+                        className="touch-action flex min-h-12 min-w-0 items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted/45 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:px-5"
+                      >
+                        <span className="min-w-0 flex-1 font-medium">{text(key)}</span>
+                        <span className="shrink-0 text-xs text-muted-foreground">
+                          {limit
+                            ? numbers.number(Number(limit.value)) + ' ' + text(limit.unit)
+                            : text('noCustomTarget')}
+                        </span>
+                        <ChevronRight
+                          className="size-4 shrink-0 text-muted-foreground rtl:rotate-180"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )}
+      {!overview && state.current && !state.scope.denied && (
         <form
           noValidate
-          className="space-y-4"
+          className={recordEditorSurface}
           aria-label={text('title')}
           onSubmit={(e) => {
             e.preventDefault();
@@ -389,149 +512,232 @@ export function ServiceWorkflowSettings({
           }}
         >
           {invalid && (
-            <Alert id="workflow-error" variant="destructive">
-              {text('invalid')}
+            <Alert id="workflow-error" tabIndex={-1} variant="destructive" className="m-4">
+              {invalidWorkflow ? (
+                <Link
+                  to="/admin/service-targets/$section/{-$workflow}"
+                  params={{ section: 'workflows', workflow: invalidWorkflow }}
+                  className="underline underline-offset-4"
+                >
+                  {text('checkOtherWorkflow').replace('{workflow}', text(invalidWorkflow))}
+                </Link>
+              ) : (
+                text('invalid')
+              )}
             </Alert>
           )}
-          <fieldset className="min-w-0 space-y-4 rounded-md border p-4" disabled={blocked || busy}>
-            <div className="space-y-2">
-              <Label htmlFor="workflow-select">{text('select')}</Label>
-              <select
-                id="workflow-select"
-                className={inputClass}
-                value={selected}
-                onChange={(e) => setSelected(e.target.value as ServiceWorkflowKey)}
-              >
-                {SERVICE_WORKFLOW_KEYS.map((key) => (
-                  <option key={key} value={key}>
-                    {text(key)}
-                    {draft[key] ? '' : ' · ' + text('disabled')}
-                  </option>
-                ))}
-              </select>
+          <fieldset className="m-0 min-w-0 border-0 p-0" disabled={blocked || busy}>
+            <div className="space-y-2 px-4 py-3 sm:px-6">
+              {!workflow && (
+                <div className={recordEditorField}>
+                  <Label htmlFor="workflow-select">{text('select')}</Label>
+                  <NativeSelect
+                    id="workflow-select"
+                    className="w-full"
+                    value={selected}
+                    onChange={(e) => setSelected(e.target.value as ServiceWorkflowKey)}
+                  >
+                    {SERVICE_WORKFLOW_KEYS.map((key) => (
+                      <option key={key} value={key}>
+                        {text(key)}
+                        {draft[key] ? '' : ' · ' + text('disabled')}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </div>
+              )}
+              <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={!!target}
+                  onChange={(e) =>
+                    edit(
+                      e.target.checked
+                        ? { hours: 24, notification: 'breach', email: false, escalation: null }
+                        : null
+                    )
+                  }
+                />
+                {text('enabled')}
+              </label>
+              {workflow?.startsWith('ticket_') && (
+                <p className="text-sm text-muted-foreground">{text('ticketTargetHelp')}</p>
+              )}
+              {workflow && !target && (
+                <p className="text-sm text-muted-foreground">{text('enableTargetHelp')}</p>
+              )}
             </div>
-            <label className="flex gap-2">
-              <input
-                type="checkbox"
-                checked={!!target}
-                onChange={(e) =>
-                  edit(
-                    e.target.checked
-                      ? { hours: 24, notification: 'breach', email: false, escalation: null }
-                      : null
-                  )
-                }
-              />
-              {text('enabled')}
-            </label>
             {target && (
               <>
-                {timeInput('target', 'threshold')}
-                <div className="space-y-2">
-                  <Label htmlFor="workflow-notification">{text('notification')}</Label>
-                  <select
-                    id="workflow-notification"
-                    aria-required="true"
-                    className={inputClass}
-                    value={target.notification}
-                    onChange={(e) =>
-                      edit({
-                        ...target,
-                        notification: e.target.value as ServiceWorkflowTarget['notification'],
-                      })
-                    }
-                  >
-                    <option value="breach">{text('breach')}</option>
-                    <option value="escalation">{text('escalation')}</option>
-                  </select>
-                </div>
-                <label className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    checked={target.email}
-                    onChange={(e) => edit({ ...target, email: e.target.checked })}
-                  />
-                  {text('email')}
-                </label>
-                <label className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    checked={!!rule}
-                    onChange={(e) =>
-                      edit({
-                        ...target,
-                        escalation: e.target.checked
-                          ? {
-                              condition: 'sla_breached',
-                              from: { kind: 'any', id: null },
-                              to: { kind: 'admins', id: null },
-                              afterHours: 24,
-                              email: false,
-                            }
-                          : null,
-                      })
-                    }
-                  />
-                  {text('rule')}
-                </label>
-                {rule && (
-                  <fieldset className="min-w-0 space-y-4 rounded-md border p-4">
-                    <legend>{text('rule')}</legend>
-                    <Label htmlFor="workflow-condition">{text('condition')}</Label>
-                    <select
-                      id="workflow-condition"
-                      aria-required="true"
-                      className={inputClass}
-                      value={rule.condition}
+                <section
+                  aria-labelledby="workflow-response-heading"
+                  className="space-y-2 border-t px-4 py-3 sm:px-6"
+                >
+                  <SectionHeading id="workflow-response-heading" className="font-semibold">
+                    {text('responseSettings')}
+                  </SectionHeading>
+                  <div className={recordEditorGrid}>
+                    {timeInput('target', 'threshold')}
+                    <div className={recordEditorField}>
+                      <Label htmlFor="workflow-notification">{text('notification')}</Label>
+                      <NativeSelect
+                        id="workflow-notification"
+                        aria-required="true"
+                        className="w-full"
+                        value={target.notification}
+                        onChange={(e) =>
+                          edit({
+                            ...target,
+                            notification: e.target.value as ServiceWorkflowTarget['notification'],
+                          })
+                        }
+                      >
+                        <option value="breach">{text('breach')}</option>
+                        <option value="escalation">{text('escalation')}</option>
+                      </NativeSelect>
+                    </div>
+                  </div>
+                  <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={target.email}
+                      onChange={(e) => edit({ ...target, email: e.target.checked })}
+                    />
+                    {text('email')}
+                  </label>
+                </section>
+                <section
+                  aria-labelledby="workflow-escalation-heading"
+                  className="space-y-2 border-t px-4 py-3 sm:px-6"
+                >
+                  <SectionHeading id="workflow-escalation-heading" className="font-semibold">
+                    {text('escalationSettings')}
+                  </SectionHeading>
+                  <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={!!rule}
                       onChange={(e) =>
                         edit({
                           ...target,
-                          escalation: {
-                            ...rule,
-                            condition: e.target.value as typeof rule.condition,
-                          },
+                          escalation: e.target.checked
+                            ? {
+                                condition: 'sla_breached',
+                                from: { kind: 'any', id: null },
+                                to: { kind: 'admins', id: null },
+                                afterHours: 24,
+                                email: false,
+                              }
+                            : null,
                         })
                       }
-                    >
-                      <option value="sla_breached">{text('sla_breached')}</option>
-                      {selected.startsWith('ticket_') && (
-                        <option value="ticket_priority">{text('ticket_priority')}</option>
-                      )}
-                    </select>
-                    {audienceInput('from')}
-                    {audienceInput('to')}
-                    {timeInput('rule', 'timeout')}
-                    <label className="flex gap-2">
-                      <input
-                        type="checkbox"
-                        checked={rule.email}
-                        onChange={(e) =>
-                          edit({ ...target, escalation: { ...rule, email: e.target.checked } })
-                        }
-                      />
-                      {text('email')}
-                    </label>
-                  </fieldset>
-                )}
-                <p className="text-sm text-muted-foreground">{text('timing')}</p>
+                    />
+                    {text('rule')}
+                  </label>
+                  {rule && (
+                    <div className="space-y-3 rounded-lg bg-muted/40 p-3">
+                      <div className={`${recordEditorField} max-w-md`}>
+                        <Label htmlFor="workflow-condition">{text('condition')}</Label>
+                        <NativeSelect
+                          id="workflow-condition"
+                          aria-required="true"
+                          className="w-full"
+                          value={rule.condition}
+                          onChange={(e) =>
+                            edit({
+                              ...target,
+                              escalation: {
+                                ...rule,
+                                condition: e.target.value as typeof rule.condition,
+                              },
+                            })
+                          }
+                        >
+                          <option value="sla_breached">{text('sla_breached')}</option>
+                          {selected.startsWith('ticket_') && (
+                            <option value="ticket_priority">{text('ticket_priority')}</option>
+                          )}
+                        </NativeSelect>
+                      </div>
+                      <div className={recordEditorGrid}>
+                        {audienceInput('from')}
+                        {audienceInput('to')}
+                      </div>
+                      {timeInput('rule', 'timeout')}
+                      <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={rule.email}
+                          onChange={(e) =>
+                            edit({ ...target, escalation: { ...rule, email: e.target.checked } })
+                          }
+                        />
+                        {text('email')}
+                      </label>
+                    </div>
+                  )}
+                  {workflow ? (
+                    rule && (
+                      <details className="text-sm text-muted-foreground">
+                        <summary className="w-fit cursor-pointer text-primary">
+                          {text('timingHelp')}
+                        </summary>
+                        <p className="mt-2">{text('timing')}</p>
+                      </details>
+                    )
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{text('timing')}</p>
+                  )}
+                </section>
               </>
             )}
           </fieldset>
-          <Button
-            type="submit"
-            disabled={
-              blocked ||
-              busy ||
-              (!!proposal().policy &&
-                serviceWorkflowBasis(proposal().policy!) ===
-                  serviceWorkflowBasis(state.current.policy))
-            }
-          >
-            {text('save')}
-          </Button>
+          {showComparison && (!workflow || hasChanges) && (
+            <section
+              aria-labelledby="workflow-preview-heading"
+              className="space-y-2 border-t px-4 py-3 sm:px-6"
+            >
+              <SectionHeading id="workflow-preview-heading" className="font-semibold">
+                {text('reviewCurrent')}
+              </SectionHeading>
+              <div className="grid min-w-0 overflow-hidden rounded-lg border text-sm sm:grid-cols-2">
+                <div className="min-w-0 space-y-1 px-3 py-2.5">
+                  <p className="text-sm text-muted-foreground">
+                    {tWorkspace('admin.settings.current', locale)}
+                  </p>
+                  {summary(state.current.policy, [selected])}
+                </div>
+                <div className="min-w-0 space-y-1 border-t bg-primary/5 px-3 py-2.5 sm:border-s sm:border-t-0">
+                  <p className="text-sm text-muted-foreground">
+                    {tWorkspace('admin.settings.draft', locale)}
+                  </p>
+                  {proposalPolicy ? (
+                    summary(proposalPolicy, [selected])
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{text('reviewPending')}</p>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+          <RecordEditorActions>
+            {(!workflow || hasChanges || invalid || state.changed || state.uncertain) && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={state.resetSaved}
+                disabled={busy || !state.ready || (state.uncertain && !state.recovered)}
+              >
+                {text('reset')}
+              </Button>
+            )}
+            <Button type="submit" disabled={blocked || busy || (!!proposalPolicy && !hasChanges)}>
+              {text(workflow ? 'reviewChanges' : 'save')}
+            </Button>
+          </RecordEditorActions>
         </form>
       )}
-      {state.current && version > 1 && !state.scope.denied && (
+      {!workflow && state.current && version > 1 && !state.scope.denied && (
         <section className="space-y-3" aria-label={text('history')}>
           <Button
             type="button"
@@ -598,13 +804,14 @@ export function ServiceWorkflowSettings({
       {action && (
         <TeamActionDialog
           action={action}
+          toastErrors={!heading}
           finalFocus={refreshRef}
           confirmationDisabled={blocked || state.uncertain}
           onClose={withdraw}
           onPendingChange={setPending}
           onDenied={state.denyCommand}
           onUnconfirmed={state.unconfirmed}
-          summary={summary(action.reviewedPolicy)}
+          summary={summary(action.reviewedPolicy, workflow ? [workflow] : SERVICE_WORKFLOW_KEYS)}
           onSuccess={async (result) => {
             if (captured.current !== epoch.current || actionRef.current !== action) return;
             if (
@@ -623,7 +830,7 @@ export function ServiceWorkflowSettings({
           }}
         />
       )}
-      <p className="text-sm text-muted-foreground">{text('legacy')}</p>
+      {!heading && <p className="text-sm text-muted-foreground">{text('legacy')}</p>}
     </section>
   );
 }

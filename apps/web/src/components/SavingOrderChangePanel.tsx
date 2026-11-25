@@ -1,14 +1,17 @@
 import { toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { ConfirmationFields } from '@barghsa/ui';
+import { ConfirmationFields, NativeSelect } from '@barghsa/ui';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from './OrderWalletBalance.js';
+import { SavingReviewPrice } from './SavingReviewPrice.js';
+import { ChevronDownIcon } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
-import { LoadingStatus, Button, Card, CardContent } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -24,7 +27,6 @@ import { tSavingChange } from '@barghsa/i18n/saving-change';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -104,7 +106,6 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
   const profileRevision = useProfileContextRevision();
   const querySequence = useRef(0);
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const formCopy = (key: string) => tSavingChange(key, locale);
   const mounted = useRef(false);
@@ -118,6 +119,13 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
   const [hardware, setHardware] = useState<SavingChangeHardware[]>([]);
   const [addresses, setAddresses] = useState<SavingChangeAddress[]>([]);
   const [quote, setQuote] = useState<SavingChangeQuote | null>(null);
+  const quoteReview = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (quote && quoteReview.current) {
+      quoteReview.current.focus({ preventScroll: true });
+      quoteReview.current.scrollIntoView?.({ block: 'start' });
+    }
+  }, [quote]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error' | 'forbidden' | 'missing'>(
     'loading'
   );
@@ -412,214 +420,226 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
   }
   const frozen = !!command.current;
   return (
-    <Card data-testid="saving-change-panel">
-      <CardContent className="space-y-4 pt-6">
-        <div className="space-y-1">
-          <h2 className="text-xl font-semibold">{copy('changeOrder')}</h2>
-          <p className="text-sm text-muted-foreground">{copy('changeOrderHelp')}</p>
-        </div>
-        {status === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-        {(status === 'forbidden' || status === 'missing') && (
-          <p role="alert">
-            {formCopy(status === 'missing' ? 'customerMissing' : 'customerForbidden')}
-          </p>
-        )}
-        {status === 'error' && (
-          <>
-            <p role="alert">{copy('changeUnavailable')}</p>
-            <Button
-              type="button"
-              variant="outline"
-              data-testid="saving-change-options-reload"
-              onClick={() => void loadOptions()}
-            >
-              {formCopy('customerReload')}
-            </Button>
-          </>
-        )}
-        {status === 'ready' && (
-          <Form {...form}>
-            <form
-              data-testid="saving-change-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void preview();
-              }}
-              className="space-y-4"
-              noValidate
-            >
-              <div className="grid gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="hardwareProductId"
-                  render={({ field }) => (
-                    <FormItem id="saving-change-hardware">
-                      <FormLabel>{copy('stepHardware')}</FormLabel>
-                      <FormControl>
-                        <select
-                          {...field}
-                          className="w-full rounded-md border bg-background px-3 py-2"
-                          disabled={frozen}
-                          onChange={(event) => edit('hardwareProductId', event.target.value)}
-                        >
-                          <option value="">{copy('stepHardware')}</option>
-                          {hardware.map((item) => (
-                            <option
-                              key={item.id}
-                              value={item.id}
-                              disabled={!availableSavingHardware(item, props.currentHardwareId)}
-                            >
-                              {item.title[locale]}
-                              {item.status !== 'active'
-                                ? ` · ${copy('unavailable')}`
-                                : item.stock_tracking && item.available_count <= 0
-                                  ? ` · ${copy('outOfStock')}`
-                                  : ''}
-                            </option>
-                          ))}
-                        </select>
-                      </FormControl>
-                      <FormDescription>{formCopy('customerHardwareHelp')}</FormDescription>
-                      <FormMessage reserveSpace />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="installationAddressId"
-                  render={({ field }) => (
-                    <FormItem id="saving-change-address">
-                      <FormLabel>{copy('stepAddress')}</FormLabel>
-                      <FormControl>
-                        <select
-                          {...field}
-                          className="w-full rounded-md border bg-background px-3 py-2"
-                          disabled={frozen}
-                          onChange={(event) => edit('installationAddressId', event.target.value)}
-                        >
-                          <option value="">{copy('stepAddress')}</option>
-                          {addresses.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item.fullAddress} · {item.postalCode}
-                            </option>
-                          ))}
-                        </select>
-                      </FormControl>
-                      <FormDescription>{formCopy('customerAddressHelp')}</FormDescription>
-                      <FormMessage reserveSpace />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              {!frozen && (
-                <Link
-                  to="/settings/addresses"
-                  className="inline-block text-sm text-primary hover:underline"
-                >
-                  {copy('manageAddresses')}
-                </Link>
-              )}
-              {!quote && !frozen && (
-                <Button
-                  type="submit"
-                  variant="outline"
-                  disabled={busy}
-                  aria-busy={busy || undefined}
-                >
-                  {busy && (
-                    <span
-                      aria-hidden="true"
-                      className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                    />
-                  )}
-                  {busy ? formCopy('customerChecking') : copy('previewChange')}
-                </Button>
-              )}
-              {form.formState.errors.root?.validation && (
-                <p role="alert">{formCopy('validationUnavailable')}</p>
-              )}
-            </form>
-          </Form>
-        )}
-        {quote && (
-          <div
-            data-testid="saving-change-quote"
-            className="space-y-2 rounded-md border bg-muted/30 p-4 text-sm break-words"
-            aria-live="polite"
+    <section className="min-w-0 space-y-4" data-testid="saving-change-panel">
+      {status === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+      {(status === 'forbidden' || status === 'missing') && (
+        <p role="alert">
+          {formCopy(status === 'missing' ? 'customerMissing' : 'customerForbidden')}
+        </p>
+      )}
+      {status === 'error' && (
+        <>
+          <p role="alert">{copy('changeUnavailable')}</p>
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="saving-change-options-reload"
+            onClick={() => void loadOptions()}
           >
-            <p>
-              {quote.plan.title[locale]} · {quote.hardware.title[locale]}
-            </p>
-            <p>
-              {copy('billIdentifier')}: <bdi>{quote.billIdentifier}</bdi>
-            </p>
-            <p>
-              {quote.address.full_address} · <bdi>{quote.address.postal_code}</bdi>
-            </p>
-            {quote.lines.map((line) => (
-              <p key={line.type}>
-                {line.title[locale]}: <bdi>{numbers.money(line.amountIrR)}</bdi>
+            {formCopy('customerReload')}
+          </Button>
+        </>
+      )}
+      {status === 'ready' && (
+        <Form {...form}>
+          <form
+            data-testid="saving-change-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void preview();
+            }}
+            className={recordEditorSurface}
+            noValidate
+          >
+            <div className="grid gap-3 px-4 py-3 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="hardwareProductId"
+                render={({ field }) => (
+                  <FormItem id="saving-change-hardware">
+                    <FormLabel>{copy('stepHardware')}</FormLabel>
+                    <FormControl>
+                      <NativeSelect
+                        {...field}
+                        aria-required="true"
+                        className="w-full"
+                        disabled={frozen}
+                        onChange={(event) => edit('hardwareProductId', event.target.value)}
+                      >
+                        <option value="">{copy('stepHardware')}</option>
+                        {hardware.map((item) => (
+                          <option
+                            key={item.id}
+                            value={item.id}
+                            disabled={!availableSavingHardware(item, props.currentHardwareId)}
+                          >
+                            {item.title[locale]}
+                            {item.status !== 'active'
+                              ? ` · ${copy('unavailable')}`
+                              : item.stock_tracking && item.available_count <= 0
+                                ? ` · ${copy('outOfStock')}`
+                                : ''}
+                          </option>
+                        ))}
+                      </NativeSelect>
+                    </FormControl>
+                    <FormDescription>{formCopy('customerHardwareHelp')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="installationAddressId"
+                render={({ field }) => (
+                  <FormItem id="saving-change-address">
+                    <FormLabel>{copy('stepAddress')}</FormLabel>
+                    <FormControl>
+                      <NativeSelect
+                        {...field}
+                        aria-required="true"
+                        className="w-full"
+                        disabled={frozen}
+                        onChange={(event) => edit('installationAddressId', event.target.value)}
+                      >
+                        <option value="">{copy('stepAddress')}</option>
+                        {addresses.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.fullAddress} · {item.postalCode}
+                          </option>
+                        ))}
+                      </NativeSelect>
+                    </FormControl>
+                    <FormDescription>{formCopy('customerAddressHelp')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {form.formState.errors.root?.validation && (
+              <p role="alert" className="px-4 pb-3 text-sm text-destructive">
+                {formCopy('validationUnavailable')}
               </p>
-            ))}
-            <p>
-              {copy('subtotal')}: <bdi>{numbers.money(quote.subtotalIrR)}</bdi>
-            </p>
-            <p>
-              {copy('discount')}: <bdi>{numbers.money(quote.discountIrR)}</bdi>
-            </p>
-            {quote.discountIrR !== '0' && (
-              <p className="text-muted-foreground">{copy('retainedDiscount')}</p>
             )}
-            <p>
-              {copy('vat')}: <bdi>{numbers.money(quote.vatIrR)}</bdi>
+            {!frozen && (
+              <RecordEditorActions
+                secondary={
+                  <Link
+                    to="/settings/addresses"
+                    className="touch-action w-fit text-sm font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    {copy('manageAddresses')}
+                  </Link>
+                }
+              >
+                {!quote && (
+                  <Button type="submit" loading={busy} disabled={busy}>
+                    {busy ? formCopy('customerChecking') : copy('previewChange')}
+                  </Button>
+                )}
+              </RecordEditorActions>
+            )}
+          </form>
+        </Form>
+      )}
+      {quote && (
+        <div
+          ref={quoteReview}
+          tabIndex={-1}
+          aria-label={formCopy('customerReview')}
+          data-testid="saving-change-quote"
+          className="min-w-0 scroll-mt-3 space-y-3 rounded-lg wrap-anywhere text-sm focus:outline-none"
+          aria-live="polite"
+        >
+          <div className="space-y-3 rounded-xl border bg-card p-3 sm:p-4">
+            <h2 className="text-base font-semibold">{formCopy('customerReview')}</h2>
+            <div className="grid min-w-0 gap-3 lg:grid-cols-2 lg:items-start">
+              <div className="space-y-2">
+                <SavingReviewPrice quote={quote} />
+                {quote.discountIrR !== '0' && (
+                  <p className="px-2 text-sm text-muted-foreground">{copy('retainedDiscount')}</p>
+                )}
+              </div>
+              <dl className="grid min-w-0 gap-x-4 gap-y-3 border-t px-2 pt-3 min-[375px]:grid-cols-2 lg:border-t-0 lg:border-s lg:ps-4 lg:pt-0">
+                <div className="min-w-0">
+                  <dt className="text-muted-foreground">{copy('stepPlan')}</dt>
+                  <dd className="mt-1 font-medium">
+                    <bdi>{quote.plan.title[locale]}</bdi>
+                  </dd>
+                </div>
+                <div className="min-w-0">
+                  <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
+                  <dd className="mt-1 font-medium">
+                    <bdi>{quote.hardware.title[locale]}</bdi>
+                  </dd>
+                </div>
+                <div className="col-span-full min-w-0">
+                  <dt className="text-muted-foreground">{copy('stepAddress')}</dt>
+                  <dd className="mt-1 space-y-1 font-medium">
+                    <p dir="auto">{quote.address.full_address}</p>
+                    <bdi dir="ltr" className="tabular-nums">
+                      {quote.address.postal_code}
+                    </bdi>
+                  </dd>
+                </div>
+                <div className="col-span-full min-w-0">
+                  <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
+                  <dd className="mt-1 font-medium tabular-nums">
+                    <bdi dir="ltr">{quote.billIdentifier}</bdi>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <details className="group rounded-lg border bg-card">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+              <bdi>{quote.agreement.title}</bdi>
+              <ChevronDownIcon
+                aria-hidden="true"
+                className="size-4 shrink-0 group-open:rotate-180 motion-safe:transition-transform"
+              />
+            </summary>
+            <p dir="auto" className="px-3 pb-3 whitespace-pre-wrap wrap-anywhere">
+              {quote.agreement.body}
             </p>
-            <p className="font-semibold">
-              {copy('total')}: <bdi>{numbers.money(quote.totalIrR)}</bdi>
-            </p>
+          </details>
+          <div className="rounded-lg border bg-card p-3 [&_button]:self-start">
             <OrderWalletBalance
               profileId={props.profileId}
               total={quote.totalIrR}
               scopeKey={quote.reviewDigest}
             />
-            <details>
-              <summary className="cursor-pointer wrap-anywhere">
-                <bdi>{quote.agreement.title}</bdi>
-              </summary>
-              <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
-                {quote.agreement.body}
-              </p>
-            </details>
-            <ConfirmationFields gate={financialGate} disabled={busy || frozen} />
-            {!frozen && (
-              <Button
-                type="button"
-                variant="warning"
-                disabled={busy || !financialGate.allowed}
-                onClick={confirm}
-              >
-                {copy('confirmChange')}
-              </Button>
-            )}
           </div>
-        )}
-        {uncertain && (
-          <Button
-            type="button"
-            variant="outline"
-            data-testid="saving-change-retry"
-            disabled={busy}
-            onClick={retry}
-          >
-            {formCopy('customerRetryCaptured')}
-          </Button>
-        )}
-        {busy && frozen && <p role="status">{copy('changingOrder')}</p>}
-        {error && (
-          <p role="alert" className="text-sm text-destructive">
-            {error}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+          <ConfirmationFields gate={financialGate} disabled={busy || frozen} />
+          {!frozen && (
+            <Button
+              type="button"
+              variant="warning"
+              disabled={busy || !financialGate.allowed}
+              onClick={confirm}
+            >
+              {copy('confirmChange')}
+            </Button>
+          )}
+        </div>
+      )}
+      {uncertain && (
+        <Button
+          type="button"
+          variant="outline"
+          data-testid="saving-change-retry"
+          disabled={busy}
+          onClick={retry}
+        >
+          {formCopy('customerRetryCaptured')}
+        </Button>
+      )}
+      {busy && frozen && <p role="status">{copy('changingOrder')}</p>}
+      {error && (
+        <p role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      )}
+    </section>
   );
 }

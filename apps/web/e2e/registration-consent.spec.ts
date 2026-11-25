@@ -33,7 +33,7 @@ test('registration shows and submits the same terms version', async ({
   await page.locator('#password').fill('Browser-consent-password-123!');
   const initialReads = reads;
   const link = page.locator('#tos-label a');
-  await expect(link).toHaveAttribute('href', `/terms?lang=fa&version=${id}`);
+  await expect(link).toHaveAttribute('href', `/terms/${id}?lang=fa`);
   await expect(link).toHaveAttribute('target', '_blank');
   await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   if (isMobile) {
@@ -49,7 +49,7 @@ test('registration shows and submits the same terms version', async ({
     const popup = page.waitForEvent('popup');
     await link.click();
     const terms = await popup;
-    await expect(terms).toHaveURL(new RegExp(`/terms\\?lang=fa&version=${id}$`));
+    await expect(terms).toHaveURL(new RegExp(`/terms/${id}\\?lang=fa$`));
     await expect(terms.getByRole('article')).toContainText('قوانین اول نمایش داده شده');
     await expect(terms.getByRole('article')).toContainText('consent-v1');
     expect(await terms.evaluate(() => window.opener)).toBeNull();
@@ -84,14 +84,14 @@ for (const locale of ['en', 'fa']) {
         },
       });
     });
-    await page.goto(`/terms?lang=${locale}&version=${id}`);
+    await page.goto(`/terms/${id}?lang=${locale}`);
     const article = page.getByRole('article');
     await expect(article).toContainText(locale === 'en' ? 'Original terms' : 'قوانین اصلی');
     await page
       .getByRole('link', { name: locale === 'en' ? 'فارسی' : 'English', exact: true })
       .click();
     await expect(article).toContainText(locale === 'en' ? 'قوانین اصلی' : 'Original terms');
-    expect(new URL(page.url()).searchParams.get('version')).toBe(id);
+    expect(new URL(page.url()).pathname).toBe(`/terms/${id}`);
     expect(reads).toEqual([locale, locale === 'en' ? 'fa' : 'en']);
     mismatch = true;
     await page.reload();
@@ -160,7 +160,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: t('tos.page.retry', locale), exact: true }).click();
     await expect(consent).toBeEnabled();
     const link = page.locator('#tos-label a');
-    await expect(link).toHaveAttribute('href', `/terms?lang=${locale}&version=${id}`);
+    await expect(link).toHaveAttribute('href', `/terms/${id}?lang=${locale}`);
     await first!.fulfill({ json: { ...terms, id: 'old-terms' } }).catch(() => {});
     await link.click();
     await expect.poll(() => !!dialogModule).toBe(true);

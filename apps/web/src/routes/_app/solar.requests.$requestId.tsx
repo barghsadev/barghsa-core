@@ -1,7 +1,11 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { SolarRequestDetailPage } from '../../pages/SolarRequestDetailPage.js';
+
 export const Route = createFileRoute('/_app/solar/requests/$requestId')({
-  component: lazyRouteComponent(
-    () => import('../../pages/SolarRequestDetailPage.js'),
-    'SolarRequestDetailPage'
-  ),
+  component: SolarRequestDetailRoute,
 });
+
+function SolarRequestDetailRoute() {
+  const { requestId } = Route.useParams();
+  return <SolarRequestDetailPage requestId={requestId} />;
+}

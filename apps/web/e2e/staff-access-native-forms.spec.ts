@@ -40,8 +40,11 @@ for (const locale of ['en', 'fa'] as const) {
         json: { error: { code: 'VALIDATION:INPUT:INVALID', fields: ['firstName'] } },
       });
     });
+    await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+      route.fulfill({ json: staffUser })
+    );
     await page.goto('/admin/users');
-    await page.getByRole('button', { name: label('create'), exact: true }).click();
+    await page.getByRole('link', { name: label('create'), exact: true }).click();
     const form = page.locator('form');
     await form.locator('#staff-lastName').fill('  Retained surname  ');
     await form.getByRole('button', { name: label('create'), exact: true }).click();
@@ -71,8 +74,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(username).toHaveValue('  Staff@Example.Test  ');
     await expect(form.locator('#staff-lastName')).toHaveValue('  Retained surname  ');
     expect(writes).toBe(1);
-    await form.getByRole('button', { name: label('cancel'), exact: true }).click();
-    await page.getByRole('button', { name: label('editRoles'), exact: true }).click();
+    await form.getByRole('link', { name: label('cancel'), exact: true }).click();
+    await page.locator(`main a[href="/admin/users/${staffUser.userId}"]:visible`).click();
+    await page.getByRole('link', { name: label('editRoles'), exact: true }).click();
     await form.getByRole('button', { name: label('saveRoles'), exact: true }).click();
     await expect(form.locator('#staff-role-reason')).toBeFocused();
     await expect(form.locator('#staff-role-reason')).toHaveAttribute('aria-required', 'true');
@@ -117,7 +121,8 @@ for (const locale of ['en', 'fa'] as const) {
       reads++;
       return route.fulfill({ status: 404, json: {} });
     });
-    await page.goto('/admin/roles');
+    await page.goto('/admin/roles/effective');
+    await page.locator('[data-permission-id-toggle]').click();
     const input = page.locator('#staffUserId');
     await expect(input).toBeVisible();
     await input.fill('   ');

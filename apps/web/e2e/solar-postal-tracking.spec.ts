@@ -1,3 +1,5 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
+import { routePostalRecords } from './solar-postal-record-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
@@ -34,6 +36,10 @@ function detail(revision = 0): SolarPostalTracking {
 async function setup(page: Parameters<typeof crmShell>[0], locale: 'en' | 'fa') {
   await crmShell(page, locale);
   await page.route('**/api/admin/solar/postal-guidance', (r) => r.fulfill({ json: solarGuidance }));
+  await routePostalRecords(page, () => [
+    { ...solarPostal(), tracking_revision: 0 },
+    { ...solarPostal(olderSolar), tracking_revision: 0 },
+  ]);
   await page.route('**/api/admin/solar/postal-queue?*', (r) =>
     r.fulfill({
       json: { requests: [{ ...solarPostal(), tracking_revision: 0 }], nextBefore: null },
@@ -93,7 +99,10 @@ for (const locale of ['en', 'fa'] as const) {
       return r.fulfill({ json: { verified: true } });
     });
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editTracking', locale), exact: true })
+      .click();
     const editor = page.getByRole('region', { name: copy('postalTrackingUpdate') }).first();
     const noteField = editor.getByLabel(copy('postalTrackingNote'), { exact: true });
     const urlField = editor.getByLabel(copy('postalTrackingUrl'), { exact: true });
@@ -204,7 +213,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.goto(`/solar/requests/${firstSolar}`);
+    await page.goto(`/solar/requests/${firstSolar}/shipment`);
     const postal = page.getByRole('region', { name: copy('postalStage'), exact: true });
     await expect(postal).toContainText(note);
     await expect(postal).toContainText(postalCalendarDate('2026-09-26', locale)!);
@@ -234,7 +243,10 @@ for (const locale of ['en', 'fa'] as const) {
         )
     );
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editTracking', locale), exact: true })
+      .click();
     const editor = page.getByRole('region', { name: copy('postalTrackingUpdate') }).first();
     await expect(editor).toContainText(postalCalendarDate('2026-09-26', locale)!);
     await expect(editor.locator('form')).toHaveCount(0);
@@ -250,7 +262,7 @@ for (const locale of ['en', 'fa'] as const) {
     failure = 403;
     await editor.getByRole('button', { name: copy('postalTrackingReload'), exact: true }).click();
     await expect(editor).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /First solar buyer/ })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /First solar buyer/ })).toHaveCount(0);
     await expect(page.locator('main[data-area=admin]')).not.toContainText('TRACK-1');
   });
 
@@ -310,11 +322,23 @@ for (const locale of ['en', 'fa'] as const) {
       }
     );
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editTracking', locale), exact: true })
+      .click();
     await page.getByLabel(copy('postalTrackingNote'), { exact: true }).fill('Obsolete proposal');
     await page.getByRole('button', { name: copy('postalTrackingReview'), exact: true }).click();
     await expect.poll(() => reviewing).toBe(true);
-    await page.getByRole('button', { name: /Older solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToShipmentReview', locale), exact: true })
+      .click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToPostal', locale), exact: true })
+      .click();
+    await page.getByRole('link', { name: /Older solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editTracking', locale), exact: true })
+      .click();
     await expect(page.getByLabel(copy('postalTrackingNote'), { exact: true })).toHaveValue(
       'Other parcel note'
     );

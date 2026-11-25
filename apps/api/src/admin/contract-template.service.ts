@@ -17,6 +17,7 @@ import {
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageProviderError } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/index.js';
+import { readCappedBytes } from '../storage/read-capped-bytes.js';
 import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 
 /**
@@ -138,6 +139,7 @@ const TEMPLATE_STORAGE_PREFIX = 'contract-templates/';
 
 /** Maximum template file size accepted (bytes) — guards memory pressure. */
 const MAX_TEMPLATE_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_PREVIEW_BYTES = 256 * 1024;
 
 @Injectable()
 export class ContractTemplateService {
@@ -181,6 +183,40 @@ export class ContractTemplateService {
     const versions = await this.versionsFor(pool, id);
     const latest = versions.length > 0 ? versions[versions.length - 1]! : null;
     return { ...this.toDto(row, versions.length, latest), versions };
+  }
+
+  async previewVersion(templateId: string, versionNumber: number) {
+    const template = await this.get(templateId);
+    const version = template.versions.find((item) => item.versionNumber === versionNumber);
+    if (!version)
+      throw new HttpException(
+        { error: TEMPLATE_NOT_FOUND, message: 'Contract template version not found' },
+        404
+      );
+    try {
+      if (!this.storage) throw new Error('Object storage unavailable');
+      const object = await this.storage.getObject(version.storageKey);
+      const { bytes, truncated } = await readCappedBytes(object.body, MAX_PREVIEW_BYTES);
+      const text = new TextDecoder('utf-8', { fatal: true }).decode(
+        bytes.subarray(0, MAX_PREVIEW_BYTES),
+        { stream: truncated }
+      );
+      return {
+        templateId,
+        templateName: template.name,
+        versionNumber,
+        fileName: version.fileName,
+        createdAt: version.createdAt,
+        placeholders: version.placeholders,
+        text,
+        truncated,
+      };
+    } catch {
+      throw new HttpException(
+        { error: TEMPLATE_STORAGE_DISABLED, message: 'Contract template preview is unavailable' },
+        503
+      );
+    }
   }
 
   // ─── Admin mutations ───────────────────────────────────────────────────

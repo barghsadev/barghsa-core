@@ -11,6 +11,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { tInvoiceCorrections as tc } from '@barghsa/i18n/invoice-corrections';
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   type Dispatch,
@@ -33,7 +34,6 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-  FinancialReviewSummary,
   Input,
   NativeSelect,
   NativeSelectOption,
@@ -63,6 +63,18 @@ import {
   RefundFormAlert as InvoiceFormAlert,
 } from './RefundFormFeedback.js';
 import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
+import { InvoiceReviewSummary } from './InvoiceReviewSummary.js';
+import { RecordEditorSection, recordEditorGrid } from './RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from './StickyRecordEditorActions.js';
+
+const reviewDialogClassName =
+  'max-h-[calc(100dvh-2rem)] gap-3 overflow-y-auto p-4 sm:max-w-lg sm:p-6';
+const reviewFooterClassName =
+  'grid grid-cols-2 gap-2 [&>button]:h-auto [&>button]:min-h-11 [&>button]:whitespace-normal sm:flex';
 
 interface Profile {
   id: string;
@@ -105,6 +117,8 @@ export default function ManualInvoiceForm(
 }
 function OwnedManualInvoiceForm({
   correction,
+  onLocked,
+  renderInvoiceLink,
 }: {
   correction?: InvoiceCorrectionSource & {
     kind: 'replacement' | 'adjustment';
@@ -112,6 +126,8 @@ function OwnedManualInvoiceForm({
     onDenied?: () => void;
     unavailable?: boolean;
   };
+  onLocked?: (locked: boolean) => void;
+  renderInvoiceLink?: (invoiceId: string) => React.ReactNode;
 }) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -168,6 +184,7 @@ function OwnedManualInvoiceForm({
       shouldValidate: draft.form.formState.isSubmitted,
     });
   };
+  const profileLookupForm = useId();
   const [search, setSearch] = useState(''),
     [query, setQuery] = useState('');
   const [revision, setRevision] = useState(0),
@@ -193,6 +210,7 @@ function OwnedManualInvoiceForm({
       commandTransport.current?.abort();
       request.current = null;
       correction?.onLocked(false);
+      onLocked?.(false);
     };
   }, []);
   const busy = useRef(false),
@@ -212,6 +230,20 @@ function OwnedManualInvoiceForm({
   const [adjustmentReview, setAdjustmentReview] = useState<InvoiceAdjustmentReview | null>(null);
   const [replacementReview, setReplacementReview] = useState<InvoiceReplacementReview | null>(null);
   const [manualReview, setManualReview] = useState<ManualInvoiceReview | null>(null);
+  const originalInvoice = adjustmentReview?.data ?? replacementReview?.data;
+  const originalRows = originalInvoice
+    ? invoiceFinancialReviewRows(originalInvoice, locale, numbers, (value) =>
+        new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        }).format(new Date(value))
+      )
+    : [];
+  const summarizesOriginal = (id: string) => id === 'profile' || id === 'invoiceTotal';
+  const originalFacts = originalRows
+    .filter(({ id }) => summarizesOriginal(id))
+    .map((row) => (row.id === 'invoiceTotal' ? { ...row, label: text('originalTotal') } : row));
+  const originalDetails = originalRows.filter(({ id }) => !summarizesOriginal(id));
   const financialGate = useRiskConfirmation(
     JSON.stringify([
       request.current?.idempotencyKey,
@@ -240,6 +272,7 @@ function OwnedManualInvoiceForm({
   function changeLock(value: boolean) {
     setLocked(value);
     correction?.onLocked(value);
+    onLocked?.(value);
   }
 
   const sourceFingerprint = correction
@@ -815,7 +848,10 @@ function OwnedManualInvoiceForm({
         <p>
           {text('approvalReference')} <bdi>{approval.id}</bdi>
         </p>
-        <a href="/admin/approval-requests" className="text-foreground underline underline-offset-4">
+        <a
+          href={`/admin/approval-requests/${encodeURIComponent(approval.id)}`}
+          className="text-foreground underline underline-offset-4"
+        >
           {text('openApprovals')}
         </a>
       </div>
@@ -830,6 +866,7 @@ function OwnedManualInvoiceForm({
         <p>
           {text('reference')} <bdi>{result.invoiceId}</bdi>
         </p>
+        {renderInvoiceLink?.(result.invoiceId)}
         {!correction && (
           <Button
             type="button"
@@ -847,9 +884,10 @@ function OwnedManualInvoiceForm({
     );
 
   return (
-    <div className="mt-6 flex flex-col gap-6">
+    <>
       {!correction && (
         <form
+          id={profileLookupForm}
           onSubmit={(event) => {
             event.preventDefault();
             if (!locked && !busy.current) {
@@ -859,88 +897,103 @@ function OwnedManualInvoiceForm({
               setRevision((value) => value + 1);
             }
           }}
-        >
-          <FieldGroup>
-            <Field data-disabled={locked || unavailable}>
-              <FieldLabel htmlFor="manual-profile-search">{text('searchProfiles')}</FieldLabel>
-              <Input
-                id="manual-profile-search"
-                maxLength={100}
-                value={search}
-                disabled={locked || unavailable}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </Field>
-            <Button type="submit" variant="outline" disabled={locked || loading}>
-              {loading ? text('loading') : text('search')}
-            </Button>
-          </FieldGroup>
-        </form>
-      )}
-      {lookupError && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {text(lookupError === 'denied' ? 'denied' : 'lookup')}
-          </AlertDescription>
-        </Alert>
+        />
       )}
       <form
         onSubmit={submit}
         noValidate
-        className="flex flex-col gap-6"
+        className={recordEditorFormSurface}
+        onFocus={keepRecordFieldVisible}
         aria-label={text('title')}
         aria-busy={acting || draft.form.formState.isSubmitting || undefined}
       >
-        <FieldGroup>
-          {!correction && (
-            <Field
-              data-disabled={locked || !ready}
-              data-invalid={error === 'invalid' && !profileId}
-            >
-              <FieldLabel htmlFor="manual-profile">{text('profile')}</FieldLabel>
-              <NativeSelect
-                id="manual-profile"
-                {...draft.bind('profileId')}
-                value={profileId ?? ''}
-                onChange={(event) => setProfileId(event.target.value)}
-                disabled={locked || !ready}
-                className="w-full"
-                required
-                aria-required="true"
+        {!correction && (
+          <RecordEditorSection title={text('billTo')}>
+            <div className={recordEditorGrid}>
+              <Field className="min-w-0 gap-1" data-disabled={locked || unavailable}>
+                <FieldLabel htmlFor="manual-profile-search">{text('searchProfiles')}</FieldLabel>
+                <div className="flex gap-2">
+                  <Input
+                    id="manual-profile-search"
+                    form={profileLookupForm}
+                    maxLength={100}
+                    value={search}
+                    placeholder={text('searchExample')}
+                    disabled={locked || unavailable}
+                    onChange={(event) => setSearch(event.target.value)}
+                  />
+                  <Button
+                    form={profileLookupForm}
+                    type="submit"
+                    variant="outline"
+                    disabled={locked || loading}
+                  >
+                    {loading ? text('loading') : text('search')}
+                  </Button>
+                </div>
+              </Field>
+              <Field
+                className="min-w-0 gap-1"
+                data-disabled={locked || !ready}
+                data-invalid={error === 'invalid' && !profileId}
               >
-                <NativeSelectOption value="" disabled>
-                  {text('chooseProfile')}
-                </NativeSelectOption>
-                {profiles.map((profile) => (
-                  <NativeSelectOption key={profile.id} value={profile.id}>
-                    {profile.title || text('untitled')}
-                  </NativeSelectOption>
-                ))}
-              </NativeSelect>
-              <InvoiceFieldFeedback
-                id={draft.errorId('profileId')}
-                error={draft.errors.profileId}
-                message={text('profileInvalid')}
-              />
-              {ready && profiles.length === 0 && (
-                <p className="text-sm text-muted-foreground">{text('noProfiles')}</p>
-              )}
-              {nextBefore && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={locked || loading}
-                  onClick={() => {
-                    setBefore(nextBefore);
-                    setRevision((value) => value + 1);
-                  }}
+                <FieldLabel htmlFor="manual-profile">{text('profile')}</FieldLabel>
+                <NativeSelect
+                  id="manual-profile"
+                  {...draft.bind('profileId')}
+                  value={profileId ?? ''}
+                  onChange={(event) => setProfileId(event.target.value)}
+                  disabled={locked || !ready}
+                  className="w-full"
+                  required
+                  aria-required="true"
                 >
-                  {text('moreProfiles')}
-                </Button>
-              )}
-            </Field>
-          )}
-          {correction && (
+                  <NativeSelectOption value="" disabled>
+                    {text('chooseProfile')}
+                  </NativeSelectOption>
+                  {profiles.map((profile) => (
+                    <NativeSelectOption key={profile.id} value={profile.id}>
+                      {profile.title || text('untitled')}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+                <InvoiceFieldFeedback
+                  reserveSpace={false}
+                  id={draft.errorId('profileId')}
+                  error={draft.errors.profileId}
+                  message={text('profileInvalid')}
+                />
+                {ready && profiles.length === 0 && (
+                  <p className="text-sm text-muted-foreground">{text('noProfiles')}</p>
+                )}
+                {nextBefore && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="self-start"
+                    disabled={locked || loading}
+                    onClick={() => {
+                      setBefore(nextBefore);
+                      setRevision((value) => value + 1);
+                    }}
+                  >
+                    {text('moreProfiles')}
+                  </Button>
+                )}
+              </Field>
+            </div>
+            {lookupError && (
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {text(lookupError === 'denied' ? 'denied' : 'lookup')}
+                </AlertDescription>
+              </Alert>
+            )}
+          </RecordEditorSection>
+        )}
+        {correction && (
+          <RecordEditorSection title={text('title')}>
             <Field data-disabled={locked || unavailable}>
               <FieldLabel htmlFor="correction-reason">{text('reason')}</FieldLabel>
               <Input
@@ -949,49 +1002,54 @@ function OwnedManualInvoiceForm({
                 required
                 aria-required="true"
                 maxLength={1000}
+                placeholder={text('reasonExample')}
                 disabled={locked || unavailable}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
               />
               <InvoiceFieldFeedback
+                reserveSpace={false}
                 id={draft.errorId('reason')}
                 error={draft.errors.reason}
                 message={text('reasonInvalid')}
               />
             </Field>
-          )}
-          {correction?.kind === 'adjustment' && (
-            <Field data-disabled={locked || unavailable}>
-              <FieldLabel htmlFor="correction-amount">{text('amount')}</FieldLabel>
-              <Input
-                id="correction-amount"
-                {...draft.bind('amount')}
-                required
-                aria-required="true"
-                dir="ltr"
-                inputMode="text"
-                maxLength={20}
-                disabled={locked || unavailable}
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                aria-describedby={[
-                  'correction-amount-hint',
-                  draft.errors.amount ? draft.errorId('amount') : undefined,
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              />
-              <InvoiceFieldFeedback
-                id={draft.errorId('amount')}
-                error={draft.errors.amount}
-                message={text('amountInvalid')}
-              />
-              <p id="correction-amount-hint" className="text-sm text-muted-foreground">
-                {text('amountHint')}
-              </p>
-            </Field>
-          )}
-          {correction?.kind !== 'adjustment' && (
+            {correction.kind === 'adjustment' && (
+              <Field data-disabled={locked || unavailable}>
+                <FieldLabel htmlFor="correction-amount">{text('amount')}</FieldLabel>
+                <Input
+                  id="correction-amount"
+                  {...draft.bind('amount')}
+                  required
+                  aria-required="true"
+                  dir="ltr"
+                  inputMode="text"
+                  maxLength={20}
+                  disabled={locked || unavailable}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  aria-describedby={[
+                    'correction-amount-hint',
+                    draft.errors.amount ? draft.errorId('amount') : undefined,
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                />
+                <InvoiceFieldFeedback
+                  reserveSpace={false}
+                  id={draft.errorId('amount')}
+                  error={draft.errors.amount}
+                  message={text('amountInvalid')}
+                />
+                <p id="correction-amount-hint" className="text-sm text-muted-foreground">
+                  {text('amountHint')}
+                </p>
+              </Field>
+            )}
+          </RecordEditorSection>
+        )}
+        {correction?.kind !== 'adjustment' && (
+          <RecordEditorSection title={text('lines')} description={text('linesHelp')}>
             <DynamicFieldArray
               value={lines}
               onChange={setLines}
@@ -1005,12 +1063,15 @@ function OwnedManualInvoiceForm({
               maxItems={100}
               disabled={locked || unavailable}
               renderItem={(line, index, actions) => (
-                <FieldSet disabled={locked || unavailable} className="rounded-md border p-4">
-                  <FieldLegend>
+                <FieldSet
+                  disabled={locked || unavailable}
+                  className="min-w-0 rounded-lg border px-3 pb-3"
+                >
+                  <FieldLegend variant="label" className="px-1">
                     {text('line')} {numbers.number(index + 1)}
                   </FieldLegend>
-                  <FieldGroup>
-                    <Field>
+                  <div className="min-w-0 space-y-2.5">
+                    <Field className="min-w-0 gap-1">
                       <FieldLabel htmlFor={`manual-description-${line.id}`}>
                         {text('lineDescription')}
                       </FieldLabel>
@@ -1020,116 +1081,138 @@ function OwnedManualInvoiceForm({
                         required
                         aria-required="true"
                         maxLength={1000}
+                        placeholder={text('lineExample')}
                         value={line.description}
                         onChange={(event) => updateLine(line.id, 'description', event.target.value)}
                       />
                       <InvoiceFieldFeedback
+                        reserveSpace={false}
                         id={draft.errorId(`lines.${line.id}.description`)}
                         error={draft.errors.lines?.[line.id]?.description}
                         message={text('descriptionInvalid')}
                       />
                     </Field>
-                    <Field>
-                      <FieldLabel htmlFor={`manual-quantity-${line.id}`}>
-                        {text('quantity')}
-                      </FieldLabel>
-                      <Input
-                        id={`manual-quantity-${line.id}`}
-                        {...draft.bind(`lines.${line.id}.quantity`)}
-                        required
-                        aria-required="true"
-                        inputMode="numeric"
-                        dir="ltr"
-                        maxLength={10}
-                        value={line.quantity}
-                        onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
-                      />
-                      <InvoiceFieldFeedback
-                        id={draft.errorId(`lines.${line.id}.quantity`)}
-                        error={draft.errors.lines?.[line.id]?.quantity}
-                        message={text('quantityInvalid')}
-                      />
-                    </Field>
-                    <Field>
-                      <FieldLabel htmlFor={`manual-price-${line.id}`}>
-                        {text('unitPrice')}
-                      </FieldLabel>
-                      <Input
-                        id={`manual-price-${line.id}`}
-                        {...draft.bind(`lines.${line.id}.unitPrice`)}
-                        required
-                        aria-required="true"
-                        inputMode="numeric"
-                        dir="ltr"
-                        maxLength={19}
-                        value={line.unitPrice}
-                        onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
-                      />
-                      <InvoiceFieldFeedback
-                        id={draft.errorId(`lines.${line.id}.unitPrice`)}
-                        error={draft.errors.lines?.[line.id]?.unitPrice}
-                        message={text('priceInvalid')}
-                      />
-                    </Field>
-                    <Field>
-                      <FieldLabel htmlFor={`manual-vat-${line.id}`}>{text('vat')}</FieldLabel>
-                      <Input
-                        id={`manual-vat-${line.id}`}
-                        {...draft.bind(`lines.${line.id}.vat`)}
-                        required
-                        aria-required="true"
-                        inputMode="decimal"
-                        dir="ltr"
-                        maxLength={6}
-                        value={line.vat}
-                        onChange={(event) => updateLine(line.id, 'vat', event.target.value)}
-                      />
-                      <InvoiceFieldFeedback
-                        id={draft.errorId(`lines.${line.id}.vat`)}
-                        error={draft.errors.lines?.[line.id]?.vat}
-                        message={text('vatInvalid')}
-                      />
-                    </Field>
-                    {actions}
-                  </FieldGroup>
+                    <div className="grid min-w-0 grid-cols-2 gap-2 min-[375px]:grid-cols-[minmax(0,.8fr)_minmax(0,1.3fr)_minmax(0,1fr)] sm:gap-3">
+                      <Field className="min-w-0 gap-1">
+                        <FieldLabel htmlFor={`manual-quantity-${line.id}`}>
+                          {text('quantity')}
+                        </FieldLabel>
+                        <Input
+                          id={`manual-quantity-${line.id}`}
+                          {...draft.bind(`lines.${line.id}.quantity`)}
+                          required
+                          aria-required="true"
+                          inputMode="numeric"
+                          dir="ltr"
+                          maxLength={10}
+                          value={line.quantity}
+                          onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
+                        />
+                        <InvoiceFieldFeedback
+                          reserveSpace={false}
+                          id={draft.errorId(`lines.${line.id}.quantity`)}
+                          error={draft.errors.lines?.[line.id]?.quantity}
+                          message={text('quantityInvalid')}
+                        />
+                      </Field>
+                      <Field className="min-w-0 gap-1">
+                        <FieldLabel htmlFor={`manual-price-${line.id}`}>
+                          {text('unitPrice')}
+                        </FieldLabel>
+                        <Input
+                          id={`manual-price-${line.id}`}
+                          {...draft.bind(`lines.${line.id}.unitPrice`)}
+                          required
+                          aria-required="true"
+                          inputMode="numeric"
+                          dir="ltr"
+                          maxLength={19}
+                          value={line.unitPrice}
+                          onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
+                        />
+                        <InvoiceFieldFeedback
+                          reserveSpace={false}
+                          id={draft.errorId(`lines.${line.id}.unitPrice`)}
+                          error={draft.errors.lines?.[line.id]?.unitPrice}
+                          message={text('priceInvalid')}
+                        />
+                      </Field>
+                      <Field className="min-w-0 gap-1">
+                        <FieldLabel htmlFor={`manual-vat-${line.id}`}>{text('vat')}</FieldLabel>
+                        <Input
+                          id={`manual-vat-${line.id}`}
+                          {...draft.bind(`lines.${line.id}.vat`)}
+                          required
+                          aria-required="true"
+                          inputMode="decimal"
+                          dir="ltr"
+                          maxLength={6}
+                          value={line.vat}
+                          onChange={(event) => updateLine(line.id, 'vat', event.target.value)}
+                        />
+                        <InvoiceFieldFeedback
+                          reserveSpace={false}
+                          id={draft.errorId(`lines.${line.id}.vat`)}
+                          error={draft.errors.lines?.[line.id]?.vat}
+                          message={text('vatInvalid')}
+                        />
+                      </Field>
+                    </div>
+                    {lines.length > 1 && <div className="flex justify-end">{actions}</div>}
+                  </div>
                 </FieldSet>
               )}
             />
-          )}
-        </FieldGroup>
-        <p aria-live="polite">
-          {text('total')}{' '}
-          <strong>
-            {calculation
-              ? numbers.money(correction?.kind === 'adjustment' ? signed : calculation.total)
-              : text('incomplete')}
-          </strong>
-        </p>
-        <InvoiceFormAlert message={draft.errors.root?.validation?.message ?? lineError} />
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{text(error)}</AlertDescription>
-          </Alert>
+          </RecordEditorSection>
         )}
-        <Button
-          ref={submitButton}
-          type="submit"
-          className={correction ? 'hover:bg-primary' : undefined}
-          disabled={
-            acting ||
-            draft.form.formState.isSubmitting ||
-            stepUp ||
-            (!locked && (!ready || !!lookupError || unavailable))
+        {(draft.errors.root?.validation?.message || lineError || error) && (
+          <div className="space-y-2 px-4 py-3 sm:px-6">
+            <InvoiceFormAlert message={draft.errors.root?.validation?.message ?? lineError} />
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{text(error)}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        )}
+        <StickyRecordEditorActions
+          secondary={
+            <div aria-live="polite" className="min-w-0 space-y-0.5">
+              {calculation ? (
+                <>
+                  <p className="text-xs text-muted-foreground">{text('draftTotal')}</p>
+                  <strong className="text-sm tabular-nums [overflow-wrap:anywhere] sm:text-base">
+                    {numbers.money(correction?.kind === 'adjustment' ? signed : calculation.total)}
+                  </strong>
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {text(correction?.kind === 'adjustment' ? 'adjustmentIncomplete' : 'incomplete')}
+                </p>
+              )}
+            </div>
           }
         >
-          {acting && (
-            <span
-              aria-hidden="true"
-              className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-            />
-          )}
-          {acting ? text('issuing') : locked ? text('retry') : text('issue')}
-        </Button>
+          <Button
+            ref={submitButton}
+            type="submit"
+            className={correction ? 'hover:bg-primary' : undefined}
+            disabled={
+              acting ||
+              draft.form.formState.isSubmitting ||
+              stepUp ||
+              (!locked && (!ready || !!lookupError || unavailable))
+            }
+          >
+            {acting && (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              />
+            )}
+            {acting ? text('issuing') : locked ? text('retry') : text('issue')}
+          </Button>
+        </StickyRecordEditorActions>
       </form>
       <Dialog
         open={Boolean(manualReview)}
@@ -1137,22 +1220,41 @@ function OwnedManualInvoiceForm({
           if (!open && !acting) unlock();
         }}
       >
-        <DialogContent
-          dir={locale === 'fa' ? 'rtl' : 'ltr'}
-          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
-        >
+        <DialogContent dir={locale === 'fa' ? 'rtl' : 'ltr'} className={reviewDialogClassName}>
           <DialogHeader>
             <DialogTitle>{text('manualReviewTitle')}</DialogTitle>
-            <DialogDescription>{text('manualReviewDescription')}</DialogDescription>
+            <DialogDescription className="rounded-lg bg-muted px-3 py-2 text-start text-foreground">
+              {text('manualReviewOutcome')}
+            </DialogDescription>
           </DialogHeader>
           {manualReview && (
-            <FinancialReviewSummary
-              title={text('manualReviewTitle')}
-              rows={[
+            <InvoiceReviewSummary
+              label={text('total')}
+              amount={manualReview.data.totals.total}
+              detailsLabel={text('manualReviewDetails')}
+              facts={[
+                { id: 'profile', label: text('profile'), value: manualReview.data.profile.title },
                 {
-                  id: 'profile',
-                  label: text('profile'),
-                  value: `${manualReview.data.profile.title} · ${manualReview.data.profile.id}`,
+                  id: 'due',
+                  label: text('manualReviewDueRule'),
+                  value: `${numbers.number(manualReview.data.dueRule.configDays)} ${text('manualReviewDueDays')}`,
+                },
+                {
+                  id: 'subtotal',
+                  label: text('manualReviewSubtotal'),
+                  value: numbers.money(manualReview.data.totals.subtotal),
+                },
+                {
+                  id: 'vat',
+                  label: text('manualReviewVat'),
+                  value: numbers.money(manualReview.data.totals.vat),
+                },
+              ]}
+              details={[
+                {
+                  id: 'profile-id',
+                  label: text('manualReviewProfileId'),
+                  value: manualReview.data.profile.id,
                 },
                 ...manualReview.data.lines.map((line, index) => ({
                   id: `line-${index}`,
@@ -1160,42 +1262,22 @@ function OwnedManualInvoiceForm({
                   value: (
                     <span className="flex flex-col gap-1">
                       <span>
-                        {numbers.number(line.quantity)} × {numbers.reviewMoney(line.unitPrice)}
+                        {numbers.number(line.quantity)} × {numbers.money(line.unitPrice)}
                       </span>
                       <span>
-                        {text('manualReviewSubtotal')}: {numbers.reviewMoney(line.lineTotal)}
+                        {text('manualReviewSubtotal')}: {numbers.money(line.lineTotal)}
                       </span>
                       <span>
-                        {text('manualReviewVat')}: {numbers.reviewMoney(line.vatAmount)}
+                        {text('manualReviewVat')}: {numbers.money(line.vatAmount)}
                       </span>
                     </span>
                   ),
                 })),
-                {
-                  id: 'subtotal',
-                  label: text('manualReviewSubtotal'),
-                  value: numbers.reviewMoney(manualReview.data.totals.subtotal),
-                },
-                {
-                  id: 'vat',
-                  label: text('manualReviewVat'),
-                  value: numbers.reviewMoney(manualReview.data.totals.vat),
-                },
-                {
-                  id: 'due',
-                  label: text('manualReviewDueRule'),
-                  value: `${numbers.number(manualReview.data.dueRule.configDays)} ${text('manualReviewDueDays')}`,
-                },
               ]}
-              total={{
-                label: text('total'),
-                value: numbers.reviewMoney(manualReview.data.totals.total),
-              }}
-              notice={text('manualReviewOutcome')}
             />
           )}
           <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
-          <DialogFooter>
+          <DialogFooter className={reviewFooterClassName}>
             <Button
               type="button"
               variant="outline"
@@ -1220,24 +1302,17 @@ function OwnedManualInvoiceForm({
           if (!open && !acting) unlock();
         }}
       >
-        <DialogContent
-          dir={locale === 'fa' ? 'rtl' : 'ltr'}
-          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
-        >
+        <DialogContent dir={locale === 'fa' ? 'rtl' : 'ltr'} className={reviewDialogClassName}>
           <DialogHeader>
             <DialogTitle>{text('reviewTitle')}</DialogTitle>
             <DialogDescription>{text('reviewDescription')}</DialogDescription>
           </DialogHeader>
           {adjustmentReview && (
-            <FinancialReviewSummary
-              title={text('reviewTitle')}
-              rows={[
-                ...invoiceFinancialReviewRows(adjustmentReview.data, locale, numbers, (value) =>
-                  new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(value))
-                ),
+            <InvoiceReviewSummary
+              label={text('amount')}
+              amount={adjustmentReview.data.adjustment.absoluteAmount}
+              detailsLabel={text('manualReviewDetails')}
+              facts={[
                 {
                   id: 'direction',
                   label: text('reviewDirection'),
@@ -1248,11 +1323,6 @@ function OwnedManualInvoiceForm({
                   ),
                 },
                 {
-                  id: 'reason',
-                  label: text('reason'),
-                  value: adjustmentReview.data.adjustment.reason,
-                },
-                {
                   id: 'approval',
                   label: text('reviewApproval'),
                   value: text(
@@ -1261,15 +1331,19 @@ function OwnedManualInvoiceForm({
                       : 'reviewApprovalNotRequired'
                   ),
                 },
+                ...originalFacts,
+                {
+                  id: 'reason',
+                  label: text('reason'),
+                  value: adjustmentReview.data.adjustment.reason,
+                  fullWidth: true,
+                },
               ]}
-              total={{
-                label: text('amount'),
-                value: numbers.reviewMoney(adjustmentReview.data.adjustment.absoluteAmount),
-              }}
+              details={originalDetails}
             />
           )}
           <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
-          <DialogFooter>
+          <DialogFooter className={reviewFooterClassName}>
             <Button
               type="button"
               variant="outline"
@@ -1295,41 +1369,18 @@ function OwnedManualInvoiceForm({
           if (!open && !acting) unlock();
         }}
       >
-        <DialogContent
-          dir={locale === 'fa' ? 'rtl' : 'ltr'}
-          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
-        >
+        <DialogContent dir={locale === 'fa' ? 'rtl' : 'ltr'} className={reviewDialogClassName}>
           <DialogHeader>
             <DialogTitle>{text('replacementReviewTitle')}</DialogTitle>
             <DialogDescription>{text('replacementReviewDescription')}</DialogDescription>
           </DialogHeader>
           {replacementReview && (
-            <FinancialReviewSummary
-              title={text('replacementReviewTitle')}
-              rows={[
-                ...invoiceFinancialReviewRows(replacementReview.data, locale, numbers, (value) =>
-                  new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(value))
-                ),
-                ...replacementReview.data.replacement.lines.map((line, index) => ({
-                  id: `replacement-${index}`,
-                  label: `${text('replacementReviewLine')} ${numbers.number(index + 1)} · ${line.description}`,
-                  value: (
-                    <span className="flex flex-col gap-1">
-                      <span>
-                        {numbers.number(line.quantity)} × {numbers.reviewMoney(line.unitPrice)}
-                      </span>
-                      <span>
-                        {text('replacementReviewSubtotal')}: {numbers.reviewMoney(line.subtotal)}
-                      </span>
-                      <span>
-                        {text('replacementReviewVat')}: {numbers.reviewMoney(line.vatAmount)}
-                      </span>
-                    </span>
-                  ),
-                })),
+            <InvoiceReviewSummary
+              label={text('total')}
+              amount={replacementReview.data.replacement.totals.total}
+              detailsLabel={text('manualReviewDetails')}
+              facts={[
+                ...originalFacts,
                 {
                   id: 'replacement-due-rule',
                   label: text('replacementReviewDueRule'),
@@ -1337,21 +1388,39 @@ function OwnedManualInvoiceForm({
                     replacementReview.data.replacement.dueRule.configDays === null
                       ? text('replacementReviewDueAtIssue')
                       : `${numbers.number(replacementReview.data.replacement.dueRule.configDays)} ${text('replacementReviewDueDays')}`,
+                  fullWidth: true,
                 },
                 {
                   id: 'replacement-reason',
                   label: text('reason'),
                   value: replacementReview.data.replacement.reason,
+                  fullWidth: true,
                 },
               ]}
-              total={{
-                label: text('total'),
-                value: numbers.reviewMoney(replacementReview.data.replacement.totals.total),
-              }}
+              details={[
+                ...replacementReview.data.replacement.lines.map((line, index) => ({
+                  id: `replacement-${index}`,
+                  label: `${text('replacementReviewLine')} ${numbers.number(index + 1)} · ${line.description}`,
+                  value: (
+                    <span className="flex flex-col gap-1">
+                      <span>
+                        {numbers.number(line.quantity)} × {numbers.money(line.unitPrice)}
+                      </span>
+                      <span>
+                        {text('replacementReviewSubtotal')}: {numbers.money(line.subtotal)}
+                      </span>
+                      <span>
+                        {text('replacementReviewVat')}: {numbers.money(line.vatAmount)}
+                      </span>
+                    </span>
+                  ),
+                })),
+                ...originalDetails,
+              ]}
             />
           )}
           <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
-          <DialogFooter>
+          <DialogFooter className={reviewFooterClassName}>
             <Button
               type="button"
               variant="outline"
@@ -1422,6 +1491,6 @@ function OwnedManualInvoiceForm({
           </form>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

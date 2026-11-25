@@ -64,26 +64,35 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.goto('/admin/users');
-    await page.getByRole('button', { name: u('editRoles'), exact: true }).click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('roleEditor') === staffUser.userId);
+    const accountPath = `/admin/users/${staffUser.userId}`;
+    await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+      route.fulfill({ json: staffUser })
+    );
+    await page.goto(`/admin/users?page=2&roleEditor=${staffUser.userId}`);
+    await expect(page).toHaveURL(
+      (url) => url.pathname === accountPath + '/roles' && url.search === '?page=2'
+    );
     const reason = page.locator('#staff-role-reason');
     await reason.fill('Inactive draft reason');
     await page.reload();
     await expect(reason).toHaveValue('');
+    await page.getByRole('link', { name: 'Finance Alice', exact: true }).click();
     await page
-      .getByRole('button', { name: t('admin.roles.effective.inspect', locale), exact: true })
+      .getByRole('link', { name: t('admin.roles.effective.inspect', locale), exact: true })
       .click();
-    await expect(page).toHaveURL(
-      (url) => url.searchParams.get('permissionView') === staffUser.userId
-    );
-    const dialog = page.getByRole('dialog');
-    await expect(dialog).toContainText('finance:read');
+    await expect(page).toHaveURL((url) => url.pathname === accountPath + '/permissions');
+    const permissions = page.getByTestId('effective-permissions');
+    await expect(permissions).toContainText('finance:read');
     await page.reload();
-    await expect(dialog).toContainText('finance:read');
+    await expect(permissions).toContainText('finance:read');
     await page.goBack();
-    await expect(dialog).toHaveCount(0);
-    await expect(reason).toHaveValue('');
+    await expect(permissions).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Finance Alice', exact: true })).toBeVisible();
+    await page.goto(`/admin/users?permissionView=${staffUser.userId}`);
+    await expect(page).toHaveURL(
+      (url) => url.pathname === accountPath + '/permissions' && !url.search
+    );
+    await expect(permissions).toContainText('finance:read');
 
     await page.route('**/api/admin/staff-teams', (route) => route.fulfill({ json: [staffTeam] }));
     await page.route('**/api/admin/staff-teams/members?*', (route) =>
@@ -92,74 +101,58 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/config/assignment-rules', (route) =>
       route.fulfill({ json: staffRoutingRules })
     );
+    await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) =>
+      route.fulfill({ json: staffTeam })
+    );
     await page.goto('/admin/staff-teams');
-    await page.getByRole('button', { name: g('edit'), exact: true }).click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === staffTeamId);
+    await page.getByRole('link', { name: staffTeam.name, exact: true }).click();
+    await page.getByRole('link', { name: g('edit'), exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/staff-teams/${staffTeamId}/edit$`));
     const teamName = page.locator('#staff-team-name');
     await expect(teamName).toHaveValue(staffTeam.name);
     await page.reload();
     await expect(teamName).toHaveValue(staffTeam.name);
     await page.goBack();
-    await expect(teamName).toHaveValue('');
+    await expect(page.getByRole('heading', { name: staffTeam.name, exact: true })).toBeVisible();
+    await expect(teamName).toHaveCount(0);
+    await page.goto(`/admin/staff-teams?selected=${staffTeamId}`);
+    await expect(page).toHaveURL(new RegExp(`/admin/staff-teams/${staffTeamId}/edit$`));
   });
 
-  test(`staff list retries preserve creation fields and permission denial clears work (${locale})`, async ({
+  test(`staff account retries preserve its role draft and permission denial clears work (${locale})`, async ({
     page,
   }, info) => {
     await shell(page, locale);
-    let fail = false,
-      deny = false,
-      accessReads = 0,
-      optionReads = 0;
-    const queries: string[] = [];
-    await page.route('**/api/admin/staff-access', (route) => {
-      ++accessReads;
-      return route.fulfill({ json: staffAccess });
-    });
-    await page.route('**/api/admin/staff-role-options', (route) => {
-      ++optionReads;
-      return route.fulfill({ json: staffRoles });
-    });
+    let status = 200;
+    let listReads = 0;
+    await page.route('**/api/admin/staff-access', (route) => route.fulfill({ json: staffAccess }));
+    await page.route('**/api/admin/staff-role-options', (route) =>
+      route.fulfill({ json: staffRoles })
+    );
     await page.route('**/api/admin/staff?*', (route) => {
-      queries.push(new URL(route.request().url()).search);
-      return route.fulfill(
-        deny
-          ? { status: 403, json: {} }
-          : fail
-            ? { status: 503, json: {} }
-            : { json: { items: [staffUser], total: 51 } }
-      );
+      listReads++;
+      return route.fulfill({ json: { items: [staffUser], total: 51 } });
     });
-    await page.goto('/admin/users');
-    await page.getByRole('button', { name: u('create'), exact: true }).click();
-    await page.locator('#staff-firstName').fill('Retained name');
-    await page.setViewportSize({ width: 800, height: 844 });
-    const viewport = page.getByRole('region', { name: u('table'), exact: true });
-    await viewport.focus();
-    await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-    await expect
-      .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
-      .toBeGreaterThan(0);
-    await page.setViewportSize({ width: 390, height: 844 });
-    fail = true;
-    await page.getByRole('button', { name: u('next'), exact: true }).click();
+    await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+      route.fulfill({ status, json: status === 200 ? staffUser : {} })
+    );
+    await page.goto(`/admin/users/${staffUser.userId}/roles?page=2`);
+    const reason = page.locator('#staff-role-reason');
+    await reason.fill('Retained role reason');
+    status = 503;
+    await page.getByRole('button', { name: u('refresh'), exact: true }).click();
     await expect(page.getByRole('button', { name: u('retry'), exact: true })).toBeVisible();
-    await page.locator('#staff-lastName').fill('During recovery');
-    const counts = [accessReads, optionReads],
-      failed = queries.at(-1);
-    fail = false;
+    await expect(reason).toHaveValue('Retained role reason');
+    status = 200;
     await page.getByRole('button', { name: u('retry'), exact: true }).click();
     await expect(page.getByRole('button', { name: u('retry'), exact: true })).toHaveCount(0);
-    expect(queries.at(-1)).toBe(failed);
-    expect([accessReads, optionReads]).toEqual(counts);
-    await expect(page.locator('#staff-firstName')).toHaveValue('Retained name');
-    await expect(page.locator('#staff-lastName')).toHaveValue('During recovery');
-    await page.locator('#staff-lastName').scrollIntoViewIfNeeded();
+    await expect(reason).toHaveValue('Retained role reason');
     await inspect(page, 'users', locale, info.project.name);
-    deny = true;
-    await page.getByRole('button', { name: u('next'), exact: true }).click();
-    await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
-    await expect(page.locator('#staff-firstName')).toHaveCount(0);
+    status = 403;
+    await page.getByRole('button', { name: u('refresh'), exact: true }).click();
+    await expect(reason).toHaveCount(0);
+    await expect(page.getByRole('alert')).toContainText(u('forbidden'));
+    expect(listReads).toBe(0);
   });
   test(`staff access and role choices recover without discarding drafts (${locale})`, async ({
     page,
@@ -188,8 +181,10 @@ for (const locale of ['en', 'fa'] as const) {
       ++listReads;
       return route.fulfill({ json: { items: [staffUser], total: 1 } });
     });
-    await page.goto('/admin/users');
-    await page.getByRole('button', { name: u('create'), exact: true }).click();
+    await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+      route.fulfill({ json: staffUser })
+    );
+    await page.goto('/admin/users/new');
     await page.locator('#staff-firstName').fill('Retained role draft');
     optionsStatus = 503;
     await page.getByRole('button', { name: u('refresh'), exact: true }).click();
@@ -208,8 +203,9 @@ for (const locale of ['en', 'fa'] as const) {
     canCreate = false;
     await page.getByRole('button', { name: u('accessRetry'), exact: true }).click();
     await expect(page.locator('#staff-firstName')).toHaveCount(0);
-    await expect(page.locator('table:visible, ol[role=list]:visible')).toBeVisible();
-    await page.getByRole('button', { name: u('editRoles'), exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText(u('forbidden'));
+    expect(listReads).toBe(0);
+    await page.goto(`/admin/users/${staffUser.userId}/roles`);
     await page.locator('#staff-role-reason').fill('Remove withdrawn role');
     withdrawnRoles = true;
     await page.getByRole('button', { name: u('refresh'), exact: true }).click();
@@ -233,6 +229,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/staff-teams', (route) =>
       route.fulfill(teamStatus === 200 ? { json: [staffTeam] } : { status: teamStatus, json: {} })
     );
+    await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) =>
+      route.fulfill(teamStatus === 200 ? { json: staffTeam } : { status: teamStatus, json: {} })
+    );
     await page.route('**/api/admin/config/assignment-rules', (route) => {
       ++rulesReads;
       if (rulesStatus === 0) return;
@@ -250,10 +249,7 @@ for (const locale of ['en', 'fa'] as const) {
       );
     });
     await page.clock.install();
-    await page.goto('/admin/staff-teams');
-    await page.getByRole('button', { name: g('edit'), exact: true }).click();
-    await expect(page.locator('#staff-team-lead')).toHaveValue(staffMember.id);
-    await page.locator('#staff-team-description').fill('Keep team explanation');
+    await page.goto('/admin/staff-teams/assignment');
     await page.locator('#team-ticket').selectOption(staffTeamId);
     await expect.poll(() => rulesReads).toBe(1);
     await page.clock.fastForward(15_001);
@@ -261,6 +257,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: g('rulesRetry'), exact: true }).click();
     await expect(page.getByRole('button', { name: g('rulesRetry'), exact: true })).toHaveCount(0);
     await expect(page.locator('#team-ticket')).toHaveValue(staffTeamId);
+    await page.goto(`/admin/staff-teams/${staffTeamId}/edit`);
+    await expect(page.locator('#staff-team-lead')).toHaveValue(staffMember.id);
+    await page.locator('#staff-team-description').fill('Keep team explanation');
     teamStatus = 503;
     await page.getByRole('button', { name: g('refresh'), exact: true }).click();
     await expect(page.getByRole('button', { name: g('retry'), exact: true })).toBeVisible();
@@ -271,7 +270,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('button', { name: g('retry'), exact: true })).toHaveCount(0);
     expect(rulesReads).toBe(reads);
     await expect(page.locator('#staff-team-description')).toHaveValue('Keep team explanation');
-    await expect(page.locator('#team-ticket')).toHaveValue(staffTeamId);
+    await expect(page.locator('#team-ticket')).toHaveCount(0);
     memberStatus = 0;
     await page.locator('#staff-team-search').fill('finance & review');
     await expect
@@ -286,7 +285,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(memberQueries.at(-1)).toBe(failed);
     await expect(page.locator('#staff-team-lead')).toHaveValue(staffMember.id);
     await expect(page.getByRole('button', { name: g('saveTeam'), exact: true })).toBeEnabled();
-    await page.locator('#team-ticket').scrollIntoViewIfNeeded();
+    await page.locator('#staff-team-lead').scrollIntoViewIfNeeded();
     await inspect(page, 'teams', locale, info.project.name);
   });
   test(`late team responses cannot revive a denied assignment editor (${locale})`, async ({
@@ -296,12 +295,12 @@ for (const locale of ['en', 'fa'] as const) {
     let hold = false,
       held: Route | undefined,
       denyMembers = false;
-    await page.route('**/api/admin/staff-teams', (route) => {
+    await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) => {
       if (hold) {
         held = route;
         return;
       }
-      return route.fulfill({ json: [staffTeam] });
+      return route.fulfill({ json: staffTeam });
     });
     await page.route('**/api/admin/config/assignment-rules', (route) =>
       route.fulfill({ json: staffRoutingRules })
@@ -313,8 +312,7 @@ for (const locale of ['en', 'fa'] as const) {
           : { json: { items: [staffMember], selected: [staffMember], hasMore: false } }
       )
     );
-    await page.goto('/admin/staff-teams');
-    await expect(page.getByRole('button', { name: g('edit'), exact: true })).toBeVisible();
+    await page.goto(`/admin/staff-teams/${staffTeamId}/edit`);
     await page.locator('#staff-team-name').fill('Private draft');
     hold = true;
     await page.getByRole('button', { name: g('refresh'), exact: true }).click();
@@ -322,7 +320,7 @@ for (const locale of ['en', 'fa'] as const) {
     denyMembers = true;
     await page.locator('#staff-team-search').fill('Fresh staff');
     await expect(page.getByRole('alert')).toContainText(g('forbidden'));
-    await held!.fulfill({ json: [staffTeam] });
+    await held!.fulfill({ json: staffTeam });
     await expect(page.locator('#staff-team-name')).toHaveCount(0);
     await expect(page.getByText(staffTeam.name, { exact: true })).toHaveCount(0);
   });

@@ -99,7 +99,7 @@ test('staff delivery and completion controls explain current prerequisites', asy
   );
   await page.goto('/admin/saving-orders');
   await page.getByRole('button', { name: 'Fulfillment', exact: true }).click();
-  await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
+  await page.getByRole('link', { name: /Buyer.*Home saving plan/ }).click();
   await page.getByRole('textbox', { name: 'Reason or progress note' }).fill('Ready to advance');
   await expect(
     page.getByText('Resolve the pending equipment upgrade charge before delivery.')

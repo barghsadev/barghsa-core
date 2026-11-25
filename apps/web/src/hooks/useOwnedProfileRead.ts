@@ -36,16 +36,20 @@ export function useOwnedProfileRead(
       !permitted(token)
     )
       throw new Error('Obsolete profile read');
-    const target = /^\/api\/profiles\/([^/]+)(\/addresses)?$/.exec(path);
+    const target = /^\/api\/profiles\/([^/]+)(\/addresses)?(?:\/(access|[a-f0-9-]{36}))?$/i.exec(
+      path
+    );
     if (path !== '/api/profiles' && !target) throw new Error('Invalid profile read path');
+    if (target?.[3] && !target[2]) throw new Error('Invalid profile address read path');
     const attempt = ++sequence.current;
     const request = JSON.stringify([reader, path, attempt]);
     const owner = target ? { ...scope, context: 'customer' as const, ownerId: target[1]! } : scope;
-    const key = target?.[2]
-      ? queryKeys.profiles.list(owner, new URLSearchParams({ reader, path }), attempt)
-      : target
-        ? queryKeys.profiles.detail(owner, request)
-        : queryKeys.profiles.authority(owner, request);
+    const key =
+      target?.[2] && !target[3]
+        ? queryKeys.profiles.list(owner, new URLSearchParams({ reader, path }), attempt)
+        : target
+          ? queryKeys.profiles.detail(owner, request)
+          : queryKeys.profiles.authority(owner, request);
     const previous = requests.current.get(path);
     requests.current.set(path, { key, attempt });
     if (previous) await client.cancelQueries({ queryKey: previous.key, exact: true });

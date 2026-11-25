@@ -3,7 +3,8 @@ import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { LoadingStatus, Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Alert, AlertDescription, Button, ListRefreshButton } from '@barghsa/ui';
+import { CircleCheckIcon, WalletIcon } from 'lucide-react';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useLocale } from '../hooks/useLocale.js';
@@ -13,6 +14,8 @@ import { parseWalletPaymentReview, type WalletPaymentReview } from '@barghsa/sha
 import { WalletPaymentReviewSummary } from './WalletPaymentReviewSummary.js';
 import { WalletFundingPrompt } from './WalletFundingPrompt.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+import './wallet-invoice-payment.css';
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
 );
@@ -85,6 +88,7 @@ function OwnedWalletInvoicePaymentPanel({
   const time = useAccountTime(locale);
   const text = (key: Parameters<typeof t>[0]) => t(key, locale);
   const paymentButton = useRef<HTMLButtonElement>(null);
+  const receiptHeading = useRef<HTMLHeadingElement>(null);
   const [quote, setQuote] = useState<Quote | null>(null),
     [intent, setIntent] = useState<Intent | null>(null);
   const [revision, setRevision] = useState(0),
@@ -162,64 +166,125 @@ function OwnedWalletInvoicePaymentPanel({
       setRefreshError(true);
     }
   }
+  function refreshQuote() {
+    setRevision((value) => value + 1);
+    void refreshDetails();
+  }
+
   if ((!eligible && !result) || hidden) return null;
   return (
     <section
       id="wallet-invoice-payment"
       aria-labelledby="wallet-invoice-payment-heading"
-      className="space-y-4 rounded-lg border p-4"
+      className={recordEditorSurface}
     >
-      <h2 id="wallet-invoice-payment-heading" className="text-lg font-semibold">
-        {text('title')}
-      </h2>
+      <div className="flex items-center justify-between gap-3 border-b bg-muted/30 px-4 py-2 sm:px-6">
+        <h2
+          id="wallet-invoice-payment-heading"
+          className="flex items-center gap-2 text-base font-semibold"
+        >
+          <WalletIcon className="size-4 shrink-0 text-primary" aria-hidden="true" />
+          {text('title')}
+        </h2>
+        {!result && (
+          <ListRefreshButton
+            label={text('refresh')}
+            refreshing={loading}
+            disabled={open}
+            onClick={refreshQuote}
+          />
+        )}
+      </div>
       {result ? (
-        <div role="status" className="space-y-2">
-          <p>
-            {text('paid')} <strong>{numbers.money(result.amount)}</strong>
-          </p>
-          <p>
-            {text('reference')} <bdi>{result.transactionId}</bdi>
-          </p>
-          {refreshError && <p>{text('refreshError')}</p>}
+        <div className="space-y-3 px-4 py-4 sm:px-6">
+          <div role="status" className="space-y-3">
+            <h3
+              ref={receiptHeading}
+              tabIndex={-1}
+              className="flex items-center gap-2 rounded-sm text-sm font-semibold"
+            >
+              <CircleCheckIcon className="size-4 shrink-0 text-success" aria-hidden="true" />
+              {text('paid')}
+            </h3>
+            <dl className="grid gap-3 sm:grid-cols-2">
+              <div className="min-w-0">
+                <dt className="text-xs text-muted-foreground">{text('paymentTotal')}</dt>
+                <dd className="text-base font-semibold tabular-nums [overflow-wrap:anywhere]">
+                  <bdi>{numbers.money(result.amount)}</bdi>
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-xs text-muted-foreground">{text('reference')}</dt>
+                <dd className="text-sm font-medium [overflow-wrap:anywhere]">
+                  <bdi>{result.transactionId}</bdi>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          {refreshError && (
+            <Alert variant="warning">
+              <AlertDescription>{text('refreshError')}</AlertDescription>
+            </Alert>
+          )}
         </div>
       ) : (
         <>
-          {loading ? (
-            <LoadingStatus>{text('loading')}</LoadingStatus>
-          ) : error ? (
-            <Alert variant="destructive">
-              <AlertDescription>{text('loadError')}</AlertDescription>
-            </Alert>
-          ) : (
-            quote && (
-              <>
-                <WalletPaymentReviewSummary review={quote.review} formatDate={time.format} />
-                {!quote.canPay && <p>{text('unavailable')}</p>}
-                {!quote.canPay ? (
-                  <WalletFundingPrompt
-                    balance={quote.availableBalance}
-                    total={quote.remainingAmount}
-                    returnInvoiceId={invoiceId}
-                  />
-                ) : null}
-              </>
-            )
-          )}
-          {intent && (
-            <div className="space-y-1 text-sm">
-              <p>{text('retryHint')}</p>
-              {!open && unconfirmed && (
-                <p role="alert">{confirmationText('unconfirmed', locale)}</p>
-              )}
-              <p>
-                {text('request')} <bdi>{intent.idempotencyKey}</bdi>
-              </p>
-            </div>
-          )}
-          <div className="flex flex-wrap gap-3">
+          <div className="space-y-3 px-4 py-4 sm:px-6">
+            {loading ? (
+              <LoadingStatus>{text('loading')}</LoadingStatus>
+            ) : error ? (
+              <Alert variant="destructive">
+                <AlertDescription>{text('loadError')}</AlertDescription>
+              </Alert>
+            ) : (
+              quote && (
+                <>
+                  <dl className="grid min-w-0 grid-cols-2 gap-3">
+                    <div className="min-w-0">
+                      <dt className="text-xs text-muted-foreground">{text('remaining')}</dt>
+                      <dd className="text-base font-semibold tabular-nums [overflow-wrap:anywhere]">
+                        <bdi>{numbers.money(quote.remainingAmount)}</bdi>
+                      </dd>
+                    </div>
+                    <div className="min-w-0">
+                      <dt className="text-xs text-muted-foreground">{text('available')}</dt>
+                      <dd className="text-base font-semibold tabular-nums [overflow-wrap:anywhere]">
+                        <bdi>{numbers.money(quote.availableBalance)}</bdi>
+                      </dd>
+                    </div>
+                  </dl>
+                  {!quote.review.data.totals && (
+                    <p className="text-sm text-muted-foreground">{text('legacyBreakdown')}</p>
+                  )}
+                  {!quote.canPay && (
+                    <>
+                      <p className="text-sm text-muted-foreground">{text('unavailable')}</p>
+                      <WalletFundingPrompt
+                        balance={quote.availableBalance}
+                        total={quote.remainingAmount}
+                        returnInvoiceId={invoiceId}
+                      />
+                    </>
+                  )}
+                </>
+              )
+            )}
+            {intent && unconfirmed && !open && (
+              <Alert variant="warning">
+                <p className="font-medium">{confirmationText('unconfirmed', locale)}</p>
+                <AlertDescription>
+                  <p>{text('retryHint')}</p>
+                  <p className="text-xs [overflow-wrap:anywhere]">
+                    {text('request')} <bdi>{intent.idempotencyKey}</bdi>
+                  </p>
+                </AlertDescription>
+              </Alert>
+            )}
+            {time.notice}
+          </div>
+          <RecordEditorActions>
             <Button
               ref={paymentButton}
-              className="hover:bg-primary"
               disabled={loading || open || !quote?.canPay || time.status !== 'ready'}
               onClick={() => {
                 if (!quote?.canPay || time.status !== 'ready') return;
@@ -230,37 +295,33 @@ function OwnedWalletInvoicePaymentPanel({
                 setOpen(true);
               }}
             >
-              {intent ? text('retry') : text('pay')}
+              {intent && unconfirmed ? text('retry') : text('pay')}
             </Button>
-            <Button
-              variant="outline"
-              disabled={loading || open}
-              onClick={() => {
-                setRevision((v) => v + 1);
-                void refreshDetails();
-              }}
-            >
-              {text('refresh')}
-            </Button>
-          </div>
-          {time.notice}
+          </RecordEditorActions>
         </>
       )}
       {open && intent && paymentAction && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
             risk="financial"
+            focusSummary
             confirmationDisabled={time.status !== 'ready'}
             action={paymentAction}
-            finalFocus={paymentButton}
+            finalFocus={() => receiptHeading.current ?? paymentButton.current}
             summary={
-              <>
+              <div
+                className="wallet-payment-review space-y-3"
+                role="region"
+                aria-label={text('reviewContent')}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- The review scrolls independently and needs keyboard access.
+                tabIndex={0}
+              >
                 {time.notice}
-                {unconfirmed && <p>{confirmationText('unconfirmed', locale)}</p>}
-                <ScrollArea className="h-[40dvh]" role="region" aria-label={text('reviewTitle')}>
-                  <WalletPaymentReviewSummary review={intent.review} formatDate={time.format} />
-                </ScrollArea>
-              </>
+                {unconfirmed && (
+                  <p className="text-sm text-muted-foreground">{text('retryHint')}</p>
+                )}
+                <WalletPaymentReviewSummary review={intent.review} formatDate={time.format} />
+              </div>
             }
             onClose={() => setOpen(false)}
             onUnconfirmed={() => setUnconfirmed(true)}

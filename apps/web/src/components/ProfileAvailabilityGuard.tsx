@@ -3,6 +3,7 @@ import { useEffect, useId, useRef } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
+import { rememberOnboardingReturn } from '../lib/auth-return.js';
 
 /** Mounted only on customer routes requiring a profile by the root route. */
 export function ProfileAvailabilityGuard({
@@ -66,6 +67,7 @@ export function ProfileAvailabilityGuard({
         // No profiles → redirect to onboarding
         if (controller.signal.aborted) return;
         if (data!.profiles.length === 0) {
+          rememberOnboardingReturn(accountId, pathname);
           router.navigate({ to: '/onboarding', replace: true });
           return;
         }

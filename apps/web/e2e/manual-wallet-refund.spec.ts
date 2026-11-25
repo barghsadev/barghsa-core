@@ -3,6 +3,7 @@ import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
 import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { refundEditorMessages } from '@barghsa/i18n/refund-editor';
 
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const refundId = '22222222-2222-4222-8222-222222222222';
@@ -144,14 +145,26 @@ for (const locale of ['en', 'fa'] as const)
         });
       });
 
-    await page.goto(`/admin/invoices?invoiceId=${invoiceId}`);
+    const editor = refundEditorMessages[locale];
+    await page.goto(`/admin/invoices/${invoiceId}/refunds`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    await expect(page.getByRole('link', { name: editor.newBankRefund, exact: true })).toBeVisible();
+    await expect(page.locator('#wallet-refunds-panel, #external-refunds-panel')).toHaveCount(0);
+    await page.getByRole('link', { name: editor.newWalletRefund, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/invoices/${invoiceId}/refunds/wallet/new$`));
     const panel = page.getByRole('region', { name: word('title'), exact: true });
-    await expect(panel.getByText(`${word('available')}:`)).toBeVisible();
+    await expect(panel.getByText(word('available'), { exact: true })).toBeVisible();
+    await expect(page.locator('#external-refunds-panel')).toHaveCount(0);
+    await panel.getByRole('button', { name: editor.useAvailable, exact: true }).click();
+    await expect(panel.getByLabel(word('requestAmount'))).toHaveValue('100');
     await panel.getByLabel(word('requestAmount')).fill('40');
     await panel.getByLabel(word('reason'), { exact: true }).fill('Customer return');
     await panel.getByRole('button', { name: word('request'), exact: true }).click();
     await expect(page.getByRole('dialog')).toContainText(word('review'));
+    await expect(page.getByTestId('invoice-refund-view-requests')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
     const confirm = async () => {
       await approveRiskConfirmation(page, locale, 'financial');
       await page
@@ -160,14 +173,20 @@ for (const locale of ['en', 'fa'] as const)
         .click();
     };
     await confirm();
+    await page.getByTestId('invoice-refund-view-requests').click();
+    await expect(page).toHaveURL(new RegExp(`/admin/invoices/${invoiceId}/refunds/wallet$`));
     await expect(panel.getByText(refundId)).toBeVisible();
+    await page.getByTestId(`invoice-refund-approve-${refundId}`).click();
+    await expect(page).toHaveURL(new RegExp(`/refunds/wallet/${refundId}/approve$`));
     await panel.getByRole('button', { name: word('approve') }).click();
     await expect(page.getByRole('dialog')).toContainText(word('targetState'));
     await confirm();
+    await page.getByTestId(`invoice-refund-process-${refundId}`).click();
     await panel.getByRole('button', { name: word('process') }).click();
     await confirm();
     await expect(panel.getByText(word('state.Completed'))).toBeVisible();
     expect(actions).toEqual(['request', 'approve', 'process']);
+    await page.getByTestId('invoice-refund-back-to-history').click();
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(

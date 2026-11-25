@@ -5,7 +5,16 @@ import type { ListQueryBinding } from '../hooks/useListQuery.js';
 export default function AdminFailedNotificationsPage({
   queries,
   historyQueries,
-}: { queries?: ListQueryBinding; historyQueries?: ListQueryBinding } = {}) {
+  historySearch,
+  recordId,
+  recordHistory,
+}: {
+  queries?: ListQueryBinding;
+  historyQueries?: ListQueryBinding | undefined;
+  historySearch?: Record<string, unknown>;
+  recordId?: string;
+  recordHistory?: boolean;
+} = {}) {
   const locale = useLocale();
   return (
     <div className="space-y-8">
@@ -14,8 +23,11 @@ export default function AdminFailedNotificationsPage({
         uiLocale={locale}
         queries={queries}
         historyQueries={historyQueries}
+        historySearch={historySearch}
+        recordId={recordId}
+        recordHistory={recordHistory}
       />
-      <CustomerCorrectionsSection locale={locale} />
+      {!recordId && <CustomerCorrectionsSection locale={locale} />}
     </div>
   );
 }

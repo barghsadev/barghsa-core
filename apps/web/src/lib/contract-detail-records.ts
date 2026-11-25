@@ -72,6 +72,9 @@ export function validContractDetail(contract: ContractDetailData, id: string) {
     (contract.currentVersionId === undefined ||
       (typeof contract.currentVersionId === 'string' && !!contract.currentVersionId)) &&
     [contract.contractNumber, contract.orderId, contract.savingOrderId].every(optionalText) &&
+    [contract.serviceStartsAt, contract.serviceEndsAt].every(
+      (date) => date == null || isDate(date)
+    ) &&
     (party == null ||
       (party.profileId === contract.profileId &&
         ['INDIVIDUAL', 'LEGAL'].includes(party.profileType) &&

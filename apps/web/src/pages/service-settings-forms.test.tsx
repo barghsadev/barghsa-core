@@ -1,5 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
-import { act } from 'react';
+import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ServiceSettingsEditor } from './ServiceSettingsEditor.js';
@@ -21,6 +21,11 @@ const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   command: null as Confirmation | null,
 }));
+vi.mock('@tanstack/react-router', async (load) => ({
+  ...(await load<typeof import('@tanstack/react-router')>()),
+  Link: ({ to, children }: ComponentProps<'a'> & { to: string }) => <a href={to}>{children}</a>,
+}));
+
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../components/AuditLogViewer.js', () => ({ AuditLogViewer: () => null }));
 vi.mock('../components/TeamActionDialog.js', () => ({
@@ -174,17 +179,18 @@ it.each(['en', 'fa'] as const)(
     await act(async () =>
       root.render(
         <QueryProvider>
-          <AdminOperationalRetentionPage />
+          <AdminOperationalRetentionPage view="history" />
         </QueryProvider>
       )
     );
     const button = (name: string) =>
       Array.from(host.querySelectorAll('button')).find((node) => node.textContent?.trim() === name);
     const recoveryButton = (id: string) => button(retentionText(id, locale));
-    const selector = '#retention-searchableLogsDays';
-    expect(input(selector).value).toBe('30');
-    expect(fetch).not.toHaveBeenCalledWith(`${path}/rollback-history`, expect.anything());
-    await act(async () => recoveryButton('recoveryTitle')!.click());
+    const current = () => host.querySelector('#retention-recovery > dl')?.textContent;
+    const period = (days: number) =>
+      retentionText('days', locale).replace('{days}', days.toLocaleString(locale));
+    expect(host.querySelector('form')).toBeNull();
+    await vi.waitFor(() => expect(current()).toContain(period(30)));
     const review = () =>
       button(
         retentionText('recoveryStage', locale).replace('{version}', locale === 'fa' ? '۱' : '1')
@@ -199,7 +205,7 @@ it.each(['en', 'fa'] as const)(
     await act(async () => {
       await harness.command?.onSuccess(draft);
     });
-    expect(input(selector).value).toBe('30');
+    expect(current()).toContain(period(30));
     await act(async () => recoveryButton('recoveryActivate')!.click());
     expect(harness.command?.action).toMatchObject({
       path: `${path}/rollback-activate`,
@@ -215,13 +221,13 @@ it.each(['en', 'fa'] as const)(
         })
       ).rejects.toThrow();
     });
-    expect(input(selector).value).toBe('30');
+    expect(current()).toContain(period(30));
     active = { ...active, version: 3, policy: config };
     history = { ...history, baseVersion: 3, draft: null };
     await act(async () => {
       await harness.command?.onSuccess({ version: 3, draftId: draft.id, config });
     });
-    await vi.waitFor(() => expect(input(selector).value).toBe('45'));
+    await vi.waitFor(() => expect(current()).toContain(period(45)));
     expect(recoveryButton('recoveryActivate')).toBeUndefined();
     expect(host.querySelector(`a[href="${path}/export"]`)).not.toBeNull();
   }

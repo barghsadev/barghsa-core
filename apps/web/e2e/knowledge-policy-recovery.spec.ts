@@ -61,8 +61,9 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await page.goto('/admin/knowledge-bases');
       if (group) await page.getByRole('button', { name: k(kind), exact: true }).click();
-      await page.getByRole('button', { name: `${k('open')} ${target.title}`, exact: true }).click();
-      const query = page.getByLabel(k('testQuery'), { exact: true });
+      await page.getByRole('link', { name: `${k('open')} ${target.title}`, exact: true }).click();
+      if (!group) await page.getByRole('link', { name: k('ingestion'), exact: true }).click();
+      const query = page.getByRole('searchbox', { name: k('testQuery'), exact: true });
       const submit = page.getByRole('button', { name: k('runQuery'), exact: true });
       const input = { query: 'retained passage', limit: 5 };
       await query.fill(input.query);
@@ -88,8 +89,7 @@ for (const locale of ['en', 'fa'] as const) {
 
         await submit.click();
         await expect.poll(() => requests).toEqual([input, input, input]);
-        const other = group ? 'knowledge-bases' : 'kb-groups';
-        await page.getByRole('button', { name: k(other), exact: true }).click();
+        await page.goto(group ? '/admin/knowledge-bases' : '/admin/knowledge-bases?kind=kb-groups');
         await expect(query).toHaveCount(0);
         await held[1]!.fulfill({ json: matches('Previous catalogue result') }).catch(() => {});
         await expect(page.getByText('Previous catalogue result')).toHaveCount(0);
@@ -135,34 +135,29 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     await page.goto('/admin/knowledge-bases');
-    await page.getByRole('button', { name: `${k('open')} ${kb.title}`, exact: true }).click();
-    await expect(page.locator('#kb-file')).toBeVisible();
-    expect(listReads).toBe(1);
-    expect(detailReads).toBe(1);
+    await page.getByRole('link', { name: `${k('open')} ${kb.title}`, exact: true }).click();
+    await page.getByRole('link', { name: k('ingestion'), exact: true }).click();
     await page.locator('#kb-test-query').fill('meter charge');
     await page.getByRole('button', { name: k('runQuery'), exact: true }).click();
     await expect(page.getByText('Accepted guidance', { exact: true })).toBeVisible();
-    await page.locator('#kb-file-search').fill('Retained search');
-    await page.locator('#kb-file').selectOption('uploads/document/guide.txt');
+    expect(listReads).toBe(1);
+    const detailsBefore = detailReads;
     failList = true;
     await page.getByRole('button', { name: k('refresh'), exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText(k('error'));
+    await expect.poll(() => detailReads).toBeGreaterThan(detailsBefore);
     await expect(page.locator('#kb-test-query')).toHaveValue('meter charge');
-    await expect(page.locator('#kb-file')).toHaveValue('uploads/document/guide.txt');
     await expect(page.getByText('Accepted guidance', { exact: true })).toBeVisible();
-    const detailBefore = detailReads;
-    failList = false;
-    await page.getByRole('button', { name: k('retry'), exact: true }).click();
-    await expect(page.getByRole('alert')).toHaveCount(0);
-    expect(detailReads).toBe(detailBefore);
+    expect(listReads).toBe(1);
+    await page.getByRole('link', { name: k('documents'), exact: true }).click();
+    await page.locator('#kb-file-search').fill('Retained search');
+    await page.locator('#kb-file').selectOption('uploads/document/guide.txt');
     failDetail = true;
     await page.getByRole('button', { name: k('refresh'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(k('detailError'));
-    const listBefore = listReads;
     failDetail = false;
     await page.getByRole('button', { name: k('detailRetry'), exact: true }).click();
     await expect(page.getByRole('alert')).toHaveCount(0);
-    expect(listReads).toBe(listBefore);
+    expect(listReads).toBe(1);
     await expect(page.locator('#kb-file-search')).toHaveValue('Retained search');
     await expect(page.locator('#kb-file')).toHaveValue('uploads/document/guide.txt');
     await inspect(page, 'knowledge', locale, info.project.name);
@@ -190,7 +185,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/admin/knowledge-bases');
     await page.getByRole('button', { name: k('kb-groups'), exact: true }).click();
-    await page.getByRole('button', { name: `${k('open')} ${kg.title}`, exact: true }).click();
+    await page.getByRole('link', { name: `${k('open')} ${kg.title}`, exact: true }).click();
     await page.locator('#kb-member').selectOption(kb.id);
     await page.locator('#kb-test-query').fill('Keep group question');
     fail = true;
@@ -210,7 +205,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#kb-member')).toHaveCount(0);
     await expect(page.locator('#kb-test-query')).toHaveCount(0);
     await expect(
-      page.getByRole('button', { name: `${k('open')} ${kg.title}`, exact: true })
+      page.getByRole('link', { name: `${k('open')} ${kg.title}`, exact: true })
     ).toHaveCount(0);
   });
   test(`policy drafts survive list recovery and frozen save waits for a valid read (${locale})`, async ({
@@ -230,9 +225,11 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill(fail ? { status: 503, json: {} } : { json: [policy] });
     });
     await page.goto('/admin/policies');
-    await page.getByRole('button', { name: p('addPolicy'), exact: true }).click();
+    await page.getByRole('link', { name: p('addPolicy'), exact: true }).click();
     await page.locator('#policy-title').fill('Local draft');
-    await page.locator('#policy-items').fill('energy\nbilling');
+    await page.locator('#policy-items').fill('energy');
+    await page.locator('#policy-items').press('Enter');
+    await page.locator('#policy-items-2').fill('billing');
     fail = true;
     await page.getByRole('button', { name: p('refresh'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(p('error'));
@@ -241,7 +238,8 @@ for (const locale of ['en', 'fa'] as const) {
     fail = false;
     await page.getByRole('button', { name: p('retry'), exact: true }).click();
     await expect(page.getByRole('alert')).toHaveCount(0);
-    await expect(page.locator('#policy-items')).toHaveValue('energy\nbilling');
+    await expect(page.locator('#policy-items')).toHaveValue('energy');
+    await expect(page.locator('#policy-items-2')).toHaveValue('billing');
     await inspect(page, 'policy-draft', locale, info.project.name);
     await page.getByRole('button', { name: p('save'), exact: true }).click();
     const dialog = page.getByRole('dialog'),
@@ -294,7 +292,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto('/admin/policies');
     await page.getByRole('button', { name: p('policy-groups'), exact: true }).click();
-    await page.getByRole('button', { name: `${p('open')} ${pg.title}`, exact: true }).click();
+    await page.getByRole('link', { name: `${p('open')} ${pg.title}`, exact: true }).click();
     const override = page.locator(`#member-priority-${policy.id}`);
     await override.fill('25');
     await page.locator('#policy-member').selectOption(policySecond.id);

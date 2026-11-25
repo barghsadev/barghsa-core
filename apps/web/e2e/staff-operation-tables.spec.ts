@@ -1,12 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect } from './coverage-fixture';
+import { expandListFilters, test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { checkRoutePresentation } from './route-presentation';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import { staffTeam, staffMember, staffRoutingRules } from '../src/test/staff-directory-fixtures';
 import {
   consultationContextRows,
@@ -62,6 +62,11 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: staffRoutingRules })
       );
       await page.route('**/api/admin/staff-teams/*', (route) => {
+        if (route.request().method() === 'GET')
+          return route.fulfill({
+            status: denied ? 403 : failed ? 503 : 200,
+            json: denied || failed ? {} : team,
+          });
         writes++;
         return route.fulfill({ status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } });
       });
@@ -79,7 +84,6 @@ for (const locale of ['en', 'fa'] as const)
       const records = root.locator(visibleRecords),
         selected = records.filter({ hasText: team.name });
       await expect(records).toHaveCount(2);
-      await expect(selected).toContainText(staffMember.name);
       await expect(selected).toContainText('finance, energy');
       await expect(selected).toContainText(text('active'));
       await expect(selected.locator('script,img')).toHaveCount(0);
@@ -106,19 +110,18 @@ for (const locale of ['en', 'fa'] as const)
         await selected.screenshot({ path: `${screenshotRoot}/staff-team-fa-dark.png` });
         await page.setViewportSize({ width: 390, height: 844 });
       }
-      await selected.getByRole('button', { name: text('edit'), exact: true }).click();
+      await selected.getByRole('link', { name: team.name, exact: true }).click();
+      await expect(page.getByRole('heading', { name: team.name, exact: true })).toBeVisible();
+      await expect(page.getByText(staffMember.name, { exact: true }).first()).toBeVisible();
+      await page.getByRole('link', { name: text('edit'), exact: true }).click();
       const name = page.locator('#staff-team-name');
       await name.fill(' Private changed team ');
       await page.setViewportSize({ width: 1280, height: 900 });
-      await expect(
-        root.getByRole('region', { name: text('catalogue'), exact: true })
-      ).toBeVisible();
-      await expect(records).toHaveCount(2);
-      await expect(selected.locator('th[scope=row]')).toContainText(team.name);
+      await expect(records).toHaveCount(0);
       await expect(name).toHaveValue(' Private changed team ');
-      await expect(page.locator('#staff-team-name')).toHaveCount(1);
       expect(reads).toBe(1);
-      await selected.getByRole('button', { name: text('delete'), exact: true }).click();
+      await page.getByRole('link', { name: team.name, exact: true }).click();
+      await page.getByRole('button', { name: text('delete'), exact: true }).click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toContainText(team.name);
       const confirm = dialog.getByRole('button', {
@@ -135,22 +138,19 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
         .click();
       await expect(dialog).toHaveCount(0);
-      await expect(name).toHaveValue(' Private changed team ');
+      await expect(name).toHaveCount(0);
       const refresh = page.getByRole('button', { name: text('refresh'), exact: true });
       await expect(refresh).toBeFocused();
       expect(writes).toBe(1);
       expect(stepUps).toBe(0);
       failed = true;
       await refresh.click();
-      await expect(records).toHaveCount(2);
-      await expect(name).toHaveValue(' Private changed team ');
-      await expect(
-        selected.getByRole('button', { name: text('edit'), exact: true })
-      ).toBeDisabled();
+      await expect(page.getByRole('heading', { name: team.name, exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: text('delete'), exact: true })).toBeDisabled();
       denied = true;
       await refresh.click();
-      await expect(records).toHaveCount(0);
-      await expect(page.locator('#staff-team-name')).toHaveCount(0);
+      await expect(page.getByRole('heading', { name: team.name, exact: true })).toHaveCount(0);
+      await expect(name).toHaveCount(0);
       expect(writes).toBe(1);
       expect(stepUps).toBe(0);
     });
@@ -160,7 +160,7 @@ for (const locale of ['en', 'fa'] as const)
     }, info) => {
       await crmShell(page, locale);
       await mockOppositeNumerals(page, locale, dark);
-      const copy = (key: string) => tConsultation(key, locale);
+      const copy = (key: string) => tStaffConsultation(key, locale);
       const rows = consultationContextRows().slice(0, 2);
       rows[0]!.status = 'under_review';
       if (locale === 'fa') {
@@ -225,11 +225,9 @@ for (const locale of ['en', 'fa'] as const)
         await selected.screenshot({ path: `${screenshotRoot}/consultation-queue-fa-light.png` });
         await page.setViewportSize({ width: 390, height: 844 });
       }
-      await selected.getByRole('button', { name: new RegExp(copy('openRequest')) }).click();
-      const detail = page.getByRole('region', { name: copy('details'), exact: true });
-      await expect(detail).toBeVisible();
       if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
-        for (const key of ['filterStatus', 'filterAssignment', 'priority', 'age', 'team']) {
+        await expandListFilters(page, locale);
+        for (const key of ['filterStatus', 'filterAssignment', 'priority', 'age']) {
           const select = page.getByRole('combobox', { name: copy(key), exact: true });
           await expect(select).toBeEnabled();
           const box = await select.boundingBox();
@@ -237,19 +235,23 @@ for (const locale of ['en', 'fa'] as const)
           expect(box?.height, key).toBeGreaterThanOrEqual(44);
         }
       }
+      await selected.getByRole('link', { name: new RegExp(copy('openRequest')) }).click();
+      const detail = page.getByRole('region', { name: copy('details'), exact: true });
+      await expect(detail).toBeVisible();
+      await expect(root).toHaveCount(0);
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        const team = detail.getByRole('combobox', { name: copy('team'), exact: true });
+        const box = await team.boundingBox();
+        expect(box?.width).toBeGreaterThanOrEqual(44);
+        expect(box?.height).toBeGreaterThanOrEqual(44);
+      }
       await detail.getByRole('button', { name: copy('reject'), exact: true }).click();
       const reason = detail.getByRole('textbox', { name: copy('note'), exact: true });
       await reason.fill('Private reason retained');
       const detailReads = details;
       await checkRoutePresentation(page, info, locale);
       await page.setViewportSize({ width: 1280, height: 900 });
-      await expect(
-        root.getByRole('region', { name: copy('queueCatalogue'), exact: true })
-      ).toBeVisible();
-      await expect(records).toHaveCount(2);
-      await expect(
-        selected.getByRole('button', { name: new RegExp(copy('openRequest')) })
-      ).toHaveAttribute('aria-pressed', 'true');
+      await expect(detail).toBeVisible();
       await expect(reason).toHaveCount(1);
       await expect(reason).toHaveValue('Private reason retained');
       expect(reads).toBe(1);
@@ -257,16 +259,16 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes).toBe(0);
       await page.setViewportSize({ width: 390, height: 844 });
       await expect(reason).toHaveValue('Private reason retained');
+      await page.getByRole('link', { name: copy('backToStaffRequests'), exact: true }).click();
+      await expect(records).toHaveCount(2);
+      await expect(reason).toHaveCount(0);
       failed = true;
       await page.getByRole('button', { name: copy('refresh'), exact: true }).click();
       await expect(root.getByRole('alert')).toContainText(copy('loadError'));
-      // Toolbar refresh begins a fresh queue snapshot while preserving selected detail work.
       await expect(records).toHaveCount(0);
-      await expect(reason).toHaveValue('Private reason retained');
       failed = false;
       await root.getByRole('button', { name: copy('retry'), exact: true }).click();
       await expect(records).toHaveCount(2);
-      await expect(reason).toHaveValue('Private reason retained');
       denied = true;
       await page.getByRole('button', { name: copy('refresh'), exact: true }).click();
       await expect(root.getByRole('alert')).toContainText(copy('queueForbidden'));

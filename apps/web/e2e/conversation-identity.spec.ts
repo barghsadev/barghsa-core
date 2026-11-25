@@ -93,7 +93,7 @@ for (const staff of [false, true])
               body.avatarUploadKey === null
                 ? null
                 : body.avatarUploadKey
-                  ? '/test-conversation-avatar'
+                  ? new URL('/test-conversation-avatar', route.request().url()).href
                   : identity.avatarUrl,
             revision: identity.revision + 1,
           };
@@ -155,7 +155,16 @@ for (const staff of [false, true])
             },
           })
       );
-      await page.route(`**${prefix}/${ticketId}`, (route) => route.fulfill({ json: row }));
+      await page.route(`**${prefix}/${ticketId}`, (route) =>
+        route.fulfill({
+          json: {
+            ...row,
+            ...(staff
+              ? { viewer: { userId: 'staff', canWrite: true, canAssignOthers: true } }
+              : {}),
+          },
+        })
+      );
       await page.route(`**${prefix}/${ticketId}/comments`, (route) =>
         route.fulfill({
           json: [
@@ -220,6 +229,8 @@ for (const staff of [false, true])
       await browse.focus();
       await page.keyboard.press('Enter');
       await (await picker).setFiles({ name: 'portrait.png', mimeType: 'image/png', buffer: image });
+      await expect(editor.locator('img')).toHaveAttribute('src', /^blob:/);
+      expect(uploads).toBe(0);
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor.getByRole('alert')).toHaveText(copy('save'));
       await expect(editor).toContainText('portrait.png');
@@ -234,7 +245,7 @@ for (const staff of [false, true])
       expect(uploads).toBe(1);
       await page
         .locator('[data-slot=ticket-queue-records]')
-        .getByRole('button', { name: row.subject, exact: true })
+        .getByRole('link', { name: row.subject, exact: true })
         .click();
       const thread = page.locator('[data-slot=ticket-comment]');
       await expect(thread.first()).toContainText(identity.displayName!);
@@ -262,6 +273,15 @@ for (const staff of [false, true])
       await expect(
         again.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
       ).toBeChecked();
+      await again.locator('input[type=file]').setInputFiles({
+        name: 'replacement.png',
+        mimeType: 'image/png',
+        buffer: image,
+      });
+      await expect(again.locator('img')).toHaveAttribute('src', /^blob:/);
+      await again.getByRole('button', { name: copy('discardPhoto'), exact: true }).click();
+      await expect(again.locator('img')).toHaveAttribute('src', /test-conversation-avatar/);
+      expect(uploads).toBe(1);
       await again.getByLabel(copy('name'), { exact: true }).fill('');
       await expect(
         again.getByRole('checkbox', { name: copy('paymentActivity'), exact: true })
@@ -269,6 +289,11 @@ for (const staff of [false, true])
       await expect(
         again.getByRole('checkbox', { name: copy('activity'), exact: true })
       ).not.toBeChecked();
+      await again.getByRole('button', { name: copy('remove'), exact: true }).click();
+      await expect(again.getByRole('status')).toHaveText(copy('photoRemovalPending'));
+      await expect(again.locator('img')).toHaveCount(0);
+      await again.getByRole('button', { name: copy('undoPhotoRemoval'), exact: true }).click();
+      await expect(again.locator('img')).toHaveAttribute('src', /test-conversation-avatar/);
       await again.getByRole('button', { name: copy('remove'), exact: true }).click();
       await again.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(again).toHaveCount(0);
@@ -281,10 +306,6 @@ for (const staff of [false, true])
         shareInPaymentActivity: false,
       });
       await page.reload();
-      await page
-        .locator('[data-slot=ticket-queue-records]')
-        .getByRole('button', { name: row.subject, exact: true })
-        .click();
       await expect(page.locator('[data-slot=ticket-comment]').first()).toContainText(
         t(staff ? 'tickets.staffAuthor' : 'tickets.customerAuthor', locale)
       );
@@ -426,3 +447,73 @@ for (const staff of [false, true])
       expect(writes).toBe(2);
     });
   }
+
+for (const staff of [false, true])
+  test(`conversation identity page is shared by ${staff ? 'staff' : 'customers'}`, async ({
+    page,
+  }) => {
+    const locale = staff ? 'fa' : 'en';
+    const copy = (key: string) => identityText(`conversationIdentity.${key}`, locale);
+    await shell(page, locale, staff);
+    if (!staff) {
+      const profileId = '44444444-4444-4444-8444-444444444444';
+      await page.route('**/api/profiles', (route) =>
+        route.fulfill({
+          json: {
+            profiles: [
+              {
+                id: profileId,
+                profileType: 'INDIVIDUAL',
+                firstName: 'Sample',
+                lastName: 'Customer',
+                isDefault: true,
+                status: 'ACTIVE',
+              },
+            ],
+            activeProfileId: profileId,
+            hasDefault: true,
+          },
+        })
+      );
+    }
+    let saved = {
+      displayName: 'Saved alias',
+      avatarUrl: null,
+      avatarUploadKey: null,
+      revision: 2,
+      shareInActivity: false,
+      shareInPaymentActivity: false,
+    };
+    const writes: unknown[] = [];
+    await page.route('**/api/user/settings/conversation-identity', (route) => {
+      if (route.request().method() === 'PUT') {
+        const body = route.request().postDataJSON();
+        writes.push(body);
+        saved = { ...saved, ...body, revision: saved.revision + 1 };
+      }
+      return route.fulfill({ json: saved });
+    });
+    await page.goto('/settings');
+    await page.getByRole('link', { name: copy('title'), exact: true }).click();
+    await expect(page).toHaveURL(/\/settings\/conversation-identity$/);
+    const form = page.getByRole('form', { name: copy('title'), exact: true });
+    const name = form.getByRole('textbox', { name: copy('name'), exact: true });
+    await expect(name).toHaveValue('Saved alias');
+    await name.fill('Unsaved change');
+    await form.getByRole('button', { name: copy('cancel'), exact: true }).click();
+    await expect(page).toHaveURL(/\/settings\/?$/);
+    expect(writes).toEqual([]);
+    await page.goto('/settings/conversation-identity');
+    await expect(name).toHaveValue('Saved alias');
+    await name.fill('New alias');
+    await form.getByRole('button', { name: copy('saveAction'), exact: true }).click();
+    await expect(page).toHaveURL(/\/settings\/?$/);
+    expect(writes).toEqual([
+      {
+        displayName: 'New alias',
+        revision: 2,
+        shareInActivity: false,
+        shareInPaymentActivity: false,
+      },
+    ]);
+  });

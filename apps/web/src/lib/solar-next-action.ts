@@ -3,11 +3,21 @@ import { tSolar } from '@barghsa/i18n/solar';
 import type { WorkflowOwner } from '../components/WorkflowStatusBanner.js';
 
 export interface SolarActionRequest {
+  id: string;
   status: string;
   contract_id: string | null;
   contract_published: boolean;
   initial_invoice_id?: string | null;
   initial_invoice_state?: string | null;
+}
+
+export function hasSolarShipment(status: string) {
+  return [
+    'waiting_for_postal_submission',
+    'postal_documents_received',
+    'final_review',
+    'contract_created',
+  ].includes(status);
 }
 
 export function solarNextAction(
@@ -16,9 +26,23 @@ export function solarNextAction(
 ): { text: string; owner: WorkflowOwner; href?: string } {
   const copy = (key: string) => tSolar(key, locale);
   if (['submitted', 'uploading_documents', 'changes_requested'].includes(request.status))
-    return { text: copy('workflowNextUpload'), owner: 'customer', href: '#solar-documents' };
+    return {
+      text: copy('workflowNextUpload'),
+      owner: 'customer',
+      href: `/solar/requests/${encodeURIComponent(request.id)}/documents`,
+    };
+  if (request.status === 'documents_under_review')
+    return {
+      text: copy('documentUploadTitle'),
+      owner: 'staff',
+      href: `/solar/requests/${encodeURIComponent(request.id)}/documents`,
+    };
   if (request.status === 'waiting_for_postal_submission')
-    return { text: copy('workflowNextPostal'), owner: 'customer', href: '#solar-postal' };
+    return {
+      text: copy('workflowNextPostal'),
+      owner: 'customer',
+      href: `/solar/requests/${encodeURIComponent(request.id)}/shipment`,
+    };
   if (request.status === 'contract_created') {
     if (
       request.initial_invoice_id &&
@@ -35,7 +59,7 @@ export function solarNextAction(
       ? {
           text: copy('solarViewContract'),
           owner: 'customer',
-          href: `/contracts?contractId=${encodeURIComponent(request.contract_id)}`,
+          href: `/contracts/${encodeURIComponent(request.contract_id)}`,
         }
       : { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
   }
@@ -43,8 +67,5 @@ export function solarNextAction(
     return { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
   if (['rejected', 'cancelled'].includes(request.status))
     return { text: t('workflow.none', locale), owner: 'none' };
-  return {
-    text: copy(request.status === 'documents_under_review' ? 'verifyStage' : 'finalStage'),
-    owner: 'staff',
-  };
+  return { text: copy('finalStage'), owner: 'staff' };
 }

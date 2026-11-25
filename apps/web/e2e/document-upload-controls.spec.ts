@@ -98,14 +98,15 @@ for (const staff of [false, true])
       });
       await page.goto(staff ? `/admin/documents?profileId=${documentProfileId}` : '/documents');
       const word = (key: string) => documentText(key, locale);
-      await page.getByRole('button', { name: word('upload'), exact: true }).click();
+      await page.getByRole('link', { name: word('upload'), exact: true }).click();
       const picker = page.locator('[data-slot=file-upload]');
-      await expect(picker.getByRole('button', { name: word('dropFiles') })).toBeEnabled();
+      await expect(picker.getByRole('button', { name: word('chooseFile') })).toBeEnabled();
       await picker.locator('input[type=file]').setInputFiles({
         name: 'proof.pdf',
         mimeType: 'application/pdf',
         buffer: pdfPreviewFixture(),
       });
+      await expect(picker.getByRole('button', { name: word('changeSelectedFile') })).toBeEnabled();
       const preview = picker.getByRole('button', {
         name: `${word('preview')}: proof.pdf`,
         exact: true,
@@ -132,7 +133,7 @@ for (const staff of [false, true])
       await expect(firstPage).toHaveCount(0);
       await expect.poll(() => revoked.includes(url)).toBe(true);
       await page.locator('#document-category').selectOption('image');
-      await expect(picker.getByRole('button', { name: word('dropFiles') })).toBeEnabled();
+      await expect(picker.getByRole('button', { name: word('changeSelectedFile') })).toBeEnabled();
       const png = Buffer.from(
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aZIUAAAAASUVORK5CYII=',
         'base64'
@@ -248,16 +249,19 @@ for (const staff of [false, true])
         );
         await page.goto(staff ? `/admin/documents?profileId=${documentProfileId}` : '/documents');
         const list = page.getByRole('region', { name: word('listTitle'), exact: true });
-        await list.getByRole('button', { name: word('upload'), exact: true }).click();
-        const upload = list.getByRole('region', { name: word('upload'), exact: true });
+        await list.getByRole('link', { name: word('upload'), exact: true }).click();
+        const workspace = page.getByRole('main');
+        const upload = workspace.getByRole('region', { name: word('upload'), exact: true });
         await expect(upload.getByRole('alert')).toContainText(word('policyError'));
         await expect(
-          upload.getByRole('button', { name: word('dropFiles'), exact: true })
+          upload.getByRole('button', { name: word('chooseFile'), exact: true })
         ).toBeDisabled();
         await upload.getByRole('button', { name: word('retry'), exact: true }).click();
-        const drop = upload.getByRole('button', { name: word('dropFiles'), exact: true });
+        const drop = upload.getByRole('button', { name: word('chooseFile'), exact: true });
         await expect(drop).toBeEnabled();
-        await drop.evaluate((element) => {
+        await expect(drop).toHaveAccessibleDescription(/\.pdf/);
+        const requirements = upload.locator('[data-slot="file-upload"] p[id$="-rules"]');
+        await requirements.evaluate((element) => {
           const data = new DataTransfer();
           data.items.add(new File(['bad'], 'bad.exe', { type: 'application/pdf' }));
           element.dispatchEvent(
@@ -320,6 +324,13 @@ for (const staff of [false, true])
         );
         await upload.getByRole('button', { name: word('pauseUpload'), exact: true }).click();
         await expect(upload.getByRole('status')).toContainText(word('paused'));
+        if (!staff) {
+          await workspace.getByRole('link', { name: word('backToDocuments'), exact: true }).click();
+          await expect(page).toHaveURL('/documents/new');
+          await expect(
+            upload.getByRole('button', { name: word('resumeUpload'), exact: true })
+          ).toBeVisible();
+        }
         expect(creates).toBe(1);
         expect(uploadReceiver.uploads[0]!.headers.cookie).toBeUndefined();
         expect(uploadReceiver.uploads[0]!.headers['x-csrf-token']).toBeUndefined();
@@ -335,7 +346,7 @@ for (const staff of [false, true])
         } else await held!.fulfill({ status: 503, json: {} });
         await upload.getByRole('button', { name: word('resumeUpload'), exact: true }).click();
         await expect(
-          list.getByRole('region', { name: word('details'), exact: true })
+          workspace.getByRole('region', { name: word('details'), exact: true })
         ).toBeVisible();
         expect(creates).toBe(1);
         if (mode === 'confirmation') {

@@ -327,8 +327,7 @@ it('blocks an opened local amendment and retained legacy callbacks while an orig
   );
   await value(en.draftTerms, 'Independent replacement terms');
   await value(en.contextReason, 'Independent amendment reason');
-  const oldCancellation = harness.cancellation!,
-    oldActivation = harness.activation!;
+  const oldCancellation = harness.cancellation!;
   await value(en.approvedOriginal, document.id);
   await click(en.prepareSignature);
   await vi.waitFor(() => expect(harness.review).not.toBeNull());
@@ -351,7 +350,6 @@ it('blocks an opened local amendment and retained legacy callbacks while an orig
     );
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     oldCancellation.onChanged();
-    oldActivation.onChanged!();
   });
   expect(harness.team).toBeNull();
   expect(changed).not.toHaveBeenCalled();

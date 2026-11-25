@@ -78,9 +78,24 @@ for (const locale of ['en', 'fa'] as const) {
     const records = table.locator('tbody tr:has(th[scope=row])');
     await expect(records).toHaveCount(2);
     await expect(records.first().getByRole('rowheader')).toHaveText(fixed.code);
+    expect(
+      await records
+        .first()
+        .getByRole('rowheader')
+        .locator('bdi')
+        .evaluate((code) => {
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          return range.getClientRects().length;
+        })
+    ).toBe(1);
     const headings = await table.locator('thead th').allTextContents();
-    const cell = (row: Locator, key: string) =>
-      row.locator('th,td').nth(headings.findIndex((value) => value.trim() === word(key)));
+    const cell = (row: Locator, key: string) => {
+      const index = headings.findIndex((value) => value.trim() === word(key));
+      return index === -1
+        ? row.getByText(word(key), { exact: true }).locator('..').locator('dd')
+        : row.locator('th,td').nth(index);
+    };
     expect(
       normalizedDigits(await cell(records.first(), 'discount').locator('bdi').innerText())
     ).toBe(exactIrr);
@@ -100,22 +115,70 @@ for (const locale of ['en', 'fa'] as const) {
     expect(await table.locator('thead').evaluate((node) => getComputedStyle(node).position)).toBe(
       'sticky'
     );
+    expect(
+      await table.locator('thead').evaluate((node) => {
+        const canvas = document.createElement('canvas');
+        const pixel = canvas.getContext('2d')!;
+        pixel.fillStyle = getComputedStyle(node).backgroundColor;
+        pixel.fillRect(0, 0, 1, 1);
+        return pixel.getImageData(0, 0, 1, 1).data[3];
+      })
+    ).toBe(255);
     const viewport = page.getByRole('region', { name: word('tableTitle'), exact: true });
+    const edit = records
+      .first()
+      .getByRole('link', { name: `${word('edit')} ${fixed.code}`, exact: true });
+    const actions = records.first().locator('[data-table-actions]');
+    const actionHeading = table.locator('thead [data-table-actions]');
+    await expect(actions).toHaveCSS('position', 'sticky');
+    await expect(edit.locator('[data-table-action-icon]')).toBeVisible();
+    await expect(edit.locator('[data-table-action-label]')).toHaveCSS('position', 'absolute');
+    const coarse = await page.evaluate(() => matchMedia('(pointer: coarse)').matches);
+    await expect(edit).toHaveCSS('width', coarse ? '44px' : '32px');
+    const before = (await actions.boundingBox())!;
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect(viewport).toBeFocused();
     await expect
       .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
       .toBeGreaterThan(0);
+    expect((await actions.boundingBox())!.x).toBeCloseTo(before.x, 2);
+    expect((await actionHeading.boundingBox())!.x).toBeCloseTo(before.x, 2);
     await inspect(page);
-    await records
-      .first()
-      .getByRole('button', { name: `${word('edit')} ${fixed.code}`, exact: true })
-      .focus();
+    const tooltip = page.getByRole('tooltip').filter({ hasText: word('edit') });
+    if (await page.evaluate(() => matchMedia('(hover: hover)').matches)) {
+      await edit.hover();
+      await expect(tooltip).toBeVisible();
+      await page.mouse.move(0, 0);
+      await expect(tooltip).toBeHidden();
+    }
+    await edit.focus();
+    await expect(tooltip).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(tooltip).toBeHidden();
+    await expect(edit).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('#gift-value')).toHaveValue(exactIrr);
     await page.locator('#gift-value').fill('۰۰۰۱۲۳۴۵');
     await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator('#gift-value')).toHaveValue('۰۰۰۱۲۳۴۵');
+    await expect(table).toHaveCount(0);
+    expect([listReads, statsReads, writes]).toEqual([1, 1, 0]);
+    await inspect(page);
+    status = 503;
+    await page.getByRole('button', { name: word('refreshStats'), exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText(word('statsError'));
+    await expect(page.getByRole('button', { name: word('save'), exact: true })).toBeDisabled();
+    await expect(page.locator('#gift-value')).toHaveValue('۰۰۰۱۲۳۴۵');
+    status = 200;
+    await page.getByRole('button', { name: word('retry'), exact: true }).click();
+    await expect(page.getByRole('button', { name: word('save'), exact: true })).toBeEnabled();
+    await expect(page.locator('#gift-value')).toHaveValue('۰۰۰۱۲۳۴۵');
+    await page
+      .getByRole('link', { name: word('title'), exact: true })
+      .last()
+      .click();
+
     const cards = page.getByRole('list', { name: word('title'), exact: true });
     const card = cards.locator(':scope > li').first();
     const sample = cards.locator(':scope > li').last();
@@ -145,37 +208,14 @@ for (const locale of ['en', 'fa'] as const) {
       );
     }
     await expect(card).toContainText(word('noExpiry'));
-    await expect(page.locator('#gift-value')).toHaveCount(1);
-    await expect(page.locator('#gift-value')).toHaveValue('۰۰۰۱۲۳۴۵');
-    expect([listReads, statsReads, writes]).toEqual([1, 1, 0]);
+    await expect(page.locator('#gift-value')).toHaveCount(0);
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
-      await sample.screenshot({
-        path: test.info().outputPath('gift-code-card-fa.png'),
-      });
-    status = 503;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(
-      page
-        .getByRole('alert')
-        .filter({ hasText: word('error') })
-        .first()
-    ).toBeVisible();
-    await expect(
-      card.getByRole('button', { name: `${word('edit')} ${fixed.code}`, exact: true })
-    ).toBeDisabled();
-    await page.setViewportSize({ width: 900, height: 900 });
-    await expect(page.locator('#gift-value')).toHaveValue('۰۰۰۱۲۳۴۵');
-    await expect(page.getByRole('button', { name: word('save'), exact: true })).toBeDisabled();
-    status = 200;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('alert')).toHaveCount(0);
-    await expect(page.locator('#gift-value')).toHaveValue('۰۰۰۱۲۳۴۵');
+      await sample.screenshot({ path: test.info().outputPath('gift-code-card-fa.png') });
     status = 403;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('table', { includeHidden: true })).toHaveCount(0);
+    await expect(page.getByRole('alert')).toContainText(word('denied'));
     await expect(cards).toHaveCount(0);
-    await expect(page.locator('#gift-value')).toHaveCount(0);
     expect(writes).toBe(0);
   });
 

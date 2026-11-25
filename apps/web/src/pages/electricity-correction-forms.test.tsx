@@ -21,6 +21,7 @@ vi.mock('./ElectricityPriceAdjustmentsPanel.js', () => ({
   ElectricityPriceAdjustmentsPanel: () => null,
 }));
 vi.mock('@tanstack/react-router', () => ({
+  useBlocker: vi.fn(),
   Link: ({
     children,
     to,
@@ -173,7 +174,7 @@ async function renderDetails(actor = 'buyer-one') {
     root.render(
       <QueryProvider>
         <AccountUserProvider value={actor}>
-          <ElectricityOrderDetailsPage orderId={order.orderId} />
+          <ElectricityOrderDetailsPage orderId={order.orderId} edit />
         </AccountUserProvider>
       </QueryProvider>
     )
@@ -233,7 +234,7 @@ it.each(['en', 'fa'] as const)(
     expect(input('correction-note').value).toBe(' Valid response ');
   }
 );
-it('retains malformed address receipts and the exact retry while blocking the sibling revision and cancellation', async () => {
+it('retains malformed address receipts and the exact retry while blocking the sibling revision', async () => {
   await renderDetails();
   let attempts = 0;
   post = () =>
@@ -256,11 +257,8 @@ it('retains malformed address receipts and the exact retry while blocking the si
   expect(calls('/revision-preview')).toHaveLength(0);
   const cancel = [...host.querySelectorAll('form')].find(
     (form) => form.querySelector('textarea') && !form.hasAttribute('data-testid')
-  )!;
-  await approveVisibleConfirmation();
-  await act(async () =>
-    cancel.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
+  expect(cancel).toBeUndefined();
   expect(calls('/cancel-review')).toHaveLength(0);
   const first = String(calls('/resubmit-address')[0]![1]?.body);
   await approveVisibleConfirmation();
@@ -462,7 +460,7 @@ it('fences stale account writes before they can publish a receipt or private dat
     root.render(
       <QueryProvider>
         <AccountUserProvider value="buyer-two">
-          <ElectricityOrderDetailsPage orderId={order.orderId} />
+          <ElectricityOrderDetailsPage orderId={order.orderId} edit />
         </AccountUserProvider>
       </QueryProvider>
     )
@@ -589,7 +587,7 @@ it('rejects an old retry callback before it can borrow a new order attempt', asy
     root.render(
       <QueryProvider>
         <AccountUserProvider value="buyer-one">
-          <ElectricityOrderDetailsPage orderId={nextOrder.orderId} />
+          <ElectricityOrderDetailsPage orderId={nextOrder.orderId} edit />
         </AccountUserProvider>
       </QueryProvider>
     )

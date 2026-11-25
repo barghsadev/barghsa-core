@@ -267,12 +267,13 @@ it('reviews the server price before preparing the exact publish command', async 
       )
     );
     const set = async (selector: string, value: string) => {
-      const input = container.querySelector<HTMLInputElement>(selector)!;
+      const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector)!;
+      const prototype =
+        input instanceof HTMLTextAreaElement
+          ? HTMLTextAreaElement.prototype
+          : HTMLInputElement.prototype;
       await act(async () => {
-        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
-          input,
-          value
-        );
+        Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(input, value);
         input.dispatchEvent(new Event('input', { bubbles: true }));
       });
     };
@@ -345,12 +346,10 @@ it.each(['charge', 'credit'] as const)(
         )
       );
       expect(
-        container.querySelector(
-          'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
-        )
+        container.querySelector('a[href="/admin/invoices/11111111-1111-7111-8111-111111111111"]')
       ).not.toBeNull();
       const sourceRefund = container.querySelector(
-        `a[href="/admin/invoices?invoiceId=${priceOriginalInvoiceId}"]`
+        `a[href="/admin/invoices/${priceOriginalInvoiceId}"]`
       );
       if (kind === 'credit') {
         expect(sourceRefund?.textContent).toBe('Refund credit from the paid invoice');

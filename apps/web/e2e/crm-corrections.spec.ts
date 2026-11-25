@@ -67,9 +67,11 @@ for (const [locale, darkMode] of [
       acknowledgements = 0,
       verifications = 0;
     const bodies: unknown[] = [];
-    await page.route('**/api/crm/verification-cases?*', (route) =>
-      route.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } })
-    );
+    let queueReads = 0;
+    await page.route('**/api/crm/verification-cases?*', (route) => {
+      queueReads++;
+      return route.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } });
+    });
     await page.route('**/api/upload/presigned-url', (route) =>
       route.fulfill({ json: { key, presignedUrl: '/test-evidence-upload' } })
     );
@@ -106,13 +108,13 @@ for (const [locale, darkMode] of [
       verified = true;
       return route.fulfill({ json: { verified: true } });
     });
-    await page.goto(`/admin/crm/corrections?profileId=${profileId}`);
+    await page.goto(`/admin/crm/profiles/${profileId}/corrections/new`);
     await expect(page.locator('#correction-field')).toBeVisible();
     await expect
       .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
       .toBe(darkMode);
     const accessibility = await new AxeBuilder({ page })
-      .include('section:has(#correction-field)')
+      .include('[data-testid="crm-corrections-workspace"]')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
     expect(accessibility.violations).toEqual([]);
@@ -122,10 +124,8 @@ for (const [locale, darkMode] of [
       await expect(control).toHaveAccessibleName(/\S/);
       await expect(control).toHaveAttribute('aria-required', 'true');
     }
-    const picker = page.getByRole('button', {
-      name: crmText('crm.corrections.chooseFiles', locale),
-      exact: true,
-    });
+    const picker = page.locator('#correction-file-picker');
+    await expect(picker).toHaveAccessibleName(crmText('crm.corrections.chooseFiles', locale));
     const create = page.getByRole('button', {
       name: crmText('crm.corrections.upload', locale),
       exact: true,
@@ -142,22 +142,29 @@ for (const [locale, darkMode] of [
     await expect(page.locator('#correction-file-picker')).toBeFocused();
     await page.locator('#correction-value').fill('Corrected');
     await page.locator('#correction-reason').fill('Document checked');
-    await page.locator('#correction-files').setInputFiles({
-      name: 'unsupported.exe',
-      mimeType: 'application/octet-stream',
-      buffer: Buffer.from('Not supported'),
-    });
+    const chooserPromise = page.waitForEvent('filechooser');
+    await picker.press('Enter');
+    await (await chooserPromise).setFiles([
+      {
+        name: 'unsupported.exe',
+        mimeType: 'application/octet-stream',
+        buffer: Buffer.from('Not supported'),
+      },
+      {
+        name: 'evidence.pdf',
+        mimeType: 'application/pdf',
+        buffer: Buffer.from('%PDF-1.7\nEvidence'),
+      },
+    ]);
     await expect(picker).toHaveAttribute('aria-invalid', 'true');
     await expect(picker).toHaveAccessibleDescription(
       new RegExp(crmText('crm.corrections.invalidFiles', locale))
     );
     await expect(create).toBeDisabled();
     expect(uploads).toBe(0);
-    await page.locator('#correction-files').setInputFiles({
-      name: 'evidence.pdf',
-      mimeType: 'application/pdf',
-      buffer: Buffer.from('%PDF-1.7\nEvidence'),
-    });
+    await page.getByRole('button', { name: /unsupported\.exe/ }).click();
+    await expect(picker).toBeFocused();
+    await expect(page.getByRole('button', { name: /evidence\.pdf/ })).toBeVisible();
     await expect(picker).not.toHaveAttribute('aria-invalid', 'true');
     await expect(picker).not.toHaveAccessibleDescription(
       new RegExp(crmText('crm.corrections.invalidFiles', locale))
@@ -170,7 +177,7 @@ for (const [locale, darkMode] of [
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(uploads).toBe(0);
     await page.locator('#correction-value').fill('Corrected');
-    await page.locator('section:has(#correction-field)').screenshot({
+    await page.getByTestId('crm-corrections-workspace').screenshot({
       path:
         '/tmp/barghsa-crm-correction-' +
         locale +
@@ -291,20 +298,13 @@ for (const [locale, darkMode] of [
     expect(uploads).toBe(1);
     await expect(page.locator('#correction-value')).toHaveValue('');
     await expect(page.locator('#correction-field')).toBeFocused();
+    expect(queueReads).toBe(0);
     await expect(
-      page.getByText(
-        locale === 'fa'
-          ? 'اجازه مشاهده صف اصلاح هویت را ندارید.'
-          : 'You do not have permission to view the correction queue.',
-        { exact: true }
-      )
-    ).toBeVisible();
-    await expect(
-      page.getByRole('button', {
+      page.getByRole('link', {
         name: locale === 'fa' ? 'بررسی درخواست' : 'Review case',
         exact: true,
       })
-    ).toHaveCount(0);
+    ).toHaveCount(1);
     const operation = (bodies[0] as { idempotencyKey: string }).idempotencyKey;
     expect(operation).toMatch(/^[a-f0-9-]{36}$/i);
     expect(bodies).toEqual(
@@ -372,6 +372,7 @@ for (const [locale, darkMode] of [
           evidenceUrls: ['verification-evidence/fixed'],
           evidenceDownloadUrls: legacy ? [] : ['https://storage.example.test/fixed?signature=test'],
           reviewerNotes: null,
+          viewer: { userId: 'reviewer', canReview: true },
         },
       })
     );
@@ -389,7 +390,7 @@ for (const [locale, darkMode] of [
       });
     });
     await page.goto('/admin/crm/corrections');
-    const open = page.getByRole('button', {
+    const open = page.getByRole('link', {
       name: locale === 'fa' ? 'بررسی درخواست' : 'Review case',
       exact: true,
     });
@@ -412,7 +413,7 @@ for (const [locale, darkMode] of [
       .toBe(darkMode);
     const checkPage = async () => {
       const result = await new AxeBuilder({ page })
-        .include('section:has(#case-status)')
+        .include('[data-testid=crm-corrections-workspace]')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
       expect(result.violations).toEqual([]);
@@ -459,9 +460,12 @@ for (const [locale, darkMode] of [
       .press('Enter');
     await expect(dialog).toHaveCount(0);
     expect(decisions).toHaveLength(1);
-    await expect(page.locator('#case-status')).toBeFocused();
+    const heading = page.getByRole('heading', { level: 1 });
+    await expect(heading).toBeFocused();
     legacy = true;
-    await open.click();
+    await page
+      .getByRole('button', { name: crmText('crm.list.refresh', locale), exact: true })
+      .click();
     await expect(review).toBeDisabled();
     await expect(
       page.getByText(
@@ -481,7 +485,7 @@ for (const [locale, darkMode] of [
       .press('Enter');
     await expect(dialog).toHaveCount(0);
     expect(decisions).toHaveLength(2);
-    await expect(page.locator('#case-status')).toBeFocused();
+    await expect(heading).toBeFocused();
   });
 
 for (const locale of ['en', 'fa'] as const)
@@ -499,6 +503,7 @@ for (const locale of ['en', 'fa'] as const)
       evidenceUrls: ['verification-evidence/fixed'],
       evidenceDownloadUrls: ['https://storage.example.test/fixed'],
       reviewerNotes: null,
+      viewer: { userId: 'reviewer', canReview: true },
     };
     await page.route('**/api/crm/verification-cases?*', (route) =>
       route.fulfill({
@@ -539,7 +544,7 @@ for (const locale of ['en', 'fa'] as const)
       });
     });
     await page.goto('/admin/crm/corrections');
-    const open = page.getByRole('button', {
+    const open = page.getByRole('link', {
       name: locale === 'fa' ? 'بررسی درخواست' : 'Review case',
       exact: true,
     });
@@ -547,12 +552,14 @@ for (const locale of ['en', 'fa'] as const)
       name: locale === 'fa' ? 'بررسی تصمیم' : 'Review decision',
       exact: true,
     });
+    await open.click();
     for (let attempt = 0; attempt < 2; attempt++) {
-      await open.click();
       await expect(page.getByRole('alert')).toBeVisible();
       await expect(review).toHaveCount(0);
+      await page
+        .getByRole('button', { name: crmText('crm.corrections.detailRetry', locale), exact: true })
+        .click();
     }
-    await open.click();
     await expect(page.getByText('Original', { exact: true })).toBeVisible();
     await page.locator('#case-notes').fill('Evidence checked');
     await review.click();
@@ -617,13 +624,13 @@ for (const locale of ['en', 'fa'])
         },
       })
     );
-    await page.goto(`/admin/crm/corrections?profileId=${profileId}`);
+    await page.goto(`/admin/crm/profiles/${profileId}/corrections/new`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const refresh = page.getByRole('button', {
       name: locale === 'fa' ? 'تازه‌سازی' : 'Refresh',
       exact: true,
     });
-    await expect(page.locator('#case-status')).toBeVisible();
+    await expect(page.locator('#case-status')).toHaveCount(0);
     await expect(page.locator('#correction-value')).toHaveCount(0);
     allowed = true;
     await refresh.click();

@@ -64,11 +64,11 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: policySnapshot('login') });
     });
     await page.goto('/admin/verification');
-    const disclosure = page.locator('summary').filter({ hasText: text('rateLimitTitle') });
-    await expect(disclosure).toBeVisible();
+    const limits = page.getByRole('link', { name: text('limitsSection'), exact: true });
+    await expect(limits).toBeVisible();
     expect(reads).toBe(0);
-    await disclosure.focus();
-    await disclosure.press('Enter');
+    await limits.press('Enter');
+    await expect(page).toHaveURL('/admin/verification/rate-limits');
     const panel = page.getByRole('region', { name: text('rateLimitTitle'), exact: true });
     const action = panel.getByLabel(text('rateLimitAction'), { exact: true });
     await action.selectOption('login');
@@ -177,13 +177,11 @@ for (const locale of ['en', 'fa'] as const) {
       draft = null;
       return route.fulfill({ json: { draftId: recovery.id, current: active } });
     });
-    const disclosure = page.locator('summary').filter({ hasText: text('rateLimitTitle') });
     const panel = page.getByRole('region', { name: text('rateLimitTitle'), exact: true });
     const limit = panel.getByLabel(text('rateLimitValue'), { exact: true });
     const history = panel.getByRole('region', { name: text('rateRecoveryHistory'), exact: true });
     const dialog = page.getByRole('dialog');
     const open = async () => {
-      await disclosure.click();
       await panel.getByLabel(text('rateLimitAction'), { exact: true }).selectOption('login');
       await panel.getByRole('button', { name: text('rateRecoveryHistory'), exact: true }).click();
     };
@@ -194,7 +192,7 @@ for (const locale of ['en', 'fa'] as const) {
       await dialog.locator('button[type=submit]').click();
       await expect(dialog).toHaveCount(0);
     };
-    await page.goto('/admin/verification');
+    await page.goto('/admin/verification/rate-limits');
     await open();
     await expect(limit).toHaveValue('8');
     await history.getByRole('button', { name: text('rateRecoveryStage'), exact: true }).click();
@@ -250,7 +248,7 @@ for (const locale of ['en', 'fa']) {
       config = { ttlSeconds: 120, version: 1 };
       return route.fulfill({ json: config });
     });
-    await page.goto('/admin/verification');
+    await page.goto('/admin/verification/codes');
     const panel = page.getByRole('region', { name: title, exact: true, includeHidden: true });
     const input = panel.getByRole('spinbutton', { includeHidden: true });
     const save = panel.getByRole('button', { name: saveName, exact: true });
@@ -310,7 +308,7 @@ for (const locale of ['en', 'fa']) {
       config = { ttlSeconds: 180, version: 1 };
       return route.fulfill({ status: 409, json: { error: 'CONFIG:VERSION_CONFLICT' } });
     });
-    await page.goto('/admin/verification');
+    await page.goto('/admin/verification/codes');
     const panel = page.getByRole('region', { name: title, exact: true, includeHidden: true });
     const input = panel.getByRole('spinbutton', { includeHidden: true });
     await input.fill('120');
@@ -384,7 +382,7 @@ for (const locale of ['en', 'fa']) {
               }
         );
       });
-      await page.goto('/admin/verification');
+      await page.goto('/admin/verification/codes');
       const panel = page.getByRole('region', { name: title, exact: true, includeHidden: true });
       const input = panel.getByRole('spinbutton', { includeHidden: true });
       await page

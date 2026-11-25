@@ -85,6 +85,10 @@ for (const locale of ['en', 'fa'] as const)
       const refreshMembers = fa ? 'بازخوانی اعضا' : 'Refresh members';
       const refreshProfiles = fa ? 'بازخوانی پروفایل' : 'Refresh profile';
       const refreshTransfers = fa ? 'بازخوانی درخواست‌های مالکیت' : 'Refresh ownership requests';
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
+        .click();
       const finance = page.getByRole('checkbox', { name: fa ? 'مالی' : 'Finance', exact: true });
       await finance.check();
       memberFailed = true;
@@ -95,7 +99,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await expect(finance).toBeChecked();
       await expect(save).toBeDisabled();
-      await expect(page.getByText('Transfer company', { exact: true })).toBeVisible();
+      await expect(save).toBeDisabled();
       memberFailed = false;
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
       await expect(save).toBeEnabled();
@@ -127,60 +131,43 @@ for (const locale of ['en', 'fa'] as const)
         })
         .click();
       await expect(finance).not.toBeChecked();
-      await page
-        .getByRole('button', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
+      const main = page.getByRole('main');
+      await main
+        .getByRole('link', { name: fa ? 'دعوت‌نامه‌ها' : 'Invitations', exact: true })
         .click();
-      dialog = page.getByRole('dialog');
-      const username = dialog.locator('#team-username');
+      await main
+        .getByRole('link', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
+        .click();
+      const form = main.getByRole('form', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member' });
+      const username = form.locator('#team-username');
+      const send = form.getByRole('button', {
+        name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation',
+        exact: true,
+      });
       await username.fill('local@example.test');
       profileFailed = true;
-      // The profile toolbar remains independently reachable outside the modal.
-      await page.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
-      await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
-      await expect(
-        page.getByRole('button', {
-          name: fa ? 'دعوت عضو تیم' : 'Invite a team member',
-          exact: true,
-        })
-      ).toBeDisabled();
+      await main.getByRole('button', { name: refreshProfiles, exact: true }).click();
+      await expect(send).toBeDisabled();
+      await expect(username).toHaveValue('local@example.test');
       profileFailed = false;
-      await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
-      await page
-        .getByRole('button', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
-        .click();
-      await expect(username).toHaveValue('local@example.test');
+      await main.getByRole('button', { name: refreshProfiles, exact: true }).click();
+      await expect(send).toBeEnabled();
       memberFailed = true;
-      await dialog.getByRole('button', { name: refreshMembers, exact: true }).click();
+      await form.getByRole('button', { name: refreshMembers, exact: true }).click();
       await expect(username).toHaveValue('local@example.test');
-      await expect(
-        dialog.getByRole('button', {
-          name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation',
-          exact: true,
-        })
-      ).toBeDisabled();
-      const box = await dialog.boundingBox();
+      await expect(send).toBeDisabled();
+      const box = await form.boundingBox();
       expect(box!.x).toBeGreaterThanOrEqual(0);
       expect(box!.x + box!.width).toBeLessThanOrEqual(391);
-      expect(
-        (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
-      ).toEqual([]);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       memberFailed = false;
-      await dialog.getByRole('button', { name: refreshMembers, exact: true }).click();
-      await expect(
-        dialog.getByRole('button', {
-          name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation',
-          exact: true,
-        })
-      ).toBeEnabled();
-      await dialog
+      await form.getByRole('button', { name: refreshMembers, exact: true }).click();
+      await expect(send).toBeEnabled();
+      await form
         .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
         .press('Enter');
-      await expect(
-        page.getByRole('button', {
-          name: fa ? 'دعوت عضو تیم' : 'Invite a team member',
-          exact: true,
-        })
-      ).toBeFocused();
+      await expect(page).toHaveURL(/settings\/team\/invitations$/);
+      await main.locator('a[href="/settings/team/transfers"]').click();
       await page
         .getByRole('button', { name: fa ? 'رد درخواست' : 'Decline request', exact: true })
         .click();
@@ -199,8 +186,12 @@ for (const locale of ['en', 'fa'] as const)
       await dialog
         .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
         .press('Enter');
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: fa ? 'اعضا' : 'Members', exact: true })
+        .click();
       const region = page.getByRole('region', {
-        name: fa ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+        name: fa ? 'اعضا' : 'Members',
         exact: true,
       });
       await region.focus();
@@ -217,16 +208,18 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
       await expect(
         page.getByRole('list', {
-          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          name: locale === 'fa' ? 'اعضا' : 'Members',
           exact: true,
         })
       ).toHaveCount(0);
-      await expect(page.getByText('Transfer company', { exact: true })).toBeVisible();
+      await expect(
+        page.getByRole('main').locator('a[href="/settings/team/transfers"]').last()
+      ).toBeVisible();
       memberDenied = false;
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
       await expect(
         page.getByRole('list', {
-          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          name: locale === 'fa' ? 'اعضا' : 'Members',
           exact: true,
         })
       ).toBeVisible();
@@ -234,7 +227,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
       await expect(
         page.getByRole('list', {
-          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          name: locale === 'fa' ? 'اعضا' : 'Members',
           exact: true,
         })
       ).toHaveCount(0);
@@ -247,7 +240,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
       await expect(
         page.getByRole('list', {
-          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          name: locale === 'fa' ? 'اعضا' : 'Members',
           exact: true,
         })
       ).toBeVisible();
@@ -256,7 +249,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
       await expect(
         page.getByRole('list', {
-          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          name: locale === 'fa' ? 'اعضا' : 'Members',
           exact: true,
         })
       ).toHaveCount(0);
@@ -265,7 +258,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
       await expect(
         page.getByRole('list', {
-          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          name: locale === 'fa' ? 'اعضا' : 'Members',
           exact: true,
         })
       ).toBeVisible();

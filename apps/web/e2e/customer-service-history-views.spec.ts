@@ -36,7 +36,7 @@ for (const locale of ['en', 'fa'] as const) {
             path: '/savings/orders',
             api: '/api/saving/orders',
             key: 'saving-orders',
-            columns: 8,
+            columns: 7,
             title: tSaving('orders', locale),
             more: tSaving('moreOrders', locale),
           },
@@ -44,7 +44,7 @@ for (const locale of ['en', 'fa'] as const) {
             path: '/electricity/orders',
             api: '/api/electricity/orders',
             key: 'electricity-orders',
-            columns: 7,
+            columns: 6,
             title: t('electricity.orders.title', locale),
             more: t('electricity.orders.more', locale),
           },
@@ -196,22 +196,6 @@ for (const locale of ['en', 'fa'] as const) {
             `barghsa.list-view:service-customer:${config.key}`
           )
         ).toBeNull();
-        if (kind === 'consultation') {
-          await page.getByRole('radio').check();
-          const confirmation = page.getByRole('checkbox', {
-            name: tConsultation('confirm', locale),
-            exact: true,
-          });
-          if (mobile) {
-            const label = page.locator('label').filter({ has: confirmation });
-            const bounds = await label.boundingBox();
-            expect(bounds?.height).toBeGreaterThanOrEqual(44);
-            await label.tap({ position: { x: bounds!.width / 2, y: bounds!.height - 4 } });
-            await expect(confirmation).toBeChecked();
-          } else {
-            await confirmation.check();
-          }
-        }
         await page.getByRole('button', { name: config.more, exact: true }).click();
         await expect(detail(second)).toBeVisible();
         const loadedRequests = requests.length;
@@ -225,6 +209,11 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(mobile ? tableButton : cardButton).toHaveAttribute('aria-pressed', 'true');
         await tableButton.click();
         await expect(table.getByRole('columnheader')).toHaveCount(config.columns);
+        await expect(table.getByRole('columnheader').last()).toHaveAttribute(
+          'data-table-actions',
+          ''
+        );
+        await expect(table.getByRole('columnheader').last()).toHaveCSS('position', 'sticky');
         const firstRow = table.getByRole('row').filter({ hasText: first });
         const secondRow = table.getByRole('row').filter({ hasText: second });
         await expect(firstRow.locator('time')).toHaveText(
@@ -251,7 +240,7 @@ for (const locale of ['en', 'fa'] as const) {
                   : t('electricity.orders.reviewContract', locale),
               exact: true,
             })
-          ).toHaveAttribute('href', `/contracts?contractId=${contract}`);
+          ).toHaveAttribute('href', `/contracts/${contract}`);
         }
         if (kind === 'saving') {
           await expect(firstRow.getByText(plans[locale], { exact: true })).toBeVisible();
@@ -278,7 +267,7 @@ for (const locale of ['en', 'fa'] as const) {
           ).toHaveAttribute('href', `/invoices/${invoice}`);
           await expect(
             secondRow.getByRole('link', { name: tSolar('workflowNextPostal', locale), exact: true })
-          ).toHaveAttribute('href', `${config.path}/${second}#solar-postal`);
+          ).toHaveAttribute('href', `${config.path}/${second}/shipment`);
         } else {
           await expect(firstRow.getByText(products[locale], { exact: true })).toBeVisible();
           await expect(firstRow.getByText('energy-reviewer', { exact: true })).toBeVisible();
@@ -287,8 +276,8 @@ for (const locale of ['en', 'fa'] as const) {
             firstRow.getByRole('link', { name: tConsultation('viewInvoice', locale), exact: true })
           ).toHaveAttribute('href', `/invoices/${invoice}`);
           await expect(
-            secondRow.getByRole('link', { name: tConsultation('provideInfo', locale), exact: true })
-          ).toHaveAttribute('href', `${config.path}/${second}#consultation-information-form`);
+            secondRow.getByRole('link', { name: tConsultation('replyTitle', locale), exact: true })
+          ).toHaveAttribute('href', `${config.path}/${second}/reply`);
         }
         await expectRegisteredNavigationLinks(table);
         const scroller = page
@@ -309,15 +298,6 @@ for (const locale of ['en', 'fa'] as const) {
         await cardButton.click();
         await expect(detail(first)).toBeVisible();
         await expect(detail(second)).toBeVisible();
-        if (kind === 'consultation') {
-          await expect(page.getByRole('radio')).toBeChecked();
-          await expect(
-            page.getByRole('checkbox', { name: tConsultation('confirm', locale), exact: true })
-          ).toBeChecked();
-          await expect(
-            page.getByRole('button', { name: tConsultation('request', locale), exact: true })
-          ).toBeEnabled();
-        }
         expect(requests.length).toBe(loadedRequests);
         expect(new URL(page.url()).searchParams.get('sort')).toBe('submitted_at:asc');
         await page.reload();
@@ -337,6 +317,34 @@ for (const locale of ['en', 'fa'] as const) {
         await page.setViewportSize({ width: 1280, height: 900 });
         await expect(cardButton).toHaveAttribute('aria-pressed', 'true');
         await checkRoutePresentation(page, info, locale);
+        if (kind === 'consultation') {
+          const historyReads = requests.length;
+          await page
+            .getByRole('link', { name: tConsultation('newRequest', locale), exact: true })
+            .click();
+          await expect(page).toHaveURL('/consultations/new');
+          await page.getByRole('radio').check();
+          const confirmation = page.getByRole('checkbox', {
+            name: tConsultation('confirm', locale),
+            exact: true,
+          });
+          if (mobile) {
+            const label = page.locator('label').filter({ has: confirmation });
+            const bounds = await label.boundingBox();
+            expect(bounds?.height).toBeGreaterThanOrEqual(44);
+            await label.tap({ position: { x: bounds!.width / 2, y: bounds!.height - 4 } });
+          } else {
+            await confirmation.check();
+          }
+          await expect(confirmation).toBeChecked();
+          await expect(
+            page.getByRole('button', { name: tConsultation('request', locale), exact: true })
+          ).toBeEnabled();
+          expect(requests.length).toBe(historyReads);
+          await page.goBack();
+          await expect(cardButton).toHaveAttribute('aria-pressed', 'true');
+          expect(new URL(page.url()).searchParams.get('sort')).toBe('submitted_at:asc');
+        }
       }
     );
   }

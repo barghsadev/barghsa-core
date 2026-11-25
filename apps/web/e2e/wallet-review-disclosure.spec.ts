@@ -1,3 +1,4 @@
+import { tSolar } from '@barghsa/i18n/solar';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page, Locator } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
@@ -104,7 +105,7 @@ for (const locale of ['en', 'fa'] as const) {
   }, info) => {
     const consultation = await setupConsultationFeeOffers(page, locale);
     const route = await balanceRoute(page);
-    await page.goto(`/admin/consultations?requestId=${informationRequest}`);
+    await page.goto(`/admin/consultations/${informationRequest}/fee`);
     await page.locator('#consultation-fee').fill('600000');
     await page.locator('#consultation-scope').fill('Supply assessment');
     await page.locator('#consultation-deliverables').fill('Written energy report');
@@ -124,7 +125,10 @@ for (const locale of ['en', 'fa'] as const) {
     const solar = await setupSolarContractIssue(page, locale);
     const solarRoute = await balanceRoute(page);
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolar('solarCreateContract', locale), exact: true })
+      .click();
     await page.locator('#solar-contract-source').selectOption(`template:${templateVersion}`);
     await page.locator('#solar-contract-title').fill('Solar installation agreement');
     await page.locator('#solar-contract-text').fill('Install the agreed solar equipment.');

@@ -2,18 +2,18 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
 import { Link } from '@tanstack/react-router';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type SyntheticEvent } from 'react';
 import {
-  lazy,
-  Suspense,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-  type SyntheticEvent,
-} from 'react';
-import { Alert, AlertDescription, Button, PageLoading, StatusBadge, Textarea } from '@barghsa/ui';
+  Alert,
+  AlertDescription,
+  Button,
+  buttonVariants,
+  PageLoading,
+  StatusBadge,
+  Textarea,
+} from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -33,26 +33,28 @@ import {
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
+import { CompactFieldFeedback } from './CompactFieldFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorDisclosure,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 import { ContractTerms } from './ContractTerms.js';
 import { ContractStatusTimeline } from './ContractStatusTimeline.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
-import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
+import {
+  contractAttachmentActions,
+  contractAttachmentTitle,
+  contractVersionPosition,
+} from '../lib/contract-attachments.js';
 import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { t } from '@barghsa/i18n/workspace';
+import { t as increaseText } from '@barghsa/i18n/electricity-increase-customer';
 import { customerContractNextAction } from '../lib/contract-guidance.js';
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { tContractReviewSignature } from '@barghsa/i18n/contract-review-signature';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -65,13 +67,11 @@ import {
   type ContractSigningSource,
 } from '../lib/contract-review-signature-form.js';
 
-const ElectricityIncreasePanel = lazy(() => import('./ContractQuantityIncreasePanel.js'));
-
 function ContractIncreaseEntry(props: {
   contractId: string;
   versionId: string;
   profileId: string;
-  formatTimestamp: (value: string) => string;
+  orderId: string;
 }) {
   const locale = useLocale();
   const actor = useAccountUser();
@@ -83,7 +83,6 @@ function ContractIncreaseEntry(props: {
     JSON.stringify([props.contractId, props.versionId])
   );
   const [available, setAvailable] = useState(false);
-  const [opened, setOpened] = useState(false);
   const [failed, setFailed] = useState(false);
   const [retry, setRetry] = useState(0);
   useEffect(() => {
@@ -104,30 +103,35 @@ function ContractIncreaseEntry(props: {
       });
     return () => controller.abort();
   }, [props.contractId, props.versionId, props.profileId, retry, readContract]);
-  if (opened)
-    return (
-      <Suspense fallback={<PageLoading label={t('electricity.increase.loading', locale)} />}>
-        <ElectricityIncreasePanel {...props} />
-      </Suspense>
-    );
   if (failed)
     return (
       <Button variant="outline" onClick={() => setRetry((value) => value + 1)}>
-        {t('electricity.increase.retry', locale)}
+        {increaseText('electricity.increase.retry', locale)}
       </Button>
     );
   return available ? (
-    <Button variant="outline" onClick={() => setOpened(true)}>
-      {t('electricity.increase.submit', locale)}
-    </Button>
+    <Link
+      to="/electricity/orders/$orderId/increases/new"
+      params={{ orderId: props.orderId }}
+      className={buttonVariants({ variant: 'outline' })}
+    >
+      {increaseText('electricity.increaseForm.openRequest', locale)}
+    </Link>
   ) : null;
 }
 
 type DetailProps = {
   id: string;
   staff: boolean;
-  onClose: () => void;
-  onChanged: () => void;
+  onClose?: () => void;
+  onChanged?: () => void;
+  recordPage?: boolean;
+  initialVersionId?: string | undefined;
+  requestChangesVersionId?: string;
+  acceptanceVersionId?: string;
+  signingOperation?: 'request' | 'record';
+  staffRecordSearch?: Record<string, unknown>;
+  customerRecordSearch?: Record<string, unknown>;
   coordination?: ContractFormCoordination;
   refreshRevision?: number;
   onWithdrawal?: () => void;
@@ -137,13 +141,25 @@ export function ContractDetail(props: DetailProps) {
     revision = useProfileContextRevision();
   return (
     <ContractDetailContent
-      key={JSON.stringify([props.id, props.staff, actor, revision])}
+      key={JSON.stringify([
+        props.id,
+        props.staff,
+        props.initialVersionId,
+        props.requestChangesVersionId,
+        props.acceptanceVersionId,
+        props.signingOperation,
+        actor,
+        revision,
+      ])}
       {...props}
     />
   );
 }
+
 interface ChangeCommand {
-  action: TeamAction;
+  action: TeamAction & {
+    body: { expectedVersionId: string; idempotencyKey: string; reason: string };
+  };
   source: ContractSigningSource;
   actor: string;
   generation: number;
@@ -223,6 +239,13 @@ function ContractDetailContent({
   staff,
   onClose,
   onChanged,
+  recordPage,
+  initialVersionId,
+  requestChangesVersionId,
+  acceptanceVersionId,
+  signingOperation,
+  staffRecordSearch,
+  customerRecordSearch,
   coordination,
   refreshRevision,
   onWithdrawal,
@@ -239,7 +262,7 @@ function ContractDetailContent({
   const [versions, setVersions] = useState<ContractVersion[]>([]);
   const [next, setNext] = useState<number | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
+  const [selectedVersion, setSelectedVersion] = useState<string | null>(initialVersionId ?? null);
   const revision = useProfileContextRevision();
   const readContract = useOwnedContractRead(
     actor,
@@ -251,6 +274,8 @@ function ContractDetailContent({
   const [error, setError] = useState(false);
   const [historyError, setHistoryError] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
+  const focusedAction = requestChangesVersionId || acceptanceVersionId || signingOperation;
+  const [decisionRecorded, setDecisionRecorded] = useState(false);
   const copy = (key: string) => tContractReviewSignature(key, locale);
   const epoch = useRef(0),
     readEpoch = useRef(0),
@@ -377,19 +402,32 @@ function ContractDetailContent({
     setAction(null);
 
     const base = `${contractBase(staff)}/${encodeURIComponent(id)}`;
+    const contractRead = readContract<ContractDetailData>(base, { signal: controller.signal });
+    const readSelected = (versionId: string) =>
+      readContract<ContractVersion | ContractDetailData>(
+        `${base}/versions/${encodeURIComponent(versionId)}`,
+        { signal: controller.signal }
+      );
     void Promise.all([
-      readContract<ContractDetailData>(base, { signal: controller.signal }),
-      readContract<ContractVersionPage>(`${base}/versions`, { signal: controller.signal }),
+      contractRead,
+      focusedAction
+        ? Promise.resolve(null)
+        : readContract<ContractVersionPage>(`${base}/versions`, { signal: controller.signal }),
       selectedVersion
-        ? readContract<ContractVersion | ContractDetailData>(
-            `${base}/versions/${encodeURIComponent(selectedVersion)}`,
-            { signal: controller.signal }
-          )
+        ? signingOperation
+          ? contractRead.then((contract) => {
+              const defaultVersion = staff ? contract.currentVersion : contract.version;
+              return defaultVersion?.id === selectedVersion ? null : readSelected(selectedVersion);
+            })
+          : readSelected(selectedVersion)
         : Promise.resolve(null),
     ])
       .then(([contract, page, chosen]) => {
         if (!fresh()) return;
-        if (!validContractDetail(contract, id) || !validContractVersionPage(page, id))
+        if (
+          !validContractDetail(contract, id) ||
+          (!focusedAction && (!page || !validContractVersionPage(page, id)))
+        )
           throw new Error('Invalid contract detail');
         const current = staff ? contract.currentVersion : contract.version;
         if (!validContractSnapshot(current, id, staff ? contract.currentVersionId : undefined))
@@ -416,8 +454,10 @@ function ContractDetailContent({
           ) {
             pending.waiting = false;
           } else {
+            if (acceptanceVersionId && lifecycleReceipt(contract, pending))
+              setDecisionRecorded(true);
             lifecycle.current = null;
-            callbacks.current.onChanged();
+            callbacks.current.onChanged?.();
           }
           setNeedsLifecycleRead(false);
           setCheckingLifecycle(false);
@@ -438,8 +478,8 @@ function ContractDetailContent({
             : contract,
           version,
         });
-        setVersions(page.versions);
-        setNext(page.nextBefore);
+        setVersions(page?.versions ?? []);
+        setNext(page?.nextBefore ?? null);
       })
       .catch((failure: unknown) => {
         if (!fresh()) return;
@@ -449,7 +489,20 @@ function ContractDetailContent({
         else setError(true);
       });
     return () => controller.abort();
-  }, [id, staff, selectedVersion, reload, refreshRevision, readContract]);
+  }, [id, staff, selectedVersion, focusedAction, reload, refreshRevision, readContract]);
+  useEffect(() => {
+    if (
+      acceptanceVersionId &&
+      !staff &&
+      data?.version.id === acceptanceVersionId &&
+      lifecycleEligible('accept', data) &&
+      !decisionRecorded &&
+      !needsLifecycleRead &&
+      !action
+    ) {
+      choose('accept');
+    }
+  }, [acceptanceVersionId, staff, data, decisionRecorded, needsLifecycleRead, action]);
   useEffect(() => {
     reasonForm.reset({ reason: '' });
   }, [selectedVersion]);
@@ -489,7 +542,7 @@ function ContractDetailContent({
       !data ||
       blocked() ||
       !lifecycleEligible(kind, data) ||
-      !shared.acquire(parentOwner.current)
+      (!(kind === 'accept' && acceptanceVersionId) && !shared.acquire(parentOwner.current))
     )
       return;
     const previous = lifecycle.current;
@@ -587,7 +640,8 @@ function ContractDetailContent({
       !actor ||
       !staff ||
       !capturedSource ||
-      capturedSource.contract.state !== 'AwaitingStaffReview' ||
+      !lifecycleEligible('publish', capturedSource) ||
+      (requestChangesVersionId && capturedSource.version.id !== requestChangesVersionId) ||
       blocked() ||
       !shared.acquire(parentOwner.current)
     )
@@ -679,8 +733,9 @@ function ContractDetailContent({
     }
     setAction(null);
     shared.release(parentOwner.current);
-    setReload((value) => value + 1);
-    callbacks.current.onChanged();
+    if (focusedAction) setDecisionRecorded(true);
+    else setReload((value) => value + 1);
+    callbacks.current.onChanged?.();
     return confirmationText('recorded', locale);
   }
   function blockSibling(event: SyntheticEvent) {
@@ -689,18 +744,30 @@ function ContractDetailContent({
       event.stopPropagation();
     }
   }
-  const currentId = data?.contract.currentVersionId ?? data?.contract.version?.id;
-  const isCurrent = data?.version.id === currentId;
-  const isPendingAmendment = data
-    ? staff
-      ? data.contract.pendingAmendment?.versionId === data.version.id
-      : ['AwaitingCustomerAcceptance', 'AwaitingSignature'].includes(
-          data.contract.amendment?.state ?? ''
-        ) && data.contract.version?.id === data.version.id
-    : false;
+  const { isCurrent, isPendingAmendment } = data
+    ? contractVersionPosition(data.contract, data.version.id, staff)
+    : { isCurrent: false, isPendingAmendment: false };
+  const documentsFocused = useRef(false);
+  useEffect(() => {
+    if (
+      recordPage &&
+      data &&
+      !documentsFocused.current &&
+      window.location.hash === '#contract-documents'
+    ) {
+      documentsFocused.current = true;
+      document.getElementById('contract-documents')?.scrollIntoView({ block: 'start' });
+    }
+  }, [data, recordPage]);
   const pendingState = staff
     ? data?.contract.pendingAmendment?.state
     : data?.contract.amendment?.state;
+  const canAcceptVersion =
+    !staff &&
+    data?.contract.canAccept &&
+    (data.contract.amendment?.state === 'AwaitingCustomerAcceptance'
+      ? isPendingAmendment
+      : isCurrent);
   const pendingNotice =
     pendingState === 'AwaitingSignature'
       ? 'amendmentSignatureNotice'
@@ -711,25 +778,187 @@ function ContractDetailContent({
           : 'amendmentAcceptNotice';
   const nextAction = data ? customerContractNextAction(data.contract, signatureStatus) : null;
   const commandLocked = locked || preparing || needsLifecycleRead;
+  const recordSignatureInSummary = !staff && isCurrent && !data?.contract.canAccept;
+  const customerOperation = data?.contract.canAccept
+    ? 'accept'
+    : recordSignatureInSummary && signatureStatus?.canRecord
+      ? 'record-signature'
+      : undefined;
+  const customerDecisionEntry =
+    recordPage && !staff && data?.contract.version && customerOperation ? (
+      <Link
+        to="/contracts/$contractId/$operation/$versionId"
+        params={{
+          contractId: id,
+          operation: customerOperation,
+          versionId: customerOperation === 'accept' ? data.contract.version.id : data.version.id,
+        }}
+        search={customerRecordSearch ?? {}}
+        className={buttonVariants({ size: 'sm' })}
+        aria-disabled={commandLocked || undefined}
+        onClick={(event) => {
+          if (blocked()) event.preventDefault();
+        }}
+      >
+        {customerOperation === 'accept' ? copy('acceptHeading') : word('recordSignature')}
+      </Link>
+    ) : null;
+  const recordHeading = useRef<HTMLHeadingElement>(null);
+  const signingTitle = signingOperation
+    ? word(signingOperation === 'request' ? 'prepareSignature' : 'recordSignature')
+    : undefined;
+  const signingReturnVersion =
+    data && data.version.id !== (staff ? data.contract.currentVersion : data.contract.version)?.id
+      ? data.version.id
+      : undefined;
+  useEffect(() => {
+    if (recordPage) recordHeading.current?.focus({ preventScroll: true });
+  }, [id, recordPage]);
+  const correctionsForm = (
+    <Form {...reasonForm}>
+      <form
+        data-testid="contract-request-changes-form"
+        aria-label={word('request-changes')}
+        noValidate
+        onSubmit={(event) => void prepareChanges(event)}
+        className={recordEditorSurface}
+      >
+        <div className="space-y-3 px-4 py-4 sm:px-6">
+          {requestChangesVersionId && (
+            <p className="text-sm text-muted-foreground">{copy('changeFormIntent')}</p>
+          )}
+          <FormField
+            control={reasonForm.control}
+            name="reason"
+            render={({ field, fieldState }) => (
+              <FormItem id="contract-change-reason">
+                <FormLabel>{word('reason')}</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    dir="auto"
+                    rows={requestChangesVersionId ? 3 : 2}
+                    className="min-h-16 max-h-48 resize-y"
+                    placeholder={copy('reasonPlaceholder')}
+                    aria-required="true"
+                    disabled={!!command.current}
+                  />
+                </FormControl>
+                <CompactFieldFeedback
+                  help={copy('reasonHelp')}
+                  validationMessage={copy('reasonInvalid')}
+                  invalid={fieldState.invalid}
+                />
+              </FormItem>
+            )}
+          />
+          {reasonForm.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
+        </div>
+        <RecordEditorActions>
+          <Button
+            type="submit"
+            variant={requestChangesVersionId ? 'default' : 'outline'}
+            loading={preparing}
+            disabled={locked || preparing}
+          >
+            {word('request-changes')}
+          </Button>
+        </RecordEditorActions>
+      </form>
+    </Form>
+  );
   return (
     <section
-      className="flex flex-col gap-5 rounded-xl border bg-card p-5"
-      aria-label={word('terms')}
+      className={
+        focusedAction
+          ? 'min-w-0 space-y-3'
+          : 'flex min-w-0 flex-col gap-5 rounded-xl border bg-card p-5'
+      }
+      aria-label={
+        signingTitle ??
+        (acceptanceVersionId
+          ? copy('acceptHeading')
+          : word(requestChangesVersionId ? 'request-changes' : 'terms'))
+      }
     >
-      <div className="flex items-start justify-between gap-4">
-        <h2 className="text-xl font-semibold">
-          {data ? word(data.contract.serviceType) : word('terms')}
-        </h2>
-        <Button
-          variant="ghost"
-          disabled={commandLocked}
-          onClick={() => {
-            if (!blocked()) onClose();
+      {recordPage && <RecordCommandGuard blocked={blocked} />}
+      {focusedAction && (
+        <Link
+          {...(!staff
+            ? {
+                to: '/contracts/$contractId/{-$action}' as const,
+                params: { contractId: id, action: undefined },
+                search: {
+                  ...customerRecordSearch,
+                  ...(signingOperation && { versionId: signingReturnVersion }),
+                },
+              }
+            : {
+                to: '/admin/contracts/$contractId/{-$action}/{-$item}' as const,
+                params: { contractId: id, action: undefined, item: undefined },
+                search: {
+                  ...staffRecordSearch,
+                  ...(signingOperation && { versionId: signingReturnVersion }),
+                },
+              })}
+          className="touch-action inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline aria-disabled:opacity-60"
+          aria-disabled={commandLocked || undefined}
+          onClick={(event) => {
+            if (blocked()) event.preventDefault();
           }}
         >
-          {word('close')}
-        </Button>
-      </div>
+          {word('backToContract')}
+        </Link>
+      )}
+      <header className="flex items-start justify-between gap-3">
+        {recordPage ? (
+          <h1
+            ref={recordHeading}
+            tabIndex={-1}
+            className={
+              focusedAction
+                ? 'w-fit rounded-sm text-2xl font-semibold'
+                : 'min-w-0 flex-1 text-2xl font-semibold tracking-tight sm:text-3xl'
+            }
+          >
+            {signingTitle ??
+              (acceptanceVersionId
+                ? copy('acceptHeading')
+                : requestChangesVersionId
+                  ? word('request-changes')
+                  : data
+                    ? word('recordTitle').replace('{service}', word(data.contract.serviceType))
+                    : word('terms'))}
+          </h1>
+        ) : (
+          <h2 className="text-xl font-semibold">
+            {data ? word(data.contract.serviceType) : word('terms')}
+          </h2>
+        )}
+        {onClose && (
+          <Button
+            variant="ghost"
+            disabled={commandLocked}
+            onClick={() => {
+              if (!blocked()) onClose();
+            }}
+          >
+            {word('close')}
+          </Button>
+        )}
+        {recordPage && data && !decisionRecorded && !signingOperation && (
+          <Button
+            variant="ghost"
+            className="min-h-11 shrink-0"
+            disabled={commandLocked}
+            onClick={() => {
+              if (!blocked()) setReload((value) => value + 1);
+            }}
+          >
+            {word('refresh')}
+          </Button>
+        )}
+      </header>
       {needsLifecycleRead && (
         <Alert variant="destructive">
           <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
@@ -762,13 +991,176 @@ function ContractDetailContent({
         </Alert>
       ) : !data ? (
         <PageLoading label={word('loading')} />
+      ) : signingOperation ? (
+        isCurrent || isPendingAmendment ? (
+          <>
+            <dl className="flex flex-wrap gap-x-6 gap-y-2 rounded-xl border bg-card px-4 py-3 text-sm">
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">
+                  {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}
+                </dt>
+                <dd className="wrap-anywhere font-semibold">
+                  <bdi dir="ltr">{data.contract.contractNumber ?? id}</bdi>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">{word('version')}</dt>
+                <dd className="font-medium">{data.version.versionNumber.toLocaleString(locale)}</dd>
+              </div>
+            </dl>
+            <ContractSignaturePanel
+              id={id}
+              versionId={data.version.id}
+              profileId={data.contract.profileId}
+              staff={staff}
+              source={data}
+              coordination={shared}
+              navigation={{
+                operation: signingOperation,
+                search: (staff ? staffRecordSearch : customerRecordSearch) ?? {},
+              }}
+              onDenied={withdraw}
+              onChanged={() => onChanged?.()}
+            />
+          </>
+        ) : (
+          <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+            {copy('signatureActionUnavailable')}
+          </p>
+        )
+      ) : focusedAction ? (
+        decisionRecorded ? (
+          <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm font-medium">
+            {copy(acceptanceVersionId ? 'acceptanceRecorded' : 'changeRecorded')}
+          </p>
+        ) : acceptanceVersionId ? (
+          !staff && data.version.id === acceptanceVersionId && lifecycleEligible('accept', data) ? (
+            <p className="text-sm text-muted-foreground">
+              {word(isPendingAmendment ? pendingNotice : 'acceptNotice')}
+            </p>
+          ) : (
+            <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+              {copy('acceptanceUnavailable')}
+            </p>
+          )
+        ) : staff &&
+          data.version.id === requestChangesVersionId &&
+          lifecycleEligible('publish', data) ? (
+          <>
+            <div className="rounded-xl border bg-card text-sm">
+              <div className="flex flex-wrap items-start justify-between gap-3 px-4 pt-3 sm:px-6">
+                <dl className="flex min-w-0 flex-wrap items-start gap-x-6 gap-y-2">
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">
+                      {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}
+                    </dt>
+                    <dd className="wrap-anywhere font-semibold">
+                      <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">{word('version')}</dt>
+                    <dd className="font-medium">
+                      {data.version.versionNumber.toLocaleString(locale)}
+                    </dd>
+                  </div>
+                </dl>
+                <StatusBadge label={word(data.contract.state)} />
+              </div>
+              <RecordEditorDisclosure label={word('terms')}>
+                <ContractTerms value={data.version.content} />
+              </RecordEditorDisclosure>
+            </div>
+            {correctionsForm}
+          </>
+        ) : (
+          <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+            {copy('changeUnavailable')}
+          </p>
+        )
       ) : (
         <>
           {time.notice}
+          {!staff && isCurrent ? (
+            <WorkflowStatusBanner
+              locale={locale}
+              submittedAt={
+                signatureStatus?.request?.requestedAt || data.contract.submittedAt
+                  ? `${workflowFeedback('submitted', locale)}: ${time.format(signatureStatus?.request?.requestedAt ?? data.contract.submittedAt!)}`
+                  : undefined
+              }
+              status={word(data.contract.state)}
+              happened={
+                signatureStatus?.signature
+                  ? word('signatureRecorded')
+                  : signatureStatus?.request
+                    ? `${word('signatureRequest')} ${signatureStatus.request.requestNumber.toLocaleString(locale)}`
+                    : data.version.changeDescription
+              }
+              nextAction={
+                nextAction!.key.startsWith('workflow.')
+                  ? t(nextAction!.key, locale)
+                  : word(nextAction!.key)
+              }
+              owner={nextAction!.owner}
+              actionHref={nextAction!.href}
+              actionLink={customerDecisionEntry}
+            />
+          ) : (
+            <StatusBadge label={word(data.contract.state)} />
+          )}
           <p className="text-sm text-muted-foreground">
             {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
-            <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
+            <bdi dir="ltr" className="[overflow-wrap:anywhere]">
+              {data.contract.contractNumber ?? data.contract.id}
+            </bdi>
           </p>
+          {staff && recordPage && isCurrent && data.contract.state === 'AwaitingStaffReview' && (
+            <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border bg-muted/25 px-4 py-3">
+              <p className="max-w-md text-sm text-muted-foreground">{copy('publishHelp')}</p>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                  params={{ contractId: id, action: 'request-changes', item: data.version.id }}
+                  search={staffRecordSearch ?? {}}
+                  className={buttonVariants({ variant: 'outline' })}
+                  aria-disabled={commandLocked || undefined}
+                  onClick={(event) => {
+                    if (blocked()) event.preventDefault();
+                  }}
+                >
+                  {word('request-changes')}
+                </Link>
+                <Button disabled={commandLocked} onClick={() => choose('publish')}>
+                  {word('publish')}
+                </Button>
+              </div>
+            </div>
+          )}
+          {recordPage && (data.contract.serviceStartsAt || data.contract.serviceEndsAt) && (
+            <dl className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
+              {data.contract.serviceStartsAt && (
+                <div>
+                  <dt className="text-muted-foreground">{word('serviceStartsAt')}</dt>
+                  <dd>
+                    <time dateTime={data.contract.serviceStartsAt}>
+                      {time.format(data.contract.serviceStartsAt)}
+                    </time>
+                  </dd>
+                </div>
+              )}
+              {data.contract.serviceEndsAt && (
+                <div>
+                  <dt className="text-muted-foreground">{word('serviceEndsAt')}</dt>
+                  <dd>
+                    <time dateTime={data.contract.serviceEndsAt}>
+                      {time.format(data.contract.serviceEndsAt)}
+                    </time>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          )}
           {data.contract.serviceType === 'electricity' && data.contract.linkedOrderStatus ? (
             <p className="text-sm text-muted-foreground">
               {word('linkedOrderStatus')}:{' '}
@@ -804,33 +1196,6 @@ function ContractDetailContent({
               ) : null}
             </div>
           ) : null}
-          {!staff && isCurrent ? (
-            <WorkflowStatusBanner
-              locale={locale}
-              submittedAt={
-                signatureStatus?.request?.requestedAt || data.contract.submittedAt
-                  ? `${workflowFeedback('submitted', locale)}: ${time.format(signatureStatus?.request?.requestedAt ?? data.contract.submittedAt!)}`
-                  : undefined
-              }
-              status={word(data.contract.state)}
-              happened={
-                signatureStatus?.signature
-                  ? word('signatureRecorded')
-                  : signatureStatus?.request
-                    ? `${word('signatureRequest')} ${signatureStatus.request.requestNumber.toLocaleString(locale)}`
-                    : data.version.changeDescription
-              }
-              nextAction={
-                nextAction!.key.startsWith('workflow.')
-                  ? t(nextAction!.key, locale)
-                  : word(nextAction!.key)
-              }
-              owner={nextAction!.owner}
-              actionHref={nextAction!.href}
-            />
-          ) : (
-            <StatusBadge label={word(data.contract.state)} />
-          )}
           {staff && data.contract.pendingAmendment ? (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
               <div>
@@ -911,7 +1276,7 @@ function ContractDetailContent({
                 contractId={data.contract.id}
                 versionId={data.version.id}
                 profileId={data.contract.profileId}
-                formatTimestamp={time.format}
+                orderId={data.contract.orderId}
               />
             </fieldset>
           ) : null}
@@ -920,7 +1285,7 @@ function ContractDetailContent({
               onClick={(event) => {
                 if (blocked()) event.preventDefault();
               }}
-              href={`/admin/electricity-orders?orderId=${encodeURIComponent(data.contract.orderId)}`}
+              href={`/admin/electricity-orders/${encodeURIComponent(data.contract.orderId)}`}
               className="touch-action self-start text-sm text-primary underline underline-offset-4"
             >
               {word('openLinkedOrder')}
@@ -959,69 +1324,113 @@ function ContractDetailContent({
           </div>
           <ContractTerms value={data.version.content} />
           {staff && isCurrent && ['Draft', 'ChangesRequested'].includes(data.contract.state) ? (
-            <ContractDraftEditor
-              key={data.version.id}
-              existing={data}
-              coordination={shared}
-              onDenied={withdraw}
-              onSaved={() => {
-                if (blocked()) return;
-                setSelectedVersion(null);
-                setReload((value) => value + 1);
-                onChanged();
-              }}
-            />
+            staffRecordSearch ? (
+              <Link
+                to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                params={{ contractId: id, action: 'edit', item: undefined }}
+                search={staffRecordSearch}
+                className="touch-action text-sm font-medium text-primary underline"
+                aria-disabled={commandLocked || undefined}
+                onClick={(event) => {
+                  if (blocked()) event.preventDefault();
+                }}
+              >
+                {word('draftEdit')}
+              </Link>
+            ) : (
+              <ContractDraftEditor
+                key={data.version.id}
+                existing={data}
+                coordination={shared}
+                onDenied={withdraw}
+                onSaved={() => {
+                  if (blocked()) return;
+                  setSelectedVersion(null);
+                  setReload((value) => value + 1);
+                  onChanged?.();
+                }}
+              />
+            )
           ) : null}
           {staff &&
           isCurrent &&
           data.contract.amendmentSupported &&
           !data.contract.pendingAmendment &&
           ['Accepted', 'Signed', 'Active'].includes(data.contract.state) ? (
-            <ContractDraftEditor
-              key={'amendment:' + data.version.id}
-              existing={data}
-              coordination={shared}
-              onDenied={withdraw}
-              amendment
-              onSaved={() => {
-                if (blocked()) return;
-                setReload((value) => value + 1);
-                onChanged();
-              }}
-            />
+            staffRecordSearch ? (
+              <Link
+                to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                params={{ contractId: id, action: 'amendments', item: 'new' }}
+                search={staffRecordSearch}
+                className="touch-action text-sm font-medium text-primary underline"
+                aria-disabled={commandLocked || undefined}
+                onClick={(event) => {
+                  if (blocked()) event.preventDefault();
+                }}
+              >
+                {word('amendmentCreate')}
+              </Link>
+            ) : (
+              <ContractDraftEditor
+                key={'amendment:' + data.version.id}
+                existing={data}
+                coordination={shared}
+                onDenied={withdraw}
+                amendment
+                onSaved={() => {
+                  if (blocked()) return;
+                  setReload((value) => value + 1);
+                  onChanged?.();
+                }}
+              />
+            )
           ) : null}
           {data.version.acceptedAt ? (
             <p role="status">
               {word('acceptedAt')}: {time.format(data.version.acceptedAt)}
             </p>
           ) : null}
-          <p className="text-sm text-muted-foreground">
-            {word(isPendingAmendment ? pendingNotice : 'acceptNotice')}
-          </p>
-          {!staff &&
-          data.contract.canAccept &&
-          (data.contract.amendment?.state === 'AwaitingCustomerAcceptance'
-            ? isPendingAmendment
-            : isCurrent) ? (
-            <div id="contract-accept" className="flex flex-col gap-3">
-              <label className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  aria-required="true"
-                  disabled={commandLocked}
-                  checked={acknowledged}
-                  onChange={(event) => setAcknowledged(event.target.checked)}
-                  className="mt-1 size-4"
-                />
-                {word('acceptAcknowledgement')}
-              </label>
-              <Button
-                className="self-start"
-                disabled={!acknowledged || commandLocked}
-                onClick={() => choose('accept')}
-              >
-                {word('accept')}
-              </Button>
+          {canAcceptVersion && !recordPage ? (
+            <form
+              id="contract-accept"
+              className={`${recordEditorSurface} scroll-mt-28`}
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (acknowledged && !commandLocked) choose('accept');
+              }}
+            >
+              <div className="space-y-3 px-4 py-3.5 sm:px-6">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-base font-semibold">{copy('acceptHeading')}</h3>
+                  <span className="rounded-md bg-muted px-2.5 py-1 text-xs font-medium">
+                    {word('version')} {data.version.versionNumber.toLocaleString(locale)}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {word(isPendingAmendment ? pendingNotice : 'acceptNotice')}
+                </p>
+                <label className="touch-label flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg bg-muted/40 px-3 py-2 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    aria-required="true"
+                    disabled={commandLocked}
+                    checked={acknowledged}
+                    onChange={(event) => setAcknowledged(event.target.checked)}
+                    className="size-4 shrink-0 accent-primary"
+                  />
+                  {word('acceptAcknowledgement')}
+                </label>
+              </div>
+              <RecordEditorActions>
+                <Button type="submit" disabled={!acknowledged || commandLocked}>
+                  {word('accept')}
+                </Button>
+              </RecordEditorActions>
+            </form>
+          ) : isPendingAmendment ? (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">{word(pendingNotice)}</p>
+              {customerOperation === 'accept' && customerDecisionEntry}
             </div>
           ) : null}
           {staff && isCurrent && data.contract.state === 'Draft' ? (
@@ -1033,43 +1442,11 @@ function ContractDetailContent({
               {word('submit')}
             </Button>
           ) : null}
-          {staff && isCurrent && data.contract.state === 'AwaitingStaffReview' ? (
-            <div className="flex flex-col gap-3">
-              <Form {...reasonForm}>
-                <form
-                  data-testid="contract-request-changes-form"
-                  noValidate
-                  onSubmit={(event) => void prepareChanges(event)}
-                  className="space-y-3"
-                >
-                  <FormField
-                    control={reasonForm.control}
-                    name="reason"
-                    render={({ field }) => (
-                      <FormItem id="contract-change-reason">
-                        <FormLabel>{word('reason')}</FormLabel>
-                        <FormControl>
-                          <Textarea {...field} aria-required="true" disabled={!!command.current} />
-                        </FormControl>
-                        <FormDescription>{copy('reasonHelp')}</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {reasonForm.formState.errors.root && (
-                    <p role="alert">{copy('validationUnavailable')}</p>
-                  )}
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    loading={preparing}
-                    disabled={locked || preparing}
-                  >
-                    {word('request-changes')}
-                  </Button>
-                </form>
-              </Form>
-              <div className="flex flex-wrap gap-2">
+          {staff && !recordPage && isCurrent && data.contract.state === 'AwaitingStaffReview' ? (
+            <div className="grid min-w-0 items-start gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+              {correctionsForm}
+              <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3.5 sm:px-6 xl:flex-col xl:items-start">
+                <p className="text-sm text-muted-foreground">{copy('publishHelp')}</p>
                 <Button disabled={commandLocked} onClick={() => choose('publish')}>
                   {word('publish')}
                 </Button>
@@ -1148,10 +1525,45 @@ function ContractDetailContent({
                 id={id}
                 versionId={data.version.id}
                 staff={staff}
+                {...(recordPage
+                  ? {
+                      renderAction: (view, label, disabled) =>
+                        staff ? (
+                          <Link
+                            to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                            params={{
+                              contractId: id,
+                              action: view.action,
+                              item: 'requestId' in view ? view.requestId : undefined,
+                            }}
+                            search={staffRecordSearch ?? {}}
+                            disabled={disabled || blocked()}
+                            className={buttonVariants({
+                              variant: view.action === 'reject' ? 'destructive' : 'outline',
+                            })}
+                          >
+                            {label}
+                          </Link>
+                        ) : (
+                          <Link
+                            to="/contracts/$contractId/{-$action}"
+                            params={{ contractId: id, action: 'cancel' }}
+                            search={customerRecordSearch ?? {}}
+                            disabled={disabled || blocked()}
+                            className={buttonVariants({
+                              variant: 'outline',
+                              className: 'self-start',
+                            })}
+                          >
+                            {label}
+                          </Link>
+                        ),
+                    }
+                  : {})}
                 onChanged={() => {
                   if (blocked()) return;
                   setReload((value) => value + 1);
-                  onChanged();
+                  onChanged?.();
                 }}
               />
             ) : null}
@@ -1167,12 +1579,7 @@ function ContractDetailContent({
               versionId={data.version.id}
               staff={staff}
               editableVersion={staff && isCurrent ? data.version : undefined}
-              onChanged={() => {
-                if (blocked()) return;
-                setSelectedVersion(null);
-                setReload((value) => value + 1);
-                onChanged();
-              }}
+              staffRecordSearch={staffRecordSearch}
             />
           ) : null}
           {!isPendingAmendment || pendingState === 'AwaitingSignature' ? (
@@ -1186,10 +1593,16 @@ function ContractDetailContent({
               coordination={shared}
               onDenied={withdraw}
               onStatus={setSignatureStatus}
+              {...(recordPage && {
+                navigation: {
+                  search: (staff ? staffRecordSearch : customerRecordSearch) ?? {},
+                  recordInSummary: recordSignatureInSummary,
+                },
+              })}
               onChanged={() => {
                 if (blocked()) return;
                 setReload((value) => value + 1);
-                onChanged();
+                onChanged?.();
               }}
             />
           ) : null}
@@ -1198,8 +1611,7 @@ function ContractDetailContent({
             contract={data.contract}
             version={data.version}
             staff={staff}
-            isCurrent={isCurrent}
-            isPendingAmendment={isPendingAmendment}
+            search={(staff ? staffRecordSearch : customerRecordSearch) ?? {}}
             coordination={shared}
             blocked={locked || preparing}
           />
@@ -1229,6 +1641,13 @@ function ContractDetailContent({
           profileId={data.contract.profileId}
           contractId={id}
           time={time}
+          {...(acceptanceVersionId && {
+            inlineAcceptance: true,
+            onPendingChange: (pending: boolean) => {
+              if (pending) shared.acquire(parentOwner.current);
+              else shared.release(parentOwner.current);
+            },
+          })}
           {...(lifecycle.current?.retryReview
             ? { retryReview: lifecycle.current.retryReview }
             : {})}
@@ -1240,6 +1659,17 @@ function ContractDetailContent({
       ) : action ? (
         <TeamActionDialog
           action={action}
+          summary={
+            renderedCommand && (
+              <div className="space-y-2 rounded-lg border bg-muted/25 px-3 py-3">
+                <p className="text-sm font-medium">{word('reason')}</p>
+                <p className="text-sm whitespace-pre-wrap wrap-anywhere">
+                  {renderedCommand.action.body.reason}
+                </p>
+                <p className="text-sm text-muted-foreground">{copy('changeReviewHelp')}</p>
+              </div>
+            )
+          }
           onDenied={() => {
             if (
               alive.current &&
@@ -1270,28 +1700,25 @@ function ContractDocuments({
   contract,
   version,
   staff,
-  isCurrent,
-  isPendingAmendment,
+  search,
   coordination,
   blocked,
 }: {
   contract: ContractDetailData;
   version: ContractVersion;
   staff: boolean;
-  isCurrent: boolean;
-  isPendingAmendment: boolean;
+  search: Record<string, unknown>;
   coordination: ContractFormCoordination;
   blocked: boolean;
 }) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
-  const [role, setRole] = useState<ContractDocumentAssociation['contractRole'] | null>(null);
   const [reload, setReload] = useState(0);
   const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState(false);
   const [generated, setGenerated] = useState<'scanning' | 'created' | null>(null);
-  const uploadOwner = useRef<object>({});
-  useEffect(() => () => coordination.release(uploadOwner.current), [coordination]);
+  const generationOwner = useRef<object>({});
+  useEffect(() => () => coordination.release(generationOwner.current), [coordination]);
   const filters = useMemo<DocumentFilters>(
     () => ({
       kind: 'contract',
@@ -1304,42 +1731,14 @@ function ContractDocuments({
     }),
     [contract.profileId, contract.id, version.id]
   );
-  const canUpload =
-    contract.state !== 'Rejected' &&
-    ((isPendingAmendment &&
-      (staff ? contract.pendingAmendment?.state : contract.amendment?.state) ===
-        'AwaitingSignature') ||
-      (staff && isPendingAmendment && contract.pendingAmendment?.state !== 'AwaitingSignature') ||
-      (isCurrent &&
-        (staff
-          ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
-          : ['Accepted', 'AwaitingSignature'].includes(contract.state))));
-  const template = version.content?.template;
-  const hasSavedTemplate =
-    template !== null &&
-    typeof template === 'object' &&
-    !Array.isArray(template) &&
-    typeof (template as Record<string, unknown>).name === 'string' &&
-    typeof (template as Record<string, unknown>).text === 'string' &&
-    Boolean(((template as Record<string, unknown>).text as string).trim());
-  const hasSystemOriginal =
-    contract.serviceType === 'electricity' &&
-    Boolean(contract.orderId) &&
-    version.content?.orderId === contract.orderId &&
-    !isPendingAmendment &&
-    hasSavedTemplate;
-  const canGenerate =
-    staff &&
-    canUpload &&
-    contract.serviceType === 'electricity' &&
-    (!contract.orderId || isPendingAmendment) &&
-    hasSavedTemplate;
+  const { uploads, canGenerate } = contractAttachmentActions(contract, version, staff);
+  const { isCurrent, isPendingAmendment } = contractVersionPosition(contract, version.id, staff);
   async function generatePdf() {
     if (
       coordination.blocked() ||
       generating ||
       generated ||
-      !coordination.acquire(uploadOwner.current)
+      !coordination.acquire(generationOwner.current)
     )
       return;
     setGenerating(true);
@@ -1362,7 +1761,7 @@ function ContractDocuments({
       setGenerationError(true);
     } finally {
       setGenerating(false);
-      coordination.release(uploadOwner.current);
+      coordination.release(generationOwner.current);
     }
   }
   function blockDocumentList(event: SyntheticEvent) {
@@ -1372,8 +1771,12 @@ function ContractDocuments({
     }
   }
   return (
-    <section className="flex flex-col gap-4" aria-label={word('documents')}>
-      <fieldset disabled={blocked && !role && !generating} className="contents">
+    <section
+      id="contract-documents"
+      className="flex scroll-mt-28 flex-col gap-4"
+      aria-label={word('documents')}
+    >
+      <fieldset disabled={blocked && !generating} className="contents">
         <h3 className="font-semibold">{word('documents')}</h3>
         <p className="text-sm text-muted-foreground">{word('copyNotice')}</p>
         {staff ? (
@@ -1400,63 +1803,49 @@ function ContractDocuments({
             ) : null}
           </div>
         ) : null}
-        {canUpload && !role ? (
+        {uploads.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {(isPendingAmendment
-              ? (staff ? contract.pendingAmendment?.state : contract.amendment?.state) ===
-                'AwaitingSignature'
-                ? staff
-                  ? (['amendment', 'signed'] as const)
-                  : (['signed'] as const)
-                : (['amendment'] as const)
-              : staff
-                ? hasSystemOriginal
-                  ? (['signed', 'amendment'] as const)
-                  : (['original', 'signed', 'amendment'] as const)
-                : (['signed'] as const)
-            ).map((value) => (
-              <Button
-                key={value}
-                variant="outline"
-                disabled={blocked}
-                onClick={() => {
-                  if (!coordination.blocked() && coordination.acquire(uploadOwner.current))
-                    setRole(value);
-                }}
-              >
-                {word(
-                  value === 'original'
-                    ? 'uploadOriginal'
-                    : value === 'signed'
-                      ? 'uploadSigned'
-                      : 'uploadAmendment'
-                )}
-              </Button>
-            ))}
+            {uploads.map((role) => {
+              const label = word(contractAttachmentTitle[role]);
+              const preventBlockedNavigation = (event: SyntheticEvent) => {
+                if (coordination.blocked()) event.preventDefault();
+              };
+              if (blocked)
+                return (
+                  <Button key={role} variant="outline" disabled>
+                    {label}
+                  </Button>
+                );
+              return staff ? (
+                <Link
+                  key={role}
+                  to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                  params={{ contractId: contract.id, action: `upload-${role}`, item: version.id }}
+                  search={{ ...search, versionId: undefined }}
+                  className={buttonVariants({ variant: 'outline' })}
+                  onClick={preventBlockedNavigation}
+                >
+                  {label}
+                </Link>
+              ) : (
+                <Link
+                  key={role}
+                  to="/contracts/$contractId/$operation/$versionId"
+                  params={{
+                    contractId: contract.id,
+                    operation: 'upload-signed',
+                    versionId: version.id,
+                  }}
+                  search={{ ...search, versionId: undefined }}
+                  className={buttonVariants({ variant: 'outline' })}
+                  onClick={preventBlockedNavigation}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
-        ) : null}
-        {role ? (
-          <DocumentUpload
-            staff={staff}
-            profileId={contract.profileId}
-            replacement={null}
-            association={{
-              businessRecordType: 'contract',
-              businessRecordId: contract.id,
-              contractVersionId: version.id,
-              contractRole: role,
-            }}
-            onClose={() => {
-              setRole(null);
-              coordination.release(uploadOwner.current);
-            }}
-            onUploaded={() => {
-              setRole(null);
-              coordination.release(uploadOwner.current);
-              setReload((value) => value + 1);
-            }}
-          />
-        ) : null}
+        )}
         <fieldset
           disabled={blocked}
           onClickCapture={blockDocumentList}
@@ -1468,6 +1857,13 @@ function ContractDocuments({
             staff={staff}
             filters={filters}
             profileId={contract.profileId}
+            relatedLinks={{
+              context: { kind: 'contract', id: contract.id, versionId: version.id, staff, search },
+              allowChanges: isCurrent || isPendingAmendment,
+              allowUpload: false,
+              disabled: blocked,
+              blocked: () => coordination.blocked(),
+            }}
           />
         </fieldset>
       </fieldset>

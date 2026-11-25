@@ -126,7 +126,10 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
         await change(host, '#ticket-assignee', 'other');
       }
       await act(async () => {
-        button(host, 'Send reply').click();
+        button(
+          host,
+          Page === StaffTicketsPage ? tTicketForms('saveInternalNote', 'en') : 'Send reply'
+        ).click();
         await vi.dynamicImportSettled();
       });
       expect(host.textContent).toContain(tTicketForms('replyInvalid', 'en'));

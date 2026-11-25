@@ -1,10 +1,12 @@
 import { lazy, Suspense } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { LoadingStatus } from '@barghsa/ui';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import { t as appText, type Locale } from '@barghsa/i18n/workspace';
 import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
+import { TableActionIcon } from './TableActionIcon.js';
 
 const ReceiptAttachmentPreview = lazy(async () => ({
   default: (await import('./ReceiptAttachmentPreview.js')).ReceiptAttachmentPreview,
@@ -38,8 +40,11 @@ export function WalletReceiptHistoryDetails({
       onToggle={(event) => onOpenChange(event.currentTarget.open)}
       className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
     >
-      <summary className="min-h-11 min-w-11 cursor-pointer content-center rounded font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-        {word('details')}
+      <summary
+        data-table-action-tooltip={word('details')}
+        className="min-h-11 min-w-11 cursor-pointer content-center rounded font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <TableActionIcon icon={open ? EyeOff : Eye}>{word('details')}</TableActionIcon>
       </summary>
       <div className="space-y-4 pt-4">
         <dl className="grid gap-3 sm:grid-cols-2">
@@ -52,11 +57,7 @@ export function WalletReceiptHistoryDetails({
           <div>
             <dt className="text-muted-foreground">{word('paymentDate')}</dt>
             <dd>
-              <ReceiptDepositDate
-                value={receipt.paymentDate}
-                locale={locale}
-                calendar={locale === 'fa' ? 'persian' : 'gregory'}
-              />
+              <ReceiptDepositDate value={receipt.paymentDate} locale={locale} />
             </dd>
           </div>
           {(['bankName', 'payerReference', 'customerNote'] as const).map((key) => (

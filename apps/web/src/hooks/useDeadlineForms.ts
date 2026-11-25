@@ -1,6 +1,6 @@
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { tDuePeriods } from '@barghsa/i18n/invoice-due-periods';
-import { deadlineInstant } from '../lib/due-at-override.js';
+import { changedDeadline } from '../lib/due-at-override.js';
 import { useLocale } from './useLocale.js';
 import { useWizardForm } from './useWizardForm.js';
 import { useActionFieldErrors } from './useActionFieldErrors.js';
@@ -18,7 +18,7 @@ export function useDeadlineForm(source: DeadlineBasis): ReturnType<
   const draft = useWizardForm<DeadlineDraft>(
     async () => {
       const { deadlineSchema } = await import('../lib/deadline-form-schemas.js');
-      return deadlineSchema(source, messages, (value) => deadlineInstant(value, source));
+      return deadlineSchema(messages, (value) => changedDeadline(value, source));
     },
     { dueAt: '', reason: '' },
     t('admin.invoices.validationUnavailable', locale)
@@ -28,9 +28,11 @@ export function useDeadlineForm(source: DeadlineBasis): ReturnType<
     applyServerErrors: useActionFieldErrors(draft.form, messages, messages.dueAt),
   };
 }
-export function useDuePeriodForm(): ReturnType<
+export function useDuePeriodForm(serviceType: string): ReturnType<
   typeof useWizardForm<{ serviceType: string; defaultDays: string }>
-> & { applyServerErrors: (fields: unknown[]) => boolean } {
+> & {
+  applyServerErrors: (fields: unknown[]) => boolean;
+} {
   const locale = useLocale();
   const messages = {
     serviceType: tDuePeriods('invalidService', locale),
@@ -41,11 +43,15 @@ export function useDuePeriodForm(): ReturnType<
       const { duePeriodSchema } = await import('../lib/deadline-form-schemas.js');
       return duePeriodSchema(messages);
     },
-    { serviceType: 'electricity', defaultDays: '7' },
+    { serviceType, defaultDays: '7' },
     tDuePeriods('validationUnavailable', locale)
   );
   return {
     ...draft,
-    applyServerErrors: useActionFieldErrors(draft.form, messages, messages.defaultDays),
+    applyServerErrors: useActionFieldErrors(
+      draft.form,
+      { defaultDays: messages.defaultDays },
+      messages.defaultDays
+    ),
   };
 }

@@ -76,7 +76,9 @@ for (const locale of ['en', 'fa'] as const)
         await expect(dialog).toHaveCount(0);
       };
       await page.goto('/admin/agents');
-      await button(`${agentText('edit')} ${aiAgent.title}`).click();
+      await page
+        .getByRole('link', { name: `${agentText('edit')} ${aiAgent.title}`, exact: true })
+        .click();
       const max = page.locator('#agent-max-tokens'),
         prompt = page.locator('#agent-system-prompt'),
         group = page
@@ -147,8 +149,10 @@ for (const locale of ['en', 'fa'] as const)
           policyGroupIds: [],
         })
       );
-      await button(`${agentText('edit')} ${aiAgent.title}`).click();
-      await page.locator('#test-chat-message').fill('Clear on denied access');
+      await page
+        .getByRole('link', { name: `${agentText('edit')} ${aiAgent.title}`, exact: true })
+        .click();
+      await prompt.fill('Clear on denied access');
       readStatus = 403;
       await button(agentText('refresh')).click();
       await expect(prompt).toHaveCount(0);
@@ -196,12 +200,12 @@ for (const locale of ['en', 'fa'] as const)
         }
         return route.fulfill({ json: slots.find((row) => row.slotKey === key) });
       });
-      await page.goto('/admin/agent-slots');
+      await page.goto('/admin/agent-slots/individual_chatbot/edit');
       const individual = page.locator('#slot-individual_chatbot'),
         website = page.locator('#slot-website_chatbot'),
         saveSlot = button(`${slotText('save')} ${slotText('individual_chatbot')}`);
       await individual.selectOption(assignmentAgent.id);
-      await website.selectOption(otherAssignmentAgent.id);
+      await expect(website).toHaveCount(0);
       await expect(page.getByText(slotText('disabledHelp'), { exact: true }).first()).toBeVisible();
       await expect(
         page.getByText(`${slotText('shared')}: ${slotText('staff_chatbot')}`, { exact: true })
@@ -210,7 +214,7 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(individual).toBeFocused();
       await expect(individual).toHaveAttribute('aria-invalid', 'true');
-      await expect(website).toHaveValue(otherAssignmentAgent.id);
+      await expect(website).toHaveCount(0);
       expect(
         (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
@@ -224,24 +228,27 @@ for (const locale of ['en', 'fa'] as const)
       await expect(button(copy('reset'))).toBeDisabled();
       await expect(saveSlot).toBeDisabled();
       await expect(individual).toHaveValue(assignmentAgent.id);
-      await expect(website).toHaveValue(otherAssignmentAgent.id);
+      await expect(website).toHaveCount(0);
       slotsStatus = 200;
       await button(slotText('refresh')).click();
       await expect(button(copy('reset'))).toBeEnabled();
       await button(copy('reset')).click();
-      await expect(website).toHaveValue(otherAssignmentAgent.id);
+      await expect(website).toHaveCount(0);
       await individual.selectOption('');
       await saveSlot.click();
       await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'destructive');
       await confirm();
-      await expect(individual).toHaveValue('');
+      await expect(page).toHaveURL('/admin/agent-slots/individual_chatbot');
+      await expect(page.getByRole('main')).toContainText(slotText('unassigned'));
       expect(slotWrites).toEqual([
         { agentId: assignmentAgent.id },
         { agentId: assignmentAgent.id },
         { agentId: null },
       ]);
+      await page.getByRole('link', { name: slotText('edit'), exact: true }).click();
+      await expect(individual).toBeVisible();
       agentsStatus = 403;
-      await button(slotText('agentsRetry')).click();
+      await button(slotText('refresh')).click();
       await expect(page.locator('select[id^=slot-]')).toHaveCount(0);
     });

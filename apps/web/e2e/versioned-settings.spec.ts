@@ -213,14 +213,17 @@ for (const locale of ['en', 'fa'] as const)
       await page.route('**/api/admin/finance/vat/products', (route) => route.fulfill({ json: [] }));
       await page.goto('/admin/vat');
       await page
-        .getByRole('button', { name: tVat('admin.vat.addRate', locale), exact: true })
+        .getByRole('link', { name: tVat('admin.vat.addRate', locale), exact: true })
         .click();
+      await expect(page).toHaveURL('/admin/vat/rates/new');
       await page.locator('#vat-percent').fill('0.5');
       const preview = page.getByTestId('config-preview');
       await expect(
-        preview.getByRole('group', { name: word('current'), exact: true })
+        preview.getByText(tVat('admin.vat.currentRate', locale), { exact: true }).locator('..')
       ).toContainText(new Intl.NumberFormat(locale, { style: 'percent' }).format(0.09));
-      await expect(preview.getByRole('group', { name: word('draft'), exact: true })).toContainText(
+      await expect(
+        preview.getByText(tVat('admin.vat.proposedRate', locale), { exact: true }).locator('..')
+      ).toContainText(
         new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(0.005)
       );
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
@@ -234,30 +237,47 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/document-templates');
       const doc = (key: Parameters<typeof documentTemplateText>[0]) =>
         documentTemplateText(key, locale);
-      await page.getByRole('button', { name: new RegExp(templateRow.title), exact: true }).click();
-      await page.getByRole('button', { name: doc('edit'), exact: true }).click();
+      await page.getByRole('link', { name: templateRow.title, exact: true }).click();
+      await page.getByRole('link', { name: doc('edit'), exact: true }).click();
       await page.locator('#document-template-title').fill('Pending title');
       await page.locator('#document-template-description').fill('<script>pending content</script>');
-      const metadata = page
-        .getByRole('form', { name: doc('edit'), exact: true })
-        .getByTestId('config-preview');
+      const form = page.getByRole('form', { name: doc('edit'), exact: true });
+      const metadata = form.getByTestId('config-preview');
+      await expect(metadata).toBeHidden();
+      await expect(form.getByRole('button', { name: doc('save'), exact: true })).toBeInViewport();
+      const comparison = form.getByText(doc('compareChanges'), { exact: true });
+      await comparison.press('Space');
+      await expect(metadata).toBeVisible();
       await expect(
         metadata.getByRole('group', { name: word('current'), exact: true })
       ).toContainText(templateRow.title);
       await expect(metadata.getByRole('group', { name: word('draft'), exact: true })).toContainText(
         '<script>pending content</script>'
       );
+      await expect(metadata.getByText(doc('category'), { exact: true })).toHaveCount(0);
       await expect(metadata.locator('script')).toHaveCount(0);
+      await comparison.press('Space');
+      await expect(metadata).toBeHidden();
+      await expect(page.locator('#document-template-title')).toHaveValue('Pending title');
+      await page.goto(`/admin/document-templates/${templateRow.id}/versions/new`);
       await page.locator('#document-template-files').setInputFiles({
         name: 'pending.pdf',
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-1.7'),
       });
+      const versionForm = page.getByRole('form', { name: doc('publishVersion'), exact: true });
+      const fileComparison = versionForm.getByTestId('config-preview');
+      await expect(fileComparison).toBeHidden();
       await expect(
-        page
-          .getByTestId('config-preview')
-          .last()
-          .getByRole('group', { name: word('draft'), exact: true })
+        versionForm.getByRole('button', { name: doc('publishVersion'), exact: true })
+      ).toBeInViewport();
+      await versionForm
+        .locator('summary')
+        .filter({ hasText: doc('compareFiles') })
+        .press('Space');
+      await expect(fileComparison).toBeVisible();
+      await expect(
+        fileComparison.getByRole('group', { name: word('draft'), exact: true })
       ).toContainText('pending.pdf');
       expect(mutations).toEqual([]);
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
+import { authReturnSearch } from '../lib/auth-return.js';
 import { t } from '@barghsa/i18n/auth';
 import { passwordRecoveryText } from '@barghsa/i18n/password-recovery-forms';
 import { Button, Input, Alert, AlertDescription } from '@barghsa/ui';
@@ -12,24 +13,41 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { usePasswordRecoveryForm } from '../hooks/usePasswordRecoveryForm.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { toast } from '../lib/toast-api.js';
-export const Route = createFileRoute('/forgot-password')({ component: ForgotPasswordPage });
+export const Route = createFileRoute('/forgot-password')({
+  validateSearch: authReturnSearch,
+  component: ForgotPasswordPage,
+});
 function ForgotPasswordPage() {
   const router = useRouter(),
     locale = useLocale(),
     numbers = useNumberFormatting(locale);
+  const { returnTo } = useSearch({ from: '/forgot-password' });
   const model = usePasswordRecoveryForm(locale, numbers.numberStyle, async () => {
     toast.success(t('auth.resetPassword.success', locale), {
       description: t('auth.resetPassword.signIn', locale),
     });
-    await router.navigate({ to: '/login', replace: true });
+    await router.navigate({
+      to: '/login',
+      ...(returnTo ? { search: { returnTo } } : {}),
+      replace: true,
+    });
   });
   const form = model.form;
   const element = model.feedback.element;
   const stage = useRef(model.stage);
+  const focusUsername = useRef(false);
   stage.current = model.stage;
   useEffect(() => {
-    if (model.authorization) document.getElementById('new-password')?.focus();
-  }, [model.authorization]);
+    if (model.authorization)
+      element.current?.querySelector<HTMLInputElement>('#new-password')?.focus();
+    if (model.stage === 'request' && focusUsername.current) {
+      focusUsername.current = false;
+      element.current?.querySelector<HTMLInputElement>('#username')?.focus();
+    }
+  }, [model.authorization, model.stage, element]);
+  const restart = () => {
+    focusUsername.current = model.restart();
+  };
   const copy = (key: string) => passwordRecoveryText(key, locale);
   const validationError = form.formState.errors.root?.validation?.message;
   const error = model.error ?? validationError ?? null;
@@ -44,6 +62,7 @@ function ForgotPasswordPage() {
       footer={
         <Link
           to="/login"
+          search={{ returnTo }}
           className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4"
           onClick={(event) => {
             if (model.busy) event.preventDefault();
@@ -53,7 +72,7 @@ function ForgotPasswordPage() {
         </Link>
       }
     >
-      <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <div className="space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <div className="space-y-2">
           <h1 className="tracking-tight">{t(title, locale)}</h1>
           {model.stage === 'request' && (
@@ -79,7 +98,7 @@ function ForgotPasswordPage() {
           <form
             noValidate
             ref={element}
-            className="space-y-4"
+            className="space-y-3.5"
             aria-busy={model.busy}
             onSubmit={(event) => void model.perform(stage.current, event)}
           >
@@ -93,9 +112,13 @@ function ForgotPasswordPage() {
                     <FormControl>
                       <Input
                         {...field}
+                        dir="ltr"
                         aria-required="true"
                         autoComplete="username"
+                        autoCapitalize="none"
+                        spellCheck={false}
                         maxLength={255}
+                        placeholder={t('auth.register.usernamePlaceholder', locale)}
                         disabled={model.locked}
                         onChange={(event) => {
                           if (model.canEdit(stage.current)) field.onChange(event);
@@ -196,7 +219,7 @@ function ForgotPasswordPage() {
                 variant="outline"
                 className="w-full"
                 disabled={model.busy}
-                onClick={model.restart}
+                onClick={restart}
               >
                 {copy('restart')}
               </Button>
@@ -225,7 +248,7 @@ function ForgotPasswordPage() {
               )}
             </Button>
             {(model.stage === 'request' ? model.cooldown : model.attemptCooldown) > 0 && (
-              <p role="status">
+              <p role="status" className="text-sm text-muted-foreground">
                 {t('auth.otp.resendTimer', locale).replace(
                   '{seconds}',
                   numbers.number(
@@ -235,21 +258,30 @@ function ForgotPasswordPage() {
                 )}
               </p>
             )}
-            {model.challenge && (
-              <Button
-                type="button"
-                variant="ghost"
-                className="w-full"
-                disabled={model.locked || model.cooldown > 0}
-                onClick={() => void model.perform('request')}
-              >
-                {model.cooldown > 0
-                  ? t('auth.otp.resendTimer', locale).replace(
-                      '{seconds}',
-                      numbers.number(model.cooldown, { useGrouping: false })
-                    )
-                  : t('auth.otp.resend', locale)}
-              </Button>
+            {model.stage === 'verify' && (
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={model.locked || model.cooldown > 0}
+                  onClick={() => void model.perform('request')}
+                >
+                  {model.cooldown > 0
+                    ? t('auth.otp.resendTimer', locale).replace(
+                        '{seconds}',
+                        numbers.number(model.cooldown, { useGrouping: false })
+                      )
+                    : t('auth.otp.resend', locale)}
+                </Button>
+              </div>
+            )}
+            {model.stage === 'reset' && !model.uncertain && (
+              <div className="flex justify-end">
+                <Button type="button" variant="ghost" disabled={model.locked} onClick={restart}>
+                  {copy('restart')}
+                </Button>
+              </div>
             )}
           </form>
         </Form>

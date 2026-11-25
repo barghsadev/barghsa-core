@@ -8,12 +8,12 @@ import {
   type GiftCodeProfileUsageDto,
   type GiftCodeRedemptionDto,
 } from '@barghsa/shared/promotions';
+import { GIFT_CODE_PAGE_SIZE } from './gift-list-query.js';
 export type GiftCodeStats = {
   code: GiftCodeDto;
   perProfile: GiftCodeProfileUsageDto[];
   recentRedemptions: GiftCodeRedemptionDto[];
 };
-export const GIFT_CODE_PAGE_SIZE = 50;
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
 const uuid = (v: unknown): v is string =>

@@ -1,22 +1,22 @@
 import { notificationContent } from '../lib/notification-content.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
-import { Button, ListPage, LoadingSkeleton } from '@barghsa/ui';
-import { operationsAlertLinks } from '@barghsa/shared/notifications';
+import { Button, ListPage, ListRefreshButton, LoadingSkeleton } from '@barghsa/ui';
 import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchNotifications,
   isNotificationDenied,
+  notificationDisplayType,
   markOneRead,
   markAllRead,
-  toNavigationTarget,
   type NotificationFilter,
   type NotificationItem,
 } from '../lib/notifications.js';
 import { NotificationRow } from '../components/NotificationRow.js';
+import { NotificationSubjectLinks } from '../components/NotificationSubjectLinks.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { notificationFeedback } from '@barghsa/i18n/notification-feedback';
@@ -43,8 +43,8 @@ export function NotificationCenterPage(props: InboxProps) {
  * Notification center page (E-05, T-05.02.03).
  *
  * Full, cursor-paginated list of the active profile's notifications with an
- * "unread only" filter and a "mark all read" action. Each item marks itself
- * read on click and navigates to its linked record when one is set. Shows a
+ * "unread only" filter and a "mark all read" action. Each message and its
+ * subject have their own link, with read state managed inline. Shows a
  * loading skeleton, an empty state, and a load-more footer. RTL-aware.
  */
 function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
@@ -58,7 +58,6 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
     const timer = window.setInterval(() => setNow(Date.now()), 60_000);
     return () => window.clearInterval(timer);
   }, []);
-  const navigate = useNavigate();
 
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -216,7 +215,6 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
     !markingAll;
   const markRead = async (item?: NotificationItem) => {
     if (!ready || writing.current) return;
-    const target = item ? toNavigationTarget(item, operatingContext) : null;
     const version = ++requestVersion.current;
     const current = () => requestVersion.current === version && liveKey.current === scope;
     const previousItems = items,
@@ -241,11 +239,6 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
       if (!current()) return;
       setUnreadCount(count);
       if (filter === 'unread' && count === 0) setNextCursor(null);
-      if (target)
-        navigate({
-          to: target.to,
-          search: target.search as NavigateOptions['search'],
-        } as NavigateOptions);
     } catch (failure) {
       if (!current()) return;
       if (isNotificationDenied(failure)) deny();
@@ -264,10 +257,28 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
   };
 
   const isRtl = locale === 'fa';
+  const priority = items.filter(
+    (item) =>
+      !item.isRead &&
+      (item.type === 'system.service_outage' || notificationDisplayType(item.type) === 'security')
+  );
+  const priorityIds = new Set(priority.map(({ id }) => id));
+  const routine = items.filter(({ id }) => !priorityIds.has(id));
   const groups =
     zone.status === 'ready'
-      ? notificationDateGroups(items, zone.timezone, now, locale)
-      : [{ key: 'ungrouped' as const, items }];
+      ? notificationDateGroups(routine, zone.timezone, now, locale)
+      : routine.length
+        ? [{ key: 'ungrouped' as const, items: routine }]
+        : [];
+  const sections = [
+    ...(priority.length
+      ? [{ label: t('notifications.record.priority', locale), items: priority }]
+      : []),
+    ...groups.map((group) => ({
+      label: notificationFeedback(group.key, locale),
+      items: group.items,
+    })),
+  ];
 
   return (
     <section className="mx-auto min-w-0 max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -300,35 +311,37 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
         </p>
       )}
       <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={loading || loadingMore || markingAll}
-            onClick={refresh}
-          >
-            {t('notifications.refresh', locale)}
-          </Button>
-          <div
-            role="tablist"
-            aria-label={t('notifications.bellLabel', locale)}
-            className="flex gap-1 rounded-lg bg-muted p-1 text-sm"
-          >
-            {(['all', 'unread'] as NotificationFilter[]).map((value) => (
-              <button
-                key={value}
-                type="button"
-                role="tab"
-                aria-selected={filter === value}
-                onClick={() => setFilter(value)}
-                disabled={markingAll}
-                className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${filter === value ? 'bg-card text-card-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-              >
-                {t(value === 'all' ? 'notifications.bellLabel' : 'notifications.unread', locale)}
-              </button>
-            ))}
-          </div>
-        </ListPage.Toolbar>
+        <ListPage.Toolbar
+          className="items-center gap-x-2 border-b border-border/80"
+          actions={
+            <div
+              role="tablist"
+              aria-label={t('notifications.bellLabel', locale)}
+              className="inline-flex gap-1 text-sm"
+            >
+              {(['all', 'unread'] as NotificationFilter[]).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={filter === value}
+                  onClick={() => setFilter(value)}
+                  disabled={markingAll}
+                  className="min-h-11 shrink-0 border-b-2 border-transparent px-2.5 font-medium whitespace-nowrap text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary aria-selected:border-primary aria-selected:text-primary sm:px-3.5"
+                >
+                  {t(value === 'all' ? 'notifications.bellLabel' : 'notifications.unread', locale)}
+                </button>
+              ))}
+            </div>
+          }
+          refresh={
+            <ListRefreshButton
+              label={t('notifications.refresh', locale)}
+              disabled={loading || loadingMore || markingAll}
+              onClick={refresh}
+            />
+          }
+        />
         <ListPage.Content
           loading={loading || loadingMore}
           error={!!error || denied}
@@ -383,54 +396,52 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
         >
           {acceptedKey === key && items.length > 0 && (
             <div className="space-y-5">
-              {groups.map((group) => (
-                <section key={group.key} aria-label={notificationFeedback(group.key, locale)}>
-                  <h2 className="mb-2 text-sm font-semibold">
-                    {notificationFeedback(group.key, locale)}
-                  </h2>
+              {sections.map((group) => (
+                <section key={group.label} aria-label={group.label}>
+                  <h2 className="mb-2 text-sm font-semibold">{group.label}</h2>
                   <ul className="divide-y divide-border rounded-lg border bg-card text-card-foreground">
-                    {group.items.map((item) => {
-                      const alertLinks =
-                        operatingContext === 'staff' && ready
-                          ? operationsAlertLinks(item.type, item.params)
-                          : [];
-                      return (
-                        <li key={item.id}>
-                          <button
-                            type="button"
-                            onClick={() => void markRead(item)}
-                            disabled={!ready}
-                            className="flex w-full min-w-0 items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
-                            aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
-                          >
-                            <span className="min-w-0 flex-1">
-                              <NotificationRow
-                                item={item}
-                                locale={locale}
-                                unread={!item.isRead}
-                                muted={item.isRead}
-                                operatingContext={operatingContext}
-                              />
-                            </span>
-                          </button>
-                          {alertLinks.length ? (
-                            <div className="flex flex-wrap gap-x-4 gap-y-1 px-4 pb-3 ps-14">
-                              {alertLinks.map(({ label, href }) => (
-                                <a
-                                  className="rounded-sm py-1 text-sm text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                  href={href}
-                                  key={label}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {t(label, locale)}
-                                </a>
-                              ))}
-                            </div>
-                          ) : null}
-                        </li>
-                      );
-                    })}
+                    {group.items.map((item) => (
+                      <li key={item.id} className="min-w-0">
+                        <Link
+                          to={
+                            operatingContext === 'staff'
+                              ? '/admin/inbox/$notificationId'
+                              : '/notifications/$notificationId'
+                          }
+                          params={{ notificationId: item.id }}
+                          search={{ filter: filter === 'unread' ? filter : undefined, cursor }}
+                          className="block min-w-0 px-4 py-3 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+                          aria-label={notificationContent(item, locale).title}
+                        >
+                          <NotificationRow
+                            item={item}
+                            locale={locale}
+                            unread={!item.isRead}
+                            muted={item.isRead}
+                            operatingContext={operatingContext}
+                          />
+                        </Link>
+                        {ready && (
+                          <div className="flex flex-wrap items-center gap-x-4 px-4 pb-2">
+                            <NotificationSubjectLinks
+                              item={item}
+                              locale={locale}
+                              operatingContext={operatingContext}
+                            />
+                            {!item.isRead && (
+                              <button
+                                type="button"
+                                onClick={() => void markRead(item)}
+                                className="touch-action rounded-sm text-sm text-muted-foreground hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                                aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
+                              >
+                                {t('notifications.record.markRead', locale)}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </section>
               ))}

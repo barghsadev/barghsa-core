@@ -37,6 +37,40 @@ export interface CustomerInvoiceActivity {
   refunds: CustomerInvoiceRefund[];
 }
 
+export async function loadCustomerInvoiceReceipts(
+  client: Pool | PoolClient,
+  invoiceId: string,
+  profileId: string,
+  receiptId: string | null = null
+): Promise<CustomerInvoiceBankReceipt[]> {
+  const { rows } = await client.query<
+    Omit<CustomerInvoiceBankReceipt, 'createdAt' | 'confirmedAt' | 'statusHistory'> & {
+      createdAt: Date;
+      confirmedAt: Date | null;
+    }
+  >(
+    `SELECT id, amount::text, state, payment_date::text AS "paymentDate",
+            payer_reference AS "payerReference", bank_name AS "bankName",
+            customer_note AS "customerNote",
+            rejection_reason AS "rejectionReason", confirmed_at AS "confirmedAt",
+            created_at AS "createdAt"
+     FROM bank_receipts WHERE invoice_id=$1::uuid AND profile_id=$2::uuid
+       AND ($3::uuid IS NULL OR id=$3::uuid)
+     ORDER BY created_at, id`,
+    [invoiceId, profileId, receiptId]
+  );
+  const history = await receiptStatusHistory(
+    client,
+    rows.map(({ id }) => id)
+  );
+  return rows.map((row) => ({
+    ...row,
+    createdAt: row.createdAt.toISOString(),
+    confirmedAt: row.confirmedAt?.toISOString() ?? null,
+    statusHistory: history.get(row.id) ?? [],
+  }));
+}
+
 /** Read only the viewed invoice under its caller's existing authorization boundary.
  * Explicit projections keep staff IDs, storage keys and internal metadata private.
  * Money is cast to text in SQL, including the bank receipt's net invoice allocation.
@@ -70,25 +104,7 @@ export async function loadCustomerInvoiceActivity(
   );
   if (payments.rows.some((row) => row.creditConflict))
     throw new ConflictException('Bank receipt allocation requires reconciliation');
-  const bankReceipts = await client.query<
-    Omit<CustomerInvoiceBankReceipt, 'createdAt' | 'confirmedAt' | 'statusHistory'> & {
-      createdAt: Date;
-      confirmedAt: Date | null;
-    }
-  >(
-    `SELECT id, amount::text, state, payment_date::text AS "paymentDate",
-            payer_reference AS "payerReference", bank_name AS "bankName",
-            customer_note AS "customerNote",
-            rejection_reason AS "rejectionReason", confirmed_at AS "confirmedAt",
-            created_at AS "createdAt"
-     FROM bank_receipts WHERE invoice_id=$1::uuid AND profile_id=$2::uuid
-     ORDER BY created_at, id`,
-    [invoiceId, profileId]
-  );
-  const historyByReceipt = await receiptStatusHistory(
-    client,
-    bankReceipts.rows.map((receipt) => receipt.id)
-  );
+  const bankReceipts = await loadCustomerInvoiceReceipts(client, invoiceId, profileId);
   const refunds = includeRefunds
     ? await client.query<
         Omit<CustomerInvoiceRefund, 'createdAt' | 'updatedAt'> & {
@@ -110,12 +126,7 @@ export async function loadCustomerInvoiceActivity(
       state,
       createdAt: createdAt.toISOString(),
     })),
-    bankReceipts: bankReceipts.rows.map((row) => ({
-      ...row,
-      createdAt: row.createdAt.toISOString(),
-      confirmedAt: row.confirmedAt?.toISOString() ?? null,
-      statusHistory: historyByReceipt.get(row.id) ?? [],
-    })),
+    bankReceipts,
     refunds: refunds.rows.map((row) => ({
       ...row,
       createdAt: row.createdAt.toISOString(),

@@ -2,6 +2,7 @@ import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { cancellationEditorMessages } from '@barghsa/i18n/cancellation-editor';
 for (const locale of ['en', 'fa'] as const)
   test(
     locale +
@@ -215,7 +216,7 @@ for (const locale of ['en', 'fa'] as const)
         operatingContext = 'customer';
         await page.goto('/contracts');
         await page
-          .getByRole('button', {
+          .getByRole('link', {
             name: `${w.electricity} · ${w.version} ${(1).toLocaleString(locale)}`,
             exact: true,
           })
@@ -231,6 +232,10 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('button', { name: t('team.confirm', locale), exact: true })
           .click();
       const customerSubmit = async () => {
+        await requestPanel
+          .getByRole('link', { name: w.cancellationRequestSubmit, exact: true })
+          .click();
+        await expect(page).toHaveURL(`/contracts/${id}/cancel`);
         await requestPanel
           .getByLabel(w.cancellationReason, { exact: true })
           .fill('Please end service');
@@ -253,12 +258,7 @@ for (const locale of ['en', 'fa'] as const)
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
       await page.reload();
-      await page
-        .getByRole('button', {
-          name: `${w.electricity} · ${w.version} ${(1).toLocaleString(locale)}`,
-          exact: true,
-        })
-        .click();
+      await expect(page).toHaveURL(`/contracts/${id}/cancel`);
       await expect(
         requestPanel.getByText(w['cancellationRequest.Pending'], { exact: true })
       ).toBeVisible();
@@ -267,10 +267,23 @@ for (const locale of ['en', 'fa'] as const)
         await page.goto('/admin/contracts');
         await page
           .getByRole('region', { name: w.cancellationRequestQueue, exact: true })
-          .getByRole('button', { name: w.cancellationRequestOpen, exact: true })
+          .getByRole('link', { name: w.cancellationRequestOpen, exact: true })
           .click();
       };
+      operatingContext = 'staff';
+      await page.goto(
+        `/admin/contracts/${id}/decline-cancellation/99999999-9999-4999-8999-999999999999`
+      );
+      await expect(requestPanel.getByRole('status')).toHaveText(
+        cancellationEditorMessages[locale].requestUnavailable
+      );
+      await expect(requestPanel.getByText('Please end service', { exact: true })).toHaveCount(0);
+      await expect(requestPanel.locator('textarea')).toHaveCount(0);
       await staffOpen();
+      await requestPanel
+        .getByRole('link', { name: w.cancellationRequestReject, exact: true })
+        .click();
+      await expect(page).toHaveURL(/\/decline-cancellation\//);
       await requestPanel
         .getByRole('button', { name: w.cancellationRequestReject, exact: true })
         .click();
@@ -293,9 +306,7 @@ for (const locale of ['en', 'fa'] as const)
         requestPanel.getByText(w['cancellationRequest.Pending'], { exact: true })
       ).toBeVisible();
       await staffOpen();
-      await requestPanel
-        .getByRole('button', { name: w.cancellationRequestReview, exact: true })
-        .click();
+      await expect(page).toHaveURL(/\/review-cancellation\//);
       const cancellation = page.getByRole('region', { name: w.cancellationTitle, exact: true });
       await cancellation
         .getByLabel(w.cancellationReason, { exact: true })

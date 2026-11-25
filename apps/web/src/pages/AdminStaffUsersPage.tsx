@@ -1,11 +1,29 @@
+import {
+  Ban as TableBanIcon,
+  ChevronDown,
+  History as TableHistoryIcon,
+  KeyRound,
+  Mail,
+  Send as TableSendIcon,
+  ShieldCheck as TableShieldCheckIcon,
+  UserCog as TableUserCogIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffEffectivePermissions } from '../components/StaffEffectivePermissions.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
+import { Link, useBlocker } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/admin-ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
@@ -17,7 +35,10 @@ import {
   Input,
   Label,
   ListPage,
+  ListRefreshButton,
   TextCell,
+  Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -64,6 +85,7 @@ interface StaffList {
   items: Staff[];
   total: number;
 }
+type StaffPageMode = 'directory' | 'create' | 'account' | 'roles' | 'permissions';
 const blank = () => ({
   username: '',
   firstName: '',
@@ -85,18 +107,29 @@ const validStaff = (row: Staff) =>
     (role) => !!role && typeof role.roleId === 'string' && typeof role.name === 'string'
   );
 
+function StaffCommandNavigationGuard({ active }: { active: boolean }) {
+  useBlocker({ shouldBlockFn: () => active, enableBeforeUnload: () => active });
+  return null;
+}
+
 export default function AdminStaffUsersPage({
   queries,
-  workspace,
+  mode,
+  userId,
+  search,
 }: {
   queries?: ListQueryBinding;
-  workspace?: { roles: RecordAddress; permissions: RecordAddress; clear: () => void };
+  mode?: StaffPageMode;
+  userId?: string;
+  search?: Record<string, unknown>;
 } = {}) {
   const read = useStaffQueryRead('profiles');
   const deniedRead = (failure: unknown) =>
     failure instanceof ServerQueryError && [401, 403].includes(failure.status);
   const time = useAccountTime();
   const locale = useLocale();
+  const directory = !mode || mode === 'directory';
+  const usesRoleOptions = !mode || mode === 'create' || mode === 'roles';
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.staff.${key}`, locale);
   const [access, setAccess] = useState<Access | null>(null),
@@ -136,8 +169,9 @@ export default function AdminStaffUsersPage({
   const setDraft = (value: StaffCreationDraft) => createForm.form.reset(value);
   const [roleIds, setRoleIds] = roleForm.field('roleIds');
   const [reason, setReason] = roleForm.field('reason');
-  const [showCreate, setShowCreate] = useState(false);
+  const [showCreate, setShowCreate] = useState(mode === 'create');
   const [editing, setEditing] = useState<Staff | null>(null);
+  const [missing, setMissing] = useState(false);
   const createErrors = useActionFieldErrors(createForm.form, createMessages, label('invalidName'));
   const roleErrors = useActionFieldErrors(roleForm.form, roleMessages, label('invalidReason'));
   const validationOwner = useRef<object | null>(null);
@@ -213,6 +247,7 @@ export default function AdminStaffUsersPage({
     setAccessLoading(false);
     setAccessError(false);
     setList({ items: [], total: 0 });
+    setMissing(false);
     rowsRef.current = [];
     rolesRef.current = [];
     setRoles([]);
@@ -226,7 +261,6 @@ export default function AdminStaffUsersPage({
     setCreated(null);
     setHistory(null);
     setPermissionTarget(null);
-    workspace?.clear();
     setSaved(false);
     setActivationNotice(false);
     setLoading(false);
@@ -273,8 +307,9 @@ export default function AdminStaffUsersPage({
         if (accessRef.current && JSON.stringify(accessRef.current) !== JSON.stringify(next))
           clearAction();
         if (accessRef.current && accessRef.current.userId !== next.userId) {
-          workspace?.clear();
           clearRecovery();
+          rowsRef.current = [];
+          setList({ items: [], total: 0 });
           setCreated(null);
           setDraft(blank());
           setShowCreate(false);
@@ -289,10 +324,7 @@ export default function AdminStaffUsersPage({
           setDraft(blank());
           setCreated(null);
         }
-        if (!next.canEditRoles || !next.canView) {
-          setPermissionTarget(null);
-          workspace?.clear();
-        }
+        if (!next.canEditRoles || !next.canView) setPermissionTarget(null);
         if (!next.canEditRoles) {
           setEditing(null);
           setRoleIds([]);
@@ -329,24 +361,31 @@ export default function AdminStaffUsersPage({
   }, [accessRevision, read]);
   useEffect(() => {
     if (accessLoading || accessError || !access?.canView) return;
+    if (mode === 'create') return;
+    if ((mode === 'roles' || mode === 'permissions') && !access.canEditRoles) return;
     const controller = new AbortController();
     const recovering = recoveryRef.current;
     const recoveryAccess = recovering?.access;
     setLoading(true);
     setError(false);
+    setMissing(false);
     void (async () => {
       try {
-        const data = (await read(
-          `/api/admin/staff?limit=25&offset=${offset}`,
-          'list',
+        const response = await read(
+          userId
+            ? `/api/admin/staff/accounts/${encodeURIComponent(userId)}`
+            : `/api/admin/staff?limit=25&offset=${offset}`,
+          userId ? 'detail' : 'list',
           controller.signal,
           staffQueryJson,
           accessVersion
-        )) as StaffList;
+        );
+        const data = (userId ? { items: [response], total: 1 } : response) as StaffList;
         if (
           !data ||
           !Array.isArray(data.items) ||
           !data.items.every(validStaff) ||
+          (userId && data.items[0]?.userId !== userId) ||
           new Set(data.items.map((row) => row.userId)).size !== data.items.length ||
           !Number.isInteger(data.total) ||
           data.total < 0
@@ -354,14 +393,16 @@ export default function AdminStaffUsersPage({
           throw new Error('Invalid staff list');
         if (controller.signal.aborted || !accessRef.current) return;
         const inspected = permissionTargetRef.current;
-        if (inspected && !data.items.some((row) => staffBasis(row) === staffBasis(inspected))) {
+        if (
+          !userId &&
+          inspected &&
+          !data.items.some((row) => staffBasis(row) === staffBasis(inspected))
+        ) {
           setPermissionTarget(null);
-          selectPermissions(null, true);
         }
         const selected = editingRef.current;
         if (selected && !data.items.some((row) => staffBasis(row) === staffBasis(selected))) {
           setEditing(null);
-          selectRoleEditor(null, true);
           setRoleIds([]);
           setReason('');
           clearAction();
@@ -380,6 +421,13 @@ export default function AdminStaffUsersPage({
         rowsRef.current = data.items;
         setList(data);
         if (
+          mode === 'roles' &&
+          data.items[0] &&
+          (!selected || staffBasis(selected) !== staffBasis(data.items[0]))
+        ) {
+          openRoleEditor(data.items[0]);
+        }
+        if (
           recovering &&
           recoveryRef.current === recovering &&
           recoveryAccess === accessRef.current
@@ -388,17 +436,35 @@ export default function AdminStaffUsersPage({
       } catch (failure) {
         if (!controller.signal.aborted && accessRef.current) {
           if (deniedRead(failure)) denyAccess();
-          else setError(true);
+          else if (userId && failure instanceof ServerQueryError && failure.status === 404) {
+            setMissing(true);
+            setList({ items: [], total: 0 });
+            rowsRef.current = [];
+            setEditing(null);
+            roleForm.form.reset({ roleIds: [], reason: '' });
+            clearAction();
+          } else setError(true);
         }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [offset, listRevision, accessVersion, accessLoading, accessError, access?.canView, read]);
+  }, [
+    offset,
+    listRevision,
+    accessVersion,
+    accessLoading,
+    accessError,
+    access?.canView,
+    access?.canEditRoles,
+    mode,
+    userId,
+    read,
+  ]);
   useEffect(() => {
     if (accessLoading || accessError) return;
-    if (!access?.canCreate && !access?.canEditRoles) {
+    if (!usesRoleOptions || (!access?.canCreate && !access?.canEditRoles)) {
       setOptionsLoading(false);
       setOptionsError(false);
       setRoles([]);
@@ -439,6 +505,7 @@ export default function AdminStaffUsersPage({
     accessError,
     access?.canCreate,
     access?.canEditRoles,
+    usesRoleOptions,
     read,
   ]);
   const load = async () => {
@@ -468,40 +535,10 @@ export default function AdminStaffUsersPage({
     !!permissionTarget ||
     validationPending;
   const rolesDisabled = disabled || optionsLoading || optionsError;
-  const staffReady =
-    !!access?.canView &&
-    access.canEditRoles &&
-    !loading &&
-    !error &&
-    !accessLoading &&
-    !accessError;
-  const selectRoleEditor = useRecordAddress(
-    workspace?.roles,
-    list.items,
-    (staff) => staff.userId,
-    staffReady && !optionsLoading && !optionsError,
-    (staff) => {
-      clearAction();
-      if (staff) openRoleEditor(staff, false);
-      else {
-        setEditing(null);
-        roleForm.form.reset({ roleIds: [], reason: '' });
-      }
-    }
-  );
-  const selectPermissions = useRecordAddress(
-    workspace?.permissions,
-    list.items,
-    (staff) => staff.userId,
-    staffReady,
-    setPermissionTarget
-  );
-  function openRoleEditor(staff: Staff, publish = true) {
+  function openRoleEditor(staff: Staff) {
     setEditing(staff);
     roleForm.form.reset({ roleIds: staff.roles.map((role) => role.roleId), reason: '' });
     setShowCreate(false);
-    setSaved(false);
-    if (publish) selectRoleEditor(staff.userId);
   }
   useEffect(() => {
     const target = validationFocus.current;
@@ -605,23 +642,31 @@ export default function AdminStaffUsersPage({
     change: (value: string[]) => void,
     form: typeof roleForm | typeof createForm
   ) => (
-    <fieldset className="space-y-2">
-      <legend className="font-medium">{label('roles')}</legend>
-      <details className="rounded border">
+    <fieldset className="min-w-0 space-y-2">
+      <legend className="text-sm font-medium">{label('roles')}</legend>
+      <details className="group rounded-lg border bg-muted/20">
         <summary
           ref={form.bind('roleIds').ref}
           onBlur={form.bind('roleIds').onBlur}
           aria-invalid={form.bind('roleIds')['aria-invalid']}
           aria-describedby={form.bind('roleIds')['aria-describedby']}
-          className="cursor-pointer p-3 focus-visible:outline focus-visible:outline-2"
+          className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 text-sm font-medium text-primary hover:bg-muted/45 focus-visible:outline focus-visible:outline-2 [&::-webkit-details-marker]:hidden"
         >
-          {roleSummary(selected)}
+          {label('chooseRoles')}
+          <ChevronDown
+            aria-hidden="true"
+            className="size-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+          />
         </summary>
-        <div className="space-y-2 border-t p-3">
+        <div className="max-h-64 space-y-1 overflow-y-auto border-t p-2">
           {roles.map((role) => (
-            <label key={role.roleId} className="flex items-start gap-2 rounded border p-3">
+            <label
+              key={role.roleId}
+              className="flex min-h-11 min-w-0 cursor-pointer items-start gap-2 rounded-md px-2 py-2 hover:bg-muted/35"
+            >
               <input
                 type="checkbox"
+                className="mt-1 size-4 shrink-0 accent-primary"
                 disabled={rolesDisabled}
                 checked={selected.includes(role.roleId)}
                 onChange={(event) => {
@@ -644,9 +689,13 @@ export default function AdminStaffUsersPage({
           {selected
             .filter((id) => !roles.some((role) => role.roleId === id))
             .map((id) => (
-              <label key={id} className="flex items-start gap-2 rounded border p-3">
+              <label
+                key={id}
+                className="flex min-h-11 min-w-0 cursor-pointer items-start gap-2 rounded-md px-2 py-2 hover:bg-muted/35"
+              >
                 <input
                   type="checkbox"
+                  className="mt-1 size-4 shrink-0 accent-primary"
                   checked
                   disabled={rolesDisabled}
                   onChange={() => {
@@ -661,7 +710,27 @@ export default function AdminStaffUsersPage({
             ))}
         </div>
       </details>
+      {selected.length > 0 ? (
+        <ul className="flex flex-wrap gap-1.5" aria-label={label('selectedRoles')}>
+          {selected.map((id) => {
+            const role = roles.find((item) => item.roleId === id);
+            return (
+              <li
+                key={id}
+                className="max-w-full rounded-md border bg-muted/35 px-2 py-0.5 text-xs [overflow-wrap:anywhere]"
+              >
+                <bdi>{role ? roleText(role, 'name') : id}</bdi>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          {label(editing ? 'noRoles' : 'noInitialRoles')}
+        </p>
+      )}
       <CatalogueFieldFeedback
+        compact
         id={form.errorId('roleIds')}
         error={form.errors.roleIds}
         message={label('invalidRoles')}
@@ -669,11 +738,20 @@ export default function AdminStaffUsersPage({
     </fieldset>
   );
   const staffName = (staff: Staff) => (
-    <>
-      <h2 className="font-semibold">
+    <h2 className="font-semibold">
+      {mode === 'directory' ? (
+        <Link
+          to="/admin/users/$userId"
+          params={{ userId: staff.userId }}
+          search={search ?? {}}
+          className="text-primary underline underline-offset-4"
+        >
+          <TextCell value={name(staff)} />
+        </Link>
+      ) : (
         <TextCell value={name(staff)} />
-      </h2>
-    </>
+      )}
+    </h2>
   );
   const staffUsername = (staff: Staff) => (
     <>
@@ -728,25 +806,52 @@ export default function AdminStaffUsersPage({
     return (
       <>
         <div className="flex flex-wrap gap-2">
-          {access.canEditRoles && (
+          {access.canEditRoles && mode === 'account' && (
+            <>
+              <Link
+                to="/admin/users/$userId/roles"
+                params={{ userId: staff.userId }}
+                search={search ?? {}}
+                className={buttonVariants()}
+                data-table-action-tooltip={label('editRoles')}
+              >
+                <TableActionIcon icon={TableUserCogIcon}>{label('editRoles')}</TableActionIcon>
+              </Link>
+              <Link
+                to="/admin/users/$userId/permissions"
+                params={{ userId: staff.userId }}
+                search={search ?? {}}
+                className={buttonVariants({ variant: 'outline' })}
+                data-table-action-tooltip={t('admin.roles.effective.inspect', locale)}
+              >
+                <TableActionIcon icon={TableShieldCheckIcon}>
+                  {t('admin.roles.effective.inspect', locale)}
+                </TableActionIcon>
+              </Link>
+            </>
+          )}
+          {access.canEditRoles && !mode && (
             <Button
               variant="outline"
               disabled={disabled}
               onClick={(event) => {
                 permissionTrigger.current = event.currentTarget;
                 setPermissionTarget(staff);
-                selectPermissions(staff.userId);
               }}
+              data-table-action-tooltip={t('admin.roles.effective.inspect', locale)}
             >
-              {t('admin.roles.effective.inspect', locale)}
+              <TableActionIcon icon={TableShieldCheckIcon}>
+                {t('admin.roles.effective.inspect', locale)}
+              </TableActionIcon>
             </Button>
           )}
           <Button
             variant="outline"
             disabled={disabled}
             onClick={() => setHistory({ userId: staff.userId, username: staff.username })}
+            data-table-action-tooltip={label('audit.title')}
           >
-            {label('audit.title')}
+            <TableActionIcon icon={TableHistoryIcon}>{label('audit.title')}</TableActionIcon>
           </Button>
           {access.canCreate && staff.activationPending && staff.status === 'active' && (
             <Button
@@ -770,11 +875,12 @@ export default function AdminStaffUsersPage({
                   },
                 });
               }}
+              data-table-action-tooltip={label('resendActivation')}
             >
-              {label('resendActivation')}
+              <TableActionIcon icon={TableSendIcon}>{label('resendActivation')}</TableActionIcon>
             </Button>
           )}
-          {access.canEditRoles && (
+          {access.canEditRoles && !mode && (
             <Button
               variant="outline"
               disabled={rolesDisabled}
@@ -782,8 +888,9 @@ export default function AdminStaffUsersPage({
                 if (validationOwner.current || actionRef.current) return;
                 openRoleEditor(staff);
               }}
+              data-table-action-tooltip={label('editRoles')}
             >
-              {label('editRoles')}
+              <TableActionIcon icon={TableUserCogIcon}>{label('editRoles')}</TableActionIcon>
             </Button>
           )}
           {access.canDisable && staff.status === 'active' && (
@@ -805,35 +912,94 @@ export default function AdminStaffUsersPage({
                   conflictMessage: label('conflict'),
                 });
               }}
+              data-table-action-tooltip={label('disable')}
             >
-              {label('disable')}
+              <TableActionIcon icon={TableBanIcon}>{label('disable')}</TableActionIcon>
             </Button>
           )}
         </div>
       </>
     );
   };
+  const account = userId ? list.items[0] : undefined;
+  const title =
+    mode === 'create'
+      ? label('create')
+      : mode === 'roles'
+        ? label('editRoles')
+        : mode === 'permissions'
+          ? t('admin.roles.effective.title', locale)
+          : mode === 'account'
+            ? account
+              ? name(account)
+              : label('accountTitle')
+            : label('title');
+  const insufficientAccess =
+    mode === 'create'
+      ? !access?.canCreate
+      : mode === 'roles' || mode === 'permissions'
+        ? !access?.canView || !access.canEditRoles
+        : mode === 'account'
+          ? !access?.canView
+          : !access?.canView && !access?.canCreate;
+  const editorRoute = mode === 'create' || mode === 'roles';
   return (
-    <section className="mx-auto max-w-5xl min-w-0 space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <section
+      className={`mx-auto min-w-0 space-y-4 ${editorRoute ? 'max-w-3xl' : 'max-w-5xl'}`}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {mode && <StaffCommandNavigationGuard active={!!action || validationPending} />}
       {time.notice}
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{label('title')}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
+      <header className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {!directory && (
+            <Link
+              to="/admin/users"
+              search={search ?? {}}
+              className="text-sm text-primary underline underline-offset-4"
+            >
+              {label('title')}
+            </Link>
+          )}
+          {userId && mode !== 'account' && account && (
+            <Link
+              to="/admin/users/$userId"
+              params={{ userId }}
+              search={search ?? {}}
+              className="ms-4 text-sm text-primary underline underline-offset-4"
+            >
+              <bdi>{name(account)}</bdi>
+            </Link>
+          )}
+          <h1 className="text-2xl font-semibold">{title}</h1>
+          {directory && (
+            <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
+          )}
         </div>
-        {access?.canView && (
+        {editorRoute && (
+          <ListRefreshButton
+            label={label('refresh')}
+            disabled={loading || accessLoading || !!action || validationPending}
+            onClick={refreshAccess}
+          />
+        )}
+        {directory && access?.canView && (
           <Button variant="outline" disabled={disabled} onClick={() => setHistory('all')}>
             {label('audit.title')}
           </Button>
         )}
-        {access?.canCreate && (
+        {mode === 'directory' && access?.canCreate && !accessLoading && !accessError && (
+          <Link to="/admin/users/new" search={search ?? {}} className={buttonVariants()}>
+            {label('create')}
+          </Link>
+        )}
+        {!mode && access?.canCreate && (
           <Button
             disabled={rolesDisabled}
             onClick={() => {
               if (validationOwner.current || actionRef.current) return;
               setShowCreate(true);
               setEditing(null);
-              selectRoleEditor(null);
               setCreated(null);
               setSaved(false);
             }}
@@ -866,21 +1032,31 @@ export default function AdminStaffUsersPage({
           ) : (
             <p role="status">{label('linkQueued')}</p>
           )}
-          <Button variant="outline" onClick={() => setCreated(null)}>
-            {label('dismiss')}
-          </Button>
+          {mode === 'create' ? (
+            <Link
+              to="/admin/users"
+              search={search ?? {}}
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {label('dismiss')}
+            </Link>
+          ) : (
+            <Button variant="outline" onClick={() => setCreated(null)}>
+              {label('dismiss')}
+            </Button>
+          )}
         </section>
       )}
       <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            variant="outline"
-            disabled={loading || accessLoading || !!action || validationPending}
-            onClick={refreshAccess}
-          >
-            {label('refresh')}
-          </Button>
-        </ListPage.Toolbar>
+        {!editorRoute && (
+          <ListPage.Toolbar>
+            <ListRefreshButton
+              label={label('refresh')}
+              disabled={loading || accessLoading || !!action || validationPending}
+              onClick={refreshAccess}
+            />
+          </ListPage.Toolbar>
+        )}
         {accessLoading && <LoadingStatus>{label('loading')}</LoadingStatus>}
         {accessError && (
           <div role="alert">
@@ -900,10 +1076,63 @@ export default function AdminStaffUsersPage({
           </div>
         )}
         <>
-          {!accessLoading && !accessError && !access?.canView && !access?.canCreate && (
+          {!accessLoading && !accessError && insufficientAccess && (
             <p role="alert">{label('forbidden')}</p>
           )}
-          {access?.canView && (
+          {userId && !insufficientAccess && !accessLoading && !accessError && (
+            <>
+              {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+              {missing && <Alert variant="destructive">{label('accountUnavailable')}</Alert>}
+              {error && (
+                <Alert variant="destructive" className="space-y-2">
+                  <p>{label('error')}</p>
+                  <Button variant="outline" onClick={() => void load()}>
+                    {label('retry')}
+                  </Button>
+                </Alert>
+              )}
+              {account && mode === 'account' && (
+                <section
+                  aria-label={label('accountTitle')}
+                  className="space-y-5 rounded-lg border bg-card p-4 sm:p-5"
+                >
+                  <dl className="grid gap-4 sm:grid-cols-2">
+                    {(
+                      [
+                        ['username', staffUsername],
+                        ['roles', staffRoles],
+                        ['status', staffStatus],
+                        ['lastLogin', staffLastLogin],
+                      ] as const
+                    ).map(([key, render]) => (
+                      <div key={key}>
+                        <dt className="mb-1 text-sm font-medium text-muted-foreground">
+                          {label(key)}
+                        </dt>
+                        <dd>{render(account)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {!loading && !error && staffActions(account)}
+                </section>
+              )}
+              {mode === 'permissions' && account && (
+                <StaffEffectivePermissions
+                  key={account.userId}
+                  target={{
+                    userId: account.userId,
+                    username: account.username,
+                    name: name(account),
+                  }}
+                  paused={loading || error}
+                  standalone
+                  onClose={() => {}}
+                  onDenied={denyAccess}
+                />
+              )}
+            </>
+          )}
+          {directory && access?.canView && (
             <>
               <ListPage.Content
                 loading={loading}
@@ -971,12 +1200,16 @@ export default function AdminStaffUsersPage({
                       cell: staffLastLogin,
                       cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
                     },
-                    {
-                      id: 'actions',
-                      header: label('actions'),
-                      cell: staffActions,
-                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
-                    },
+                    ...(!mode
+                      ? [
+                          {
+                            id: 'actions',
+                            header: label('actions'),
+                            cell: staffActions,
+                            cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                          },
+                        ]
+                      : []),
                   ]}
                   renderCard={(staff) => (
                     <div className="min-w-0 space-y-4 [overflow-wrap:anywhere]">
@@ -996,7 +1229,7 @@ export default function AdminStaffUsersPage({
                           </div>
                         ))}
                       </dl>
-                      {staffActions(staff)}
+                      {!mode && staffActions(staff)}
                     </div>
                   )}
                 />
@@ -1043,11 +1276,9 @@ export default function AdminStaffUsersPage({
               }
               onClose={() => {
                 setPermissionTarget(null);
-                selectPermissions(null);
               }}
               onDenied={(status) => {
                 setPermissionTarget(null);
-                selectPermissions(null, true);
                 if (status === 401) denyAccess();
                 else refreshAccess();
               }}
@@ -1061,154 +1292,242 @@ export default function AdminStaffUsersPage({
               onDenied={denyAccess}
             />
           )}
-          {showCreate && access?.canCreate && (
+          {(mode === 'create' ? !created : showCreate) && access?.canCreate && (
             <form
-              className="space-y-4 rounded-lg border bg-card p-4"
+              className={recordEditorSurface}
               noValidate
+              aria-label={label('create')}
               onSubmit={(event) => void propose('create', event)}
             >
-              <h2 className="text-lg font-semibold">{label('create')}</h2>
               {catalogueRootMessage(createForm.errors) && (
-                <Alert variant="destructive">{catalogueRootMessage(createForm.errors)}</Alert>
+                <Alert variant="destructive" className="m-4">
+                  {catalogueRootMessage(createForm.errors)}
+                </Alert>
               )}
-              <fieldset disabled={!!action || validationPending} className="space-y-4">
-                {(['username', 'firstName', 'lastName'] as const).map((field) => (
-                  <div key={field}>
-                    <Label htmlFor={`staff-${field}`}>{label(field)}</Label>
-                    <Input
-                      id={`staff-${field}`}
-                      required
-                      aria-required="true"
-                      {...createForm.bind(field)}
-                      maxLength={field === 'username' ? 255 : 100}
-                      value={draft[field]}
-                      dir={field === 'username' ? 'ltr' : undefined}
-                      onChange={(event) => {
-                        if (!validationOwner.current && !actionRef.current)
-                          createForm.field(field)[1](event.target.value);
-                      }}
-                    />
-                    <CatalogueFieldFeedback
-                      id={createForm.errorId(field)}
-                      error={createForm.errors[field]}
-                      message={createMessages[field]}
-                    />
+              <fieldset disabled={!!action || validationPending} className="min-w-0">
+                <legend className="sr-only">{label('create')}</legend>
+                <div className="grid min-w-0 border-b md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+                  <div className="min-w-0 border-b md:border-e md:border-b-0">
+                    <RecordEditorSection title={label('accountDetails')}>
+                      <div className={recordEditorGrid}>
+                        {(['username', 'firstName', 'lastName'] as const).map((field) => (
+                          <div
+                            key={field}
+                            className={`${recordEditorField} ${field === 'username' ? 'sm:col-span-2' : ''}`}
+                          >
+                            <Label htmlFor={`staff-${field}`}>{label(field)}</Label>
+                            <Input
+                              id={`staff-${field}`}
+                              required
+                              aria-required="true"
+                              {...createForm.bind(field)}
+                              maxLength={field === 'username' ? 255 : 100}
+                              value={draft[field]}
+                              dir={field === 'username' ? 'ltr' : 'auto'}
+                              placeholder={
+                                field === 'username'
+                                  ? draft.activationMethod === 'link'
+                                    ? 'name@example.com'
+                                    : '+989121234567'
+                                  : undefined
+                              }
+                              onChange={(event) => {
+                                if (!validationOwner.current && !actionRef.current)
+                                  createForm.field(field)[1](event.target.value);
+                              }}
+                            />
+                            <CatalogueFieldFeedback
+                              compact
+                              id={createForm.errorId(field)}
+                              error={createForm.errors[field]}
+                              message={createMessages[field]}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </RecordEditorSection>
                   </div>
-                ))}
-                {selectRoles(
-                  draft.roleIds,
-                  (value) => createForm.field('roleIds')[1](value),
-                  createForm
-                )}
-                <fieldset
-                  role="radiogroup"
-                  aria-labelledby="staff-activation-label"
-                  aria-required="true"
-                  aria-invalid={createForm.bind('activationMethod')['aria-invalid']}
-                  aria-describedby={createForm.bind('activationMethod')['aria-describedby']}
-                  className="space-y-2"
-                >
-                  <legend id="staff-activation-label">{label('activation')}</legend>
-                  {(['link', 'tempPassword'] as const).map((method) => (
-                    <label key={method} className="flex gap-2">
-                      <input
-                        type="radio"
-                        {...(method === 'link'
-                          ? createForm.bind('activationMethod')
-                          : {
-                              name: 'activationMethod',
-                              onBlur: createForm.bind('activationMethod').onBlur,
-                            })}
-                        value={method}
-                        checked={draft.activationMethod === method}
-                        onChange={() => {
-                          if (!validationOwner.current && !actionRef.current)
-                            createForm.field('activationMethod')[1](method);
-                        }}
-                      />
-                      {label(method)}
-                    </label>
-                  ))}
-                </fieldset>
-                <CatalogueFieldFeedback
-                  id={createForm.errorId('activationMethod')}
-                  error={createForm.errors.activationMethod}
-                  message={createMessages.activationMethod}
-                />
-                {draft.activationMethod === 'link' && (
-                  <p className="text-sm">{label('linkHelp')}</p>
-                )}
-                <div className="flex gap-2">
+                  <RecordEditorSection title={label('activation')}>
+                    <fieldset
+                      role="radiogroup"
+                      aria-labelledby="staff-activation-label"
+                      aria-required="true"
+                      aria-invalid={createForm.bind('activationMethod')['aria-invalid']}
+                      aria-describedby={createForm.bind('activationMethod')['aria-describedby']}
+                      className="space-y-2"
+                    >
+                      <legend id="staff-activation-label" className="sr-only">
+                        {label('activation')}
+                      </legend>
+                      {(['link', 'tempPassword'] as const).map((method) => (
+                        <label
+                          key={method}
+                          className="flex min-h-11 cursor-pointer items-start gap-2 rounded-lg border p-3 hover:bg-muted/35 has-checked:border-primary/40 has-checked:bg-primary/5"
+                        >
+                          <input
+                            type="radio"
+                            className="mt-0.5 size-4 shrink-0 accent-primary"
+                            {...(method === 'link'
+                              ? createForm.bind('activationMethod')
+                              : {
+                                  name: 'activationMethod',
+                                  onBlur: createForm.bind('activationMethod').onBlur,
+                                })}
+                            aria-labelledby={`staff-activation-${method}`}
+                            aria-describedby={`staff-activation-${method}-help`}
+                            value={method}
+                            checked={draft.activationMethod === method}
+                            onChange={() => {
+                              if (!validationOwner.current && !actionRef.current)
+                                createForm.field('activationMethod')[1](method);
+                            }}
+                          />
+                          <span className="min-w-0 flex-1">
+                            <span
+                              id={`staff-activation-${method}`}
+                              className="block text-sm font-medium"
+                            >
+                              {label(method)}
+                            </span>
+                            <span
+                              id={`staff-activation-${method}-help`}
+                              className="mt-0.5 block text-xs text-muted-foreground"
+                            >
+                              {label(method === 'link' ? 'linkHelp' : 'tempPasswordHelp')}
+                            </span>
+                          </span>
+                          {method === 'link' ? (
+                            <Mail aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                          ) : (
+                            <KeyRound aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                          )}
+                        </label>
+                      ))}
+                    </fieldset>
+                    <CatalogueFieldFeedback
+                      compact
+                      id={createForm.errorId('activationMethod')}
+                      error={createForm.errors.activationMethod}
+                      message={createMessages.activationMethod}
+                    />
+                  </RecordEditorSection>
+                </div>
+                <RecordEditorSection title={label('roleAccess')}>
+                  {selectRoles(
+                    draft.roleIds,
+                    (value) => createForm.field('roleIds')[1](value),
+                    createForm
+                  )}
+                </RecordEditorSection>
+                <RecordEditorActions>
+                  {mode === 'create' ? (
+                    <Link
+                      to="/admin/users"
+                      search={search ?? {}}
+                      className={buttonVariants({ variant: 'outline' })}
+                    >
+                      {label('cancel')}
+                    </Link>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        if (validationOwner.current || actionRef.current) return;
+                        setShowCreate(false);
+                        setDraft(blank());
+                      }}
+                    >
+                      {label('cancel')}
+                    </Button>
+                  )}
                   <CatalogueSaveButton
                     label={label('create')}
                     pending={createForm.pending}
                     disabled={rolesDisabled}
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      if (validationOwner.current || actionRef.current) return;
-                      setShowCreate(false);
-                      setDraft(blank());
-                    }}
-                  >
-                    {label('cancel')}
-                  </Button>
-                </div>
+                </RecordEditorActions>
               </fieldset>
             </form>
           )}
           {editing && access?.canEditRoles && (
             <form
-              className="space-y-4 rounded-lg border bg-card p-4"
+              className={recordEditorSurface}
               noValidate
+              aria-label={label('editRoles')}
               onSubmit={(event) => void propose('roles', event)}
             >
-              <h2 className="text-lg font-semibold">
-                {label('editRoles')}: {name(editing)}
-              </h2>
               {catalogueRootMessage(roleForm.errors) && (
-                <Alert variant="destructive">{catalogueRootMessage(roleForm.errors)}</Alert>
+                <Alert variant="destructive" className="m-4">
+                  {catalogueRootMessage(roleForm.errors)}
+                </Alert>
               )}
-              <fieldset disabled={!!action || validationPending} className="space-y-4">
-                {selectRoles(roleIds, setRoleIds, roleForm)}
-                <p>{label('rolesHelp')}</p>
-                <Label htmlFor="staff-role-reason">{label('reason')}</Label>
-                <Input
-                  id="staff-role-reason"
-                  {...roleForm.bind('reason')}
-                  required
-                  aria-required="true"
-                  maxLength={500}
-                  value={reason}
-                  onChange={(event) => {
-                    if (!validationOwner.current && !actionRef.current)
-                      setReason(event.target.value);
-                  }}
-                />
-                <CatalogueFieldFeedback
-                  id={roleForm.errorId('reason')}
-                  error={roleForm.errors.reason}
-                  message={roleMessages.reason}
-                />
-                <div className="flex gap-2">
+              <fieldset disabled={!!action || validationPending} className="min-w-0">
+                <legend className="sr-only">{label('editRoles')}</legend>
+                <div className="grid min-w-0 md:grid-cols-2">
+                  <div className="min-w-0 border-b md:border-e md:border-b-0">
+                    <RecordEditorSection
+                      title={label('roleAccess')}
+                      description={label('rolesHelp')}
+                    >
+                      {selectRoles(roleIds, setRoleIds, roleForm)}
+                    </RecordEditorSection>
+                  </div>
+                  <RecordEditorSection title={label('auditReason')}>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="staff-role-reason">{label('reason')}</Label>
+                      <Textarea
+                        id="staff-role-reason"
+                        {...roleForm.bind('reason')}
+                        required
+                        aria-required="true"
+                        maxLength={500}
+                        rows={2}
+                        dir="auto"
+                        className="max-h-32 min-h-16 resize-y placeholder-shown:[direction:inherit]"
+                        placeholder={label('reasonExample')}
+                        value={reason}
+                        onChange={(event) => {
+                          if (!validationOwner.current && !actionRef.current)
+                            setReason(event.target.value);
+                        }}
+                      />
+                      <CatalogueFieldFeedback
+                        compact
+                        id={roleForm.errorId('reason')}
+                        error={roleForm.errors.reason}
+                        message={roleMessages.reason}
+                      />
+                    </div>
+                  </RecordEditorSection>
+                </div>
+                <RecordEditorActions>
+                  {mode === 'roles' && userId ? (
+                    <Link
+                      to="/admin/users/$userId"
+                      params={{ userId }}
+                      search={search ?? {}}
+                      className={buttonVariants({ variant: 'outline' })}
+                    >
+                      {label('cancel')}
+                    </Link>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setEditing(null);
+                      }}
+                    >
+                      {label('cancel')}
+                    </Button>
+                  )}
                   <CatalogueSaveButton
                     label={label('saveRoles')}
                     pending={roleForm.pending}
                     disabled={rolesDisabled}
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setEditing(null);
-                      selectRoleEditor(null);
-                    }}
-                  >
-                    {label('cancel')}
-                  </Button>
-                </div>
+                </RecordEditorActions>
               </fieldset>
             </form>
           )}
@@ -1311,7 +1630,6 @@ export default function AdminStaffUsersPage({
               throw new Error('Unconfirmed staff disable');
             }
             setEditing(null);
-            selectRoleEditor(null, true);
             setSaved(true);
             refreshAccess();
           }}

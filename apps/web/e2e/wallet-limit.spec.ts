@@ -46,7 +46,7 @@ for (const locale of ['en', 'fa'] as const) {
       verified = true;
       return route.fulfill({ json: { verified: true } });
     });
-    await page.goto('/admin/wallet-receipts');
+    await page.goto('/admin/wallet-receipts/settings/edit');
     const panel = page.getByTestId('wallet-top-up-limit-panel');
     const input = panel.getByTestId('wallet-top-up-limit-input');
     const draft = locale === 'fa' ? '۵۰۰۰۰۰۰۰۰' : '500000000';
@@ -153,7 +153,7 @@ for (const locale of ['en', 'fa'] as const) {
             json: reads === 2 ? { limitIrR: 1, version: 'bad' } : { limitIrR: 100, version: 0 },
           });
     });
-    await page.goto('/admin/wallet-receipts');
+    await page.goto('/admin/wallet-receipts/settings/edit');
     const panel = page.getByTestId('wallet-top-up-limit-panel');
     for (let i = 0; i < 2; i++) {
       await expect(panel.getByRole('alert')).toBeVisible();

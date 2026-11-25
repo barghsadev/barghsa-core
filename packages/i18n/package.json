@@ -62,6 +62,31 @@
       "import": "./dist/solar.js",
       "default": "./dist/solar.js"
     },
+    "./solar-intake": {
+      "types": "./dist/solar-intake.d.ts",
+      "import": "./dist/solar-intake.js",
+      "default": "./dist/solar-intake.js"
+    },
+    "./solar-staff-record": {
+      "types": "./dist/solar-staff-record.d.ts",
+      "import": "./dist/solar-staff-record.js",
+      "default": "./dist/solar-staff-record.js"
+    },
+    "./consultation-staff": {
+      "types": "./dist/consultation-staff.d.ts",
+      "import": "./dist/consultation-staff.js",
+      "default": "./dist/consultation-staff.js"
+    },
+    "./consultation-intake": {
+      "types": "./dist/consultation-intake.d.ts",
+      "import": "./dist/consultation-intake.js",
+      "default": "./dist/consultation-intake.js"
+    },
+    "./staff-work-preview": {
+      "types": "./dist/staff-work-preview.d.ts",
+      "import": "./dist/staff-work-preview.js",
+      "default": "./dist/staff-work-preview.js"
+    },
     "./consultation": {
       "types": "./dist/consultation.d.ts",
       "import": "./dist/consultation.js",
@@ -71,6 +96,11 @@
       "types": "./dist/timezone.d.ts",
       "import": "./dist/timezone.js",
       "default": "./dist/timezone.js"
+    },
+    "./timezone-display": {
+      "types": "./dist/timezone-display.d.ts",
+      "import": "./dist/timezone-display.js",
+      "default": "./dist/timezone-display.js"
     },
     "./preferences": {
       "types": "./dist/preferences.d.ts",
@@ -97,6 +127,21 @@
       "import": "./dist/wallet-receipts.js",
       "default": "./dist/wallet-receipts.js"
     },
+    "./refund-editor": {
+      "types": "./dist/refund-editor.d.ts",
+      "import": "./dist/refund-editor.js",
+      "default": "./dist/refund-editor.js"
+    },
+    "./receipt-editor": {
+      "types": "./dist/receipt-editor.d.ts",
+      "import": "./dist/receipt-editor.js",
+      "default": "./dist/receipt-editor.js"
+    },
+    "./cancellation-editor": {
+      "types": "./dist/cancellation-editor.d.ts",
+      "import": "./dist/cancellation-editor.js",
+      "default": "./dist/cancellation-editor.js"
+    },
     "./branding": {
       "types": "./dist/branding.d.ts",
       "import": "./dist/branding.js",
@@ -106,6 +151,11 @@
       "types": "./dist/date-time.d.ts",
       "import": "./dist/date-time.js",
       "default": "./dist/date-time.js"
+    },
+    "./account-time-input": {
+      "types": "./dist/account-time-input.d.ts",
+      "import": "./dist/account-time-input.js",
+      "default": "./dist/account-time-input.js"
     },
     "./providers": {
       "types": "./dist/providers.d.ts",
@@ -131,6 +181,11 @@
       "types": "./dist/crm.d.ts",
       "import": "./dist/crm.js",
       "default": "./dist/crm.js"
+    },
+    "./crm-forms": {
+      "types": "./dist/crm-forms.d.ts",
+      "import": "./dist/crm-forms.js",
+      "default": "./dist/crm-forms.js"
     },
     "./numbers": {
       "types": "./dist/numbers.d.ts",
@@ -389,15 +444,35 @@
       "import": "./dist/workspace-admin.js",
       "default": "./dist/workspace-admin.js"
     },
+    "./simple-electricity-order": {
+      "types": "./dist/simple-electricity-order.d.ts",
+      "import": "./dist/simple-electricity-order.js",
+      "default": "./dist/simple-electricity-order.js"
+    },
     "./electricity-price-forms": {
       "types": "./dist/electricity-price-forms.d.ts",
       "import": "./dist/electricity-price-forms.js",
       "default": "./dist/electricity-price-forms.js"
     },
+    "./electricity-increase-customer": {
+      "types": "./dist/electricity-increase-customer.d.ts",
+      "import": "./dist/electricity-increase-customer.js",
+      "default": "./dist/electricity-increase-customer.js"
+    },
     "./electricity-increase-decision-forms": {
       "types": "./dist/electricity-increase-decision-forms.d.ts",
       "import": "./dist/electricity-increase-decision-forms.js",
       "default": "./dist/electricity-increase-decision-forms.js"
+    },
+    "./electricity-cancellation-customer": {
+      "types": "./dist/electricity-cancellation-customer.d.ts",
+      "import": "./dist/electricity-cancellation-customer.js",
+      "default": "./dist/electricity-cancellation-customer.js"
+    },
+    "./electricity-draft-decision": {
+      "types": "./dist/electricity-draft-decision.d.ts",
+      "import": "./dist/electricity-draft-decision.js",
+      "default": "./dist/electricity-draft-decision.js"
     },
     "./recovery": {
       "types": "./dist/recovery.d.ts",

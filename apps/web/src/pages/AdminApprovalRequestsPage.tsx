@@ -5,19 +5,31 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import { formatRelativeTime } from '../lib/relative-time.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { LoadingStatus, Button, FinancialReviewSummary, Label, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  FinancialReviewSummary,
+  Label,
+  ListPage,
+  ListRefreshButton,
+  StatusBadge,
+  buttonVariants,
+} from '@barghsa/ui';
 import {
   ApprovalDecisionForm,
   type ApprovalDecisionDraft,
 } from '../components/ApprovalDecisionForm.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
-import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
-import { Link, useSearch } from '@tanstack/react-router';
+import { Link, useBlocker } from '@tanstack/react-router';
+import { approvalRequestRoute } from '../lib/decision-queue-query.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 import { existingDraftReturns } from '../lib/electricity-existing-returns.js';
+import { QueueEmptyState } from '../components/QueueEmptyState.js';
 
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
@@ -33,6 +45,8 @@ interface Request {
   reviewerUsername: string | null;
   reviewReason: string | null;
   details: Record<string, unknown> | null;
+  createdAt?: string;
+  reviewedAt?: string | null;
 }
 function approvalAmount(request: Request) {
   const amount = request.details?.adjustmentAmount;
@@ -61,44 +75,56 @@ function adoptedReturns(request: Request) {
   );
 }
 const PAGE_SIZE = 25;
-
-export default function AdminApprovalRequestsPage({
-  queries,
-}: { queries?: ListQueryBinding } = {}) {
-  const { requestId } = useSearch({ from: '/admin/approval-requests' });
-  return (
-    <AdminApprovalRequestsView
-      {...(requestId ? { requestId } : {})}
-      {...(queries ? { queries } : {})}
-    />
-  );
-}
+const approvalStatuses = ['pending', 'approved', 'rejected'] as const;
 
 export function AdminApprovalRequestsView({
   requestId,
+  decision,
   queries,
+  recordSearch,
 }: {
   requestId?: string;
+  decision?: 'reject' | undefined;
   queries?: ListQueryBinding;
+  recordSearch?: Record<string, unknown>;
 }) {
   return (
     <ApprovalWorkspace
       key={requestId || `queue:${queries?.query.filters.status || 'pending'}`}
+      decision={decision}
       {...(requestId ? { requestId } : {})}
       {...(queries ? { queries } : {})}
+      {...(recordSearch ? { recordSearch } : {})}
     />
   );
 }
+export default AdminApprovalRequestsView;
+
+function ApprovalNavigationGuard({ locked }: { locked: boolean }) {
+  useBlocker({ shouldBlockFn: () => locked, enableBeforeUnload: () => locked });
+  return null;
+}
+
 function ApprovalWorkspace({
   requestId,
+  decision,
   queries,
+  recordSearch,
 }: {
   requestId?: string;
+  decision?: 'reject' | undefined;
   queries?: ListQueryBinding;
+  recordSearch?: Record<string, unknown>;
 }) {
   const locale = useLocale();
   const read = useStaffQueryRead('operations');
   const numbers = useNumberFormatting(locale);
+  const time = useAccountTime(locale);
+  const renderDecision = Boolean(requestId || !recordSearch);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (requestId && recordSearch) heading.current?.focus({ preventScroll: true });
+  }, [requestId, decision]);
   const [localStatus, setStatus] = useState<Status>('pending');
   const [localOffset, setOffset] = useState(0);
   const status = (queries?.query.filters.status || localStatus) as Status;
@@ -147,6 +173,18 @@ function ApprovalWorkspace({
     setValidating(null);
     setAction(null);
     setReview(null);
+  }
+  function changeStatus(next: string) {
+    if (action || validating !== null) return;
+    if (queries) {
+      queries.setQuery({ filters: { status: next } });
+      return;
+    }
+    clearDecision();
+    setReasons({});
+    setStatus(next as Status);
+    setOffset(0);
+    setSaved(false);
   }
   function denyAccess() {
     ++generation.current;
@@ -286,7 +324,7 @@ function ApprovalWorkspace({
     setAction({
       risk: decision === 'reject' ? 'both' : 'financial',
       title: t(`admin.approvals.${decision}`, locale),
-      description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${numbers.money(approvalAmount(request))} ${decision === 'reject' ? `· ${reason}` : request.details?.invoiceAdjustment ? tInvoiceCorrections('approvalEffect', locale) : ''}`,
+      description: t('admin.approvals.confirm', locale),
       path: `/api/admin/approval-requests/${encodeURIComponent(request.id)}/${decision}`,
       method: 'POST',
       ...(decision === 'reject' ? { body: { reason } } : {}),
@@ -296,73 +334,111 @@ function ApprovalWorkspace({
   }
 
   const actionGeneration = commandGeneration.current;
+  const actionLocked = !!action || validating !== null;
+  const rejectionReason =
+    action?.body &&
+    typeof action.body === 'object' &&
+    'reason' in action.body &&
+    typeof action.body.reason === 'string'
+      ? action.body.reason
+      : undefined;
   return (
     <section
       aria-labelledby="approval-requests-title"
-      className="mx-auto max-w-4xl space-y-6"
+      className={
+        decision ? 'mx-auto min-w-0 max-w-3xl space-y-4' : 'mx-auto min-w-0 max-w-4xl space-y-4'
+      }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <header className="space-y-2">
-        <h1 id="approval-requests-title" className="text-2xl font-semibold">
-          {t('admin.approvals.title', locale)}
-        </h1>
-        <p className="text-sm text-muted-foreground">{t('admin.approvals.description', locale)}</p>
-      </header>
-      <DualApprovalThresholdPanel />
-      {requestId && (
-        <div className="space-y-2 rounded-lg border border-primary bg-card p-4 text-sm">
-          <p>
-            {t('admin.approvals.linkedRequest', locale)}: <bdi>{requestId}</bdi>
-          </p>
-          <Link
-            to="/admin/approval-requests"
-            search={(previous) => ({ ...previous, requestId: undefined })}
-            className="inline-block text-primary underline"
-          >
-            {t('admin.approvals.backToQueue', locale)}
-          </Link>
-        </div>
-      )}
-      <ListPage role="region" aria-label={t('admin.approvals.listTitle', locale)}>
-        <ListPage.Toolbar>
-          <div className="flex flex-wrap items-center gap-3">
-            {!requestId && (
-              <>
-                <Label htmlFor="approval-status">{t('admin.approvals.status', locale)}</Label>
-                <select
-                  id="approval-status"
-                  className="rounded border bg-card text-card-foreground p-2"
-                  value={status}
-                  disabled={!!action || validating !== null}
-                  onChange={(event) => {
-                    if (queries) {
-                      queries.setQuery({ filters: { status: event.target.value } });
-                      return;
-                    }
-                    clearDecision();
-                    setReasons({});
-                    setStatus(event.target.value as Status);
-                    setOffset(0);
-                    setSaved(false);
-                  }}
-                >
-                  {(['pending', 'approved', 'rejected'] as const).map((value) => (
-                    <option key={value} value={value}>
-                      {t(`admin.approvals.${value}`, locale)}
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
-            <Button
-              variant="outline"
-              disabled={loading || validating !== null}
-              onClick={() => void load()}
+      {recordSearch && requestId && <ApprovalNavigationGuard locked={actionLocked} />}
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-1">
+          {requestId && decision ? (
+            <Link
+              to={approvalRequestRoute}
+              params={{ requestId, decision: undefined }}
+              search={recordSearch ?? {}}
+              disabled={actionLocked}
+              className="touch-action inline-flex items-center text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
             >
-              {t('admin.approvals.refresh', locale)}
-            </Button>
-          </div>
-        </ListPage.Toolbar>
+              {t('admin.approvals.backToRequest', locale)}
+            </Link>
+          ) : (
+            requestId && (
+              <Link
+                to="/admin/approval-requests"
+                search={recordSearch ?? {}}
+                className="touch-action inline-flex items-center text-sm text-primary underline underline-offset-4"
+              >
+                {t('admin.approvals.backToQueue', locale)}
+              </Link>
+            )
+          )}
+          <h1
+            ref={heading}
+            tabIndex={requestId ? -1 : undefined}
+            id="approval-requests-title"
+            className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+          >
+            {t(
+              decision
+                ? 'admin.approvals.rejectRequest'
+                : requestId
+                  ? 'admin.approvals.decisionTitle'
+                  : 'admin.approvals.title',
+              locale
+            )}
+          </h1>
+          {!requestId && (
+            <p className="text-sm text-muted-foreground">
+              {t('admin.approvals.description', locale)}
+            </p>
+          )}
+        </div>
+        {recordSearch && !requestId && (
+          <Link
+            to="/admin/approval-requests/thresholds/{-$view}"
+            params={{ view: undefined }}
+            search={recordSearch}
+            className={buttonVariants({ variant: 'outline' })}
+          >
+            {t('admin.approvals.thresholdsLink', locale)}
+          </Link>
+        )}
+        {requestId && (
+          <ListRefreshButton
+            label={t('admin.approvals.refresh', locale)}
+            disabled={loading || actionLocked}
+            onClick={() => void load()}
+          />
+        )}
+      </header>
+      <ListPage role="region" aria-label={t('admin.approvals.listTitle', locale)}>
+        {!requestId && (
+          <ListPage.Toolbar>
+            <div className="flex flex-wrap items-center gap-3">
+              <Label htmlFor="approval-status">{t('admin.approvals.status', locale)}</Label>
+              <select
+                id="approval-status"
+                className="rounded border bg-card text-card-foreground p-2"
+                value={status}
+                disabled={!!action || validating !== null}
+                onChange={(event) => changeStatus(event.target.value)}
+              >
+                {approvalStatuses.map((value) => (
+                  <option key={value} value={value}>
+                    {t(`admin.approvals.${value}`, locale)}
+                  </option>
+                ))}
+              </select>
+              <ListRefreshButton
+                label={t('admin.approvals.refresh', locale)}
+                disabled={loading || validating !== null}
+                onClick={() => void load()}
+              />
+            </div>
+          </ListPage.Toolbar>
+        )}
         <CommandFeedback
           message={
             saved
@@ -389,56 +465,44 @@ function ApprovalWorkspace({
               )}
             </div>
           }
-          emptyView={<p>{t('admin.approvals.empty', locale)}</p>}
+          emptyView={
+            !requestId && offset === 0 ? (
+              <QueueEmptyState
+                locale={locale}
+                message={t('admin.approvals.empty', locale)}
+                status={t(`admin.approvals.${status}`, locale)}
+                alternatives={approvalStatuses
+                  .filter((value) => value !== status)
+                  .map((value) => ({
+                    value,
+                    label: t(`admin.approvals.${value}`, locale),
+                    path: `/api/admin/approval-requests?status=${value}&limit=1&offset=0`,
+                  }))}
+                hasResults={(body, value) =>
+                  Array.isArray(body) && body.some((row) => row?.status === value)
+                }
+                select={changeStatus}
+              />
+            ) : (
+              <p>{t('admin.approvals.empty', locale)}</p>
+            )
+          }
         >
           <ul className="space-y-4">
-            {visibleItems.slice(0, PAGE_SIZE).map((request) => (
-              <li
-                key={request.id}
-                className="space-y-3 rounded-lg border bg-card text-card-foreground p-4 break-words"
-              >
-                <h2 className="font-semibold">
-                  {request.details?.entityType === 'electricity_order_termination'
-                    ? t(
-                        'electricity.rawDraft.' +
-                          (request.details.terminalAction === 'reject' ? 'reject' : 'cancel'),
-                        locale
-                      )
-                    : request.actionType === 'contract_cancellation' &&
-                        request.details?.terminalAction === 'reject'
-                      ? contractText('rejectionTitle', locale)
-                      : t(`admin.approvals.${request.actionType}`, locale)}
-                </h2>
-                <dl className="grid gap-2 text-sm sm:grid-cols-2">
+            {visibleItems.slice(0, PAGE_SIZE).map((request) => {
+              const metadata = (
+                <dl className="grid min-w-0 grid-cols-2 gap-2.5 text-sm sm:grid-cols-3">
                   {[
-                    [t('admin.approvals.requestId', locale), request.id],
-                    [t('admin.approvals.amount', locale), numbers.money(approvalAmount(request))],
                     [
                       t('admin.approvals.initiator', locale),
                       request.initiatorUsername ?? request.initiatorId,
                     ],
-                    [t('admin.approvals.reason', locale), request.reason],
-                    [
-                      t('admin.approvals.status', locale),
-                      t(`admin.approvals.${request.status}`, locale),
-                    ],
-                    ...(['receiptId', 'invoiceId', 'walletId'] as const).flatMap((key) =>
-                      typeof request.details?.[key] === 'string'
-                        ? [[t(`admin.approvals.${key}`, locale), request.details[key] as string]]
-                        : []
-                    ),
-                    ...(request.actionType === 'refund' &&
-                    (request.details?.destination === 'wallet' ||
-                      request.details?.destination === 'external_bank')
+                    ...(request.createdAt
                       ? [
                           [
-                            t('admin.approvals.destination', locale),
-                            t(
-                              request.details.destination === 'wallet'
-                                ? 'admin.invoices.walletRefunds.title'
-                                : 'admin.invoices.externalRefunds.title',
-                              locale
-                            ),
+                            t('admin.approvals.createdAt', locale),
+                            (requestId ? '' : formatRelativeTime(request.createdAt, locale)) ||
+                              time.format(request.createdAt),
                           ],
                         ]
                       : []),
@@ -450,58 +514,233 @@ function ApprovalWorkspace({
                           ],
                         ]
                       : []),
-                    ...(request.reviewReason
-                      ? [[t('admin.approvals.reviewReason', locale), request.reviewReason]]
+                    ...(renderDecision
+                      ? [
+                          [
+                            t(
+                              requestId
+                                ? 'admin.approvals.linkedRequest'
+                                : 'admin.approvals.requestId',
+                              locale
+                            ),
+                            request.id,
+                          ],
+                          ...(request.reviewedAt
+                            ? [
+                                [
+                                  t('admin.approvals.reviewedAt', locale),
+                                  time.format(request.reviewedAt),
+                                ],
+                              ]
+                            : []),
+                          ...(['receiptId', 'invoiceId', 'walletId'] as const).flatMap((key) =>
+                            typeof request.details?.[key] === 'string'
+                              ? [
+                                  [
+                                    t(`admin.approvals.${key}`, locale),
+                                    request.details[key] as string,
+                                  ],
+                                ]
+                              : []
+                          ),
+                          ...(request.actionType === 'refund' &&
+                          (request.details?.destination === 'wallet' ||
+                            request.details?.destination === 'external_bank')
+                            ? [
+                                [
+                                  t('admin.approvals.destination', locale),
+                                  t(
+                                    request.details.destination === 'wallet'
+                                      ? 'admin.invoices.walletRefunds.title'
+                                      : 'admin.invoices.externalRefunds.title',
+                                    locale
+                                  ),
+                                ],
+                              ]
+                            : []),
+                        ]
                       : []),
                   ].map(([label, value]) => (
-                    <div key={label}>
-                      <dt className="text-muted-foreground">{label}</dt>
-                      <dd className="whitespace-pre-wrap">{value}</dd>
+                    <div key={label} className="min-w-0">
+                      <dt className="text-xs text-muted-foreground">{label}</dt>
+                      <dd dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+                        {value}
+                      </dd>
                     </div>
                   ))}
+                  {renderDecision && request.reviewReason && (
+                    <div className="col-span-full">
+                      <dt className="text-xs text-muted-foreground">
+                        {t('admin.approvals.reviewReason', locale)}
+                      </dt>
+                      <dd dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+                        {request.reviewReason}
+                      </dd>
+                    </div>
+                  )}
                 </dl>
-                {request.details?.entityType === 'wallet_bank_receipt' && (
-                  <a className="text-primary underline" href="/admin/wallet-receipts">
-                    {t('admin.approvals.walletReceipts', locale)}
-                  </a>
-                )}
-                {request.actionType === 'refund' &&
-                  typeof request.details?.invoiceId === 'string' &&
-                  isInvoiceUuid(request.details.invoiceId) &&
-                  (request.details.destination === 'wallet' ||
-                    request.details.destination === 'external_bank') && (
+              );
+              return (
+                <li
+                  key={request.id}
+                  className="min-w-0 space-y-3 rounded-xl border bg-card p-4 text-card-foreground"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <h2 className="font-semibold">
+                      {request.details?.entityType === 'electricity_order_termination'
+                        ? t(
+                            'electricity.rawDraft.' +
+                              (request.details.terminalAction === 'reject' ? 'reject' : 'cancel'),
+                            locale
+                          )
+                        : request.actionType === 'contract_cancellation' &&
+                            request.details?.terminalAction === 'reject'
+                          ? contractText('rejectionTitle', locale)
+                          : t(`admin.approvals.${request.actionType}`, locale)}
+                    </h2>
+                    <StatusBadge
+                      state={request.status}
+                      label={t(`admin.approvals.${request.status}`, locale)}
+                    />
+                  </div>
+                  <div
+                    className={
+                      renderDecision
+                        ? 'grid gap-2.5 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]'
+                        : undefined
+                    }
+                  >
+                    <dl className="min-w-0 space-y-0.5 rounded-lg border bg-muted/30 px-3 py-2.5">
+                      <dt className="text-xs text-muted-foreground">
+                        {t('admin.approvals.amount', locale)}
+                      </dt>
+                      <dd className="text-lg font-semibold tabular-nums [overflow-wrap:anywhere]">
+                        <bdi>{numbers.money(approvalAmount(request))}</bdi>
+                      </dd>
+                    </dl>
+                    {renderDecision && (
+                      <dl className="min-w-0 space-y-0.5 rounded-lg border px-3 py-2.5 text-sm">
+                        <dt className="text-xs text-muted-foreground">
+                          {t('admin.approvals.reason', locale)}
+                        </dt>
+                        <dd dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+                          {request.reason}
+                        </dd>
+                      </dl>
+                    )}
+                  </div>
+                  {decision ? (
+                    <details className="rounded-lg border px-3 text-sm">
+                      <summary className="min-h-11 cursor-pointer py-3 font-medium">
+                        {t('admin.approvals.requestDetails', locale)}
+                      </summary>
+                      <div className="pb-3">{metadata}</div>
+                    </details>
+                  ) : (
+                    metadata
+                  )}
+                  {recordSearch && !requestId && request.reason && (
+                    <p className="line-clamp-2 text-sm text-muted-foreground">{request.reason}</p>
+                  )}
+                  {renderDecision && request.details?.entityType === 'wallet_bank_receipt' && (
                     <a
-                      className="inline-block text-primary underline"
-                      href={`/admin/invoices?invoiceId=${encodeURIComponent(request.details.invoiceId)}#${request.details.destination === 'wallet' ? 'wallet-refunds-panel' : 'external-refunds-panel'}`}
+                      className="text-primary underline"
+                      href={
+                        typeof request.details.receiptId === 'string' &&
+                        isInvoiceUuid(request.details.receiptId)
+                          ? `/admin/wallet-receipts/${encodeURIComponent(request.details.receiptId)}`
+                          : '/admin/wallet-receipts'
+                      }
                     >
-                      {t('admin.approvals.returnToRefund', locale)}
+                      {t('admin.approvals.walletReceipts', locale)}
                     </a>
                   )}
-                {request.status === 'pending' && (
-                  <ApprovalDecisionForm
-                    requestId={request.id}
-                    initialReason={reasons[request.id] ?? ''}
-                    disabled={!!action || validating !== null || loading || error}
-                    draftDisabled={!!action || validating !== null || loading}
-                    {...(validating === request.id ||
-                    (action &&
-                      selected.current?.id === request.id &&
-                      action.path.endsWith('/reject'))
-                      ? { pending: 'reject' as const }
-                      : action && selected.current?.id === request.id
-                        ? { pending: 'approve' as const }
-                        : {})}
-                    onChange={(reason) =>
-                      setReasons((previous) => ({ ...previous, [request.id]: reason }))
-                    }
-                    validate={(run) => validateReject(request, run)}
-                    decide={(decision, draft, reason, owner) =>
-                      decide(request, decision, draft, reason, owner)
-                    }
-                  />
-                )}
-              </li>
-            ))}
+                  {renderDecision &&
+                    request.actionType === 'refund' &&
+                    typeof request.details?.invoiceId === 'string' &&
+                    isInvoiceUuid(request.details.invoiceId) &&
+                    (request.details.destination === 'wallet' ||
+                      request.details.destination === 'external_bank') && (
+                      <a
+                        className="inline-block text-primary underline"
+                        href={`/admin/invoices/${encodeURIComponent(request.details.invoiceId)}/refunds/${request.details.destination === 'wallet' ? 'wallet' : 'bank'}`}
+                      >
+                        {t('admin.approvals.returnToRefund', locale)}
+                      </a>
+                    )}
+                  {recordSearch && !requestId && (
+                    <Link
+                      to={approvalRequestRoute}
+                      params={{ requestId: request.id, decision: undefined }}
+                      search={recordSearch}
+                      aria-label={`${t('admin.approvals.openRequest', locale)} · ${request.id}`}
+                      className={buttonVariants({
+                        size: 'sm',
+                        variant: 'outline',
+                        className: 'min-h-11',
+                      })}
+                    >
+                      {t('admin.approvals.openRequest', locale)}
+                    </Link>
+                  )}
+                  {renderDecision && request.status === 'pending' && (
+                    <ApprovalDecisionForm
+                      key={decision ?? 'review'}
+                      requestId={request.id}
+                      rejectionRoute={
+                        requestId && recordSearch
+                          ? {
+                              active: decision === 'reject',
+                              link: (
+                                <Link
+                                  to={approvalRequestRoute}
+                                  params={{ requestId, decision: decision ? undefined : 'reject' }}
+                                  search={recordSearch}
+                                  disabled={actionLocked || loading || (!decision && error)}
+                                  className={buttonVariants({
+                                    variant: decision ? 'ghost' : 'outline',
+                                    className: 'aria-disabled:opacity-60',
+                                  })}
+                                >
+                                  {t(
+                                    decision
+                                      ? 'admin.approvals.cancelRejection'
+                                      : 'admin.approvals.reject',
+                                    locale
+                                  )}
+                                </Link>
+                              ),
+                            }
+                          : undefined
+                      }
+                      initialReason={reasons[request.id] ?? ''}
+                      disabled={!!action || validating !== null || loading || error}
+                      draftDisabled={!!action || validating !== null || loading}
+                      {...(validating === request.id ||
+                      (action &&
+                        selected.current?.id === request.id &&
+                        action.path.endsWith('/reject'))
+                        ? { pending: 'reject' as const }
+                        : action && selected.current?.id === request.id
+                          ? { pending: 'approve' as const }
+                          : {})}
+                      onChange={(reason) =>
+                        setReasons((previous) => ({ ...previous, [request.id]: reason }))
+                      }
+                      validate={(run) => validateReject(request, run)}
+                      decide={(decision, draft, reason, owner) =>
+                        decide(request, decision, draft, reason, owner)
+                      }
+                    />
+                  )}
+                  {decision && request.status !== 'pending' && !saved && (
+                    <p role="status" className="rounded-lg border bg-muted/25 p-3 text-sm">
+                      {t('admin.approvals.rejectionUnavailable', locale)}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </ListPage.Content>
         {!requestId && (
@@ -536,6 +775,7 @@ function ApprovalWorkspace({
       {action && (
         <TeamActionDialog
           action={action}
+          toastErrors={!requestId}
           finalFocus={() => returnFocus.current}
           onValidationError={(fields) =>
             action.path.endsWith('/reject') &&
@@ -580,6 +820,15 @@ function ApprovalWorkspace({
                     label: t('admin.approvals.reason', locale),
                     value: review.reason,
                   },
+                  ...(rejectionReason
+                    ? [
+                        {
+                          id: 'rejection-reason',
+                          label: t('admin.approvals.rejectReason', locale),
+                          value: rejectionReason,
+                        },
+                      ]
+                    : []),
                   ...(review.actionType === 'contract_cancellation' &&
                   (review.details?.terminalAction === 'reject' ||
                     review.details?.entityType === 'electricity_order_termination')

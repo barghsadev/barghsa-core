@@ -101,6 +101,6 @@ test('solar customer sees invoice payment, review, then published contract hando
   await page.reload();
   await expect(summary.getByRole('link', { name: 'View contract' })).toHaveAttribute(
     'href',
-    `/contracts?contractId=${contractId}`
+    `/contracts/${contractId}`
   );
 });

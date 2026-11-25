@@ -1,4 +1,4 @@
-import { test, expect, type Page } from './coverage-fixture';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
@@ -73,23 +73,25 @@ for (const locale of ['en', 'fa'] as const)
         );
       await page.goto('/admin/document-templates?q=Agreement&category=contract');
       const list = page.getByRole('region', { name: word('listTitle'), exact: true });
-      await expect(list.getByRole('button', { name: /Customer agreement/ })).toBeVisible();
+      await expect(list.getByRole('link', { name: /Customer agreement/ })).toBeVisible();
       await expect(page.locator('#document-template-search')).toHaveValue('Agreement');
       await expect(page.locator('#document-template-category')).toHaveValue('contract');
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
         search: 'Agreement',
         category: 'contract',
       });
-      await list.getByRole('button', { name: /Customer agreement/ }).click();
-      await page.getByRole('button', { name: word('edit'), exact: true }).click();
-      await page.locator('#document-template-title').fill('Private metadata');
-      await page.locator('#document-template-files').setInputFiles({
-        name: 'Private.pdf',
-        mimeType: 'application/pdf',
-        buffer: Buffer.from('%PDF-draft'),
-      });
+      await list.getByRole('link', { name: /Customer agreement/ }).click();
+      await page.getByRole('link', { name: word('edit'), exact: true }).click();
+      const main = page.getByRole('main');
+      const title = page.locator('#document-template-title');
       const summary = page.getByRole('textbox', { name: word('changeSummary'), exact: true });
-      await summary.fill('Private version summary');
+      await title.fill('Private metadata');
+      await expect(summary).toHaveCount(0);
+      expect(params(page).get('q')).toBe('Agreement');
+      await main.getByRole('link', { name: templateRow.title, exact: true }).click();
+      await main.getByRole('link', { name: word('title'), exact: true }).click();
+      await expect(title).toHaveCount(0);
+      await expect(list.getByRole('link', { name: templateRow.title, exact: true })).toBeVisible();
       const count = reads.length;
       await page.locator('#document-template-search').fill('Unapplied');
       expect(reads).toHaveLength(count);
@@ -99,44 +101,34 @@ for (const locale of ['en', 'fa'] as const)
       await expect.poll(() => params(page).get('category')).toBe('invoice');
       expect(reads.at(-1)!.searchParams.get('search')).toBe('Agreement');
       await expect(page.locator('#document-template-search')).toHaveValue('Unapplied');
-      await expect(page.locator('#document-template-title')).toHaveValue('Private metadata');
-      await expect(summary).toHaveValue('Private version summary');
-      expect(
-        await page
-          .locator('#document-template-files')
-          .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
-      ).toBe('Private.pdf');
       await page.getByRole('button', { name: word('search'), exact: true }).click();
       await expect.poll(() => reads.at(-1)?.searchParams.get('search')).toBe('Unapplied');
       await expect.poll(() => params(page).get('q')).toBe('Unapplied');
       expect(params(page).has('title')).toBe(false);
       expect(params(page).has('changeSummary')).toBe(false);
-      await expect(page.locator('#document-template-title')).toHaveValue('Private metadata');
       await page.reload();
       await expect(page.locator('#document-template-search')).toHaveValue('Unapplied');
       await expect(page.locator('#document-template-category')).toHaveValue('invoice');
-      await expect(page.locator('#document-template-title')).toHaveValue(templateRow.title);
-      await expect(summary).toHaveValue('');
-      expect(
-        await page
-          .locator('#document-template-files')
-          .evaluate((input: HTMLInputElement) => input.files?.length)
-      ).toBe(0);
+      await expect(title).toHaveCount(0);
       await page.goBack();
       await expect(page.locator('#document-template-search')).toHaveValue('Agreement');
       await page.goForward();
       await expect(page.locator('#document-template-search')).toHaveValue('Unapplied');
-      await list.getByRole('button', { name: /Customer agreement/ }).click();
+      await list.getByRole('link', { name: /Customer agreement/ }).click();
+      await main.getByRole('link', { name: word('publishVersion'), exact: true }).click();
       await summary.fill('Discard this summary');
       await page.locator('#document-template-files').setInputFiles({
         name: 'Private.pdf',
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-draft'),
       });
-      await list.getByRole('button', { name: /Another agreement/ }).click();
+      await main.getByRole('link', { name: templateRow.title, exact: true }).click();
+      await main.getByRole('link', { name: word('title'), exact: true }).click();
+      await list.getByRole('link', { name: 'Another agreement', exact: true }).click();
       await expect(
         page.getByRole('heading', { name: 'Another agreement', exact: true })
       ).toBeVisible();
+      await main.getByRole('link', { name: word('publishVersion'), exact: true }).click();
       await expect(summary).toHaveValue('');
       expect(
         await page
@@ -167,7 +159,7 @@ for (const locale of ['en', 'fa'] as const)
               : [
                   {
                     ...notificationTemplate(),
-                    id: `template-${channel}-${language}-${status}`,
+                    id: notificationTemplate().id,
                     eventKey: 'fixture.url',
                     subject: null,
                     channel,
@@ -180,17 +172,21 @@ for (const locale of ['en', 'fa'] as const)
           });
         }
       );
+      await page.route(
+        `**/api/admin/notifications/templates/${notificationTemplate().id}`,
+        (route) => route.fulfill({ status: failed ? 503 : 200, json: notificationTemplate() })
+      );
       await page.goto('/admin/notifications?locale=fa&channel=in_app&status=draft');
       const main = page.getByRole('main');
+      await expandListFilters(main, locale);
       const root = main.locator('[data-slot="list-page"]').filter({
         has: page.getByRole('combobox', { name: word('allStatus'), exact: true }),
       });
-      const content = root.locator(':scope > [data-slot="list-content"]');
       const list = main.getByRole('list', { name: word('catalogue'), exact: true });
       const language = root.getByRole('combobox', { name: word('locale'), exact: true });
       const channel = root.getByRole('combobox', { name: word('channel'), exact: true });
       const status = root.getByRole('combobox', { name: word('allStatus'), exact: true });
-      await expect(list.getByRole('button', { name: word('edit'), exact: true })).toBeVisible();
+      await expect(list.getByRole('link', { name: word('edit'), exact: true })).toBeVisible();
       await expect(language).toHaveValue('fa');
       await expect(channel).toHaveValue('in_app');
       await expect(status).toHaveValue('draft');
@@ -199,33 +195,37 @@ for (const locale of ['en', 'fa'] as const)
         channel: 'in_app',
         status: 'draft',
       });
-      await list.getByRole('button', { name: word('edit'), exact: true }).click();
+      await list.getByRole('link', { name: word('edit'), exact: true }).click();
       const body = page.locator('#notification-template-bodyTemplate');
       await body.fill('Private message draft');
       failed = true;
-      await root.getByRole('button', { name: word('refresh'), exact: true }).click();
-      await expect(content.locator(':scope > [role="alert"]')).toBeVisible();
+      const exactContent = main.locator('[data-slot="list-content"]');
+      await main.getByRole('button', { name: word('refresh'), exact: true }).click();
+      await expect(exactContent.locator(':scope > [role="alert"]')).toBeVisible();
       await expect(body).toHaveValue('Private message draft');
       failed = false;
-      await content
+      await exactContent
         .locator(':scope > [role="alert"]')
         .getByRole('button', { name: word('retry'), exact: true })
         .click();
-      await expect(content.locator(':scope > [role="alert"]')).toHaveCount(0);
+      await expect(exactContent.locator(':scope > [role="alert"]')).toHaveCount(0);
       await expect(body).toHaveValue('Private message draft');
+      await main.getByRole('link', { name: word('view'), exact: true }).click();
+      await main.getByRole('link', { name: word('title'), exact: true }).click();
+      await expect(body).toHaveCount(0);
+      await expandListFilters(main, locale);
       await channel.selectOption('sms');
       await expect.poll(() => params(page).get('channel')).toBe('sms');
       await expect.poll(() => reads.at(-1)?.searchParams.get('channel')).toBe('sms');
       await expect(body).toHaveCount(0);
       expect(params(page).has('bodyTemplate')).toBe(false);
       await page.reload();
+      await expandListFilters(main, locale);
       await expect(channel).toHaveValue('sms');
       await expect(language).toHaveValue('fa');
       await expect(status).toHaveValue('draft');
       await page.goBack();
       await expect(channel).toHaveValue('in_app');
-      await list.getByRole('button', { name: word('edit'), exact: true }).click();
-      await body.fill('Old scope message');
       await page.goForward();
       await expect(channel).toHaveValue('sms');
       await expect(body).toHaveCount(0);
@@ -238,6 +238,7 @@ for (const locale of ['en', 'fa'] as const)
         status: 'active',
       });
       await page.reload();
+      await expandListFilters(main, locale);
       await expect(language).toHaveValue('en');
       await expect(channel).toHaveValue('sms');
       await expect(status).toHaveValue('active');

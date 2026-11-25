@@ -6,7 +6,9 @@ const SolarRequestForm = lazyRouteComponent(
   'SolarRequestPage'
 );
 export const Route = createFileRoute('/_app/solar/requests/new')({
-  validateSearch: (search: Record<string, unknown>) => ({ step: search.step }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    step: search.step === 4 || search.step === '4' ? 3 : search.step,
+  }),
   component: () => (
     <MaintenanceBoundary capability="solar_requests">
       <SolarRequestForm />

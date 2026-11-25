@@ -272,11 +272,23 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
   }
   await page.goto(staff ? '/admin/contracts' : '/contracts');
   await page
-    .getByRole('button', {
+    .getByRole('link', {
       name: `${contractText(serviceType, locale)} · ${contractText('version', locale)} ${(1).toLocaleString(locale)}`,
       exact: true,
     })
     .click();
+  const action =
+    surface === 'decision'
+      ? 'cancellationReview'
+      : surface === 'rejection'
+        ? 'cancellationRequestReject'
+        : 'cancellationRequestSubmit';
+  await page.getByRole('link', { name: contractText(action, locale), exact: true }).click();
+  const path =
+    surface === 'customer'
+      ? `/contracts/${id}/cancel`
+      : `/admin/contracts/${id}/${surface === 'rejection' ? 'decline-cancellation/' + requestId : 'cancel'}`;
+  await expect(page).toHaveURL(path);
   return {
     writes,
     executions,
@@ -303,8 +315,6 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
           exact: true,
           includeHidden: true,
         });
-        if (surface === 'decision')
-          await region.getByRole('button', { name: w('cancellationReview'), exact: true }).click();
         const form = region.locator('form');
         const reason =
           surface === 'decision'
@@ -549,3 +559,43 @@ for (const locale of ['en', 'fa'] as const)
     expect(f.writes).toHaveLength(0);
     await expect(page.getByRole('dialog')).toHaveCount(0);
   });
+
+test('a customer request targets the effective contract version while an amendment is displayed', async ({
+  page,
+}) => {
+  const locale = 'en';
+  const f = await fixture(page, locale, false, 'customer');
+  await page.route(`**/api/contracts/${id}`, (route) =>
+    route.fulfill({
+      json: {
+        id,
+        profileId,
+        serviceType: 'electricity',
+        state: 'Active',
+        currentVersionId: versionId,
+        version: {
+          id: '99999999-9999-4999-8999-999999999999',
+          versionNumber: 2,
+          content: { text: 'Proposed amendment' },
+          changeDescription: 'Proposed amendment',
+          createdAt: '2026-09-21T00:00:00Z',
+          acceptedAt: null,
+        },
+      },
+    })
+  );
+  await page.reload();
+  await page.locator(`#request-reason-${id}`).fill('Please end the current service.');
+  await page
+    .getByRole('button', { name: contractText('cancellationRequestSubmit', locale), exact: true })
+    .click();
+  await approveRiskConfirmation(page, locale, 'destructive');
+  await page
+    .getByRole('dialog')
+    .getByRole('button', {
+      name: t('team.confirm', locale),
+      exact: true,
+    })
+    .click();
+  await expect.poll(() => f.writes[0]).toMatchObject({ expectedVersionId: versionId });
+});

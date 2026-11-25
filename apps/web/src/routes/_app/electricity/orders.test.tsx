@@ -235,9 +235,9 @@ it('opens the next invoice, contract or correction step from the order list', as
     expect(container.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toBe(
       'View and pay invoice'
     );
-    expect(
-      container.querySelector(`a[href="/contracts?contractId=${contractId}"]`)?.textContent
-    ).toBe('Review contract');
+    expect(container.querySelector(`a[href="/contracts/${contractId}"]`)?.textContent).toBe(
+      'Review contract'
+    );
     expect(
       [...container.querySelectorAll('a[href="/electricity/orders/order-correct"]')].some(
         (link) => link.textContent === 'Review requested changes'

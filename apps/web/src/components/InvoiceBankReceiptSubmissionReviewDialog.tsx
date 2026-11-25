@@ -3,6 +3,7 @@ import { FinancialConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
 import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
 import { t } from '@barghsa/i18n/workspace';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
+import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 
 export default function InvoiceBankReceiptSubmissionReviewDialog({
   review,
@@ -32,6 +33,7 @@ export default function InvoiceBankReceiptSubmissionReviewDialog({
       loading={loading}
     >
       <FinancialReviewSummary
+        compact
         title={t('invoices.details.receiptReviewSummary', locale)}
         rows={[
           {
@@ -62,7 +64,7 @@ export default function InvoiceBankReceiptSubmissionReviewDialog({
           {
             id: 'date',
             label: t('invoices.details.receiptDateLabel', locale),
-            value: review.data.paymentDate,
+            value: <ReceiptDepositDate value={review.data.paymentDate} locale={locale} />,
           },
           {
             id: 'reference',

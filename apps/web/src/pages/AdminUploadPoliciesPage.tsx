@@ -1,5 +1,12 @@
+import {
+  CalendarX as TableCalendarXIcon,
+  History as TableHistoryIcon,
+  Pencil as TablePencilIcon,
+  Plus as TablePlusIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
-import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
+import { Link } from '@tanstack/react-router';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
@@ -18,19 +25,23 @@ import {
   emptyPolicyDraft,
   type UploadPolicyDraft,
 } from '../lib/storage-policy-form.js';
-import type { UploadPolicyDto } from '@barghsa/shared/admin';
+import type { UploadPolicyCategory, UploadPolicyDto } from '@barghsa/shared/admin';
 import {
   LoadingStatus,
   Button,
+  buttonVariants,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
   Label,
   ListPage,
+  ListRefreshButton,
   DateCell,
   TextCell,
   Alert,
@@ -40,8 +51,14 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
+import {
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
+import { toast } from '../lib/toast-api.js';
 interface Limit {
-  category: string;
+  category: UploadPolicyCategory;
   allowedExtensions: string[];
   maxSizeBytes: number;
 }
@@ -49,6 +66,20 @@ interface Editor {
   limit: Limit;
   basis: string;
 }
+interface UploadPolicyAction extends TeamAction {
+  comparison?: { current: Limit; proposed: Limit };
+}
+
+function effectiveLimits(limit: Limit, current?: UploadPolicyDto): Limit {
+  return {
+    category: limit.category,
+    allowedExtensions: (current?.allowedExtensions ?? limit.allowedExtensions).filter((ext) =>
+      limit.allowedExtensions.includes(ext)
+    ),
+    maxSizeBytes: Math.min(current?.maxSizeBytes ?? limit.maxSizeBytes, limit.maxSizeBytes),
+  };
+}
+
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -103,15 +134,21 @@ function basis(limit: Limit, policies: UploadPolicyDto[]) {
   });
 }
 const mib = 1024 * 1024;
+const collectionPath = '/api/admin/upload-policies';
+type UploadPolicyWorkspace =
+  | { view: 'catalogue'; category?: never; versionId?: never }
+  | {
+      view: 'detail' | 'editor' | 'history';
+      category: UploadPolicyCategory;
+      versionId?: never;
+      close: () => void;
+      showVersion: (versionId: string) => void;
+    }
+  | { view: 'version'; category: UploadPolicyCategory; versionId: string };
 export default function AdminUploadPoliciesPage({
   workspace,
 }: {
-  workspace?: {
-    editor: RecordAddress;
-    clear: () => void;
-    history: readonly string[];
-    toggleHistory: (category: string) => void;
-  };
+  workspace?: UploadPolicyWorkspace;
 } = {}) {
   const readQuery = useStaffQueryRead('catalogue');
   const deniedRead = (reason: unknown) =>
@@ -124,10 +161,15 @@ export default function AdminUploadPoliciesPage({
     storagePolicyFormText(key, locale);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const category = workspace?.category;
+  const versionId = workspace?.versionId;
+  const view = workspace?.view;
+  const routedRecord = !!category;
+  useEffect(() => {
+    if (routedRecord) heading.current?.focus({ preventScroll: true });
+  }, [routedRecord]);
+  const editorOpened = useRef(false);
   const [localHistory, setLocalHistory] = useState<string[]>([]);
-  const expandedHistory = workspace?.history ?? localHistory;
-  const onSelect = workspace?.editor.set;
-  const clearAddress = workspace?.clear;
   const limitRef = useRef<Limit | null>(null);
   const form = useWizardForm<UploadPolicyDraft>(
     async () => {
@@ -159,6 +201,7 @@ export default function AdminUploadPoliciesPage({
     [policies, setPolicies] = useState<UploadPolicyDto[]>([]);
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(false),
+    [missing, setMissing] = useState(false),
     [canEdit, setCanEdit] = useState(false),
     [revision, setRevision] = useState(0);
   const [editor, setEditor] = useState<Editor | null>(null);
@@ -172,7 +215,7 @@ export default function AdminUploadPoliciesPage({
     dialogBusy.current = pending;
     setDialogPending(pending);
   }, []);
-  const [action, setAction] = useState<TeamAction | null>(null),
+  const [action, setAction] = useState<UploadPolicyAction | null>(null),
     [notice, setNotice] = useState(false);
   const [accessRevision, setAccessRevision] = useState(0);
   const [accessLoading, setAccessLoading] = useState(true);
@@ -186,7 +229,7 @@ export default function AdminUploadPoliciesPage({
   const actionBasis = useRef<{ category: string; basis: string } | null>(null);
   const generation = useRef(0);
   const actionGeneration = useRef(0);
-  const actionRef = useRef<TeamAction | null>(null);
+  const actionRef = useRef<UploadPolicyAction | null>(null);
   const withdraw = useCallback(() => {
     generation.current++;
     validationBusy.current = false;
@@ -196,20 +239,17 @@ export default function AdminUploadPoliciesPage({
     actionBasis.current = null;
     onPendingChange(false);
   }, [form.setValidationPending, onPendingChange]);
-  const clearWork = useCallback(
-    (publish = true) => {
-      withdraw();
-      setEditor(null);
-      limitRef.current = null;
-      resetPolicy(emptyPolicyDraft());
-      setNeedsReset(false);
-      setUncertain(false);
-      setRecoveryReady(false);
-      setNotice(false);
-      if (publish) onSelect?.(null, true);
-    },
-    [withdraw, resetPolicy, onSelect]
-  );
+  const clearWork = useCallback(() => {
+    withdraw();
+    editorOpened.current = false;
+    setEditor(null);
+    limitRef.current = null;
+    resetPolicy(emptyPolicyDraft());
+    setNeedsReset(false);
+    setUncertain(false);
+    setRecoveryReady(false);
+    setNotice(false);
+  }, [withdraw, resetPolicy]);
   const deny = useCallback(() => {
     accessRequest.current?.abort();
     listRequest.current?.abort();
@@ -222,9 +262,10 @@ export default function AdminUploadPoliciesPage({
     setAccessError(false);
     setLoading(false);
     setError(false);
-    clearWork(false);
-    clearAddress?.();
-  }, [clearWork, clearAddress]);
+    setMissing(false);
+    editorOpened.current = false;
+    clearWork();
+  }, [clearWork]);
   useEffect(
     () => () => {
       generation.current++;
@@ -271,12 +312,13 @@ export default function AdminUploadPoliciesPage({
     listRequest.current = controller;
     setLoading(true);
     setError(false);
+    setMissing(false);
     void (async () => {
       try {
-        const read = (path: string) =>
+        const read = (path: string, kind: 'list' | 'detail' = 'list') =>
           readQuery(
             path,
-            'list',
+            kind,
             controller.signal,
             async (res) => {
               if (controller.signal.aborted) throw new Error('Obsolete read');
@@ -288,12 +330,24 @@ export default function AdminUploadPoliciesPage({
             },
             accessVersion
           );
-        const [versions, boundaries] = await Promise.all([
-          read('/api/admin/upload-policies'),
+        const path =
+          versionId && category
+            ? `${collectionPath}/${category}/versions/${encodeURIComponent(versionId)}`
+            : category
+              ? `${collectionPath}?category=${category}`
+              : collectionPath;
+        const [response, boundaries] = await Promise.all([
+          read(path, versionId ? 'detail' : 'list'),
           read('/api/admin/upload-policies/limits'),
         ]);
         if (controller.signal.aborted) return;
-        if (!validPolicies(versions) || !validLimits(boundaries))
+        const versions = versionId ? [response] : response;
+        if (
+          !validPolicies(versions) ||
+          !validLimits(boundaries) ||
+          (category && versions.some((item) => item.category !== category)) ||
+          (versionId && versions[0]?.id !== versionId)
+        )
           throw new Error('Invalid response');
         const work = editorRef.current ?? actionBasis.current;
         if (work) {
@@ -307,10 +361,17 @@ export default function AdminUploadPoliciesPage({
         }
         accepted.current = true;
         setPolicies(versions);
-        setLimits(boundaries);
+        setLimits(
+          category ? boundaries.filter((limit) => limit.category === category) : boundaries
+        );
         setRecoveryReady(true);
-      } catch {
-        if (!controller.signal.aborted) setError(true);
+      } catch (reason) {
+        if (!controller.signal.aborted) {
+          if (versionId && reason instanceof ServerQueryError && reason.status === 404) {
+            setMissing(true);
+            setPolicies([]);
+          } else setError(true);
+        }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -326,22 +387,19 @@ export default function AdminUploadPoliciesPage({
     clearWork,
     withdraw,
     readQuery,
+    category,
+    versionId,
   ]);
   const disabled = !canEdit || loading || error || accessLoading || accessError;
-  const selectEditor = useRecordAddress(
-    workspace?.editor,
-    limits,
-    (limit) => limit.category,
-    !disabled,
-    (limit) => {
-      if (limit) {
-        const current = policies.find(
-          (policy) => policy.category === limit.category && policy.status === 'current'
-        );
-        edit(limit, current, false);
-      } else cancelEditor(false);
-    }
-  );
+  useEffect(() => {
+    const limit = limits[0];
+    if (view !== 'editor' || disabled || editorOpened.current || !limit) return;
+    editorOpened.current = true;
+    edit(
+      limit,
+      policies.find((policy) => policy.status === 'current')
+    );
+  }, [view, limits, policies, disabled]);
   const refresh = () => {
     if (dialogBusy.current) return;
     if (validationBusy.current || uncertain) withdraw();
@@ -359,14 +417,12 @@ export default function AdminUploadPoliciesPage({
   };
   const recoveryControls = (
     <div className="space-y-2">
-      <Button
-        type="button"
-        variant="outline"
-        disabled={accessLoading || loading || dialogPending}
+      <ListRefreshButton
+        label={t('admin.jobs.refresh', locale)}
+        refreshing={accessLoading || loading}
+        disabled={dialogPending}
         onClick={refresh}
-      >
-        {t('admin.jobs.refresh', locale)}
-      </Button>
+      />
       {(accessLoading || loading) && <LoadingStatus>{t('common.loading', locale)}</LoadingStatus>}
       {accessError && (
         <div role="alert">
@@ -386,8 +442,8 @@ export default function AdminUploadPoliciesPage({
       )}
     </div>
   );
-  function edit(limit: Limit, current: UploadPolicyDto | undefined, publish = true) {
-    if (publish && (disabled || uncertain || actionRef.current || validationBusy.current)) return;
+  function edit(limit: Limit, current: UploadPolicyDto | undefined) {
+    if (disabled || uncertain || actionRef.current || validationBusy.current) return;
     withdraw();
     setNeedsReset(false);
     setNotice(false);
@@ -397,7 +453,6 @@ export default function AdminUploadPoliciesPage({
       limit,
       basis: basis(limit, policies),
     });
-    if (publish) selectEditor(limit.category);
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -419,19 +474,23 @@ export default function AdminUploadPoliciesPage({
         captured = value;
       })();
       if (!captured || epoch !== generation.current || disabled) return;
-      const bytes = Number(captured.size) * mib;
+      const proposed = {
+        category: editor.limit.category,
+        allowedExtensions: captured.extensions,
+        maxSizeBytes: Number(captured.size) * mib,
+      };
+      const current = policies.find(
+        (policy) => policy.category === proposed.category && policy.status === 'current'
+      );
       actionBasis.current = { category: editor.limit.category, basis: editor.basis };
       actionGeneration.current = generation.current;
-      const next: TeamAction = {
+      const next: UploadPolicyAction = {
         title: label('save'),
-        description: `${label('confirm')} ${label(`category.${editor.limit.category}`)}: ${captured.extensions.join(', ')} · ${size(bytes)}`,
+        description: label('applyOnConfirmation'),
         path: '/api/admin/upload-policies',
         method: 'POST',
-        body: {
-          category: editor.limit.category,
-          allowedExtensions: captured.extensions,
-          maxSizeBytes: bytes,
-        },
+        body: proposed,
+        comparison: { current: effectiveLimits(editor.limit, current), proposed },
         conflictMessage: label('scheduleConflict'),
         forbiddenMessage: label('forbidden'),
         errorMessages: errors,
@@ -450,7 +509,6 @@ export default function AdminUploadPoliciesPage({
     if (disabled || uncertain || validationBusy.current || actionRef.current || needsReset) return;
     generation.current++;
     setEditor(null);
-    selectEditor(null);
     actionBasis.current = { category: limit.category, basis: basis(limit, policies) };
     actionGeneration.current = generation.current;
     setNotice(false);
@@ -503,33 +561,280 @@ export default function AdminUploadPoliciesPage({
     setRecoveryReady(false);
     setAccessRevision((value) => value + 1);
   }
-  function cancelEditor(publish = true) {
+  function cancelEditor() {
     withdraw();
     setEditor(null);
     limitRef.current = null;
     resetPolicy(emptyPolicyDraft());
     setNeedsReset(false);
-    if (publish) selectEditor(null);
+    if (workspace?.view === 'editor') workspace.close();
   }
   function toggleHistory(category: string) {
-    if (workspace) workspace.toggleHistory(category);
-    else
-      setLocalHistory((values) =>
-        values.includes(category)
-          ? values.filter((value) => value !== category)
-          : [...values, category]
-      );
+    setLocalHistory((values) =>
+      values.includes(category)
+        ? values.filter((value) => value !== category)
+        : [...values, category]
+    );
   }
+  const categoryLabel = category ? label(`category.${category}`) : '';
+  const scopedLimit = category ? limits[0] : undefined;
+  const selectedVersion = versionId ? policies[0] : undefined;
+  const currentVersion = category
+    ? policies.find((policy) => policy.status === 'current')
+    : undefined;
+  const effectivePolicy = scopedLimit && effectiveLimits(scopedLimit, currentVersion);
+  const title = category
+    ? `${view === 'history' ? label('history') : view === 'editor' ? label(currentVersion ? 'edit' : 'create') : view === 'version' ? label('version') : label('details')} · ${categoryLabel}`
+    : label('title');
+  const versionRoute = (policy: UploadPolicyDto) => ({
+    to: '/admin/upload-policies/$category/versions/$versionId' as const,
+    params: { category: policy.category, versionId: policy.id },
+  });
+  const categoryRoute = (value: UploadPolicyCategory, action?: 'history' | 'edit' | 'new') => ({
+    to: '/admin/upload-policies/$category/{-$action}' as const,
+    params: { category: value, action },
+  });
+  const subAction = buttonVariants({ variant: 'outline', className: 'min-h-11' });
+  const valuesSummary = (extensions: string[], bytes: number) => (
+    <dl className="grid gap-3 text-sm sm:grid-cols-2">
+      <div>
+        <dt className="text-muted-foreground">{label('formats')}</dt>
+        <dd className="mt-1 font-medium [overflow-wrap:anywhere]">
+          <bdi>{extensions.join(', ') || '—'}</bdi>
+        </dd>
+      </div>
+      <div>
+        <dt className="text-muted-foreground">{label('maxSize')}</dt>
+        <dd className="mt-1 font-medium">
+          {Number.isSafeInteger(bytes) && bytes > 0 ? size(bytes) : '—'}
+        </dd>
+        {Number.isSafeInteger(bytes) && bytes > 0 && (
+          <dd className="text-muted-foreground">
+            {label('bytes').replace('{count}', numbers.number(bytes))}
+          </dd>
+        )}
+      </div>
+    </dl>
+  );
+  const versionMetadata = (policy: UploadPolicyDto) => (
+    <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <dt className="text-muted-foreground">{label('status')}</dt>
+        <dd>{label(`status.${policy.status}`)}</dd>
+      </div>
+      <div>
+        <dt className="text-muted-foreground">{label('from')}</dt>
+        <dd>
+          <DateCell value={policy.effectiveFrom} format={() => date(policy.effectiveFrom)} />
+        </dd>
+      </div>
+      <div>
+        <dt className="text-muted-foreground">{label('until')}</dt>
+        <dd>
+          {policy.effectiveUntil ? (
+            <DateCell value={policy.effectiveUntil} format={() => date(policy.effectiveUntil)} />
+          ) : (
+            label('openEnded')
+          )}
+        </dd>
+      </div>
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{label('actor')}</dt>
+        <dd className="[overflow-wrap:anywhere]">
+          <bdi>{policy.createdBy}</bdi>
+        </dd>
+      </div>
+    </dl>
+  );
+  const EditorActions = workspace ? RecordEditorActions : DialogFooter;
+  const editorForm = editor && (
+    <form
+      noValidate
+      aria-busy={form.pending || undefined}
+      onSubmit={submit}
+      className={workspace ? recordEditorSurface : 'space-y-4'}
+      aria-label={title}
+    >
+      <div className={workspace ? 'space-y-3 px-4 py-4 sm:px-6' : 'space-y-3'}>
+        {workspace ? (
+          <>
+            {effectivePolicy && (
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 rounded-lg bg-muted/55 px-3 py-2.5 text-sm">
+                <p className="text-muted-foreground">{label('currentEffective')}</p>
+                <p className="min-w-0 font-medium [overflow-wrap:anywhere]">
+                  <bdi>{effectivePolicy.allowedExtensions.join(', ') || '—'}</bdi>
+                  <span aria-hidden="true"> · </span>
+                  {size(effectivePolicy.maxSizeBytes)}
+                </p>
+              </div>
+            )}
+            <p className="text-sm text-muted-foreground">{label('warning')}</p>
+          </>
+        ) : (
+          recoveryControls
+        )}
+        {(needsReset || uncertain) && (
+          <>
+            <Alert variant="destructive">{text(uncertain ? 'unverified' : 'changed')}</Alert>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={disabled || !recoveryReady || form.pending}
+              onClick={resetSaved}
+            >
+              {text('reset')}
+            </Button>
+          </>
+        )}
+        {catalogueRootMessage(form.errors) && (
+          <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
+        )}
+        <fieldset
+          ref={extensionsRef}
+          className="m-0 min-w-0 space-y-2 border-0 p-0"
+          disabled={disabled || needsReset || uncertain || form.pending || !!action}
+          aria-invalid={form.bind('extensions')['aria-invalid']}
+          aria-describedby={
+            form.bind('extensions')['aria-describedby'] ?? 'upload-policy-formats-help'
+          }
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              form.bind('extensions').onBlur();
+          }}
+        >
+          <legend className="font-medium">{label('formats')}</legend>
+          {!form.errors.extensions && (
+            <p id="upload-policy-formats-help" className="text-sm text-muted-foreground">
+              {text('extensions')}
+            </p>
+          )}
+          <div className="flex flex-wrap gap-2">
+            {editor.limit.allowedExtensions.map((ext) => (
+              <label
+                key={ext}
+                className="touch-label flex min-h-8 cursor-pointer items-center gap-2 rounded-lg border px-2.5 text-sm has-[:checked]:border-primary/45 has-[:checked]:bg-primary/5"
+              >
+                <input
+                  type="checkbox"
+                  checked={form.values.extensions.includes(ext)}
+                  onChange={(event) =>
+                    form.field('extensions')[1](
+                      event.target.checked
+                        ? [...form.values.extensions, ext]
+                        : form.values.extensions.filter((value) => value !== ext)
+                    )
+                  }
+                />
+                <bdi>{ext}</bdi>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <CatalogueFieldFeedback
+          id={form.errorId('extensions')}
+          error={form.errors.extensions}
+          message={text('extensions')}
+          compact
+        />
+        <div className={recordEditorField}>
+          <Label htmlFor="upload-policy-size">
+            {label('maxSize')}
+            <span className="sr-only"> ({label('mib')})</span>
+          </Label>
+          <InputGroup className="w-44 max-w-full">
+            <InputGroupInput
+              {...form.bind('size')}
+              id="upload-policy-size"
+              type="number"
+              dir="ltr"
+              className="min-w-0 tabular-nums"
+              min={1 / mib}
+              max={editor.limit.maxSizeBytes / mib}
+              step="any"
+              required
+              aria-required="true"
+              aria-describedby={[
+                form.bind('size')['aria-describedby'],
+                'upload-policy-size-ceiling',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              value={form.values.size}
+              disabled={disabled || needsReset || uncertain || form.pending || !!action}
+              onChange={(event) => form.field('size')[1](event.target.value)}
+            />
+            <InputGroupAddon align="inline-end" aria-hidden="true" className="whitespace-nowrap">
+              {label('mib')}
+            </InputGroupAddon>
+          </InputGroup>
+          <p id="upload-policy-size-ceiling" className="text-sm text-muted-foreground">
+            {label('ceiling')}: {size(editor.limit.maxSizeBytes)}
+          </p>
+        </div>
+        <CatalogueFieldFeedback
+          id={form.errorId('size')}
+          error={form.errors.size}
+          message={text('size')}
+          compact
+        />
+      </div>
+      <EditorActions>
+        <Button type="button" variant="outline" onClick={() => cancelEditor()}>
+          {label('cancel')}
+        </Button>
+        <CatalogueSaveButton
+          label={label('save')}
+          pending={form.pending}
+          disabled={disabled || needsReset || uncertain || form.pending || !!action}
+        />
+      </EditorActions>
+    </form>
+  );
   return (
-    <section className="min-w-0 space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <section
+      className={view === 'editor' ? 'mx-auto w-full max-w-3xl space-y-4' : 'min-w-0 space-y-5'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       {time.notice}
       <header className="flex flex-wrap justify-between gap-3">
         <div>
-          <h1 ref={heading} tabIndex={-1} className="text-2xl font-semibold outline-none">
-            {label('title')}
+          {category && (
+            <nav
+              aria-label={label('title')}
+              className="mb-2 flex flex-wrap gap-2 text-sm text-primary"
+            >
+              <Link to="/admin/upload-policies" className="underline-offset-4 hover:underline">
+                {label('title')}
+              </Link>
+              {view !== 'detail' && (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <Link {...categoryRoute(category)} className="underline-offset-4 hover:underline">
+                    {categoryLabel}
+                  </Link>
+                </>
+              )}
+            </nav>
+          )}
+          <h1
+            ref={heading}
+            tabIndex={-1}
+            className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+          >
+            {title}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
+          {(!category || view === 'detail') && (
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
+          )}
         </div>
+        {view === 'editor' && (
+          <ListRefreshButton
+            label={t('admin.jobs.refresh', locale)}
+            ref={refreshButton}
+            disabled={accessLoading || loading || dialogPending}
+            onClick={refresh}
+          />
+        )}
       </header>
       <CommandFeedback message={notice ? label('saved') : null} />
       {uncertain && !editor && (
@@ -546,16 +851,16 @@ export default function AdminUploadPoliciesPage({
         </div>
       )}
       <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            ref={refreshButton}
-            variant="outline"
-            disabled={accessLoading || loading || dialogPending}
-            onClick={refresh}
-          >
-            {t('admin.jobs.refresh', locale)}
-          </Button>
-        </ListPage.Toolbar>
+        {view !== 'editor' && (
+          <ListPage.Toolbar>
+            <ListRefreshButton
+              label={t('admin.jobs.refresh', locale)}
+              ref={refreshButton}
+              disabled={accessLoading || loading || dialogPending}
+              onClick={refresh}
+            />
+          </ListPage.Toolbar>
+        )}
         {accessLoading && <LoadingStatus>{label('accessLoading')}</LoadingStatus>}
         {accessError && (
           <div role="alert" className="space-y-2">
@@ -564,6 +869,7 @@ export default function AdminUploadPoliciesPage({
           </div>
         )}
         {!accessLoading && !accessError && !canEdit && <p role="alert">{label('forbidden')}</p>}
+        {missing && <Alert variant="destructive">{label('versionMissing')}</Alert>}
         {canEdit && (
           <ListPage.Content
             loading={loading}
@@ -581,121 +887,260 @@ export default function AdminUploadPoliciesPage({
             }
             emptyView={<p>{label('empty')}</p>}
           >
-            <OperationalQueueTable
-              locale={locale}
-              rows={limits.map((limit) => ({
-                limit,
-                id: limit.category,
-                current: policies.find(
-                  (policy) => policy.category === limit.category && policy.status === 'current'
-                ),
-              }))}
-              caption={label('catalogue')}
-              scrollLabel={label('catalogue')}
-              nameHeader={label('category')}
-              renderName={({ limit }) => <TextCell value={label(`category.${limit.category}`)} />}
-              fields={[
-                {
-                  id: 'formats',
-                  label: label('formats'),
-                  render: ({ current, limit }) => (
-                    <span dir="ltr">
-                      <TextCell
-                        value={(current?.allowedExtensions ?? limit.allowedExtensions)
-                          .filter((ext) => limit.allowedExtensions.includes(ext))
-                          .join(', ')}
-                      />
-                    </span>
-                  ),
-                },
-                {
-                  id: 'maxSize',
-                  label: label('maxSize'),
-                  render: ({ current, limit }) =>
-                    size(Math.min(current?.maxSizeBytes ?? limit.maxSizeBytes, limit.maxSizeBytes)),
-                },
-                {
-                  id: 'source',
-                  label: label('source'),
-                  render: ({ current }) => label(current ? 'configured' : 'deployment'),
-                },
-              ]}
-              actionHeader={label('actions')}
-              renderActions={({ current, limit }) => (
-                <>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      disabled={disabled || uncertain || form.pending || !!action}
-                      onClick={() => edit(limit, current)}
-                      aria-label={`${label('edit')} ${label(`category.${limit.category}`)}`}
+            {category && scopedLimit && view === 'detail' && effectivePolicy && (
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {!disabled && (
+                    <Link
+                      {...categoryRoute(category, currentVersion ? 'edit' : 'new')}
+                      className={buttonVariants({ className: 'min-h-11' })}
                     >
-                      {label('edit')}
-                    </Button>
-                    {current?.effectiveUntil === null && (
-                      <Button
-                        variant="outline"
-                        disabled={disabled || uncertain || form.pending || !!action}
-                        onClick={() => end(current, limit)}
-                        aria-label={`${label('end')} ${label(`category.${limit.category}`)}`}
+                      {label(currentVersion ? 'edit' : 'create')}
+                    </Link>
+                  )}
+                  <Link {...categoryRoute(category, 'history')} className={subAction}>
+                    {label('history')}
+                  </Link>
+                  {currentVersion && (
+                    <Link {...versionRoute(currentVersion)} className={subAction}>
+                      {label('version')}
+                    </Link>
+                  )}
+                </div>
+                <section
+                  aria-label={label('catalogue')}
+                  className="space-y-3 rounded-xl border bg-card p-4 sm:p-6"
+                >
+                  <h2 className="text-lg font-semibold">{label('catalogue')}</h2>
+                  {valuesSummary(effectivePolicy.allowedExtensions, effectivePolicy.maxSizeBytes)}
+                  {currentVersion ? (
+                    versionMetadata(currentVersion)
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{label('deployment')}</p>
+                  )}
+                </section>
+                <section
+                  aria-label={label('ceiling')}
+                  className="space-y-3 rounded-xl border bg-card p-4 sm:p-6"
+                >
+                  <h2 className="font-semibold">{label('ceiling')}</h2>
+                  {valuesSummary(scopedLimit.allowedExtensions, scopedLimit.maxSizeBytes)}
+                </section>
+              </div>
+            )}
+            {category &&
+              view === 'history' &&
+              (policies.length ? (
+                <ol aria-label={label('history')} className="divide-y rounded-xl border bg-card">
+                  {policies.map((policy) => (
+                    <li key={policy.id} className="min-w-0 space-y-3 p-4 sm:p-5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p className="font-semibold">
+                          {label(`status.${policy.status}`)} · {date(policy.effectiveFrom)}
+                        </p>
+                        <Link {...versionRoute(policy)} className={subAction}>
+                          {label('version')}
+                        </Link>
+                      </div>
+                      {valuesSummary(policy.allowedExtensions, policy.maxSizeBytes)}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="rounded-xl border bg-card p-4">{label('noHistory')}</p>
+              ))}
+            {category && scopedLimit && selectedVersion && view === 'version' && (
+              <div className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+                {versionMetadata(selectedVersion)}
+                <div className="border-t pt-4">
+                  {valuesSummary(selectedVersion.allowedExtensions, selectedVersion.maxSizeBytes)}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link {...categoryRoute(category, 'history')} className={subAction}>
+                    {label('history')}
+                  </Link>
+                  {selectedVersion.status === 'current' &&
+                    selectedVersion.effectiveUntil === null && (
+                      <>
+                        {!disabled && (
+                          <Link {...categoryRoute(category, 'edit')} className={subAction}>
+                            {label('edit')}
+                          </Link>
+                        )}
+                        <Button
+                          variant="outline"
+                          disabled={disabled || uncertain || !!action}
+                          onClick={() => end(selectedVersion, scopedLimit)}
+                        >
+                          {label('end')}
+                        </Button>
+                      </>
+                    )}
+                </div>
+              </div>
+            )}
+            {!routedRecord && (
+              <OperationalQueueTable
+                locale={locale}
+                rows={limits.map((limit) => ({
+                  limit,
+                  id: limit.category,
+                  current: policies.find(
+                    (policy) => policy.category === limit.category && policy.status === 'current'
+                  ),
+                }))}
+                caption={label('catalogue')}
+                scrollLabel={label('catalogue')}
+                nameHeader={label('category')}
+                renderName={({ limit }) =>
+                  workspace && !disabled ? (
+                    <Link
+                      {...categoryRoute(limit.category)}
+                      className="font-semibold text-primary underline-offset-4 hover:underline"
+                    >
+                      {label(`category.${limit.category}`)}
+                    </Link>
+                  ) : (
+                    <TextCell value={label(`category.${limit.category}`)} />
+                  )
+                }
+                fields={[
+                  {
+                    id: 'formats',
+                    label: label('formats'),
+                    render: ({ current, limit }) => (
+                      <span dir="ltr">
+                        <TextCell
+                          value={(current?.allowedExtensions ?? limit.allowedExtensions)
+                            .filter((ext) => limit.allowedExtensions.includes(ext))
+                            .join(', ')}
+                        />
+                      </span>
+                    ),
+                  },
+                  {
+                    id: 'maxSize',
+                    label: label('maxSize'),
+                    render: ({ current, limit }) =>
+                      size(
+                        Math.min(current?.maxSizeBytes ?? limit.maxSizeBytes, limit.maxSizeBytes)
+                      ),
+                  },
+                  {
+                    id: 'source',
+                    label: label('source'),
+                    render: ({ current }) => label(current ? 'configured' : 'deployment'),
+                  },
+                ]}
+                actionHeader={label('actions')}
+                renderActions={({ current, limit }) => (
+                  <>
+                    <div className="flex flex-wrap gap-2">
+                      {workspace && !disabled ? (
+                        <>
+                          <Link
+                            {...categoryRoute(limit.category, current ? 'edit' : 'new')}
+                            className={subAction}
+                            aria-label={`${label(current ? 'edit' : 'create')} ${label(`category.${limit.category}`)}`}
+                            data-table-action-tooltip={label(current ? 'edit' : 'create')}
+                          >
+                            <TableActionIcon icon={current ? TablePencilIcon : TablePlusIcon}>
+                              {label(current ? 'edit' : 'create')}
+                            </TableActionIcon>
+                          </Link>
+                          <Link
+                            {...categoryRoute(limit.category, 'history')}
+                            className={subAction}
+                            aria-label={`${label('history')} · ${label(`category.${limit.category}`)}`}
+                            data-table-action-tooltip={label('history')}
+                          >
+                            <TableActionIcon icon={TableHistoryIcon}>
+                              {label('history')}
+                            </TableActionIcon>
+                          </Link>
+                        </>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          disabled={disabled || uncertain || form.pending || !!action}
+                          onClick={() => edit(limit, current)}
+                          aria-label={`${label('edit')} ${label(`category.${limit.category}`)}`}
+                          data-table-action-tooltip={label('edit')}
+                        >
+                          <TableActionIcon icon={TablePencilIcon}>{label('edit')}</TableActionIcon>
+                        </Button>
+                      )}
+                      {current?.effectiveUntil === null && (
+                        <Button
+                          variant="outline"
+                          disabled={disabled || uncertain || form.pending || !!action}
+                          onClick={() => end(current, limit)}
+                          aria-label={`${label('end')} ${label(`category.${limit.category}`)}`}
+                          data-table-action-tooltip={label('end')}
+                        >
+                          <TableActionIcon icon={TableCalendarXIcon}>
+                            {label('end')}
+                          </TableActionIcon>
+                        </Button>
+                      )}
+                    </div>
+                    {!workspace && (
+                      <QueueRecordDetails
+                        label={label('history')}
+                        open={localHistory.includes(limit.category)}
+                        onToggle={() => toggleHistory(limit.category)}
                       >
-                        {label('end')}
-                      </Button>
+                        <ol className="mt-2 space-y-3">
+                          {policies
+                            .filter((policy) => policy.category === limit.category)
+                            .map((policy) => (
+                              <li key={policy.id} className="rounded border p-2">
+                                <p>
+                                  {label(`status.${policy.status}`)} ·{' '}
+                                  <bdi>{policy.allowedExtensions.join(', ')}</bdi> ·{' '}
+                                  {size(policy.maxSizeBytes)}
+                                </p>
+                                <p>
+                                  {label('from')}:{' '}
+                                  <DateCell
+                                    value={policy.effectiveFrom}
+                                    format={() => date(policy.effectiveFrom)}
+                                  />
+                                </p>
+                                <p>
+                                  {label('until')}:{' '}
+                                  {policy.effectiveUntil ? (
+                                    <DateCell
+                                      value={policy.effectiveUntil}
+                                      format={() => date(policy.effectiveUntil)}
+                                    />
+                                  ) : (
+                                    label('openEnded')
+                                  )}
+                                </p>
+                                <p>
+                                  {label('actor')}: <bdi>{policy.createdBy}</bdi>
+                                </p>
+                              </li>
+                            ))}
+                        </ol>
+                        {!policies.some((policy) => policy.category === limit.category) && (
+                          <p>{label('noHistory')}</p>
+                        )}
+                      </QueueRecordDetails>
                     )}
-                  </div>
-                  <QueueRecordDetails
-                    label={label('history')}
-                    open={expandedHistory.includes(limit.category)}
-                    onToggle={() => toggleHistory(limit.category)}
-                  >
-                    <ol className="mt-2 space-y-3">
-                      {policies
-                        .filter((policy) => policy.category === limit.category)
-                        .map((policy) => (
-                          <li key={policy.id} className="rounded border p-2">
-                            <p>
-                              {label(`status.${policy.status}`)} ·{' '}
-                              <bdi>{policy.allowedExtensions.join(', ')}</bdi> ·{' '}
-                              {size(policy.maxSizeBytes)}
-                            </p>
-                            <p>
-                              {label('from')}:{' '}
-                              <DateCell
-                                value={policy.effectiveFrom}
-                                format={() => date(policy.effectiveFrom)}
-                              />
-                            </p>
-                            <p>
-                              {label('until')}:{' '}
-                              {policy.effectiveUntil ? (
-                                <DateCell
-                                  value={policy.effectiveUntil}
-                                  format={() => date(policy.effectiveUntil)}
-                                />
-                              ) : (
-                                label('openEnded')
-                              )}
-                            </p>
-                            <p>
-                              {label('actor')}: <bdi>{policy.createdBy}</bdi>
-                            </p>
-                          </li>
-                        ))}
-                    </ol>
-                    {!policies.some((policy) => policy.category === limit.category) && (
-                      <p>{label('noHistory')}</p>
-                    )}
-                  </QueueRecordDetails>
-                </>
-              )}
-              cardHeading="h2"
-              loading={loading}
-              emptyMessage={label('empty')}
-            />
+                  </>
+                )}
+                cardHeading="h2"
+                loading={loading}
+                emptyMessage={label('empty')}
+              />
+            )}
           </ListPage.Content>
         )}
       </ListPage>
-      {editor && !action && (
+      {workspace?.view === 'editor' && editorForm}
+      {!workspace && editor && !action && (
         <Dialog
           open
           onOpenChange={(open) => {
@@ -706,121 +1151,13 @@ export default function AdminUploadPoliciesPage({
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
             finalFocus={() => (accessLoading || loading ? heading.current : refreshButton.current)}
           >
-            <form
-              noValidate
-              aria-busy={form.pending || undefined}
-              onSubmit={submit}
-              className="space-y-4"
-            >
-              <DialogHeader>
-                <DialogTitle>
-                  {label('edit')} {label(`category.${editor.limit.category}`)}
-                </DialogTitle>
-                <DialogDescription>{label('warning')}</DialogDescription>
-              </DialogHeader>
-              {recoveryControls}
-              {(needsReset || uncertain) && (
-                <>
-                  <Alert variant="destructive">{text(uncertain ? 'unverified' : 'changed')}</Alert>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={disabled || !recoveryReady || form.pending}
-                    onClick={resetSaved}
-                  >
-                    {text('reset')}
-                  </Button>
-                </>
-              )}
-              {catalogueRootMessage(form.errors) && (
-                <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
-              )}
-              <fieldset
-                ref={extensionsRef}
-                className="space-y-2"
-                disabled={disabled || needsReset || uncertain || form.pending}
-                aria-invalid={form.bind('extensions')['aria-invalid']}
-                aria-describedby={
-                  form.bind('extensions')['aria-describedby'] ?? 'upload-policy-formats-help'
-                }
-                onBlur={(event) => {
-                  if (!event.currentTarget.contains(event.relatedTarget))
-                    form.bind('extensions').onBlur();
-                }}
-              >
-                <legend className="font-medium">{label('formats')}</legend>
-                {!form.errors.extensions && (
-                  <p id="upload-policy-formats-help" className="text-sm text-muted-foreground">
-                    {text('extensions')}
-                  </p>
-                )}
-                <div className="flex flex-wrap gap-3">
-                  {editor.limit.allowedExtensions.map((ext) => (
-                    <label key={ext} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={form.values.extensions.includes(ext)}
-                        onChange={(event) =>
-                          form.field('extensions')[1](
-                            event.target.checked
-                              ? [...form.values.extensions, ext]
-                              : form.values.extensions.filter((value) => value !== ext)
-                          )
-                        }
-                      />
-                      <bdi>{ext}</bdi>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <CatalogueFieldFeedback
-                id={form.errorId('extensions')}
-                error={form.errors.extensions}
-                message={text('extensions')}
-              />
-              <div className="space-y-2">
-                <Label htmlFor="upload-policy-size">
-                  {label('maxSize')} ({label('mib')})
-                </Label>
-                <Input
-                  {...form.bind('size')}
-                  id="upload-policy-size"
-                  type="number"
-                  min={1 / mib}
-                  max={editor.limit.maxSizeBytes / mib}
-                  step="any"
-                  required
-                  aria-required="true"
-                  aria-describedby={[
-                    form.bind('size')['aria-describedby'],
-                    'upload-policy-size-ceiling',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  value={form.values.size}
-                  disabled={disabled || needsReset || uncertain || form.pending}
-                  onChange={(event) => form.field('size')[1](event.target.value)}
-                />
-                <p id="upload-policy-size-ceiling" className="text-sm text-muted-foreground">
-                  {label('ceiling')}: {size(editor.limit.maxSizeBytes)}
-                </p>
-              </div>
-              <CatalogueFieldFeedback
-                id={form.errorId('size')}
-                error={form.errors.size}
-                message={text('size')}
-              />
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => cancelEditor()}>
-                  {label('cancel')}
-                </Button>
-                <CatalogueSaveButton
-                  label={label('save')}
-                  pending={form.pending}
-                  disabled={disabled || needsReset || uncertain || form.pending}
-                />
-              </DialogFooter>
-            </form>
+            <DialogHeader>
+              <DialogTitle>
+                {label('edit')} {label(`category.${editor.limit.category}`)}
+              </DialogTitle>
+              <DialogDescription>{label('warning')}</DialogDescription>
+            </DialogHeader>
+            {editorForm}
           </DialogContent>
         </Dialog>
       )}
@@ -842,7 +1179,34 @@ export default function AdminUploadPoliciesPage({
               fields.map((field) => (field === 'allowedExtensions' ? 'extensions' : 'size'))
             );
           }}
-          summary={recoveryControls}
+          summary={
+            <>
+              {action.comparison && (
+                <section aria-label={label('comparison')} className="space-y-2">
+                  <p className="text-sm font-medium">
+                    {label(`category.${action.comparison.proposed.category}`)}
+                  </p>
+                  <div className="grid min-w-0 grid-cols-2 overflow-hidden rounded-lg border">
+                    <div className="min-w-0 space-y-2 px-3 py-2.5">
+                      <h3 className="text-sm font-semibold">{label('currentEffective')}</h3>
+                      {valuesSummary(
+                        action.comparison.current.allowedExtensions,
+                        action.comparison.current.maxSizeBytes
+                      )}
+                    </div>
+                    <div className="min-w-0 space-y-2 border-s bg-primary/5 px-3 py-2.5">
+                      <h3 className="text-sm font-semibold">{label('nextVersion')}</h3>
+                      {valuesSummary(
+                        action.comparison.proposed.allowedExtensions,
+                        action.comparison.proposed.maxSizeBytes
+                      )}
+                    </div>
+                  </div>
+                </section>
+              )}
+              {recoveryControls}
+            </>
+          }
           onClose={withdraw}
           onSuccess={(() => {
             const commandGeneration = actionGeneration.current;
@@ -870,6 +1234,11 @@ export default function AdminUploadPoliciesPage({
                 !receipt.effectiveUntil
               )
                 throw new Error('Unmatched ending receipt');
+              if (workspace?.view === 'editor' && action.path === collectionPath) {
+                toast.success(label('saved'));
+                workspace.showVersion(receipt.id);
+                return;
+              }
               clearWork();
               setNotice(true);
               refresh();

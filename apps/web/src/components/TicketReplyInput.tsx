@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Bold, Italic, List, Link as LinkIcon, Paperclip } from 'lucide-react';
-import { Button, DynamicFieldArray, Input, Label } from '@barghsa/ui';
-import { useFileSelectionKey } from '../hooks/useFileSelectionKey.js';
+import { Bold, Italic, List, Link as LinkIcon } from 'lucide-react';
+import { Button, Input, Label, Textarea } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import TosContent from './TosContent.js';
-import { FilePreview } from './FilePreview.js';
-import { documentText } from '@barghsa/i18n/documents';
 import {
   isAllowedInvoiceReceiptFile,
   uploadTicketReplyAttachment,
@@ -24,6 +21,8 @@ import {
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import { useTicketFormFeedback } from '../hooks/useTicketFormFeedback.js';
 import type { TicketCoordination, TicketReplyValues } from '../lib/ticket-form.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+import { TicketFileField } from './TicketFileField.js';
 type ReplyPayload = {
   body: string;
   visibility: 'public' | 'internal';
@@ -64,8 +63,8 @@ export function TicketReplyInput({
 }) {
   const copy = (k: string) => t('tickets.' + k, locale),
     feedback = (k: string) => tTicketForms(k, locale),
-    fileKey = useFileSelectionKey(),
     branch = staff && internal ? 'internal' : 'public',
+    sendLabel = branch === 'internal' ? feedback('saveInternalNote') : copy('send'),
     identity = scope ?? JSON.stringify([ticketId, profileId, staff]);
   const current = useRef(identity);
   current.current = identity;
@@ -75,16 +74,11 @@ export function TicketReplyInput({
       public: [],
       internal: [],
     }),
-    [fileError, setFileError] = useState(false),
     [links, setLinks] = useState({ public: 'https://', internal: 'https://' }),
     [previewFile, setPreviewFile] = useState<File | null>(null);
   const files = fileDrafts[branch],
     link = links[branch];
-  const setFiles = (next: File[] | ((v: File[]) => File[])) =>
-      setFileDrafts((old) => ({
-        ...old,
-        [branch]: typeof next === 'function' ? next(old[branch]) : next,
-      })),
+  const setFiles = (next: File[]) => setFileDrafts((old) => ({ ...old, [branch]: next })),
     setLink = (v: string) => setLinks((old) => ({ ...old, [branch]: v }));
   const textarea = useRef<HTMLTextAreaElement | null>(null),
     uploadDrafts = useRef({ public: new Map<File, string>(), internal: new Map<File, string>() }),
@@ -147,7 +141,6 @@ export function TicketReplyInput({
   }, [files]);
   useEffect(() => {
     setPreviewFile(null);
-    setFileError(false);
     form.clearErrors();
   }, [branch]);
   useLayoutEffect(() => {
@@ -164,17 +157,6 @@ export function TicketReplyInput({
     if (next.length > 10000) return;
     selection.current = [start + before.length, end + before.length];
     onBodyChange(next);
-  }
-  function addFiles(next: File[]) {
-    if (locked || coordination?.isLocked()) return;
-    if (files.length + next.length > 5 || next.some((f) => !isAllowedInvoiceReceiptFile(f))) {
-      setFileError(true);
-      form.setError('files', { type: 'validate', message: feedback('filesInvalid') });
-      return;
-    }
-    setFileError(false);
-    form.clearErrors('files');
-    setFiles((old) => [...old, ...next]);
   }
   async function submit() {
     const owner = branch === 'internal' ? 'reply-internal' : 'reply-public';
@@ -209,7 +191,6 @@ export function TicketReplyInput({
           onBodyChange('', rawBranch);
           if (branchRef.current === rawBranch) {
             setPreviewFile(null);
-            setFileError(false);
             form.reset({ body: '', files: [] });
           }
         };
@@ -271,246 +252,187 @@ export function TicketReplyInput({
         ref={formFeedback.element}
         data-slot="ticket-reply-input"
         noValidate
-        aria-label={copy('send')}
-        className="flex min-w-0 flex-col gap-3"
+        aria-label={sendLabel}
+        className={recordEditorSurface}
         onSubmit={(e) => {
           e.preventDefault();
           if (!locked) void submit();
         }}
       >
-        <FormField
-          control={form.control}
-          name="body"
-          render={({ field }) => (
-            <FormItem id="ticket-reply">
-              <FormLabel>{copy('reply')}</FormLabel>
-              <FormControl>
-                <textarea
-                  {...field}
-                  ref={(node) => {
-                    field.ref(node);
-                    textarea.current = node;
-                  }}
-                  disabled={locked}
-                  rows={4}
-                  className="block w-full rounded-md border border-input bg-background p-3 text-foreground"
-                  value={body}
-                  onChange={(e) => {
-                    if (coordination?.isLocked()) return;
-                    field.onChange(e);
-                    onBodyChange(e.target.value);
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                {feedback('replyInvalid')} {copy('formatHelp')}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div
-          role="group"
-          aria-label={copy('formatting')}
-          className="flex flex-wrap items-center gap-1"
-        >
-          {(
-            [
-              ['bold', Bold, () => insert('**', '**')],
-              ['italic', Italic, () => insert('_', '_')],
-              [
-                'bulletList',
-                List,
-                () => {
-                  const start = textarea.current?.selectionStart ?? body.length,
-                    end = textarea.current?.selectionEnd ?? start;
-                  const selected = body.slice(start, end);
-                  const before = start && body[start - 1] !== '\n' ? '\n' : '';
-                  const formatted = before + '- ' + selected.replaceAll('\n', '\n- ');
-                  const next = body.slice(0, start) + formatted + body.slice(end);
-                  if (next.length <= 10000) {
-                    selection.current = [start + before.length + 2, start + formatted.length];
-                    onBodyChange(next);
-                  }
-                },
-              ],
-            ] as const
-          ).map(([key, Icon, action]) => (
-            <Button
-              key={key}
-              type="button"
-              variant="outline"
-              size="icon"
-              disabled={locked}
-              aria-label={copy(key)}
-              title={copy(key)}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={action}
-            >
-              <Icon aria-hidden="true" />
-            </Button>
-          ))}
-          <details className="min-w-0">
-            <summary className="cursor-pointer rounded-md border px-3 py-2 text-sm pointer-coarse:min-h-11 pointer-coarse:py-3">
-              <LinkIcon aria-hidden="true" className="inline size-4" /> {copy('insertLink')}
-            </summary>
-            <div className="mt-2 flex flex-wrap items-end gap-2">
-              <div className="min-w-0 flex-1">
-                <Label htmlFor="ticket-reply-link">{copy('linkAddress')}</Label>
-                <Input
-                  id="ticket-reply-link"
-                  dir="ltr"
-                  value={link}
-                  disabled={locked}
-                  onChange={(event) => setLink(event.target.value)}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={locked || !/^https?:\/\/[^\s<>()[\]\\]+$/i.test(link.trim())}
-                onClick={() => insert('[', `](${link.trim()})`)}
-              >
-                {copy('insertLink')}
-              </Button>
-            </div>
-          </details>
-        </div>
-
-        {body.trim() && (
-          <details>
-            <summary className="cursor-pointer text-sm text-primary pointer-coarse:min-h-11 pointer-coarse:py-3">
-              {copy('previewReply')}
-            </summary>
-            <div className="mt-2 rounded-md border bg-card p-3">
-              <TosContent content={body} language={locale} />
-            </div>
-          </details>
+        {staff && (
+          <div
+            className={`border-b px-4 py-2.5 sm:px-6 ${internal ? 'bg-warning-soft' : 'bg-muted/40'}`}
+          >
+            <Label className="touch-label flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                className="size-4 shrink-0 accent-primary"
+                disabled={locked}
+                checked={internal}
+                onChange={(e) => {
+                  if (!coordination?.isLocked()) onInternalChange(e.target.checked);
+                }}
+              />
+              {copy('internal')}
+            </Label>
+            <p aria-live="polite" className="mt-1 text-sm text-muted-foreground">
+              {feedback(internal ? 'internalVisibility' : 'publicVisibility')}
+            </p>
+          </div>
         )}
-        <FormField
-          control={form.control}
-          name="files"
-          render={({ field }) => (
-            <FormItem id="ticket-reply-files">
-              <div
-                className="rounded-md border border-dashed p-3"
-                onDragOver={(event) => {
-                  event.preventDefault();
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  if (!locked && !coordination?.isLocked())
-                    addFiles(Array.from(event.dataTransfer.files));
-                }}
-              >
-                <FormLabel className="mb-2 flex items-center gap-2">
-                  <Paperclip aria-hidden="true" className="size-4" />
-                  {copy('replyFiles')}
-                </FormLabel>
+        <div className="space-y-3 px-4 py-3 sm:px-6">
+          <FormField
+            control={form.control}
+            name="body"
+            render={({ field }) => (
+              <FormItem id="ticket-reply">
+                <FormLabel>{copy('reply')}</FormLabel>
                 <FormControl>
-                  <input
-                    ref={field.ref}
-                    onBlur={field.onBlur}
-                    name={field.name}
-                    type="file"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                  <Textarea
+                    {...field}
+                    ref={(node) => {
+                      field.ref(node);
+                      textarea.current = node;
+                    }}
                     disabled={locked}
-                    className="block w-full text-sm"
-                    onChange={(event) => {
-                      addFiles(Array.from(event.target.files ?? []));
-                      event.target.value = '';
+                    rows={3}
+                    placeholder={feedback(internal ? 'internalExample' : 'replyExample')}
+                    className="min-h-20 max-h-64"
+                    value={body}
+                    onChange={(e) => {
+                      if (coordination?.isLocked()) return;
+                      field.onChange(e);
+                      onBodyChange(e.target.value);
                     }}
                   />
                 </FormControl>
                 <FormDescription>
-                  {documentText('dropFiles', locale)}. {copy('fileHelp')}
+                  {feedback('replyInvalid')} {copy('formatHelp')}
                 </FormDescription>
                 <FormMessage />
-                <DynamicFieldArray
-                  emptyFocusRef={textarea}
-                  className={files.length ? 'mt-2' : 'hidden'}
-                  value={files}
-                  getItemKey={fileKey}
+              </FormItem>
+            )}
+          />
+          <div
+            role="group"
+            aria-label={copy('formatting')}
+            className="flex flex-wrap items-center gap-1 rounded-lg bg-muted/40 p-1"
+          >
+            {(
+              [
+                ['bold', Bold, () => insert('**', '**')],
+                ['italic', Italic, () => insert('_', '_')],
+                [
+                  'bulletList',
+                  List,
+                  () => {
+                    const start = textarea.current?.selectionStart ?? body.length,
+                      end = textarea.current?.selectionEnd ?? start;
+                    const selected = body.slice(start, end);
+                    const before = start && body[start - 1] !== '\n' ? '\n' : '';
+                    const formatted = before + '- ' + selected.replaceAll('\n', '\n- ');
+                    const next = body.slice(0, start) + formatted + body.slice(end);
+                    if (next.length <= 10000) {
+                      selection.current = [start + before.length + 2, start + formatted.length];
+                      onBodyChange(next);
+                    }
+                  },
+                ],
+              ] as const
+            ).map(([key, Icon, action]) => (
+              <Button
+                key={key}
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className="pointer-coarse:size-11"
+                disabled={locked}
+                aria-label={copy(key)}
+                title={copy(key)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={action}
+              >
+                <Icon aria-hidden="true" />
+              </Button>
+            ))}
+            <details className="min-w-0 open:basis-full">
+              <summary className="cursor-pointer rounded-md px-2 py-2 text-sm hover:bg-muted pointer-coarse:min-h-11 pointer-coarse:py-3">
+                <LinkIcon aria-hidden="true" className="inline size-4" /> {copy('insertLink')}
+              </summary>
+              <div className="mt-1 flex flex-wrap items-end gap-2 rounded-md border bg-card p-2">
+                <div className="min-w-0 flex-1">
+                  <Label htmlFor="ticket-reply-link">{copy('linkAddress')}</Label>
+                  <Input
+                    id="ticket-reply-link"
+                    dir="ltr"
+                    value={link}
+                    disabled={locked}
+                    onChange={(event) => setLink(event.target.value)}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={locked || !/^https?:\/\/[^\s<>()[\]\\]+$/i.test(link.trim())}
+                  onClick={() => insert('[', `](${link.trim()})`)}
+                >
+                  {copy('insertLink')}
+                </Button>
+              </div>
+            </details>
+          </div>
+
+          {body.trim() && (
+            <details>
+              <summary className="cursor-pointer text-sm text-primary pointer-coarse:min-h-11 pointer-coarse:py-3">
+                {copy('previewReply')}
+              </summary>
+              <div className="mt-2 rounded-md border bg-card p-3">
+                <TosContent content={body} language={locale} />
+              </div>
+            </details>
+          )}
+          <FormField
+            control={form.control}
+            name="files"
+            render={({ field }) => (
+              <FormItem id="ticket-reply-files">
+                <TicketFileField
+                  locale={locale}
+                  input={field}
+                  files={files}
+                  preview={previewFile}
                   disabled={locked}
-                  maxItems={5}
-                  removeLabel={(file) => `${copy('removeFile')} ${file.name}`}
-                  moveUpLabel={(file) =>
-                    documentText('moveFileUp', locale).replace('{name}', file.name)
-                  }
-                  moveDownLabel={(file) =>
-                    documentText('moveFileDown', locale).replace('{name}', file.name)
-                  }
+                  isLocked={() => !!coordination?.isLocked()}
+                  emptyFocusRef={textarea}
                   onChange={(next) => {
-                    if (locked || coordination?.isLocked()) return;
                     for (const file of files) if (!next.includes(file)) uploaded.delete(file);
                     if (previewFile && !next.includes(previewFile)) setPreviewFile(null);
-                    setFileError(false);
                     form.clearErrors('files');
                     setFiles(next);
                   }}
-                  renderItem={(file, _index, actions) => (
-                    <div className="flex min-w-0 flex-wrap items-center gap-2">
-                      <span className="min-w-0 basis-full break-words sm:flex-1 sm:basis-auto">
-                        <bdi>{file.name}</bdi>
-                      </span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        aria-label={`${documentText('preview', locale)}: ${file.name}`}
-                        aria-expanded={previewFile === file}
-                        disabled={locked}
-                        onClick={() => {
-                          if (!coordination?.isLocked())
-                            setPreviewFile((current) => (current === file ? null : file));
-                        }}
-                      >
-                        {documentText(previewFile === file ? 'hidePreview' : 'preview', locale)}
-                      </Button>
-                      {actions}
-                    </div>
-                  )}
+                  onInvalid={() =>
+                    form.setError('files', { type: 'validate', message: copy('invalidReplyFiles') })
+                  }
+                  onPreview={setPreviewFile}
+                  onAccessDenied={denyPreview}
                 />
-                {previewFile && files.includes(previewFile) && (
-                  <FilePreview
-                    file={previewFile}
-                    name={previewFile.name}
-                    locale={locale}
-                    onAccessDenied={denyPreview}
-                  />
-                )}
-              </div>
-            </FormItem>
-          )}
-        />
-        {fileError && (
-          <p role="alert" className="text-sm text-destructive">
-            {copy('invalidReplyFiles')}
-          </p>
-        )}
-        {staff && (
-          <Label className="touch-label flex items-center gap-2">
-            <input
-              type="checkbox"
-              disabled={locked}
-              checked={internal}
-              onChange={(e) => {
-                if (!coordination?.isLocked()) onInternalChange(e.target.checked);
-              }}
-            />
-            {copy('internal')}
-          </Label>
-        )}
-        {form.formState.errors.root && <p role="alert">{feedback('validationUnavailable')}</p>}
-        <Button className="self-start" disabled={locked} type="submit">
-          {locked && (
-            <span
-              aria-hidden="true"
-              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-            />
-          )}
-          {copy(locked ? 'saving' : 'send')}
-        </Button>
+              </FormItem>
+            )}
+          />
+          {form.formState.errors.root && <p role="alert">{feedback('validationUnavailable')}</p>}
+        </div>
+        <RecordEditorActions>
+          <Button disabled={locked} type="submit" variant={internal ? 'warning' : 'default'}>
+            {locked && (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              />
+            )}
+            {locked ? copy('saving') : sendLabel}
+          </Button>
+        </RecordEditorActions>
       </form>
     </Form>
   );

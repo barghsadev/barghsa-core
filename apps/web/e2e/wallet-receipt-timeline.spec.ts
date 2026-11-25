@@ -410,7 +410,7 @@ for (const locale of ['en', 'fa'] as const)
         );
         await expect.poll(() => previewRequests.length).toBe(3);
         const bankDraft = page.locator('#receipt-bank-name');
-        await bankDraft.fill('Unsubmitted bank draft');
+        await expect(bankDraft).toHaveCount(0);
         await openHistoryFilters(page, locale);
         let drawer = page.getByRole('dialog');
         const search = drawer.getByRole('searchbox', {
@@ -420,7 +420,7 @@ for (const locale of ['en', 'fa'] as const)
         await search.fill('Cancelled search');
         await closeHistoryFilters(page, locale);
         expect(queries.at(-1)?.get('q')).toBeNull();
-        await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+        await expect(bankDraft).toHaveCount(0);
 
         await openHistoryFilters(page, locale);
         drawer = page.getByRole('dialog');
@@ -473,7 +473,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(queries.at(-1)?.has('to')).toBe(false);
         expect(queries.at(-1)?.has('cursor')).toBe(false);
         expect(queries.at(-1)?.get('limit')).toBe('25');
-        await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+        await expect(bankDraft).toHaveCount(0);
         const appliedUrl = page.url();
         expect(defaultParseSearch(new URL(appliedUrl).search)).toMatchObject({
           history_q: 'TRK_%\\',
@@ -514,7 +514,7 @@ for (const locale of ['en', 'fa'] as const)
         );
         await expect(history.getByRole('navigation')).toHaveCount(0);
         await expect(details).toHaveCount(0);
-        await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+        await expect(bankDraft).toHaveCount(0);
         if (locale === 'fa' && darkMode && process.env.BARGHSA_SCREENSHOT_DIR)
           await history.screenshot({
             path: `${process.env.BARGHSA_SCREENSHOT_DIR}/wallet-history-denied-${test.info().project.name}.png`,
@@ -532,7 +532,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(queries.at(-1)?.get('min')).toBe(amount);
         expect(queries.at(-1)?.get('max')).toBe(amount);
         expect(queries.at(-1)?.get('sort')).toBe('asc');
-        await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+        await expect(bankDraft).toHaveCount(0);
         await expect(
           history.getByRole('button', { name: t('wallet.history.previous', locale), exact: true })
         ).toBeDisabled();

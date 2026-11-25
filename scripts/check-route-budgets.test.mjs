@@ -144,11 +144,13 @@ test('named dynamic facades count all dependencies, deduplicate aliases and reje
         file: 'customer.js',
         imports: ['shared'],
       },
+      route: { file: 'route.js', dynamicImports: ['_hashed-customer.js'] },
       shared: { file: 'shared.js' },
     };
     for (const [file, content] of Object.entries({
       'entry.js': 'export const entry=1;',
       'customer.js': 'export const customer=1;',
+      'route.js': 'export const route=1;',
       'shared.js': randomBytes(3000),
     }))
       await writeFile(join(dist, file), content);
@@ -160,6 +162,22 @@ test('named dynamic facades count all dependencies, deduplicate aliases and reje
       direct
     );
     assert.ok(named.bytes > 3000);
+    const deferredEntries = ['chunk:CustomerProfileWorkspace'];
+    assert.deepEqual((await measureRoute(dist, manifest, ['route'], { deferredEntries })).files, [
+      'entry.js',
+      'route.js',
+    ]);
+    assert.deepEqual(
+      (
+        await measureRoute(
+          dist,
+          { ...manifest, route: { ...manifest.route, imports: ['_hashed-customer.js'] } },
+          ['route'],
+          { deferredEntries }
+        )
+      ).files,
+      ['customer.js', 'entry.js', 'route.js', 'shared.js']
+    );
     await assert.rejects(
       measureRoute(dist, manifest, ['chunk:Missing']),
       /Expected one dynamic manifest entry/

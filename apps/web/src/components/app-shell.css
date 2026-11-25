@@ -1,0 +1,174 @@
+.app-shell:has(> [data-assistant-launcher]) .shell-frame > .app-content {
+  scroll-padding-block-end: 5rem;
+}
+
+.app-shell:has(> [data-assistant-launcher]) .app-content > .responsive-container {
+  padding-block-end: 5rem;
+}
+
+.shell-frame > .app-content:has(.record-editor-sticky-actions) {
+  scroll-padding-block-end: 4.75rem;
+}
+
+.app-shell[data-area='admin'] .app-shell-sidebar {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--sidebar-foreground) 35%, transparent) transparent;
+}
+
+.shell-sidebar-navigation:has(> [data-disclosure]) {
+  gap: 0.25rem;
+}
+
+.shell-sidebar-group[data-disclosure] + .shell-sidebar-group[data-disclosure] {
+  padding-block-start: 0.25rem;
+}
+
+.shell-sidebar-group-items {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+}
+
+.shell-sidebar-group-items[data-open] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.shell-sidebar-group-items > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-block-size: 0;
+  overflow: clip;
+}
+
+.shell-sidebar-group-items li:first-child {
+  padding-block-start: 0.125rem;
+}
+
+.shell-sidebar-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-md);
+  color: var(--sidebar-foreground);
+  font-size: calc(0.8125rem * var(--font-scale));
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+.shell-sidebar-group-toggle > svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex-shrink: 0;
+}
+
+.shell-sidebar-group-toggle > svg:last-child {
+  margin-inline-start: auto;
+}
+
+.shell-sidebar-group-toggle[aria-expanded='true'] > svg:last-child {
+  rotate: 180deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-sidebar-group-items {
+    transition:
+      grid-template-rows 180ms ease-out,
+      visibility 0s 180ms;
+  }
+
+  .shell-sidebar-group-items[data-open] {
+    transition-delay: 0s;
+  }
+
+  .shell-sidebar-group-toggle > svg:last-child {
+    transition: rotate 180ms ease-out;
+  }
+}
+
+.shell-sidebar-group-toggle:hover,
+.shell-sidebar-group-toggle[data-current][aria-expanded='false'] {
+  background-color: var(--sidebar-active);
+  color: var(--sidebar-active-foreground);
+}
+
+.shell-sidebar-group-toggle:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+@media (48rem <= width < 64rem) {
+  .app-shell[data-area='admin']
+    .app-shell-sidebar:not(:is(:hover, :focus-within, [data-expanded='true'])) {
+    padding-inline: 0.125rem;
+  }
+
+  .app-shell-sidebar:not(:is(:hover, :focus-within, [data-expanded='true']))
+    .shell-sidebar-group-toggle {
+    justify-content: center;
+    padding-inline: 0;
+  }
+}
+
+@media (width < 64rem) {
+  .shell-topbar[data-area='admin'] {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .shell-topbar[data-area='admin'] .shell-topbar-brand {
+    max-inline-size: 2.75rem;
+  }
+
+  .shell-topbar[data-area='admin'] [data-slot='brand-logo'] {
+    max-inline-size: 2.75rem;
+  }
+
+  .shell-topbar[data-area='admin'] .shell-breadcrumbs {
+    grid-area: 1 / 2;
+    padding: 0;
+  }
+
+  .shell-topbar[data-area='admin'] .shell-topbar-actions {
+    grid-column: 3;
+    gap: 0;
+  }
+
+  .shell-topbar[data-area='admin'] .shell-breadcrumb-trigger {
+    border: 0;
+    background: transparent;
+    color: var(--muted-foreground);
+  }
+}
+
+@media (min-width: 768px) {
+  .app-shell[data-focused='true'] .shell-frame {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell[data-focused='true'] .shell-topbar,
+  .app-shell[data-focused='true'] .shell-frame > .app-content {
+    grid-column: 1;
+  }
+
+  .app-shell[data-focused='true'] .app-shell-sidebar[data-expanded='false'] {
+    display: none;
+  }
+
+  .app-shell[data-focused='true'] .app-shell-sidebar[data-expanded='true'] {
+    position: absolute;
+    z-index: 30;
+    inset-block-start: var(--topbar-height);
+    inset-inline-start: 0;
+    width: min(var(--sidebar-width), 100%);
+    max-height: 55dvh;
+  }
+}

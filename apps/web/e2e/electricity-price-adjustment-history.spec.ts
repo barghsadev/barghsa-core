@@ -1,16 +1,13 @@
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { checkRoutePresentation } from './route-presentation';
 import AxeBuilder from '@axe-core/playwright';
-import { t } from '@barghsa/i18n/admin-ui';
+import { adminText as t } from '@barghsa/i18n/electricity-price-forms';
 import { test, expect } from './coverage-fixture';
 import {
   adjustmentId,
   creditAdjustmentId,
   cancelledAdjustmentId,
   contractId,
-  profileId,
-  versionId,
-  periodEnd,
   invoiceId,
   linkedCreditId,
   defaultPriceInput,
@@ -43,29 +40,6 @@ for (const locale of ['en', 'fa'] as const)
         priceRow({ ...defaultPriceInput, percentageBps: '1025' }, cancelledAdjustmentId)
       );
       state.rows = [charge, credit, cancelled];
-      let readStatus = 200;
-      await page.route(
-        `**/api/staff/electricity/contracts/${contractId}/price-adjustments`,
-        (route) => {
-          if (route.request().method() !== 'GET') return route.fallback();
-          state.staffReads++;
-          return readStatus === 200
-            ? route.fulfill({
-                json: {
-                  contractId,
-                  profileId,
-                  versionId,
-                  periodEnd,
-                  canPropose: false,
-                  canCancel: true,
-                  canFinalize: true,
-                  blockedByIncrease: false,
-                  adjustments: state.rows,
-                },
-              })
-            : route.fulfill({ status: readStatus, json: {} });
-        }
-      );
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto(`/admin/electricity-price-adjustments?contractId=${contractId}`);
       const content = page.locator('[data-slot=list-content]');
@@ -76,7 +50,7 @@ for (const locale of ['en', 'fa'] as const)
       await checkRoutePresentation(page, test.info(), locale);
       if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
         await page.setViewportSize({ width: 320, height: 900 });
-        const invoiceLinks = page.locator('main a[href^="/admin/invoices?invoiceId="]:visible');
+        const invoiceLinks = page.locator('main a[href^="/admin/invoices/"]:visible');
         await expect(invoiceLinks).toHaveCount(2);
         const spacing = await page.evaluate(() =>
           document.documentElement.style.getPropertyValue('--spacing')
@@ -111,20 +85,23 @@ for (const locale of ['en', 'fa'] as const)
         await expect(first.locator('script')).toHaveCount(0);
         await expect(first).toContainText(copy('noInvoice'));
         await expect(
-          first.getByRole('button', { name: copy('finalize'), exact: true })
-        ).toBeEnabled();
+          first.getByRole('link', { name: new RegExp(copy('viewCalculation')) })
+        ).toBeVisible();
+        await expect(first.getByRole('link', { name: copy('finalize'), exact: true })).toHaveCount(
+          0
+        );
         await expect(
-          records.nth(1).getByRole('button', { name: copy('finalize'), exact: true })
+          records.nth(1).getByRole('link', { name: copy('finalize'), exact: true })
         ).toHaveCount(0);
         await expect(
-          records.nth(2).getByRole('button', { name: copy('cancel'), exact: true })
+          records.nth(2).getByRole('link', { name: copy('cancel'), exact: true })
         ).toHaveCount(0);
         await expect(
-          records.nth(1).locator(`a[href="/admin/invoices?invoiceId=${linkedCreditId}"]`)
+          records.nth(1).locator(`a[href="/admin/invoices/${linkedCreditId}"]`)
         ).toBeVisible();
         await expect(
           records.nth(1).getByRole('link', { name: copy('refundCredit'), exact: true })
-        ).toHaveAttribute('href', `/admin/invoices?invoiceId=${invoiceId}`);
+        ).toHaveAttribute('href', `/admin/invoices/${invoiceId}`);
         for (const [index, value] of [
           [0, charge.proposedAt],
           [1, credit.finalizedAt],
@@ -173,113 +150,63 @@ for (const locale of ['en', 'fa'] as const)
           .screenshot({ path: `${process.env.BARGHSA_SCREENSHOT_DIR}/price-history-fa-light.png` });
         await page.setViewportSize({ width: 390, height: 844 });
       }
-      const openCredit = records.nth(1).getByRole('button', {
-        name: `${copy('viewCalculation')} : ${creditAdjustmentId}`,
+      const openCredit = records.nth(1).getByRole('link', {
+        name: `${copy('viewCalculation')} ${creditAdjustmentId}`,
         exact: true,
       });
       expect(
-        await openCredit.evaluate((button) => button.getBoundingClientRect().height)
+        await openCredit.evaluate((link) => link.getBoundingClientRect().height)
       ).toBeGreaterThanOrEqual(44);
-      const opening = await page.evaluateHandle(() => {
-        let evidence: { opacity: string; keyframes: (string | number | undefined)[] } | null = null;
-        const capture = () => {
-          if (evidence) return;
-          const popup = document.querySelector('[data-slot="dialog-content"][data-open]');
-          if (!popup) return;
-          const opacity = getComputedStyle(popup).opacity;
-          const effect = popup
-            .getAnimations()
-            .find(
-              (animation) =>
-                animation instanceof CSSAnimation && animation.animationName === 'enter'
-            )?.effect;
-          if (effect instanceof KeyframeEffect) {
-            evidence = {
-              opacity,
-              keyframes: effect.getKeyframes().map((frame) => frame.opacity),
-            };
-          }
-        };
-        // Observe the popup's insertion before waiting for the browser's animation event.
-        const observer = new MutationObserver(capture);
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: ['data-open'],
-        });
-        document.addEventListener('animationstart', capture);
-        return {
-          read: () => evidence,
-          release: () => {
-            observer.disconnect();
-            document.removeEventListener('animationstart', capture);
-          },
-        };
-      });
-      try {
-        await openCredit.click();
-        await expect.poll(() => opening.evaluate((monitor) => monitor.read())).not.toBeNull();
-        const effect = await opening.evaluate((monitor) => monitor.read());
-        await info.attach('dialog-opening-opacity', {
-          body: JSON.stringify(effect),
-          contentType: 'application/json',
-        });
-        expect(effect?.opacity).toBe('1');
-        expect(
-          effect?.keyframes.every((opacity) => opacity === undefined || Number(opacity) === 1)
-        ).toBe(true);
-      } finally {
-        await opening.evaluate((monitor) => monitor.release());
-        await opening.dispose();
-      }
-      let dialog = page.getByRole('dialog', { name: copy('viewCalculation'), exact: true });
-      await expect(dialog).toContainText(creditAdjustmentId);
-      await expect(dialog).toContainText(copy('source.original_invoice'));
-      await expect(dialog).toContainText(invoiceId);
-      await expect(dialog.locator('bdi[dir=ltr]').filter({ hasText: invoiceId })).toHaveText(
+      await openCredit.click();
+      const record = page.locator('[data-slot=electricity-price-record]');
+      await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+      expect(new URL(page.url()).pathname).toBe(
+        `/admin/electricity-price-adjustments/${contractId}/${creditAdjustmentId}`
+      );
+      await expect(record).toContainText(copy('source.original_invoice'));
+      await expect(record).toContainText(invoiceId);
+      await expect(record.locator('bdi[dir=ltr]').filter({ hasText: invoiceId })).toHaveText(
         invoiceId
       );
-      await expect(dialog).toContainText(defaultPriceInput.contractualBasis);
-      expect(digits(await dialog.innerText())).toContain(credit.adjustmentAmountIrR);
-      await expect(dialog.locator('time')).toHaveCount(3);
-      await expect(dialog.locator('form')).toHaveCount(0);
+      await expect(record).toContainText(defaultPriceInput.contractualBasis);
+      expect(digits(await record.innerText())).toContain(credit.adjustmentAmountIrR);
+      await expect(record.locator('form')).toHaveCount(0);
       expect(state.writes).toEqual([]);
       expect(state.previews).toEqual([]);
+      expect(state.staffReads).toBe(initialReads);
       expect(
         (
           await new AxeBuilder({ page })
-            .include('[role=dialog]')
+            .include('[data-slot=electricity-price-record]')
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
             .analyze()
         ).violations
       ).toEqual([]);
       await page.setViewportSize({ width: 1280, height: 900 });
-      await expect(dialog).toBeVisible();
-      await dialog.getByRole('button', { name: copy('closeCalculation'), exact: true }).click();
-      await expect(
-        records.nth(1).getByRole('button', {
-          name: `${copy('viewCalculation')} : ${creditAdjustmentId}`,
-          exact: true,
-        })
-      ).toBeFocused();
-      expect(state.staffReads).toBe(initialReads);
+      await page.getByRole('link', { name: copy('backToHistory'), exact: true }).click();
+      await expect(records).toHaveCount(3);
 
-      // The responsive adapter must preserve the original authorization-bound row.
       await records
         .first()
-        .getByRole('button', { name: copy('finalize'), exact: true })
+        .getByRole('link', { name: new RegExp(copy('viewCalculation')) })
         .click();
-      dialog = page.getByRole('dialog');
-      await expect(dialog).toContainText(contractId);
-      expect(digits(await dialog.innerText())).toContain(charge.adjustmentAmountIrR);
-      await expect(dialog).toContainText(defaultPriceInput.contractualBasis);
+      await record.getByRole('link', { name: copy('finalize'), exact: true }).click();
+      const path = `/admin/electricity-price-adjustments/${contractId}/${adjustmentId}`;
+      await expect(page).toHaveURL(`${path}/finalize`);
+      const decision = page.locator('[data-slot=electricity-price-decision]');
+      expect(digits(await decision.innerText())).toContain(charge.adjustmentAmountIrR);
+      await expect(decision).toContainText(defaultPriceInput.contractualBasis);
+      await decision.getByText(copy('viewCalculation'), { exact: true }).click();
+      await expect(decision.getByText(contractId, { exact: true })).toBeVisible();
+      await decision.getByText(copy('viewCalculation'), { exact: true }).click();
       state.writeMode = 'success';
-      const confirm = dialog.locator('button[type=submit]');
+      const form = page.getByRole('form', { name: copy('finalize'), exact: true });
+      const confirm = form.locator('button[type=submit]');
       await expect(confirm).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
-      await expect(dialog).toHaveCount(0);
+      await expect(page).toHaveURL(path);
+      await expect(form).toHaveCount(0);
       expect(state.writes).toHaveLength(1);
       expect(state.writes[0]!.path).toContain(
         `/api/staff/electricity/price-adjustments/${adjustmentId}/finalize`
@@ -288,62 +215,59 @@ for (const locale of ['en', 'fa'] as const)
         idempotencyKey: expect.stringMatching(/^[0-9a-f-]{36}$/),
         expectedCalculationSha256: charge.calculationSha256,
       });
+      await expect(record).toContainText(copy('status.finalized'));
+      await page.getByRole('link', { name: copy('backToHistory'), exact: true }).click();
       await expect(records.first()).toContainText(copy('status.finalized'));
       await expect(
-        records.first().getByRole('button', { name: copy('finalize'), exact: true })
+        records.first().getByRole('link', { name: copy('finalize'), exact: true })
       ).toHaveCount(0);
 
-      await records
-        .nth(2)
-        .getByRole('button', {
-          name: `${copy('viewCalculation')} : ${cancelledAdjustmentId}`,
-          exact: true,
-        })
-        .click();
-      dialog = page.getByRole('dialog', { name: copy('viewCalculation'), exact: true });
-      await expect(dialog).toContainText(cancelledAdjustmentId);
-      expect(digits(await dialog.innerText()).replace('٫', '.')).toContain('10.25%');
+      let recordStatus = 200;
+      await page.route(
+        `**/api/staff/electricity/contracts/${contractId}/price-adjustments/${cancelledAdjustmentId}`,
+        (route) =>
+          recordStatus === 200
+            ? route.fallback()
+            : route.fulfill({ status: recordStatus, json: {} })
+      );
+      await page.setViewportSize({ width: 390, height: 844 });
+      const mobileInspect = records.nth(2).getByRole('link', {
+        name: `${copy('viewCalculation')} ${cancelledAdjustmentId}`,
+        exact: true,
+      });
+      await mobileInspect.focus();
+      await expect(mobileInspect).toBeFocused();
+      await mobileInspect.press('Enter');
+      await expect(record).toContainText(copy('status.cancelled'));
+      expect(digits(await record.innerText()).replace('٫', '.')).toContain('10.25%');
       if (
         locale === 'fa' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
         await page.setViewportSize({ width: 1100, height: 1800 });
-        await dialog.screenshot({
+        await record.screenshot({
           path: `${process.env.BARGHSA_SCREENSHOT_DIR}/price-calculation-fa-${dark ? 'dark' : 'light'}.png`,
         });
-        await page.setViewportSize({ width: 1280, height: 900 });
+        await page.setViewportSize({ width: 390, height: 844 });
       }
-      await page.setViewportSize({ width: 390, height: 844 });
-      await dialog.getByRole('button', { name: copy('closeCalculation'), exact: true }).click();
-      const mobileInspect = records.nth(2).getByRole('button', {
-        name: `${copy('viewCalculation')} : ${cancelledAdjustmentId}`,
-        exact: true,
-      });
-      await expect(mobileInspect).toBeFocused();
-      await mobileInspect.press('Enter');
-      await expect(dialog).toBeVisible();
-      // An external refresh can finish while a read-only calculation is open.
-      readStatus = 503;
-      await page
-        .getByRole('button', { name: copy('refresh'), exact: true, includeHidden: true })
-        .dispatchEvent('click');
-      await expect(page.getByRole('alert', { includeHidden: true })).toContainText(copy('load'));
-      await expect(dialog).toBeVisible();
-      await expect(records).toHaveCount(3);
-      expect(state.writes).toHaveLength(1);
-      readStatus = 403;
-      await page
-        .getByRole('button', { name: copy('refresh'), exact: true, includeHidden: true })
-        .dispatchEvent('click');
-      await expect(dialog).toHaveCount(0);
-      await expect(records).toHaveCount(0);
+      const refresh = page.getByRole('button', { name: copy('refresh'), exact: true });
+      recordStatus = 503;
+      await refresh.click();
+      await expect(page.getByRole('alert')).toContainText(copy('load'));
+      await expect(record).toBeVisible();
+      recordStatus = 403;
+      await refresh.click();
+      await expect(record).toHaveCount(0);
       await expect(page.getByRole('alert')).toContainText(copy('forbidden'));
       await expect(page.locator('main')).not.toContainText(defaultPriceInput.reason);
-      readStatus = 200;
-      await page.getByRole('button', { name: copy('refresh'), exact: true }).click();
-      await expect(records).toHaveCount(3);
+      recordStatus = 200;
+      await refresh.click();
+      await expect(record).toContainText(copy('status.cancelled'));
       await expect(page.getByRole('dialog')).toHaveCount(0);
+      await page.goto(`${path}/finalize`);
+      await expect(decision.getByRole('status')).toContainText(copy('decisionUnavailable'));
+      await expect(form).toHaveCount(0);
       expect(state.writes).toHaveLength(1);
       expect(state.previews).toEqual([]);
     });

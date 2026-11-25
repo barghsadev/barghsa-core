@@ -2,25 +2,35 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import { toast } from '../lib/toast-api.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
+import SavingsOrderReview from '../components/SavingsOrderReview.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
-import { StepReviewPage } from '../components/StepReviewPage.js';
+import {
+  wizardActionSurface,
+  wizardChoiceCard as choiceCard,
+  wizardChoiceRadio as choiceRadio,
+} from '../components/FormWizard.js';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   LoadingStatus,
   Button,
   Card,
   CardContent,
-  FinancialReviewSummary,
   DependentSelect,
+  Input,
+  NativeSelect,
+  Textarea,
 } from '@barghsa/ui';
+import { ChevronDownIcon } from 'lucide-react';
+import { addressesText } from '@barghsa/i18n/addresses';
+import { validatePostalCode } from '@barghsa/shared/validation';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
 import { t } from '@barghsa/i18n/app';
@@ -46,12 +56,13 @@ import {
   type SavingProduct as Product,
 } from '../lib/customer-saving-catalogue.js';
 import {
+  defaultIntakeAddressId,
   readIntakeProfile,
   readIntakeAddresses,
   type IntakeAddress as Address,
 } from '../lib/service-intake-records.js';
 
-interface Quote {
+export interface SavingQuote {
   reviewDigest: string;
   plan: { id: string; title: Product['title'] };
   hardware: { id: string; title: Product['title'] };
@@ -84,7 +95,6 @@ interface Draft {
   giftCode: string;
 }
 type AddressDraftField = 'provinceId' | 'cityId' | 'fullAddress' | 'postalCode';
-
 const draftSchema: DraftSchema<Draft> = {
   safeParse(value) {
     if (!value || typeof value !== 'object') return { success: false };
@@ -117,12 +127,17 @@ async function postJson<T>(
 
 const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
 
-export function SavingsOrderPage() {
+export function SavingsOrderPage({ preferredPlanId }: { preferredPlanId?: string } = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedSavingsOrderPage key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedSavingsOrderPage
+      key={JSON.stringify([actor, revision])}
+      preferredPlanId={preferredPlanId}
+    />
+  );
 }
-function OwnedSavingsOrderPage() {
+function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | undefined }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const navigate = useNavigate();
@@ -137,7 +152,7 @@ function OwnedSavingsOrderPage() {
   const [loadError, setLoadError] = useState<'intake' | 'addresses' | 'authority' | null>(null);
   const [intakeAttempt, setIntakeAttempt] = useState(0);
   const [addressAttempt, setAddressAttempt] = useState(0);
-  const wizard = useWizardStep('/savings/order', 6);
+  const wizard = useWizardStep('/savings/orders/new', 3);
   const { step } = wizard;
   const [verification, setVerification] = useState<'idle' | 'checking' | 'verified' | 'manual'>(
     'idle'
@@ -226,6 +241,8 @@ function OwnedSavingsOrderPage() {
   const [duplicateRevision, setDuplicateRevision] = useState(0);
   const [addressId, setAddressId] = fields.field('addressId');
   const [addingAddress, setAddingAddress] = useState(false);
+  const addressHeading = useRef<HTMLHeadingElement>(null);
+  const addAddressButton = useRef<HTMLButtonElement>(null);
   const [provinceId, setProvinceId] = fields.field('provinceId');
   const [cityId, setCityId] = fields.field('cityId');
   const provinceOptions = useGeographyOptions(addingAddress ? '/api/geography/provinces' : null);
@@ -244,10 +261,12 @@ function OwnedSavingsOrderPage() {
     cities.some((city) => city.id === cityId);
   const [fullAddress, setFullAddress] = fields.field('fullAddress');
   const [postalCode, setPostalCode] = fields.field('postalCode');
+  const validPostalCode = validatePostalCode(postalCode);
+  const invalidPostalCode = postalCode !== '' && !validPostalCode;
   const [agreementAccepted, setAgreementAccepted] = fields.field('agreementAccepted');
   const [giftCode, setGiftCode] = fields.field('giftCode');
   const [appliedGiftCode, setAppliedGiftCode] = fields.field('appliedGiftCode');
-  const [quote, setQuote] = useState<Quote | null>(null);
+  const [quotePacket, setQuotePacket] = useState<{ key: string; value: SavingQuote } | null>(null);
   const [quoteError, setQuoteError] = useState(false);
   const [quoting, setQuoting] = useState(false);
   const [quoteRevision, setQuoteRevision] = useState(0);
@@ -294,10 +313,12 @@ function OwnedSavingsOrderPage() {
     : null;
   function bindAddressField(name: AddressDraftField) {
     const rejected = addressErrors.includes(name);
+    const postal = name === 'postalCode';
     return {
       ...fields.bind(name),
       'aria-required': true,
-      ...(rejected && { 'aria-invalid': true, 'aria-describedby': fields.errorId(name) }),
+      'aria-invalid': rejected || (postal && invalidPostalCode) || undefined,
+      'aria-describedby': rejected || postal ? fields.errorId(name) : undefined,
     };
   }
   function addressFieldError(name: AddressDraftField) {
@@ -323,6 +344,11 @@ function OwnedSavingsOrderPage() {
     save: saveDraft,
     retry: retryDraft,
   } = useFormDraft(draftKey, draftSchema);
+  // Persist the completed stages using the existing server draft numbers.
+  const saveWizardDraft = useCallback(
+    (stage: number, data: Draft) => saveDraft(stage * 2, data),
+    [saveDraft]
+  );
   const currentDraft = useMemo(
     () => ({ planId, hardwareId, billIdentifier, addressId, giftCode }),
     [planId, hardwareId, billIdentifier, addressId, giftCode]
@@ -332,8 +358,8 @@ function OwnedSavingsOrderPage() {
     profileId,
     data: currentDraft,
     step,
-    ready: !!draft && !loading && !loadError && !draftLoading && !draftError,
-    saveDraft,
+    ready: !!draft && !loading && !loadError && !addressLoading && !draftLoading && !draftError,
+    saveDraft: saveWizardDraft,
     go: wizard.go,
     extraDirty: addressDirty,
     saveDisabled: addressDirty,
@@ -343,14 +369,26 @@ function OwnedSavingsOrderPage() {
   const draftSaveError = protection.saveError;
   const selectedPlan = useMemo(() => plans.find((plan) => plan.id === planId), [plans, planId]);
   const selectedHardware = selectedPlan?.hardware.find((item) => item.id === hardwareId);
-  const steps = [
-    'stepPlan',
-    'stepHardware',
-    'stepBill',
-    'stepAddress',
-    'stepAgreement',
-    'stepReview',
-  ];
+  const canConfirmHardware =
+    selectedHardware?.status === 'active' &&
+    (!selectedHardware.stock_tracking || (selectedHardware.available_count ?? 0) > 0);
+  const steps = ['stepPackage', 'stepInstallation', 'stepReview'];
+  const agreementVersionId = selectedPlan?.agreement?.versionId;
+  const quoteKey = JSON.stringify([
+    profileId,
+    planId,
+    hardwareId,
+    billIdentifier,
+    addressId,
+    agreementVersionId,
+    appliedGiftCode,
+    quoteRevision,
+  ]);
+  const quote = step === 3 && quotePacket?.key === quoteKey ? quotePacket.value : null;
+  useEffect(() => {
+    setAgreementAccepted(false);
+    setSubmitForReview(false);
+  }, [quote?.reviewDigest]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -403,9 +441,8 @@ function OwnedSavingsOrderPage() {
       .then((result) => {
         if (!controller.signal.aborted) {
           const addresses = readIntakeAddresses(result, profileId);
-          const main = addresses.find((item) => item.mainAddress);
           setAddresses(addresses);
-          setAddressId((current) => current || main?.id || '');
+          setAddressId((current) => current || defaultIntakeAddressId(addresses));
         }
       })
       .catch(() => {
@@ -429,24 +466,46 @@ function OwnedSavingsOrderPage() {
   }
 
   useEffect(() => {
-    if (!profileId || !draft || loading || hydratedProfile.current === profileId) return;
+    if (!profileId || !draft || loading || addressLoading || hydratedProfile.current === profileId)
+      return;
     hydratedProfile.current = profileId;
-    if (draft.data) {
-      setPlanId(draft.data.planId);
-      setHardwareId(draft.data.hardwareId);
-      setBillIdentifier(draft.data.billIdentifier);
-      setAddressId(draft.data.addressId);
-      setGiftCode(draft.data.giftCode);
+    const saved = draft.data;
+    const availablePlans = plans.filter((item) => item.available);
+    const initialPlan =
+      availablePlans.find((item) => item.id === preferredPlanId) ??
+      (!saved && availablePlans.length === 1 ? availablePlans[0] : undefined);
+    if (saved) {
+      setPlanId(saved.planId);
+      setHardwareId(saved.hardwareId);
+      setBillIdentifier(saved.billIdentifier);
+      setAddressId((current) => saved.addressId || current);
+      setGiftCode(saved.giftCode);
     }
-    // Equipment confirmation and agreement acceptance are never persisted as consent.
-    const restored = draft.data ? Math.min(2, draft.currentStep) : 1;
-    wizard.restore(restored);
-    protection.markSaved(draft.data ?? currentDraft, restored);
-  }, [profileId, draft, loading, currentDraft, wizard.restore, protection.markSaved]);
+    if (initialPlan && initialPlan.id !== saved?.planId) {
+      setPlanId(initialPlan.id);
+      setHardwareId('');
+      setGiftCode('');
+    }
+    // Renew equipment confirmation and acceptance when restoring a draft.
+    wizard.restore(1);
+    const baseline = saved
+      ? { ...saved, addressId: saved.addressId || currentDraft.addressId }
+      : { ...currentDraft, planId: initialPlan?.id ?? '' };
+    protection.markSaved(baseline, 1);
+  }, [
+    profileId,
+    draft,
+    loading,
+    addressLoading,
+    currentDraft,
+    plans,
+    preferredPlanId,
+    wizard.restore,
+    protection.markSaved,
+  ]);
   useEffect(() => {
-    if (step > 2 && !hardwareConfirmed) wizard.restore(2);
-    else if (step > 5 && !agreementAccepted) wizard.restore(5);
-  }, [step, hardwareConfirmed, agreementAccepted, wizard.restore]);
+    if (step > 1 && !hardwareConfirmed) wizard.restore(1);
+  }, [step, hardwareConfirmed, wizard.restore]);
   async function saveNow() {
     const saved = await protection.save();
     if (saved) {
@@ -457,7 +516,17 @@ function OwnedSavingsOrderPage() {
   }
   async function advanceStep() {
     if (!canNext) return;
+    if (step === 2) setQuotePacket(null);
     await protection.save(step + 1);
+  }
+
+  function closeAddressEditor() {
+    setAddingAddress(false);
+    setProvinceId('');
+    setCityId('');
+    setFullAddress('');
+    setPostalCode('');
+    setAddressErrors([]);
   }
 
   async function saveAddress() {
@@ -465,7 +534,7 @@ function OwnedSavingsOrderPage() {
       !profileId ||
       !addressLocationReady ||
       !fullAddress.trim() ||
-      !/^[0-9]{10}$/.test(postalCode) ||
+      !validPostalCode ||
       protection.busy ||
       addressCommand.coordination.isLocked()
     )
@@ -498,11 +567,8 @@ function OwnedSavingsOrderPage() {
           const address = value as Address;
           setAddresses((values) => [...values.filter((row) => row.id !== address.id), address]);
           setAddressId(address.id);
-          setAddingAddress(false);
-          setProvinceId('');
-          setCityId('');
-          setFullAddress('');
-          setPostalCode('');
+          closeAddressEditor();
+          requestAnimationFrame(() => addressHeading.current?.focus());
           toast.success(t('settings.addresses.success.create', locale));
         },
       });
@@ -528,14 +594,13 @@ function OwnedSavingsOrderPage() {
   }
 
   useEffect(() => {
-    const agreement = selectedPlan?.agreement;
-    if (step !== 6 || !profileId || !agreement || !selectedHardware || !addressId) return;
+    if (step !== 3 || !profileId || !agreementVersionId || !selectedHardware || !addressId) return;
     const controller = new AbortController();
-    setQuote(null);
+    setQuotePacket(null);
     setQuoteError(false);
     setQuoting(true);
     void readWithDeadline(controller.signal, (signal) =>
-      postJson<Quote>(
+      postJson<SavingQuote>(
         '/api/saving/orders/quote',
         {
           profileId,
@@ -543,14 +608,27 @@ function OwnedSavingsOrderPage() {
           hardwareProductId: hardwareId,
           billIdentifier,
           installationAddressId: addressId,
-          agreementVersionId: agreement.versionId,
+          agreementVersionId,
           ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
         },
         signal
       )
     )
       .then((result) => {
-        if (!controller.signal.aborted) setQuote(result);
+        if (controller.signal.aborted) return;
+        if (
+          !result ||
+          !/^[a-f0-9]{64}$/.test(result.reviewDigest) ||
+          result.plan?.id !== planId ||
+          result.hardware?.id !== hardwareId ||
+          result.address?.id !== addressId ||
+          result.billIdentifier !== billIdentifier ||
+          result.agreement?.versionId !== agreementVersionId ||
+          typeof result.agreement.body !== 'string' ||
+          !Array.isArray(result.lines)
+        )
+          throw new Error('Invalid saving quote');
+        setQuotePacket({ key: quoteKey, value: result });
       })
       .catch(() => {
         if (!controller.signal.aborted) setQuoteError(true);
@@ -562,18 +640,18 @@ function OwnedSavingsOrderPage() {
   }, [
     step,
     profileId,
-    selectedPlan,
+    agreementVersionId,
     selectedHardware,
     addressId,
     planId,
     hardwareId,
     billIdentifier,
     appliedGiftCode,
-    quoteRevision,
+    quoteKey,
   ]);
 
   useEffect(() => {
-    if (step !== 3) {
+    if (step !== 2) {
       setDuplicateChecking(false);
       return;
     }
@@ -616,25 +694,17 @@ function OwnedSavingsOrderPage() {
 
   const canNext =
     step === 1
-      ? !!selectedPlan?.available
+      ? !!selectedPlan?.available && canConfirmHardware && hardwareConfirmed
       : step === 2
-        ? !!selectedHardware &&
-          selectedHardware.status === 'active' &&
-          (!selectedHardware.stock_tracking || (selectedHardware.available_count ?? 0) > 0) &&
-          hardwareConfirmed
-        : step === 3
-          ? /^[0-9]{6,13}$/.test(billIdentifier) &&
-            !duplicateChecking &&
-            !duplicateError &&
-            (duplicate?.duplicate === false ||
-              (duplicate?.preventActiveDuplicates === false && duplicateAcknowledged))
-          : step === 4
-            ? !addressLoading &&
-              !addressDirty &&
-              addresses.some((address) => address.id === addressId)
-            : step === 5
-              ? agreementAccepted && giftCode.trim() === appliedGiftCode
-              : false;
+        ? validBill &&
+          !duplicateChecking &&
+          !duplicateError &&
+          (duplicate?.duplicate === false ||
+            (duplicate?.preventActiveDuplicates === false && duplicateAcknowledged)) &&
+          !addressLoading &&
+          !addingAddress &&
+          addresses.some((address) => address.id === addressId)
+        : false;
   const financialGate = useRiskConfirmation(
     JSON.stringify([
       profileId,
@@ -691,6 +761,7 @@ function OwnedSavingsOrderPage() {
       quoteError ||
       !submitForReview ||
       addressDirty ||
+      giftCode.trim() !== appliedGiftCode ||
       !addresses.some((address) => address.id === addressId)
     )
       return;
@@ -716,7 +787,7 @@ function OwnedSavingsOrderPage() {
   const controlsBlocked = !!loadError || commandBlocked;
   return (
     <div
-      className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
+      className="mx-auto w-full max-w-4xl space-y-4 py-3 sm:py-5"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {protection.blocker.status === 'blocked' && (
@@ -740,11 +811,11 @@ function OwnedSavingsOrderPage() {
           />
         </Suspense>
       )}
-      <header className="space-y-2" data-toast-anchor={!showWizard || undefined}>
+      <header className="space-y-1" data-toast-anchor={!showWizard || undefined}>
         <Link to="/savings" className="touch-action text-sm text-primary hover:underline">
           {copy('title')}
         </Link>
-        <h1 className="text-3xl font-semibold">{copy('orderTitle')}</h1>
+        <h1 className="text-2xl font-semibold sm:text-3xl">{copy('orderTitle')}</h1>
       </header>
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && (
@@ -783,13 +854,13 @@ function OwnedSavingsOrderPage() {
           </Button>
         </div>
       )}
-      {addressDirty && step !== 4 && (
+      {addressDirty && step !== 2 && (
         <div role="alert" className="space-y-2">
           <p>{t('electricity.order.unsaved.address', locale)}</p>
           <Button
             variant="outline"
             onClick={() => {
-              void wizard.go(4, step);
+              void wizard.go(2, step);
             }}
           >
             {copy('stepAddress')}
@@ -810,6 +881,7 @@ function OwnedSavingsOrderPage() {
           onPendingChange={fields.setValidationPending}
           disabled={
             loading ||
+            (step === 1 && addressLoading) ||
             draftLoading ||
             !!draftError ||
             !!addressCommand.locked ||
@@ -819,29 +891,35 @@ function OwnedSavingsOrderPage() {
           }
           onInvalidStep={(target) => wizard.go(target, step)}
           fields={[
-            [{ name: 'planId', label: copy('choosePlan') }],
             [
+              { name: 'planId', label: copy('choosePlan') },
               { name: 'hardwareId', label: copy('chooseHardware') },
               { name: 'hardwareConfirmed', label: copy('confirmHardware') },
             ],
             [
               { name: 'billIdentifier', label: copy('billIdentifier') },
               { name: 'duplicateAcknowledged', label: copy('acknowledgeDuplicate') },
+              { name: 'addressId', label: copy('chooseAddress') },
             ],
-            [{ name: 'addressId', label: copy('chooseAddress') }],
             [
               { name: 'agreementAccepted', label: copy('acceptAgreement') },
               { name: 'giftCode', label: copy('giftCode') },
+              { name: 'submitForReview', label: copy('submitForReview') },
             ],
-            [{ name: 'submitForReview', label: copy('submitForReview') }],
           ]}
           steps={steps.map(copy)}
           step={step}
           ariaLabel={copy('orderTitle')}
           anchorNotices
+          compactProgress
+          actionsClassName={
+            step < 3 && (step !== 2 || !addingAddress)
+              ? `${wizardActionSurface} max-lg:sticky max-lg:bottom-0 max-lg:z-20 [&>button]:min-h-11`
+              : wizardActionSurface
+          }
           backLabel={copy('back')}
           saveLabel={t('electricity.order.saveDraft', locale)}
-          nextLabel={copy('next')}
+          nextLabel={copy(step === 2 ? 'stepReview' : 'next')}
           submitLabel={copy('submit')}
           savingLabel={t('electricity.order.savingDraft', locale)}
           submittingLabel={copy('submitting')}
@@ -859,6 +937,7 @@ function OwnedSavingsOrderPage() {
             !hardwareConfirmed ||
             !agreementAccepted ||
             !submitForReview ||
+            giftCode.trim() !== appliedGiftCode ||
             addressDirty
           }
           onBack={() => void protection.save(step - 1)}
@@ -867,554 +946,578 @@ function OwnedSavingsOrderPage() {
           onSubmit={submit}
         >
           {(pending) => (
-            <Card>
-              <CardContent className="space-y-5 pt-6">
+            <Card size="sm">
+              <CardContent className="space-y-4">
                 <fieldset
-                  className="min-w-0 space-y-5"
+                  className="min-w-0 space-y-4"
                   disabled={pending || commandBlocked || !!addressCommand.locked}
                 >
+                  <legend className="sr-only">{copy(steps[step - 1] ?? 'orderTitle')}</legend>
                   {step === 1 && (
-                    <section className="space-y-3">
-                      <h2 id="saving-plan-title" className="text-xl font-semibold">
-                        {copy('choosePlan')}
-                      </h2>
-                      <div
-                        role="radiogroup"
-                        aria-labelledby="saving-plan-title"
-                        aria-required="true"
-                        className="space-y-3"
-                      >
-                        {plans.map((plan) => (
-                          <label
-                            key={plan.id}
-                            className={`flex gap-3 rounded-md border p-4 ${plan.available ? 'cursor-pointer' : 'cursor-not-allowed bg-muted/30'}`}
-                          >
-                            <input
-                              type="radio"
-                              {...fields.bind('planId')}
-                              value={plan.id}
-                              checked={planId === plan.id}
-                              disabled={!plan.available}
-                              onChange={() => {
-                                setPlanId(plan.id);
-                                setHardwareId('');
-                                setHardwareConfirmed(false);
-                                setAgreementAccepted(false);
-                              }}
-                            />
-                            <span className="space-y-1">
-                              <span className="block font-medium">{title(plan)}</span>
-                              {!plan.available && (
-                                <span className="block text-xs font-medium text-muted-foreground">
-                                  {copy('unavailable')}
-                                </span>
-                              )}
-                              <span className="block text-sm text-muted-foreground">
-                                {plan.description?.[locale]}
-                              </span>
-                              <bdi className="block text-sm">
-                                {plan.price ? numbers.money(plan.price) : copy('unpriced')}
-                              </bdi>
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                    </section>
-                  )}
-                  {step === 2 && (
-                    <section className="space-y-3">
-                      <h2 id="saving-hardware-title" className="text-xl font-semibold">
-                        {copy('chooseHardware')}
-                      </h2>
-                      <div
-                        role="radiogroup"
-                        aria-labelledby="saving-hardware-title"
-                        aria-required="true"
-                        className="space-y-3"
-                      >
-                        {selectedPlan?.hardware.map((item) => (
-                          <label key={item.id} className="flex gap-3 rounded-md border p-4">
-                            <input
-                              type="radio"
-                              {...fields.bind('hardwareId')}
-                              value={item.id}
-                              checked={hardwareId === item.id}
-                              disabled={
-                                item.status !== 'active' ||
-                                (!!item.stock_tracking && (item.available_count ?? 0) < 1)
-                              }
-                              onChange={() => {
-                                setHardwareId(item.id);
-                                setHardwareConfirmed(false);
-                              }}
-                            />
-                            <span>
-                              <span className="block font-medium">{title(item)}</span>
-                              <span className="block text-sm">{item.description?.[locale]}</span>
-                              <bdi>{item.price ? numbers.money(item.price) : copy('unpriced')}</bdi>
-                              <span className="block text-sm text-muted-foreground">
-                                {item.stock_tracking
-                                  ? (item.available_count ?? 0) > 0
-                                    ? copy('inStock')
-                                    : copy('outOfStock')
-                                  : copy('subjectToConfirmation')}
-                              </span>
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                      <label className="touch-label flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          {...fields.bind('hardwareConfirmed')}
-                          aria-required="true"
-                          checked={hardwareConfirmed}
-                          onChange={(event) => setHardwareConfirmed(event.target.checked)}
-                        />
-                        {copy('confirmHardware')}
-                      </label>
-                    </section>
-                  )}
-                  {step === 3 && (
-                    <section className="space-y-3">
-                      <h2 className="text-xl font-semibold">{copy('billIdentifier')}</h2>
-                      <input
-                        aria-label={copy('billIdentifier')}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        maxLength={13}
-                        {...fields.bind('billIdentifier')}
-                        aria-required="true"
-                        aria-invalid={
-                          invalidBill ||
-                          fields.form.getFieldState('billIdentifier').invalid ||
-                          undefined
-                        }
-                        aria-describedby={
-                          invalidBill
-                            ? 'saving-bill-error'
-                            : fields.form.getFieldState('billIdentifier').invalid
-                              ? fields.errorId('billIdentifier')
-                              : undefined
-                        }
-                        value={billIdentifier}
-                        onChange={(event) => {
-                          setBillIdentifier(
-                            normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
-                          );
-                          setVerification('idle');
-                        }}
-                        className="w-full rounded-md border bg-background p-3"
-                        dir="ltr"
-                      />
-                      {invalidBill && (
-                        <p id="saving-bill-error" className="text-sm text-destructive">
-                          {copy('invalidBill')}
-                        </p>
-                      )}
-                      {duplicateError && (
-                        <div role="alert" className="space-y-2 text-sm text-destructive">
-                          <p>{copy('duplicateCheckError')}</p>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => setDuplicateRevision((value) => value + 1)}
-                          >
-                            {copy('retry')}
-                          </Button>
-                        </div>
-                      )}
-                      <Button
-                        variant="outline"
-                        disabled={!validBill || verification === 'checking'}
-                        onClick={() => void verifyBill()}
-                      >
-                        {copy('verifyBill')}
-                      </Button>
-                      {verification === 'verified' && <p role="status">{copy('verified')}</p>}
-                      {verification === 'manual' && <p role="status">{copy('manualReview')}</p>}
-                      {duplicate?.duplicate && (
-                        <div
-                          role="alert"
-                          className="rounded-md border border-destructive/30 p-3 text-sm"
-                        >
-                          <p>
-                            {copy(
-                              !duplicate.preventActiveDuplicates
-                                ? 'duplicateAllowedNotice'
-                                : duplicate.existingOrderId
-                                  ? 'duplicateOrder'
-                                  : 'duplicateSupport'
-                            )}
-                          </p>
-                          {duplicate.existingOrderId && (
-                            <Link
-                              to="/savings/orders/$orderId"
-                              params={{ orderId: duplicate.existingOrderId }}
-                              className="text-primary hover:underline"
-                            >
-                              {copy('openExisting')}
-                            </Link>
-                          )}
-                          {!duplicate.preventActiveDuplicates && (
-                            <label className="touch-label mt-3 flex items-center gap-2">
-                              <input
-                                type="checkbox"
-                                {...fields.bind('duplicateAcknowledged')}
-                                aria-required="true"
-                                checked={duplicateAcknowledged}
-                                onChange={(event) => setDuplicateAcknowledged(event.target.checked)}
-                              />
-                              {copy('acknowledgeDuplicate')}
-                            </label>
-                          )}
-                        </div>
-                      )}
-                    </section>
-                  )}
-                  {step === 4 && (
-                    <section className="space-y-3">
-                      <h2 id="saving-address-title" className="text-xl font-semibold">
-                        {copy('chooseAddress')}
-                      </h2>
-                      {addressLoading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-                      {!addressLoading && !loadError && !addresses.length && (
-                        <p role="status">{copy('noSavedAddresses')}</p>
-                      )}
-                      {addresses.length > 0 && (
+                    <div
+                      className={
+                        selectedPlan?.available
+                          ? 'grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]'
+                          : undefined
+                      }
+                    >
+                      <section className="min-w-0 space-y-2">
+                        <h2 id="saving-plan-title" className="text-base font-semibold">
+                          {copy('choosePlan')}
+                        </h2>
                         <div
                           role="radiogroup"
-                          aria-labelledby="saving-address-title"
+                          aria-labelledby="saving-plan-title"
                           aria-required="true"
-                          className="space-y-3"
+                          className="space-y-2"
                         >
-                          {addresses.map((address) => (
-                            <label key={address.id} className="flex gap-3 rounded-md border p-3">
+                          {plans.map((plan) => (
+                            <label key={plan.id} className={choiceCard}>
                               <input
                                 type="radio"
-                                {...fields.bind('addressId')}
-                                value={address.id}
-                                checked={addressId === address.id}
-                                onChange={() => setAddressId(address.id)}
+                                {...fields.bind('planId')}
+                                className={choiceRadio}
+                                value={plan.id}
+                                checked={planId === plan.id}
+                                disabled={!plan.available}
+                                onChange={() => {
+                                  setPlanId(plan.id);
+                                  setHardwareId('');
+                                  setHardwareConfirmed(false);
+                                  setAgreementAccepted(false);
+                                }}
                               />
-                              <span>
-                                {address.fullAddress} · <bdi>{address.postalCode}</bdi>
+                              <span className="min-w-0 flex-1 space-y-1">
+                                <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                                  <span className="text-sm font-medium">{title(plan)}</span>
+                                  <bdi className="text-sm font-medium wrap-anywhere">
+                                    {plan.price ? numbers.money(plan.price) : copy('unpriced')}
+                                  </bdi>
+                                </span>
+                                {!plan.available && (
+                                  <span className="block text-xs font-medium text-muted-foreground">
+                                    {copy('unavailable')}
+                                  </span>
+                                )}
+                                {plan.description?.[locale] && (
+                                  <span className="block text-xs text-muted-foreground">
+                                    {plan.description[locale]}
+                                  </span>
+                                )}
                               </span>
                             </label>
                           ))}
                         </div>
-                      )}
-                      <Button
-                        variant="outline"
-                        disabled={addressLoading || !!loadError}
-                        onClick={() => {
-                          if (addingAddress) {
-                            setProvinceId('');
-                            setCityId('');
-                            setFullAddress('');
-                            setPostalCode('');
-                            setAddressErrors([]);
-                          }
-                          setAddingAddress((value) => !value);
-                        }}
-                      >
-                        {addingAddress ? t('electricity.order.cancel', locale) : copy('newAddress')}
-                      </Button>
-                      {addressErrorMessage && <p role="alert">{addressErrorMessage}</p>}
-                      {addingAddress && (
-                        <div className="grid gap-3 rounded-md border p-4 md:grid-cols-2">
-                          <div>
-                            <label htmlFor="saving-address-province">{copy('province')}</label>
-                            <select
-                              id="saving-address-province"
-                              className="mt-1 w-full rounded-md border bg-background p-2"
-                              {...bindAddressField('provinceId')}
-                              value={provinceId}
-                              disabled={savingAddress || !provinceOptions.ready}
-                              onChange={(event) => {
-                                setProvinceId(event.target.value);
-                                setCityId('');
-                              }}
-                            >
-                              <option value="">—</option>
-                              {provinces.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {locale === 'fa' ? item.nameFa : item.nameEn}
-                                </option>
-                              ))}
-                            </select>
-                            {addressFieldError('provinceId')}
-                            <GeographyLoadError
-                              {...provinceOptions}
-                              message={t('settings.addresses.error.loadProvinces', locale)}
-                              locale={locale}
-                              testId="saving-address-province-retry"
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor="saving-address-city">{copy('city')}</label>
-                            <DependentSelect
-                              id="saving-address-city"
-                              className="mt-1 w-full rounded-md border bg-background p-2"
-                              dependencyValue={provinceId}
-                              {...bindAddressField('cityId')}
-                              value={cityId}
-                              ready={cityOptions.ready}
-                              loading={cityOptions.loading}
-                              disabled={savingAddress}
-                              options={cities.map((city) => ({
-                                value: city.id,
-                                label: locale === 'fa' ? city.nameFa : city.nameEn,
-                                dependencyValue: city.provinceId ?? '',
-                              }))}
-                              placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
-                              onChange={(event) => setCityId(event.target.value)}
-                            />
-                            {addressFieldError('cityId')}
-                            <GeographyLoadError
-                              {...cityOptions}
-                              message={t('settings.addresses.error.loadCities', locale)}
-                              locale={locale}
-                              testId="saving-address-city-retry"
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor="saving-address-full">{copy('fullAddress')}</label>
-                            <input
-                              id="saving-address-full"
-                              className="mt-1 w-full rounded-md border bg-background p-2"
-                              maxLength={500}
-                              {...bindAddressField('fullAddress')}
-                              value={fullAddress}
-                              onChange={(event) => setFullAddress(event.target.value)}
-                            />
-                            {addressFieldError('fullAddress')}
-                          </div>
-                          <div>
-                            <label htmlFor="saving-address-postal">{copy('postalCode')}</label>
-                            <input
-                              id="saving-address-postal"
-                              className="mt-1 w-full rounded-md border bg-background p-2"
-                              inputMode="numeric"
-                              maxLength={10}
-                              {...bindAddressField('postalCode')}
-                              value={postalCode}
-                              onChange={(event) =>
-                                setPostalCode(
-                                  normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
-                                )
-                              }
-                            />
-                            {addressFieldError('postalCode')}
-                          </div>
-                          <Button
-                            disabled={
-                              savingAddress ||
-                              !addressLocationReady ||
-                              !fullAddress.trim() ||
-                              !/^[0-9]{10}$/.test(postalCode)
-                            }
-                            onClick={() => void saveAddress()}
+                      </section>
+                      {selectedPlan?.available && (
+                        <section className="min-w-0 space-y-2 border-t pt-3 lg:border-s lg:border-t-0 lg:ps-4 lg:pt-0">
+                          <h2 id="saving-hardware-title" className="text-base font-semibold">
+                            {copy('chooseHardware')}
+                          </h2>
+                          <div
+                            role="radiogroup"
+                            aria-labelledby="saving-hardware-title"
+                            aria-required="true"
+                            className="space-y-2"
                           >
-                            {copy('saveAddress')}
+                            {selectedPlan.hardware.map((item) => {
+                              const outOfStock =
+                                !!item.stock_tracking && (item.available_count ?? 0) < 1;
+                              return (
+                                <label key={item.id} className={choiceCard}>
+                                  <input
+                                    type="radio"
+                                    {...fields.bind('hardwareId')}
+                                    className={choiceRadio}
+                                    value={item.id}
+                                    checked={hardwareId === item.id}
+                                    disabled={item.status !== 'active' || outOfStock}
+                                    onChange={() => {
+                                      setHardwareId(item.id);
+                                      setHardwareConfirmed(false);
+                                    }}
+                                  />
+                                  <span className="min-w-0 flex-1 space-y-1">
+                                    <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                                      <span
+                                        id={`saving-equipment-${item.id}`}
+                                        className="text-sm font-medium"
+                                      >
+                                        {title(item)}
+                                      </span>
+                                      <bdi className="text-sm font-medium wrap-anywhere">
+                                        {item.price ? numbers.money(item.price) : copy('unpriced')}
+                                      </bdi>
+                                    </span>
+                                    {item.description?.[locale] && (
+                                      <span className="block text-xs text-muted-foreground">
+                                        {item.description[locale]}
+                                      </span>
+                                    )}
+                                    <span className="block text-xs text-muted-foreground">
+                                      {copy(
+                                        item.status !== 'active'
+                                          ? 'unavailable'
+                                          : outOfStock
+                                            ? 'outOfStock'
+                                            : item.stock_tracking
+                                              ? 'inStock'
+                                              : 'stockPending'
+                                      )}
+                                    </span>
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                          {canConfirmHardware && (
+                            <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg bg-muted/45 px-3 py-1.5 text-sm">
+                              <input
+                                type="checkbox"
+                                {...fields.bind('hardwareConfirmed')}
+                                className="size-4 shrink-0 accent-primary"
+                                aria-required="true"
+                                aria-describedby={[
+                                  `saving-equipment-${hardwareId}`,
+                                  fields.form.getFieldState('hardwareConfirmed').invalid
+                                    ? fields.errorId('hardwareConfirmed')
+                                    : undefined,
+                                ]
+                                  .filter(Boolean)
+                                  .join(' ')}
+                                checked={hardwareConfirmed}
+                                onChange={(event) => setHardwareConfirmed(event.target.checked)}
+                              />
+                              {copy('confirmHardware')}
+                            </label>
+                          )}
+                        </section>
+                      )}
+                    </div>
+                  )}
+                  {step === 2 && (
+                    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
+                      <section className="min-w-0 space-y-2">
+                        <h2 className="text-base font-semibold">
+                          <label htmlFor="saving-bill-identifier">{copy('billIdentifier')}</label>
+                        </h2>
+                        <p id="saving-bill-hint" className="text-xs text-muted-foreground">
+                          {copy('billIdentifierHint')}
+                        </p>
+                        <div className="flex items-start gap-2">
+                          <Input
+                            id="saving-bill-identifier"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            maxLength={13}
+                            {...fields.bind('billIdentifier')}
+                            aria-required="true"
+                            aria-invalid={
+                              invalidBill ||
+                              fields.form.getFieldState('billIdentifier').invalid ||
+                              undefined
+                            }
+                            aria-describedby={
+                              invalidBill
+                                ? 'saving-bill-error'
+                                : fields.form.getFieldState('billIdentifier').invalid
+                                  ? fields.errorId('billIdentifier')
+                                  : 'saving-bill-hint'
+                            }
+                            value={billIdentifier}
+                            onChange={(event) => {
+                              setBillIdentifier(
+                                normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
+                              );
+                              setDuplicate(null);
+                              setDuplicateAcknowledged(false);
+                              setVerification('idle');
+                            }}
+                            className="min-w-0 flex-1 tabular-nums"
+                            dir="ltr"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="min-h-11 shrink-0"
+                            disabled={!validBill || verification === 'checking'}
+                            onClick={() => void verifyBill()}
+                          >
+                            {copy(verification === 'checking' ? 'verifyingBill' : 'verifyBill')}
                           </Button>
                         </div>
-                      )}
-                    </section>
+                        {invalidBill && (
+                          <p id="saving-bill-error" className="text-sm text-destructive">
+                            {copy('invalidBill')}
+                          </p>
+                        )}
+                        {duplicateError && (
+                          <div role="alert" className="space-y-2 text-sm text-destructive">
+                            <p>{copy('duplicateCheckError')}</p>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setDuplicateRevision((value) => value + 1)}
+                            >
+                              {copy('retry')}
+                            </Button>
+                          </div>
+                        )}
+                        {duplicateChecking && (
+                          <p role="status" className="text-sm text-muted-foreground">
+                            {copy('duplicateChecking')}
+                          </p>
+                        )}
+                        {verification === 'verified' && (
+                          <p role="status" className="text-sm font-medium">
+                            {copy('verified')}
+                          </p>
+                        )}
+                        {verification === 'manual' && (
+                          <p role="status" className="text-sm text-muted-foreground">
+                            {copy('manualReview')}
+                          </p>
+                        )}
+                        {duplicate?.duplicate && (
+                          <div
+                            role="alert"
+                            className="rounded-md border border-destructive/30 p-3 text-sm"
+                          >
+                            <p>
+                              {copy(
+                                !duplicate.preventActiveDuplicates
+                                  ? 'duplicateAllowedNotice'
+                                  : duplicate.existingOrderId
+                                    ? 'duplicateOrder'
+                                    : 'duplicateSupport'
+                              )}
+                            </p>
+                            {duplicate.existingOrderId && (
+                              <Link
+                                to="/savings/orders/$orderId"
+                                params={{ orderId: duplicate.existingOrderId }}
+                                className="text-primary hover:underline"
+                              >
+                                {copy('openExisting')}
+                              </Link>
+                            )}
+                            {!duplicate.preventActiveDuplicates && (
+                              <label className="touch-label mt-3 flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  {...fields.bind('duplicateAcknowledged')}
+                                  aria-required="true"
+                                  checked={duplicateAcknowledged}
+                                  onChange={(event) =>
+                                    setDuplicateAcknowledged(event.target.checked)
+                                  }
+                                />
+                                {copy('acknowledgeDuplicate')}
+                              </label>
+                            )}
+                          </div>
+                        )}
+                      </section>
+                      <section className="min-w-0 space-y-2 border-t pt-3 lg:border-s lg:border-t-0 lg:ps-4 lg:pt-0">
+                        <h2
+                          id="saving-address-title"
+                          ref={addressHeading}
+                          tabIndex={-1}
+                          className="scroll-mt-3 text-base font-semibold"
+                        >
+                          {copy(addingAddress ? 'newInstallationAddress' : 'chooseAddress')}
+                        </h2>
+                        {addressLoading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+                        {!addingAddress && !addressLoading && !loadError && !addresses.length && (
+                          <p role="status">{copy('noSavedAddresses')}</p>
+                        )}
+                        {!addingAddress && addresses.length > 0 && (
+                          <div
+                            role="radiogroup"
+                            aria-labelledby="saving-address-title"
+                            aria-required="true"
+                            className="space-y-2"
+                          >
+                            {addresses.map((address) => (
+                              <label key={address.id} className={choiceCard}>
+                                <input
+                                  type="radio"
+                                  {...fields.bind('addressId')}
+                                  className={choiceRadio}
+                                  value={address.id}
+                                  checked={addressId === address.id}
+                                  onChange={() => setAddressId(address.id)}
+                                />
+                                <span className="min-w-0 space-y-1 text-sm">
+                                  <span className="block font-medium wrap-anywhere">
+                                    {address.fullAddress}
+                                  </span>
+                                  <span className="block text-xs text-muted-foreground">
+                                    {copy('postalCode')} <bdi>{address.postalCode}</bdi>
+                                  </span>
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                        {!addingAddress && (
+                          <Button
+                            ref={addAddressButton}
+                            type="button"
+                            variant="outline"
+                            disabled={addressLoading || !!loadError}
+                            onClick={() => {
+                              setAddingAddress(true);
+                              requestAnimationFrame(() => addressHeading.current?.focus());
+                            }}
+                          >
+                            {copy('newAddress')}
+                          </Button>
+                        )}
+                        {addressErrorMessage && <p role="alert">{addressErrorMessage}</p>}
+                        {addingAddress && (
+                          <div className="space-y-3">
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              <div className="min-w-0 space-y-1">
+                                <label
+                                  htmlFor="saving-address-province"
+                                  className="block text-sm font-medium"
+                                >
+                                  {copy('province')}
+                                </label>
+                                <NativeSelect
+                                  id="saving-address-province"
+                                  className="w-full"
+                                  {...bindAddressField('provinceId')}
+                                  value={provinceId}
+                                  disabled={savingAddress || !provinceOptions.ready}
+                                  onChange={(event) => {
+                                    setProvinceId(event.target.value);
+                                    setCityId('');
+                                  }}
+                                >
+                                  <option value="">
+                                    {t('settings.addresses.form.provincePlaceholder', locale)}
+                                  </option>
+                                  {provinces.map((item) => (
+                                    <option key={item.id} value={item.id}>
+                                      {locale === 'fa' ? item.nameFa : item.nameEn}
+                                    </option>
+                                  ))}
+                                </NativeSelect>
+                                {addressFieldError('provinceId')}
+                                <GeographyLoadError
+                                  {...provinceOptions}
+                                  message={t('settings.addresses.error.loadProvinces', locale)}
+                                  locale={locale}
+                                  testId="saving-address-province-retry"
+                                />
+                              </div>
+                              <div className="min-w-0 space-y-1">
+                                <label
+                                  htmlFor="saving-address-city"
+                                  className="block text-sm font-medium"
+                                >
+                                  {copy('city')}
+                                </label>
+                                <div className="relative">
+                                  <DependentSelect
+                                    id="saving-address-city"
+                                    className="h-11 appearance-none rounded-lg bg-transparent py-1 pe-8 ps-2.5"
+                                    dependencyValue={provinceId}
+                                    {...bindAddressField('cityId')}
+                                    value={cityId}
+                                    ready={cityOptions.ready}
+                                    loading={cityOptions.loading}
+                                    disabled={savingAddress}
+                                    options={cities.map((city) => ({
+                                      value: city.id,
+                                      label: locale === 'fa' ? city.nameFa : city.nameEn,
+                                      dependencyValue: city.provinceId ?? '',
+                                    }))}
+                                    placeholder={
+                                      !provinceId
+                                        ? addressesText('provinceFirst', locale)
+                                        : cityOptions.loading
+                                          ? addressesText('loadingCities', locale)
+                                          : t('settings.addresses.form.cityPlaceholder', locale)
+                                    }
+                                    onChange={(event) => setCityId(event.target.value)}
+                                  />
+                                  <ChevronDownIcon
+                                    aria-hidden="true"
+                                    className="pointer-events-none absolute end-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                                  />
+                                </div>
+                                {addressFieldError('cityId')}
+                                <GeographyLoadError
+                                  {...cityOptions}
+                                  message={t('settings.addresses.error.loadCities', locale)}
+                                  locale={locale}
+                                  testId="saving-address-city-retry"
+                                />
+                              </div>
+                            </div>
+                            <div className="space-y-1">
+                              <label
+                                htmlFor="saving-address-full"
+                                className="block text-sm font-medium"
+                              >
+                                {copy('fullAddress')}
+                              </label>
+                              <Textarea
+                                id="saving-address-full"
+                                autoComplete="street-address"
+                                placeholder={addressesText('streetExample', locale)}
+                                rows={2}
+                                maxLength={500}
+                                {...bindAddressField('fullAddress')}
+                                value={fullAddress}
+                                onChange={(event) => setFullAddress(event.target.value)}
+                              />
+                              {addressFieldError('fullAddress')}
+                            </div>
+                            <div className="max-w-xs space-y-1">
+                              <label
+                                htmlFor="saving-address-postal"
+                                className="block text-sm font-medium"
+                              >
+                                {copy('postalCode')}
+                              </label>
+                              <Input
+                                id="saving-address-postal"
+                                autoComplete="postal-code"
+                                inputMode="numeric"
+                                dir="ltr"
+                                maxLength={10}
+                                {...bindAddressField('postalCode')}
+                                value={postalCode}
+                                onChange={(event) =>
+                                  setPostalCode(
+                                    normalizeProfileDigits(event.target.value).replace(
+                                      /[^0-9]/g,
+                                      ''
+                                    )
+                                  )
+                                }
+                              />
+                              <p
+                                id={fields.errorId('postalCode')}
+                                className={
+                                  invalidPostalCode || addressErrors.includes('postalCode')
+                                    ? 'text-xs text-destructive'
+                                    : 'text-xs text-muted-foreground'
+                                }
+                              >
+                                {addressErrors.includes('postalCode') && !invalidPostalCode
+                                  ? invalidField
+                                  : addressesText('postalCodeFormat', locale)}
+                              </p>
+                            </div>
+                            <div className="flex flex-wrap justify-end gap-2 border-t pt-3">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                disabled={savingAddress}
+                                onClick={() => {
+                                  closeAddressEditor();
+                                  requestAnimationFrame(() => addAddressButton.current?.focus());
+                                }}
+                              >
+                                {t('electricity.order.cancel', locale)}
+                              </Button>
+                              <Button
+                                type="button"
+                                disabled={
+                                  savingAddress ||
+                                  !addressLocationReady ||
+                                  !fullAddress.trim() ||
+                                  !validPostalCode
+                                }
+                                onClick={() => void saveAddress()}
+                              >
+                                {copy('saveAddress')}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </section>
+                    </div>
                   )}
-                  {step === 5 && (
+                  {step === 3 && (
                     <section className="space-y-4">
-                      <h2 dir="auto" className="text-xl font-semibold wrap-anywhere">
-                        {selectedPlan?.agreement?.title}
-                      </h2>
-                      <div
-                        dir="auto"
-                        className="max-h-80 overflow-y-auto whitespace-break-spaces rounded-md border bg-muted/30 p-4 text-sm wrap-anywhere"
-                      >
-                        {selectedPlan?.agreement?.body}
-                      </div>
+                      <SavingsOrderReview
+                        quote={quote}
+                        quoting={quoting}
+                        quoteError={quoteError}
+                        retryQuote={() => setQuoteRevision((value) => value + 1)}
+                        plan={selectedPlan}
+                        hardware={selectedHardware}
+                        billIdentifier={billIdentifier}
+                        address={addresses.find((address) => address.id === addressId)}
+                        appliedGiftCode={appliedGiftCode}
+                        onEdit={(target) => void protection.save(target)}
+                        editDisabled={pending || protection.busy || protection.completed.current}
+                      />
                       <label className="touch-label flex items-center gap-2">
                         <input
                           type="checkbox"
                           {...fields.bind('agreementAccepted')}
                           aria-required="true"
                           checked={agreementAccepted}
+                          disabled={!quote || quoting || quoteError}
                           onChange={(event) => setAgreementAccepted(event.target.checked)}
                         />
                         {copy('acceptAgreement')}
                       </label>
-                      <div className="flex flex-wrap items-end gap-2">
-                        <label className="flex-1">
-                          {copy('giftCode')}
-                          <input
-                            className="mt-1 w-full rounded-md border bg-background p-2"
-                            {...fields.bind('giftCode')}
-                            value={giftCode}
-                            onChange={(event) => setGiftCode(event.target.value)}
-                          />
-                        </label>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setAppliedGiftCode(giftCode.trim());
-                            setQuoteRevision((value) => value + 1);
-                            submission.resetPreparation();
-                          }}
-                        >
-                          {copy('apply')}
-                        </Button>
+                      <div className="space-y-2">
+                        <details className="group rounded-lg border [&[open]>div]:px-3 [&[open]>div]:pb-3">
+                          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 text-sm font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+                            {copy('giftOptional')}
+                            <ChevronDownIcon
+                              aria-hidden="true"
+                              className="size-4 shrink-0 group-open:rotate-180 motion-safe:transition-transform"
+                            />
+                          </summary>
+                          <div className="flex flex-wrap items-end gap-2">
+                            <label className="min-w-0 flex-1 basis-32 text-sm">
+                              {copy('giftCode')}
+                              <input
+                                className="mt-1 w-full rounded-md border bg-background p-2"
+                                {...fields.bind('giftCode')}
+                                value={giftCode}
+                                onChange={(event) => setGiftCode(event.target.value)}
+                              />
+                            </label>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setAppliedGiftCode(giftCode.trim());
+                                setQuoteRevision((value) => value + 1);
+                                submission.resetPreparation();
+                              }}
+                            >
+                              {copy('apply')}
+                            </Button>
+                          </div>
+                        </details>
+                        {giftCode.trim() !== appliedGiftCode && (
+                          <p role="status" className="text-sm">
+                            {t('electricity.order.applyGiftFirst', locale)}
+                          </p>
+                        )}
                       </div>
-                      {giftCode.trim() !== appliedGiftCode && (
-                        <p role="status" className="text-sm">
-                          {t('electricity.order.applyGiftFirst', locale)}
-                        </p>
-                      )}
-                    </section>
-                  )}
-                  {step === 6 && (
-                    <section className="space-y-4">
-                      <StepReviewPage
-                        title={copy('stepReview')}
-                        editLabel={t('electricity.order.edit', locale)}
-                        disabled={pending || protection.busy || protection.completed.current}
-                        onEdit={(target) => void protection.save(target)}
-                        sections={[
-                          {
-                            id: 'plan',
-                            title: copy('stepPlan'),
-                            step: 1,
-                            rows: [
-                              {
-                                label: copy('stepPlan'),
-                                value: quote?.plan && title(quote.plan),
-                              },
-                            ],
-                          },
-                          {
-                            id: 'hardware',
-                            title: copy('stepHardware'),
-                            step: 2,
-                            rows: [
-                              {
-                                label: copy('stepHardware'),
-                                value: quote?.hardware && title(quote.hardware),
-                              },
-                            ],
-                          },
-                          {
-                            id: 'bill',
-                            title: copy('stepBill'),
-                            step: 3,
-                            rows: [{ label: copy('billIdentifier'), value: quote?.billIdentifier }],
-                          },
-                          {
-                            id: 'address',
-                            title: copy('stepAddress'),
-                            step: 4,
-                            rows: [
-                              {
-                                label: copy('stepAddress'),
-                                value: quote?.address?.full_address,
-                              },
-                              {
-                                label: t('electricity.order.postalCode', locale),
-                                value: quote?.address?.postal_code,
-                              },
-                            ],
-                          },
-                          {
-                            id: 'agreement',
-                            title: copy('stepAgreement'),
-                            step: 5,
-                            content: (
-                              <div className="space-y-2 text-sm">
-                                <p dir="auto" className="font-medium wrap-anywhere">
-                                  {quote?.agreement?.title}
-                                </p>
-                                <p dir="auto" className="whitespace-break-spaces wrap-anywhere">
-                                  {quote?.agreement?.body}
-                                </p>
-                              </div>
-                            ),
-                          },
-                          {
-                            id: 'gift',
-                            title: copy('giftCode'),
-                            step: 5,
-                            rows: [{ label: copy('giftCode'), value: appliedGiftCode || '—' }],
-                          },
-                          {
-                            id: 'price',
-                            title: t('electricity.order.step3', locale),
-                            content: (
-                              <>
-                                {quoting && <p role="status">{copy('loading')}</p>}
-                                {quoteError && (
-                                  <div role="alert">
-                                    <p>{copy('quoteError')}</p>
-                                    <Button
-                                      variant="outline"
-                                      onClick={() => setQuoteRevision((value) => value + 1)}
-                                    >
-                                      {copy('retry')}
-                                    </Button>
-                                  </div>
-                                )}
-                                {quote && (
-                                  <FinancialReviewSummary
-                                    title={copy('total')}
-                                    rows={[
-                                      ...quote.lines.map((line) => ({
-                                        id: line.type,
-                                        label: line.title[locale],
-                                        value: (
-                                          <>
-                                            {numbers.money(line.amountIrR)}
-                                            {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
-                                              <small className="block text-muted-foreground">
-                                                −{numbers.money(line.discountIrR)} · +
-                                                {numbers.money(line.vatIrR)} {copy('vat')}
-                                              </small>
-                                            )}
-                                          </>
-                                        ),
-                                      })),
-                                      {
-                                        id: 'subtotal',
-                                        label: copy('subtotal'),
-                                        value: numbers.money(quote.subtotalIrR),
-                                      },
-                                      {
-                                        id: 'discount',
-                                        label: copy('discount'),
-                                        value: numbers.money(quote.discountIrR),
-                                      },
-                                      {
-                                        id: 'vat',
-                                        label: copy('vat'),
-                                        value: numbers.money(quote.vatIrR),
-                                      },
-                                    ]}
-                                    total={{
-                                      label: copy('total'),
-                                      value: numbers.money(quote.totalIrR),
-                                    }}
-                                  />
-                                )}
-                              </>
-                            ),
-                          },
-                        ]}
-                      />
                       {profileId && (
-                        <OrderWalletBalance
-                          profileId={profileId}
-                          total={quote?.totalIrR ?? '0'}
-                          checkout={{
-                            label: copy('walletBalance'),
-                            balanceField: 'availableBalance',
-                          }}
-                        />
+                        <div className="rounded-lg border p-3 [&_button]:self-start">
+                          <OrderWalletBalance
+                            profileId={profileId}
+                            total={quote?.totalIrR ?? '0'}
+                            checkout={{
+                              label: copy('walletBalance'),
+                              balanceField: 'availableBalance',
+                            }}
+                          />
+                        </div>
                       )}
                       <label className="touch-label flex items-center gap-2">
                         <input
@@ -1442,7 +1545,7 @@ function OwnedSavingsOrderPage() {
                     {copy('draftSaveError')}
                   </p>
                 )}
-                {step === 6 && (
+                {step === 3 && (
                   <ConfirmationFields
                     gate={financialGate}
                     disabled={submitting || submission.unconfirmed}

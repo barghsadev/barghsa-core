@@ -31,6 +31,7 @@ import {
   updateSchema,
 } from './maintenance.service.js';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { recheckStaffAuthorityAfter } from '../admin/staff-read-authority.js';
 
 const capabilitySchema = z.enum(capabilities);
 const historyCursor = z
@@ -79,6 +80,29 @@ export class AdminMaintenanceController {
     )
       throw new HttpException({ error: 'AUTHZ_FORBIDDEN' }, 403);
     return this.maintenance.list();
+  }
+
+  @Get(':capability')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Read maintenance for one service' })
+  @ApiResponse({ status: 200, description: 'Maintenance setting and version' })
+  setting(@Param('capability') rawCapability: string, @Req() req: AuthenticatedRequest) {
+    const permission = hasStaffPermission(req, 'admin:config:read')
+      ? 'admin:config:read'
+      : 'admin:config:write';
+    if (!hasStaffPermission(req, permission))
+      throw new HttpException({ error: 'AUTHZ_FORBIDDEN' }, 403);
+    const capability = capabilitySchema.safeParse(rawCapability);
+    if (!capability.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    const canEdit = hasStaffPermission(req, 'admin:config:write');
+    return recheckStaffAuthorityAfter(
+      req.session,
+      canEdit ? 'admin:config:write' : permission,
+      async () => ({
+        ...(await this.maintenance.get(capability.data)),
+        canEdit,
+      })
+    );
   }
 
   @Get(':capability/history')

@@ -107,7 +107,7 @@ export interface NotificationCenterQueryPool {
   ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
-// Column list used by the list query — snake_case DB columns aliased to the
+// Snake-case DB columns aliased to the
 // camelCase NotificationCenterItem shape (the `pg` driver does not auto-convert).
 const SELECT_COLUMNS = `id,
   localized_content AS "localizedContent",
@@ -119,12 +119,34 @@ const SELECT_COLUMNS = `id,
   link_params AS "linkParams",
   is_read AS "isRead",
   read_at AS "readAt",
-  created_at AS "createdAt",
-  to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "cursorTimestamp"`;
+  created_at AS "createdAt"`;
 
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function assertNotificationId(id: string) {
+  if (!UUID_PATTERN.test(id))
+    throw new HttpException(
+      {
+        statusCode: 400,
+        error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        message: 'Invalid notification ID',
+      },
+      400
+    );
+}
+
+function notificationNotFound(): never {
+  throw new HttpException(
+    {
+      statusCode: 404,
+      error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+      message: 'Notification not found',
+    },
+    404
+  );
+}
 
 /**
  * Encode a (created_at, id) position into an opaque, URL-safe cursor.
@@ -246,7 +268,8 @@ export class NotificationCenterService {
     params.push(limit + 1);
 
     const rows = await db.query(
-      `SELECT ${SELECT_COLUMNS}
+      `SELECT ${SELECT_COLUMNS},
+              to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "cursorTimestamp"
          FROM in_app_notifications
         WHERE ${conditions.join(' AND ')}
         ORDER BY created_at ${order}, id ${order}
@@ -292,6 +315,23 @@ export class NotificationCenterService {
     return parseInt((result.rows[0] as { n: string } | undefined)?.n ?? '0', 10);
   }
 
+  async findOne(
+    profileId: string | null,
+    id: string,
+    userId?: string,
+    context: OperatingContext = 'customer'
+  ): Promise<NotificationCenterItem> {
+    assertNotificationId(id);
+    const { rows } = await this.db.query(
+      `SELECT ${SELECT_COLUMNS}
+        FROM in_app_notifications
+        WHERE id = $4 AND ${notificationScope}`,
+      [profileId, userId ?? null, context, id]
+    );
+    const item = rows[0] as NotificationCenterItem | undefined;
+    return item ?? notificationNotFound();
+  }
+
   /**
    * Mark one notification read. Profile-scoped so a user can only affect their
    * own rows; throws 404 when the row does not exist for the given profile.
@@ -302,32 +342,14 @@ export class NotificationCenterService {
     userId?: string,
     context: OperatingContext = 'customer'
   ): Promise<void> {
-    if (!UUID_PATTERN.test(notificationId)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid notification ID',
-        },
-        400
-      );
-    }
+    assertNotificationId(notificationId);
     const result = await this.db.query(
       `UPDATE in_app_notifications
           SET is_read = true, read_at = COALESCE(read_at,NOW())
         WHERE id = $4 AND ${notificationScope}`,
       [profileId, userId ?? null, context, notificationId]
     );
-    if (result.rowCount === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Notification not found',
-        },
-        404
-      );
-    }
+    if (result.rowCount === 0) notificationNotFound();
   }
 
   /** Mark every unread notification for the profile as read. */

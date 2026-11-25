@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/crm';
 import type { Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
@@ -114,7 +115,7 @@ async function setup(page: Page, locale: Locale, allowed = true, archived = fals
   };
 }
 for (const locale of ['fa', 'en'] as const) {
-  test(`CRM inline address edit retains drafts, validates geography and confirms retries (${locale})`, async ({
+  test(`CRM address editor retains drafts, validates geography and confirms retries (${locale})`, async ({
     page,
   }) => {
     const fixture = await setup(page, locale);
@@ -157,8 +158,8 @@ for (const locale of ['fa', 'en'] as const) {
     });
     await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { success: true } }));
     await fixture.open();
-    const panel = page.locator('#panel-addresses');
-    const edit = panel.getByRole('button', {
+    const panel = page.locator('main[data-area=admin]');
+    const edit = panel.getByRole('link', {
       name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address',
       exact: true,
     });
@@ -178,13 +179,12 @@ for (const locale of ['fa', 'en'] as const) {
     expect(writes).toEqual([]);
     await edit.click();
     await full.fill('New street');
-    // Hiding the address tab must not discard an open draft.
-    await page
-      .getByRole('tab', { name: locale === 'fa' ? 'خلاصه' : 'Overview', exact: true })
-      .click();
-    await page
-      .getByRole('tab', { name: locale === 'fa' ? 'آدرس‌ها' : 'Addresses', exact: true })
-      .click();
+    await expect(page).toHaveURL(`/admin/crm/profiles/${profileId}/addresses/${addressId}/edit`);
+    await expect(page.getByRole('tablist')).toHaveCount(0);
+    const viewport = page.viewportSize()!;
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(full).toHaveValue('New street');
+    await page.setViewportSize(viewport);
     await expect(full).toHaveValue('New street');
     const province = panel.getByLabel(locale === 'fa' ? 'استان' : 'Province', { exact: true });
     const city = panel.getByLabel(locale === 'fa' ? 'شهر' : 'City', { exact: true });
@@ -242,6 +242,10 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(panel.getByRole('status')).toHaveText(
       locale === 'fa' ? 'آدرس ذخیره شد.' : 'Address saved.'
     );
+    await page
+      .getByRole('link', { name: t('crm.profile.returnToProfile', locale), exact: true })
+      .click();
+    await expect(page.locator('#panel-addresses')).toBeVisible();
     await expect(panel).toContainText('New street');
     await expect(panel).toContainText('2345678901');
     expect(writes).toEqual(
@@ -266,7 +270,7 @@ for (const locale of ['fa', 'en'] as const) {
       const fixture = await setup(page, locale, archived, archived);
       await fixture.open();
       await expect(
-        page.getByRole('tabpanel').getByRole('button', {
+        page.getByRole('tabpanel').getByRole('link', {
           name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address',
           exact: true,
         })
@@ -283,9 +287,9 @@ for (const locale of ['fa', 'en'] as const) {
       return route.fulfill({ status: 409, json: { error: { code: 'CONFLICT:STATE' } } });
     });
     await fixture.open();
-    const panel = page.locator('#panel-addresses');
+    const panel = page.locator('main[data-area=admin]');
     await panel
-      .getByRole('button', { name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address', exact: true })
       .click();
     const full = panel.getByLabel(locale === 'fa' ? 'آدرس کامل' : 'Full address', { exact: true });
     await full.fill('Stale draft');
@@ -315,10 +319,7 @@ for (const locale of ['fa', 'en'] as const) {
         exact: true,
       })
       .click();
-    await page
-      .getByRole('tab', { name: locale === 'fa' ? 'آدرس‌ها' : 'Addresses', exact: true })
-      .click();
-    await expect(panel).toContainText('Concurrent street');
+    await expect(full).toHaveValue('Concurrent street');
     await expect(panel).not.toContainText('Stale draft');
   });
 }
@@ -354,9 +355,9 @@ for (const locale of ['fa', 'en'] as const)
       });
     });
     await fixture.open();
-    const panel = page.locator('#panel-addresses');
+    const panel = page.locator('main[data-area=admin]');
     await panel
-      .getByRole('button', { name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'ویرایش آدرس' : 'Edit address', exact: true })
       .click();
     const full = panel.getByLabel(locale === 'fa' ? 'آدرس کامل' : 'Full address', { exact: true });
     const postal = panel.getByLabel(locale === 'fa' ? 'کد پستی' : 'Postal code', { exact: true });
@@ -387,6 +388,9 @@ for (const locale of ['fa', 'en'] as const)
     await confirm.click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(panel.getByRole('status')).toBeVisible();
+    await page
+      .getByRole('link', { name: t('crm.profile.returnToProfile', locale), exact: true })
+      .click();
     await expect(panel).toContainText('Retained street');
     await expect(panel).toContainText('3456789012');
     expect(writes).toHaveLength(2);

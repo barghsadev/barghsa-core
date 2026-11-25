@@ -1,5 +1,7 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t } from '@barghsa/i18n/app';
+import { electricityCancellationText } from '@barghsa/i18n/electricity-cancellation-customer';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
@@ -65,8 +67,18 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto(`/electricity/orders/${orderId}`);
     const copy = (key: string) => t(`electricity.order.detail.${key}`, locale);
+    const cancellationCopy = (key: Parameters<typeof electricityCancellationText>[0]) =>
+      electricityCancellationText(key, locale);
+    await page.getByRole('link', { name: copy('cancel'), exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}/cancel$`));
+    await expect(page.getByRole('heading', { name: copy('cancel'), exact: true })).toBeVisible();
+    await expect(
+      page.getByText(cancellationCopy('cancelPreviewHint'), { exact: true })
+    ).toBeVisible();
     await page.getByLabel(copy('cancelReason'), { exact: true }).fill(reason);
-    await page.getByRole('button', { name: copy('cancel'), exact: true }).click();
+    await page
+      .getByRole('button', { name: cancellationCopy('cancelReviewAction'), exact: true })
+      .click();
     const dialog = page.getByRole('dialog');
     const submit = dialog.getByRole('button', { name: copy('cancel'), exact: true });
     await approveRiskConfirmation(page, locale, 'both');
@@ -76,6 +88,16 @@ for (const locale of ['en', 'fa'] as const) {
     await page.clock.fastForward(15_001);
     await expect(dialog).toContainText(confirmationText('unconfirmed', locale));
     await expect(submit).toBeDisabled();
+    await expect(
+      dialog.getByRole('link', { name: cancellationCopy('cancelRecoveryHelp') })
+    ).toHaveAttribute('target', '_blank');
+    await page.evaluate(() => {
+      return new Promise<void>((resolve) => {
+        window.addEventListener('popstate', () => resolve(), { once: true });
+        window.history.back();
+      });
+    });
+    await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}/cancel$`));
     await held!.fulfill({ json: receipt }).catch(() => {});
     await expect(dialog).toBeVisible();
     const read = page.waitForRequest(
@@ -90,6 +112,14 @@ for (const locale of ['en', 'fa'] as const) {
     await approveRiskConfirmation(page, locale, 'both');
     await submit.click();
     await expect(dialog).toHaveCount(0);
+    await expect(
+      page.getByRole('status').filter({ hasText: t('electricity.order.status.cancelled', locale) })
+    ).toBeVisible();
+    await page
+      .getByRole('link', { name: cancellationCopy('cancelBackToOrder'), exact: true })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
+    await expect(page.getByRole('link', { name: copy('cancel'), exact: true })).toHaveCount(0);
     expect(writes).toEqual([writes[0], writes[0]]);
     expect(JSON.parse(writes[0]!)).toMatchObject({
       expectedReviewHash: hash,
@@ -99,3 +129,21 @@ for (const locale of ['en', 'fa'] as const) {
     });
   });
 }
+
+test('a direct cancellation URL respects the current order state and access', async ({ page }) => {
+  const { state } = await setupElectricityCorrectionForms(page, 'en', false);
+  state.detail = { ...state.detail, electricityStatus: 'approved' };
+  const url = `/electricity/orders/${orderId}/cancel`;
+  await page.goto(url);
+  await expect(
+    page.getByText(electricityCancellationText('cancelUnavailable', 'en'))
+  ).toBeVisible();
+  await expect(page.getByLabel(t('electricity.order.detail.cancelReason', 'en'))).toHaveCount(0);
+
+  await page.route(`**/api/electricity/orders/${orderId}`, (route) =>
+    route.fulfill({ status: 404 })
+  );
+  await page.reload();
+  await expect(page.getByText(loadingText('recordUnavailable', 'en'))).toBeVisible();
+  await expect(page.getByText(state.detail.profileName, { exact: true })).toHaveCount(0);
+});

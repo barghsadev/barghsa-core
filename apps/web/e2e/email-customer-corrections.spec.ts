@@ -3,6 +3,8 @@ import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 
+const correctionsPage = '/admin/failed-notifications/corrections';
+const recordUrl = '**/api/admin/notifications/customer-corrections/*';
 const row = {
   id: '10000000-0000-4000-8000-000000000001',
   address: 'recipient@example.test',
@@ -20,7 +22,8 @@ for (const locale of ['en', 'fa'] as const) {
     previous: fa ? 'صفحه قبل پیگیری‌ها' : 'Previous corrections',
     resolve: fa ? 'ثبت نتیجه پیگیری' : 'Record follow-up',
     note: fa ? 'نتیجه پیگیری' : 'Follow-up outcome',
-    save: fa ? 'ثبت و بستن کار' : 'Save and complete',
+    save: fa ? 'بررسی نتیجه پیگیری' : 'Review follow-up',
+    back: fa ? 'بازگشت به پیگیری‌های اطلاعات تماس' : 'Back to contact corrections',
     completed: fa ? 'کارهای انجام‌شده' : 'Completed tasks',
   };
   test(`correction queue guards access, validates pages and recovers (${locale})`, async ({
@@ -52,8 +55,12 @@ for (const locale of ['en', 'fa'] as const) {
           }));
       return route.fulfill({ json: malformed ? [{ ...row, id: 'wrong' }] : rows });
     });
+    await page.route(recordUrl, (route) =>
+      route.fulfill({ json: { ...row, address: 'second-page@example.test' } })
+    );
     await page.goto('/admin/failed-notifications');
-    await page.locator('summary').filter({ hasText: copy.title }).click();
+    await page.getByRole('link', { name: copy.title, exact: true }).click();
+    await expect(page).toHaveURL(correctionsPage);
     const panel = page.getByRole('region', { name: copy.title });
     await expect(panel.getByRole('alert')).toBeVisible();
     expect(requests).toEqual([]);
@@ -63,17 +70,26 @@ for (const locale of ['en', 'fa'] as const) {
     malformed = false;
     await panel.getByRole('button', { name: copy.refresh }).click();
     await expect(panel.getByRole('listitem')).toHaveCount(25);
-    await expect(panel.getByRole('button', { name: copy.resolve })).toHaveCount(0);
+    await expect(panel.getByRole('link', { name: copy.resolve })).toHaveCount(0);
     await panel.getByRole('button', { name: copy.next }).click();
     await expect(panel.getByText('second-page@example.test')).toBeVisible();
     expect(requests).toContain(25);
+    await panel.getByRole('link', { name: 'second-page@example.test' }).click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname === correctionsPage + '/' + row.id && url.searchParams.get('offset') === '25'
+    );
+    await expect(panel.getByText('second-page@example.test')).toBeVisible();
+    await expect(panel.getByRole('link', { name: copy.resolve })).toHaveCount(0);
+    await page.getByRole('link', { name: copy.back, exact: true }).click();
+    await expect(panel.getByText('second-page@example.test')).toBeVisible();
     await panel.getByRole('button', { name: copy.previous }).click();
     await expect(panel.getByRole('listitem')).toHaveCount(25);
     await expect(panel).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
     expect(
       (await new AxeBuilder({ page }).include(`[aria-label="${copy.title}"]`).analyze()).violations
     ).toEqual([]);
-    await panel.getByLabel(copy.completed).check();
+    await panel.getByRole('link', { name: copy.completed, exact: true }).click();
     await expect(panel.getByRole('listitem')).toHaveCount(0);
   });
   test(`correction completion retains notes through step-up and rejects a wrong acknowledgment (${locale})`, async ({
@@ -99,6 +115,9 @@ for (const locale of ['en', 'fa'] as const) {
         json: completed ? (saved ? [acknowledgment] : []) : saved ? [] : openRows,
       });
     });
+    await page.route(recordUrl, (route) =>
+      route.fulfill(saved ? { json: acknowledgment } : { json: openRows[0] })
+    );
     await page.route(
       `**/api/admin/notifications/customer-corrections/${row.id}/resolve`,
       (route) => {
@@ -125,29 +144,38 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/notifications/templates', (route) =>
       route.fulfill({ json: [] })
     );
-    await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
+    await page.goto('/admin/failed-notifications');
     await page
       .context()
       .addCookies([
         { url: new URL(page.url()).origin, name: 'barghsa_csrf', value: 'fixture-csrf' },
       ]);
-    await page.locator('summary').filter({ hasText: copy.title }).click();
+    await page.getByRole('link', { name: copy.title, exact: true }).click();
+    await expect(page).toHaveURL(correctionsPage);
     const panel = page.getByRole('region', { name: copy.title });
     const refresh = panel.getByRole('button', { name: copy.refresh });
     const save = panel.getByRole('button', { name: copy.save });
-    await panel.getByRole('button', { name: copy.resolve, exact: true }).click();
+    await panel.getByRole('link', { name: copy.resolve, exact: true }).click();
+    await expect(page).toHaveURL(correctionsPage + '/' + row.id + '/resolve');
+    await page.reload();
     const outcome = panel.getByLabel(copy.note, { exact: true });
     await expect(outcome).toHaveAttribute('aria-required', 'true');
+    await expect(outcome).toBeFocused();
     await outcome.fill(`  ${note}  `);
+    expect(
+      (await new AxeBuilder({ page }).include('[data-slot="correction-record"]').analyze())
+        .violations
+    ).toEqual([]);
     await save.click();
     const dialog = page.getByRole('dialog');
+    await expect(dialog.getByText(note, { exact: true })).toBeVisible();
     const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
     await confirm.click();
     await dialog.locator('input[type="password"]').fill('fixture-password');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
-    await expect(panel.getByRole('listitem')).toHaveCount(1);
+    await expect(panel.getByText(row.address, { exact: true })).toBeVisible();
     await expect(outcome).toHaveValue(note);
     await expect(save).toBeDisabled();
     await expect(refresh).toBeFocused();
@@ -167,7 +195,7 @@ for (const locale of ['en', 'fa'] as const) {
 
     openRows = [{ ...row, address: 'changed@example.test' }];
     await refresh.click();
-    await expect(panel.getByRole('listitem')).toHaveText(/changed@example.test/);
+    await expect(panel.getByText('changed@example.test', { exact: true })).toBeVisible();
     await expect(save).toBeDisabled();
     expect(calls).toBe(3);
     openRows = [row];
@@ -177,21 +205,23 @@ for (const locale of ['en', 'fa'] as const) {
     await save.click();
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    await expect(panel.getByRole('listitem')).toHaveCount(0);
+    await expect(outcome).toHaveCount(0);
     const savedNotice = fa
       ? 'نتیجه پیگیری ثبت شد. ارسال ایمیل همچنان مسدود است.'
       : 'Follow-up recorded. Email remains suppressed.';
     await expect(panel.getByRole('status').filter({ hasText: savedNotice })).toHaveText(
       savedNotice
     );
-    await panel.getByLabel(copy.completed).check();
+    await expect(panel.getByText(note, { exact: true })).toBeVisible();
+    await page.getByRole('link', { name: copy.back, exact: true }).click();
+    await panel.getByRole('link', { name: copy.completed, exact: true }).click();
     await expect(panel.getByText(note, { exact: true })).toBeVisible();
     expect(calls).toBe(4);
     expect(stepUps).toBe(1);
   });
 }
 
-test('a committed correction with a lost receipt stays locked while staff check its history', async ({
+test('a committed correction with a lost receipt reconciles its dedicated record without another write', async ({
   page,
 }) => {
   await crmShell(page, 'en');
@@ -219,18 +249,22 @@ test('a committed correction with a lost receipt stays locked while staff check 
           : [row],
     });
   });
+  await page.route(recordUrl, (route) =>
+    route.fulfill({
+      json: committed ? { ...row, resolvedAt: '2026-09-13T10:00:00Z', resolutionNote: note } : row,
+    })
+  );
   await page.route(`**/api/admin/notifications/customer-corrections/${row.id}/resolve`, (route) => {
     expect(route.request().postDataJSON()).toEqual({ note });
     writes++;
     committed = true;
   });
-  await page.goto('/admin/failed-notifications');
-  await page.locator('summary').filter({ hasText: 'Customer contact corrections' }).click();
+  await page.goto(correctionsPage + '/' + row.id + '/resolve');
   const panel = page.getByRole('region', { name: 'Customer contact corrections' });
   const refresh = panel.getByRole('button', { name: 'Refresh corrections' });
-  const save = panel.getByRole('button', { name: 'Save and complete' });
+  const save = panel.getByRole('button', { name: 'Review follow-up' });
   const outcome = panel.getByLabel('Follow-up outcome');
-  await panel.getByRole('button', { name: 'Record follow-up' }).click();
+  await expect(outcome).toBeFocused();
   await outcome.fill(note);
   await save.click();
   const dialog = page.getByRole('dialog');
@@ -238,23 +272,21 @@ test('a committed correction with a lost receipt stays locked while staff check 
   await expect.poll(() => writes).toBe(1);
   await page.clock.fastForward(15_001);
   await expect(dialog).toHaveCount(0);
-  await refresh.click();
-  await expect(panel.getByRole('listitem')).toHaveCount(0);
-  await expect(save).toBeDisabled();
   await expect(outcome).toHaveValue(note);
-  await panel.getByLabel('Completed tasks').check();
-  await expect(panel.getByRole('listitem').getByText(note, { exact: true })).toBeVisible();
-  await expect(panel.getByText('Follow-up recorded. Email remains suppressed.')).toHaveCount(0);
+  await expect(save).toBeDisabled();
+  await refresh.click();
+  await expect(outcome).toHaveCount(0);
+  await expect(panel.getByText(note, { exact: true })).toBeVisible();
+  await expect(panel.getByText('Follow-up recorded. Email remains suppressed.')).toBeVisible();
   expect(writes).toBe(1);
 
   canView = false;
   await refresh.click();
   await expect(panel.getByRole('alert')).toHaveText('You do not have permission for this action.');
-  await expect(outcome).toHaveCount(0);
-  await expect(panel.getByRole('listitem')).toHaveCount(0);
+  await expect(panel.getByText(row.address, { exact: true })).toHaveCount(0);
   canView = true;
   await refresh.click();
-  await expect(panel.getByRole('listitem').getByText(note, { exact: true })).toBeVisible();
+  await expect(panel.getByText(note, { exact: true })).toBeVisible();
   await expect(outcome).toHaveCount(0);
   expect(writes).toBe(1);
 });

@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { BriefcaseBusiness, ListTodo, TriangleAlert } from 'lucide-react';
-import { t } from '@barghsa/i18n/workspace';
+import { staffWorkText } from '@barghsa/i18n/staff-work-preview';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
@@ -59,10 +59,13 @@ const readFailures = staffDashboardReader((value) => {
   return Object.values(counts).every((count) => count === null) ? null : counts;
 });
 const cards = [
-  { key: 'consultations', route: '/admin/consultations', label: 'consultations' },
+  { key: 'consultations', route: '/admin/consultations', label: 'consultationRequests' },
   { key: 'solarRequests', route: '/admin/solar-requests', label: 'solarRequests' },
   { key: 'documentReviews', route: '/admin/documents', label: 'documentReviews' },
 ] as const;
+
+// Reserve enough room for all four metric links while the counts load or retry.
+const metricCardHeight = 'min-h-[16.5rem]';
 
 function WorkQueue() {
   const locale = useLocale();
@@ -70,11 +73,11 @@ function WorkQueue() {
   if (!resource) return null;
   return (
     <DashboardWidget
-      title={t('dashboard.admin.work.queueTitle', locale)}
+      title={staffWorkText('queueTotals', locale)}
       icon={ListTodo}
       resource={resource}
       locale={locale}
-      wide
+      className={metricCardHeight}
     >
       {(counts) => <StaffWorkQueueWidget counts={counts} embedded />}
     </DashboardWidget>
@@ -87,10 +90,11 @@ function OpenWork() {
   if (!resource) return null;
   return (
     <DashboardWidget
-      title={t('dashboard.admin.work.title', locale)}
+      title={staffWorkText('businessWork', locale)}
       icon={BriefcaseBusiness}
       resource={resource}
       locale={locale}
+      className={metricCardHeight}
     >
       {(counts) => (
         <div className="grid divide-y">
@@ -99,16 +103,16 @@ function OpenWork() {
               <Link key={key} to={route} className={dashboardMetricLink}>
                 <DashboardMetricRow
                   count={numbers.number(counts[key])}
-                  label={t(`dashboard.admin.work.${label}`, locale)}
+                  label={staffWorkText(label, locale)}
                 />
               </Link>
             )
           )}
           {counts.refundObligations !== null && (
-            <a href="/admin/contracts#refund-obligations" className={dashboardMetricLink}>
+            <a href="/admin/contracts/refunds" className={dashboardMetricLink}>
               <DashboardMetricRow
                 count={numbers.number(counts.refundObligations)}
-                label={t('dashboard.admin.work.refundObligations', locale)}
+                label={staffWorkText('refundObligations', locale)}
               />
             </a>
           )}
@@ -123,7 +127,7 @@ function Failures() {
   if (!resource) return null;
   return (
     <DashboardWidget
-      title={t('dashboard.admin.failures.title', locale)}
+      title={staffWorkText('failures', locale)}
       icon={TriangleAlert}
       resource={resource}
       locale={locale}
@@ -138,8 +142,8 @@ export function AdminBusinessWorkCounts() {
   return (
     <>
       <WorkQueue />
-      <Failures />
       <OpenWork />
+      <Failures />
     </>
   );
 }

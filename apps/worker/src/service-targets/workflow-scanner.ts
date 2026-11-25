@@ -86,6 +86,13 @@ function domain(key: ServiceWorkflowKey) {
   };
 }
 type Db = Pick<Pool, 'query'> | Pick<PoolClient, 'query'>;
+const workflowRecordRoutes = new Set([
+  '/admin/tickets',
+  '/admin/consultations',
+  '/admin/electricity-orders',
+  '/admin/saving-orders',
+  '/admin/solar-requests',
+]);
 export async function readWorkflowPolicy(db: Db): Promise<ServiceWorkflowPolicy> {
   const row = (
     await db.query('SELECT key,value FROM app_config WHERE key=$1', [SERVICE_WORKFLOW_CONFIG_KEY])
@@ -262,7 +269,7 @@ export async function scanServiceWorkflows(
                   item_id: row.id,
                   target_hours: target!.hours,
                   escalation_level: level,
-                  link_route: d.route,
+                  link_route: workflowRecordRoutes.has(d.route) ? `${d.route}/${row.id}` : d.route,
                 },
                 channels: email ? ['in_app', 'email'] : ['in_app'],
                 idempotencyKey: `${eventKey}:${episode.id}:${level}:${user.user_id}`,

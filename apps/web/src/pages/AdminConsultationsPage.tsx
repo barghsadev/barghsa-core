@@ -1,3 +1,7 @@
+import { Eye as TableEyeIcon } from 'lucide-react';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
+import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
@@ -5,32 +9,33 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
-import { useSearch } from '@tanstack/react-router';
+import { Link, useSearch } from '@tanstack/react-router';
 import {
   LoadingStatus,
   Button,
+  buttonVariants,
   Alert,
   FinancialReviewSummary,
   Label,
+  Input,
+  NativeSelect,
+  Textarea,
   ListPage,
+  ListRefreshButton,
   StatusBadge,
   DateCell,
   TextCell,
   StatusTimeline,
   type StatusTone,
 } from '@barghsa/ui';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { QueueEmptyState } from '../components/QueueEmptyState.js';
+import { ClipboardCheckIcon } from 'lucide-react';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { tConsultationFee } from '@barghsa/i18n/consultation-fee';
 import { tConsultationResolution } from '@barghsa/i18n/consultation-resolution';
 import {
@@ -53,7 +58,7 @@ import {
   type ConsultationFeeSource,
   type ConsultationFeeReviewValue,
 } from '../lib/consultation-fee-form.js';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import {
   type ConsultationFeeReview,
   type ConsultationPaidFeeReview,
@@ -65,8 +70,13 @@ import { offerInputFromInstant } from '../lib/consultation-offer-time.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
-import type { ConsultationListQuery } from '../lib/support-list-query.js';
+import type { ConsultationFilters, ConsultationListQuery } from '../lib/support-list-query.js';
 import { consultationReceipt, type ConsultationReasonDraft } from '../lib/consultation-form.js';
+import {
+  consultationDecisions,
+  consultationDecisionPath,
+  type ConsultationDecision,
+} from '../lib/consultation-decision-route.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { toast } from '../lib/toast-api.js';
 
@@ -115,7 +125,28 @@ const statuses = [
   'cancelled',
 ] as const;
 
-type ReasonIntent = 'request-info' | 'complete' | 'reject' | 'cancel' | 'recover_refund';
+type ReasonIntent = Exclude<ConsultationDecision, 'recover-refund'> | 'recover_refund';
+const reasonLabels = {
+  'request-info': 'requestInfo',
+  complete: 'complete',
+  reject: 'reject',
+  cancel: 'cancel',
+  'recover-refund': 'recoverRefund',
+} satisfies Record<ConsultationDecision, string>;
+
+function consultationDecisionAvailable(decision: ConsultationDecision, request: Detail['request']) {
+  switch (decision) {
+    case 'request-info':
+      return request.status === 'under_review';
+    case 'complete':
+      return request.status === 'offer_accepted';
+    case 'cancel':
+    case 'reject':
+      return !['completed', 'rejected', 'cancelled', 'offer_declined'].includes(request.status);
+    case 'recover-refund':
+      return BigInt(request.uncovered_credit) > 0n;
+  }
+}
 interface FeeCommand {
   action: TeamAction;
   source: ConsultationFeeSource;
@@ -273,6 +304,31 @@ function consultationStatus(status: string, copy: (key: string) => string) {
     ? { label: copy(`status_${status}`), tone: statusTones[status as keyof typeof statusTones] }
     : { label: copy('status_unknown'), tone: 'default' as const };
 }
+function consultationStaffNextStep(request: Detail['request']): string {
+  switch (request.status) {
+    case 'submitted':
+      return 'staffNextReview';
+    case 'under_review':
+      return 'staffNextPrepare';
+    case 'awaiting_customer_info':
+      return 'staffNextCustomerInfo';
+    case 'offer_pending':
+      return request.invoice_state === 'PaymentUnderReview'
+        ? 'paymentUnderReview'
+        : 'staffNextOffer';
+    case 'offer_accepted':
+      return request.invoice_id && request.invoice_state !== 'Paid'
+        ? 'acceptedAwaitingPayment'
+        : 'staffNextDeliver';
+    case 'completed':
+    case 'cancelled':
+    case 'rejected':
+    case 'offer_declined':
+      return BigInt(request.uncovered_credit) > 0n ? 'staffNextRefund' : 'staffNextClosed';
+    default:
+      return 'staffNextUnavailable';
+  }
+}
 function ConsultationAssignment({
   request,
   copy,
@@ -309,15 +365,37 @@ export function AdminConsultationsPage(
   const profileRevision = useProfileContextRevision();
   return <OwnedAdminConsultationsPage key={profileRevision} {...props} />;
 }
-function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQuery } = {}) {
-  const { assignment: initialAssignment } = useSearch({ from: '/admin/consultations' });
+interface ConsultationWorkspaceProps {
+  queries?: ConsultationListQuery;
+  recordSearch?: ConsultationFilters;
+  requestId?: string;
+  feeEditor?: boolean;
+  decision?: ConsultationDecision | undefined;
+}
+function OwnedAdminConsultationsPage({
+  queries,
+  recordSearch,
+  requestId,
+  feeEditor = false,
+  decision,
+}: ConsultationWorkspaceProps = {}) {
+  const showQueue = !requestId;
+  const showDetail = !!requestId || !recordSearch;
+  const routedEditor = feeEditor || !!decision;
+  const decisionLabel = decision ? reasonLabels[decision] : null;
+  const pageSearch = useSearch({ strict: false });
+  const initialAssignment =
+    'assignment' in pageSearch && typeof pageSearch.assignment === 'string'
+      ? pageSearch.assignment
+      : 'all';
   const readActor = useAccountUser();
   const readProfileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const actor = useAccountUser();
   const time = useAccountTime(locale);
-  const copy = (key: string) => tConsultation(key, locale);
+  const copy = (key: string) => tStaffConsultation(key, locale);
   const feeCopy = (key: string) => tConsultationFee(key, locale);
   const resolutionCopy = (key: string) => tConsultationResolution(key, locale);
   const [accepted, setAccepted] = useState<{
@@ -332,9 +410,9 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     queries ? queries.queue.setQuery({ cursor: value ?? '' }) : setLocalAfter(value);
   const [queueLoading, setQueueLoading] = useState(true);
   const [localSelected, setLocalSelected] = useState<string | null>(null);
-  const selectedId = queries ? queries.selected : localSelected;
+  const selectedId = requestId ?? (queries ? queries.selected : localSelected);
   const setSelectedId = (id: string | null, replace = false) =>
-    queries ? queries.select(id, replace) : setLocalSelected(id);
+    queries ? queries.select?.(id, replace) : setLocalSelected(id);
   const [loadedDetail, setDetail] = useState<Detail | null>(null);
   const detailScope = useRef('');
   const [status, setStatus] = useState('');
@@ -345,6 +423,11 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
   const appliedAssignment = queries ? queries.queue.query.filters.assignment || 'all' : assignment;
   const appliedPriority = queries ? queries.queue.query.filters.priority || 'all' : priority;
   const appliedMinAgeDays = queries ? queries.queue.query.filters.minAgeDays || '0' : minAgeDays;
+  const additionalFilters = [
+    appliedAssignment !== 'all',
+    appliedPriority !== 'all',
+    appliedMinAgeDays !== '0',
+  ].filter(Boolean).length;
   const criteria = JSON.stringify([
     appliedStatus,
     appliedAssignment,
@@ -357,7 +440,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
   const queueScope = JSON.stringify([criteria, after]);
   const currentQueueScope = useRef(queueScope);
   currentQueueScope.current = queueScope;
-  const workScope = JSON.stringify([criteria, selectedId]);
+  const workScope = JSON.stringify([requestId ? actor : criteria, selectedId]);
   const detail =
     loadedDetail?.request.id === selectedId && detailScope.current === workScope
       ? loadedDetail
@@ -376,12 +459,15 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
   const teams = teamsActor === actor ? teamNames : [];
   const reasonPaidRef = useRef(false);
   const [reasonPaid, setReasonPaid] = useState(false);
+  const decisionPaid =
+    decision === 'recover-refund' ||
+    ((decision === 'reject' || decision === 'cancel') && !!detail?.request.has_paid_invoice);
   const reasonForm = useZodForm<ConsultationReasonDraft>(
     async () => {
       const generation = work.current.generation;
       const schemas = await import('../lib/consultation-form-schemas.js');
       // Touched validation uses the intent selected while the schema was loading.
-      const paid = reasonPaidRef.current;
+      const paid = decision ? decisionPaid : reasonPaidRef.current;
       return generation === work.current.generation
         ? schemas.reasonSchema(
             copy(paid ? 'paidReasonInvalid1000' : 'reasonInvalid2000'),
@@ -391,9 +477,26 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     },
     { defaultValues: { reason: '' }, validationUnavailableMessage: copy('validationUnavailable') }
   );
+  const displayedReason = useRef<ConsultationDecision | null>(null);
+  const otherReasons = useRef(new Map<ConsultationDecision, string>());
+  const [recordedDecision, setRecordedDecision] = useState<ConsultationDecision | null>(null);
+  const { getValues: getReason, reset: resetReason } = reasonForm;
+  useEffect(() => {
+    if (!decision || displayedReason.current === decision) return;
+    if (displayedReason.current)
+      otherReasons.current.set(displayedReason.current, getReason('reason'));
+    displayedReason.current = decision;
+    resetReason({ reason: otherReasons.current.get(decision) ?? '' });
+    otherReasons.current.delete(decision);
+  }, [decision, getReason, resetReason]);
   const reasonFields = useActionFieldErrors(
     reasonForm,
-    { reason: copy(reasonPaid ? 'paidReasonInvalid1000' : 'reasonInvalid2000') },
+    { reason: copy('reasonInvalid2000') },
+    copy('actionError')
+  );
+  const paidReasonFields = useActionFieldErrors(
+    reasonForm,
+    { reason: copy('paidReasonInvalid1000') },
     copy('actionError')
   );
   const feeSource = useRef<Detail['request'] | null>(null);
@@ -568,6 +671,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
       !!feeCommand.current ||
       !!resolutionCommand.current ||
       (recoveringCommand.current !== null && recoveringCommand.current.kind !== 'reason') ||
+      (!!decision && (!!actionRef.current || reasonForm.isSubmissionPending())) ||
       (reasonPaidRef.current && preparingRef.current)
     );
   }
@@ -599,6 +703,8 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     setSelectedId(null, true);
     setDetail(null);
     setQueueDenied(true);
+    otherReasons.current.clear();
+    setRecordedDecision(null);
     reasonForm.reset({ reason: '' });
   }
   useEffect(
@@ -614,11 +720,20 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
   }
   function refresh() {
     if (navigationBlocked()) return;
-    resetQueue();
+    if (showQueue) resetQueue();
     setRevision((value) => value + 1);
+  }
+  function changeQueueStatus(next: string) {
+    if (navigationBlocked() || work.current.scope !== workScope) return;
+    if (queries) queries.setFilters({ status: next });
+    else {
+      resetQueue(true);
+      setStatus(next);
+    }
   }
 
   useEffect(() => {
+    if (!showDetail) return;
     const controller = new AbortController();
     const capturedAccess = accessGeneration.current;
     const capturedRead = readGeneration.current;
@@ -654,9 +769,10 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           setTeamsError(true);
       });
     return () => controller.abort();
-  }, [revision, teamsRevision, readStaff]);
+  }, [revision, teamsRevision, readStaff, showDetail]);
 
   useEffect(() => {
+    if (!showQueue) return;
     const controller = new AbortController();
     const capturedAccess = accessGeneration.current;
     const capturedRead = readGeneration.current;
@@ -746,6 +862,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     revision,
     listRevision,
     readStaff,
+    showQueue,
   ]);
 
   useEffect(() => {
@@ -757,6 +874,8 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     clearAction();
     preparingRef.current = false;
     staffCommand.current = null;
+    otherReasons.current.clear();
+    setRecordedDecision(null);
     reasonForm.reset({ reason: '' });
     reasonPaidRef.current = false;
     setReasonPaid(false);
@@ -828,8 +947,10 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             recoveringCommand.current = null;
             unconfirmedRef.current = false;
             setUnconfirmed(false);
-            if (command.kind === 'reason') reasonForm.reset({ reason: '' });
-            else {
+            if (command.kind === 'reason') {
+              setRecordedDecision(displayedReason.current);
+              reasonForm.reset({ reason: '' });
+            } else {
               toast.success(confirmationText('recorded', locale));
               setListRevision((value) => value + 1);
             }
@@ -1135,7 +1256,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
       Array.isArray(error.fields) &&
       error.fields.length > 0 &&
       error.fields.every((field) => field === 'reason') &&
-      reasonFields(error.fields)
+      paidReasonFields(error.fields)
     );
   }
   function decorateResolutionAction(command: ResolutionCommand, ownedAction: TeamAction) {
@@ -1272,6 +1393,43 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
   }
 
   const current = detail?.request;
+  const availableDecisions = current
+    ? consultationDecisions.filter((option) => consultationDecisionAvailable(option, current))
+    : [];
+  const canUseDecision = !!decision && availableDecisions.includes(decision);
+  const showPaidReason = decision ? decisionPaid : reasonPaid;
+  const canEditFee =
+    current?.status === 'under_review' ||
+    (current?.status === 'offer_pending' && !current.has_paid_invoice) ||
+    current?.status === 'offer_accepted';
+  const feeEditorTitle = copy(
+    !canEditFee
+      ? 'feeEditorTitle'
+      : current?.status === 'offer_accepted'
+        ? 'feeEditorAdjustment'
+        : current?.invoice_id
+          ? 'feeEditorReplacement'
+          : 'feeEditorInitial'
+  );
+  const editorTitle = decisionLabel ? copy(decisionLabel) : feeEditorTitle;
+  const customerBrief = detail?.history.find(
+    (event) =>
+      event.actor_type === 'customer' && event.status === 'submitted' && event.reason?.trim()
+  );
+  const customerResponse =
+    detail &&
+    [...detail.history]
+      .reverse()
+      .find(
+        (event) =>
+          event.actor_type === 'customer' && event.status !== 'submitted' && event.reason?.trim()
+      );
+  const detailHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (requestId && current?.id) detailHeading.current?.focus();
+  }, [requestId, current?.id, feeEditor, decision]);
+  const Content = showQueue ? ListPage : 'div';
+  const SectionHeading = requestId ? 'h2' : 'h3';
   const editorLocked =
     !!action ||
     !!feeCommand.current ||
@@ -1295,13 +1453,15 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
       <FormField
         control={feeForm.control}
         name={name}
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem id={id} className="space-y-1 text-sm">
             <FormLabel>{label}</FormLabel>
             <FormControl>
               {kind === 'textarea' ? (
-                <textarea
+                <Textarea
                   {...field}
+                  rows={2}
+                  dir="auto"
                   aria-required="true"
                   disabled={
                     !!action ||
@@ -1316,11 +1476,12 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                     offerDirty.current = true;
                     field.onChange(event);
                   }}
-                  className="min-h-20 w-full rounded-md border bg-background p-2"
+                  className="max-h-56 min-h-14"
                 />
               ) : (
-                <input
+                <Input
                   {...field}
+                  dir="ltr"
                   aria-required="true"
                   type={kind === 'date' ? 'datetime-local' : 'text'}
                   inputMode={kind === 'input' ? 'numeric' : undefined}
@@ -1338,49 +1499,69 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                     offerDirty.current = true;
                     field.onChange(event);
                   }}
-                  className="w-full rounded-md border bg-background p-2"
+                  className="min-w-0"
                 />
               )}
             </FormControl>
-            <FormDescription>{feeCopy(help)}</FormDescription>
-            <div className="grid">
-              <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                {feeMessages[name]}
-              </p>
-              <FormMessage className="col-start-1 row-start-1" />
-            </div>
+            <CompactFieldFeedback
+              help={feeCopy(help)}
+              validationMessage={feeMessages[name]}
+              invalid={!!fieldState.error?.message}
+            />
           </FormItem>
         )}
       />
     );
   }
   return (
-    <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
-          <p className="text-muted-foreground">{copy('staffIntro')}</p>
+    <div
+      className={routedEditor ? 'mx-auto max-w-3xl space-y-3' : 'space-y-6'}
+      data-slot="consultation-workspace"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {requestId && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <RecordCommandGuard blocked={navigationBlocked} />
+          <Link
+            to={routedEditor ? '/admin/consultations/$requestId' : '/admin/consultations'}
+            params={routedEditor ? { requestId } : {}}
+            search={recordSearch ?? {}}
+            activeOptions={{ exact: true }}
+            aria-disabled={navigationBlocked() || undefined}
+            onClick={(event) => {
+              if (navigationBlocked()) event.preventDefault();
+            }}
+            className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
+          >
+            {copy(routedEditor ? 'backToFeeRequest' : 'backToStaffRequests')}
+          </Link>
+          <ListRefreshButton
+            label={copy('refresh')}
+            onClick={refresh}
+            disabled={navigationBlocked()}
+          />
         </div>
-      </header>
+      )}
+      {!requestId && (
+        <header className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
+            <p className="text-muted-foreground">{copy('staffIntro')}</p>
+          </div>
+        </header>
+      )}
       {time.notice}
-      <ListPage>
-        <ListPage.Toolbar
-          filters={
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <Content className="space-y-5">
+        {showQueue && (
+          <ListPage.Toolbar
+            sort={
               <label className="space-y-1 text-sm">
                 <span>{copy('filterStatus')}</span>
                 <select
                   className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
                   value={appliedStatus}
                   disabled={navigationBlocked()}
-                  onChange={(event) => {
-                    if (navigationBlocked() || work.current.scope !== workScope) return;
-                    if (queries) queries.setFilters({ status: event.target.value });
-                    else {
-                      resetQueue(true);
-                      setStatus(event.target.value);
-                    }
-                  }}
+                  onChange={(event) => changeQueueStatus(event.target.value)}
                 >
                   <option value="">{copy('openRequests')}</option>
                   {statuses.map((item) => (
@@ -1390,80 +1571,87 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                   ))}
                 </select>
               </label>
-              <label className="space-y-1 text-sm">
-                <span>{copy('filterAssignment')}</span>
-                <select
-                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
-                  value={appliedAssignment}
-                  disabled={navigationBlocked()}
-                  onChange={(event) => {
-                    if (navigationBlocked() || work.current.scope !== workScope) return;
-                    if (queries) queries.setFilters({ assignment: event.target.value });
-                    else {
-                      resetQueue(true);
-                      setAssignment(event.target.value);
-                    }
-                  }}
-                >
-                  <option value="all">{copy('all')}</option>
-                  <option value="mine">{copy('mine')}</option>
-                  <option value="unassigned">{copy('unassigned')}</option>
-                </select>
-              </label>
-              <label className="space-y-1 text-sm">
-                <span>{copy('priority')}</span>
-                <select
-                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
-                  value={appliedPriority}
-                  disabled={navigationBlocked()}
-                  onChange={(event) => {
-                    if (navigationBlocked() || work.current.scope !== workScope) return;
-                    if (queries) queries.setFilters({ priority: event.target.value });
-                    else {
-                      resetQueue(true);
-                      setPriority(event.target.value);
-                    }
-                  }}
-                >
-                  <option value="all">{copy('all')}</option>
-                  <option value="high">{copy('high')}</option>
-                  <option value="normal">{copy('normal')}</option>
-                </select>
-              </label>
-              <label className="space-y-1 text-sm">
-                <span>{copy('age')}</span>
-                <select
-                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
-                  value={appliedMinAgeDays}
-                  disabled={navigationBlocked()}
-                  onChange={(event) => {
-                    if (navigationBlocked() || work.current.scope !== workScope) return;
-                    if (queries) queries.setFilters({ minAgeDays: event.target.value });
-                    else {
-                      resetQueue(true);
-                      setMinAgeDays(event.target.value);
-                    }
-                  }}
-                >
-                  <option value="0">{copy('all')}</option>
-                  <option value="1">{copy('oneDay')}</option>
-                  <option value="7">{copy('sevenDays')}</option>
-                </select>
-              </label>
-            </div>
-          }
-          actions={
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (!navigationBlocked()) refresh();
-              }}
-              disabled={queueLoading || navigationBlocked()}
-            >
-              {copy('refresh')}
-            </Button>
-          }
-        />
+            }
+            moreFilters={{
+              label: workspaceText('historyFilters.label', locale),
+              count: additionalFilters ? numbers.number(additionalFilters) : undefined,
+              children: (
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <label className="space-y-1 text-sm">
+                    <span>{copy('filterAssignment')}</span>
+                    <select
+                      className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
+                      value={appliedAssignment}
+                      disabled={navigationBlocked()}
+                      onChange={(event) => {
+                        if (navigationBlocked() || work.current.scope !== workScope) return;
+                        if (queries) queries.setFilters({ assignment: event.target.value });
+                        else {
+                          resetQueue(true);
+                          setAssignment(event.target.value);
+                        }
+                      }}
+                    >
+                      <option value="all">{copy('all')}</option>
+                      <option value="mine">{copy('mine')}</option>
+                      <option value="unassigned">{copy('unassigned')}</option>
+                    </select>
+                  </label>
+                  <label className="space-y-1 text-sm">
+                    <span>{copy('priority')}</span>
+                    <select
+                      className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
+                      value={appliedPriority}
+                      disabled={navigationBlocked()}
+                      onChange={(event) => {
+                        if (navigationBlocked() || work.current.scope !== workScope) return;
+                        if (queries) queries.setFilters({ priority: event.target.value });
+                        else {
+                          resetQueue(true);
+                          setPriority(event.target.value);
+                        }
+                      }}
+                    >
+                      <option value="all">{copy('all')}</option>
+                      <option value="high">{copy('high')}</option>
+                      <option value="normal">{copy('normal')}</option>
+                    </select>
+                  </label>
+                  <label className="space-y-1 text-sm">
+                    <span>{copy('age')}</span>
+                    <select
+                      className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
+                      value={appliedMinAgeDays}
+                      disabled={navigationBlocked()}
+                      onChange={(event) => {
+                        if (navigationBlocked() || work.current.scope !== workScope) return;
+                        if (queries) queries.setFilters({ minAgeDays: event.target.value });
+                        else {
+                          resetQueue(true);
+                          setMinAgeDays(event.target.value);
+                        }
+                      }}
+                    >
+                      <option value="0">{copy('all')}</option>
+                      <option value="1">{copy('oneDay')}</option>
+                      <option value="7">{copy('sevenDays')}</option>
+                    </select>
+                  </label>
+                </div>
+              ),
+            }}
+            refresh={
+              <ListRefreshButton
+                label={copy('refresh')}
+                onClick={() => {
+                  if (!navigationBlocked()) refresh();
+                }}
+                refreshing={queueLoading}
+                disabled={navigationBlocked()}
+              />
+            }
+          />
+        )}
         {teamsError && (
           <div className="space-y-2" role="alert">
             <p>{copy('teamsLoadError')}</p>
@@ -1517,515 +1705,867 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             </Button>
           </div>
         )}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-          <section aria-label={copy('staffTitle')} className="min-w-0 space-y-2">
-            <ListPage.Content
-              loading={queueLoading}
-              error={queueError || queueDenied}
-              empty={rows.length === 0}
-              retainContent={rows.length > 0 && !queueDenied}
-              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-              errorView={
-                queueDenied ? (
-                  <p role="alert">{copy('queueForbidden')}</p>
-                ) : (
-                  <div className="space-y-2">
-                    <p role="alert">{copy('loadError')}</p>
-                    <Button variant="outline" onClick={() => setListRevision((value) => value + 1)}>
-                      {copy('retry')}
-                    </Button>
-                  </div>
-                )
-              }
-              emptyView={<p className="text-muted-foreground">{copy('noWork')}</p>}
-            >
-              <OperationalQueueTable
-                locale={locale}
-                rows={rows}
-                caption={copy('queueCatalogue')}
-                scrollLabel={copy('queueCatalogue')}
-                nameHeader={copy('queueRequest')}
-                renderName={(row) => (
-                  <>
-                    <TextCell value={row.product_snapshot.title[locale]} />
-                    <span className="block font-mono text-xs font-normal">
-                      <TextCell value={row.id} />
-                    </span>
-                  </>
-                )}
-                fields={[
-                  {
-                    id: 'profile',
-                    label: copy('profile'),
-                    render: (row) => <TextCell value={row.profile_name} />,
-                  },
-                  {
-                    id: 'status',
-                    label: copy('status'),
-                    render: (row) => (
-                      <StatusBadge state={row.status} {...consultationStatus(row.status, copy)} />
-                    ),
-                  },
-                  {
-                    id: 'priority',
-                    label: copy('priority'),
-                    render: (row) => <TextCell value={copy(row.priority)} />,
-                  },
-                  {
-                    id: 'submittedAt',
-                    label: copy('submittedAt'),
-                    render: (row) => (
-                      <DateCell
-                        value={row.submitted_at}
-                        format={(value) =>
-                          time.format(value, { year: 'numeric', month: '2-digit', day: '2-digit' })
-                        }
-                      />
-                    ),
-                  },
-                  {
-                    id: 'assignment',
-                    label: copy('queueAssignment'),
-                    render: (row) => <ConsultationAssignment request={row} copy={copy} />,
-                  },
-                ]}
-                actionHeader={copy('queueActions')}
-                renderActions={(row) => (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={navigationBlocked()}
-                    onClick={() => {
-                      if (
-                        work.current.scope !== workScope ||
-                        navigationBlocked() ||
-                        row.id === selectedId
-                      )
-                        return;
-                      setSelectedId(row.id);
-                      setDetail(null);
-                      reasonForm.reset({ reason: '' });
-                      setOfferKey(crypto.randomUUID());
-                    }}
-                    aria-pressed={selectedId === row.id}
-                    className={
-                      selectedId === row.id
-                        ? 'min-h-11 border-primary ring-1 ring-primary'
-                        : 'min-h-11'
-                    }
-                  >
-                    {copy('openRequest')}
-                    <span className="sr-only">
-                      : {row.product_snapshot.title[locale]} · {row.profile_name} · {row.id}
-                    </span>
-                  </Button>
-                )}
-                cardHeading="h2"
+        <div
+          className={
+            showQueue && showDetail
+              ? 'grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]'
+              : 'min-w-0'
+          }
+        >
+          {showQueue && (
+            <section aria-label={copy('staffTitle')} className="min-w-0 space-y-2">
+              <ListPage.Content
                 loading={queueLoading}
-                emptyMessage={copy('noWork')}
-                tableClassName="min-w-[60rem]"
-              />
-            </ListPage.Content>
-            <ListPage.Pagination
-              kind="cursor"
-              hasMore={
-                !!nextAfter &&
-                !navigationBlocked() &&
-                !queueError &&
-                !queueDenied &&
-                ((accepted?.cursor !== after && accepted?.nextAfter === after) ||
-                  queueLoading ||
-                  (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
-              }
-              loading={queueLoading}
-              onNext={() => {
-                if (!nextAfter || navigationBlocked() || work.current.scope !== workScope) return;
-                if (nextAfter === after && accepted?.cursor !== after)
-                  setListRevision((value) => value + 1);
-                else if (queries) queries.queue.next(nextAfter);
-                else setAfter(nextAfter);
-              }}
-              previous={{
-                enabled:
-                  !queueDenied && !navigationBlocked() && (queries?.queue.hasPrevious ?? false),
-                onClick: () => {
-                  if (!navigationBlocked() && work.current.scope === workScope)
-                    queries?.queue.previous();
-                },
-                label: appText('historyPagination.previous', locale),
-              }}
-              label={appText('historyPagination.label', locale)}
-              nextLabel={copy('moreWork')}
-            />
-          </section>
-          <section className="space-y-4 rounded-xl border bg-card p-5" aria-label={copy('details')}>
-            {!selectedId && <p className="text-muted-foreground">{copy('selectRequest')}</p>}
-            {selectedId && !current && !detailError && <p role="status">{copy('loading')}</p>}
-            {selectedId && detailError && (
-              <div role="alert" className="space-y-2">
-                <p>{copy('detailLoadError')}</p>
-                <Button variant="outline" onClick={() => setDetailRevision((value) => value + 1)}>
-                  {copy('retry')}
-                </Button>
-              </div>
-            )}
-            {current && (
-              <>
-                <div>
-                  <h2 className="text-xl font-semibold" dir="auto">
-                    {current.product_snapshot.title[locale]}
-                  </h2>
-                  <p>
-                    {copy('customer')}: <span dir="auto">{current.profile_name}</span>
-                  </p>
-                  <p className="my-2 flex flex-wrap items-center gap-2">
-                    {copy('status')}:{' '}
-                    <StatusBadge
-                      state={current.status}
-                      {...consultationStatus(current.status, copy)}
+                error={queueError || queueDenied}
+                empty={rows.length === 0}
+                retainContent={rows.length > 0 && !queueDenied}
+                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                errorView={
+                  queueDenied ? (
+                    <p role="alert">{copy('queueForbidden')}</p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p role="alert">{copy('loadError')}</p>
+                      <Button
+                        variant="outline"
+                        onClick={() => setListRevision((value) => value + 1)}
+                      >
+                        {copy('retry')}
+                      </Button>
+                    </div>
+                  )
+                }
+                emptyView={
+                  after ? (
+                    <p>{copy('noWork')}</p>
+                  ) : (
+                    <QueueEmptyState
+                      locale={locale}
+                      message={copy('noWork')}
+                      status={
+                        appliedStatus ? copy(`status_${appliedStatus}`) : copy('openRequests')
+                      }
+                      alternatives={['', 'offer_declined', 'completed', 'rejected', 'cancelled']
+                        .filter((value) => value !== appliedStatus)
+                        .map((value) => {
+                          const params = new URLSearchParams({
+                            assignment: appliedAssignment,
+                            priority: appliedPriority,
+                            minAgeDays: appliedMinAgeDays,
+                          });
+                          if (value) params.set('status', value);
+                          return {
+                            value,
+                            label: value ? copy(`status_${value}`) : copy('openRequests'),
+                            path: `/api/admin/consultations/requests?${params}`,
+                          };
+                        })}
+                      hasResults={(body, value) =>
+                        record(body) &&
+                        Array.isArray(body.requests) &&
+                        body.requests.some(
+                          (row) => validRequestRow(row) && (!value || row.status === value)
+                        )
+                      }
+                      select={changeQueueStatus}
+                      disabled={navigationBlocked()}
                     />
-                  </p>
-                  <ConsultationAssignment request={current} copy={copy} />
+                  )
+                }
+              >
+                <OperationalQueueTable
+                  locale={locale}
+                  rows={rows}
+                  caption={copy('queueCatalogue')}
+                  scrollLabel={copy('queueCatalogue')}
+                  nameHeader={copy('queueRequest')}
+                  renderName={(row) => (
+                    <>
+                      <TextCell value={row.product_snapshot.title[locale]} />
+                      <span className="block font-mono text-xs font-normal">
+                        <TextCell value={row.id} />
+                      </span>
+                    </>
+                  )}
+                  fields={[
+                    {
+                      id: 'profile',
+                      label: copy('profile'),
+                      render: (row) => <TextCell value={row.profile_name} />,
+                    },
+                    {
+                      id: 'status',
+                      label: copy('status'),
+                      render: (row) => (
+                        <StatusBadge state={row.status} {...consultationStatus(row.status, copy)} />
+                      ),
+                    },
+                    {
+                      id: 'priority',
+                      label: copy('priority'),
+                      render: (row) => <TextCell value={copy(row.priority)} />,
+                    },
+                    {
+                      id: 'submittedAt',
+                      label: copy('submittedAt'),
+                      render: (row) => (
+                        <DateCell
+                          value={row.submitted_at}
+                          format={(value) =>
+                            time.format(value, {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                            })
+                          }
+                        />
+                      ),
+                    },
+                    {
+                      id: 'assignment',
+                      label: copy('queueAssignment'),
+                      render: (row) => <ConsultationAssignment request={row} copy={copy} />,
+                    },
+                  ]}
+                  actionHeader={copy('queueActions')}
+                  renderActions={(row) =>
+                    recordSearch ? (
+                      <Link
+                        to="/admin/consultations/$requestId"
+                        params={{ requestId: row.id }}
+                        search={recordSearch}
+                        className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                        data-table-action-tooltip={copy('openRequest')}
+                      >
+                        <TableActionIcon icon={TableEyeIcon}>{copy('openRequest')}</TableActionIcon>
+                        <span className="sr-only">
+                          : {row.product_snapshot.title[locale]} · {row.profile_name} · {row.id}
+                        </span>
+                      </Link>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={navigationBlocked()}
+                        onClick={() => {
+                          if (
+                            work.current.scope !== workScope ||
+                            navigationBlocked() ||
+                            row.id === selectedId
+                          )
+                            return;
+                          setSelectedId(row.id);
+                          setDetail(null);
+                          reasonForm.reset({ reason: '' });
+                          setOfferKey(crypto.randomUUID());
+                        }}
+                        aria-pressed={selectedId === row.id}
+                        className={
+                          selectedId === row.id
+                            ? 'min-h-11 border-primary ring-1 ring-primary'
+                            : 'min-h-11'
+                        }
+                        data-table-action-tooltip={copy('openRequest')}
+                      >
+                        <TableActionIcon icon={TableEyeIcon}>{copy('openRequest')}</TableActionIcon>
+                        <span className="sr-only">
+                          : {row.product_snapshot.title[locale]} · {row.profile_name} · {row.id}
+                        </span>
+                      </Button>
+                    )
+                  }
+                  cardHeading="h2"
+                  loading={queueLoading}
+                  emptyMessage={copy('noWork')}
+                  tableClassName="min-w-[50rem]"
+                  fieldGroups={[
+                    {
+                      label: workspaceText('recordTable.progress', locale),
+                      fields: ['status', 'priority'],
+                      icon: ClipboardCheckIcon,
+                    },
+                  ]}
+                />
+              </ListPage.Content>
+              <ListPage.Pagination
+                kind="cursor"
+                hasMore={
+                  !!nextAfter &&
+                  !navigationBlocked() &&
+                  !queueError &&
+                  !queueDenied &&
+                  ((accepted?.cursor !== after && accepted?.nextAfter === after) ||
+                    queueLoading ||
+                    (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
+                }
+                loading={queueLoading}
+                onNext={() => {
+                  if (!nextAfter || navigationBlocked() || work.current.scope !== workScope) return;
+                  if (nextAfter === after && accepted?.cursor !== after)
+                    setListRevision((value) => value + 1);
+                  else if (queries) queries.queue.next(nextAfter);
+                  else setAfter(nextAfter);
+                }}
+                previous={{
+                  enabled:
+                    !queueDenied && !navigationBlocked() && (queries?.queue.hasPrevious ?? false),
+                  onClick: () => {
+                    if (!navigationBlocked() && work.current.scope === workScope)
+                      queries?.queue.previous();
+                  },
+                  label: appText('historyPagination.previous', locale),
+                }}
+                label={appText('historyPagination.label', locale)}
+                nextLabel={copy('moreWork')}
+              />
+            </section>
+          )}
+          {showDetail && (
+            <section
+              className={
+                routedEditor ? 'space-y-4' : 'space-y-5 rounded-xl border bg-card p-4 sm:p-6'
+              }
+              aria-label={routedEditor ? editorTitle : copy('details')}
+            >
+              {requestId && !current && (
+                <h1 className="text-2xl font-semibold">
+                  {routedEditor ? editorTitle : copy('details')}
+                </h1>
+              )}
+              {!selectedId && <p className="text-muted-foreground">{copy('selectRequest')}</p>}
+              {requestId && queueDenied && <p role="alert">{copy('requestUnavailable')}</p>}
+              {selectedId && !current && !detailError && !queueDenied && (
+                <p role="status">{copy('loading')}</p>
+              )}
+              {selectedId && detailError && (
+                <div role="alert" className="space-y-2">
+                  <p>{copy('detailLoadError')}</p>
+                  <Button variant="outline" onClick={() => setDetailRevision((value) => value + 1)}>
+                    {copy('retry')}
+                  </Button>
                 </div>
-                {current.expected_next_step && (
-                  <p>
-                    {copy('nextStep')}: <span dir="auto">{current.expected_next_step}</span>
-                  </p>
-                )}
-                {current.fee && (
-                  <section
-                    className="space-y-2 rounded-lg border p-4"
-                    aria-label={copy('savedOffer')}
-                  >
-                    <h3 className="font-semibold">{copy('savedOffer')}</h3>
-                    <p>
-                      {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(current.fee))} IRR
-                    </p>
-                    {current.scope && (
-                      <p>
-                        {copy('scope')}:{' '}
-                        <span dir="auto" className="wrap-anywhere">
-                          {current.scope}
-                        </span>
+              )}
+              {current && (
+                <>
+                  {routedEditor ? (
+                    <header className="space-y-1" data-toast-anchor>
+                      <h1
+                        ref={detailHeading}
+                        tabIndex={-1}
+                        className="text-2xl font-semibold tracking-tight"
+                      >
+                        {editorTitle}
+                      </h1>
+                      <p className="flex flex-wrap gap-x-2 gap-y-1 text-sm text-muted-foreground">
+                        <bdi>{current.product_snapshot.title[locale]}</bdi>
+                        <span aria-hidden="true">·</span>
+                        <bdi>{current.profile_name}</bdi>
+                        {decision && (
+                          <StatusBadge
+                            state={current.status}
+                            {...consultationStatus(current.status, copy)}
+                          />
+                        )}
                       </p>
-                    )}
-                    {current.deliverables && (
-                      <p>
-                        {copy('deliverables')}:{' '}
-                        <span dir="auto" className="wrap-anywhere">
-                          {current.deliverables}
-                        </span>
-                      </p>
-                    )}
-                    {current.offer_valid_until && (
-                      <p>
-                        {copy('offerValidUntil')}:{' '}
-                        <time dateTime={current.offer_valid_until}>
-                          {time.format(current.offer_valid_until)}
-                        </time>
-                      </p>
-                    )}
-                    {current.invoice_id && (
-                      <p>
-                        {copy('invoiceStatus')}:{' '}
-                        {current.invoice_state
-                          ? copy(`invoice_state_${current.invoice_state}`)
-                          : copy('unknownInvoiceStatus')}{' '}
-                        <a
-                          className="text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
-                          href={`/admin/invoices?invoiceId=${encodeURIComponent(current.invoice_id)}`}
-                        >
-                          {copy('viewInvoice')}
-                        </a>
-                      </p>
-                    )}
-                  </section>
-                )}
-                {(current.status === 'under_review' ||
-                  (current.status === 'offer_pending' && !current.has_paid_invoice) ||
-                  current.status === 'offer_accepted') && (
-                  <Form {...feeForm}>
-                    <form
-                      data-testid="consultation-fee-form"
-                      noValidate
-                      className="space-y-3 rounded-lg border p-4"
-                      aria-label={copy(
-                        current.status === 'offer_accepted' ? 'adjustPaidFee' : 'feeOffer'
-                      )}
-                      onSubmit={(event) => {
-                        event.preventDefault();
-                        if (current.status === 'offer_accepted') preparePaidFee();
-                        else prepareFeeOffer();
-                      }}
+                    </header>
+                  ) : (
+                    <div
+                      className={
+                        requestId
+                          ? 'grid gap-4 border-b pb-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(16rem,1fr)]'
+                          : undefined
+                      }
                     >
-                      <h3 className="font-semibold">
-                        {copy(current.status === 'offer_accepted' ? 'adjustPaidFee' : 'feeOffer')}
-                      </h3>
-                      {current.status === 'offer_accepted' && (
-                        <p className="text-sm text-muted-foreground">{copy('adjustPaidFeeHelp')}</p>
-                      )}
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        {feeField('fee', 'consultation-fee', copy('feeIrr'), 'feeHelp', 'input')}
-                        {feeField(
-                          'validUntil',
-                          'consultation-valid-until',
-                          copy('offerValidUntil'),
-                          'deadlineHelp',
-                          'date'
+                      <div className="min-w-0 space-y-2" data-toast-anchor>
+                        {requestId ? (
+                          <h1
+                            ref={detailHeading}
+                            tabIndex={-1}
+                            className="text-2xl font-semibold tracking-tight sm:text-3xl"
+                            dir="auto"
+                          >
+                            {current.product_snapshot.title[locale]}
+                          </h1>
+                        ) : (
+                          <h2 className="text-xl font-semibold" dir="auto">
+                            {current.product_snapshot.title[locale]}
+                          </h2>
+                        )}
+                        <p>
+                          {copy('customer')}: <span dir="auto">{current.profile_name}</span>
+                        </p>
+                        <p className="my-2 flex flex-wrap items-center gap-2">
+                          {copy('status')}:{' '}
+                          <StatusBadge
+                            state={current.status}
+                            {...consultationStatus(current.status, copy)}
+                          />
+                        </p>
+                        <ConsultationAssignment request={current} copy={copy} />
+                        {requestId && (
+                          <p className="text-sm text-muted-foreground">
+                            {copy('submittedAt')}{' '}
+                            <time dateTime={current.submitted_at}>
+                              {time.format(current.submitted_at)}
+                            </time>
+                          </p>
                         )}
                       </div>
-                      {current.status !== 'offer_accepted' && (
-                        <>
-                          {feeField(
-                            'scope',
-                            'consultation-scope',
-                            copy('scope'),
-                            'termsHelp',
-                            'textarea'
-                          )}
-                          {feeField(
-                            'deliverables',
-                            'consultation-deliverables',
-                            copy('deliverables'),
-                            'termsHelp',
-                            'textarea'
-                          )}
-                        </>
-                      )}
-                      {(current.status === 'offer_accepted' || current.invoice_id) &&
-                        feeField(
-                          'reason',
-                          'consultation-offer-reason',
-                          copy(
-                            current.status === 'offer_accepted'
-                              ? 'adjustmentReason'
-                              : 'replaceReason'
-                          ),
-                          'reasonHelp',
-                          'textarea'
-                        )}
-                      {feeForm.formState.errors.root && (
-                        <Alert variant="destructive">{feeCopy('validationUnavailable')}</Alert>
-                      )}
-                      {reviewLoading && <LoadingStatus>{feeCopy('checking')}</LoadingStatus>}
-                      <Button
-                        type="submit"
-                        loading={reviewLoading || feeForm.formState.isSubmitting}
-                        disabled={
-                          editorLocked || unconfirmed || feeUncertain || time.status !== 'ready'
-                        }
-                      >
-                        {copy(
-                          current.status === 'offer_accepted'
-                            ? 'adjustPaidFee'
-                            : current.invoice_id
-                              ? 'replaceFee'
-                              : 'issueFee'
-                        )}
-                      </Button>
-                    </form>
-                  </Form>
-                )}
-                {current.status === 'offer_pending' && current.has_paid_invoice && (
-                  <p className="rounded-lg border p-4 text-sm">{copy('paidAdjustmentPending')}</p>
-                )}
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant="outline"
-                    disabled={!actor || editorLocked || unconfirmed}
-                    onClick={() => prepareStaffWork('self', copy('assignSelf'))}
-                  >
-                    {copy('assignSelf')}
-                  </Button>
-                  {current.status === 'submitted' && (
-                    <Button
-                      disabled={editorLocked || unconfirmed}
-                      onClick={() => prepareStaffWork('review', copy('startReview'))}
-                    >
-                      {copy('startReview')}
-                    </Button>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-end gap-2">
-                  <div className="space-y-1">
-                    <Label htmlFor="consultation-team">{copy('team')}</Label>
-                    <select
-                      id="consultation-team"
-                      value={team}
-                      disabled={editorLocked || unconfirmed}
-                      onChange={(event) => setTeam(event.target.value)}
-                      className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
-                    >
-                      <option value="">{copy('selectTeam')}</option>
-                      {teams.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <Button
-                    variant="outline"
-                    disabled={!team.trim() || editorLocked || unconfirmed}
-                    onClick={() => prepareStaffWork('team', copy('assignTeam'))}
-                  >
-                    {copy('assignTeam')}
-                  </Button>
-                </div>
-                <Form {...reasonForm}>
-                  <form
-                    aria-label={copy('reasonFormTitle')}
-                    className="space-y-2"
-                    onSubmit={(event) => event.preventDefault()}
-                    noValidate
-                  >
-                    {reasonForm.formState.errors.root && (
-                      <Alert variant="destructive">{copy('validationUnavailable')}</Alert>
-                    )}
-                    <FormField
-                      control={reasonForm.control}
-                      name="reason"
-                      render={({ field }) => (
-                        <FormItem id="consultation-reason">
-                          <FormLabel>{copy('note')}</FormLabel>
-                          <FormControl>
-                            <textarea
-                              {...field}
-                              aria-required="true"
-                              disabled={
-                                !!action ||
-                                !!feeCommand.current ||
-                                !!resolutionCommand.current ||
-                                commandPending ||
-                                unconfirmed
-                              }
-                              className="min-h-24 w-full rounded-md border bg-background p-2"
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            {copy(reasonPaid ? 'paidReasonHelp' : 'reasonHelp')}
-                          </FormDescription>
-                          <div className="grid">
-                            <p
-                              aria-hidden="true"
-                              className="invisible col-start-1 row-start-1 text-sm"
-                            >
-                              {copy(reasonPaid ? 'paidReasonInvalid1000' : 'reasonInvalid2000')}
-                            </p>
-                            <FormMessage className="col-start-1 row-start-1" />
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                    {current.has_paid_invoice && (
-                      <p className="text-sm text-muted-foreground">{copy('paidClosureHelp')}</p>
-                    )}
-                    {BigInt(current.uncovered_credit) > 0n && (
-                      <p role="status" className="text-sm text-destructive">
-                        {copy('uncoveredCredit')}:{' '}
-                        {new Intl.NumberFormat(locale).format(BigInt(current.uncovered_credit))} IRR
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-2">
-                      {current.status === 'under_review' && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          loading={reasonForm.formState.isSubmitting || reviewLoading}
-                          disabled={editorLocked || unconfirmed}
-                          onClick={() => prepareReason('request-info', copy('requestInfo'))}
-                        >
-                          {copy('requestInfo')}
-                        </Button>
-                      )}
-                      {current.status === 'offer_accepted' && (
-                        <Button
-                          type="button"
-                          loading={reasonForm.formState.isSubmitting || reviewLoading}
-                          disabled={editorLocked || unconfirmed}
-                          onClick={() => prepareReason('complete', copy('complete'))}
-                        >
-                          {copy('complete')}
-                        </Button>
-                      )}
-                      {!['completed', 'rejected', 'cancelled', 'offer_declined'].includes(
-                        current.status
-                      ) && (
-                        <>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            loading={reasonForm.formState.isSubmitting || reviewLoading}
-                            disabled={editorLocked || unconfirmed}
-                            onClick={() =>
-                              prepareReason('reject', copy('reject'), current.has_paid_invoice)
-                            }
-                          >
-                            {copy('reject')}
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            loading={reasonForm.formState.isSubmitting || reviewLoading}
-                            disabled={editorLocked || unconfirmed}
-                            onClick={() =>
-                              prepareReason('cancel', copy('cancel'), current.has_paid_invoice)
-                            }
-                          >
-                            {copy('cancel')}
-                          </Button>
-                        </>
-                      )}
-                      {BigInt(current.uncovered_credit) > 0n && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          loading={reasonForm.formState.isSubmitting || reviewLoading}
-                          disabled={editorLocked || unconfirmed}
-                          onClick={() =>
-                            prepareReason('recover_refund', copy('recoverRefund'), true)
-                          }
-                        >
-                          {copy('recoverRefund')}
-                        </Button>
+                      {requestId && (
+                        <div className="self-start rounded-lg border border-primary/20 bg-primary/5 p-4">
+                          <h2 className="font-semibold">{copy('nextStep')}</h2>
+                          <p className="mt-1 text-sm">{copy(consultationStaffNextStep(current))}</p>
+                        </div>
                       )}
                     </div>
-                  </form>
-                </Form>
-                <section className="space-y-2">
-                  <h3 className="font-semibold">{copy('history')}</h3>
-                  <StatusTimeline
-                    label={copy('history')}
-                    items={detail.history.map((event, index) => {
-                      const presentation = consultationStatus(event.status, copy);
-                      return {
-                        id: `${event.created_at}-${index}`,
-                        title: presentation.label,
-                        tone: presentation.tone,
-                        state: event.status,
-                        dateTime: event.created_at,
-                        dateLabel: time.format(event.created_at),
-                        actorLabel: [
-                          ['staff', 'customer', 'unknown'].includes(event.actor_type)
-                            ? event.actor_name
-                            : null,
-                          historyContextText(event.actor_type, locale),
-                        ]
-                          .filter(Boolean)
-                          .join(' · '),
-                        description: event.reason ?? undefined,
-                      };
-                    })}
-                  />
-                </section>
-              </>
-            )}
-          </section>
+                  )}
+                  {!routedEditor && current.expected_next_step && (
+                    <p>
+                      {copy(requestId ? 'customerInstructions' : 'nextStep')}:{' '}
+                      <span dir="auto">{current.expected_next_step}</span>
+                    </p>
+                  )}
+                  {requestId &&
+                    !routedEditor &&
+                    (
+                      [
+                        ['customerBrief', customerBrief],
+                        ['customerResponse', customerResponse],
+                      ] as const
+                    ).map(
+                      ([key, message]) =>
+                        message?.reason && (
+                          <section
+                            key={key}
+                            className="space-y-2 rounded-lg border p-4"
+                            aria-labelledby={key}
+                          >
+                            <h2 id={key} className="font-semibold">
+                              {copy(key)}
+                            </h2>
+                            <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                              {message.reason}
+                            </p>
+                            <time
+                              className="text-xs text-muted-foreground"
+                              dateTime={message.created_at}
+                            >
+                              {time.format(message.created_at)}
+                            </time>
+                          </section>
+                        )
+                    )}
+                  {feeEditor && current.fee && (
+                    <section
+                      className="space-y-2.5 rounded-xl border bg-card px-4 py-3 text-sm sm:px-6"
+                      aria-label={copy('savedOffer')}
+                    >
+                      <h2 className="font-semibold">{copy('savedOffer')}</h2>
+                      <dl className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+                        <div className="col-span-2 min-w-0 sm:col-span-1">
+                          <dt className="text-muted-foreground">{copy('fee')}</dt>
+                          <dd className="text-base font-semibold wrap-anywhere">
+                            {numbers.money(current.fee)}
+                          </dd>
+                        </div>
+                        {current.offer_valid_until && (
+                          <div className="min-w-0">
+                            <dt className="text-muted-foreground">{copy('offerValidUntil')}</dt>
+                            <dd>
+                              <time dateTime={current.offer_valid_until}>
+                                {time.format(current.offer_valid_until)}
+                              </time>
+                            </dd>
+                          </div>
+                        )}
+                        {current.invoice_id && (
+                          <div className="min-w-0">
+                            <dt className="text-muted-foreground">{copy('invoiceStatus')}</dt>
+                            <dd>
+                              {current.invoice_state
+                                ? copy(`invoice_state_${current.invoice_state}`)
+                                : copy('unknownInvoiceStatus')}{' '}
+                              <a
+                                className="touch-action text-primary underline underline-offset-2"
+                                href={`/admin/invoices/${encodeURIComponent(current.invoice_id)}`}
+                              >
+                                {copy('viewInvoice')}
+                              </a>
+                            </dd>
+                          </div>
+                        )}
+                      </dl>
+                      {current.status === 'offer_accepted' &&
+                        (current.scope || current.deliverables) && (
+                          <details className="border-t pt-2">
+                            <summary className="touch-action cursor-pointer font-medium">
+                              {copy('feeEditorSavedTerms')}
+                            </summary>
+                            <dl className="mt-2 grid min-w-0 gap-2.5 sm:grid-cols-2">
+                              {current.scope && (
+                                <div className="min-w-0">
+                                  <dt className="font-medium">{copy('scope')}</dt>
+                                  <dd dir="auto" className="whitespace-pre-line wrap-anywhere">
+                                    {current.scope}
+                                  </dd>
+                                </div>
+                              )}
+                              {current.deliverables && (
+                                <div className="min-w-0">
+                                  <dt className="font-medium">{copy('deliverables')}</dt>
+                                  <dd dir="auto" className="whitespace-pre-line wrap-anywhere">
+                                    {current.deliverables}
+                                  </dd>
+                                </div>
+                              )}
+                            </dl>
+                          </details>
+                        )}
+                    </section>
+                  )}
+                  {!routedEditor && current.fee && (
+                    <section
+                      className="space-y-2 rounded-lg border bg-card p-4"
+                      aria-label={copy('savedOffer')}
+                    >
+                      <SectionHeading className="font-semibold">
+                        {copy('savedOffer')}
+                      </SectionHeading>
+                      <p>
+                        {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(current.fee))}{' '}
+                        IRR
+                      </p>
+                      {current.scope && (
+                        <p>
+                          {copy('scope')}:{' '}
+                          <span dir="auto" className="wrap-anywhere">
+                            {current.scope}
+                          </span>
+                        </p>
+                      )}
+                      {current.deliverables && (
+                        <p>
+                          {copy('deliverables')}:{' '}
+                          <span dir="auto" className="wrap-anywhere">
+                            {current.deliverables}
+                          </span>
+                        </p>
+                      )}
+                      {current.offer_valid_until && (
+                        <p>
+                          {copy('offerValidUntil')}:{' '}
+                          <time dateTime={current.offer_valid_until}>
+                            {time.format(current.offer_valid_until)}
+                          </time>
+                        </p>
+                      )}
+                      {current.invoice_id && (
+                        <p>
+                          {copy('invoiceStatus')}:{' '}
+                          {current.invoice_state
+                            ? copy(`invoice_state_${current.invoice_state}`)
+                            : copy('unknownInvoiceStatus')}{' '}
+                          <a
+                            className="text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                            href={`/admin/invoices/${encodeURIComponent(current.invoice_id)}`}
+                          >
+                            {copy('viewInvoice')}
+                          </a>
+                        </p>
+                      )}
+                    </section>
+                  )}
+                  {canEditFee && requestId && !routedEditor && (
+                    <Link
+                      to="/admin/consultations/$requestId/fee"
+                      params={{ requestId }}
+                      search={recordSearch ?? {}}
+                      className={buttonVariants({ variant: 'default' })}
+                      disabled={editorLocked || unconfirmed}
+                    >
+                      {feeEditorTitle}
+                    </Link>
+                  )}
+                  {canEditFee && (feeEditor || !requestId) && (
+                    <Form {...feeForm}>
+                      <form
+                        data-testid="consultation-fee-form"
+                        noValidate
+                        className={recordEditorSurface}
+                        aria-label={copy(
+                          current.status === 'offer_accepted' ? 'adjustPaidFee' : 'feeOffer'
+                        )}
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          if (current.status === 'offer_accepted') preparePaidFee();
+                          else prepareFeeOffer();
+                        }}
+                      >
+                        {(!feeEditor || current.status === 'offer_accepted') && (
+                          <div className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-6">
+                            {!feeEditor && (
+                              <SectionHeading className="text-base font-semibold">
+                                {copy(
+                                  current.status === 'offer_accepted' ? 'adjustPaidFee' : 'feeOffer'
+                                )}
+                              </SectionHeading>
+                            )}
+                            {current.status === 'offer_accepted' && (
+                              <p className="text-sm text-muted-foreground">
+                                {copy('adjustPaidFeeHelp')}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        <div className="space-y-3 px-4 py-4 sm:px-6">
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            {feeField(
+                              'fee',
+                              'consultation-fee',
+                              copy('feeIrr'),
+                              'feeHelp',
+                              'input'
+                            )}
+                            {feeField(
+                              'validUntil',
+                              'consultation-valid-until',
+                              copy('offerValidUntil'),
+                              'deadlineHelp',
+                              'date'
+                            )}
+                          </div>
+                          {current.status !== 'offer_accepted' && (
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              {feeField(
+                                'scope',
+                                'consultation-scope',
+                                copy('scope'),
+                                'scopeHelp',
+                                'textarea'
+                              )}
+                              {feeField(
+                                'deliverables',
+                                'consultation-deliverables',
+                                copy('deliverables'),
+                                'deliverablesHelp',
+                                'textarea'
+                              )}
+                            </div>
+                          )}
+                          {(current.status === 'offer_accepted' || current.invoice_id) &&
+                            feeField(
+                              'reason',
+                              'consultation-offer-reason',
+                              copy(
+                                current.status === 'offer_accepted'
+                                  ? 'adjustmentReason'
+                                  : 'replaceReason'
+                              ),
+                              'reasonHelp',
+                              'textarea'
+                            )}
+                          {feeForm.formState.errors.root && (
+                            <Alert variant="destructive">{feeCopy('validationUnavailable')}</Alert>
+                          )}
+                          {reviewLoading && <LoadingStatus>{feeCopy('checking')}</LoadingStatus>}
+                        </div>
+                        <RecordEditorActions className="max-sm:justify-start">
+                          <Button
+                            type="submit"
+                            loading={reviewLoading || feeForm.formState.isSubmitting}
+                            disabled={
+                              editorLocked || unconfirmed || feeUncertain || time.status !== 'ready'
+                            }
+                          >
+                            {copy(
+                              current.status === 'offer_accepted'
+                                ? 'adjustPaidFee'
+                                : current.invoice_id
+                                  ? 'replaceFee'
+                                  : 'issueFee'
+                            )}
+                          </Button>
+                        </RecordEditorActions>
+                      </form>
+                    </Form>
+                  )}
+                  {!decision && current.status === 'offer_pending' && current.has_paid_invoice && (
+                    <p className="rounded-lg border p-4 text-sm">{copy('paidAdjustmentPending')}</p>
+                  )}
+                  {feeEditor &&
+                    !canEditFee &&
+                    !(current.status === 'offer_pending' && current.has_paid_invoice) && (
+                      <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+                        {copy('feeEditorUnavailable')}
+                      </p>
+                    )}
+                  {routedEditor && (customerBrief?.reason || customerResponse?.reason) && (
+                    <details className="rounded-lg border bg-card px-4 py-3">
+                      <summary className="touch-action cursor-pointer text-sm font-semibold">
+                        {copy('customerBrief')}
+                      </summary>
+                      {customerBrief?.reason && (
+                        <p dir="auto" className="mt-2 text-sm whitespace-pre-line wrap-anywhere">
+                          {customerBrief.reason}
+                        </p>
+                      )}
+                      {customerResponse?.reason && (
+                        <>
+                          <h2 className="mt-3 text-sm font-semibold">{copy('customerResponse')}</h2>
+                          <p dir="auto" className="mt-1 text-sm whitespace-pre-line wrap-anywhere">
+                            {customerResponse.reason}
+                          </p>
+                        </>
+                      )}
+                    </details>
+                  )}
+                  {!routedEditor && (
+                    <>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          disabled={!actor || editorLocked || unconfirmed}
+                          onClick={() => prepareStaffWork('self', copy('assignSelf'))}
+                        >
+                          {copy('assignSelf')}
+                        </Button>
+                        {current.status === 'submitted' && (
+                          <Button
+                            disabled={editorLocked || unconfirmed}
+                            onClick={() => prepareStaffWork('review', copy('startReview'))}
+                          >
+                            {copy('startReview')}
+                          </Button>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap items-end gap-2">
+                        <div className="space-y-1">
+                          <Label htmlFor="consultation-team">{copy('team')}</Label>
+                          <NativeSelect
+                            id="consultation-team"
+                            value={team}
+                            disabled={editorLocked || unconfirmed}
+                            onChange={(event) => setTeam(event.target.value)}
+                            className="w-full"
+                          >
+                            <option value="">{copy('selectTeam')}</option>
+                            {teams.map((name) => (
+                              <option key={name} value={name}>
+                                {name}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                        </div>
+                        <Button
+                          variant="outline"
+                          disabled={!team.trim() || editorLocked || unconfirmed}
+                          onClick={() => prepareStaffWork('team', copy('assignTeam'))}
+                        >
+                          {copy('assignTeam')}
+                        </Button>
+                      </div>
+                      {requestId && availableDecisions.length > 0 && (
+                        <section className="space-y-3 border-t pt-4">
+                          <SectionHeading className="text-base font-semibold">
+                            {copy('decisionActions')}
+                          </SectionHeading>
+                          <div className="flex flex-wrap gap-2">
+                            {availableDecisions.map((option) => (
+                              <Link
+                                key={option}
+                                to={consultationDecisionPath}
+                                params={{ requestId, decision: option }}
+                                search={recordSearch ?? {}}
+                                className={buttonVariants({ variant: 'outline' })}
+                                disabled={editorLocked || unconfirmed}
+                              >
+                                {copy(reasonLabels[option])}
+                              </Link>
+                            ))}
+                          </div>
+                        </section>
+                      )}
+                    </>
+                  )}
+                  {decision && !canUseDecision && !unconfirmed && (
+                    <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+                      {recordedDecision === decision
+                        ? confirmationText('recorded', locale)
+                        : copy('decisionUnavailable')}
+                    </p>
+                  )}
+                  {(canUseDecision || (decision && unconfirmed) || !requestId) && (
+                    <Form {...reasonForm}>
+                      <form
+                        aria-label={copy('reasonFormTitle')}
+                        className={recordEditorSurface}
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          if (decision && decisionLabel && canUseDecision)
+                            prepareReason(
+                              decision === 'recover-refund' ? 'recover_refund' : decision,
+                              copy(decisionLabel),
+                              decisionPaid
+                            );
+                        }}
+                        noValidate
+                      >
+                        {!decision && (
+                          <div className="border-b bg-muted/25 px-4 py-3 sm:px-6">
+                            <SectionHeading className="text-base font-semibold">
+                              {copy('reasonFormTitle')}
+                            </SectionHeading>
+                          </div>
+                        )}
+                        <div className="space-y-4 px-4 py-4 sm:px-6">
+                          {reasonForm.formState.errors.root && (
+                            <Alert variant="destructive">{copy('validationUnavailable')}</Alert>
+                          )}
+                          {decisionPaid && decision !== 'recover-refund' && (
+                            <p className="rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+                              {copy('paidClosureHelp')}
+                            </p>
+                          )}
+                          {(decision === 'recover-refund' || !decision) &&
+                            BigInt(current.uncovered_credit) > 0n && (
+                              <p role="status" className="text-sm text-destructive">
+                                {copy('uncoveredCredit')}{' '}
+                                <bdi className="font-semibold">
+                                  {new Intl.NumberFormat(locale).format(
+                                    BigInt(current.uncovered_credit)
+                                  )}{' '}
+                                  IRR
+                                </bdi>
+                              </p>
+                            )}
+                          <FormField
+                            control={reasonForm.control}
+                            name="reason"
+                            render={({ field, fieldState }) => (
+                              <FormItem id="consultation-reason">
+                                <FormLabel>
+                                  {copy(decisionLabel ? decisionLabel + 'Field' : 'note')}
+                                </FormLabel>
+                                {decisionLabel && (
+                                  <p
+                                    id="consultation-reason-prompt"
+                                    className="text-sm text-muted-foreground"
+                                  >
+                                    {copy(decisionLabel + 'Prompt')}
+                                  </p>
+                                )}
+                                <FormControl>
+                                  <Textarea
+                                    {...field}
+                                    rows={decision ? 3 : 2}
+                                    dir="auto"
+                                    aria-required="true"
+                                    aria-describedby={
+                                      decisionLabel ? 'consultation-reason-prompt' : undefined
+                                    }
+                                    disabled={
+                                      !!action ||
+                                      !!feeCommand.current ||
+                                      !!resolutionCommand.current ||
+                                      commandPending ||
+                                      unconfirmed
+                                    }
+                                    className="max-h-56 min-h-14"
+                                  />
+                                </FormControl>
+                                <CompactFieldFeedback
+                                  help={
+                                    decisionLabel
+                                      ? copy(showPaidReason ? 'decisionPaidLimit' : 'decisionLimit')
+                                      : copy(showPaidReason ? 'paidReasonHelp' : 'reasonHelp')
+                                  }
+                                  validationMessage={copy(
+                                    showPaidReason ? 'paidReasonInvalid1000' : 'reasonInvalid2000'
+                                  )}
+                                  invalid={!!fieldState.error?.message}
+                                />
+                              </FormItem>
+                            )}
+                          />
+                          {!decision && current.has_paid_invoice && (
+                            <p className="text-sm text-muted-foreground">
+                              {copy('paidClosureHelp')}
+                            </p>
+                          )}
+                        </div>
+                        <RecordEditorActions className={decision ? '' : 'max-sm:justify-start'}>
+                          {decisionLabel ? (
+                            <Button
+                              type="submit"
+                              loading={reasonForm.formState.isSubmitting || reviewLoading}
+                              disabled={!canUseDecision || editorLocked || unconfirmed}
+                            >
+                              {copy(decisionLabel)}
+                            </Button>
+                          ) : (
+                            availableDecisions.map((option) => (
+                              <Button
+                                key={option}
+                                type="button"
+                                variant={option === 'complete' ? 'default' : 'outline'}
+                                loading={reasonForm.formState.isSubmitting || reviewLoading}
+                                disabled={editorLocked || unconfirmed}
+                                onClick={() =>
+                                  prepareReason(
+                                    option === 'recover-refund' ? 'recover_refund' : option,
+                                    copy(reasonLabels[option]),
+                                    option === 'recover-refund' ||
+                                      ((option === 'reject' || option === 'cancel') &&
+                                        current.has_paid_invoice)
+                                  )
+                                }
+                              >
+                                {copy(reasonLabels[option])}
+                              </Button>
+                            ))
+                          )}
+                        </RecordEditorActions>
+                      </form>
+                    </Form>
+                  )}
+                  {!routedEditor && (
+                    <section className="space-y-2">
+                      <SectionHeading className="font-semibold">{copy('history')}</SectionHeading>
+                      <StatusTimeline
+                        label={copy('history')}
+                        items={detail.history.map((event, index) => {
+                          const presentation = consultationStatus(event.status, copy);
+                          return {
+                            id: `${event.created_at}-${index}`,
+                            title: presentation.label,
+                            tone: presentation.tone,
+                            state: event.status,
+                            dateTime: event.created_at,
+                            dateLabel: time.format(event.created_at),
+                            actorLabel: [
+                              ['staff', 'customer', 'unknown'].includes(event.actor_type)
+                                ? event.actor_name
+                                : null,
+                              historyContextText(event.actor_type, locale),
+                            ]
+                              .filter(Boolean)
+                              .join(' · '),
+                            description: event.reason ?? undefined,
+                          };
+                        })}
+                      />
+                    </section>
+                  )}
+                </>
+              )}
+            </section>
+          )}
         </div>
-      </ListPage>
+      </Content>
       {action && actionScope.current === workScope && (
         <TeamActionDialog
           action={action}
+          focusSummary={Boolean(resolutionReview || paidFeeReview || feeReview)}
           confirmationDisabled={unconfirmed}
           onPendingChange={(pending) => {
             if (!currentAction()) return;
@@ -2067,6 +2607,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           summary={
             resolutionReview ? (
               <FinancialReviewSummary
+                compact
                 title={copy('paidResolutionReviewTitle')}
                 rows={[
                   {
@@ -2148,6 +2689,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             ) : paidFeeReview ? (
               <>
                 <FinancialReviewSummary
+                  compact
                   title={copy('paidFeeReviewTitle')}
                   rows={[
                     {
@@ -2221,6 +2763,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             ) : feeReview ? (
               <>
                 <FinancialReviewSummary
+                  compact
                   title={copy('feeReviewTitle')}
                   rows={[
                     { id: 'profile', label: copy('customer'), value: feeReview.data.profileName },
@@ -2321,6 +2864,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                 throw new Error('Consultation resolution receipt did not match');
               resolutionCommand.current = null;
               setResolutionUncertain(false);
+              setRecordedDecision(displayedReason.current);
               reasonForm.reset({ reason: '' });
               offerDirty.current = true;
               clearAction();
@@ -2341,7 +2885,10 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             )
               throw new Error('Consultation staff receipt did not match');
             if (command) {
-              if (command.kind === 'reason') reasonForm.reset({ reason: '' });
+              if (command.kind === 'reason') {
+                setRecordedDecision(displayedReason.current);
+                reasonForm.reset({ reason: '' });
+              }
               recoveringCommand.current = null;
               unconfirmedRef.current = false;
               setUnconfirmed(false);

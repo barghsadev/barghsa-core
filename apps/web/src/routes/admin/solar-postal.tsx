@@ -17,7 +17,7 @@ function PostalRoute() {
       resetScroll: false,
     });
   });
-  return <Page queries={queries} />;
+  return <Page queries={queries} queueSearch={search} />;
 }
 export const Route = createFileRoute('/admin/solar-postal')({
   validateSearch: solarPostalSearch,

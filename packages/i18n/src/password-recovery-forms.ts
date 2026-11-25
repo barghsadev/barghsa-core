@@ -3,6 +3,9 @@ const en = {
   requestInstructions:
     'Use the email or mobile number on your account to request a verification code.',
   activationInstructions: 'Enter the activation code from your invitation and choose a password.',
+  activationComplete: 'Your staff account is ready. Sign in with the password you just chose.',
+  activationRecovery:
+    'Already activated your account? Sign in below. For a new invitation, contact the person who invited you.',
   usernameInvalid: 'Enter an email address or a valid mobile number.',
   codeInvalid: 'Enter all six digits of the verification code.',
   validationUnavailable: 'Validation is unavailable. Your entries are kept; try again.',
@@ -17,6 +20,9 @@ const fa: Record<keyof typeof en, string> = {
   requestInstructions:
     'برای دریافت کد تأیید، ایمیل یا شماره موبایل ثبت‌شده در حساب خود را وارد کنید.',
   activationInstructions: 'کد فعال‌سازی دعوت‌نامه را وارد کنید و رمز عبور بسازید.',
+  activationComplete: 'حساب کارکنان شما آماده است. با رمز عبوری که انتخاب کردید وارد شوید.',
+  activationRecovery:
+    'اگر حساب را فعال کرده‌اید، از پیوند پایین وارد شوید. برای دریافت دعوت‌نامه تازه، با دعوت‌کننده تماس بگیرید.',
   usernameInvalid: 'ایمیل یا شماره موبایل معتبر وارد کنید.',
   codeInvalid: 'هر شش رقم کد تأیید را وارد کنید.',
   validationUnavailable: 'اعتبارسنجی در دسترس نیست. اطلاعات واردشده حفظ شده؛ دوباره تلاش کنید.',

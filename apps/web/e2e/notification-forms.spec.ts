@@ -12,21 +12,18 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await setupCatalogueForms(page, locale, false);
-    await page.route('**/api/admin/notifications/templates', (route) =>
-      route.fulfill({ json: [notificationTemplate()] })
+    const draft = notificationTemplate();
+    let templateStatus = 200;
+    await page.route(`**/api/admin/notifications/templates/${draft.id}`, (route) =>
+      route.fulfill({ status: templateStatus, json: draft })
     );
     let status = 200;
     await page.route('**/api/admin/config/delivery-window', (route) =>
       route.fulfill({ status, json: { timezone: 'UTC', startHour: 9, endHour: 21 } })
     );
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/settings');
     const start = page.locator('#delivery-window-start');
     await expect(start).toHaveValue('09:00');
-    await page
-      .getByRole('button', { name: t('admin.notifications.edit', locale), exact: true })
-      .click();
-    const body = page.locator('#notification-template-bodyTemplate');
-    await body.fill('Local private draft');
     const refresh = page.getByRole('button', {
       name: notificationFormText('refresh', locale),
       exact: true,
@@ -34,14 +31,12 @@ for (const locale of ['en', 'fa'] as const) {
     status = 403;
     await refresh.click();
     await expect(start).toHaveCount(0);
-    await expect(body).toHaveValue('Local private draft');
     status = 200;
     await refresh.click();
     await expect(start).toHaveValue('09:00');
     status = 401;
     await refresh.click();
     await expect(start).toHaveCount(0);
-    await expect(body).toHaveCount(0);
     const sessionEnded = page
       .getByRole('main')
       .getByRole('alert')
@@ -50,6 +45,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       sessionEnded.getByRole('link', { name: loginFormText('restart', locale) })
     ).toHaveAttribute('href', '/login');
+    await page.goto(`/admin/notifications/${draft.id}/edit`);
+    const body = page.locator('#notification-template-bodyTemplate');
+    await body.fill('Local private draft');
+    templateStatus = 401;
+    await page
+      .getByRole('button', { name: t('admin.notifications.refresh', locale), exact: true })
+      .click();
+    await expect(body).toHaveCount(0);
+    await expect(page.getByRole('main')).not.toContainText('Local private draft');
   });
 }
 
@@ -73,6 +77,7 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: [saved] })
       );
       await page.route(`**/api/admin/notifications/templates/${saved.id}`, (route) => {
+        if (route.request().method() === 'GET') return route.fulfill({ json: saved });
         const body = route.request().postDataJSON();
         writes.push(body);
         if (!verified)
@@ -101,15 +106,16 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: config });
       });
       await page.goto('/admin/notifications');
-      await page.getByRole('button', { name: text('edit'), exact: true }).click();
+      await page.getByRole('link', { name: text('edit'), exact: true }).click();
       const form = page
         .locator('form')
         .filter({ has: page.locator('#notification-template-eventKey') });
+      await expect(form.locator('#notification-template-eventKey')).toHaveText(saved.eventKey);
       const body = page.locator('#notification-template-bodyTemplate');
       await expect(body).toHaveAttribute('aria-required', 'true');
       await expect(body).toHaveAccessibleDescription(text('bodyHint'));
       await expect(form.locator('#test-destination')).toHaveAccessibleDescription(
-        text('testDestinationHint')
+        notificationFormText('testEmailHint', locale)
       );
       await body.fill('Hello {{unknown}}');
       await form.locator('button[type=submit]').click();
@@ -130,6 +136,10 @@ for (const locale of ['en', 'fa'] as const)
       await form.locator('button[type=submit]').click();
       await expect(form).toHaveCount(0);
       expect(saved.bodyTemplate).toBe('Local body');
+      const exact = `/admin/notifications/${saved.id}`;
+      await expect(page).toHaveURL(exact);
+      await expect(page.getByRole('heading', { name: saved.eventKey, exact: true })).toBeVisible();
+      await page.goto('/admin/notifications/settings');
       const windowForm = page
         .locator('form')
         .filter({ has: page.locator('#delivery-window-start') });
@@ -143,7 +153,11 @@ for (const locale of ['en', 'fa'] as const)
       await windowForm.locator('button[type=submit]').click();
       await expect(windowForm).toContainText(text('window.saved'));
       expect(windowWrites).toEqual([{ timezone: 'UTC', start_hour: 10.25, end_hour: 14.25 }]);
-      await page.getByRole('button', { name: text('edit'), exact: true }).click();
+      const capture = locale === 'fa' && dark && info.project.name === 'mobile-safari';
+      if (capture)
+        await windowForm.screenshot({ path: '/tmp/barghsa-notification-window-fa-dark.png' });
+      await page.goto(exact + '/edit');
+      await expect(form).toBeVisible();
       expect(
         (
           await new AxeBuilder({ page })
@@ -156,10 +170,9 @@ for (const locale of ['en', 'fa'] as const)
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
-      if (locale === 'fa' && dark && info.project.name === 'mobile-safari') {
+      if (capture) {
         await page.setViewportSize({ width: 390, height: 1600 });
         await form.screenshot({ path: '/tmp/barghsa-notification-template-fa-dark.png' });
-        await windowForm.screenshot({ path: '/tmp/barghsa-notification-window-fa-dark.png' });
       }
     });
     test(`delivery window keeps drafts through failed, changed and uncertain reads (${locale}, ${dark ? 'dark' : 'light'})`, async ({
@@ -182,7 +195,7 @@ for (const locale of ['en', 'fa'] as const)
           json: mismatch ? { ...config, startHour: 11 } : { ...config, startHour: body.start_hour },
         });
       });
-      await page.goto('/admin/notifications');
+      await page.goto('/admin/notifications/settings');
       const start = page.locator('#delivery-window-start');
       await expect(start).toHaveValue('09:00');
       await start.fill('10:00');

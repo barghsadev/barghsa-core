@@ -1,3 +1,4 @@
+import { backToSavingOrder, savingOperationLink } from './saving-operation-navigation';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
@@ -91,16 +92,20 @@ for (const [locale, theme] of [
     const hardwareForm = page.getByTestId('saving-staff-hardware-form');
     const hardware = page.locator('#saving-amend-hardware');
     const reason = page.locator('#saving-amend-hardware-reason');
-    const addressForm = page.getByTestId('saving-staff-address-form');
     const addressReason = page.locator('#saving-amend-reason');
     const note = page.locator('#saving-staff-note');
     const preview = () =>
       hardwareForm.getByRole('button', { name: copy('staffAmendHardware'), exact: true });
+    await savingOperationLink(page, 'installation-address').click();
+    await addressReason.fill('  Independent address explanation  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
+    await note.fill('  Independent public delivery note  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'hardware').click();
     await expect(hardwareForm).toBeVisible();
     await expect(hardware).toHaveAttribute('aria-required', 'true');
     await expect(reason).toHaveAttribute('aria-required', 'true');
-    await addressReason.fill('  Independent address explanation  ');
-    await note.fill('  Independent public delivery note  ');
     await preview().click();
     await expect(hardwareForm.locator('button[type=submit]')).toBeDisabled();
     await hardwareForm.locator('form').dispatchEvent('submit');
@@ -113,6 +118,9 @@ for (const [locale, theme] of [
     await focusedError(hardware);
     expect(state.hardwarePreviews).toEqual([]);
     await hardware.selectOption(replacementHardware);
+    await expect(page.locator('#saving-amend-hardware-description')).toContainText(
+      copy('hardwareAdditionalCharge')
+    );
     await reason.fill('x'.repeat(1001));
     await preview().click();
     await focusedError(reason);
@@ -183,13 +191,15 @@ for (const [locale, theme] of [
     await expect(dialog).toHaveCount(0);
     const hardwareRetry = page.getByTestId('saving-staff-hardware-retry');
     await expect(hardwareRetry).toHaveText(formCopy('retryCaptured'));
-    await expect(
-      addressForm.getByRole('button', { name: copy('staffAmendAddress'), exact: true })
-    ).toBeDisabled();
+    const back = backToSavingOrder(page, locale);
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await expect(addressReason).toHaveCount(0);
+    const editorUrl = page.url();
+    await back.dispatchEvent('click');
+    await expect(page).toHaveURL(editorUrl);
     await expect(hardware).toBeDisabled();
     const readCount = state.reads.length;
     await hardwareForm.locator('form').dispatchEvent('submit');
-    await addressForm.locator('form').dispatchEvent('submit');
     await refresh(page).dispatchEvent('click');
     expect(state.reads).toHaveLength(readCount);
     expect(state.hardwareWrites).toHaveLength(2);
@@ -211,8 +221,14 @@ for (const [locale, theme] of [
     expect(state.hardwareCsrf.slice(1)).toEqual(
       Array.from({ length: 3 }, () => 'rotated-saving-password-proof')
     );
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'installation-address').click();
     await expect(addressReason).toHaveValue('  Independent address explanation  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
     await expect(note).toHaveValue('  Independent public delivery note  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'cancel-upgrade', upgradeId).click();
     await expect(page.getByTestId(`saving-upgrade-cancel-form-${upgradeId}`)).toBeVisible();
   });
 
@@ -233,11 +249,15 @@ for (const [locale, theme] of [
       idempotencyKey: '00000000-0000-4000-8000-000000000123',
     });
     await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
-    const addressForm = page.getByTestId('saving-staff-address-form');
     const addressReason = page.locator('#saving-amend-reason');
     const note = page.locator('#saving-staff-note');
+    await savingOperationLink(page, 'installation-address').click();
     await addressReason.fill('  Independent address explanation  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
     await note.fill('  Independent public delivery note  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'cancel-upgrade', upgradeId).click();
     const row = page.getByTestId(`saving-upgrade-cancel-form-${upgradeId}`);
     const rowReason = page.locator(`#saving-upgrade-cancel-${upgradeId}`);
     await expect(rowReason).toHaveAttribute('aria-required', 'true');
@@ -299,9 +319,12 @@ for (const [locale, theme] of [
     await expect(retry).toHaveText(formCopy('retryCancellation'));
     await heldCancellation.fulfill({ status: 503, json: {} }).catch(() => {});
     await expect(rowReason).toBeDisabled();
-    await expect(
-      addressForm.getByRole('button', { name: copy('staffAmendAddress'), exact: true })
-    ).toBeDisabled();
+    const back = backToSavingOrder(page, locale);
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await expect(addressReason).toHaveCount(0);
+    const editorUrl = page.url();
+    await back.dispatchEvent('click');
+    await expect(page).toHaveURL(editorUrl);
     const reads = state.reads.length;
     await row.locator('form').dispatchEvent('submit');
     await refresh(page).dispatchEvent('click');
@@ -322,10 +345,16 @@ for (const [locale, theme] of [
     await expect(row).toHaveCount(0);
     expect(state.cancelWrites).toEqual(Array.from({ length: 3 }, () => command));
     expect(state.cancelBodies).toEqual(Array.from({ length: 3 }, () => body));
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'installation-address').click();
     await expect(addressReason).toHaveValue('  Independent address explanation  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
     await expect(note).toHaveValue('  Independent public delivery note  ');
+    await backToSavingOrder(page, locale).click();
     nextPendingUpgrade();
     await refresh(page).click();
+    await savingOperationLink(page, 'cancel-upgrade', nextUpgradeId).click();
     const nextRow = page.getByTestId(`saving-upgrade-cancel-form-${nextUpgradeId}`),
       nextReason = page.locator(`#saving-upgrade-cancel-${nextUpgradeId}`);
     await expect(nextReason).toHaveValue('');
@@ -351,10 +380,15 @@ for (const [locale, theme] of [
       form.getByRole('button', { name: copy('staffAmendHardware'), exact: true });
     const addressReason = page.locator('#saving-amend-reason'),
       note = page.locator('#saving-staff-note');
+    await savingOperationLink(page, 'installation-address').click();
+    await addressReason.fill('  Independent address draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
+    await note.fill('  Independent progress note  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'hardware').click();
     await expect(form).toBeVisible();
     await hardware.selectOption(target);
-    await addressReason.fill('  Independent address draft  ');
-    await note.fill('  Independent progress note  ');
     await preview().click();
     await expect(form.locator('button[type=submit]')).toBeDisabled();
     await form.locator('form').dispatchEvent('submit');
@@ -442,8 +476,13 @@ for (const [locale, theme] of [
     await expect(reason).toHaveValue('');
     expect(state.hardwareWrites).toEqual(Array.from({ length: 4 }, () => command));
     expect(state.hardwareBodies).toEqual(Array.from({ length: 4 }, () => body));
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'installation-address').click();
     await expect(addressReason).toHaveValue('  Independent address draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
     await expect(note).toHaveValue('  Independent progress note  ');
+    await backToSavingOrder(page, locale).click();
     const history = page
       .getByRole('heading', { name: copy('hardwareAmendments'), exact: true })
       .locator('..');
@@ -461,16 +500,17 @@ for (const [locale, theme] of [
       history,
       info.outputPath(`saving-immediate-hardware-result-${locale}-${theme}.png`)
     );
+    await savingOperationLink(page, 'hardware').click();
     await hardware.selectOption(replacementHardware);
     await reason.fill('Old source private replacement');
     state.hardwarePreviewMode = 'held';
     await preview().click();
     await expect.poll(() => !!state.hardwarePreviewRoute).toBe(true);
     const stale = state.hardwarePreviewRoute!;
-    // Browser back/forward query selection can change scope even while command-owned controls are disabled.
+    // A record navigation can abandon a read-only preview.
     await page.evaluate((id) => {
       const url = new URL(location.href);
-      url.searchParams.set('orderId', id);
+      url.pathname = `/admin/saving-orders/${id}/hardware`;
       window.history.pushState({}, '', url.href);
       dispatchEvent(new PopStateEvent('popstate'));
     }, otherSavingChangeOrder);

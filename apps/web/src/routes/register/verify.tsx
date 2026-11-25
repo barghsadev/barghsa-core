@@ -15,8 +15,10 @@ import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/a
 import { registrationChallenge, emptyRegistration } from '../../lib/registration-form.js';
 import { toast } from '../../lib/toast-api.js';
 import { rememberAuthSuccess } from '../../lib/auth-entry-feedback.js';
+import { authReturnSearch } from '../../lib/auth-return.js';
 export const Route = createFileRoute('/register/verify')({
   validateSearch: (search: Record<string, unknown>) => ({
+    ...authReturnSearch(search),
     challengeId: String(search?.challengeId ?? ''),
     destination: String(search?.destination ?? ''),
   }),
@@ -24,7 +26,7 @@ export const Route = createFileRoute('/register/verify')({
 });
 function OtpVerifyPage() {
   const router = useRouter(),
-    { challengeId, destination } = useSearch({ from: '/register/verify' }),
+    { challengeId, destination, returnTo } = useSearch({ from: '/register/verify' }),
     locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const model = useRegistrationNativeForm('verify', `verify|${challengeId}`, locale),
@@ -57,7 +59,8 @@ function OtpVerifyPage() {
     setResendUntil(Date.now() + 60_000);
     setAttemptUntil(0);
     setNow(Date.now());
-    if (!registrationChallenge({ challengeId })) void router.navigate({ to: '/register' });
+    if (!registrationChallenge({ challengeId }))
+      void router.navigate({ to: '/register', search: { returnTo } });
     return () => {
       if (expiryRedirect.current !== null) clearTimeout(expiryRedirect.current);
       expiryRedirect.current = null;
@@ -133,7 +136,7 @@ function OtpVerifyPage() {
               if (!capture.current() || router.state.location.pathname !== '/register/verify')
                 return;
               toast.error(t('auth.otp.expired', locale));
-              void router.navigate({ to: '/register' });
+              void router.navigate({ to: '/register', search: { returnTo } });
             }, 500);
           }
           return;
@@ -147,7 +150,7 @@ function OtpVerifyPage() {
         const message = t('auth.register.success', locale);
         rememberAuthSuccess(message);
         toast.success(message);
-        await router.navigate({ to: '/app' });
+        await router.navigate({ to: returnTo ?? '/app' });
       } catch {
         unknown();
       }
@@ -218,11 +221,16 @@ function OtpVerifyPage() {
             {t('auth.register.error.usernameTaken', locale)}
           </h1>
           <div className="flex flex-col items-center gap-2">
-            <Link to="/login" className="touch-action text-primary underline underline-offset-4">
+            <Link
+              to="/login"
+              search={{ returnTo }}
+              className="touch-action text-primary underline underline-offset-4"
+            >
               {t('auth.register.loginLinkLabel', locale)}
             </Link>
             <Link
               to="/forgot-password"
+              search={{ returnTo }}
               className="touch-action text-primary underline underline-offset-4"
             >
               {t('auth.register.forgotPasswordLink', locale)}
@@ -232,12 +240,14 @@ function OtpVerifyPage() {
       </AuthLayout>
     );
   }
+  const [codePrefix, codeSuffix] = t('auth.otp.sentTo', locale).split('{destination}');
   return (
     <AuthLayout
       locale={locale}
       footer={
         <Link
           to="/register"
+          search={{ returnTo }}
           className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4"
           onClick={(event) => {
             if (model.busy) event.preventDefault();
@@ -248,18 +258,20 @@ function OtpVerifyPage() {
         </Link>
       }
     >
-      <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-        <div className="space-y-1.5 text-center">
+      <div className="space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+        <div className="space-y-1.5">
           <h1 className="tracking-tight">{t('auth.otp.title', locale)}</h1>
           <p className="text-sm text-muted-foreground">
-            {t('auth.otp.sentTo', locale).replace('{destination}', destination)}
+            {codePrefix}
+            <bdi className="font-medium text-foreground">{destination}</bdi>
+            {codeSuffix}
           </p>
         </div>
         <Form {...form}>
           <form
             key={model.draftKey}
             ref={model.feedback.element}
-            className="space-y-6"
+            className="space-y-3.5"
             noValidate
             aria-busy={model.busy}
             onSubmit={verify}
@@ -303,7 +315,7 @@ function OtpVerifyPage() {
                 onClick={() => {
                   if (model.restart()) {
                     otpRef.current?.reset();
-                    void router.navigate({ to: '/register' });
+                    void router.navigate({ to: '/register', search: { returnTo } });
                   }
                 }}
               >
@@ -314,14 +326,14 @@ function OtpVerifyPage() {
               {t(model.busy && !resending ? 'auth.otp.verifying' : 'auth.otp.verifyButton', locale)}
             </Button>
             {attemptCooldown > 0 && (
-              <p role="status">
+              <p role="status" className="text-sm text-muted-foreground">
                 {t('auth.otp.resendTimer', locale).replace(
                   '{seconds}',
                   numbers.number(attemptCooldown, { useGrouping: false })
                 )}
               </p>
             )}
-            <div className="text-center">
+            <div className="flex justify-end">
               {cooldown === 0 ? (
                 <Button
                   type="button"

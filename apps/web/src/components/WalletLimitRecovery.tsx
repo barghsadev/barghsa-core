@@ -29,15 +29,14 @@ export default function WalletLimitRecovery({ label, ...props }: Props) {
   return (
     <ConfigRecovery
       {...props}
+      showRevisions
       label={recoveryLabel}
       valid={valid}
       basis={(value) => String(value.limitIrR)}
       activationRisk={(value) => (value.limitIrR === 0 ? 'destructive' : undefined)}
       renderValues={(value) => (
         <div className="space-y-2">
-          <p>
-            {label('label')} <bdi>{numbers.irrDigits(String(value.limitIrR))}</bdi>
-          </p>
+          <p className="font-medium tabular-nums">{numbers.money(value.limitIrR)}</p>
           {value.limitIrR === 0 && <p>{label('blocked')}</p>}
         </div>
       )}

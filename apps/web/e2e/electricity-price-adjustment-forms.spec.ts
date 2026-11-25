@@ -3,7 +3,7 @@ import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { adminText } from '@barghsa/i18n/electricity-price-forms';
 import { test, expect } from './coverage-fixture';
 import {
   creditAdjustmentId,
@@ -82,20 +82,23 @@ for (const [locale, theme] of [
       .screenshot({ path: info.outputPath(`price-picker-${locale}-${theme}.png`) });
     await picker.fill(` ${contractId} `);
     await picker.press('Enter');
+    await page.getByRole('link', { name: copy('newProposal'), exact: true }).click();
     const form = page.getByTestId('electricity-price-proposal-form');
     await expect(form).toBeVisible();
-    await expect(page).toHaveURL(new RegExp(`contractId=${contractId}`));
-    expect(state.staffReads).toBe(1);
+    await expect(page).toHaveURL(new RegExp(`/${contractId}/new$`));
+    expect(state.staffReads).toBe(2);
     const percentage = page.locator('#price-percent');
     const date = page.locator('#price-effective');
     const reason = page.locator('#price-reason');
     const basis = page.locator('#price-basis');
     const review = form.getByRole('button', { name: copy('reviewProposal'), exact: true });
+    await expect(review).toBeInViewport({ ratio: 0.99 });
     for (const field of [percentage, date, reason, basis])
       await expect(field).toHaveAttribute('aria-required', 'true');
     await percentage.fill('0');
     await date.fill('2026-10-09T12:00');
-    await reason.fill('  Draft <script> tariff  ');
+    const draftReason = 'Draft <script> tariff\nApplies to the remaining delivery period.';
+    await reason.fill(`  ${draftReason}  `);
     await basis.fill('  Contract clause 7  ');
     await review.click();
     await focusedError(percentage);
@@ -105,14 +108,14 @@ for (const [locale, theme] of [
     await focusedError(reason);
     await expect(percentage).toHaveValue(' 10.25 ');
     await expect(date).toHaveValue('2026-10-09T12:00');
-    await expect(reason).toHaveValue('  Draft <script> tariff  ');
+    await expect(reason).toHaveValue(`  ${draftReason}  `);
     await expect(basis).toHaveValue('  Contract clause 7  ');
     const effectiveFrom = '2026-10-09T08:30:00.000Z';
     expect(state.previews[0]).toEqual({
       expectedVersionId: versionId,
       effectiveFrom,
       percentageBps: '1025',
-      reason: 'Draft <script> tariff',
+      reason: draftReason,
       contractualBasis: 'Contract clause 7',
     });
     await expect(form).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');
@@ -132,11 +135,12 @@ for (const [locale, theme] of [
     await expect.poll(() => !!state.previewRoute).toBe(true);
     const stale = state.previewRoute!;
     const staleBody = state.previews.at(-1)!;
-    await reason.fill('  Updated tariff  ');
+    const updatedReason = 'Updated tariff\nApplies to the remaining delivery period.';
+    await reason.fill(`  ${updatedReason}  `);
     await stale.fulfill({ json: priceReview(staleBody) });
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(review).toBeEnabled();
-    await expect(reason).toHaveValue('  Updated tariff  ');
+    await expect(reason).toHaveValue(`  ${updatedReason}  `);
     state.previewRoute = undefined;
     await review.click();
     await expect.poll(() => !!state.previewRoute).toBe(true);
@@ -147,7 +151,10 @@ for (const [locale, theme] of [
     expect(state.previews).toHaveLength(previewCount);
     await state.previewRoute!.fulfill({ json: priceReview(reviewed) });
     let dialog = page.getByRole('dialog');
-    await expect(dialog).toContainText('Updated tariff');
+    const reviewedReason = dialog.locator('dd').filter({ hasText: 'Updated tariff' });
+    await expect(reviewedReason).toHaveCount(1);
+    expect(await reviewedReason.textContent()).toBe(updatedReason);
+    await expect(reviewedReason).toHaveCSS('white-space', 'pre-wrap');
     await expect(dialog).toContainText('Contract clause 7');
     await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
@@ -170,18 +177,19 @@ for (const [locale, theme] of [
       exact: true,
     });
     await expect(retry).toBeEnabled();
-    await expect(open).toBeDisabled();
+    const back = page.getByRole('link', { name: copy('backToHistory'), exact: true });
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
     const reads = state.staffReads;
-    await pickerForm.dispatchEvent('submit');
+    await back.dispatchEvent('click');
     expect(state.staffReads).toBe(reads);
-    await expect(reason).toHaveValue('  Updated tariff  ');
+    await expect(reason).toHaveValue(`  ${updatedReason}  `);
     state.writeMode = 'success';
     await retry.click();
     dialog = page.getByRole('dialog');
     await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
-    const cancel = page.getByRole('button', { name: copy('cancel'), exact: true });
+    const cancel = page.getByRole('link', { name: copy('cancel'), exact: true });
     await expect(cancel).toBeEnabled();
     expect(state.writes.slice(0, 2)).toEqual([publish, publish]);
     expect(state.previews).toHaveLength(previewCount);
@@ -190,21 +198,31 @@ for (const [locale, theme] of [
     state.writeMode = 'held';
     state.writeRoute = undefined;
     await cancel.click();
-    dialog = page.getByRole('dialog');
+    await expect(page).toHaveURL(/\/cancel$/);
+    const cancelForm = page.getByRole('form', { name: copy('cancel'), exact: true });
+    await expect(cancelForm.locator('button[type=submit]')).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'both');
-    await dialog.locator('button[type=submit]').click();
+    await cancelForm.locator('button[type=submit]').click();
     await expect.poll(() => !!state.writeRoute).toBe(true);
     const cancellation = state.writes.at(-1)!;
     expect(cancellation.kind).toBe('cancel');
     expect(cancellation.body).toEqual({ idempotencyKey: expect.stringMatching(/^[0-9a-f-]{36}$/) });
     await state.writeRoute!.fulfill({ status: 201, json: {} });
-    await expect(dialog).toHaveCount(0);
+    await expect(cancelForm).toHaveCount(0);
+    const backToAdjustment = page.getByRole('link', {
+      name: copy('backToAdjustment'),
+      exact: true,
+    });
+    await expect(backToAdjustment).toHaveAttribute('aria-disabled', 'true');
+    await backToAdjustment.dispatchEvent('click');
+    await expect(page).toHaveURL(/\/cancel$/);
     state.writeMode = 'success';
     await retry.click();
-    dialog = page.getByRole('dialog');
     await approveRiskConfirmation(page, locale, 'both');
-    await dialog.locator('button[type=submit]').click();
-    await expect(dialog).toHaveCount(0);
+    await cancelForm.locator('button[type=submit]').click();
+    await expect(page).not.toHaveURL(/\/cancel$/);
+    await back.click();
+    await page.getByRole('link', { name: copy('newProposal'), exact: true }).click();
     await expect(review).toBeEnabled();
     expect(state.writes.slice(2, 4)).toEqual([cancellation, cancellation]);
     await expect(reason).toHaveValue('');
@@ -221,7 +239,7 @@ for (const [locale, theme] of [
     await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
-    const finalize = page.getByRole('button', { name: copy('finalize'), exact: true });
+    const finalize = page.getByRole('link', { name: copy('finalize'), exact: true });
     await expect(finalize).toBeEnabled();
     const credit = state.rows.find((row) => row.adjustmentId === creditAdjustmentId)!;
     expect(credit.percentageBps).toBe('-1025');
@@ -229,9 +247,10 @@ for (const [locale, theme] of [
     state.writeMode = 'held';
     state.writeRoute = undefined;
     await finalize.click();
-    dialog = page.getByRole('dialog');
+    await expect(page).toHaveURL(/\/finalize$/);
+    const finalizeForm = page.getByRole('form', { name: copy('finalize'), exact: true });
     await approveRiskConfirmation(page, locale, 'financial');
-    await dialog.locator('button[type=submit]').click();
+    await finalizeForm.locator('button[type=submit]').click();
     await expect.poll(() => !!state.writeRoute).toBe(true);
     const finalCommand = state.writes.at(-1)!;
     expect(finalCommand.body).toEqual({
@@ -239,16 +258,13 @@ for (const [locale, theme] of [
       idempotencyKey: expect.stringMatching(/^[0-9a-f-]{36}$/),
     });
     await state.writeRoute!.fulfill({ status: 201, json: {} });
-    await expect(dialog).toHaveCount(0);
+    await expect(finalizeForm).toHaveCount(0);
     state.writeMode = 'success';
     await retry.click();
-    dialog = page.getByRole('dialog');
     await approveRiskConfirmation(page, locale, 'financial');
-    await dialog.locator('button[type=submit]').click();
-    await expect(dialog).toHaveCount(0);
-    await expect(
-      page.locator(`a[href="/admin/invoices?invoiceId=${linkedCreditId}"]:visible`)
-    ).toBeVisible();
+    await finalizeForm.locator('button[type=submit]').click();
+    await expect(page).not.toHaveURL(/\/finalize$/);
+    await expect(page.locator(`a[href="/admin/invoices/${linkedCreditId}"]:visible`)).toBeVisible();
     expect(state.writes.slice(-2)).toEqual([finalCommand, finalCommand]);
     expect(state.rows.find((row) => row.adjustmentId === creditAdjustmentId)!.status).toBe(
       'finalized'
@@ -269,6 +285,7 @@ for (const [locale, theme] of [
     const picker = page.locator('#electricity-price-contract');
     await picker.fill(contractId);
     await picker.press('Enter');
+    await page.getByRole('link', { name: copy('newProposal'), exact: true }).click();
     const review = page.getByTestId('electricity-price-proposal-form').getByRole('button', {
       name: copy('reviewProposal'),
       exact: true,
@@ -312,6 +329,7 @@ for (const [locale, theme] of [
     const picker = page.locator('#electricity-price-contract');
     await picker.fill(contractId);
     await picker.press('Enter');
+    await page.getByRole('link', { name: copy('newProposal'), exact: true }).click();
     const form = page.getByTestId('electricity-price-proposal-form');
     const review = form.getByRole('button', { name: copy('reviewProposal'), exact: true });
     await page.locator('#price-percent').fill('10.25');
@@ -360,7 +378,7 @@ for (const [locale, theme] of [
     await dialog.locator('button[type=submit]').click();
     expect((await replay).postData()).toBe(original);
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByRole('button', { name: copy('cancel'), exact: true })).toBeEnabled();
+    await expect(page.getByRole('link', { name: copy('cancel'), exact: true })).toBeEnabled();
     expect(state.writes).toEqual([captured, captured, captured]);
     expect(state.previews).toHaveLength(1);
   });

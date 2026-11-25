@@ -4,7 +4,9 @@ import { createServerQueryClient } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 
 const QueryDevtools =
-  process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === 'development' &&
+  import.meta.env.VITE_SHOW_DEVTOOLS === '1' &&
+  !import.meta.env.VITE_E2E
     ? lazy(() =>
         import('@tanstack/react-query-devtools').then((module) => ({
           default: module.ReactQueryDevtools,
@@ -18,7 +20,7 @@ function ScopedQueryProvider({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       {children}
-      {QueryDevtools && !import.meta.env.VITE_E2E && (
+      {QueryDevtools && (
         <Suspense fallback={null}>
           <QueryDevtools initialIsOpen={false} />
         </Suspense>

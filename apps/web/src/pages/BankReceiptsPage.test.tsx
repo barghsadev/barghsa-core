@@ -11,15 +11,17 @@ vi.mock('@tanstack/react-router', () => ({
     children,
     to,
     params,
-    hash,
   }: {
     children: ReactNode;
     to: string;
-    params?: { invoiceId: string };
-    hash?: string;
+    params?: { invoiceId: string; receiptId: string };
   }) => (
     <a
-      href={`${params ? to.replace('$invoiceId', params.invoiceId) : to}${hash ? `#${hash}` : ''}`}
+      href={
+        params
+          ? to.replace('$invoiceId', params.invoiceId).replace('$receiptId', params.receiptId)
+          : to
+      }
     >
       {children}
     </a>
@@ -96,7 +98,7 @@ it.each(['en', 'fa'] as const)(
     expect(host.textContent).toContain(firstReceipt.invoiceId);
     expect(
       host.querySelector(
-        `a[href="/invoices/${firstReceipt.invoiceId}#bank-receipt-${firstReceipt.receiptId}"]`
+        `a[href="/invoices/${firstReceipt.invoiceId}/receipts/${firstReceipt.receiptId}"]`
       )
     ).not.toBeNull();
     expect(host.textContent).toContain(locale === 'en' ? 'Bank receipts' : 'رسیدهای بانکی');

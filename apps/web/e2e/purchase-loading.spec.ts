@@ -34,7 +34,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('script[type="module"][src^="/assets/"]')).toHaveCount(1);
   });
-  test(`electricity routes avoid downloads and lazy service pages retain stable loading (${locale})`, async ({
+  test(`electricity and lazy services retain stable loading between tasks (${locale})`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
@@ -78,11 +78,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       main.getByRole('heading', { name: t('electricity.order.title', locale), exact: true })
     ).toBeVisible();
-    for (const path of ['electricity/index', 'electricity/order'])
-      expect(manifest[`src/routes/_app/${path}.tsx?tsr-split=component`]).toBeUndefined();
+    expect(
+      manifest['src/routes/_app/electricity/orders.new.tsx?tsr-split=component']
+    ).toBeUndefined();
+    const catalogueChunk = manifest['src/pages/ElectricityIndexPage.tsx'];
+    expect(catalogueChunk?.isDynamicEntry).toBe(true);
     expect(manifest['src/routes/_app.tsx?tsr-split=component']).toBeUndefined();
     expect(manifest['src/routes/_app/savings.index.tsx?tsr-split=component']).toBeTruthy();
-    for (const path of ['wallet', 'ai', 'documents', 'charts', 'videos'])
+    for (const path of ['wallet.index', 'ai', 'documents.index', 'charts', 'videos'])
       expect(manifest[`src/routes/_app/${path}.tsx?tsr-split=component`]).toBeTruthy();
     expect(manifest['src/pages/AdminDashboard.tsx']).toBeTruthy();
 
@@ -100,13 +103,17 @@ for (const locale of ['en', 'fa'] as const) {
       await page.evaluate(() => {
         document.documentElement.dataset['entryCheck'] = 'same';
       });
-      for (const path of ['/electricity']) {
-        await page.locator(`#dashboard-navigation a[href="${path}"]`).click();
-        await expect(page).toHaveURL(new RegExp(path + '$'));
-        await expect(main.getByRole('heading').first()).toBeVisible();
-        await expect(page.locator('html')).toHaveAttribute('data-entry-check', 'same');
-        expect(scripts).toEqual([]);
-      }
+      await main.locator('a[href="/electricity"]').click();
+      await expect.poll(() => scripts.some((url) => url.endsWith(catalogueChunk.file))).toBe(true);
+      await expect(
+        main.getByRole('status', { name: feedbackText('loading', locale), exact: true })
+      ).toBeVisible();
+      release();
+      await expect(page).toHaveURL(/\/electricity$/);
+      await expect(
+        main.getByRole('heading', { name: t('electricity.catalogue.title', locale), exact: true })
+      ).toBeVisible();
+      await expect(page.locator('html')).toHaveAttribute('data-entry-check', 'same');
       const header = page.getByRole('banner');
       const before = await header.boundingBox();
       for (const path of ['/savings', '/wallet', '/invoices']) {

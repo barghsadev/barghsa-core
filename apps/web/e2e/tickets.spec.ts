@@ -11,6 +11,9 @@ const profileId = '11111111-1111-4111-8111-111111111111',
   ticketId = '22222222-2222-4222-8222-222222222222';
 const key = `ticket-attachments/33333333-3333-4333-8333-333333333333/${'a'.repeat(64)}`;
 const missingKey = `ticket-attachments/33333333-3333-4333-8333-333333333333/${'b'.repeat(64)}`;
+const staffViewer = { userId: 'staff', canWrite: true, canAssignOthers: true };
+const assignedViewer = { ...staffViewer, canAssignOthers: false };
+const readOnlyViewer = { ...assignedViewer, canWrite: false };
 const item = {
   id: ticketId,
   subject: 'Delivery question',
@@ -93,6 +96,7 @@ for (const staff of [false, true])
         route.fulfill({
           json: {
             ...item,
+            ...(staff ? { viewer: staffViewer } : {}),
             attachments: [missingKey, key],
             attachmentDownloadUrls: ['https://storage.example.test/initial.pdf'],
             attachmentFiles: [
@@ -143,7 +147,7 @@ for (const staff of [false, true])
         return route.fulfill({ status: 500 });
       });
       await page.goto(staff ? '/admin/tickets' : '/tickets');
-      await page.getByRole('button', { name: item.subject, exact: true }).click();
+      await page.getByRole('link', { name: item.subject, exact: true }).click();
       const initial = page.getByRole('img', {
         name: `${documentText('preview', locale)}: initial.pdf`,
         exact: true,
@@ -215,7 +219,11 @@ for (const staff of [false, true])
         await page.route('**/api/tickets/options*', (route) =>
           route.fulfill({ json: { profiles: [], records: [] } })
         );
-        await page.getByRole('button', { name: t('tickets.create', locale), exact: true }).click();
+        await page
+          .locator('[data-slot=tickets-page]')
+          .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
+          .click();
+        await page.getByRole('link', { name: t('tickets.create', locale), exact: true }).click();
         await page.locator('#ticket-files').setInputFiles({
           name: 'new-ticket.pdf',
           mimeType: 'application/pdf',
@@ -236,6 +244,11 @@ for (const staff of [false, true])
         await createToggle.click();
         expect(transientReads).toBe(2);
         expect(reservations).toBe(0);
+        await page
+          .locator('[data-slot=tickets-page]')
+          .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
+          .click();
+        await page.getByRole('link', { name: item.subject, exact: true }).click();
       }
       denied = true;
       await page.reload();
@@ -315,7 +328,7 @@ for (const staff of [false, true])
       );
       await page.route(`**${prefix}/${ticketId}`, (route) => {
         detailReads++;
-        return route.fulfill({ json: row });
+        return route.fulfill({ json: { ...row, ...(staff ? { viewer: staffViewer } : {}) } });
       });
       await page.route(`**${prefix}/${ticketId}/comments`, (route) => route.fulfill({ json: [] }));
       await page.route('**/api/staff/tickets/assignees', (route) =>
@@ -328,7 +341,11 @@ for (const staff of [false, true])
       const path = staff ? '/admin/tickets' : '/tickets';
       await page.goto(path);
       await expect(cards).toHaveAttribute('aria-pressed', 'true');
-      await expect(records.getByRole('button', { name: item.subject, exact: true })).toBeVisible();
+      const subject = records.getByRole('link', {
+        name: item.subject,
+        exact: true,
+      });
+      await expect(subject).toBeVisible();
       await expect(records).toContainText('P1');
       await expect(records).toContainText(locale === 'fa' ? '۱۰ دقیقه پیش' : '10 minutes ago');
       const exact = await formatBrowserDate(
@@ -345,9 +362,8 @@ for (const staff of [false, true])
       await expect(disclosure).toHaveAttribute('open', '');
       if (staff) {
         await expect(records).toContainText('Support agent');
-        await expect(records.getByRole('link')).toHaveCount(0);
-      } else
-        await expect(records.getByRole('link')).toHaveAttribute('href', `/invoices/${profileId}`);
+        await expect(records.getByRole('link')).toHaveCount(1);
+      } else await expect(records.locator(`a[href="/invoices/${profileId}"]`)).toBeVisible();
       const initialReads = reads;
       await page.setViewportSize({ width: 1280, height: 900 });
       await expect(records.getByRole('table')).toBeVisible();
@@ -355,8 +371,8 @@ for (const staff of [false, true])
       await page.setViewportSize({ width: 390, height: 844 });
       await expect(records.locator('details')).toHaveAttribute('open', '');
       expect(reads).toBe(initialReads);
-      await records.getByRole('button', { name: item.subject, exact: true }).click();
-      await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeFocused();
+      await subject.click();
+      await expect(page.getByRole('heading', { name: item.subject, level: 1 })).toBeFocused();
       await expect(page.locator('[data-slot=ticket-detail] header time').first()).toHaveAttribute(
         'datetime',
         item.createdAt
@@ -371,6 +387,17 @@ for (const staff of [false, true])
       );
       await page.locator('#ticket-reply').fill('Keep this reply');
       const selectedReads = detailReads;
+      await expect(records).toHaveCount(0);
+      await expect(page).toHaveURL(path + '/' + ticketId);
+      await expect(page.locator('#ticket-reply')).toHaveValue('Keep this reply');
+      await page
+        .locator('[data-slot=tickets-page]')
+        .getByRole('link', {
+          name: tTicketForms(staff ? 'backToStaffQueue' : 'backToTickets', locale),
+          exact: true,
+        })
+        .click();
+      await expect(subject).toBeVisible();
       status = 503;
       await page.getByRole('button', { name: copy('next'), exact: true }).click();
       await expect(page.getByRole('alert')).toContainText(copy('queueError'));
@@ -378,21 +405,19 @@ for (const staff of [false, true])
       await table.click();
       await expect(records.getByRole('table')).toBeVisible();
       await cards.click();
-      await expect(records.locator('details')).toHaveAttribute('open', '');
-      await expect(page.locator('#ticket-reply')).toHaveValue('Keep this reply');
+      await expect(page.locator('#ticket-reply')).toHaveCount(0);
       expect(reads).toBe(failedReads);
       expect(detailReads).toBe(selectedReads);
       status = 200;
       await page.getByRole('button', { name: copy('retry'), exact: true }).click();
       await expect(page.getByRole('alert')).toHaveCount(0);
       expect(reads).toBe(failedReads + 1);
-      await expect(page.locator('#ticket-reply')).toHaveValue('Keep this reply');
       if (locale === 'fa') await expect(page.locator('html')).toHaveClass(/dark/);
       else await expect(page.locator('html')).not.toHaveClass(/dark/);
       expect(
         (
           await new AxeBuilder({ page })
-            .include('section.max-w-5xl')
+            .include('[data-slot=tickets-page]')
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
             .analyze()
         ).violations
@@ -432,6 +457,7 @@ async function shell(page: Page, locale = 'en', staff = false) {
     route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
   );
   await page.route('**/api/staff/tickets/teams', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/staff/tickets/assignees', (route) => route.fulfill({ json: [] }));
   await page.route('**/api/profiles', (route) =>
     route.fulfill({ json: { profiles: [], activeProfileId: null } })
   );
@@ -445,6 +471,131 @@ async function shell(page: Page, locale = 'en', staff = false) {
     route.fulfill({ json: { data: [], unread_count: 0 } })
   );
 }
+for (const locale of ['en', 'fa'] as const) {
+  test(`ticket queue previews an unread staff reply and reconciles after fast return (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const replyId = 'e1000000-0000-4000-8000-000000000001';
+    const replyText = 'The updated delivery date is Tuesday.';
+    const hiddenText = 'Private operational note';
+    let unread = true;
+    let readCount = 0;
+    let seenRequest: { replyIds: string[] } | null = null;
+    let release!: () => void;
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route('**/api/tickets?*', (route) => {
+      readCount++;
+      return route.fulfill({
+        json: {
+          data: [
+            {
+              ...item,
+              latestReply: { id: replyId, preview: replyText, createdAt: item.updatedAt },
+              hasUnreadReply: unread,
+            },
+          ],
+          totalPages: 1,
+        },
+      });
+    });
+    await page.route(`**/api/tickets/${ticketId}`, (route) => route.fulfill({ json: item }));
+    await page.route(`**/api/tickets/${ticketId}/comments`, (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: replyId,
+            body: replyText,
+            authorId: 'staff',
+            authorContext: 'staff',
+            visibility: 'public',
+            unreadReply: unread,
+            createdAt: item.updatedAt,
+          },
+          {
+            id: 'e1000000-0000-4000-8000-000000000002',
+            body: hiddenText,
+            authorId: 'staff',
+            visibility: 'internal',
+            unreadReply: true,
+            createdAt: item.updatedAt,
+          },
+        ],
+      })
+    );
+    await page.route(`**/api/tickets/${ticketId}/replies/seen`, async (route) => {
+      expect(route.request().method()).toBe('PATCH');
+      seenRequest = route.request().postDataJSON();
+      await pending;
+      unread = false;
+      return route.fulfill({ status: 204 });
+    });
+    await page.goto('/tickets');
+    await page
+      .getByRole('button', {
+        name: t(locale === 'fa' ? 'historyView.card' : 'historyView.table', locale),
+        exact: true,
+      })
+      .click();
+    const badge = page.getByText(tTicketForms('newReply', locale), { exact: true });
+    const preview = page.locator('[data-slot=ticket-reply-preview]');
+    await expect(badge).toBeVisible();
+    await expect(preview).toContainText(replyText);
+    await expect(preview.locator('time')).toHaveAttribute('datetime', item.updatedAt);
+    await page.getByRole('link', { name: item.subject, exact: true }).click();
+    await expect(page.locator('#ticket-conversation-heading')).toBeVisible();
+    await expect(page.getByText(hiddenText, { exact: true })).toHaveCount(0);
+    await expect.poll(() => seenRequest).toEqual({ replyIds: [replyId] });
+    await page
+      .locator('[data-slot=tickets-page]')
+      .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
+      .click();
+    await expect(badge).toBeVisible();
+    const initialReads = readCount;
+    release();
+    await expect(badge).toHaveCount(0);
+    expect(readCount).toBe(initialReads + 1);
+    await expect(preview).toContainText(replyText);
+  });
+}
+
+test('new support requests select only context returned by the owner-scoped options', async ({
+  page,
+}) => {
+  await shell(page);
+  const reads: URL[] = [];
+  await page.route('**/api/tickets/options**', (route) => {
+    const url = new URL(route.request().url());
+    reads.push(url);
+    const owned = url.searchParams.get('relatedId') === ticketId;
+    const scoped = url.searchParams.get('profileId') === profileId;
+    return route.fulfill({
+      json: {
+        profiles: [{ id: profileId, title: 'Example profile' }],
+        records:
+          owned && scoped ? [{ id: ticketId, type: 'invoice', created_at: item.createdAt }] : [],
+        ...(owned && !scoped ? { suggestedProfileId: profileId } : {}),
+      },
+    });
+  });
+  await page.goto('/tickets/new?relatedType=invoice&relatedId=' + ticketId);
+  await expect(page.locator('#ticket-profile')).toHaveValue(profileId);
+  await expect(page.locator('#ticket-record')).toHaveValue('invoice:' + ticketId);
+  await expect(page.locator('#ticket-record')).toHaveAccessibleDescription(
+    `${tTicketForms('recordReference', 'en')} ${ticketId}`
+  );
+  expect(reads.map((url) => Object.fromEntries(url.searchParams))).toEqual([
+    { relatedType: 'invoice', relatedId: ticketId },
+    { relatedType: 'invoice', relatedId: ticketId, profileId, recordPage: '1' },
+  ]);
+  await page.goto('/tickets/new?relatedType=invoice&relatedId=' + profileId);
+  await expect(page.getByText(tTicketForms('relatedUnavailable', 'en'))).toBeVisible();
+  await expect(page.locator('#ticket-profile')).toHaveValue('');
+  await expect(page.locator('#ticket-record')).toHaveCount(0);
+});
+
 for (const locale of ['en', 'fa'])
   test(`customer creates a contract-linked attachment ticket without losing uploads on a failed submit (${locale})`, async ({
     page,
@@ -543,7 +694,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: locale === 'en' ? 'Table' : 'جدول', exact: true })
       .click();
     await page
-      .getByRole('button', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
+      .getByRole('link', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
       .click();
     await expect(page.locator('#ticket-subject')).toHaveAttribute('aria-required', 'true');
     await expect(page.locator('#ticket-body')).toHaveAttribute('aria-required', 'true');
@@ -569,17 +720,22 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: tTicketForms('retryOriginal', locale), exact: true })
       .click();
-    await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeFocused();
+    await expect(page.getByRole('heading', { name: item.subject, level: 1 })).toBeFocused();
+    await expect(page).toHaveURL('/tickets/' + ticketId);
+    await expect(
+      page.getByRole('link', { name: locale === 'en' ? 'Open attachment 1' : 'مشاهده پیوست 1' })
+    ).toHaveAttribute('href', 'https://storage.example.test/fixed');
+    await page
+      .locator('[data-slot=tickets-page]')
+      .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
+      .click();
     await expect(
       page.getByRole('cell', { name: locale === 'en' ? 'Billing' : 'سفارش‌ها', exact: true })
     ).toBeVisible();
     await expect(
-      page.getByRole('link', { name: locale === 'en' ? 'Open attachment 1' : 'مشاهده پیوست 1' })
-    ).toHaveAttribute('href', 'https://storage.example.test/fixed');
-    await expect(
       page
         .getByRole('row')
-        .filter({ has: page.getByRole('button', { name: item.subject, exact: true }) })
+        .filter({ has: page.getByRole('link', { name: item.subject, exact: true }) })
     ).toContainText(
       await formatBrowserDate(
         page,
@@ -627,14 +783,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(invoiceLink).toHaveAttribute('href', `/invoices/${profileId}`);
     const orderRow = page
       .getByRole('row')
-      .filter({ has: page.getByRole('button', { name: 'Order question', exact: true }) });
-    await expect(orderRow.getByRole('link')).toHaveCount(0);
+      .filter({ has: page.getByRole('link', { name: 'Order question', exact: true }) });
+    await expect(orderRow.getByRole('link')).toHaveCount(1);
     await expect(orderRow).toContainText(
       locale === 'en' ? 'Record view is unavailable.' : 'نمایش این رکورد در دسترس نیست.'
     );
-    await page.getByRole('button', { name: item.subject, exact: true }).click();
-    await expect(invoiceLink).toHaveCount(2);
-    await expect(invoiceLink.nth(1)).toHaveAttribute('href', `/invoices/${profileId}`);
+    await page.getByRole('link', { name: item.subject, exact: true }).click();
+    await expect(invoiceLink).toHaveCount(1);
+    await expect(invoiceLink).toHaveAttribute('href', `/invoices/${profileId}`);
     await expect(
       page.getByRole('region', { name: locale === 'en' ? 'Customer information' : 'اطلاعات مشتری' })
     ).toHaveCount(0);
@@ -677,6 +833,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({
         json: {
           ...item,
+          viewer: readOnlyViewer,
           relatedEntityType: 'invoice',
           relatedEntityId: profileId,
           customer: {
@@ -693,7 +850,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: [] })
     );
     await page.goto('/admin/tickets');
-    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    await page.getByRole('link', { name: item.subject, exact: true }).click();
     const panel = page.getByRole('region', {
       name: locale === 'en' ? 'Customer information' : 'اطلاعات مشتری',
     });
@@ -713,13 +870,14 @@ for (const locale of ['en', 'fa'] as const) {
     expect(
       (
         await new AxeBuilder({ page })
-          .include('section.max-w-5xl')
+          .include('[data-slot=tickets-page]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze()
       ).violations
     ).toEqual([]);
     currentProfile = null;
-    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    await page.reload();
+    await expect(panel).toBeVisible();
     await expect(panel.getByRole('link')).toHaveCount(0);
     await expect(panel.getByText('Customer profile', { exact: true })).toHaveCount(0);
     await expect(panel.getByText('contact@example.test', { exact: true })).toBeVisible();
@@ -753,7 +911,9 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.route('**/api/staff/tickets/assignees', (route) =>
     route.fulfill({ json: [{ id: 'staff', name: 'Support colleague' }] })
   );
-  await page.route(`**/api/staff/tickets/${ticketId}`, (route) => route.fulfill({ json: current }));
+  await page.route(`**/api/staff/tickets/${ticketId}`, (route) =>
+    route.fulfill({ json: { ...current, viewer: staffViewer } })
+  );
   await page.route(`**/api/staff/tickets/${ticketId}/assign`, (route) => {
     const input = route.request().postDataJSON();
     expect(input.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
@@ -811,13 +971,18 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
     return route.fulfill({ json: current });
   });
   await page.goto('/admin/tickets');
-  await page.getByRole('button', { name: item.subject, exact: true }).click();
+  await page.getByRole('link', { name: item.subject, exact: true }).click();
   await page.locator('#ticket-team').selectOption(profileId);
   await page.locator('#ticket-assignee').selectOption('staff');
   await page.getByRole('button', { name: 'Assign ticket', exact: true }).click();
   await page.getByRole('checkbox', { name: 'Internal note, staff only' }).check();
   await page.locator('#ticket-reply').fill('Private reasoning');
-  await page.getByRole('button', { name: 'Send reply', exact: true }).click();
+  await expect(
+    page.getByText(tTicketForms('internalVisibility', 'en'), { exact: true })
+  ).toBeVisible();
+  await page
+    .getByRole('button', { name: tTicketForms('saveInternalNote', 'en'), exact: true })
+    .click();
   await expect(
     page.getByRole('alert').getByText(tTicketForms('uncertain', 'en'), { exact: true })
   ).toHaveText(tTicketForms('uncertain', 'en'));
@@ -888,7 +1053,7 @@ test('staff with broad read access only edit tickets assigned to them', async ({
     })
   );
   await page.route(`**/api/staff/tickets/${ticketId}`, (route) =>
-    route.fulfill({ json: { ...item, assignedTo, status: 'in_progress' } })
+    route.fulfill({ json: { ...item, assignedTo, status: 'in_progress', viewer: assignedViewer } })
   );
   await page.route(`**/api/staff/tickets/${ticketId}/comments`, (route) =>
     route.fulfill({
@@ -904,13 +1069,13 @@ test('staff with broad read access only edit tickets assigned to them', async ({
     })
   );
   await page.goto('/admin/tickets');
-  await page.getByRole('button', { name: item.subject, exact: true }).click();
+  await page.getByRole('link', { name: item.subject, exact: true }).click();
   await expect(page.getByText('Visible internal history', { exact: true })).toBeVisible();
   await expect(page.locator('#ticket-reply')).toHaveCount(0);
   await expect(page.locator('#ticket-next-status')).toHaveCount(0);
   await expect(page.locator('#ticket-assignee')).toHaveCount(0);
   assignedTo = 'staff';
-  await page.getByRole('button', { name: item.subject, exact: true }).click();
+  await page.reload();
   await expect(page.locator('#ticket-reply')).toBeVisible();
   await expect(page.locator('#ticket-next-status')).toBeVisible();
 });
@@ -967,10 +1132,14 @@ for (const { locale, darkMode } of [
     await page.goto('/tickets');
     if (darkMode) await expect(page.locator('html')).toHaveClass(/dark/);
     else await expect(page.locator('html')).not.toHaveClass(/dark/);
-    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    await page.getByRole('link', { name: item.subject, exact: true }).click();
     await expect(page.getByText('A support reply', { exact: true })).toBeVisible();
     await page
-      .getByRole('button', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
+      .locator('[data-slot=tickets-page]')
+      .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
+      .click();
+    await page
+      .getByRole('link', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
       .click();
     await page.locator('#ticket-subject').fill('A readable subject');
     await page.locator('#ticket-body').fill('A readable question');
@@ -988,7 +1157,7 @@ for (const { locale, darkMode } of [
     expect(
       (
         await new AxeBuilder({ page })
-          .include('section.max-w-5xl')
+          .include('[data-slot=tickets-page]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze()
       ).violations
@@ -1020,23 +1189,28 @@ test('assigned-only staff see no reassignment control and stale lists cannot rep
     });
   });
   await page.route(`**/api/staff/tickets/${ticketId}`, (route) =>
-    route.fulfill({ json: { ...item, status: 'open', assignedTo: 'staff' } })
+    route.fulfill({
+      json: { ...item, status: 'open', assignedTo: 'staff', viewer: assignedViewer },
+    })
   );
   await page.route(`**/api/staff/tickets/${ticketId}/comments`, (route) =>
     route.fulfill({ json: [] })
   );
   await page.goto('/admin/tickets');
-  await page.getByRole('button', { name: item.subject, exact: true }).click();
+  await page.getByRole('link', { name: item.subject, exact: true }).click();
   await expect(page.locator('#ticket-assignee')).toHaveCount(0);
   await page.locator('#ticket-status-reason').fill('Staff follow-up');
   await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeEnabled();
+  await page
+    .getByRole('link', { name: tTicketForms('backToStaffQueue', 'en'), exact: true })
+    .click();
   const request = page.waitForRequest((request) => request.url().includes('search=old'));
   await page.locator('#ticket-search').fill('old');
   await request;
   await page.locator('#ticket-search').fill('new');
-  await expect(page.getByRole('button', { name: item.subject, exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: item.subject, exact: true })).toBeVisible();
   release();
-  await expect(page.getByRole('button', { name: 'Stale result', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Stale result', exact: true })).toHaveCount(0);
 });
 test('ticket deep links remain available without a profile or active profile selection', async ({
   page,
@@ -1057,7 +1231,8 @@ test('ticket deep links remain available without a profile or active profile sel
   await page.route(`**/api/tickets/${ticketId}`, (route) => route.fulfill({ json: item }));
   await page.route(`**/api/tickets/${ticketId}/comments`, (route) => route.fulfill({ json: [] }));
   await page.goto(`/tickets?ticketId=${ticketId}`);
-  await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeVisible();
+  await expect(page).toHaveURL(`/tickets/${ticketId}`);
+  await expect(page.getByRole('heading', { name: item.subject, level: 1 })).toBeVisible();
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });
 
@@ -1101,7 +1276,9 @@ for (const staff of [false, true])
             },
           })
       );
-      await page.route(`**${prefix}/${ticketId}`, (route) => route.fulfill({ json: item }));
+      await page.route(`**${prefix}/${ticketId}`, (route) =>
+        route.fulfill({ json: { ...item, ...(staff ? { viewer: staffViewer } : {}) } })
+      );
       await page.route('**/api/staff/tickets/assignees', (route) =>
         route.fulfill({ json: [{ id: 'staff', name: 'Support colleague' }] })
       );
@@ -1204,7 +1381,7 @@ for (const staff of [false, true])
         return route.fulfill({ status: 201, json: { status: 'recorded', key } });
       });
       await page.goto(staff ? '/admin/tickets' : '/tickets');
-      await page.getByRole('button', { name: item.subject, exact: true }).click();
+      await page.getByRole('link', { name: item.subject, exact: true }).click();
       const composer = page.locator('[data-slot=ticket-reply-input]'),
         reply = page.locator('#ticket-reply');
       if (staff) await composer.getByRole('checkbox').check();
@@ -1285,7 +1462,12 @@ for (const staff of [false, true])
       await composer
         .getByRole('button', { name: `${copy('removeFile')} dropped.pdf`, exact: true })
         .click();
-      await composer.getByRole('button', { name: copy('send'), exact: true }).click();
+      await composer
+        .getByRole('button', {
+          name: staff ? tTicketForms('saveInternalNote', locale) : copy('send'),
+          exact: true,
+        })
+        .click();
       await expect(page.getByRole('alert')).toBeVisible();
       await expect(reply).not.toHaveValue('');
       await expect(
@@ -1336,27 +1518,27 @@ for (const staff of [false, true])
           type: 'contract',
           destination: 'contract',
           id: profileId,
-          href: `${staff ? '/admin/contracts' : '/contracts'}?contractId=${profileId}`,
+          href: staff ? `/admin/contracts/${profileId}` : `/contracts/${profileId}`,
         },
         {
           type: 'invoice',
           destination: 'invoice',
           id: profileId,
-          href: staff ? `/admin/invoices?invoiceId=${profileId}` : `/invoices/${profileId}`,
+          href: staff ? `/admin/invoices/${profileId}` : `/invoices/${profileId}`,
         },
         {
           type: 'order',
           destination: 'electricity_order',
           id: profileId,
           href: staff
-            ? `/admin/electricity-orders?orderId=${profileId}`
+            ? `/admin/electricity-orders/${profileId}`
             : `/electricity/orders/${profileId}`,
         },
         {
           type: 'order',
           destination: 'saving_order',
           id: savingId,
-          href: staff ? `/admin/saving-orders?orderId=${savingId}` : `/savings/orders/${savingId}`,
+          href: staff ? `/admin/saving-orders/${savingId}` : `/savings/orders/${savingId}`,
         },
       ];
       const rows = records.map((record, index) => ({
@@ -1380,7 +1562,9 @@ for (const staff of [false, true])
           })
       );
       for (const row of rows) {
-        await page.route(`**${prefix}/${row.id}`, (route) => route.fulfill({ json: row }));
+        await page.route(`**${prefix}/${row.id}`, (route) =>
+          route.fulfill({ json: { ...row, ...(staff ? { viewer: staffViewer } : {}) } })
+        );
         await page.route(`**${prefix}/${row.id}/comments`, (route) => route.fulfill({ json: [] }));
       }
       await page.route('**/api/staff/tickets/assignees', (route) => route.fulfill({ json: [] }));
@@ -1467,16 +1651,12 @@ for (const staff of [false, true])
         lines: [],
       };
       let invoiceReads = 0;
-      await page.route('**/api/admin/invoices/ledger?*', (route) => {
-        expect(new URL(route.request().url()).searchParams.get('invoiceId')).toBe(profileId);
+      await page.route(`**/api/admin/invoices/ledger/${profileId}`, (route) => {
         invoiceReads++;
-        return route.fulfill({ json: { items: [invoice], nextCursor: null } });
-      });
-      await page.route(`**/api/admin/invoices/ledger/${profileId}`, (route) =>
-        route.fulfill({
+        return route.fulfill({
           json: { ...invoice, activity: { payments: [], bankReceipts: [], refunds: [] } },
-        })
-      );
+        });
+      });
       await page.route(`**/api/invoices/${profileId}`, (route) => {
         invoiceReads++;
         return route.fulfill({
@@ -1593,12 +1773,12 @@ for (const staff of [false, true])
       await table.click();
       for (const record of records)
         await expect(queue.locator(`a[href="${record.href}"]`)).toBeVisible();
-      await queue.getByRole('button', { name: rows[0]!.subject, exact: true }).click();
+      await queue.getByRole('link', { name: rows[0]!.subject, exact: true }).click();
       const detail = page.locator('[data-slot=ticket-detail]');
       await expect(detail.locator('a')).toHaveAttribute('href', records[0]!.href);
       await detail.locator('a').focus();
       await page.keyboard.press('Enter');
-      await expect(page).toHaveURL(new RegExp(`contractId=${profileId}`));
+      await expect(page).toHaveURL(records[0]!.href);
       await expect(page.getByText('Published electricity terms', { exact: true })).toBeVisible();
       for (const record of records.slice(1)) {
         await page.goto(path);
@@ -1609,7 +1789,7 @@ for (const staff of [false, true])
           await expect.poll(() => invoiceReads).toBeGreaterThan(0);
           if (staff)
             await expect(
-              page.locator('section[aria-labelledby=invoice-ledger-title]')
+              page.locator('section[aria-labelledby=invoice-ledger-detail-title]')
             ).toContainText(profileId);
           else await expect(page.getByTestId(`invoice-card-${profileId}`)).toBeVisible();
         } else if (record.destination === 'electricity_order')

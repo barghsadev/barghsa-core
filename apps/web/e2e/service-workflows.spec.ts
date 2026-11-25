@@ -6,6 +6,10 @@ import { DEFAULT_SERVICE_WORKFLOWS, type ServiceWorkflowView } from '@barghsa/sh
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import { t } from '@barghsa/i18n/admin-ui';
 import { loginFormText } from '@barghsa/i18n/login-forms';
+import { feedbackText } from '@barghsa/i18n/feedback';
+
+const workflows = '/admin/service-targets/workflows';
+const urgent = `${workflows}/ticket_urgent`;
 
 for (const locale of ['en', 'fa'] as const) {
   test(`staff reviews and activates a previous workflow version (${locale})`, async ({ page }) => {
@@ -24,6 +28,7 @@ for (const locale of ['en', 'fa'] as const) {
     };
     const requests: unknown[] = [];
     let stepUps = 0;
+    let mismatch = true;
     await page.route(`**${path}`, (route) => {
       expect(route.request().method()).toBe('GET');
       return route.fulfill({ json: view });
@@ -40,11 +45,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**${path}/restore`, (route) => {
       expect(route.request().method()).toBe('POST');
       requests.push(route.request().postDataJSON());
+      if (mismatch) return route.fulfill({ json: { ...view, version: 999 } });
       view = { ...view, policy: prior, version: 3 };
       return route.fulfill({ json: view });
     });
-    await page.goto('/admin/service-targets');
+    await page.goto(workflows);
     const section = page.getByRole('region', { name: copy('title'), exact: true });
+    await expect(section.locator('form')).toHaveCount(0);
+    await expect(section.locator(`a[href^="${workflows}/"]`)).toHaveCount(12);
     await section.getByRole('button', { name: copy('history'), exact: true }).press('Enter');
     const restore = section.getByRole('button', {
       name: copy('restoreVersion').replace('{version}', '1'),
@@ -54,12 +62,33 @@ for (const locale of ['en', 'fa'] as const) {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('ticket_urgent'));
     expect(requests).toEqual([]);
-    await dialog.locator('#team-step-up-password').fill('test-only');
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+    const password = dialog.locator('#team-step-up-password');
+    await password.fill('test-only');
+    await confirm.click();
+    await expect(confirm).toBeDisabled();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+    await expect(section).toContainText(copy('unverified'));
+    await expect(restore).toBeDisabled();
+    await section.getByRole('button', { name: copy('reset'), exact: true }).click();
+    mismatch = false;
+    await restore.click();
+    await password.fill('test-only');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
+    await section.locator(`a[href="${urgent}"]`).click();
+    await expect(page).toHaveURL(urgent);
     await expect(section.locator('#workflow-hours-ticket_urgent')).toHaveValue('8');
-    expect(stepUps).toBe(1);
-    expect(requests).toEqual([{ sourceId, expectedVersion: 2 }]);
+    expect(stepUps).toBe(2);
+    expect(requests).toEqual([
+      { sourceId, expectedVersion: 2 },
+      { sourceId, expectedVersion: 2 },
+    ]);
+    await page.goto(`${workflows}/unknown-workflow`);
+    await expect(
+      page.getByRole('heading', { name: feedbackText('notFound', locale), exact: true })
+    ).toBeVisible();
   });
 }
 
@@ -110,56 +139,48 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/service-targets');
     const main = page.getByRole('main');
     const workflow = main.getByRole('region', { name: copy('workflow.title'), exact: true });
-    const enabled = workflow.getByRole('checkbox', {
-      name: copy('workflow.enabled'),
-      exact: true,
-    });
+    const enabled = workflow.getByRole('checkbox', { name: copy('workflow.enabled'), exact: true });
     const editor = (kind: 'targets' | 'escalation') =>
       main.getByRole('group', { name: copy(`admin.${kind}.formTitle`), exact: true });
-    const refresh = (kind: 'targets' | 'escalation') =>
-      editor(kind).getByRole('button', { name: copy(`admin.${kind}.refresh`), exact: true });
     const workflowRefresh = workflow.getByRole('button', {
       name: copy('workflow.refresh'),
       exact: true,
     });
     const targets = editor('targets').locator('#target-ticket');
     const escalation = editor('escalation').locator('#escalation-ticketLevel2');
+    await main.locator('a[href="/admin/service-targets/workflows"]').click();
+    await workflow.locator(`a[href="${urgent}"]`).click();
     await expect(enabled).toBeEnabled();
-    await expect(targets).toHaveValue('24');
-    await expect(escalation).toHaveValue('36');
-    await escalation.fill('72');
+    expect(reads.targets).toBe(0);
+    expect(reads.escalation).toBe(0);
+    const workflowReads = reads.workflows;
+    expect(workflowReads).toBeGreaterThan(0);
     denied = 'targets';
-    await refresh('targets').press('Enter');
+    await workflowRefresh.press('Enter');
+    await expect(workflow.getByRole('alert')).toHaveText(copy('workflow.forbidden'));
+    await expect(enabled).toHaveCount(0);
+    await page.goto('/admin/service-targets/response-times');
     await expect(editor('targets').getByRole('alert')).toContainText(
       copy('admin.targets.forbidden')
     );
     await expect(targets).toHaveCount(0);
-    await expect(enabled).toHaveCount(0);
-    await expect(escalation).toHaveValue('72');
-    expect(reads).toEqual({ targets: 2, escalation: 1, workflows: 1 });
-    await workflowRefresh.press('Enter');
-    await expect(workflow.getByRole('alert')).toHaveText(copy('workflow.forbidden'));
-    await expect(enabled).toHaveCount(0);
-    expect(reads.workflows).toBe(2);
-    denied = null;
-    await refresh('targets').press('Enter');
-    await expect(targets).toHaveValue('24');
-    await workflowRefresh.press('Enter');
-    await expect(enabled).toBeEnabled();
-    await expect(escalation).toHaveValue('72');
-    await targets.fill('60');
+    await page.goto('/admin/service-targets/escalation');
+    await expect(escalation).toHaveValue('36');
+    expect(reads).toEqual({ targets: 1, escalation: 1, workflows: workflowReads + 1 });
     denied = 'escalation';
-    await refresh('escalation').press('Enter');
+    await editor('escalation')
+      .getByRole('button', { name: copy('admin.escalation.refresh'), exact: true })
+      .press('Enter');
     await expect(editor('escalation').getByRole('alert')).toContainText(
       copy('admin.escalation.forbidden')
     );
-    await expect(escalation).toHaveCount(0);
-    await expect(enabled).toHaveCount(0);
-    await expect(targets).toHaveValue('60');
-    expect(reads).toEqual({ targets: 3, escalation: 2, workflows: 3 });
+    await page.goto('/admin/service-targets/response-times');
+    await expect(targets).toHaveValue('24');
+    denied = null;
+    await page.goto(urgent);
+    await expect(enabled).toBeEnabled();
     expired = true;
-    if (locale === 'fa') await workflowRefresh.press('Enter');
-    else await refresh('targets').press('Enter');
+    await workflowRefresh.press('Enter');
     await expect(
       main.getByRole('alert').filter({ hasText: loginFormText('sessionEnded', locale) })
     ).toBeVisible();
@@ -214,13 +235,17 @@ for (const width of [390, 1440])
         await page.route('**/api/auth/step-up', (route) =>
           route.fulfill({ json: { verified: true } })
         );
-        await page.goto('/admin/service-targets');
+        await page.goto(urgent);
         const section = page.getByRole('region', {
           name: text('title'),
           exact: true,
           includeHidden: true,
         });
-        const save = section.getByRole('button', { name: text('save'), exact: true });
+        const save = section.getByRole('button', { name: text('reviewChanges'), exact: true });
+        await expect(section.locator('#workflow-select')).toHaveCount(0);
+        await expect(
+          section.getByRole('link', { name: text('backToWorkflows'), exact: true })
+        ).toHaveAttribute('href', workflows);
         await section.getByRole('checkbox', { name: text('enabled'), exact: true }).check();
         const hours = section.locator('#workflow-hours-ticket_urgent');
         await expect(hours).toHaveAttribute('aria-required', 'true');

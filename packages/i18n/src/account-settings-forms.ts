@@ -1,6 +1,10 @@
 import type { Locale } from './app.js';
 export const en: Record<string, string> = {
   usernameInvalid: 'Enter a valid email or international mobile number.',
+  usernameHelp: 'You’ll verify both your current and new sign-in addresses.',
+  usernameCodes: 'Verify both addresses',
+  contactCode: 'Verify this contact',
+  notSet: 'Not set',
   emailInvalid: 'Enter a valid email address.',
   mobileInvalid: 'Enter a valid international or Iranian mobile number.',
   otpInvalid: 'Enter the six-digit verification code.',
@@ -17,6 +21,10 @@ export const en: Record<string, string> = {
 };
 export const fa: Record<string, string> = {
   usernameInvalid: 'ایمیل یا شماره موبایل بین‌المللی معتبر وارد کنید.',
+  usernameHelp: 'برای تغییر نام کاربری، نشانی ورود فعلی و جدید را تأیید می‌کنید.',
+  usernameCodes: 'تأیید هر دو نشانی',
+  contactCode: 'تأیید روش تماس',
+  notSet: 'ثبت نشده',
   emailInvalid: 'ایمیل معتبر وارد کنید.',
   mobileInvalid: 'شماره موبایل بین‌المللی یا ایرانی معتبر وارد کنید.',
   otpInvalid: 'کد تأیید شش‌رقمی را وارد کنید.',

@@ -1,4 +1,9 @@
-import { ConfirmationFields } from '@barghsa/ui';
+import { ConfirmationFields, FinancialReviewSummary } from '@barghsa/ui';
+import {
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+  StickyRecordEditorActions,
+} from '../components/StickyRecordEditorActions.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
@@ -699,7 +704,15 @@ export function ElectricityOrderRevisionForm({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {multiline ? (
-              <Textarea {...field} aria-required="true" disabled={locked} maxLength={maxLength} />
+              <Textarea
+                {...field}
+                dir="auto"
+                rows={2}
+                className="min-h-14"
+                aria-required="true"
+                disabled={locked}
+                maxLength={maxLength}
+              />
             ) : (
               <Input
                 {...field}
@@ -712,345 +725,363 @@ export function ElectricityOrderRevisionForm({
                 disabled={locked}
                 maxLength={maxLength}
                 inputMode={numeric ? 'numeric' : 'text'}
+                dir={numeric ? 'ltr' : 'auto'}
               />
             )}
           </FormControl>
-          <FormDescription>{copy('help')}</FormDescription>
-          <div className="grid">
-            <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-              {messages[name]}
-            </p>
-            <FormMessage className="col-start-1 row-start-1" />
-          </div>
+          {multiline ? (
+            <FormDescription>{copy('responseHelp')}</FormDescription>
+          ) : (
+            <FormDescription className="sr-only">{copy('help')}</FormDescription>
+          )}
+          <FormMessage />
         </FormItem>
       )}
     />
   );
-  const message = (name: keyof ElectricityRevisionDraft) => (
+  const fieldFeedback = (
     <>
-      <FormDescription>{copy('help')}</FormDescription>
-      <div className="grid">
-        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-          {messages[name]}
-        </p>
-        <FormMessage className="col-start-1 row-start-1" />
-      </div>
+      <FormDescription className="sr-only">{copy('help')}</FormDescription>
+      <FormMessage />
     </>
   );
   if (!live) return <p role="alert">{t('electricity.order.revision.error', locale)}</p>;
   return (
-    <section className="space-y-4 border-t pt-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h3 className="font-semibold">{t('electricity.order.revision.title', locale)}</h3>
-      <p className="text-sm text-muted-foreground">
-        {t('electricity.order.revision.description', locale)}
-      </p>
+    <section className="min-w-0 space-y-3" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <Form {...form}>
         <form
           noValidate
           data-testid="electricity-revision-form"
           onSubmit={(event) => void preview(event)}
-          className="space-y-4"
+          onFocus={keepRecordFieldVisible}
+          className={recordEditorFormSurface}
         >
-          {advanced ? (
-            <>
-              {(['startAt', 'endAt'] as const).map((name) => (
+          <div className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-5">
+            <h2 className="text-base font-semibold">
+              {t('electricity.order.revision.title', locale)}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {t('electricity.order.revision.description', locale)}
+            </p>
+          </div>
+          <div className="space-y-4 px-4 py-4 sm:px-5">
+            {advanced ? (
+              <>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {(['startAt', 'endAt'] as const).map((name) => (
+                    <FormField
+                      key={name}
+                      control={form.control}
+                      name={name}
+                      render={({ field }) => (
+                        <FormItem
+                          id={name === 'startAt' ? 'revision-start-date' : 'revision-end-date'}
+                        >
+                          <FormLabel
+                            id={name === 'startAt' ? 'revision-start-label' : 'revision-end-label'}
+                          >
+                            {t(
+                              name === 'startAt'
+                                ? 'electricity.advanced.start'
+                                : 'electricity.advanced.end',
+                              locale
+                            )}
+                          </FormLabel>
+                          <FormControl>
+                            <RevisionDateControl
+                              locale={locale}
+                              timezone="Asia/Tehran"
+                              disabled={locked}
+                              value={
+                                parseJalaliDateTime(field.value)
+                                  ? new Date(parseJalaliDateTime(field.value)!)
+                                  : undefined
+                              }
+                              onChange={(date) =>
+                                field.onChange(date ? formatJalaliDateTime(date) : '')
+                              }
+                              onBlur={field.onBlur}
+                              triggerProps={{
+                                ref: field.ref,
+                                'aria-required': true,
+                                'aria-labelledby':
+                                  name === 'startAt'
+                                    ? 'revision-start-label'
+                                    : 'revision-end-label',
+                              }}
+                            />
+                          </FormControl>
+                          {fieldFeedback}
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
+                <fieldset className="min-w-0 space-y-2" aria-describedby="revision-quantities-help">
+                  <legend className="text-sm font-medium">
+                    {t('electricity.advanced.stepProducts', locale)}
+                  </legend>
+                  <p id="revision-quantities-help" className="text-sm text-muted-foreground">
+                    {copy('quantitiesHelp')}
+                  </p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {systemKeys.map((key) =>
+                      key === 'green' && mandatoryGreen ? (
+                        <div key={key}>
+                          <p className="text-sm">
+                            {t('electricity.advanced.greenDerived', locale)}
+                          </p>
+                        </div>
+                      ) : (
+                        text(
+                          systemFields[key],
+                          `${order.lines?.find((line) => line.systemKey === key)?.title?.[locale] ?? t(`electricity.order.revision.${key}`, locale)} (kWh)`,
+                          `revision-${key.replace('_', '-')}`,
+                          19,
+                          true
+                        )
+                      )
+                    )}
+                  </div>
+                </fieldset>
+              </>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
                 <FormField
-                  key={name}
                   control={form.control}
-                  name={name}
+                  name="period"
                   render={({ field }) => (
-                    <FormItem id={name === 'startAt' ? 'revision-start-date' : 'revision-end-date'}>
-                      <FormLabel
-                        id={name === 'startAt' ? 'revision-start-label' : 'revision-end-label'}
-                      >
-                        {t(
-                          name === 'startAt'
-                            ? 'electricity.advanced.start'
-                            : 'electricity.advanced.end',
-                          locale
-                        )}
-                      </FormLabel>
+                    <FormItem id="revision-period">
+                      <FormLabel>{t('electricity.order.period.selection', locale)}</FormLabel>
                       <FormControl>
-                        <RevisionDateControl
-                          locale={locale}
-                          timezone="Asia/Tehran"
-                          disabled={locked}
-                          value={
-                            parseJalaliDateTime(field.value)
-                              ? new Date(parseJalaliDateTime(field.value)!)
-                              : undefined
-                          }
-                          onChange={(date) =>
-                            field.onChange(date ? formatJalaliDateTime(date) : '')
-                          }
-                          onBlur={field.onBlur}
-                          triggerProps={{
-                            ref: field.ref,
-                            'aria-required': true,
-                            'aria-labelledby':
-                              name === 'startAt' ? 'revision-start-label' : 'revision-end-label',
-                          }}
-                        />
+                        <NativeSelect
+                          {...field}
+                          aria-required="true"
+                          className="w-full"
+                          disabled={locked || !periods.length}
+                        >
+                          {periods.map((option) => (
+                            <option key={option.key} value={option.key}>
+                              {t(periodLabels[option.key], locale)}
+                            </option>
+                          ))}
+                        </NativeSelect>
                       </FormControl>
-                      {message(name)}
+                      {fieldFeedback}
                     </FormItem>
                   )}
                 />
-              ))}
-              <fieldset className="min-w-0 space-y-2" aria-describedby="revision-quantities-help">
-                <legend className="text-sm font-medium">
-                  {t('electricity.advanced.stepProducts', locale)}
-                </legend>
-                <p id="revision-quantities-help" className="text-sm text-muted-foreground">
-                  {copy('quantitiesHelp')}
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {systemKeys.map((key) =>
-                    key === 'green' && mandatoryGreen ? (
-                      <div key={key}>
-                        <p className="text-sm">{t('electricity.advanced.greenDerived', locale)}</p>
-                      </div>
-                    ) : (
-                      text(
-                        systemFields[key],
-                        `${order.lines?.find((line) => line.systemKey === key)?.title?.[locale] ?? t(`electricity.order.revision.${key}`, locale)} (kWh)`,
-                        `revision-${key.replace('_', '-')}`,
-                        19,
-                        true
-                      )
-                    )
-                  )}
-                </div>
-              </fieldset>
-            </>
-          ) : (
-            <>
-              <FormField
-                control={form.control}
-                name="period"
-                render={({ field }) => (
-                  <FormItem id="revision-period">
-                    <FormLabel>{t('electricity.order.period.selection', locale)}</FormLabel>
-                    <FormControl>
-                      <NativeSelect
-                        {...field}
-                        aria-required="true"
-                        className="w-full"
-                        disabled={locked || !periods.length}
-                      >
-                        {periods.map((option) => (
-                          <option key={option.key} value={option.key}>
-                            {t(periodLabels[option.key], locale)}
-                          </option>
-                        ))}
-                      </NativeSelect>
-                    </FormControl>
-                    {message('period')}
-                  </FormItem>
+                {text(
+                  'totalKwh',
+                  t('electricity.order.quantity', locale),
+                  'revision-quantity',
+                  19,
+                  true
                 )}
-              />
+              </div>
+            )}
+            <fieldset className="min-w-0 space-y-2.5 border-t pt-3">
+              <legend className="sr-only">{t('electricity.order.deliveryAddress', locale)}</legend>
               {text(
-                'totalKwh',
-                `${t('electricity.order.quantity', locale)} (kWh)`,
-                'revision-quantity',
-                19,
-                true
+                'fullAddress',
+                t('electricity.order.deliveryAddress', locale),
+                'revision-address',
+                500
               )}
-            </>
-          )}
-          {text('giftCode', t('electricity.order.giftCode', locale), 'revision-gift', 100)}
-          {text(
-            'fullAddress',
-            t('electricity.order.deliveryAddress', locale),
-            'revision-address',
-            500
-          )}
-          <div className="grid gap-3 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="provinceId"
-              render={({ field }) => (
-                <FormItem id="revision-province">
-                  <FormLabel>{t('electricity.order.revision.province', locale)}</FormLabel>
-                  <FormControl>
-                    <NativeSelect
-                      {...field}
-                      aria-required="true"
-                      className="w-full"
-                      disabled={locked || !provinceOptions.ready}
-                      onChange={(event) => {
-                        field.onChange(event);
-                        form.setValue('cityId', '', {
-                          shouldValidate: !!form.formState.touchedFields.cityId,
-                        });
-                      }}
-                    >
-                      <option value="">
-                        {t('settings.addresses.form.provincePlaceholder', locale)}
-                      </option>
-                      {!provinces.some((place) => place.id === provinceId) && provinceId ? (
-                        <option value={provinceId}>
-                          {t('electricity.order.revision.currentProvince', locale)}
-                        </option>
-                      ) : null}
-                      {provinces.map((place) => (
-                        <option key={place.id} value={place.id}>
-                          {locale === 'fa' ? place.nameFa : place.nameEn}
-                        </option>
-                      ))}
-                    </NativeSelect>
-                  </FormControl>
-                  {message('provinceId')}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="cityId"
-              render={({ field }) => (
-                <FormItem id="revision-city">
-                  <FormLabel>{t('electricity.order.revision.city', locale)}</FormLabel>
-                  <FormControl>
-                    <DependentSelect
-                      {...field}
-                      aria-required="true"
-                      className="w-full rounded-md border bg-background p-2 pointer-coarse:h-11"
-                      disabled={locked}
-                      dependencyValue={provinceId}
-                      ready={cityOptions.ready}
-                      loading={cityOptions.loading}
-                      placeholder={t('electricity.order.revision.selectCity', locale)}
-                      options={cities.map((city) => ({
-                        value: city.id,
-                        label: locale === 'fa' ? city.nameFa : city.nameEn,
-                        dependencyValue: city.provinceId ?? '',
-                      }))}
-                      savedOption={{
-                        value: order.cityId,
-                        label: t('electricity.order.revision.currentCity', locale),
-                        dependencyValue: order.provinceId,
-                      }}
-                    />
-                  </FormControl>
-                  {message('cityId')}
-                </FormItem>
-              )}
-            />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="provinceId"
+                  render={({ field }) => (
+                    <FormItem id="revision-province">
+                      <FormLabel>{t('electricity.order.revision.province', locale)}</FormLabel>
+                      <FormControl>
+                        <NativeSelect
+                          {...field}
+                          aria-required="true"
+                          className="w-full"
+                          disabled={locked || !provinceOptions.ready}
+                          onChange={(event) => {
+                            field.onChange(event);
+                            form.setValue('cityId', '', {
+                              shouldValidate: !!form.formState.touchedFields.cityId,
+                            });
+                          }}
+                        >
+                          <option value="">
+                            {t('settings.addresses.form.provincePlaceholder', locale)}
+                          </option>
+                          {!provinces.some((place) => place.id === provinceId) && provinceId ? (
+                            <option value={provinceId}>
+                              {t('electricity.order.revision.currentProvince', locale)}
+                            </option>
+                          ) : null}
+                          {provinces.map((place) => (
+                            <option key={place.id} value={place.id}>
+                              {locale === 'fa' ? place.nameFa : place.nameEn}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </FormControl>
+                      {fieldFeedback}
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cityId"
+                  render={({ field }) => (
+                    <FormItem id="revision-city">
+                      <FormLabel>{t('electricity.order.revision.city', locale)}</FormLabel>
+                      <FormControl>
+                        <DependentSelect
+                          {...field}
+                          aria-required="true"
+                          className="w-full rounded-md border bg-background p-2 pointer-coarse:h-11"
+                          disabled={locked}
+                          dependencyValue={provinceId}
+                          ready={cityOptions.ready}
+                          loading={cityOptions.loading}
+                          placeholder={t('electricity.order.revision.selectCity', locale)}
+                          options={cities.map((city) => ({
+                            value: city.id,
+                            label: locale === 'fa' ? city.nameFa : city.nameEn,
+                            dependencyValue: city.provinceId ?? '',
+                          }))}
+                          savedOption={{
+                            value: order.cityId,
+                            label: t('electricity.order.revision.currentCity', locale),
+                            dependencyValue: order.provinceId,
+                          }}
+                        />
+                      </FormControl>
+                      {fieldFeedback}
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <GeographyLoadError
+                {...provinceOptions}
+                message={t('settings.addresses.error.loadProvinces', locale)}
+                locale={locale}
+                testId="electricity-revision-province-retry"
+              />
+              <GeographyLoadError
+                {...cityOptions}
+                message={t('settings.addresses.error.loadCities', locale)}
+                locale={locale}
+                testId="electricity-revision-city-retry"
+              />
+              <div className="grid gap-3 sm:grid-cols-2">
+                {text(
+                  'postalCode',
+                  t('electricity.order.correction.postalCode', locale),
+                  'revision-postal',
+                  10,
+                  true
+                )}
+                {text('giftCode', t('electricity.order.giftCode', locale), 'revision-gift', 100)}
+              </div>
+            </fieldset>
+            {text(
+              'responseNote',
+              t('electricity.order.correction.responseNote', locale),
+              'revision-note',
+              1000,
+              false,
+              true
+            )}
+            {error || form.formState.errors.root ? (
+              <p role="alert" className="text-sm text-destructive">
+                {unconfirmed
+                  ? copy('uncertain')
+                  : (form.formState.errors.root?.validation?.message ??
+                    t('electricity.order.revision.error', locale))}
+              </p>
+            ) : null}
+            {lock.owner === 'address' ? <p role="status">{copy('busy')}</p> : null}
+            {!optionsReady && !optionsError && (
+              <LoadingStatus>{t('electricity.order.period.loading', locale)}</LoadingStatus>
+            )}
           </div>
-          <GeographyLoadError
-            {...provinceOptions}
-            message={t('settings.addresses.error.loadProvinces', locale)}
-            locale={locale}
-            testId="electricity-revision-province-retry"
-          />
-          <GeographyLoadError
-            {...cityOptions}
-            message={t('settings.addresses.error.loadCities', locale)}
-            locale={locale}
-            testId="electricity-revision-city-retry"
-          />
-          {text(
-            'postalCode',
-            t('electricity.order.correction.postalCode', locale),
-            'revision-postal',
-            10,
-            true
-          )}
-          {text(
-            'responseNote',
-            t('electricity.order.correction.responseNote', locale),
-            'revision-note',
-            1000,
-            false,
-            true
-          )}
-          {error || form.formState.errors.root ? (
-            <p role="alert" className="text-sm text-destructive">
-              {unconfirmed
-                ? copy('uncertain')
-                : (form.formState.errors.root?.validation?.message ??
-                  t('electricity.order.revision.error', locale))}
-            </p>
-          ) : null}
-          {lock.owner === 'address' ? <p role="status">{copy('busy')}</p> : null}
-          {!optionsReady && !optionsError && (
-            <LoadingStatus>{t('electricity.order.period.loading', locale)}</LoadingStatus>
-          )}
-          {optionsError ? (
+          <StickyRecordEditorActions>
+            {optionsError ? (
+              <Button
+                type="button"
+                data-testid="electricity-revision-options-retry"
+                variant="outline"
+                disabled={busy || locked || optionsPending.current || !!attempt.current}
+                onClick={retryOptions}
+              >
+                {t('electricity.order.retry', locale)}
+              </Button>
+            ) : null}
             <Button
-              type="button"
-              data-testid="electricity-revision-options-retry"
-              variant="outline"
-              disabled={busy || locked || optionsPending.current || !!attempt.current}
-              onClick={retryOptions}
+              type="submit"
+              loading={busy}
+              disabled={
+                busy || locked || !optionsReady || !locationValid || (!advanced && !periods.length)
+              }
             >
-              {t('electricity.order.retry', locale)}
+              {t('electricity.order.revision.preview', locale)}
             </Button>
-          ) : null}
-          <Button
-            type="submit"
-            variant="outline"
-            loading={busy}
-            disabled={
-              busy || locked || !optionsReady || !locationValid || (!advanced && !periods.length)
-            }
-          >
-            {t('electricity.order.revision.preview', locale)}
-          </Button>
-          {unconfirmed ? (
-            <Button
-              type="button"
-              data-testid="electricity-revision-retry"
-              variant="outline"
-              disabled={busy}
-              onClick={() => void retry()}
-            >
-              {copy('retry')}
-            </Button>
-          ) : null}
+            {unconfirmed ? (
+              <Button
+                type="button"
+                data-testid="electricity-revision-retry"
+                variant="outline"
+                disabled={busy}
+                onClick={() => void retry()}
+              >
+                {copy('retry')}
+              </Button>
+            ) : null}
+          </StickyRecordEditorActions>
         </form>
       </Form>
       {currentReview ? (
-        <div className="space-y-3 rounded-md border p-4" role="status">
-          <p className="font-medium">{t('electricity.order.revision.review', locale)}</p>
-          <p>
-            {t('electricity.order.quantity', locale)}: {numbers.irrDigits(currentReview.totalKwh)}{' '}
-            kWh
-          </p>
-          <ul className="space-y-1 text-sm">
-            {currentReview.lines.map((line) => (
-              <li key={line.systemKey} className="flex justify-between gap-3">
-                <span>
-                  {t(`electricity.order.revision.${line.systemKey}`, locale)} ·{' '}
-                  {numbers.irrDigits(line.quantityKwh)} kWh
-                </span>
-                <span>{numbers.money(line.subtotalIrR)}</span>
-              </li>
-            ))}
-          </ul>
-          <p>
-            {t('electricity.order.detail.subtotal', locale)}:{' '}
-            {numbers.money(currentReview.subtotalIrR)}
-          </p>
-          <p>
-            {t('electricity.order.detail.giftDiscount', locale)}:{' '}
-            {numbers.money(currentReview.discountIrR)}
-          </p>
-          <p>
-            {t('electricity.order.vat', locale)}: {numbers.money(currentReview.vatIrR)}
-          </p>
-          <p>
-            {t('electricity.order.total', locale)}:{' '}
-            <strong>{numbers.money(currentReview.totalIrR)}</strong>
-          </p>
+        <div className="space-y-3" role="status">
+          <FinancialReviewSummary
+            compact
+            title={t('electricity.order.revision.review', locale)}
+            rows={[
+              {
+                id: 'quantity',
+                label: t('electricity.order.quantity', locale),
+                value: `${numbers.irrDigits(currentReview.totalKwh)} kWh`,
+              },
+              ...currentReview.lines.map((line) => ({
+                id: line.systemKey,
+                label: `${t(`electricity.order.revision.${line.systemKey}`, locale)} · ${numbers.irrDigits(line.quantityKwh)} kWh`,
+                value: numbers.money(line.subtotalIrR),
+              })),
+              {
+                id: 'subtotal',
+                label: t('electricity.order.detail.subtotal', locale),
+                value: numbers.money(currentReview.subtotalIrR),
+              },
+              {
+                id: 'discount',
+                label: t('electricity.order.detail.giftDiscount', locale),
+                value: numbers.money(currentReview.discountIrR),
+              },
+              {
+                id: 'vat',
+                label: t('electricity.order.vat', locale),
+                value: numbers.money(currentReview.vatIrR),
+              },
+            ]}
+            total={{
+              label: t('electricity.order.total', locale),
+              value: numbers.money(currentReview.totalIrR),
+            }}
+            notice={t('electricity.order.revision.replacesInvoice', locale)}
+          />
           <OrderWalletBalance
             profileId={order.profileId}
             total={currentReview.totalIrR}
             scopeKey={JSON.stringify([scopeKey, currentReview.reviewDigest])}
           />
-          <p className="text-sm text-muted-foreground">
-            {t('electricity.order.revision.replacesInvoice', locale)}
-          </p>
           <ConfirmationFields gate={financialGate} disabled={busy || locked} />
           <Button
             type="button"

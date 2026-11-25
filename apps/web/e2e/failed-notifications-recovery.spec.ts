@@ -40,6 +40,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/failed-notifications/access', (route) =>
       route.fulfill({ json: { canView: true, canRetry: false } })
     );
+    await page.route(`**/api/admin/failed-notifications/${row.id}`, (route) =>
+      route.fulfill({ json: row })
+    );
     let initialQueue: Route | undefined;
     await page.route('**/api/admin/failed-notifications?*', (route) => {
       if (!initialQueue) {
@@ -83,7 +86,7 @@ for (const locale of ['en', 'fa'] as const) {
                 : entries,
       });
     });
-    await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
+    await page.goto('/admin/failed-notifications');
     await expect(
       page.getByRole('status').filter({
         hasText: fa ? 'در حال بارگذاری اعلان‌های ناموفق…' : 'Loading failed notifications…',
@@ -91,18 +94,19 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeVisible();
     await expect.poll(() => !!initialQueue).toBe(true);
     await initialQueue!.fulfill({ json: [row] });
-    await page
-      .locator('summary:visible')
-      .filter({ hasText: fa ? 'جزئیات پوشانده‌شده' : 'Masked details' })
-      .click();
-    const history = page.getByRole('button', {
-      name: fa ? 'تاریخچه تلاش‌های ارسال' : 'Delivery attempt history',
+    const recordPath = `/admin/failed-notifications/${row.id}`;
+    await page.getByRole('link', { name: row.eventKey, exact: true }).click();
+    await expect(page).toHaveURL((url) => url.pathname === recordPath);
+    const historyName = t('admin.notifications.history.title', locale);
+    const history = page.getByRole('link', {
+      name: historyName,
       exact: true,
     });
     await history.click();
-    const dialog = page.getByRole('dialog');
-    const error = dialog.getByRole('alert');
-    await expect(dialog.getByRole('status')).toHaveText(
+    await expect(page).toHaveURL((url) => url.pathname === recordPath + '/history');
+    const historyView = page.getByRole('region', { name: historyName });
+    const error = historyView.getByRole('alert');
+    await expect(historyView.getByRole('status')).toHaveText(
       fa ? 'در حال بارگذاری تاریخچه ارسال…' : 'Loading delivery history…'
     );
     await expect.poll(() => !!initialHistory).toBe(true);
@@ -112,49 +116,53 @@ for (const locale of ['en', 'fa'] as const) {
     await error.getByRole('button').click();
     await expect(error).toBeVisible();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      historyView.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(0);
     mode = 'valid';
     await error.getByRole('button').click();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      historyView.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(25);
-    await expect(dialog).toContainText('receipt-26');
-    await expect(dialog).toContainText('<img src=x onerror=alert(1)> token=***');
-    await expect(dialog.locator('img')).toHaveCount(0);
+    await expect(historyView).toContainText('receipt-26');
+    await expect(historyView).toContainText('<img src=x onerror=alert(1)> token=***');
+    await expect(historyView.locator('img')).toHaveCount(0);
     expect(
       await new AxeBuilder({ page })
-        .include('[role="dialog"]')
+        .include('main[data-area=admin]')
         .analyze()
         .then((result) => result.violations)
     ).toEqual([]);
-    expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(
-      true
-    );
-    await dialog.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
+    expect(
+      await historyView.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)
+    ).toBe(true);
+    await historyView.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      historyView.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(1);
     expect(queries.at(-1)?.get('offset')).toBe('25');
-    await dialog.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
+    await historyView.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      historyView.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(25);
     for (const query of queries) {
       expect(query.get('notificationId')).toBe(row.outboxId);
       expect(query.get('channel')).toBe('email');
       expect(query.get('limit')).toBe('26');
     }
-    await page.keyboard.press('Escape');
-    await expect(dialog).toHaveCount(0);
-    await expect(history).toBeFocused();
+    const returnToRecord = page.getByRole('link', {
+      name: t('admin.notifications.deadLetter.recordTitle', locale),
+      exact: true,
+    });
+    await returnToRecord.click();
+    await expect(page).toHaveURL((url) => url.pathname === recordPath);
+    await expect(history).toBeVisible();
     mode = 'empty';
     await history.click();
-    await expect(dialog).toContainText(
+    await expect(historyView).toContainText(
       fa ? 'هیچ تلاش ارسالی ثبت نشده است.' : 'No delivery attempts have been recorded.'
     );
-    await page.keyboard.press('Escape');
-    await expect(dialog).toHaveCount(0);
+    await returnToRecord.click();
+    await expect(historyView).toHaveCount(0);
     mode = 'denied';
     await history.click();
     await expect(
@@ -162,7 +170,7 @@ for (const locale of ['en', 'fa'] as const) {
         .getByRole('alert')
         .filter({ hasText: t('admin.notifications.deadLetter.accessDenied', locale) })
     ).toBeVisible();
-    await expect(dialog).toHaveCount(0);
+    await expect(historyView).toHaveCount(0);
     await expect(page.locator('main')).not.toContainText(row.eventKey);
   });
   test(`failed notification reads reject malformed authority and rows (${locale})`, async ({

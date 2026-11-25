@@ -2,6 +2,7 @@ import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
   title: 'Consultations',
+  newRequest: 'New consultation request',
   intro:
     'Request specialist advice. Staff will review your request and provide a fee before any payment is due.',
   profile: 'Requesting profile',
@@ -12,14 +13,20 @@ const en: Record<string, string> = {
   confirm: 'I confirm this request is for the selected profile.',
   intakeForm: 'Consultation request',
   productInvalid: 'Choose an available consultation for this profile.',
-  productHelp:
-    'Select the service you need. Staff will propose its fee after reviewing your request.',
+  productHelp: 'Choose the topic that best matches your request.',
   confirmationInvalid: 'Confirm that this request is for the displayed profile.',
   confirmationHelp: 'Check the requesting profile before sending.',
   intakeUnconfirmed:
     'The request result could not be verified. Retry the same request to check its result.',
   informationInvalid: 'Enter information from 1 to 2,000 characters.',
   informationHelp: 'Answer the information requested by staff, up to 2,000 characters.',
+  informationRequested: 'What staff asked you to provide',
+  replyTitle: 'Reply to staff',
+  replyBack: 'Back to consultation',
+  replyUnavailable: 'This consultation is no longer waiting for your reply.',
+  offerPageTitle: 'Consultation offer',
+  openOffer: 'Review offer',
+  offerPageUnavailable: 'There is no current offer to review.',
   informationUnconfirmed:
     'The information result could not be verified. Reload the request to check whether staff received it before sending again.',
   informationReload: 'Reload consultation request',
@@ -129,7 +136,7 @@ const en: Record<string, string> = {
     'Your payment receipt is under review. The consultation will proceed after payment is confirmed.',
   offerExpired: 'This offer has expired. Ask staff for a new offer.',
   acceptOffer: 'Accept offer and pay',
-  confirmAcceptance: 'Confirm acceptance of paid offer',
+  confirmAcceptance: 'Confirm acceptance',
   declineOffer: 'Decline offer',
   confirmDecline: 'Decline this offer and cancel its unpaid invoice?',
   decisionReviewTitle: 'Review consultation offer',
@@ -207,6 +214,7 @@ const en: Record<string, string> = {
 
 const fa: Record<string, string> = {
   title: 'مشاوره‌ها',
+  newRequest: 'درخواست مشاوره جدید',
   intro:
     'درخواست مشاوره تخصصی ثبت کنید. کارشناسان پس از بررسی، هزینه را اعلام می‌کنند و تا آن زمان پرداختی لازم نیست.',
   profile: 'پروفایل درخواست‌دهنده',
@@ -217,14 +225,20 @@ const fa: Record<string, string> = {
   confirm: 'تأیید می‌کنم این درخواست برای پروفایل انتخاب‌شده است.',
   intakeForm: 'درخواست مشاوره',
   productInvalid: 'یک مشاوره در دسترس برای این پروفایل انتخاب کنید.',
-  productHelp:
-    'خدمت موردنیاز را انتخاب کنید. کارشناسان پس از بررسی درخواست، هزینه را پیشنهاد می‌دهند.',
+  productHelp: 'موضوعی را انتخاب کنید که به درخواستتان نزدیک‌تر است.',
   confirmationInvalid: 'تأیید کنید که این درخواست برای پروفایل نمایش‌داده‌شده است.',
   confirmationHelp: 'پیش از ارسال، پروفایل درخواست‌دهنده را بررسی کنید.',
   intakeUnconfirmed:
     'نتیجه درخواست تأیید نشد. برای بررسی نتیجه، همان درخواست را دوباره ارسال کنید.',
   informationInvalid: 'اطلاعاتی از ۱ تا ۲٬۰۰۰ نویسه وارد کنید.',
   informationHelp: 'به اطلاعات درخواستی کارشناسان، تا ۲٬۰۰۰ نویسه پاسخ دهید.',
+  informationRequested: 'اطلاعاتی که کارشناس درخواست کرده است',
+  replyTitle: 'پاسخ به کارشناس',
+  replyBack: 'بازگشت به درخواست مشاوره',
+  replyUnavailable: 'این درخواست مشاوره دیگر منتظر پاسخ شما نیست.',
+  offerPageTitle: 'پیشنهاد مشاوره',
+  openOffer: 'بررسی پیشنهاد',
+  offerPageUnavailable: 'پیشنهاد فعالی برای بررسی وجود ندارد.',
   informationUnconfirmed:
     'نتیجه ارسال اطلاعات تأیید نشد. پیش از ارسال دوباره، درخواست را تازه‌سازی کنید تا دریافت اطلاعات توسط کارشناسان بررسی شود.',
   informationReload: 'تازه‌سازی درخواست مشاوره',
@@ -333,7 +347,7 @@ const fa: Record<string, string> = {
   offerExpired:
     'اعتبار این پیشنهاد پایان یافته است. برای دریافت پیشنهاد جدید با کارشناسان تماس بگیرید.',
   acceptOffer: 'پذیرش پیشنهاد و پرداخت',
-  confirmAcceptance: 'تأیید پذیرش پیشنهاد پرداخت‌شده',
+  confirmAcceptance: 'تأیید پذیرش',
   declineOffer: 'رد پیشنهاد',
   confirmDecline: 'این پیشنهاد رد و صورتحساب پرداخت‌نشده لغو شود؟',
   decisionReviewTitle: 'بررسی پیشنهاد مشاوره',

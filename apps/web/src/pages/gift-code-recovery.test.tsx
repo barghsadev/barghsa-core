@@ -5,6 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Page from './AdminGiftCodesPage.js';
 import { giftCode } from '../test/gift-code-fixtures.js';
+import type { ReactNode } from 'react';
 import {
   giftCodeBasis,
   isGiftCode,
@@ -12,6 +13,10 @@ import {
   isGiftCodeStats,
   matchesGiftReceipt,
 } from '../lib/gift-code-catalogue.js';
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
+  Link: ({ children }: { children: ReactNode }) => <a href="/admin/gift-codes">{children}</a>,
+}));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../hooks/useTimezone.js', () => ({
   useTimezone: () => ({ status: 'ready', timezone: 'Asia/Tehran', retry: vi.fn() }),
@@ -348,24 +353,32 @@ it('a receipt can publish before failed authoritative refresh without retaining 
   ).toBe(true);
 });
 
-it('restored code selection waits for the catalogue baseline before initializing an editable draft', async () => {
+it('a direct editor waits for its exact record without loading the catalogue', async () => {
   let finish!: (value: Response) => void;
-  vi.stubGlobal(
-    'fetch',
-    vi.fn((input: RequestInfo | URL) =>
-      String(input).includes('/stats')
-        ? Promise.resolve(reply(stats()))
-        : new Promise<Response>((resolve) => {
-            finish = resolve;
-          })
-    )
+  const fetch = vi.fn(
+    () =>
+      new Promise<Response>((resolve) => {
+        finish = resolve;
+      })
   );
-  const selection = { id: giftCode().id, set: vi.fn(), apply: vi.fn() };
+  vi.stubGlobal('fetch', fetch);
+  const workspace = {
+    view: 'edit' as const,
+    codeId: giftCode().id,
+    search: {},
+    goToRecord: vi.fn(),
+    goToList: vi.fn(),
+  };
   await act(async () =>
-    root.render(<QueryProvider>{<Page selection={selection} />}</QueryProvider>)
+    root.render(<QueryProvider>{<Page workspace={workspace} />}</QueryProvider>)
   );
   expect(host.querySelector('#gift-value')).toBeNull();
-  await act(async () => finish(reply([giftCode()])));
+  expect(fetch.mock.calls).toHaveLength(1);
+  expect(fetch).toHaveBeenCalledWith(
+    `/api/admin/promotions/gift-codes/${giftCode().id}/stats`,
+    expect.anything()
+  );
+  await act(async () => finish(reply(stats())));
   expect(host.querySelector<HTMLInputElement>('#gift-value')?.value).toBe('1000');
   const save = host.querySelector<HTMLButtonElement>(
     'form[aria-label="Gift-code settings"] button[type=submit]'
@@ -373,18 +386,24 @@ it('restored code selection waits for the catalogue baseline before initializing
   expect(save?.disabled).toBe(false);
   expect(host.textContent).not.toContain('Reset to saved');
 });
-it('unavailable restored code statistics can be closed without an initialized draft', async () => {
+it('a missing code has a way back to the catalogue without an initialized draft', async () => {
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL) =>
       String(input).includes('/stats') ? reply({}, 404) : reply([giftCode(1)])
     )
   );
-  const selection = { id: giftCode().id, set: vi.fn(), apply: vi.fn() };
+  const workspace = {
+    view: 'edit' as const,
+    codeId: giftCode().id,
+    search: {},
+    goToRecord: vi.fn(),
+    goToList: vi.fn(),
+  };
   await act(async () =>
-    root.render(<QueryProvider>{<Page selection={selection} />}</QueryProvider>)
+    root.render(<QueryProvider>{<Page workspace={workspace} />}</QueryProvider>)
   );
   expect(host.querySelector('#gift-value')).toBeNull();
-  await click('Cancel');
-  expect(selection.set).toHaveBeenCalledWith('');
+  expect(host.textContent).toContain('This gift code could not be found.');
+  expect(host.querySelector('a[href="/admin/gift-codes"]')).not.toBeNull();
 });

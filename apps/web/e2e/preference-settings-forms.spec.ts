@@ -30,7 +30,22 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/settings');
     const main = page.getByRole('main');
     const account = main.getByRole('navigation', { name: preferencesText('account', locale) });
-    await expect(account.getByRole('link')).toHaveCount(6);
+    await expect
+      .poll(() =>
+        account
+          .getByRole('link')
+          .evaluateAll((links) => links.map((link) => link.getAttribute('href')))
+      )
+      .toEqual([
+        '/settings/profile',
+        '/settings/conversation-identity',
+        '/settings/username',
+        '/settings/security',
+        '/settings/timezone',
+        '/settings/addresses',
+        '/settings/privacy',
+        '/settings/team',
+      ]);
     const marketing = main.getByRole('form', { name: t('settings.marketing.title', locale) });
     const email = marketing.getByRole('switch', {
       name: t('settings.marketing.optInEmailLabel', locale),

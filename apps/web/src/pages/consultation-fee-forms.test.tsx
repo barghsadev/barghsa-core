@@ -231,9 +231,7 @@ it.each(['en', 'fa'] as const)(
         tConsultationFee('feeInvalid', locale)
       );
       const message = view.container.querySelector('#consultation-fee-message')!;
-      expect(message.parentElement?.querySelector('[aria-hidden=true]')?.textContent).toBe(
-        message.textContent
-      );
+      expect(message.getAttribute('role')).toBe('alert');
       expect(view.previews()).toHaveLength(0);
       expect(view.field('fee').disabled).toBe(false);
     } finally {
@@ -533,14 +531,20 @@ it('releases an original complete owned write rejection and restores linked focu
 
 it('fences an old actor queue denial before effect cleanup can withdraw new private drafts', async () => {
   const held = deferred<Response>();
-  let queues = 0;
+  let holdNextQueue = false;
+  let capturedQueue = false;
   const view = await mount({
-    override: async (url) =>
-      url.includes('/requests?') && ++queues === 2 ? held.promise : undefined,
+    override: async (url) => {
+      if (!holdNextQueue || !url.includes('/requests?')) return undefined;
+      holdNextQueue = false;
+      capturedQueue = true;
+      return held.promise;
+    },
   });
   try {
+    holdNextQueue = true;
     await view.click(tConsultation('refresh', 'en'));
-    await vi.waitFor(() => expect(queues).toBe(2));
+    await vi.waitFor(() => expect(capturedQueue).toBe(true));
     await view.render('new-reviewer');
     await vi.waitFor(() =>
       expect(view.container.querySelector('#consultation-fee')).not.toBeNull()

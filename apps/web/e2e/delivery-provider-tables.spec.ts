@@ -143,32 +143,32 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(active.locator('time').first()).toContainText(
         locale === 'fa' ? '۱۵:۳۰' : '3:30 PM'
       );
-      await draft.locator('input[type=email]').fill('staff@example.test');
       if (locale === 'fa' && info.project.name === 'mobile-safari') {
         await draft.screenshot({
           path: test.info().outputPath('email-card-fa.png'),
         });
       }
-      await draft.getByRole('button', { name: emailText('update'), exact: true }).click();
+      await draft.getByRole('link', { name: emailDraft.label, exact: true }).click();
+      const main = page.getByRole('main');
+      const recipient = main.getByRole('textbox', {
+        name: emailText('test.recipient'),
+        exact: true,
+      });
+      await recipient.fill('staff@example.test');
+      await page.setViewportSize({ width: 1100, height: 900 });
+      await expect(recipient).toHaveValue('staff@example.test');
+      await main.getByRole('link', { name: emailText('update.title'), exact: true }).click();
       await page.locator('#email-provider-label').fill('Retained draft');
       await page.getByLabel(emailText('field.apiKey'), { exact: false }).fill('synthetic-kept-key');
-      await page.setViewportSize({ width: 1100, height: 900 });
-      const desktopDraft = page
-        .getByRole('row')
-        .filter({ has: page.getByRole('rowheader', { name: emailDraft.label, exact: true }) });
-      await expect(desktopDraft.locator('input[type=email]')).toHaveValue('staff@example.test');
       await expect(page.locator('#email-provider-label')).toHaveValue('Retained draft');
       await expect(page.locator('form')).toHaveCount(1);
       await page.setViewportSize({ width: 390, height: 844 });
-      await expect(draft.locator('input[type=email]')).toHaveValue('staff@example.test');
       await expect(page.getByLabel(emailText('field.apiKey'), { exact: false })).toHaveValue(
         'synthetic-kept-key'
       );
       expect(reads).toBe(1);
       status = 503;
       await page.getByRole('button', { name: emailText('refresh'), exact: true }).click();
-      await expect(draft.locator('input[type=email]')).toBeDisabled();
-      await expect(draft.locator('input[type=email]')).toHaveValue('staff@example.test');
       await expect(page.locator('form button[type=submit]')).toBeDisabled();
       status = 200;
       await page.getByRole('button', { name: emailText('retry'), exact: true }).click();
@@ -177,6 +177,8 @@ for (const locale of ['en', 'fa'] as const) {
         .locator('form')
         .getByRole('button', { name: emailText('cancel'), exact: true })
         .click();
+      await expect(recipient).toHaveValue('staff@example.test');
+      await main.getByRole('link', { name: emailText('backToList'), exact: true }).click();
       await page.setViewportSize({ width: 800, height: 844 });
       const viewport = page.getByRole('region', { name: emailText('table'), exact: true });
       await viewport.focus();
@@ -192,7 +194,9 @@ for (const locale of ['en', 'fa'] as const) {
       );
       changed = true;
       await page.getByRole('button', { name: emailText('refresh'), exact: true }).click();
-      await expect(cards.locator('input[type=email]')).toHaveValue('');
+      await cards.getByRole('link', { name: 'ایمیل تغییرکرده', exact: true }).click();
+      await expect(recipient).toHaveValue('');
+      await main.getByRole('link', { name: emailText('backToList'), exact: true }).click();
       status = 403;
       await page.getByRole('button', { name: emailText('refresh'), exact: true }).click();
       await expect(cards).toHaveCount(0);
@@ -238,7 +242,9 @@ for (const locale of ['en', 'fa'] as const) {
           path: test.info().outputPath('sms-card-fa.png'),
         });
       }
-      await draft.getByRole('button', { name: smsText('edit'), exact: true }).click();
+      await draft.getByRole('link', { name: smsDraft.label, exact: true }).click();
+      const main = page.getByRole('main');
+      await main.getByRole('link', { name: smsText('edit'), exact: true }).click();
       await page.locator('#sms-label').fill('Retained mapping draft');
       await page.locator('#sms-key').fill('synthetic-kept-key');
       await page.locator('form input[list=sms-events]').fill('auth.otp');
@@ -251,9 +257,7 @@ for (const locale of ['en', 'fa'] as const) {
       expect(reads).toBe(1);
       status = 503;
       await page.getByRole('button', { name: smsText('refresh'), exact: true }).click();
-      await expect(
-        draft.getByRole('button', { name: smsText('edit'), exact: true })
-      ).toBeDisabled();
+      await expect(page.locator('form button[type=submit]')).toBeDisabled();
       await expect(page.locator('#sms-key')).toHaveValue('synthetic-kept-key');
       status = 200;
       await page.getByRole('button', { name: smsText('retry'), exact: true }).click();
@@ -262,6 +266,7 @@ for (const locale of ['en', 'fa'] as const) {
         .locator('form')
         .getByRole('button', { name: smsText('cancel'), exact: true })
         .click();
+      await main.getByRole('link', { name: emailText('backToList'), exact: true }).click();
       await page.setViewportSize({ width: 800, height: 844 });
       const viewport = page.getByRole('region', { name: smsText('table'), exact: true });
       await viewport.focus();

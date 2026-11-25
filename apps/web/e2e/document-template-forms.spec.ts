@@ -47,7 +47,7 @@ async function setup(page: Page, locale: 'en' | 'fa') {
   await page.goto('/admin/document-templates');
   await page
     .getByRole('region', { name: word('listTitle'), exact: true })
-    .getByRole('button', { name: current.title })
+    .getByRole('link', { name: current.title })
     .click();
   await expect(page.getByRole('heading', { name: current.title, exact: true })).toBeVisible();
   return {
@@ -67,9 +67,7 @@ async function inspect(page: Page, locale: string, info: TestInfo, kind: string)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   if (locale === 'fa' && info.project.name === 'chromium') {
     await page.setViewportSize({ width: 1600, height: 1000 });
-    await page
-      .getByRole('heading', { name: documentTemplateText('title', 'fa'), exact: true })
-      .scrollIntoViewIfNeeded();
+    await page.getByRole('main').getByRole('heading', { level: 1 }).scrollIntoViewIfNeeded();
     await page.screenshot({
       path: info.outputPath(`${kind}-fa.png`),
       fullPage: true,
@@ -77,6 +75,9 @@ async function inspect(page: Page, locale: string, info: TestInfo, kind: string)
   }
 }
 
+const detailPath = '/admin/document-templates/' + templateDetail.id;
+const publishedVersionPath = detailPath + '/versions/' + templateDetail.versions[0]!.id;
+const newVersionPath = detailPath + '/versions/new';
 for (const locale of ['en', 'fa'] as const) {
   test(`document template record and edit mode survive navigation (${locale})`, async ({
     page,
@@ -84,16 +85,14 @@ for (const locale of ['en', 'fa'] as const) {
     const { word } = await setup(page, locale);
     const workspace = page.getByRole('region', { name: word('workspaceTitle') });
     const title = workspace.getByRole('textbox', { name: word('name'), exact: true });
-    const heading = workspace.getByRole('heading', { name: templateDetail.title, exact: true });
-    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === templateDetail.id);
+    const heading = page
+      .getByRole('main')
+      .getByRole('heading', { name: templateDetail.title, exact: true });
+    await expect(page).toHaveURL(detailPath);
     await page.reload();
     await expect(heading).toBeVisible();
-    await workspace.getByRole('button', { name: word('edit'), exact: true }).click();
-    await expect(page).toHaveURL(
-      (url) =>
-        url.searchParams.get('selected') === templateDetail.id &&
-        url.searchParams.get('mode') === 'edit'
-    );
+    await workspace.getByRole('link', { name: word('edit'), exact: true }).click();
+    await expect(page).toHaveURL(detailPath + '/edit');
     await page.reload();
     await expect(title).toHaveValue(templateDetail.title);
     await page.goBack();
@@ -102,6 +101,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goForward();
     await expect(title).toHaveValue(templateDetail.title);
     await page.goto('/admin/document-templates?selected=new&category=contract');
+    await expect(page).toHaveURL('/admin/document-templates/new?category=contract');
     await expect(title).toHaveValue('');
     await workspace.getByRole('button', { name: word('cancel'), exact: true }).click();
     await expect(page).toHaveURL(
@@ -128,6 +128,11 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ status: 503, json: {} });
       }
     );
+    await page.locator(`main a[href="${publishedVersionPath}"]`).click();
+    await expect(page).toHaveURL(publishedVersionPath);
+    await expect(
+      page.getByRole('main').getByText(templateFile.originalName, { exact: true })
+    ).toBeVisible();
     const download = page.getByRole('button', { name: word('download'), exact: true });
     const loading = page.getByRole('status').filter({ hasText: word('linkLoading') });
     await download.click();
@@ -181,7 +186,7 @@ for (const locale of ['en', 'fa'] as const) {
       save(result);
       return route.fulfill({ json: result });
     });
-    await page.getByRole('button', { name: word('edit'), exact: true }).click();
+    await page.getByRole('link', { name: word('edit'), exact: true }).click();
     const title = page.locator('#document-template-title');
     const details = page.locator('#document-template-description');
     const form = page.getByRole('form', { name: word('edit'), exact: true });
@@ -199,7 +204,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(requests).toHaveLength(0);
     await title.fill('  قرارداد مشتری  ');
     await details.fill('  توضیحات قرارداد  ');
-    await page.locator('#document-template-summary').fill('Unsubmitted companion draft');
+    await expect(page.locator('#document-template-summary')).toHaveCount(0);
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(page.getByRole('dialog')).toContainText('قرارداد مشتری');
     await confirm().click();
@@ -218,7 +223,7 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm().click();
     await expect.poll(() => requests.length).toBe(2);
     await expect(title).toBeDisabled();
-    await expect(page.locator('#document-template-summary')).toBeDisabled();
+    await expect(page.locator('#document-template-summary')).toHaveCount(0);
     await expect(
       page.getByRole('button', { name: word('refresh'), exact: true, includeHidden: true })
     ).toBeDisabled();
@@ -237,13 +242,14 @@ for (const locale of ['en', 'fa'] as const) {
     });
     release();
     await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page).toHaveURL(detailPath);
     await expect(
-      page.getByRole('status', { name: '', exact: true }).filter({ hasText: word('saved') })
+      page.locator('[data-sonner-toast]').filter({ hasText: word('saved') })
     ).toBeVisible();
     await expect(
       page.getByRole('heading', { name: 'قرارداد به‌روز مشتری', exact: true })
     ).toBeVisible();
-    await expect(page.locator('#document-template-summary')).toHaveValue('');
+    await expect(page.locator('#document-template-summary')).toHaveCount(0);
     await inspect(page, locale, info, 'metadata');
 
     const newTemplate = {
@@ -268,10 +274,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**/api/admin/document-templates/${newTemplate.id}`, (route) =>
       route.fulfill({ json: newTemplate })
     );
-    await page.getByRole('button', { name: word('add'), exact: true }).click();
-    const newForm = page.getByRole('form').filter({
-      has: page.getByRole('heading', { name: word('add'), exact: true }),
-    });
+    await page.goto('/admin/document-templates/new');
+    const newForm = page.getByRole('form', { name: word('edit'), exact: true });
     const newCategory = newForm.getByRole('combobox', { name: word('category'), exact: true });
     await expect(newCategory).toHaveAttribute('aria-required', 'true');
     await newCategory.selectOption('invoice');
@@ -287,8 +291,10 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     const { word, confirm, save, readFailed } = await setup(page, locale);
+    await page.goto(newVersionPath);
     const form = page.getByRole('form', { name: word('publishVersion'), exact: true });
     const upload = page.locator('#document-template-files');
+    await expect(upload).toHaveAccessibleName(word('chooseFiles'));
     await expect(upload).toHaveAccessibleDescription(word('fileHelp'));
     const summary = page.locator('#document-template-summary');
     const retained = form.getByRole('checkbox');
@@ -310,11 +316,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(upload).toBeEnabled();
     const bytes = Buffer.from('%PDF-new-version');
-    await upload.setInputFiles({
+    await upload.focus();
+    const chooserPromise = page.waitForEvent('filechooser');
+    await upload.press('Enter');
+    await (await chooserPromise).setFiles({
       name: 'Addendum.pdf',
       mimeType: 'application/pdf',
       buffer: bytes,
     });
+    await expect(upload).toHaveAccessibleName(word('changeFiles'));
     await summary.fill('  الحاقیه قرارداد  ');
     const commands: string[] = [];
     let releaseVersion!: () => void;
@@ -408,17 +418,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(summary).toBeEnabled();
     await form.getByRole('button', { name: word('publishVersion'), exact: true }).click();
     await confirm().click();
-    await expect(
-      page
-        .getByTestId('admin-settings-layout')
-        .getByRole('status')
-        .filter({ hasText: word('saved') })
-    ).toBeVisible();
-    await expect(summary).toHaveValue('');
-    await expect(form.getByRole('checkbox')).toHaveCount(2);
-    await expect(page.getByRole('region', { name: word('history'), exact: true })).toContainText(
-      'Initial terms'
-    );
+    await expect(page).toHaveURL(detailPath + '/versions/99999999-9999-4999-8999-999999999999');
+    await expect(summary).toHaveCount(0);
+    const version = page.getByRole('region', { name: word('history'), exact: true });
+    await expect(version.getByText('Addendum.pdf', { exact: true })).toBeVisible();
+    await expect(version.getByText('Initial terms', { exact: true })).toHaveCount(0);
+    await page.reload();
+    await expect(version.getByText('Addendum.pdf', { exact: true })).toBeVisible();
+    await page.goto(detailPath);
+    await expect(version.getByText('Initial terms', { exact: true })).toBeVisible();
     expect(commands).toHaveLength(3);
     await inspect(page, locale, info, 'version');
   });

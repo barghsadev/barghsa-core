@@ -97,7 +97,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/knowledge-bases');
       await button(k('kb-groups')).click();
-      await button(`${k('open')} ${kg.title}`).click();
+      await page.getByRole('link', { name: `${k('open')} ${kg.title}`, exact: true }).click();
       const query = page.locator('#kb-test-query'),
         member = page.locator('#kb-member');
       await expect(query).toHaveAttribute('aria-required', 'true');
@@ -135,6 +135,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(member).toHaveAccessibleDescription(copy('member'));
       await member.selectOption(kb.id);
       await button(k('link')).click();
+      await expect(page.getByRole('dialog')).toContainText(kb.title);
+      await expect(page.getByRole('dialog')).toContainText(kg.title);
       await confirm();
       await expect(member).toBeFocused();
       await expect(member).toHaveValue(kb.id);
@@ -199,7 +201,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       await page.goto('/admin/policies');
       await button(p('policy-groups')).click();
-      await button(`${p('open')} ${pg.title}`).click();
+      await page.getByRole('link', { name: `${p('open')} ${pg.title}`, exact: true }).click();
       const first = page.locator(`#member-priority-${policy.id}`),
         saveFirst = page
           .locator('form')
@@ -207,6 +209,7 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('button', { name: p('updatePriority'), exact: true });
       await expect(page.locator('#policy-member')).toHaveAttribute('aria-required', 'true');
       await expect(first).not.toHaveAttribute('aria-required', 'true');
+      await expect(first).toHaveAccessibleName(`${p('priorityOverride')} · ${policy.title}`);
       await first.fill('1.5');
       await saveFirst.click();
       await expect(first).toBeFocused();
@@ -254,6 +257,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(second).toHaveValue('77');
       await first.fill('');
       await saveFirst.click();
+      await expect(dialog).toContainText(pg.title);
+      await expect(dialog).toContainText(policy.title);
+      await expect(dialog).toContainText(copy('currentPriority'));
+      await expect(dialog).toContainText(copy('newPriority'));
+      await expect(dialog).toContainText(p('inheritPriority'));
       await confirm();
       await expect(first).toHaveValue('');
       await expect(second).toHaveValue('77');
@@ -270,7 +278,8 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(second).toHaveCount(0);
       await page.goto('/admin/knowledge-bases');
-      await button(`${k('open')} ${kb.title}`).click();
+      await page.getByRole('link', { name: `${k('open')} ${kb.title}`, exact: true }).click();
+      await page.getByRole('link', { name: k('ingestion'), exact: true }).click();
       await button(k('runQuery')).click();
       await expect(query).toBeFocused();
       await expect(query).toHaveAttribute('aria-invalid', 'true');

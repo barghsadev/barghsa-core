@@ -3,9 +3,12 @@ import { useEffect, useId, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Markdown } from '@tiptap/markdown';
+import { Bold, Heading2, Italic, List, ListOrdered, Quote, Redo2, Undo2 } from 'lucide-react';
 import type { adminTosText } from './admin-tos-text.js';
 
 const extensions = [StarterKit.configure({ underline: false }), Markdown];
+const toolbarButton =
+  'inline-flex size-8 items-center justify-center rounded-md border border-transparent text-muted-foreground hover:bg-muted hover:text-foreground aria-pressed:border-ring aria-pressed:bg-accent aria-pressed:text-accent-foreground disabled:opacity-50';
 
 export default function TosRichText({
   text,
@@ -72,31 +75,37 @@ export default function TosRichText({
     ? [
         {
           name: text.bold,
+          Icon: Bold,
           active: editor.isActive('bold'),
           run: () => editor.chain().focus().toggleBold().run(),
         },
         {
           name: text.italic,
+          Icon: Italic,
           active: editor.isActive('italic'),
           run: () => editor.chain().focus().toggleItalic().run(),
         },
         {
           name: text.heading,
+          Icon: Heading2,
           active: editor.isActive('heading', { level: 2 }),
           run: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
         },
         {
           name: text.bullets,
+          Icon: List,
           active: editor.isActive('bulletList'),
           run: () => editor.chain().focus().toggleBulletList().run(),
         },
         {
           name: text.numbers,
+          Icon: ListOrdered,
           active: editor.isActive('orderedList'),
           run: () => editor.chain().focus().toggleOrderedList().run(),
         },
         {
           name: text.quote,
+          Icon: Quote,
           active: editor.isActive('blockquote'),
           run: () => editor.chain().focus().toggleBlockquote().run(),
         },
@@ -124,39 +133,48 @@ export default function TosRichText({
       </div>
     );
   return (
-    <div className="rounded border border-input bg-card text-card-foreground" aria-busy={!editor}>
+    <div
+      className="rounded-lg border border-input bg-card text-card-foreground"
+      aria-busy={!editor}
+    >
       <div
         role="group"
         aria-label={`${label}: ${text.formatting}`}
-        className="flex flex-wrap gap-1 border-b p-2"
+        className="flex flex-wrap gap-1 border-b bg-muted/35 p-1.5"
       >
         {actions.map((action) => (
           <button
             key={action.name}
             type="button"
+            aria-label={action.name}
+            title={action.name}
             aria-pressed={action.active}
             disabled={disabled}
             onClick={action.run}
-            className="rounded border px-2 py-1 text-sm aria-pressed:border-ring aria-pressed:bg-accent aria-pressed:text-accent-foreground disabled:opacity-50"
+            className={toolbarButton}
           >
-            {action.name}
+            <action.Icon aria-hidden="true" className="size-4" />
           </button>
         ))}
         <button
           type="button"
+          aria-label={text.undo}
+          title={text.undo}
           disabled={disabled || !editor?.can().undo()}
           onClick={() => editor?.chain().focus().undo().run()}
-          className="rounded border px-2 py-1 text-sm disabled:opacity-50"
+          className={toolbarButton}
         >
-          {text.undo}
+          <Undo2 aria-hidden="true" className="size-4 rtl:-scale-x-100" />
         </button>
         <button
           type="button"
+          aria-label={text.redo}
+          title={text.redo}
           disabled={disabled || !editor?.can().redo()}
           onClick={() => editor?.chain().focus().redo().run()}
-          className="rounded border px-2 py-1 text-sm disabled:opacity-50"
+          className={toolbarButton}
         >
-          {text.redo}
+          <Redo2 aria-hidden="true" className="size-4 rtl:-scale-x-100" />
         </button>
       </div>
       <EditorContent editor={editor} />

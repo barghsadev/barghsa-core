@@ -48,6 +48,66 @@ async function paint(page: Page) {
   );
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`an unread notification opens its own record without changing read state (${locale})`, async ({
+    page,
+  }) => {
+    await arrange(page, locale);
+    const record = { ...item('Transfer confirmed'), linkRoute: '/wallet' };
+    let reads = 0;
+    let marks = 0;
+    let denied = false;
+    const path = '/notifications/' + record.id;
+    await page.route('**/api/v1/notifications?*', (route) =>
+      route.fulfill({ json: { data: [record], next_cursor: null, unread_count: 1 } })
+    );
+    await page.route('**/api/v1' + path, (route) => {
+      reads++;
+      return denied
+        ? route.fulfill({ status: 403, json: {} })
+        : route.fulfill({
+            json: { ...record, isRead: marks > 0, readAt: marks ? record.createdAt : null },
+          });
+    });
+    await page.route('**/api/v1' + path + '/read', (route) => {
+      marks++;
+      return route.fulfill({ json: { id: record.id, is_read: true, unread_count: 0 } });
+    });
+    await page.goto('/notifications?filter=unread');
+    const main = page.getByRole('main');
+    await main.getByRole('link', { name: 'Transfer confirmed', exact: true }).click();
+    await expect(page).toHaveURL(
+      (url) => url.pathname === path && url.searchParams.get('filter') === 'unread'
+    );
+    await expect(main.getByRole('heading', { name: 'Transfer confirmed' })).toBeVisible();
+    await expect(
+      main.getByRole('link', { name: t('notifications.title', locale), exact: true })
+    ).toHaveAttribute('href', '/notifications?filter=unread');
+    await expect(
+      main.getByRole('link', { name: t('notifications.record.openSubject', locale) })
+    ).toHaveAttribute('href', '/wallet');
+    expect(reads).toBe(1);
+    expect(marks).toBe(0);
+    const mark = main.getByRole('button', {
+      name: t('notifications.markReadAria', locale),
+      exact: true,
+    });
+    await mark.click();
+    await expect(mark).toHaveCount(0);
+    await expect(
+      main.getByText(t('notifications.record.read', locale), { exact: true })
+    ).toBeVisible();
+    expect(marks).toBe(1);
+    await page.reload();
+    await expect(main.getByRole('heading', { name: 'Transfer confirmed' })).toBeVisible();
+    denied = true;
+    await page.reload();
+    await expect(main.getByRole('alert')).toHaveText(t('notifications.record.unavailable', locale));
+    await expect(main.getByRole('heading', { name: 'Transfer confirmed' })).toHaveCount(0);
+    await expect(
+      main.getByRole('link', { name: t('notifications.record.openSubject', locale) })
+    ).toHaveCount(0);
+  });
+
   test(`notification filters ignore stale pages and recover from loading errors (${locale})`, async ({
     page,
   }) => {
@@ -89,7 +149,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(error).toBeVisible();
     failing = false;
     await error.getByRole('button', { name: t('notifications.retry', locale) }).click();
-    const row = page.getByRole('button', { name: /Current all notice/ });
+    const row = page.getByRole('link', { name: 'Current all notice', exact: true });
     await expect(row).toBeVisible();
     const badge = row.locator('span.bg-success-soft');
     await expect(badge.locator('svg.lucide-credit-card')).toBeVisible();

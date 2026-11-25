@@ -284,7 +284,7 @@ export class VerificationCaseService {
                 title: localizedContent.en.title,
                 body: localizedContent.en.body,
                 localizedContent,
-                link: `/admin/crm/corrections?profileId=${profileId}`,
+                link: `/admin/crm/corrections/${id}`,
               },
               client
             );

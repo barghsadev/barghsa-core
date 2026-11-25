@@ -1,8 +1,9 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
-import { useEffect, useId, useRef, useState, type RefObject } from 'react';
-import { LoadingStatus, Button, Textarea } from '@barghsa/ui';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { RefreshCw, Send } from 'lucide-react';
+import { LoadingStatus, Button, NativeSelect, Textarea } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -124,6 +125,15 @@ function CommentWorkspace({
   const [action, setAction] = useState<TeamAction | null>(null);
   const [busy, setBusy] = useState(false);
   const [uncertain, setUncertain] = useState(false);
+  const history = useRef<HTMLOListElement>(null);
+  const previousLast = useRef<string | undefined>(undefined);
+  const firstId = comments[0]?.id;
+  const lastId = comments.at(-1)?.id;
+  useLayoutEffect(() => {
+    const list = history.current;
+    if (list) list.scrollTop = lastId === previousLast.current ? 0 : list.scrollHeight;
+    previousLast.current = lastId;
+  }, [firstId, lastId]);
   const messages = { body: formCopy('bodyInvalid'), visibility: formCopy('visibilityInvalid') };
   const form: ReturnType<typeof useZodForm<CommentDraft>> = useZodForm<CommentDraft>(
     async () => {
@@ -385,65 +395,42 @@ function CommentWorkspace({
   const command = captured.current;
   const frozen = !!command || pending.current || uncertain;
   return (
-    <section className="space-y-4" aria-label={copy('comments')} data-testid="order-comments">
-      <h2 className="text-xl font-semibold">{copy('comments')}</h2>
+    <section
+      className="min-w-0 space-y-3"
+      aria-label={copy('comments')}
+      data-testid="order-comments"
+    >
+      <header className="flex items-center justify-between gap-3">
+        <h2 className="font-semibold">{copy('comments')}</h2>
+        {error !== 'forbidden' && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            data-testid="order-comment-reload"
+            aria-label={formCopy('retryLoad')}
+            title={formCopy('retryLoad')}
+            disabled={loading || locked()}
+            onClick={reload}
+          >
+            <RefreshCw aria-hidden="true" />
+          </Button>
+        )}
+      </header>
       {error && (
-        <p role="alert">
+        <p
+          role="alert"
+          className="rounded-lg border border-destructive/30 px-3 py-2 text-sm text-destructive"
+        >
           {error === 'load' || error === 'network' ? copy('commentError') : formCopy(error)}
         </p>
       )}
       {loading && <LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
-      <div className="flex flex-wrap gap-2">
-        {error !== 'forbidden' && (
-          <Button
-            type="button"
-            variant="outline"
-            data-testid="order-comment-reload"
-            disabled={loading || locked()}
-            onClick={reload}
-          >
-            {formCopy('retryLoad')}
-          </Button>
-        )}
-        {before && (
-          <Button
-            type="button"
-            variant="outline"
-            disabled={loading || locked()}
-            onClick={() => {
-              if (active() && !locked() && !reading.current) {
-                if (cursor === before) retryPage();
-                else setCursor(before);
-              }
-            }}
-          >
-            {copy('olderComments')}
-          </Button>
-        )}
-      </div>
-      {!loading && !error && !comments.length && (
-        <p className="text-sm text-muted-foreground">{copy('noComments')}</p>
-      )}
-      <ol className="space-y-3">
-        {comments.map((comment) => (
-          <li key={comment.id} className="rounded-md border p-3">
-            <div className="flex flex-wrap justify-between gap-2 text-sm">
-              <strong>
-                {comment.authorName} · {copy(comment.authorRole)}
-                {kind === 'electricity' && comment.visibility === 'internal'
-                  ? ` · ${copy('internal')}`
-                  : null}
-              </strong>
-              <time dateTime={comment.createdAt} className="text-muted-foreground">
-                {formatTimestamp(comment.createdAt)}
-              </time>
-            </div>
-            <p className="mt-2 whitespace-pre-wrap break-words text-sm">{comment.body}</p>
-          </li>
-        ))}
-      </ol>
       {uncertain && (
-        <div role="alert" className="space-y-2">
+        <div
+          role="alert"
+          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-destructive/30 px-3 py-2 text-sm"
+        >
           <p>{formCopy('uncertain')}</p>
           <Button
             type="button"
@@ -461,74 +448,172 @@ function CommentWorkspace({
           <form
             noValidate
             data-testid="order-comment-form"
-            className="space-y-4"
+            className="space-y-2 rounded-xl border bg-muted/20 p-3 sm:p-4"
             onSubmit={(event) => {
               event.preventDefault();
               send();
             }}
           >
-            <FormField
-              control={form.control}
-              name="body"
-              render={({ field }) => (
-                <FormItem id={`${kind}-comment-${staff ? 'staff' : 'customer'}`}>
-                  <FormLabel>{copy('writeComment')}</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} aria-required="true" disabled={frozen} />
-                  </FormControl>
-                  <FormDescription>{formCopy('bodyHelp')}</FormDescription>
-                  <FormMessage reserveSpace />
-                </FormItem>
-              )}
-            />
-            {staffVisibility && (
+            <div
+              className={
+                staffVisibility
+                  ? 'grid gap-x-4 gap-y-2 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'
+                  : undefined
+              }
+            >
               <FormField
                 control={form.control}
-                name="visibility"
+                name="body"
                 render={({ field }) => (
-                  <FormItem id="electricity-comment-visibility">
-                    <FormLabel>{copy('visibility')}</FormLabel>
+                  <FormItem id={`${kind}-comment-${staff ? 'staff' : 'customer'}`}>
+                    <FormLabel>{copy('writeComment')}</FormLabel>
                     <FormControl>
-                      <select
+                      <Textarea
                         {...field}
                         aria-required="true"
                         disabled={frozen}
-                        className="w-full rounded border border-input bg-background p-2 text-sm"
-                      >
-                        <option value="">{copy('chooseVisibility')}</option>
-                        <option value="public">{copy('public')}</option>
-                        <option value="internal">{copy('internal')}</option>
-                      </select>
+                        rows={2}
+                        placeholder={formCopy('bodyPrompt')}
+                        className="max-h-40 min-h-14 resize-none overflow-y-auto bg-background"
+                      />
                     </FormControl>
-                    <FormDescription>{formCopy('visibilityHelp')}</FormDescription>
-                    <FormMessage reserveSpace />
+                    <FormDescription className="text-xs">{formCopy('bodyHelp')}</FormDescription>
+                    <FormMessage reserveSpace className="min-h-4 text-xs" />
                   </FormItem>
                 )}
               />
-            )}
-            <Button
-              type="submit"
-              disabled={loading || !!error || frozen || busy}
-              aria-busy={busy || undefined}
-            >
-              {busy && (
-                <span
-                  aria-hidden="true"
-                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              {staffVisibility && (
+                <FormField
+                  control={form.control}
+                  name="visibility"
+                  render={({ field }) => (
+                    <FormItem id="electricity-comment-visibility">
+                      <FormLabel>{copy('visibility')}</FormLabel>
+                      <FormControl>
+                        <NativeSelect
+                          {...field}
+                          aria-required="true"
+                          disabled={frozen}
+                          className="w-full rounded-lg bg-background"
+                        >
+                          <option value="">{copy('chooseVisibility')}</option>
+                          <option value="public">{copy('public')}</option>
+                          <option value="internal">{copy('internal')}</option>
+                        </NativeSelect>
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        {formCopy('visibilityHelp')}
+                      </FormDescription>
+                      <FormMessage reserveSpace className="min-h-4 text-xs" />
+                    </FormItem>
+                  )}
                 />
               )}
-              {copy('sendComment')}
-            </Button>
-            {busy && <p role="status">{formCopy('checking')}</p>}
+            </div>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              {busy && (
+                <p role="status" className="me-auto text-xs text-muted-foreground">
+                  {formCopy('checking')}
+                </p>
+              )}
+              <Button
+                type="submit"
+                disabled={loading || !!error || frozen || busy}
+                aria-busy={busy || undefined}
+              >
+                {busy ? (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                  />
+                ) : (
+                  <Send className="rtl:-scale-x-100" aria-hidden="true" />
+                )}
+                {copy('sendComment')}
+              </Button>
+            </div>
             {form.formState.errors.root?.validation && (
               <p role="alert">{formCopy('validationUnavailable')}</p>
             )}
           </form>
         </Form>
       )}
+      {comments.length > 0 && (
+        <div className="space-y-1.5">
+          <div className="flex flex-wrap items-center justify-between gap-x-3">
+            <h3 className="text-sm font-medium">{formCopy('history')}</h3>
+            {before && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={loading || locked()}
+                onClick={() => {
+                  if (active() && !locked() && !reading.current) {
+                    if (cursor === before) retryPage();
+                    else setCursor(before);
+                  }
+                }}
+              >
+                {copy('olderComments')}
+              </Button>
+            )}
+          </div>
+          <ol
+            ref={history}
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to scroll message history.
+            tabIndex={0}
+            aria-label={formCopy('history')}
+            className="max-h-64 divide-y overflow-y-auto rounded-lg border sm:max-h-80"
+          >
+            {comments.map((comment) => (
+              <li key={comment.id} className="space-y-1 px-3 py-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <strong>
+                      {comment.authorName} · {copy(comment.authorRole)}
+                    </strong>
+                    {kind === 'electricity' && comment.visibility === 'internal' && (
+                      <span className="rounded bg-muted px-1.5 text-muted-foreground">
+                        {copy('internal')}
+                      </span>
+                    )}
+                  </div>
+                  <time dateTime={comment.createdAt} className="text-muted-foreground">
+                    {formatTimestamp(comment.createdAt)}
+                  </time>
+                </div>
+                <p className="whitespace-pre-wrap wrap-anywhere text-sm">{comment.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+      {!loading && !error && !comments.length && (
+        <p className="text-sm text-muted-foreground">{copy('noComments')}</p>
+      )}
       {action && command && live(command, action) && (
         <TeamActionDialog
           action={action}
+          summary={
+            <div className="space-y-2 rounded-lg border bg-muted/25 p-3">
+              {staffVisibility && (
+                <p className="text-sm">
+                  <span className="text-muted-foreground">{copy('visibility')}</span>{' '}
+                  <strong>{copy(command.visibility)}</strong>
+                </p>
+              )}
+              <div
+                role="region"
+                aria-label={copy('writeComment')}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to review long messages.
+                tabIndex={0}
+                className="max-h-40 overflow-auto whitespace-pre-wrap wrap-anywhere text-sm"
+              >
+                {command.body}
+              </div>
+            </div>
+          }
           onClose={() => close(command, action)}
           onValidationError={() => false}
           onDenied={() => {

@@ -1,6 +1,6 @@
 import { useId, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { Button, Card, CardHeader, CardContent, LoadingSkeleton } from '@barghsa/ui';
+import { Button, Card, CardHeader, CardContent, cn, ResultGlyph, Skeleton } from '@barghsa/ui';
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { loadingText, reloadText } from '@barghsa/i18n/loading-feedback';
 import type { Locale } from '@barghsa/i18n/app';
@@ -21,8 +21,7 @@ export function DashboardWidget<T>({
   locale,
   empty,
   emptyMessage,
-  tall = false,
-  wide = false,
+  className,
   children,
 }: {
   title: string;
@@ -32,8 +31,7 @@ export function DashboardWidget<T>({
   locale: Locale;
   empty?: (data: T) => boolean;
   emptyMessage?: string;
-  tall?: boolean;
-  wide?: boolean;
+  className?: string;
   children: (data: T) => ReactNode;
 }) {
   const id = useId();
@@ -43,37 +41,59 @@ export function DashboardWidget<T>({
       variant="widget"
       role="region"
       aria-labelledby={id}
-      className={`${tall ? 'h-96' : 'h-[19rem]'} ${wide ? 'xl:col-span-2' : ''} min-w-0 gap-2 py-3 [--card-spacing:1rem] sm:[--card-spacing:1.25rem]`}
+      className={cn(
+        '@container/widget min-h-44 min-w-0 gap-2 py-3 [--card-spacing:1rem] sm:[--card-spacing:1.25rem]',
+        className
+      )}
     >
-      <CardHeader className="flex min-h-11 flex-row flex-wrap items-center justify-between gap-x-2 gap-y-0 border-b pb-1.5">
+      <CardHeader className="flex min-h-11 flex-row flex-wrap items-center justify-between gap-x-2 gap-y-0 border-b pb-2!">
         <h2 id={id} className="flex min-w-0 items-center gap-2 text-base font-semibold">
-          <Icon aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
+          <span
+            aria-hidden="true"
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          >
+            <Icon className="size-[1.125rem]" />
+          </span>
           {title}
         </h2>
         {viewAll}
       </CardHeader>
-      <CardContent className="min-h-0 flex-1 overflow-y-auto py-1" tabIndex={0}>
+      <CardContent className="min-h-0 flex-1 py-1">
         {resource.status === 'loading' ? (
-          <LoadingSkeleton label={loadingText('loading', locale)} variant="table" />
+          <div role="status" aria-label={loadingText('loading', locale)} className="space-y-2 py-2">
+            <Skeleton aria-hidden="true" className="h-4 w-2/3" />
+            <Skeleton aria-hidden="true" className="h-4 w-1/2" />
+          </div>
         ) : resource.status === 'error' ? (
-          <div role="alert" className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {dashboardText(profileChanged ? 'widget.profileChanged' : 'widget.error', locale)}
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (profileChanged) window.location.reload();
-                else retryDashboardRead(resource, locale);
-              }}
-            >
-              {profileChanged
-                ? reloadText('reload', locale)
-                : dashboardText('widget.retry', locale)}
-            </Button>
+          <div
+            role="alert"
+            className="flex items-center gap-2 rounded-lg bg-danger-soft/40 px-2.5 py-1"
+          >
+            <ResultGlyph error className="hidden size-8 @md/widget:inline-flex" />
+            <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
+              <p className="text-sm">
+                {dashboardText(profileChanged ? 'widget.profileChanged' : 'widget.error', locale)}
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="min-h-11 shrink-0"
+                onClick={() => {
+                  if (profileChanged) window.location.reload();
+                  else retryDashboardRead(resource, locale);
+                }}
+              >
+                {profileChanged
+                  ? reloadText('reload', locale)
+                  : dashboardText('widget.retry', locale)}
+              </Button>
+            </div>
           </div>
         ) : empty?.(resource.data) ? (
-          <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+          <div className="flex items-center gap-3 rounded-lg bg-muted/60 p-3">
+            <ResultGlyph />
+            <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+          </div>
         ) : (
           children(resource.data)
         )}

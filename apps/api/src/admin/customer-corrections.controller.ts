@@ -56,6 +56,14 @@ export class CustomerCorrectionsController {
     );
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Read an email complaint correction task' })
+  @ApiResponse({ status: 200, type: Object, description: 'Correction task' })
+  @ApiResponse({ status: 404, description: 'Correction task not found' })
+  get(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    return this.corrections.get(req.session, id);
+  }
+
   @Post(':id/resolve')
   @UseGuards(StepUpGuard)
   @RequiresStepUp()

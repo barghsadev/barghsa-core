@@ -1,6 +1,7 @@
 import { ErrorState, type ErrorStateProps } from './error-state';
 export { ErrorState, type ErrorStateProps } from './error-state';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { CircleAlertIcon, InboxIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import {
   Empty,
@@ -25,12 +26,35 @@ export function EmptyState({ icon, title, description, action, className }: Empt
   return (
     <Empty className={className}>
       <EmptyHeader>
-        {icon ? <EmptyMedia aria-hidden="true">{icon}</EmptyMedia> : null}
+        {icon === undefined ? (
+          <ResultGlyph />
+        ) : icon ? (
+          <EmptyMedia aria-hidden="true">{icon}</EmptyMedia>
+        ) : null}
         <EmptyTitle>{title}</EmptyTitle>
         <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
       {action ? <EmptyContent>{action}</EmptyContent> : null}
     </Empty>
+  );
+}
+
+export function ResultGlyph({
+  error = false,
+  className,
+}: { error?: boolean; className?: string } = {}) {
+  const Icon = error ? CircleAlertIcon : InboxIcon;
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'inline-flex size-10 shrink-0 items-center justify-center rounded-xl',
+        error ? 'bg-danger-soft text-destructive' : 'bg-primary/10 text-primary',
+        className
+      )}
+    >
+      <Icon className="size-5" />
+    </span>
   );
 }
 

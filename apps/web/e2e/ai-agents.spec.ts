@@ -108,6 +108,7 @@ for (const locale of ['en', 'fa'] as const)
     await setupCatalogueForms(page, locale as 'en' | 'fa', false);
     await page.route('**/api/admin/agents/options', (route) =>
       route.fulfill({
+        status: denied ? 403 : 200,
         json: {
           models: [{ id: model, title: 'Local model' }],
           kbs: [],
@@ -144,7 +145,7 @@ for (const locale of ['en', 'fa'] as const)
     ).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
-    await page.getByRole('button', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local assistant');
     await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model);
     await page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions').fill('Help with energy');

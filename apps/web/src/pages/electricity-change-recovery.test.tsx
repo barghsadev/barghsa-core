@@ -1,3 +1,4 @@
+import { openManualRecordDateTime } from '../test/record-date-time.js';
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
@@ -83,11 +84,13 @@ afterEach(async () => {
   window.history.replaceState({}, '', '/');
 });
 async function click(label: string) {
-  if (label === 'Approve and issue amendment') {
-    const input = document.querySelector<HTMLInputElement>('input[id^=increase-approval-reason-]')!;
+  if (label === 'Preview approval') {
+    const input = document.querySelector<HTMLTextAreaElement>(
+      'textarea[id^=increase-approval-reason-]'
+    )!;
     expect(input).not.toBeNull();
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         input,
         'Capacity reviewed'
       );
@@ -102,6 +105,7 @@ async function click(label: string) {
   await act(async () => button!.click());
 }
 async function set(id: string, value: string) {
+  if (id.startsWith('increase-effective-')) await openManualRecordDateTime(id);
   const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)!;
   expect(input).not.toBeNull();
   await act(async () => {
@@ -202,7 +206,7 @@ it('retains an increase confirmation across transient refresh and removes it whe
       </QueryProvider>
     )
   );
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await act(async () => vi.dynamicImportSettled());
   expect(container.querySelector('[role="dialog"]')).not.toBeNull();
   const action = captured.action;
@@ -240,7 +244,7 @@ it('abandons an increase preview and clears drafts when the view changes', async
     )
   );
   await set(`increase-reason-${increaseRow.requestId}`, 'Draft');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await click('Expired');
   await act(async () => pending.resolve(Response.json(increaseReview('approve'))));
   expect(container.querySelector('[role="dialog"]')).toBeNull();
@@ -273,7 +277,7 @@ it('ignores a late increase preview after queue permission denial', async () => 
       </QueryProvider>
     )
   );
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   status = 401;
   await click('Refresh');
   await act(async () => pending.resolve(Response.json(increaseReview('approve'))));
@@ -528,7 +532,7 @@ it('an obsolete increase write cannot reload a different queue view', async () =
       </QueryProvider>
     )
   );
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   const oldSuccess = captured.success!;
   expect(oldSuccess).toBeTypeOf('function');
   await click('Expired');

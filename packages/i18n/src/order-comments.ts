@@ -2,7 +2,11 @@ import type { Locale } from './app.js';
 
 export const en: Record<string, string> = {
   bodyInvalid: 'Enter a message of 1 to 10,000 characters.',
-  bodyHelp: 'Write your message in at most 10,000 characters.',
+  bodyHelp: 'Up to 10,000 characters.',
+  bodyPrompt: 'Ask a question or share an update about this order.',
+  history: 'Message history',
+  open: 'Open order discussion',
+  loading: 'Loading the discussion…',
   visibilityInvalid: 'Choose who can see this message.',
   visibilityHelp: 'Internal messages are visible only to staff.',
   validationUnavailable: 'Validation is unavailable. Try again.',
@@ -16,7 +20,11 @@ export const en: Record<string, string> = {
 
 export const fa: Record<string, string> = {
   bodyInvalid: 'پیام باید بین ۱ تا ۱۰٬۰۰۰ نویسه باشد.',
-  bodyHelp: 'پیام خود را در حداکثر ۱۰٬۰۰۰ نویسه بنویسید.',
+  bodyHelp: 'حداکثر ۱۰٬۰۰۰ نویسه.',
+  bodyPrompt: 'درباره این سفارش بپرسید یا اطلاعات تازه‌ای بنویسید.',
+  history: 'پیام‌های پیشین',
+  open: 'باز کردن گفت‌وگوی سفارش',
+  loading: 'در حال بارگذاری گفت‌وگو…',
   visibilityInvalid: 'مخاطب پیام را انتخاب کنید.',
   visibilityHelp: 'پیام داخلی فقط برای کارکنان نمایش داده می‌شود.',
   validationUnavailable: 'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',

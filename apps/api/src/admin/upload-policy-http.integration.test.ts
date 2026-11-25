@@ -98,6 +98,18 @@ it('versions policy changes, preserves history and enforces them during real upl
     status: 'current',
     createdBy: 'operator',
   });
+  const exact = `/document/versions/${created.id}`;
+  const past = await request(exact);
+  expect(past.status).toBe(200);
+  expect(await past.json()).toMatchObject({
+    id: created.id,
+    category: 'document',
+    status: 'expired',
+    maxSizeBytes: policy.maxSizeBytes,
+  });
+  expect((await request(exact, 'GET', undefined, 'other')).status).toBe(403);
+  expect((await request(`/image/versions/${created.id}`)).status).toBe(404);
+  expect((await request('/document/versions/bad')).status).toBe(400);
   const presign = (fileSize: number) =>
     fetch(`${http.base}/api/upload/presigned-url`, {
       method: 'POST',

@@ -69,54 +69,53 @@ for (const locale of ['en', 'fa'] as const)
                 }
         );
       });
-      await page.goto('/admin/users');
-      const trigger = page.getByRole('button', { name: text('effective.inspect'), exact: true });
+      await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+        route.fulfill({ json: staffUser })
+      );
+      const account = `/admin/users/${staffUser.userId}`;
+      await page.goto(account);
+      const trigger = page.getByRole('link', { name: text('effective.inspect'), exact: true });
       await trigger.click();
-      const dialog = page.getByRole('dialog');
-      await expect(dialog.getByRole('status')).toHaveText(
+      const content = page.locator('main');
+      await expect(content.getByRole('status')).toHaveText(
         locale === 'fa' ? 'در حال بارگذاری دسترسی‌های مؤثر…' : 'Loading effective permissions…'
       );
       await expect.poll(() => !!initialPermissions).toBe(true);
       await initialPermissions!.fulfill({
         json: { ...effectivePermissions, userId: staffUser.userId },
       });
-      await expect(dialog).toContainText('Finance Alice');
-      await expect(dialog).toContainText('finance:read');
+      await expect(content).toContainText('Finance Alice');
+      await expect(content).toContainText('finance:read');
       expect(reads[0]).toContain(`/api/admin/users/${staffUser.userId}/effective-permissions`);
       await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark).*$/);
-      expect(
-        (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
-      ).toEqual([]);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
       if (locale === 'fa' && info.project.name === 'mobile-safari')
-        await dialog.screenshot({ path: `/tmp/barghsa-staff-access-${theme}.png` });
+        await content.screenshot({ path: `/tmp/barghsa-staff-access-${theme}.png` });
       mode = 'failed';
-      await dialog
+      await content
         .getByRole('button', { name: t('admin.jobs.refresh', locale), exact: true })
         .click();
-      await expect(dialog.getByRole('alert')).toContainText(text('effective.retained'));
-      await expect(dialog).toContainText('finance:read');
+      await expect(content.getByRole('alert')).toContainText(text('effective.retained'));
+      await expect(content).toContainText('finance:read');
       mode = 'foreign';
-      await dialog.getByRole('button', { name: text('retry'), exact: true }).click();
-      await expect(dialog).not.toContainText('foreign');
-      await expect(dialog).toContainText('finance:read');
-      await dialog.getByRole('button', { name: text('effective.close'), exact: true }).click();
-      await expect(trigger).toBeFocused();
+      await content.getByRole('button', { name: text('retry'), exact: true }).click();
+      await expect(content).not.toContainText('foreign');
+      await expect(content).toContainText('finance:read');
+      await page.goBack();
+      await expect(trigger).toBeVisible();
       mode = 'valid';
       await trigger.click();
-      await expect(dialog).toContainText('finance:read');
+      await expect(content).toContainText('finance:read');
       mode = 'denied';
       allowed = false;
-      await dialog
+      await content
         .getByRole('button', { name: t('admin.jobs.refresh', locale), exact: true })
         .click();
-      await expect(dialog).toHaveCount(0);
-      await expect(trigger).toHaveCount(0);
-      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
-        'Finance Alice'
-      );
+      await expect(content.getByRole('alert')).toContainText(t('admin.staff.forbidden', locale));
+      await expect(content.getByText('Finance Alice', { exact: true })).toHaveCount(0);
       await expect(page.locator('main [data-testid=effective-permissions]')).toHaveCount(0);
     });
     test(`role module comparison shows read-only granted and ungranted permissions (${locale}, ${theme})`, async ({
@@ -137,9 +136,12 @@ for (const locale of ['en', 'fa'] as const)
           ],
         })
       );
-      await page.goto('/admin/roles');
+      await page.goto('/admin/roles/compare');
       const module = page.getByLabel(text('compare.module'), { exact: true });
       await module.selectOption('finance');
+      await expect(page).toHaveURL(/module=finance/);
+      await expect(page.getByText(text('compare.granted'), { exact: true })).toBeVisible();
+      await expect(page.getByText(text('compare.notGranted'), { exact: true })).toBeVisible();
       const rows = page.locator('table:visible tbody tr, ol[role=list]:visible > li');
       await expect(rows).toHaveCount(3);
       for (const [index, values] of [
@@ -162,6 +164,8 @@ for (const locale of ['en', 'fa'] as const)
         true
       );
       await module.selectOption('');
+      await expect(page).not.toHaveURL(/module=/);
+      await expect(page.getByText(text('compare.notGranted'), { exact: true })).toHaveCount(0);
       await expect(rows.first()).toContainText('invoices:read');
     });
   }

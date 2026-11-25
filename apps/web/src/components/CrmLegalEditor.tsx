@@ -2,14 +2,20 @@ import { useId, useRef, useState, type RefObject } from 'react';
 import { z } from 'zod';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { Button, Input, Label, DependentSelect } from '@barghsa/ui';
-import { tWorkspace as t } from '@barghsa/i18n/workspace-crm';
+import { Button, Input, Label, NativeSelect, Textarea, DependentSelect } from '@barghsa/ui';
+import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
 import type { LegalInfo } from '../pages/CrmProfileDetail.js';
+import { RecordEditorSection, recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from './StickyRecordEditorActions.js';
 
 const specs = {
   registrationNumber: [50, 'text', false],
@@ -35,7 +41,46 @@ const specs = {
 } as const;
 type Field = keyof typeof specs;
 type Changes = Partial<Record<Field, string | null>>;
-const fields = Object.keys(specs) as Field[];
+const sections = [
+  [
+    'crm.legal.registrationDetails',
+    ['registrationNumber', 'companyTypeId', 'registrationDate', 'economicCode'],
+  ],
+  [
+    'crm.legal.companyContact',
+    [
+      'officialPhone',
+      'officialEmail',
+      'officialProvinceId',
+      'officialCityId',
+      'officialFullAddress',
+      'officialPostalCode',
+    ],
+  ],
+  [
+    'crm.legal.representativeDetails',
+    [
+      'representativeHonorific',
+      'representativeFirstName',
+      'representativeLastName',
+      'representativeNationalId',
+      'representativeTitle',
+      'representativeRelationship',
+    ],
+  ],
+  [
+    'crm.legal.representativeAddress',
+    [
+      'representativeProvinceId',
+      'representativeCityId',
+      'representativeFullAddress',
+      'representativePostalCode',
+    ],
+  ],
+] as const satisfies readonly (readonly [string, readonly Field[]])[];
+const fields: Field[] = sections.flatMap(([, fields]) => [...fields]);
+const sectionId = (heading: (typeof sections)[number][0]) =>
+  heading.replace('crm.legal.', 'crm-legal-');
 const labelKey = (field: Field) =>
   field === 'companyTypeId' ? 'companyType' : field.replace(/(Province|City)Id$/, '$1');
 
@@ -45,12 +90,16 @@ export function CrmLegalEditor({
   onCancel,
   onSaved,
   returnFocus,
+  onDenied,
+  onPendingChange,
 }: {
   returnFocus: RefObject<HTMLButtonElement | null>;
   profileId: string;
   legalInfo: LegalInfo;
   onCancel: () => void;
   onSaved: (legalInfo: LegalInfo, updatedAt: string) => void;
+  onDenied?: () => void;
+  onPendingChange?: (value: boolean) => void;
 }) {
   const locale = useLocale(),
     id = useId(),
@@ -189,123 +238,159 @@ export function CrmLegalEditor({
       throw new Error('Invalid CRM legal acknowledgement');
     onSaved(current, result.profile.updatedAt);
   }
+  function renderField(field: Field) {
+    const [max, kind] = specs[field],
+      fieldId = id + '-' + field,
+      invalid = !!errors[field];
+    const list = options[field as keyof typeof options];
+    const name = legalInfo[(labelKey(field) + 'Name') as keyof LegalInfo];
+    const currentName =
+      name && typeof name === 'object'
+        ? locale === 'fa'
+          ? name.nameFa
+          : name.nameEn
+        : t('crm.records.unknown', locale);
+    const inputProps = {
+      ...draft.bind(field),
+      id: fieldId,
+      value: values[field],
+      onChange: (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+      ) => change(field, event.target.value),
+    };
+    const dependencyField =
+      field === 'officialCityId'
+        ? 'officialProvinceId'
+        : field === 'representativeCityId'
+          ? 'representativeProvinceId'
+          : null;
+    return (
+      <div
+        key={field}
+        className={kind === 'textarea' ? 'min-w-0 space-y-1 sm:col-span-2' : recordEditorField}
+      >
+        <Label htmlFor={fieldId}>{label(field)}</Label>
+        {list ? (
+          <>
+            {dependencyField ? (
+              <DependentSelect
+                {...inputProps}
+                dependencyValue={values[dependencyField]}
+                ready={list.ready}
+                loading={list.loading}
+                options={list.options.map((city) => ({
+                  value: city.id,
+                  label: locale === 'fa' ? city.nameFa : city.nameEn,
+                  dependencyValue: city.provinceId ?? '',
+                }))}
+                className="h-11 rounded-lg bg-transparent"
+                placeholder={label(field)}
+                savedOption={{
+                  value: legalInfo[field] ?? '',
+                  label: currentName,
+                  dependencyValue: legalInfo[dependencyField] ?? '',
+                }}
+              />
+            ) : (
+              <NativeSelect {...inputProps} disabled={!list.ready} className="w-full">
+                <option value="">{label(field)}</option>
+                {values[field] === legalInfo[field] &&
+                  values[field] &&
+                  !list.options.some((row) => row.id === values[field]) && (
+                    <option value={values[field]}>{currentName}</option>
+                  )}
+                {list.options.map((row) => (
+                  <option key={row.id} value={row.id}>
+                    {locale === 'fa' ? row.nameFa : row.nameEn}
+                  </option>
+                ))}
+              </NativeSelect>
+            )}
+            <GeographyLoadError
+              {...list}
+              locale={locale}
+              message={t('crm.legal.optionsError', locale)}
+              testId={'crm-legal-' + field + '-retry'}
+            />
+          </>
+        ) : kind === 'textarea' ? (
+          <Textarea
+            {...inputProps}
+            maxLength={max}
+            dir="auto"
+            rows={2}
+            placeholder={t('crm.address.fullExample', locale)}
+            className="max-h-48 min-h-14 resize-y placeholder-shown:[direction:inherit]"
+          />
+        ) : (
+          <Input
+            {...inputProps}
+            maxLength={max}
+            dir={
+              kind === 'date' ||
+              kind === 'email' ||
+              kind === 'tel' ||
+              kind === 'postal' ||
+              kind === 'national'
+                ? 'ltr'
+                : undefined
+            }
+            inputMode={kind === 'postal' || kind === 'national' ? 'numeric' : undefined}
+            autoComplete="off"
+            type={kind === 'date' || kind === 'email' || kind === 'tel' ? kind : 'text'}
+          />
+        )}
+        {invalid && (
+          <p id={draft.errorId(field)} role="alert" className="text-sm text-destructive">
+            {errors[field]?.message}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <form
         onSubmit={review}
         noValidate
         aria-label={t('crm.legal.edit', locale)}
-        className="col-span-full space-y-4 rounded border bg-card text-card-foreground p-4 [color-scheme:light] dark:[color-scheme:dark]"
+        className={recordEditorFormSurface}
+        onFocus={keepRecordFieldVisible}
       >
-        <p className="text-sm text-muted-foreground">{t('crm.legal.description', locale)}</p>
-        <fieldset
-          disabled={pending !== null || draft.form.formState.isSubmitting}
-          className="grid gap-4 sm:grid-cols-2"
+        <nav
+          aria-label={t('crm.legal.formSections', locale)}
+          className="grid grid-cols-2 gap-1.5 border-b p-3 sm:flex sm:flex-wrap sm:px-6"
         >
-          {fields.map((field) => {
-            const [max, kind] = specs[field],
-              fieldId = id + '-' + field,
-              invalid = !!errors[field];
-            const list = options[field as keyof typeof options];
-            const name = legalInfo[(labelKey(field) + 'Name') as keyof LegalInfo];
-            const currentName =
-              name && typeof name === 'object'
-                ? locale === 'fa'
-                  ? name.nameFa
-                  : name.nameEn
-                : t('crm.records.unknown', locale);
-            const inputProps = {
-              ...draft.bind(field),
-              id: fieldId,
-              value: values[field],
-              onChange: (
-                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-              ) => change(field, event.target.value),
-            };
-            const dependencyField =
-              field === 'officialCityId'
-                ? 'officialProvinceId'
-                : field === 'representativeCityId'
-                  ? 'representativeProvinceId'
-                  : null;
-            return (
-              <div key={field} className="space-y-1 min-w-0">
-                <Label htmlFor={fieldId}>{label(field)}</Label>
-                {list ? (
-                  <>
-                    {dependencyField ? (
-                      <DependentSelect
-                        {...inputProps}
-                        dependencyValue={values[dependencyField]}
-                        ready={list.ready}
-                        loading={list.loading}
-                        options={list.options.map((city) => ({
-                          value: city.id,
-                          label: locale === 'fa' ? city.nameFa : city.nameEn,
-                          dependencyValue: city.provinceId ?? '',
-                        }))}
-                        placeholder={label(field)}
-                        savedOption={{
-                          value: legalInfo[field] ?? '',
-                          label: currentName,
-                          dependencyValue: legalInfo[dependencyField] ?? '',
-                        }}
-                      />
-                    ) : (
-                      <select
-                        {...inputProps}
-                        disabled={!list.ready}
-                        className="w-full rounded border bg-background text-foreground p-2"
-                      >
-                        <option value="">{label(field)}</option>
-                        {values[field] === legalInfo[field] &&
-                          values[field] &&
-                          !list.options.some((row) => row.id === values[field]) && (
-                            <option value={values[field]}>{currentName}</option>
-                          )}
-                        {list.options.map((row) => (
-                          <option key={row.id} value={row.id}>
-                            {locale === 'fa' ? row.nameFa : row.nameEn}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    <GeographyLoadError
-                      {...list}
-                      locale={locale}
-                      message={t('crm.legal.optionsError', locale)}
-                      testId={'crm-legal-' + field + '-retry'}
-                    />
-                  </>
-                ) : kind === 'textarea' ? (
-                  <textarea
-                    {...inputProps}
-                    maxLength={max}
-                    className="w-full rounded border bg-background text-foreground p-2"
-                  />
-                ) : (
-                  <Input
-                    {...inputProps}
-                    maxLength={max}
-                    type={kind === 'date' || kind === 'email' || kind === 'tel' ? kind : 'text'}
-                  />
-                )}
-                {invalid && (
-                  <p id={draft.errorId(field)} role="alert" className="text-sm text-destructive">
-                    {errors[field]?.message}
-                  </p>
-                )}
-              </div>
-            );
-          })}
-          <div className="flex flex-wrap gap-2 sm:col-span-2">
-            <Button ref={saveButton} type="submit">
-              {t('crm.profile.edit.save', locale)}
-            </Button>
+          {sections.map(([heading]) => (
+            <a
+              key={heading}
+              href={`#${sectionId(heading)}`}
+              className="inline-flex min-h-10 items-center rounded-md bg-muted/50 px-2.5 py-1 text-xs font-medium text-foreground hover:bg-muted focus-visible:outline focus-visible:outline-offset-2"
+            >
+              {t(heading, locale)}
+            </a>
+          ))}
+        </nav>
+        <fieldset disabled={pending !== null || draft.form.formState.isSubmitting}>
+          {sections.map(([heading, sectionFields], index) => (
+            <RecordEditorSection
+              key={heading}
+              anchorId={sectionId(heading)}
+              title={t(heading, locale)}
+              {...(index === 0 ? { description: t('crm.legal.description', locale) } : {})}
+            >
+              <div className={recordEditorGrid}>{sectionFields.map(renderField)}</div>
+            </RecordEditorSection>
+          ))}
+          <StickyRecordEditorActions>
             <Button type="button" variant="outline" onClick={onCancel}>
               {t('crm.profile.edit.cancel', locale)}
             </Button>
-          </div>
+            <Button ref={saveButton} type="submit">
+              {t('crm.profile.edit.save', locale)}
+            </Button>
+          </StickyRecordEditorActions>
         </fieldset>
       </form>
       {pending && (
@@ -333,6 +418,8 @@ export function CrmLegalEditor({
           onClose={() => setPending(null)}
           onSuccess={saved}
           onValidationError={onValidationError}
+          {...(onDenied ? { onDenied } : {})}
+          {...(onPendingChange ? { onPendingChange } : {})}
         />
       )}
     </>

@@ -3,6 +3,7 @@ import { Button, DynamicFieldArray, cn } from '@barghsa/ui';
 import { FileText, Upload } from 'lucide-react';
 import { useFileSelectionKey } from '../hooks/useFileSelectionKey.js';
 import { FilePreview } from './FilePreview.js';
+import { recordFilePicker, recordFilePickerAction, recordFilePickerHelp } from './RecordEditorLayout.js';
 import { documentText } from '@barghsa/i18n/documents';
 import type { Locale } from '@barghsa/i18n/app';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -57,8 +58,8 @@ export function FileUpload({
         : `${numbers.number(bytes)} ${word('sizeBytes')}`;
   }
   const requirements = policy
-    ? interpolate('fileRequirements', {
-        formats: policy.formats.map((format) => format.extension).join(', '),
+    ? interpolate(maxFiles === 1 ? 'singleFileRequirements' : 'fileRequirements', {
+        formats: `\u2066${policy.formats.map((format) => format.extension).join(', ')}\u2069`,
         size: size(policy.maxSizeBytes),
         count: numbers.number(maxFiles),
       })
@@ -86,7 +87,7 @@ export function FileUpload({
       onChange(next);
     }
   }
-  function drop(event: DragEvent<HTMLButtonElement>) {
+  function drop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
     setDragging(false);
     if (!blocked) choose(Array.from(event.dataTransfer.files));
@@ -94,7 +95,7 @@ export function FileUpload({
 
   return (
     <div
-      className="flex min-w-0 flex-col gap-3"
+      className="flex min-w-0 flex-col gap-2.5"
       data-slot="file-upload"
       onDragOver={(event) => event.preventDefault()}
       onDrop={(event) => event.preventDefault()}
@@ -114,30 +115,44 @@ export function FileUpload({
           if (files.length) choose(files);
         }}
       />
-      <Button
-        ref={browse}
-        type="button"
-        variant="outline"
-        disabled={blocked}
-        aria-describedby={`${id}-rules${problem ? ` ${id}-error` : ''}`}
+      <div
         className={cn(
-          'h-auto min-h-28 w-full flex-col gap-2 whitespace-normal border-dashed px-4 py-5 text-center',
+          recordFilePicker,
+          progress && 'hidden',
           dragging && 'border-primary bg-accent'
         )}
-        onClick={() => input.current?.click()}
         onDragOver={(event) => {
           event.preventDefault();
           if (!blocked) setDragging(true);
         }}
-        onDragLeave={() => setDragging(false)}
+        onDragLeave={(event) => {
+          if (
+            !(event.relatedTarget instanceof Node) ||
+            !event.currentTarget.contains(event.relatedTarget)
+          )
+            setDragging(false);
+        }}
         onDrop={drop}
       >
-        <Upload aria-hidden="true" className="size-6" />
-        {word('dropFiles')}
-      </Button>
-      <p id={`${id}-rules`} className="break-words text-sm text-muted-foreground">
-        {requirements}
-      </p>
+        <Button
+          ref={browse}
+          type="button"
+          variant="outline"
+          disabled={blocked}
+          aria-describedby={`${id}-rules${problem ? ` ${id}-error` : ''}`}
+          className={recordFilePickerAction}
+          onClick={() => input.current?.click()}
+        >
+          <Upload aria-hidden="true" className="size-4 shrink-0" />
+          {word(maxFiles > 1 ? 'chooseFiles' : value.length ? 'changeSelectedFile' : 'chooseFile')}
+        </Button>
+        <div className={recordFilePickerHelp}>
+          {!blocked && (
+            <p className="hidden [@media(pointer:fine)]:block">{word('dropHere')}</p>
+          )}
+          <p id={`${id}-rules`}>{requirements}</p>
+        </div>
+      </div>
       {problem && (
         <p id={`${id}-error`} role="alert" className="break-words text-sm text-destructive">
           {problem}
@@ -149,6 +164,7 @@ export function FileUpload({
         </p>
       )}
       <DynamicFieldArray
+        className={value.length ? '' : 'hidden'}
         emptyFocusRef={browse}
         value={value}
         getItemKey={fileKey}
@@ -173,28 +189,35 @@ export function FileUpload({
               )
             : 0;
           return (
-            <div className="min-w-0 space-y-2 rounded-md border p-3">
-              <div className="flex min-w-0 items-center gap-2">
-                <FileText aria-hidden="true" className="size-4 shrink-0" />
-                <bdi className="min-w-0 flex-1 break-all text-sm">{file.name}</bdi>
-                <span className="shrink-0 text-sm text-muted-foreground">{size(file.size)}</span>
+            <div className="min-w-0 space-y-2 rounded-lg border px-3 py-2.5">
+              <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
+                  <FileText aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium [overflow-wrap:anywhere]">
+                      <bdi>{file.name}</bdi>
+                    </p>
+                    <p className="text-xs text-muted-foreground">{size(file.size)}</p>
+                  </div>
+                </div>
+                {!disabled && actions}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-primary"
+                  aria-label={`${word('preview')}: ${file.name}`}
+                  aria-expanded={previews.includes(file)}
+                  onClick={() =>
+                    setPreviews((current) =>
+                      current.includes(file)
+                        ? current.filter((item) => item !== file)
+                        : [...current, file]
+                    )
+                  }
+                >
+                  {word(previews.includes(file) ? 'hidePreview' : 'preview')}
+                </Button>
               </div>
-              {!disabled && actions}
-              <Button
-                type="button"
-                variant="ghost"
-                aria-label={`${word('preview')}: ${file.name}`}
-                aria-expanded={previews.includes(file)}
-                onClick={() =>
-                  setPreviews((current) =>
-                    current.includes(file)
-                      ? current.filter((item) => item !== file)
-                      : [...current, file]
-                  )
-                }
-              >
-                {word(previews.includes(file) ? 'hidePreview' : 'preview')}
-              </Button>
               {previews.includes(file) && (
                 <FilePreview
                   file={file}

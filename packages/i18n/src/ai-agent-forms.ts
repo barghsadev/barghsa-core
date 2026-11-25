@@ -23,12 +23,21 @@ const en = {
   reset: 'Reset to saved settings',
   linkedKbs: 'Direct knowledge base links',
   linkedPolicies: 'Direct policy links',
+  basics: 'Agent details',
+  editAgent: 'Edit agent',
+  instructions: 'Agent behavior',
+  promptPlaceholder:
+    'Describe what the agent should do, which sources to use, and when to ask for clarification.',
+  sources: 'Knowledge and policies',
+  responseSettings: 'Response settings',
+  descriptionPlaceholder: 'Summarize what this agent helps with.',
   promptHelp:
     'Markdown headings, lists, links and code are highlighted. Instructions are saved as entered.',
   slotsTable: 'Agent slot assignments',
   slot: 'Slot',
   lastChanged: 'Last changed',
   assignment: 'Assignment',
+  proposedAssignment: 'Proposed assignment',
 };
 const fa: Record<keyof typeof en, string> = {
   tableDetails: 'جزئیات',
@@ -55,12 +64,21 @@ const fa: Record<keyof typeof en, string> = {
   reset: 'بازنشانی به تنظیمات ذخیره‌شده',
   linkedKbs: 'پیوندهای مستقیم پایگاه دانش',
   linkedPolicies: 'پیوندهای مستقیم سیاست',
+  basics: 'مشخصات عامل',
+  editAgent: 'ویرایش عامل',
+  instructions: 'رفتار عامل',
+  promptPlaceholder:
+    'بنویسید عامل چه کاری انجام دهد، از چه منابعی استفاده کند و چه زمانی سؤال بپرسد.',
+  sources: 'دانش و سیاست‌ها',
+  responseSettings: 'تنظیمات پاسخ',
+  descriptionPlaceholder: 'کوتاه بنویسید این عامل در چه کاری کمک می‌کند.',
   promptHelp:
     'عنوان‌ها، فهرست‌ها، پیوندها و کدهای Markdown مشخص می‌شوند. دستورها همان‌گونه که وارد شده‌اند ذخیره می‌شوند.',
   slotsTable: 'تخصیص‌های جایگاه عامل',
   slot: 'جایگاه',
   lastChanged: 'آخرین تغییر',
   assignment: 'تخصیص',
+  proposedAssignment: 'تخصیص پیشنهادی',
 };
 export function aiAgentFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];

@@ -1,6 +1,10 @@
+import { fullNavigation } from './navigation-fixture';
+import { shellText } from '@barghsa/i18n/shell';
+import { manualRecordDateTime, selectRecordDateTime } from './record-date-time-fixture';
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
+import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
 
 for (const locale of ['en', 'fa'] as const) {
   test(
@@ -10,6 +14,9 @@ for (const locale of ['en', 'fa'] as const) {
       const id = '11111111-1111-4111-8111-111111111111';
       const firstId = '22222222-2222-4222-8222-222222222222';
       const secondId = '44444444-4444-4444-8444-444444444444';
+      const invoiceId = '77777777-7777-4777-8777-777777777777';
+      const profileId = '33333333-3333-4333-8333-333333333333';
+      const copy = (key: string) => tContractAuthoring(key, locale);
       await page.addInitScript((language) => {
         localStorage.setItem('barghsa.locale', language);
         if (document.documentElement) document.documentElement.lang = language;
@@ -24,6 +31,7 @@ for (const locale of ['en', 'fa'] as const) {
             userId: 'contract-context-staff',
             isStaff: true,
             operatingContext: 'staff',
+            navigation: fullNavigation('staff'),
             canSwitchContext: true,
             requiresTosAcceptance: false,
           },
@@ -54,7 +62,7 @@ for (const locale of ['en', 'fa'] as const) {
       const dto = () => ({
         id,
         contractNumber: '1',
-        profileId: '33333333-3333-4333-8333-333333333333',
+        profileId,
         orderId: null,
         serviceType: 'savings',
         state: 'Draft',
@@ -115,14 +123,16 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route(`**/api/admin/contracts/${id}/versions/${firstId}`, (route) =>
         route.fulfill({ json: original })
       );
+      let activationAccess: 'current' | 'historical' | 'denied' = 'current';
       await page.route(`**/api/admin/contracts/${id}/activation?*`, (route) => {
+        if (activationAccess === 'denied') return route.fulfill({ status: 403, json: {} });
         const selected = new URL(route.request().url()).searchParams.get('versionId');
         return route.fulfill({
           json: {
             contractId: id,
             versionId: selected,
             state: 'Draft',
-            isCurrent: selected === current.id,
+            isCurrent: activationAccess === 'current' && selected === current.id,
             ready: false,
             ruleRevision: 1,
             ...(selected === current.id ? context : originalContext),
@@ -134,6 +144,21 @@ for (const locale of ['en', 'fa'] as const) {
               { key: 'initialPayment', required: false, status: 'not_required' },
               { key: 'serviceStart', required: false, status: 'not_required' },
             ],
+          },
+        });
+      });
+      let invoiceReads = 0;
+      await page.route(`**/api/admin/contracts/${id}/activation/invoice-options?*`, (route) => {
+        const params = new URL(route.request().url()).searchParams;
+        expect(params.get('versionId')).toBe(firstId);
+        invoiceReads++;
+        return route.fulfill({
+          json: {
+            contractId: id,
+            versionId: firstId,
+            profileId: invoiceReads === 1 ? secondId : profileId,
+            invoices: [{ id: invoiceId, createdAt: '2026-09-21T00:00:00Z' }],
+            nextBefore: null,
           },
         });
       });
@@ -160,27 +185,53 @@ for (const locale of ['en', 'fa'] as const) {
         verified = true;
         return route.fulfill({ json: { verified: true } });
       });
-      await page.goto('/admin/contracts');
+      await page.goto('/admin/contracts?serviceType=savings');
       await page
-        .getByRole('button', {
+        .getByRole('link', {
           name: `${words.savings} \u00b7 ${words.version} ${(1).toLocaleString(locale)}`,
           exact: true,
         })
         .click();
       const panel = page.getByRole('region', { name: words.activationTitle, exact: true });
-      await panel.getByRole('button', { name: words.editContext, exact: true }).click();
-      await expect(page.locator('#contract-context-start')).toHaveValue('2026-09-22T03:30');
+      await expect(page.getByTestId('contract-context-form')).toHaveCount(0);
+      await panel.getByRole('link', { name: words.editContext, exact: true }).click();
+      await expect(page).toHaveURL(`/admin/contracts/${id}/service-dates?serviceType=savings`);
+      await expect(page.locator('.shell-breadcrumbs [aria-current=page]')).toHaveText(
+        shellText('editPage', locale)
+      );
       await expect(
-        panel.getByRole('button', { name: words.saveContext, exact: true })
+        page.getByRole('heading', { name: words.editContext, exact: true })
+      ).toBeFocused();
+      const start = await manualRecordDateTime(page, 'contract-context-start');
+      await expect(start).toHaveValue('2026-09-22T03:30');
+      const editor = page.getByTestId('contract-context-form');
+      const invoice = editor.getByLabel(copy('initialInvoice'), { exact: true });
+      await expect(editor.getByText(copy('invoiceLookupError'), { exact: true })).toBeVisible();
+      await expect(invoice.locator('option')).toHaveCount(1);
+      await editor.getByRole('button', { name: words.retry, exact: true }).click();
+      await invoice.selectOption(invoiceId);
+      await editor.getByRole('button', { name: copy('invoiceEnterId'), exact: true }).click();
+      await expect(editor.getByLabel(words.contextInvoice, { exact: true })).toHaveValue(invoiceId);
+      await editor.getByRole('button', { name: copy('invoiceChoose'), exact: true }).click();
+      await expect(invoice).toHaveValue(invoiceId);
+      await invoice.selectOption('');
+      await expect(
+        editor.getByRole('button', { name: words.saveContext, exact: true })
       ).toBeDisabled();
-      await page.locator('#contract-context-end').fill('2026-11-22T03:30');
+      await page.reload();
+      await expect(editor).toBeVisible();
+      await selectRecordDateTime(page, 'contract-context-end', '2026-11-22T03:30', locale);
+      await invoice.selectOption(invoiceId);
       await page.getByLabel(words.contextReason, { exact: true }).fill('Extend service term');
-      await panel.getByRole('button', { name: words.saveContext, exact: true }).click();
+      await editor.getByRole('button', { name: words.saveContext, exact: true }).click();
       const dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText(invoiceId);
+      await expect(dialog).toContainText('Extend service term');
       await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
       await dialog.locator('input[type=password]').fill('Test-password');
       await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
       await expect(dialog).toHaveCount(0);
+      await expect(page).toHaveURL(`/admin/contracts/${id}?serviceType=savings`);
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
       expect(attempts[0]).toMatchObject({
@@ -189,7 +240,7 @@ for (const locale of ['en', 'fa'] as const) {
         changeDescription: 'Extend service term',
         idempotencyKey: expect.any(String),
         activationContext: {
-          initialInvoiceId: null,
+          initialInvoiceId: invoiceId,
           serviceStartsAt: originalContext.serviceStartsAt,
           serviceEndsAt: '2026-11-22T00:00:00.000Z',
         },
@@ -207,9 +258,19 @@ for (const locale of ['en', 'fa'] as const) {
         })
         .click();
       await expect(panel.getByText(words.historicalRequirements, { exact: true })).toBeVisible();
-      await expect(panel.getByRole('button', { name: words.editContext, exact: true })).toHaveCount(
+      await expect(panel.getByRole('link', { name: words.editContext, exact: true })).toHaveCount(
         0
       );
+      activationAccess = 'historical';
+      await page.goto(`/admin/contracts/${id}/service-dates`);
+      await expect(
+        page.getByRole('alert').filter({ hasText: words.draftUnavailable })
+      ).toBeVisible();
+      await expect(editor).toHaveCount(0);
+      activationAccess = 'denied';
+      await page.reload();
+      await expect(page.getByRole('alert').filter({ hasText: words.denied })).toBeVisible();
+      await expect(editor).toHaveCount(0);
     }
   );
 }

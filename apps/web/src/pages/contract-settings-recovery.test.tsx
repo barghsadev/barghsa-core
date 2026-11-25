@@ -18,6 +18,12 @@ const captured = vi.hoisted(() => ({
   close: null as (() => void) | null,
   disabled: false,
 }));
+vi.mock('@tanstack/react-router', async (original) => ({
+  ...(await original<typeof import('@tanstack/react-router')>()),
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
+  ),
+}));
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (v: string) => v }),
 }));
@@ -57,7 +63,8 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 const response = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status });
-async function render(Page: typeof Templates | typeof Limits) {
+const LimitEditor = () => <Limits view="edit" />;
+async function render(Page: typeof Templates | typeof LimitEditor) {
   await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 async function click(name: string) {
@@ -330,7 +337,7 @@ function limitsFetch(read: () => Response | Promise<Response>) {
 it('limits retry retains edits, pauses confirmation and recovers its frozen proposal', async () => {
   let fail = false;
   limitsFetch(() => response(electricityLimits, fail ? 503 : 200));
-  await render(Limits);
+  await render(LimitEditor);
   await fill('#contract-limit-leadTimeDays', '14');
   await submit();
   const body = captured.action?.body;
@@ -346,7 +353,7 @@ it('limits retry retains edits, pauses confirmation and recovers its frozen prop
 it('fresh limits invalidate obsolete confirmation and late completion', async () => {
   let changed = false;
   limitsFetch(() => response({ ...electricityLimits, leadTimeDays: changed ? 7 : 0 }));
-  await render(Limits);
+  await render(LimitEditor);
   await fill('#contract-limit-leadTimeDays', '14');
   await submit();
   const old = captured.success!;
@@ -360,7 +367,7 @@ it('fresh limits invalidate obsolete confirmation and late completion', async ()
 it.each([401, 403])('limits %s clears drafts and recovers explicitly', async (status) => {
   let deny = false;
   limitsFetch(() => response(electricityLimits, deny ? status : 200));
-  await render(Limits);
+  await render(LimitEditor);
   await fill('#contract-limit-leadTimeDays', '14');
   await submit();
   deny = true;
@@ -376,7 +383,7 @@ it('invalid limits retain accepted form without enabling confirmation', async ()
   limitsFetch(() =>
     response(malformed ? { ...electricityLimits, maxContractDuration: 0 } : electricityLimits)
   );
-  await render(Limits);
+  await render(LimitEditor);
   await fill('#contract-limit-leadTimeDays', '14');
   malformed = true;
   await click('Refresh');
@@ -386,7 +393,7 @@ it('invalid limits retain accepted form without enabling confirmation', async ()
 it('limits validation rejects out of range local edits and unexpected acknowledgements', async () => {
   let saved = false;
   limitsFetch(() => response({ ...electricityLimits, leadTimeDays: saved ? 14 : 0 }));
-  await render(Limits);
+  await render(LimitEditor);
   await fill('#contract-limit-leadTimeDays', '-1');
   await submit();
   expect(captured.action).toBeNull();

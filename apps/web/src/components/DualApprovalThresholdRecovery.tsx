@@ -25,15 +25,14 @@ export default function DualApprovalThresholdRecovery({ label, ...props }: Props
         const copy = tServiceSettings(`recovery.${key}`, locale);
         return copy === `recovery.${key}` ? label(key) : copy;
       }}
+      showRevisions
       valid={validThreshold}
       basis={thresholdBasis}
       requiresOtp
       activationRisk={(value) => (value.thresholdIrR === 0 ? 'destructive' : undefined)}
       renderValues={(value) => (
         <div className="space-y-2">
-          <p>
-            {label('label')} <bdi>{numbers.money(value.thresholdIrR)}</bdi>
-          </p>
+          <p className="font-medium tabular-nums">{numbers.money(value.thresholdIrR)}</p>
           {value.thresholdIrR === 0 && <p>{label('disabled')}</p>}
         </div>
       )}

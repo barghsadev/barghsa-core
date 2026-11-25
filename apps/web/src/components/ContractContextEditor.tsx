@@ -1,17 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Alert, AlertDescription, Button, Input, Textarea } from '@barghsa/ui';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+import { Alert, AlertDescription, Button, PageLoading, Textarea } from '@barghsa/ui';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { contractText } from '@barghsa/i18n/contracts';
 import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
+import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -32,6 +24,16 @@ import type {
 } from '../lib/contracts.js';
 import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
+import { CompactFieldFeedback } from './CompactFieldFeedback.js';
+import { ContractInvoicePicker } from './ContractInvoicePicker.js';
+import { RecordDateTimeField } from './RecordDateTimeField.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 type Props = {
   context: ContractActivationData;
   version: ContractVersion;
@@ -39,6 +41,7 @@ type Props = {
   onChanged: () => void;
   coordination?: ContractFormCoordination | undefined;
   onDenied?: (() => void) | undefined;
+  recordPage?: boolean;
 };
 export function ContractContextEditor(props: Props) {
   const actor = useAccountUser(),
@@ -59,45 +62,19 @@ function ContextEditor(props: Props) {
   const locale = useLocale(),
     time = useAccountTime(),
     word = (key: string) => contractText(key, locale);
-  const [open, setOpen] = useState(false),
-    [zone, setZone] = useState<string | null>(null),
-    [locked, setLocked] = useState(false),
-    owner = useRef(false);
+  const [zone, setZone] = useState(() => (time.status === 'ready' ? time.timezone : null));
   useEffect(() => {
-    if (open && !zone && time.status === 'ready') setZone(time.timezone);
-  }, [open, zone, time.status, time.timezone]);
+    if (!zone && time.status === 'ready') setZone(time.timezone);
+  }, [zone, time.status, time.timezone]);
   return (
-    <div className="flex flex-col gap-3 border-t pt-4">
-      <Button
-        className="self-start"
-        variant="outline"
-        aria-expanded={open}
-        disabled={locked || !!props.coordination?.blocked()}
-        onClick={() => {
-          if (owner.current || props.coordination?.blocked()) return;
-          if (!open && time.status === 'ready') setZone(time.timezone);
-          setOpen(!open);
-        }}
-      >
-        {word('editContext')}
-      </Button>
-      {open && (
-        <>
-          {time.notice}
-          {zone && (
-            <Editor
-              {...props}
-              initialZone={zone}
-              time={time}
-              onLocked={(value) => {
-                owner.current = value;
-                setLocked(value);
-              }}
-            />
-          )}
-        </>
+    <>
+      {time.notice}
+      {zone ? (
+        <Editor {...props} initialZone={zone} time={time} />
+      ) : (
+        time.status === 'loading' && <PageLoading label={word('loading')} />
       )}
-    </div>
+    </>
   );
 }
 function Editor({
@@ -109,11 +86,10 @@ function Editor({
   onDenied,
   initialZone,
   time,
-  onLocked,
+  recordPage,
 }: Props & {
   initialZone: string;
   time: ReturnType<typeof useAccountTime>;
-  onLocked: (value: boolean) => void;
 }) {
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale),
@@ -171,7 +147,6 @@ function Editor({
   const command = useContractAuthoringCommand({
     scope,
     coordination,
-    onLocked,
     onSaved: () => {
       form.setValue('changeDescription', '');
       onChanged();
@@ -261,69 +236,122 @@ function Editor({
         <AlertDescription>{word('denied')}</AlertDescription>
       </Alert>
     );
-  const fields = [
-    ['serviceStartsAt', 'contract-context-start', 'prerequisite.serviceStart', 'dateHelp'],
-    ['serviceEndsAt', 'contract-context-end', 'serviceEndsAt', 'dateHelp'],
-    ['initialInvoiceId', 'contract-context-invoice', 'contextInvoice', null],
-    ['changeDescription', 'contract-context-reason', 'contextReason', 'reasonHelp'],
+  const dates = [
+    [
+      'serviceStartsAt',
+      'contract-context-start',
+      'prerequisite.serviceStart',
+      'startDateHelp',
+      'startInvalid',
+    ],
+    ['serviceEndsAt', 'contract-context-end', 'serviceEndsAt', 'endDateHelp', 'endInvalid'],
   ] as const;
+  const disabled = command.frozen || time.status !== 'ready' || !!coordination?.blocked();
+  const reviewed = command.action?.body as
+    | {
+        activationContext: ReturnType<typeof contractContextBody>;
+        changeDescription: string;
+      }
+    | undefined;
   return (
     <>
+      {recordPage && <RecordCommandGuard blocked={command.navigationBlocked} />}
       <Form {...form}>
         <form
           data-testid="contract-context-form"
           noValidate
           onSubmit={(event) => void save(event)}
-          className="flex flex-col gap-4"
+          className={recordEditorSurface}
         >
-          <p className="text-sm text-muted-foreground">{word('contextVersionNotice')}</p>
-          <p className="text-sm">
-            {word('contextTimezone')}: <bdi>{displayZone}</bdi>
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {fields.map(([name, id, label, help]) => (
-              <FormField
-                key={name}
-                control={form.control}
-                name={name}
-                render={({ field }) => (
-                  <FormItem id={id}>
-                    <FormLabel>{word(label)}</FormLabel>
-                    <FormControl>
-                      {name === 'changeDescription' ? (
-                        <Textarea {...field} aria-required="true" disabled={command.frozen} />
-                      ) : (
-                        <Input
+          <RecordEditorSection title={copy('serviceDates')}>
+            <p className="text-sm text-muted-foreground">
+              {word('contextTimezone')} · <bdi>{displayZone}</bdi>
+            </p>
+            <div className={recordEditorGrid}>
+              {dates.map(([name, id, label, help, validation]) => (
+                <FormField
+                  key={name}
+                  control={form.control}
+                  name={name}
+                  render={({ field, fieldState }) => (
+                    <FormItem id={id}>
+                      <FormLabel>{word(label)}</FormLabel>
+                      <FormControl>
+                        <RecordDateTimeField
                           {...field}
-                          type={name === 'initialInvoiceId' ? 'text' : 'datetime-local'}
-                          dir="ltr"
-                          disabled={command.frozen || time.status !== 'ready'}
+                          label={word(label)}
+                          locale={locale}
+                          timezone={displayZone}
+                          disabled={disabled}
+                          clearable
                         />
-                      )}
+                      </FormControl>
+                      <CompactFieldFeedback
+                        help={copy(help)}
+                        validationMessage={copy(validation)}
+                        invalid={fieldState.invalid}
+                      />
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
+          </RecordEditorSection>
+          <div className="grid border-b lg:grid-cols-2">
+            <div className="min-w-0 border-b px-4 py-4 sm:px-6 lg:border-e lg:border-b-0">
+              <ContractInvoicePicker
+                contractId={context.contractId}
+                versionId={version.id}
+                profileId={source.profileId}
+                control={form.control}
+                disabled={disabled}
+                formatDate={time.format}
+              />
+            </div>
+            <RecordEditorSection
+              title={copy('reviewSection')}
+              description={word(
+                context.state === 'ChangesRequested'
+                  ? 'contextResubmitNotice'
+                  : 'contextVersionNotice'
+              )}
+            >
+              <FormField
+                control={form.control}
+                name="changeDescription"
+                render={({ field, fieldState }) => (
+                  <FormItem id="contract-context-reason">
+                    <FormLabel>{word('contextReason')}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        rows={2}
+                        className="min-h-16"
+                        placeholder={copy('reasonExample')}
+                        aria-required="true"
+                        disabled={command.frozen}
+                      />
                     </FormControl>
-                    {help && <FormDescription>{copy(help)}</FormDescription>}
-                    <FormMessage />
+                    <CompactFieldFeedback
+                      help={copy('reasonHelp')}
+                      validationMessage={copy('reasonInvalid')}
+                      invalid={fieldState.invalid}
+                    />
                   </FormItem>
                 )}
               />
-            ))}
+              {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
+            </RecordEditorSection>
           </div>
-          <p className="text-sm text-muted-foreground">{word('contextOptional')}</p>
-          {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
-          <Button
-            type="submit"
-            className="self-start"
-            loading={command.preparing}
-            disabled={
-              !changed ||
-              command.locked ||
-              !!coordination?.blocked() ||
-              time.status !== 'ready' ||
-              zone.current !== displayZone
-            }
-          >
-            {word('saveContext')}
-          </Button>
+          <RecordEditorActions>
+            <Button
+              type="submit"
+              loading={command.preparing}
+              disabled={!changed || command.locked || disabled || zone.current !== displayZone}
+            >
+              {word('saveContext')}
+            </Button>
+          </RecordEditorActions>
         </form>
       </Form>
       {command.failed && (
@@ -347,7 +375,40 @@ function Editor({
         </Button>
       )}
       {command.action && command.dialog && (
-        <TeamActionDialog action={command.action} {...command.dialog} />
+        <TeamActionDialog
+          action={command.action}
+          {...command.dialog}
+          summary={
+            reviewed && (
+              <dl className="grid gap-2.5 rounded-lg border bg-muted/25 p-3 text-sm sm:grid-cols-2">
+                {dates.map(([name, , label]) => (
+                  <div key={name}>
+                    <dt className="text-muted-foreground">{word(label)}</dt>
+                    <dd>
+                      {reviewed.activationContext[name]
+                        ? formatInTimezone(reviewed.activationContext[name], displayZone, locale)
+                        : word('noValue')}
+                    </dd>
+                  </div>
+                ))}
+                <div className="min-w-0 sm:col-span-2">
+                  <dt className="text-muted-foreground">{copy('initialInvoice')}</dt>
+                  <dd className="wrap-anywhere">
+                    <bdi>
+                      {reviewed.activationContext.initialInvoiceId ?? copy('noLinkedInvoice')}
+                    </bdi>
+                  </dd>
+                </div>
+                <div className="min-w-0 sm:col-span-2">
+                  <dt className="text-muted-foreground">{word('contextReason')}</dt>
+                  <dd className="whitespace-pre-wrap wrap-anywhere">
+                    {reviewed.changeDescription}
+                  </dd>
+                </div>
+              </dl>
+            )
+          }
+        />
       )}
     </>
   );

@@ -1,4 +1,13 @@
-import { validDocumentDetail } from '../lib/document-records.js';
+import { canReplaceDocument, validDocumentDetail } from '../lib/document-records.js';
+import { isContractAttachmentRole } from '../lib/contract-attachments.js';
+import {
+  relatedDocumentListLocation,
+  relatedDocumentLocation,
+  relatedDocumentMatches,
+  type RelatedDocumentContext,
+} from '../lib/related-document-route.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -8,6 +17,7 @@ import {
   Alert,
   AlertDescription,
   Button,
+  buttonVariants,
   Field,
   FieldLabel,
   PageLoading,
@@ -23,7 +33,8 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-import { DocumentLegalHolds } from './DocumentLegalHolds.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+import { DocumentLegalHolds, type DocumentHoldPage } from './DocumentLegalHolds.js';
 import { DocumentStatusBadge } from './DocumentStatusBadge.js';
 import { FilePreview } from './FilePreview.js';
 import {
@@ -59,7 +70,17 @@ export function DocumentDetail(props: Parameters<typeof OwnedDocumentDetail>[0])
   const revision = useProfileContextRevision();
   return (
     <OwnedDocumentDetail
-      key={JSON.stringify([actor, revision, props.id, props.profileId, props.staff])}
+      key={JSON.stringify([
+        actor,
+        revision,
+        props.id,
+        props.profileId,
+        props.staff,
+        props.decision,
+        props.related?.kind,
+        props.related?.id,
+        props.related?.kind === 'contract' ? props.related.versionId : undefined,
+      ])}
       {...props}
     />
   );
@@ -74,20 +95,30 @@ function OwnedDocumentDetail({
   onPrevious,
   savingPreSubmissionOnly = false,
   solarCustomer = false,
+  related,
   allowReplacement = true,
+  previewOnly = false,
   showRetention = false,
+  holdPage,
+  decision,
+  recordSearch,
 }: {
   id: string;
   profileId?: string;
   staff: boolean;
-  onClose: () => void;
-  onChanged: () => void;
-  onReplace: (document: BusinessDocument) => void;
-  onPrevious: (id: string) => void;
+  onClose?: () => void;
+  onChanged?: () => void;
+  onReplace?: (document: BusinessDocument) => void;
+  onPrevious?: (id: string) => void;
   savingPreSubmissionOnly?: boolean;
   solarCustomer?: boolean;
+  related?: RelatedDocumentContext;
   allowReplacement?: boolean;
+  previewOnly?: boolean;
   showRetention?: boolean;
+  holdPage?: DocumentHoldPage | undefined;
+  decision?: DocumentAction | undefined;
+  recordSearch?: Record<string, unknown>;
 }) {
   const locale = useLocale();
   const actor = useAccountUser();
@@ -97,7 +128,7 @@ function OwnedDocumentDetail({
     revision,
     staff,
     profileId,
-    JSON.stringify([id, staff])
+    JSON.stringify([id, staff, related?.kind, related?.id])
   );
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
@@ -107,7 +138,11 @@ function OwnedDocumentDetail({
   const [reload, setReload] = useState(0);
   const [reason, setReason] = useState('');
   const [reasonMissing, setReasonMissing] = useState(false);
+  const reasonInput = useRef<HTMLTextAreaElement>(null);
   const [action, setAction] = useState<Transition | null>(null);
+  const [decisionPending, setDecisionPending] = useState(false);
+  const inlineDecision = !staff && !!decision;
+  const [recordedState, setRecordedState] = useState<BusinessDocument['state'] | null>(null);
   const unconfirmed = useRef<Transition | null>(null);
   const [needsRead, setNeedsRead] = useState(false);
   const [download, setDownload] = useState<string | null>(null);
@@ -118,6 +153,11 @@ function OwnedDocumentDetail({
   const downloadController = useRef<AbortController | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
+  const recordHeading = useRef<HTMLHeadingElement>(null);
+  const recordPage = !!(recordSearch || related);
+  useEffect(() => {
+    if (recordPage) recordHeading.current?.focus({ preventScroll: true });
+  }, [id, recordPage, recordSearch, holdPage, decision]);
   useEffect(() => {
     const controller = new AbortController();
     previewController.current?.abort();
@@ -141,6 +181,8 @@ function OwnedDocumentDetail({
           (pending && data.profileId !== pending.target.profileId)
         )
           throw new Error('Invalid document detail');
+        if (related && !relatedDocumentMatches(data, related))
+          throw new DocumentRequestError(404, null);
         if (pending?.body.expectedRevision !== data.revision || data.permissions?.write === false)
           unconfirmed.current = null;
         setDocument(data);
@@ -200,9 +242,10 @@ function OwnedDocumentDetail({
     }
   }
   function choose(next: DocumentAction) {
-    if (!document || needsRead || action) return;
+    if (!document || needsRead || action || recordedState || !actions.includes(next)) return;
     if (reasonRequiredActions.has(next) && !reason.trim()) {
       setReasonMissing(true);
+      reasonInput.current?.focus();
       return;
     }
     setReasonMissing(false);
@@ -243,11 +286,13 @@ function OwnedDocumentDetail({
     setPreview(null);
     setDownload(null);
     setAction(null);
+    setDecisionPending(false);
   }
   function withdrawDenied() {
     withdraw();
     unconfirmed.current = null;
     setNeedsRead(false);
+    setRecordedState(null);
     setReason('');
     setReasonMissing(false);
     setError('denied');
@@ -257,13 +302,21 @@ function OwnedDocumentDetail({
     !isQuarantinedDocument(document) &&
     document.permissions?.download !== false &&
     !['Uploading', 'PendingScan'].includes(document.state);
+  const canPreview =
+    readable &&
+    document.state !== 'Removed' &&
+    ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'].includes(
+      document.detectedMime ?? ''
+    );
   const customerCanChange =
     document?.businessRecordType !== 'contract' || document.contractRole === 'signed';
   const canChange = document?.permissions?.write !== false && (staff || customerCanChange);
+  const canChangeVersion = related?.kind !== 'contract' || allowReplacement;
   const actions: DocumentAction[] = [];
-  if (document && canChange) {
-    if (document.state === 'Available') actions.push('submit');
+  if (document && canChange && !previewOnly) {
+    if (canChangeVersion && document.state === 'Available') actions.push('submit');
     if (
+      canChangeVersion &&
       staff &&
       (document.state === 'SubmittedForReview' ||
         (document.businessRecordType === 'solar_request' && document.state === 'Available'))
@@ -285,24 +338,133 @@ function OwnedDocumentDetail({
             ['Uploading', 'PendingScan', 'Available'].includes(document.state)
           : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(document.state)
     ) {
-      if (document.permissions?.remove !== false) actions.push('remove');
+      if (canChangeVersion && document.permissions?.remove !== false) actions.push('remove');
     }
     if (staff && !['Removed', 'Quarantined'].includes(document.state)) actions.push('quarantine');
   }
   const showReasonHelp = actions.some((item) => reasonRequiredActions.has(item));
+  useEffect(() => {
+    if (inlineDecision && decision) choose(decision);
+  }, [action, decision, document, inlineDecision, needsRead, recordedState]);
+  const canReplace =
+    document &&
+    allowReplacement &&
+    (related?.kind !== 'contract' ||
+      (document.permissions?.replace === true &&
+        isContractAttachmentRole(document.contractRole))) &&
+    canReplaceDocument(document, staff, solarCustomer, savingPreSubmissionOnly);
+  const predecessor = document?.supersedesDocumentId;
+  const SectionHeading = recordPage ? 'h2' : 'h3';
+  const title = holdPage
+    ? word(holdPage === 'history' ? 'legalHolds' : holdPage === 'new' ? 'newHold' : 'releaseHold')
+    : decision
+      ? word(decision)
+      : (document?.originalName ?? word('details'));
+  const previewButton = canPreview && (
+    <Button
+      type="button"
+      variant="outline"
+      disabled={previewing || decisionPending}
+      onClick={() => void getPreview()}
+    >
+      {word('preview')}
+    </Button>
+  );
+  const previewContent = (
+    <>
+      {previewError && <p role="alert">{word('previewUnavailable')}</p>}
+      {preview && document && (
+        <FilePreview imageUrl={preview} name={document.originalName} locale={locale} />
+      )}
+    </>
+  );
+  const required = !!decision && reasonRequiredActions.has(decision);
+  const decisionLabel = required ? word(`decisionLabel.${decision}`) : word('decisionNote');
+  const decisionReasonField = (
+    <Field className="gap-1.5" data-invalid={reasonMissing || undefined}>
+      <FieldLabel htmlFor="document-review-reason">{decisionLabel}</FieldLabel>
+      <Textarea
+        id="document-review-reason"
+        ref={reasonInput}
+        rows={2}
+        maxLength={1000}
+        required={required}
+        aria-required={required || undefined}
+        aria-invalid={reasonMissing || undefined}
+        aria-describedby={reasonMissing ? 'document-review-reason-error' : undefined}
+        dir="auto"
+        className="min-h-14 resize-y placeholder-shown:[direction:inherit]"
+        placeholder={word(`decisionExample.${decision}`)}
+        value={reason}
+        disabled={!!action}
+        onChange={(event) => {
+          setReason(event.target.value);
+          if (event.target.value.trim()) setReasonMissing(false);
+        }}
+      />
+      {reasonMissing && (
+        <p id="document-review-reason-error" role="alert" className="text-sm text-destructive">
+          {word('reasonRequired')}
+        </p>
+      )}
+    </Field>
+  );
+  const decisionContext = document && decision && (
+    <div className="space-y-2 rounded-lg bg-muted/50 px-3 py-2.5 text-sm">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p dir="auto" className="wrap-anywhere font-semibold">
+            {document.originalName}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {word('reviewRevision').replace('{revision}', numbers.number(document.revision))}
+          </p>
+        </div>
+        <DocumentStatusBadge state={document.state} locale={locale} />
+      </div>
+      <p className="text-muted-foreground">{word(`decisionEffect.${decision}`)}</p>
+    </div>
+  );
   return (
     <section
-      className="flex flex-col gap-5 rounded-xl border bg-card p-5"
+      className={
+        holdPage || decision
+          ? 'min-w-0 space-y-3'
+          : 'flex min-w-0 flex-col gap-4 rounded-xl border bg-card p-4 sm:p-5'
+      }
       aria-label={word('details')}
     >
-      <div className="flex items-start justify-between gap-4">
-        <h2 className="break-words text-xl font-semibold">
-          {document?.originalName ?? word('details')}
-        </h2>
-        <Button variant="ghost" onClick={onClose}>
-          {word('close')}
-        </Button>
-      </div>
+      {recordPage && (
+        <RecordCommandGuard
+          blocked={() => needsRead || (inlineDecision ? decisionPending : !!action)}
+        />
+      )}
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {recordPage ? (
+            <h1
+              ref={recordHeading}
+              tabIndex={-1}
+              className="min-w-0 text-xl font-semibold [overflow-wrap:anywhere] focus-visible:shadow-none! focus-visible:outline-hidden! sm:text-2xl"
+              dir="auto"
+            >
+              {title}
+            </h1>
+          ) : (
+            <h2 className="break-words text-xl font-semibold">{title}</h2>
+          )}
+          {holdPage && document && (
+            <p dir="auto" className="wrap-anywhere text-sm text-muted-foreground">
+              {document.originalName}
+            </p>
+          )}
+        </div>
+        {onClose && (
+          <Button variant="ghost" onClick={onClose}>
+            {word('close')}
+          </Button>
+        )}
+      </header>
       {needsRead ? (
         <Alert variant="destructive">
           <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
@@ -327,6 +489,82 @@ function OwnedDocumentDetail({
         </Alert>
       ) : !document ? (
         <PageLoading label={word('loading')} />
+      ) : holdPage && staff && recordSearch ? (
+        <DocumentLegalHolds
+          document={document}
+          heading="h2"
+          location={{ page: holdPage, search: recordSearch }}
+        />
+      ) : decision ? (
+        recordedState ? (
+          <div role="status" className="space-y-2 rounded-xl border bg-card p-4">
+            <p className="font-medium">{confirmationText('recorded', locale)}</p>
+            <p dir="auto" className="wrap-anywhere text-sm">
+              {document.originalName}
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <DocumentStatusBadge state={recordedState} locale={locale} />
+              {recordPage && (
+                <Link
+                  {...(related
+                    ? relatedDocumentListLocation(related)
+                    : { to: staff ? '/admin/documents' : '/documents', search: recordSearch })}
+                  className="touch-action inline-flex items-center text-sm text-primary underline"
+                >
+                  {word('backToDocuments')}
+                </Link>
+              )}
+            </div>
+          </div>
+        ) : !actions.includes(decision) ? (
+          <Alert variant="destructive">
+            <AlertDescription>{word('decisionUnavailable')}</AlertDescription>
+          </Alert>
+        ) : inlineDecision ? (
+          action ? null : (
+            <PageLoading label={word('loading')} />
+          )
+        ) : (
+          <form
+            aria-label={word('reviewDecision')}
+            className={recordEditorSurface}
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault();
+              choose(decision);
+            }}
+          >
+            <div className="space-y-4 p-4 sm:p-5">
+              {decisionContext}
+              {previewButton}
+              {previewContent}
+              {related && !required ? (
+                <details
+                  open={reason.trim() ? true : undefined}
+                  className="rounded-lg border border-input px-3 open:pb-3"
+                >
+                  <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium text-primary">
+                    {word(reason.trim() ? 'decisionNote' : 'addDecisionNote')}
+                  </summary>
+                  {decisionReasonField}
+                </details>
+              ) : (
+                decisionReasonField
+              )}
+            </div>
+            <RecordEditorActions>
+              <Button
+                type="submit"
+                variant={
+                  ['quarantine', 'reject', 'remove'].includes(decision) ? 'destructive' : 'default'
+                }
+                disabled={!!action}
+              >
+                {word('reviewDecisionAction')}
+              </Button>
+            </RecordEditorActions>
+          </form>
+        )
       ) : (
         <>
           {time.notice}
@@ -335,6 +573,17 @@ function OwnedDocumentDetail({
             locale={locale}
             reason={isQuarantinedDocument(document) ? null : document.rejectionReason}
           />
+          {recordSearch &&
+            document.state === 'Rejected' &&
+            document.rejectionReason &&
+            !isQuarantinedDocument(document) && (
+              <div className="space-y-1 rounded-lg border p-4">
+                <h2 className="font-semibold">{word('correctionRequired')}</h2>
+                <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+                  {document.rejectionReason}
+                </p>
+              </div>
+            )}
           {!staff && document.state === 'SubmittedForReview' && (
             <WaitingForBarghsa
               title={workflowFeedback('waiting', locale)}
@@ -355,7 +604,7 @@ function OwnedDocumentDetail({
               }
             />
           )}
-          <dl className="grid gap-3 text-sm sm:grid-cols-2">
+          <dl className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/25 p-3 text-sm lg:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">{word('kind')}</dt>
               <dd>{word(document.businessRecordType)}</dd>
@@ -373,7 +622,7 @@ function OwnedDocumentDetail({
               <dd>{time.format(document.createdAt)}</dd>
             </div>
             {document.checksum ? (
-              <div className="sm:col-span-2">
+              <div className="col-span-full">
                 <dt className="text-muted-foreground">{word('checksum')}</dt>
                 <dd className="break-all" dir="ltr">
                   {document.checksum}
@@ -383,7 +632,8 @@ function OwnedDocumentDetail({
           </dl>
           {isQuarantinedDocument(document) ? (
             <p className="text-sm text-muted-foreground">{word('quarantinedNotice')}</p>
-          ) : document.rejectionReason || document.reviewComment ? (
+          ) : (document.rejectionReason || document.reviewComment) &&
+            !(recordSearch && document.state === 'Rejected' && document.rejectionReason) ? (
             <Alert>
               <AlertDescription>
                 {document.rejectionReason ?? document.reviewComment}
@@ -396,50 +646,76 @@ function OwnedDocumentDetail({
           {document.state === 'Removed' ? (
             <p className="text-sm text-muted-foreground">{word('removedNotice')}</p>
           ) : null}
-          {staff && showRetention ? <DocumentLegalHolds document={document} /> : null}
           <div className="flex flex-wrap gap-2">
-            {readable &&
-            document.state !== 'Removed' &&
-            ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'].includes(
-              document.detectedMime ?? ''
-            ) ? (
-              <Button variant="outline" disabled={previewing} onClick={() => void getPreview()}>
-                {word('preview')}
-              </Button>
-            ) : null}
+            {previewButton}
             {readable ? (
               <Button variant="outline" disabled={downloading} onClick={() => void getDownload()}>
                 {word('download')}
               </Button>
             ) : null}
-            {document.supersedesDocumentId ? (
-              <Button variant="outline" onClick={() => onPrevious(document.supersedesDocumentId!)}>
-                {word('predecessor')}
-              </Button>
-            ) : null}
-            {allowReplacement &&
-            document.permissions?.replace !== false &&
-            canChange &&
-            (solarCustomer
-              ? document.uploadedByType === 'customer' &&
-                ['Available', 'SubmittedForReview', 'Approved', 'Rejected'].includes(document.state)
-              : savingPreSubmissionOnly
-                ? document.state === 'Available' && document.uploadedByType === 'customer'
-                : ['Available', 'Approved', 'Rejected'].includes(document.state) ||
-                  (staff &&
-                    document.state === 'Quarantined' &&
-                    document.businessRecordType === 'contract' &&
-                    document.contractRole === 'original')) ? (
-              <Button variant="outline" onClick={() => onReplace(document)}>
-                {word('replace')}
-              </Button>
-            ) : null}
+            {predecessor &&
+              (related && staffOrderId(predecessor) ? (
+                <Link
+                  {...relatedDocumentLocation(related, predecessor)}
+                  className="touch-action text-primary underline"
+                >
+                  {word('predecessor')}
+                </Link>
+              ) : recordSearch && staffOrderId(predecessor) ? (
+                <Link
+                  className="touch-action text-primary underline"
+                  to={
+                    staff
+                      ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                      : '/documents/$documentId/{-$operation}'
+                  }
+                  params={{ documentId: predecessor, operation: undefined }}
+                  search={recordSearch}
+                >
+                  {word('predecessor')}
+                </Link>
+              ) : (
+                onPrevious && (
+                  <Button variant="outline" onClick={() => onPrevious(predecessor)}>
+                    {word('predecessor')}
+                  </Button>
+                )
+              ))}
+            {canReplace &&
+              (related ? (
+                <Link
+                  {...relatedDocumentLocation(related, document.id, 'replace')}
+                  className={buttonVariants({ variant: 'outline' })}
+                >
+                  {word('replace')}
+                </Link>
+              ) : recordSearch ? (
+                <Link
+                  className="touch-action text-primary underline"
+                  to={
+                    staff
+                      ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                      : '/documents/$documentId/{-$operation}'
+                  }
+                  params={{
+                    documentId: document.id,
+                    section: staff ? 'replace' : undefined,
+                    operation: staff ? undefined : 'replace',
+                  }}
+                  search={recordSearch}
+                >
+                  {word('replace')}
+                </Link>
+              ) : (
+                onReplace && (
+                  <Button variant="outline" onClick={() => onReplace(document)}>
+                    {word('replace')}
+                  </Button>
+                )
+              ))}
           </div>
           {downloadError ? <p role="alert">{word('error')}</p> : null}
-          {previewError ? <p role="alert">{word('previewUnavailable')}</p> : null}
-          {preview ? (
-            <FilePreview imageUrl={preview} name={document.originalName} locale={locale} />
-          ) : null}
+          {previewContent}
           {download ? (
             <div className="flex flex-col gap-3">
               <a
@@ -453,51 +729,123 @@ function OwnedDocumentDetail({
               </a>
             </div>
           ) : null}
-          {staff && actions.length ? (
-            <Field data-invalid={reasonMissing || undefined}>
-              <FieldLabel htmlFor="document-review-reason">{word('reason')}</FieldLabel>
-              <Textarea
-                id="document-review-reason"
-                maxLength={1000}
-                value={reason}
-                onChange={(event) => {
-                  setReason(event.target.value);
-                  if (event.target.value.trim()) setReasonMissing(false);
-                }}
-                aria-invalid={reasonMissing}
-                aria-required={reasonMissing || undefined}
-                aria-describedby={
-                  reasonMissing
-                    ? 'document-review-reason-help document-review-reason-error'
-                    : showReasonHelp
-                      ? 'document-review-reason-help'
-                      : undefined
-                }
-              />
-              {showReasonHelp && (
-                <p id="document-review-reason-help" className="text-sm text-muted-foreground">
-                  {word('reviewReasonHelp')}
-                </p>
+          {actions.length > 0 && recordPage ? (
+            <section className="space-y-2" aria-label={word('reviewDecision')}>
+              <h2 className="text-base font-semibold">{word('reviewDecision')}</h2>
+              <div className="flex flex-wrap gap-2">
+                {actions.map((item) => (
+                  <Link
+                    key={item}
+                    {...(related
+                      ? relatedDocumentLocation(related, document.id, item)
+                      : {
+                          to: staff
+                            ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                            : '/documents/$documentId/{-$operation}',
+                          params: {
+                            documentId: document.id,
+                            section: 'decisions',
+                            action: item,
+                            holdId: undefined,
+                            operation: staff ? undefined : item,
+                          },
+                          search: recordSearch,
+                        })}
+                    className={buttonVariants({
+                      variant: item === 'approve' || item === 'submit' ? 'default' : 'outline',
+                    })}
+                  >
+                    {word(item)}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : actions.length > 0 ? (
+            <section
+              className={staff ? 'rounded-xl border bg-card' : undefined}
+              aria-label={staff ? word('reviewDecision') : undefined}
+            >
+              {staff && (
+                <div className="space-y-2.5 px-3 py-3 sm:px-4">
+                  <SectionHeading className="text-base font-semibold">
+                    {word('reviewDecision')}
+                  </SectionHeading>
+                  <Field className="max-w-prose gap-1.5" data-invalid={reasonMissing || undefined}>
+                    <FieldLabel htmlFor="document-review-reason">{word('reason')}</FieldLabel>
+                    <Textarea
+                      id="document-review-reason"
+                      ref={reasonInput}
+                      maxLength={1000}
+                      rows={2}
+                      dir="auto"
+                      className="min-h-14 resize-y"
+                      placeholder={word('reviewExample')}
+                      value={reason}
+                      onChange={(event) => {
+                        setReason(event.target.value);
+                        if (event.target.value.trim()) setReasonMissing(false);
+                      }}
+                      aria-invalid={reasonMissing}
+                      aria-required={reasonMissing || undefined}
+                      aria-describedby={
+                        reasonMissing
+                          ? 'document-review-reason-help document-review-reason-error'
+                          : showReasonHelp
+                            ? 'document-review-reason-help'
+                            : undefined
+                      }
+                    />
+                    {showReasonHelp && (
+                      <p id="document-review-reason-help" className="text-sm text-muted-foreground">
+                        {word('reviewReasonHelp')}
+                      </p>
+                    )}
+                    {reasonMissing ? (
+                      <p
+                        id="document-review-reason-error"
+                        role="alert"
+                        className="text-sm text-destructive"
+                      >
+                        {word('reasonRequired')}
+                      </p>
+                    ) : null}
+                  </Field>
+                </div>
               )}
-              {reasonMissing ? (
-                <p id="document-review-reason-error" role="alert">
-                  {word('reasonRequired')}
-                </p>
-              ) : null}
-            </Field>
-          ) : null}
-          <div className="flex flex-wrap gap-2">
-            {actions.map((item) => (
-              <Button
-                key={item}
-                variant={item === 'submit' || item === 'approve' ? 'default' : 'outline'}
-                onClick={() => choose(item)}
+              <div
+                className={
+                  staff
+                    ? 'flex flex-wrap justify-end gap-2 border-t bg-muted/35 px-3 py-2.5 sm:px-4'
+                    : 'flex flex-wrap gap-2'
+                }
               >
-                {word(item)}
-              </Button>
-            ))}
-          </div>
-          <h3 className="font-semibold">{word('history')}</h3>
+                {actions.map((item) => (
+                  <Button
+                    key={item}
+                    variant={
+                      item === 'approve' || (item === 'submit' && !actions.includes('approve'))
+                        ? 'default'
+                        : item === 'quarantine'
+                          ? 'ghost'
+                          : 'outline'
+                    }
+                    className={item === 'quarantine' ? 'text-destructive' : undefined}
+                    onClick={() => choose(item)}
+                  >
+                    {word(item)}
+                  </Button>
+                ))}
+              </div>
+            </section>
+          ) : null}
+          {staff && showRetention ? (
+            <DocumentLegalHolds
+              document={document}
+              heading={SectionHeading}
+              location={recordSearch && { page: 'summary', search: recordSearch }}
+            />
+          ) : null}
+          <SectionHeading className="font-semibold">{word('history')}</SectionHeading>
           <Timeline
             label={word('history')}
             items={document.history.map((event) => ({
@@ -513,34 +861,68 @@ function OwnedDocumentDetail({
         </>
       )}
       {action ? (
-        <TeamActionDialog
-          action={action}
-          onClose={() => setAction(null)}
-          onDenied={withdrawDenied}
-          onUnconfirmed={() => {
-            withdraw();
-            unconfirmed.current = action;
-            setNeedsRead(true);
-          }}
-          onSuccess={async (result) => {
-            const receipt = result as Partial<BusinessDocument> | null;
-            const target = action.target;
-            if (
-              !receipt ||
-              receipt.id !== target.id ||
-              receipt.profileId !== target.profileId ||
-              receipt.revision !== target.revision ||
-              receipt.state !== target.state
-            )
-              throw new Error('Document transition receipt mismatch');
-            setAction(null);
-            unconfirmed.current = null;
-            setReason('');
-            setReload((value) => value + 1);
-            onChanged();
-            return confirmationText('recorded', locale);
-          }}
-        />
+        <div className={inlineDecision ? `${recordEditorSurface} p-4 sm:p-5` : undefined}>
+          <TeamActionDialog
+            action={action}
+            {...(inlineDecision && decision
+              ? { inlineConfirmLabel: word(decision), onPendingChange: setDecisionPending }
+              : {})}
+            summary={
+              inlineDecision ? (
+                <>
+                  {decisionContext}
+                  {previewButton}
+                  {previewContent}
+                </>
+              ) : (
+                decision && (
+                  <dl className="space-y-2 text-sm">
+                    <div>
+                      <dt className="text-muted-foreground">{word('decisionNextStatus')}</dt>
+                      <dd>{word(action.target.state)}</dd>
+                    </div>
+                    {action.body.reason && (
+                      <div>
+                        <dt className="text-muted-foreground">{decisionLabel}</dt>
+                        <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                          {action.body.reason}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                )
+              )
+            }
+            onClose={() => setAction(null)}
+            onDenied={withdrawDenied}
+            onUnconfirmed={() => {
+              withdraw();
+              unconfirmed.current = action;
+              setNeedsRead(true);
+            }}
+            onSuccess={async (result) => {
+              const receipt = result as Partial<BusinessDocument> | null;
+              const target = action.target;
+              if (
+                !receipt ||
+                receipt.id !== target.id ||
+                receipt.profileId !== target.profileId ||
+                receipt.revision !== target.revision ||
+                receipt.state !== target.state ||
+                (related && !relatedDocumentMatches(receipt, related))
+              )
+                throw new Error('Document transition receipt mismatch');
+              setAction(null);
+              unconfirmed.current = null;
+              setReason('');
+              if (decision) setRecordedState(target.state);
+              setDecisionPending(false);
+              if (!inlineDecision && !(related && decision)) setReload((value) => value + 1);
+              onChanged?.();
+              return confirmationText('recorded', locale);
+            }}
+          />
+        </div>
       ) : null}
     </section>
   );

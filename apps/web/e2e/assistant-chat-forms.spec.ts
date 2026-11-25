@@ -402,11 +402,13 @@ for (const kind of ['customer', 'admin'] as const)
         ).toBeVisible();
       }
       const input = chat.locator('textarea');
+      await expect(input).toHaveCSS('height', '44px');
       const long = Array.from({ length: 12 }, () => 'Detailed question about electricity.').join(
         '\n'
       );
       await input.fill(long);
-      await expect(input).toHaveCSS('height', '240px');
+      await expect(input).toHaveCSS('height', '144px');
+      expect(await input.evaluate((node) => node.scrollHeight > node.clientHeight)).toBe(true);
       await input.evaluate((node) => {
         node.dispatchEvent(
           new KeyboardEvent('keydown', {
@@ -441,7 +443,7 @@ for (const kind of ['customer', 'admin'] as const)
       await retry.click();
       await expect(chat).toContainText('Verified guide answer');
       await expect(input).toHaveValue('');
-      await expect(input).toHaveCSS('height', '80px');
+      await expect(input).toHaveCSS('height', '44px');
       expect(sent).toHaveLength(2);
       expect(sent[1]).toEqual(sent[0]);
       const user = chat.locator('article[data-message-role="user"]'),

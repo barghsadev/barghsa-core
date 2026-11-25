@@ -2,6 +2,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 import { confirmFinancialReview } from './confirmation-fixture';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
+import { openWalletReceiptAction } from './wallet-receipt-action-navigation';
 
 const receiptId = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const profileId = '11111111-1111-7111-8111-111111111111';
@@ -51,6 +53,27 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await shell(page, locale);
+    const candidate = {
+      invoiceId,
+      profileId: receipt.walletId,
+      state: 'Unpaid',
+      totalAmount: '100000',
+      paidAmount: '0',
+      createdAt: '2026-09-01T10:00:00Z',
+    };
+    const foreignInvoiceId = '11111111-1111-7111-8111-111111111119';
+    await page.route('**/api/admin/invoices/ledger?*', (route) => {
+      expect(new URL(route.request().url()).searchParams.get('profileId')).toBe(receipt.walletId);
+      return route.fulfill({
+        json: {
+          items: [
+            candidate,
+            { ...candidate, invoiceId: foreignInvoiceId, profileId: foreignInvoiceId },
+          ],
+          nextCursor: null,
+        },
+      });
+    });
     let hash = 'a'.repeat(64);
     await page.route(`**${base}/${receiptId}/review**`, (route) => {
       const id = new URL(route.request().url()).searchParams.get('invoiceId');
@@ -69,15 +92,23 @@ for (const locale of ['en', 'fa'] as const) {
         json: { ...receipt, state: 'Released', canDecide: false, reviewHash: hash },
       });
     });
-    await page.goto('/admin/wallet-receipts');
+    await page.goto(`/admin/wallet-receipts/${receiptId}`);
+    await openWalletReceiptAction(page, 'confirm');
     const confirm = page.getByTestId('wallet-receipt-confirm');
+    const selection = page.getByLabel(receiptEditorMessages[locale].invoiceDestination);
     await expect(confirm).toBeEnabled();
-    await page.locator('input[name="invoiceId"]').fill(invoiceId);
+    await expect(selection.locator(`option[value="${invoiceId}"]`)).toHaveCount(1);
+    await expect(selection.locator(`option[value="${foreignInvoiceId}"]`)).toHaveCount(0);
+    await selection.selectOption(invoiceId);
     await expect(confirm).toBeEnabled();
     await expect(page.getByTestId('admin-wallet-receipts-page')).toHaveAttribute(
       'dir',
       locale === 'fa' ? 'rtl' : 'ltr'
     );
+    await page
+      .locator('summary')
+      .filter({ hasText: receiptEditorMessages[locale].fullPaymentReview })
+      .click();
     await expect(page.getByText('Customer profile')).toBeVisible();
     expect(
       (
@@ -96,7 +127,7 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .click();
     await expect(confirm).toBeEnabled();
-    await page.locator('input[name="invoiceId"]').fill(invoiceId);
+    await selection.selectOption(invoiceId);
     await expect(confirm).toBeEnabled();
     await confirm.click();
     await confirmFinancialReview(page, locale);
@@ -115,11 +146,29 @@ test('malformed receipt reviews cannot enable confirmation', async ({ page }) =>
     if (!valid) review.data.wallet.availableAfter = '999';
     return route.fulfill({ json: review });
   });
-  await page.goto('/admin/wallet-receipts');
+  await page.goto(`/admin/wallet-receipts/${receiptId}/confirm`);
   const confirm = page.getByTestId('wallet-receipt-confirm');
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(confirm).toBeDisabled();
   valid = true;
   await page.getByRole('button', { name: 'Review latest details' }).click();
   await expect(confirm).toBeEnabled();
+});
+
+test('a direct emergency URL cannot open an ineligible receipt action', async ({ page }) => {
+  await shell(page, 'en');
+  let reviews = 0;
+  await page.route(`**${base}/${receiptId}/review*`, (route) => {
+    reviews++;
+    return route.fulfill({ json: bankReceiptReview(receiptId) });
+  });
+  await page.goto(`/admin/wallet-receipts/${receiptId}/emergency`);
+  await expect(
+    page.getByText(receiptEditorMessages.en.actionUnavailable, { exact: true })
+  ).toBeVisible();
+  await expect(page.getByTestId('wallet-receipt-emergency-confirm')).toHaveCount(0);
+  expect(reviews).toBe(0);
+  await page.getByTestId('wallet-receipt-back-to-review').click();
+  await expect(page.getByTestId('wallet-receipt-open-emergency')).toHaveCount(0);
+  await expect(page.getByTestId('wallet-receipt-open-confirm')).toBeVisible();
 });

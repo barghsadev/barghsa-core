@@ -3,6 +3,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Limits from './AdminContractLimitsPage.js';
+import History from './ContractLimitsHistoryPage.js';
 import Retention from './AdminOperationalRetentionPage.js';
 import Wallet from '../components/WalletTopUpLimitConfigPanel.js';
 import Threshold from '../components/DualApprovalThresholdPanel.js';
@@ -20,6 +21,12 @@ const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   confirmation: null as Confirmation | null,
 }));
+vi.mock('@tanstack/react-router', async (original) => ({
+  ...(await original<typeof import('@tanstack/react-router')>()),
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
+  ),
+}));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../components/TeamActionDialog.js', () => ({
   TeamActionDialog: (props: Confirmation) => {
@@ -30,7 +37,7 @@ vi.mock('../components/TeamActionDialog.js', () => ({
 const cases = [
   {
     name: 'contract',
-    Page: Limits,
+    Page: () => <Limits view="edit" />,
     field: 'leadTimeDays',
     selector: '#contract-limit-leadTimeDays',
     initial: { maxQuantityIncreasePercent: 20, maxContractDuration: 24, leadTimeDays: 0 },
@@ -70,7 +77,7 @@ const cases = [
   },
   {
     name: 'retention',
-    Page: Retention,
+    Page: () => <Retention view="edit" />,
     field: 'searchableLogsDays',
     selector: '#retention-searchableLogsDays',
     initial: { version: 0, policy: defaultOperationalRetention, canEdit: true },
@@ -171,14 +178,13 @@ it.each([
     await act(async () =>
       root.render(
         <QueryProvider>
-          <Limits />
+          <History />
         </QueryProvider>
       )
     );
     expect(host.querySelector('section')?.dir).toBe(locale === 'fa' ? 'rtl' : 'ltr');
     expect(fetch).toHaveBeenCalledTimes(1);
-    await click(title);
-    await act(async () => vi.dynamicImportSettled());
+    expect(host.querySelector('h1')?.textContent).toBe(title);
     await click(stage);
     expect(harness.confirmation?.action.body).toEqual({ sourceId, expectedVersion: 2 });
     expect(harness.confirmation?.action.successStatus).toBe(201);
@@ -186,19 +192,19 @@ it.each([
     await act(async () => {
       await harness.confirmation!.onSuccess(draft);
     });
-    expect(field(cases[0].selector).value).toBe('14');
+    expect(host.querySelector(cases[0].selector)).toBeNull();
     await click(activate);
     expect(harness.confirmation?.action.body).toEqual({ draftId, expectedVersion: 2 });
     await expect(
       harness.confirmation!.onSuccess({ config, version: 3, draftId: sourceId })
     ).rejects.toThrow('Invalid recovery activation receipt');
-    expect(field(cases[0].selector).value).toBe('14');
+    expect(host.querySelector(cases[0].selector)).toBeNull();
     readValue = config;
     history = { ...history, baseVersion: 3, draft: null };
     await act(async () => {
       await harness.confirmation!.onSuccess({ config, version: 3, draftId });
     });
-    await vi.waitFor(() => expect(field(cases[0].selector).value).toBe('0'));
+    await vi.waitFor(() => expect(button(activate)).toBeUndefined());
   }
 );
 
@@ -235,11 +241,10 @@ it('rejects malformed wallet limit history and reviews a valid nonzero recovery 
   await act(async () =>
     root.render(
       <QueryProvider>
-        <Wallet />
+        <Wallet view="history" />
       </QueryProvider>
     )
   );
-  await click('Restore a previous top-up limit');
   await act(async () => vi.dynamicImportSettled());
   await vi.waitFor(() =>
     expect(host.textContent).toContain('Recovery history could not be loaded.')
@@ -261,7 +266,9 @@ it('rejects malformed wallet limit history and reviews a valid nonzero recovery 
   expect(harness.confirmation?.action.risk).toBeUndefined();
   expect(host.textContent).not.toContain('All online top-ups will be blocked.');
   await act(async () => harness.confirmation!.onClose());
-  expect(field('#online-top-up-limit').value).toBe('250000');
+  expect(host.querySelector('[data-testid=wallet-top-up-limit-current]')?.textContent).toContain(
+    '250,000'
+  );
 
   setHistory({ limitIrR: 0 });
   await click('Reload history', '#wallet-limit-recovery');

@@ -10,7 +10,8 @@ export function useFinancialFormatting(locale: Locale) {
     ...numbers,
     reviewMoney: (value: string | number | bigint) => {
       try {
-        return `${numbers.money(value)} · ${formatToman(value, locale, { numberStyle: numbers.numberStyle })} ${confirmationText('toman', locale)}`;
+        const toman = formatToman(value, locale, { numberStyle: numbers.numberStyle });
+        return `${numbers.money(value)} · ${toman}\u00a0${confirmationText('toman', locale)}`;
       } catch {
         return '—';
       }

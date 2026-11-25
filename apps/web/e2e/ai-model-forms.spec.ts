@@ -32,6 +32,8 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ status: readStatus, json: readStatus === 200 ? [model] : {} })
       );
       await page.route(`**/api/admin/ai-models/${model.id}`, (route) => {
+        if (route.request().method() === 'GET')
+          return route.fulfill({ status: readStatus, json: readStatus === 200 ? model : {} });
         const body = route.request().postDataJSON();
         modelWrites.push(body);
         if (modelWrites.length === 1) return route.fulfill(invalid('maxTokens'));
@@ -77,12 +79,24 @@ for (const locale of ['en', 'fa'] as const)
         await expect(dialog).toHaveCount(0);
       };
       await page.goto('/admin/ai-models');
-      await button('edit').click();
+      await page.getByRole('link', { name: label('edit'), exact: true }).click();
       const max = page.locator('#ai-model-max-tokens'),
         base = page.locator('#ai-model-baseUrl'),
-        choice = page.locator('#ai-model-token-choice');
-      for (const field of [max, base, choice, page.locator('#ai-model-provider')])
+        choice = page.locator('#ai-model-token-choice'),
+        provider = page.locator('#ai-model-provider');
+      for (const field of [max, base, choice, provider])
         await expect(field).toHaveAttribute('aria-required', 'true');
+      await expect(base).toHaveAccessibleDescription(/\/chat\/completions/);
+      await provider.selectOption('anthropic');
+      await expect(base).toHaveAccessibleDescription(/\/messages/);
+      await provider.selectOption(model.providerType);
+      await expect(base).toHaveAccessibleDescription(/\/chat\/completions/);
+      await base.fill('not-a-url');
+      await button('save').click();
+      await expect(base).toBeFocused();
+      await expect(base).toHaveAccessibleDescription(aiModelFormText('baseUrl', locale));
+      expect(modelWrites).toHaveLength(0);
+      await base.fill(model.baseUrl);
       await max.fill('1.5');
       await button('save').click();
       await expect(max).toBeFocused();
@@ -121,7 +135,7 @@ for (const locale of ['en', 'fa'] as const)
         })
       );
       await expect(page.locator('#ai-model-token')).toHaveCount(0);
-      await button('budgetEdit').click();
+      await page.getByRole('link', { name: label('budgetEdit'), exact: true }).click();
       const cost = page.locator('#ai-model-monthlyCostUsd');
       await expect(cost).not.toHaveAttribute('aria-required', 'true');
       for (const id of ['inputPriceUsd', 'outputPriceUsd'])
@@ -171,7 +185,7 @@ for (const locale of ['en', 'fa'] as const)
           outputPricePerMillionMicros: 2,
         })
       );
-      await button('edit').click();
+      await page.getByRole('link', { name: label('edit'), exact: true }).click();
       await choice.selectOption('replace');
       await page.locator('#ai-model-token').fill('clear-on-denial');
       readStatus = 403;

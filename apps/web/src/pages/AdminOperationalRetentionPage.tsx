@@ -1,4 +1,5 @@
 import { retentionText } from '@barghsa/i18n/operational-retention';
+import { Link } from '@tanstack/react-router';
 import {
   defaultOperationalRetention,
   isOperationalRetention,
@@ -6,14 +7,29 @@ import {
   type OperationalRetention,
   type OperationalRetentionView,
 } from '@barghsa/shared/admin';
-import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
-import { lazy, Suspense, useState } from 'react';
+import {
+  Alert,
+  Badge,
+  Input,
+  Label,
+  ListRefreshButton,
+  LoadingStatus,
+  buttonVariants,
+} from '@barghsa/ui';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import {
   CatalogueEditorStatus,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
 import { SettingsFormSection } from '../components/SettingsFormSection.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorSurface,
+  recordEditorField,
+  recordEditorGrid,
+} from '../components/RecordEditorLayout.js';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { useCatalogueEditor } from '../hooks/useCatalogueEditor.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -33,6 +49,14 @@ const values = (policy: OperationalRetention): Draft =>
     operationalRetentionFields.map(({ key }) => [key, String(policy[key])])
   ) as Draft;
 const defaults = values(defaultOperationalRetention);
+const traceFields = operationalRetentionFields.filter(({ key }) => key.endsWith('TracesDays'));
+const policyGroups = [
+  {
+    label: 'logsAndMetrics',
+    fields: operationalRetentionFields.filter((field) => !traceFields.includes(field)),
+  },
+  { label: 'traces', fields: traceFields },
+] as const;
 const validate = (value: unknown): value is OperationalRetentionView =>
   record(value) &&
   typeof value.canEdit === 'boolean' &&
@@ -41,12 +65,19 @@ const validate = (value: unknown): value is OperationalRetentionView =>
   value.version >= 0 &&
   isOperationalRetention(value.policy);
 
-export default function AdminOperationalRetentionPage() {
+export default function AdminOperationalRetentionPage({
+  view,
+}: {
+  view: 'overview' | 'edit' | 'history';
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => retentionText(key, locale);
-  const [showRecovery, setShowRecovery] = useState(false);
   const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (view !== 'overview') heading.current?.focus({ preventScroll: true });
+  }, [view]);
   const messages = Object.fromEntries(
     operationalRetentionFields.map(({ key, min, max }) => [
       key,
@@ -87,35 +118,53 @@ export default function AdminOperationalRetentionPage() {
   const error = catalogueRootMessage(editor.errors);
   const body = editor.action?.body;
   const proposed = record(body) && isOperationalRetention(body.policy) ? body.policy : null;
-  const hasChanges =
-    saved &&
-    operationalRetentionFields.some(({ key }) => editor.values[key] !== String(saved.policy[key]));
+  const days = (value: number) => label('days').replace('{days}', numbers.number(value));
   const policySummary = (policy: OperationalRetention) => (
     <dl className="grid gap-2 rounded-md border p-3 sm:grid-cols-2">
       {operationalRetentionFields.map(({ key }) => (
         <div key={key}>
           <dt className="text-sm text-muted-foreground">{label(key)}</dt>
-          <dd>
-            <bdi>{numbers.number(policy[key])}</bdi>
-          </dd>
+          <dd>{days(policy[key])}</dd>
         </div>
       ))}
     </dl>
   );
+  const exportLink = (
+    <a
+      className="touch-action text-sm font-medium text-primary underline underline-offset-4"
+      href={`${path}/export`}
+    >
+      {label('export')}
+    </a>
+  );
   return (
-    <section className="max-w-3xl space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="flex flex-wrap items-start justify-between gap-3">
+    <section className="mx-auto w-full max-w-3xl space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <header className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{label('title')}</h1>
-          <p className="text-muted-foreground">{label('description')}</p>
+          {view !== 'overview' && (
+            <Link
+              to="/admin/operational-retention"
+              disabled={editor.commandPending || recoveryBusy}
+              className="touch-action mb-1 inline-flex text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
+            >
+              {label('title')}
+            </Link>
+          )}
+          <h1
+            ref={heading}
+            tabIndex={view !== 'overview' ? -1 : undefined}
+            className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+          >
+            {label(view === 'history' ? 'recoveryTitle' : view === 'edit' ? 'editTitle' : 'title')}
+          </h1>
+          <p className="max-w-prose text-sm text-muted-foreground">{label('description')}</p>
         </div>
-        <Button
-          variant="outline"
-          disabled={editor.resource.loading || editor.commandPending || recoveryBusy}
+        <ListRefreshButton
+          label={label('refresh')}
+          disabled={editor.commandPending || recoveryBusy}
+          refreshing={editor.resource.loading}
           onClick={editor.refresh}
-        >
-          {label('refresh')}
-        </Button>
+        />
       </header>
       <CatalogueEditorStatus
         {...editor}
@@ -125,7 +174,57 @@ export default function AdminOperationalRetentionPage() {
         refresh={editor.refresh}
         busy={editor.pending}
       />
-      {saved && (
+      {view === 'history' && saved && !saved.canEdit && (
+        <p className="text-sm text-muted-foreground">{label('readOnly')}</p>
+      )}
+      {saved && !editor.denied && view === 'overview' && (
+        <div className={recordEditorSurface}>
+          <RecordEditorSection title={label('savedPolicy')} description={label('applyHelp')}>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Badge variant="outline">
+                {label('savedVersion').replace('{version}', numbers.number(saved.version))}
+              </Badge>
+              {saved.canEdit && (
+                <Link
+                  to="/admin/operational-retention/$view"
+                  params={{ view: 'edit' }}
+                  disabled={!editor.ready}
+                  className={buttonVariants()}
+                >
+                  {label('editTitle')}
+                </Link>
+              )}
+            </div>
+            {!saved.canEdit && <p className="text-sm text-muted-foreground">{label('readOnly')}</p>}
+          </RecordEditorSection>
+          {policyGroups.map((group) => (
+            <RecordEditorSection title={label(group.label)} key={group.label}>
+              <dl className="divide-y">
+                {group.fields.map(({ key }) => (
+                  <div key={key} className="flex items-baseline justify-between gap-4 py-2.5">
+                    <dt className="min-w-0 text-sm">{label(key)}</dt>
+                    <dd className="shrink-0 text-sm font-semibold tabular-nums">
+                      {days(saved.policy[key])}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </RecordEditorSection>
+          ))}
+          <RecordEditorActions secondary={exportLink}>
+            {saved.canEdit && (
+              <Link
+                to="/admin/operational-retention/$view"
+                params={{ view: 'history' }}
+                className={buttonVariants({ variant: 'ghost', className: 'text-primary' })}
+              >
+                {label('recoveryTitle')}
+              </Link>
+            )}
+          </RecordEditorActions>
+        </div>
+      )}
+      {saved && view === 'edit' && (
         <SettingsFormSection
           title={label('savedPolicy')}
           description={label('applyHelp')}
@@ -161,89 +260,118 @@ export default function AdminOperationalRetentionPage() {
                   disabled={editor.disabled}
                 />
               )}
-              <a
-                className="text-sm font-medium text-primary underline underline-offset-4"
-                href={`${path}/export`}
-              >
-                {label('export')}
-              </a>
+              {exportLink}
             </>
           }
         >
           {error && <Alert variant="destructive">{error}</Alert>}
+          <Badge className="mb-3" variant="outline">
+            {label('savedVersion').replace('{version}', numbers.number(saved.version))}
+          </Badge>
           {!saved.canEdit && (
             <p className="mb-4 text-sm text-muted-foreground">{label('readOnly')}</p>
           )}
           <fieldset
             disabled={editor.disabled || !saved.canEdit}
-            className="grid min-w-0 gap-x-6 gap-y-4 sm:grid-cols-2"
+            className="m-0 min-w-0 space-y-3 border-0 p-0"
           >
-            {operationalRetentionFields.map(({ key }) => {
-              const [raw, setRaw] = editor.field(key);
-              const id = `retention-${key}`;
-              return (
-                <div key={key} className="space-y-2">
-                  <Label htmlFor={id}>{label(key)}</Label>
-                  <Input
-                    id={id}
-                    {...editor.bind(key)}
-                    inputMode="numeric"
-                    dir="ltr"
-                    value={raw}
-                    onChange={(event) => setRaw(event.target.value)}
-                    aria-describedby={editor.errorId(key)}
-                  />
-                  {editor.feedback(key)}
+            {policyGroups.map((group) => (
+              <section
+                key={group.label}
+                aria-labelledby={`retention-${group.label}`}
+                className="space-y-2 border-t pt-3"
+              >
+                <h3 id={`retention-${group.label}`} className="font-semibold">
+                  {label(group.label)}
+                </h3>
+                {group.label === 'traces' && (
+                  <p className="text-sm text-muted-foreground">{label('traceHelp')}</p>
+                )}
+                <div className={recordEditorGrid}>
+                  {group.fields.map(({ key, min, max }) => {
+                    const [raw, setRaw] = editor.field(key);
+                    const id = `retention-${key}`;
+                    const binding = editor.bind(key);
+                    return (
+                      <div key={key} className={recordEditorField}>
+                        <Label htmlFor={id}>{label(key)}</Label>
+                        <div className="flex min-w-0 items-center gap-3">
+                          <Input
+                            id={id}
+                            {...binding}
+                            className="w-28 min-w-0"
+                            inputMode="numeric"
+                            dir="ltr"
+                            value={raw}
+                            onChange={(event) => setRaw(event.target.value)}
+                            aria-describedby={[
+                              `${id}-saved`,
+                              `${id}-range`,
+                              binding['aria-describedby'],
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                          />
+                          <p
+                            id={`${id}-saved`}
+                            className="min-w-0 border-s ps-3 text-sm text-muted-foreground"
+                          >
+                            {label('savedDays').replace(
+                              '{days}',
+                              numbers.number(saved.policy[key])
+                            )}
+                          </p>
+                        </div>
+                        <p id={`${id}-range`} className="text-sm text-muted-foreground">
+                          {label('allowedDays')
+                            .replace('{min}', numbers.number(min))
+                            .replace('{max}', numbers.number(max))}
+                        </p>
+                        {editor.feedback(key, true)}
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              </section>
+            ))}
           </fieldset>
-          <Alert className="mt-4">{label('legal')}</Alert>
+          <p
+            className="mt-2 rounded-lg bg-muted/40 px-3 py-2.5 text-sm text-muted-foreground"
+            role="note"
+          >
+            {label('legal')}
+          </p>
         </SettingsFormSection>
       )}
-      {saved?.canEdit && (
-        <>
-          <Button
-            type="button"
-            variant="outline"
-            aria-expanded={showRecovery}
-            aria-controls={showRecovery ? 'retention-recovery' : undefined}
-            disabled={editor.busy || recoveryBusy || !!editor.action}
-            onClick={() => setShowRecovery((current) => !current)}
-          >
-            {label('recoveryTitle')}
-          </Button>
-          {showRecovery && (
-            <div id="retention-recovery">
-              <p className="mb-3 text-sm text-muted-foreground">{label('applyHelp')}</p>
-              <Suspense fallback={<LoadingStatus>{label('recoveryLoading')}</LoadingStatus>}>
-                <ConfigRecovery
-                  key={saved.version}
-                  path={path}
-                  valid={isOperationalRetention}
-                  basis={policyBasis}
-                  renderValues={policySummary}
-                  label={label}
-                  disabled={
-                    editor.busy ||
-                    editor.uncertain ||
-                    editor.resource.loading ||
-                    !!editor.resource.error ||
-                    !!editor.action ||
-                    !!hasChanges
-                  }
-                  onBusyChange={setRecoveryBusy}
-                  onDenied={() => {
-                    setShowRecovery(false);
-                    setRecoveryBusy(false);
-                    editor.onDenied();
-                  }}
-                  onActivated={editor.refresh}
-                />
-              </Suspense>
-            </div>
-          )}
-        </>
+      {saved?.canEdit && view === 'history' && (
+        <div id="retention-recovery" className="space-y-3">
+          <p className="text-sm text-muted-foreground">{label('applyHelp')}</p>
+          {exportLink}
+          {policySummary(saved.policy)}
+          <Suspense fallback={<LoadingStatus>{label('recoveryLoading')}</LoadingStatus>}>
+            <ConfigRecovery
+              key={saved.version}
+              path={path}
+              valid={isOperationalRetention}
+              basis={policyBasis}
+              renderValues={policySummary}
+              label={label}
+              disabled={
+                editor.busy ||
+                editor.uncertain ||
+                editor.resource.loading ||
+                !!editor.resource.error ||
+                !!editor.action
+              }
+              onBusyChange={setRecoveryBusy}
+              onDenied={() => {
+                setRecoveryBusy(false);
+                editor.onDenied();
+              }}
+              onActivated={editor.refresh}
+            />
+          </Suspense>
+        </div>
       )}
       {editor.action && (
         <TeamActionDialog
@@ -254,7 +382,14 @@ export default function AdminOperationalRetentionPage() {
           onPendingChange={editor.onPendingChange}
           onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
-          summary={proposed && policySummary(proposed)}
+          summary={
+            proposed && (
+              <div className="space-y-2">
+                <p className="font-medium">{label('proposedPeriods')}</p>
+                {policySummary(proposed)}
+              </div>
+            )
+          }
           onSuccess={async (result) => {
             const matches =
               validate(result) &&

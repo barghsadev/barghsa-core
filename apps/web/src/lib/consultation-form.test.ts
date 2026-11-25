@@ -15,12 +15,16 @@ import {
 } from './consultation-form-schemas.js';
 const requestId = '11111111-1111-4111-8111-111111111111',
   profileId = '22222222-2222-4222-8222-222222222222';
-it('requires a valid product and explicit confirmation without altering raw input', () => {
-  const schema = intakeSchema({ productId: 'product', confirm: 'confirm' });
-  expect(safeParse(schema, { productId: requestId, confirm: true }).success).toBe(true);
+it('requires a product and confirmation and preserves an optional brief for submission', () => {
+  const schema = intakeSchema({ productId: 'product', brief: 'brief', confirm: 'confirm' });
+  const draft = { productId: requestId, brief: '', confirm: true };
+  expect(safeParse(schema, draft).success).toBe(true);
   for (const productId of ['', 'private', ` ${requestId} `])
-    expect(safeParse(schema, { productId, confirm: true }).success).toBe(false);
-  expect(safeParse(schema, { productId: requestId, confirm: false }).success).toBe(false);
+    expect(safeParse(schema, { ...draft, productId }).success).toBe(false);
+  expect(safeParse(schema, { ...draft, confirm: false }).success).toBe(false);
+  const brief = ' ' + 'x'.repeat(2000) + ' ';
+  expect(safeParse(schema, { ...draft, brief })).toMatchObject({ success: true, data: { brief } });
+  expect(safeParse(schema, { ...draft, brief: 'x'.repeat(2001) }).success).toBe(false);
 });
 it.each([2000, 1000])(
   'validates the current reason intent through exactly %s trimmed characters',

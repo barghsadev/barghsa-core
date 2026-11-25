@@ -63,3 +63,13 @@ export function deadlineInstant(
     ? source.dueAt
     : datetimeLocalToIso(value, source.timezone);
 }
+
+export function changedDeadline(
+  value: string,
+  source: { dueAt: string | null; issuedAt: string | null; timezone: string }
+): string | null {
+  const instant = deadlineInstant(value, source);
+  if (!instant || instant === source.dueAt) return null;
+  if (source.issuedAt && Date.parse(instant) < Date.parse(source.issuedAt)) return null;
+  return instant;
+}

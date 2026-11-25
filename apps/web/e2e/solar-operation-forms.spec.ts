@@ -1,3 +1,5 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
+import { feedbackText } from '@barghsa/i18n/feedback';
 import { productionManifest } from './production-manifest';
 import type { Locator, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -62,7 +64,10 @@ for (const [locale, theme] of [
       }
     );
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editTracking', locale), exact: true })
+      .click();
     const region = page.getByRole('region', { name: copy('postalTrackingUpdate'), exact: true });
     const form = region.locator('form');
     const note = page.locator('#postal-tracking-note');
@@ -179,7 +184,16 @@ for (const [locale, theme] of [
     await expect.poll(() => !!state.trackingPreview).toBe(true);
     const late = state.trackingPreviews.at(-1)!;
     const lateSnapshot = structuredClone(state.tracking);
-    await page.getByRole('button', { name: /Older solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToShipmentReview', locale), exact: true })
+      .click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToPostal', locale), exact: true })
+      .click();
+    await page.getByRole('link', { name: /Older solar buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editTracking', locale), exact: true })
+      .click();
     await expect(note).toHaveValue('Other parcel note');
     await note.fill('PRIVATE_NEW_PARCEL_DRAFT');
     await state.trackingPreview!.fulfill({ json: trackingReview(lateSnapshot, late) });
@@ -211,11 +225,30 @@ for (const [locale, theme] of [
       locale,
       theme === 'dark'
     );
+    const record = `/admin/solar-requests/${constructionRequest}/construction`;
+    await page.goto(`${record}/unknown-stage`);
+    await expect(
+      page.getByRole('heading', { name: feedbackText('notFound', locale), exact: true })
+    ).toBeVisible();
+    expect(state.progressReads).toHaveLength(0);
     await page.goto(`/admin/solar-construction?requestId=${constructionRequest}`);
+    await expect(page).toHaveURL(record);
     await expect(
       page.getByRole('link', { name: copy('solarViewContract'), exact: true })
-    ).toHaveAttribute('href', `/admin/contracts?contractId=${state.progress.contractId}`);
+    ).toHaveAttribute('href', `/admin/contracts/${state.progress.contractId}`);
     const form = page.getByRole('form', { name: copy('constructionReviewTitle'), exact: true });
+    const openEditor = page.getByRole('link', {
+      name: tSolarStaffRecord('recordMilestone', locale),
+      exact: true,
+    });
+    const backToRecord = page.getByRole('link', {
+      name: tSolarStaffRecord('backToConstructionRecord', locale),
+      exact: true,
+    });
+    await expect(form).toHaveCount(0);
+    await openEditor.click();
+    await expect(page).toHaveURL(`${record}/start-work`);
+    await expect(page.locator('[data-slot=status-timeline]')).toHaveCount(0);
     const note = page.locator('#solar-construction-note');
     const review = page.getByRole('button', { name: copy('constructionReview'), exact: true });
     const reload = page.locator('#solar-construction-recovery-reload');
@@ -306,20 +339,40 @@ for (const [locale, theme] of [
     persistProgress();
     await reload.click();
     await expect(page.getByText(copy('progressActionUnconfirmed'), { exact: true })).toHaveCount(0);
-    await expect(note).toHaveValue('');
+    await expect(form).toHaveCount(0);
+    await expect(
+      page.getByRole('status').filter({
+        hasText: tSolarStaffRecord('milestoneRecorded', locale),
+      })
+    ).toContainText(copy('construction_in_progress'));
+    await backToRecord.click();
     await expect(page.locator('[data-slot=status-timeline]')).toContainText(String(captured.note));
     expect(state.progressWrites).toEqual([command]);
     await expect(
       page.locator('[data-slot=status-timeline] script,[data-slot=status-timeline] img')
     ).toHaveCount(0);
 
+    // A deep link to an earlier milestone cannot submit a note for the next stage.
+    await page.goto(`${record}/start-work`);
+    await expect(
+      page.getByText(tSolarStaffRecord('milestoneUnavailable', locale), { exact: true })
+    ).toBeVisible();
+    await expect(form).toHaveCount(0);
+    await backToRecord.click();
+    await openEditor.click();
+    await expect(page).toHaveURL(`${record}/equipment-delivery`);
     state.progressPreview = undefined;
     await note.fill('PRIVATE_OLD_CONSTRUCTION_DRAFT');
     await review.click();
     await expect.poll(() => !!state.progressPreview).toBe(true);
     const late = state.progressPreviews.at(-1)!;
     const lateSnapshot = structuredClone(state.progress);
-    await page.getByRole('button', { name: /702/ }).click();
+    await backToRecord.click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToConstruction', locale), exact: true })
+      .click();
+    await page.getByRole('link', { name: /702/ }).click();
+    await openEditor.click();
     await expect(note).toHaveValue('');
     await note.fill('PRIVATE_NEW_CONSTRUCTION_DRAFT');
     await state.progressPreview!.fulfill({ json: constructionReview(lateSnapshot, late) });

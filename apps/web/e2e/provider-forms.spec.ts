@@ -86,11 +86,15 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/providers');
       const emailText = (key: string) => providerText(`admin.providers.${key}`, locale);
-      await page
-        .locator('table:visible tbody tr, ol[role=list]:visible > li')
-        .filter({ hasText: 'Saved email' })
-        .getByRole('button', { name: emailText('update'), exact: true })
-        .click();
+      await page.getByRole('link', { name: 'Saved email', exact: true }).click();
+      await page.getByRole('link', { name: emailText('update.title'), exact: true }).click();
+      const save = page.locator('main form button[type=submit]');
+      await expect(save).toBeInViewport({ ratio: 0.99 });
+      const password = page.locator('#email-provider-password');
+      await expect(password).toHaveValue('');
+      await expect(password).toHaveAccessibleDescription(
+        providerFormText('keepCredential', locale)
+      );
       const port = page.locator('#email-provider-port');
       await expect(port).toHaveAttribute('aria-required', 'true');
       await expect(page.locator('#email-provider-transport')).toHaveAttribute(
@@ -124,9 +128,9 @@ for (const locale of ['en', 'fa'] as const)
       await page.locator('form button[type=submit]').click();
       await expect(page.locator('#email-provider-label')).toHaveCount(0);
       expect(emailWrites).toHaveLength(2);
-      await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+      await page.goto('/admin/providers/sms/sms/edit');
+      await expect(save).toBeInViewport({ ratio: 0.99 });
       const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
-      await page.getByRole('button', { name: text('edit'), exact: true }).click();
       await expect(page.locator('#sms-key')).toHaveValue('');
       await expect(page.locator('#sms-key')).not.toHaveAttribute('aria-required', 'true');
       const timeout = page.locator('#sms-timeout');

@@ -23,6 +23,7 @@ import {
 import type { Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service.js';
+import { markTicketRepliesSeen } from './ticket-reply-activity.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -34,6 +35,13 @@ import { z } from 'zod';
 const customerTicketStatusCommand = z.strictObject({
   status: z.string().min(1).max(16),
   idempotencyKey: z.uuid().optional(),
+});
+const relatedTicketOption = z.object({
+  type: z.enum(['order', 'invoice', 'contract']),
+  id: z.uuid(),
+});
+const seenReplies = z.strictObject({
+  replyIds: z.array(z.uuid()).min(1).max(100),
 });
 
 @ApiTags('Tickets')
@@ -189,22 +197,33 @@ export class TicketsController {
   }
 
   /**
-   * GET /api/tickets/:id
+   * GET /api/tickets/options
    *
-   * Gets a single ticket detail, scoped to the authenticated user.
+   * Gets profiles and related records available to the authenticated user.
    */
   @Get('options')
   async creationOptions(
     @Req() req: AuthenticatedRequest,
     @Query('profileId') profileId?: string,
-    @Query('recordPage') recordPage?: string
+    @Query('recordPage') recordPage?: string,
+    @Query('relatedType') relatedType?: string,
+    @Query('relatedId') relatedId?: string
   ) {
+    const related = relatedTicketOption
+      .optional()
+      .safeParse(
+        relatedType === undefined && relatedId === undefined
+          ? undefined
+          : { type: relatedType, id: relatedId }
+      );
+    if (!related.success) throw new HttpException('Invalid related record', 400);
     return this.ticketsService.readAs(req.session, false, (client) =>
       this.ticketsService.creationOptions(
         req.session.userId,
         profileId,
         recordPage === undefined ? 1 : Number(recordPage),
-        client
+        client,
+        related.data
       )
     );
   }
@@ -354,6 +373,23 @@ export class TicketsController {
   ) {
     return this.ticketsService.readAs(req.session, false, (client) =>
       this.ticketsService.listComments(id, req.session.userId, false, client)
+    );
+  }
+
+  @Patch(':id/replies/seen')
+  @HttpCode(204)
+  @RateLimit({ namespace: 'tickets:replies:seen', limit: 120, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Mark a customer’s displayed public ticket replies as read' })
+  @ApiResponse({ status: 204, description: 'Matching unread replies marked as read.' })
+  async markRepliesSeen(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = seenReplies.safeParse(body);
+    if (!parsed.success) throw new HttpException('Invalid reply identifiers', 400);
+    await this.ticketsService.readAs(req.session, false, (client) =>
+      markTicketRepliesSeen(id, req.session.userId, parsed.data.replyIds, client)
     );
   }
 

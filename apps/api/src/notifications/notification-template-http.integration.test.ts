@@ -135,9 +135,15 @@ async function seed(action: Action, event = `fix.template.${randomUUID()}`) {
   const id = randomUUID();
   if (action !== 'create')
     await http.pool.query(
-      `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,created_by,published_at)
-     VALUES ($1,$2,'email','en','Original message','[]',$3,$4,1,'template-editor',CASE WHEN $4 THEN NOW() END)`,
-      [id, event, action === 'unpublish' ? 'active' : 'draft', action === 'unpublish']
+      `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,created_by,published_at,subject)
+     VALUES ($1,$2,'email','en','Original message','[]',$3,$4,1,'template-editor',CASE WHEN $4 THEN NOW() END,$5)`,
+      [
+        id,
+        event,
+        action === 'unpublish' ? 'active' : 'draft',
+        action === 'unpublish',
+        action === 'publish' ? 'Original subject' : null,
+      ]
     );
   if (action === 'test-send')
     await http.pool.query("UPDATE notification_templates SET channel='in_app' WHERE id=$1", [id]);
@@ -225,7 +231,7 @@ function write(
   action: Action,
   value: { id: string; event: string },
   user = 'editor',
-  commandBody: unknown = {}
+  commandBody: Record<string, unknown> = {}
 ) {
   const path =
     action === 'create'
@@ -242,9 +248,10 @@ function write(
             locale: 'en',
             bodyTemplate: 'Original message',
             variables: [],
+            ...commandBody,
           }
         : action === 'update'
-          ? { bodyTemplate: 'Updated message' }
+          ? { bodyTemplate: 'Updated message', ...commandBody }
           : commandBody
     ),
   });
@@ -485,7 +492,7 @@ it('does not edit a draft that became active while its update waited', async () 
 
 it('keeps published content immutable through replacement and unpublication', async () => {
   const value = await seed('create');
-  const created = await write('create', value);
+  const created = await write('create', value, 'editor', { subject: 'Original subject' });
   expect(created.status).toBe(201);
   const original = (await created.json()) as NotificationTemplateResult;
   expect(original.version).toBe(1);
@@ -502,7 +509,9 @@ it('keeps published content immutable through replacement and unpublication', as
   expect((await write('update', first)).status).toBe(400);
   expect((await write('delete', first)).status).toBe(400);
   const second = { id: draft.id, event: value.event };
-  expect((await write('update', second)).status).toBe(200);
+  expect((await write('update', second, 'editor', { subject: 'Replacement subject' })).status).toBe(
+    200
+  );
   const secondPublished = await write('publish', second);
   expect(secondPublished.status).toBe(200);
   expect(await secondPublished.json()).toMatchObject({ version: 2, supersedesVersion: 1 });
@@ -612,7 +621,11 @@ for (const [kind, channel, destination] of [
       });
     const before = await snapshot();
     try {
-      expect((await send()).status).toBe(403);
+      const rejected = await send();
+      expect(rejected.status).toBe(403);
+      expect(await rejected.json()).toMatchObject({
+        error: { code: 'NOTIFICATION_TEMPLATE_TEST_DESTINATION_FORBIDDEN' },
+      });
       expect(await snapshot()).toEqual(before);
       await http.pool.query(
         `INSERT INTO account_login_identifiers(user_id,kind,destination,verified_at)
@@ -718,6 +731,35 @@ it('rejects publishing an invalid legacy draft before replacing the active templ
   const before = await snapshot();
   expect((await write('publish', value)).status).toBe(400);
   expect(await snapshot()).toEqual(before);
+});
+
+it.each([null, '', ' \t '])(
+  'keeps the active email version when a replacement has a blank subject %j',
+  async (subject) => {
+    const active = await seed('publish');
+    expect((await write('publish', active)).status).toBe(200);
+    const created = await write('create', active, 'editor', { subject });
+    expect(created.status).toBe(201);
+    const { id } = (await created.json()) as NotificationTemplateResult;
+    const before = await snapshot();
+
+    const rejected = await write('publish', { event: active.event, id });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields: ['subject'] },
+    });
+    expect(await snapshot()).toEqual(before);
+  }
+);
+
+it.each(['sms', 'in_app'])('publishes a %s template with no subject', async (channel) => {
+  const value = await seed('create');
+  const created = await write('create', value, 'editor', { channel });
+  expect(created.status).toBe(201);
+  const { id } = (await created.json()) as NotificationTemplateResult;
+  const published = await write('publish', { ...value, id });
+  expect(published.status).toBe(200);
+  expect(await published.json()).toMatchObject({ channel, status: 'active', subject: null });
 });
 
 const auditWindow = new AuditWindow(() => http.pool);

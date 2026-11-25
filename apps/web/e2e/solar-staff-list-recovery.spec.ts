@@ -1,3 +1,5 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -112,12 +114,24 @@ for (const locale of ['en', 'fa'] as const) {
           });
         }
       );
+      await routePostalRecords(page, () => [solarPostal(), solarPostal(olderSolar)]);
       await page.goto(path);
       const lists = page.locator('[data-slot="list-page"]');
       const list = lists.nth(slot),
         content = list.locator('[data-slot="list-content"]');
-      await expect(content.getByRole('button').first()).toBeVisible();
+      const sibling = name === 'postal' ? null : lists.nth(1 - slot);
+      await expect(content.getByRole('link').first()).toBeVisible();
+      if (sibling) await expect(sibling.getByRole('link').first()).toBeVisible();
       if (guidanceFail) {
+        await page
+          .getByRole('link', {
+            name: tSolarStaffRecord(
+              name === 'postal' ? 'editPostalGuidance' : 'editDocumentGuidance',
+              locale
+            ),
+            exact: true,
+          })
+          .click();
         const error = page.getByRole('alert').filter({ hasText: copy('staffGuidanceLoadError') });
         await expect(error).toBeVisible();
         const reads = queries.length;
@@ -125,53 +139,88 @@ for (const locale of ['en', 'fa'] as const) {
         await error.getByRole('button', { name: copy('retry'), exact: true }).click();
         await expect(
           page.getByRole('heading', {
-            name: copy(name === 'postal' ? 'postalGuidance' : 'documentGuidance'),
+            name: tSolarStaffRecord(
+              name === 'postal' ? 'editPostalGuidance' : 'editDocumentGuidance',
+              locale
+            ),
             exact: true,
           })
         ).toBeVisible();
         expect(queries).toHaveLength(reads);
+        await page
+          .getByRole('link', {
+            name: tSolarStaffRecord(name === 'postal' ? 'backToPostal' : 'backToRequests', locale),
+            exact: true,
+          })
+          .click();
       }
       await (name === 'files' ? lists.nth(1) : list)
-        .getByRole('button', { name: /First solar buyer/ })
+        .getByRole('link', { name: /First solar buyer/ })
         .click();
       if (detailFail) {
         const error = page.getByRole('alert').filter({ hasText: copy('staffDetailLoadError') });
         await expect(error).toBeVisible();
-        await list.getByRole('button', { name: /First solar buyer/ }).click();
         await expect(error.getByRole('button', { name: copy('retry'), exact: true })).toBeVisible();
         const reads = queries.length;
         detailFail = false;
         await error.getByRole('button', { name: copy('retry'), exact: true }).click();
-        await expect(page.locator('#solar-review-reason')).toBeVisible();
+        await expect(
+          page.getByRole('link', { name: copy('requestAdditional'), exact: true })
+        ).toBeVisible();
         expect(queries).toHaveLength(reads);
       }
-      const note =
-        name === 'postal'
-          ? page.getByRole('textbox', { name: copy('reason'), exact: true })
-          : page.locator('#solar-review-reason');
+      const note = page.locator(
+        name === 'postal' ? '#solar-postal-reason' : '#solar-review-reason'
+      );
       if (name !== 'postal') {
-        const detail = page
-          .getByRole('heading', { name: copy('staffDocuments'), exact: true })
-          .locator('..');
+        const detail = page.getByRole('group', { name: copy('staffDocuments'), exact: true });
         await expect(detail).toContainText(copy('status_documents_under_review'));
         await expect(detail).toContainText(documentText('SubmittedForReview', locale));
         await expect(detail).toContainText(copy('documentReview_pending'));
         await expect(detail).not.toContainText('documents_under_review');
+        await page.getByRole('link', { name: copy('requestAdditional'), exact: true }).click();
+      }
+      if (name === 'postal') {
+        await page.getByRole('link', { name: copy('postal_mark-incomplete'), exact: true }).click();
       }
       await note.fill('Keep this solar explanation');
-      const guidance = page.locator('form textarea').first();
-      await guidance.fill('Keep this guidance draft');
-      const reads = otherReads.length,
-        details = detailReads;
+      const guidance = page.locator('#solar-guidance-fa, #solar-postal-guidance-fa');
+      const details = detailReads;
       await checkRoutePresentation(page, testInfo, locale);
       await expect(note).toHaveValue('Keep this solar explanation');
-      await expect(guidance).toHaveValue('Keep this guidance draft');
+      if (locale === 'fa') {
+        await note.scrollIntoViewIfNeeded();
+        await page.screenshot({
+          path: `/tmp/barghsa-solar-${name}-fa-${testInfo.project.name}.png`,
+        });
+      }
+      await page
+        .getByRole('link', {
+          name: tSolarStaffRecord(
+            name === 'postal' ? 'backToShipmentReview' : 'backToDocumentReview',
+            locale
+          ),
+          exact: true,
+        })
+        .click();
+      await page
+        .getByRole('link', {
+          name: tSolarStaffRecord(name === 'postal' ? 'backToPostal' : 'backToRequests', locale),
+          exact: true,
+        })
+        .click();
+      await expect(guidance).toHaveCount(0);
+      await expect(content.getByRole('link').first()).toBeVisible();
+      if (sibling) await expect(sibling.getByRole('link').first()).toBeVisible();
+      const detailsBeforePagination = detailReads;
+      expect(detailsBeforePagination).toBe(details + (name === 'postal' ? 0 : 1));
+      const queueOnlyReads = otherReads.length;
       const moreButton = list.getByRole('button', { name: copy(more), exact: true });
       await moreButton.click();
       await expect.poll(() => !!held).toBe(true);
       await expect(content).toHaveAttribute('aria-busy', 'true');
       await expect(moreButton).toBeDisabled();
-      await expect(content.getByRole('button').first()).toBeVisible();
+      await expect(content.getByRole('link').first()).toBeVisible();
       await held!.fulfill({ status: 503, json: {} });
       const retry = content.getByRole('button', { name: copy('retry'), exact: true });
       await expect(retry).toBeVisible();
@@ -179,31 +228,24 @@ for (const locale of ['en', 'fa'] as const) {
       fail = false;
       await retry.click();
       await expect(
-        content.getByRole('button', { name: name === 'files' ? /older.pdf/ : /Older solar buyer/ })
+        content.getByRole('link', { name: name === 'files' ? /older.pdf/ : /Older solar buyer/ })
       ).toBeVisible();
       expect(queries.at(-1)).toBe(failed);
       expect(new URLSearchParams(failed).get('before')).toBe(firstSolar);
       if (name === 'postal') expect(new URLSearchParams(failed).get('lane')).toBe('needs_staff');
-      expect(otherReads).toHaveLength(reads);
-      expect(detailReads).toBe(details);
-      await expect(note).toHaveValue('Keep this solar explanation');
-      await expect(guidance).toHaveValue('Keep this guidance draft');
+      expect(otherReads).toHaveLength(queueOnlyReads);
+      expect(detailReads).toBe(detailsBeforePagination);
+      await expect(guidance).toHaveCount(0);
       expect(await list.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       expect(
         (await new AxeBuilder({ page }).include('[data-slot="list-page"]').analyze()).violations
       ).toEqual([]);
-      if (locale === 'fa') {
-        await note.scrollIntoViewIfNeeded();
-        await page.screenshot({
-          path: `/tmp/barghsa-solar-${name}-fa-${testInfo.project.name}.png`,
-        });
-      }
       denied = true;
       await moreButton.click();
       await expect(content.getByRole('alert')).toHaveText(copy('staffQueueForbidden'));
-      await expect(content.getByRole('button')).toHaveCount(0);
+      await expect(content.getByRole('link')).toHaveCount(0);
       await expect(note).toHaveCount(0);
-      await expect(guidance).toHaveValue('Keep this guidance draft');
+      await expect(guidance).toHaveCount(0);
     });
   }
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Button, Label, ListSearchInput, ListToolbar, NativeSelect } from '@barghsa/ui';
 import {
   CATALOGUE_SEARCH_LIMIT,
   CATALOGUE_SORT_FIELDS,
@@ -8,13 +8,11 @@ import {
   parseCatalogueListQuery,
 } from '@barghsa/shared/catalogue-query';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import {
-  CatalogueFieldFeedback,
-  CatalogueSaveButton,
-  catalogueRootMessage,
-} from './CatalogueEditorFeedback.js';
+import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 interface Draft {
   search: string;
   status: string;
@@ -32,6 +30,7 @@ export function ProductCatalogueFilters({
   disabled: boolean;
 }) {
   const copy = (key: string) => tCatalogue(key, locale);
+  const numbers = useNumberFormatting(locale);
   const current: Draft = {
     search: queries.query.search,
     status: queries.query.filters.status || '',
@@ -101,6 +100,12 @@ export function ProductCatalogueFilters({
     { field: 'limit', options: CATALOGUE_PAGE_SIZES.map(String) },
   ];
   const rootError = catalogueRootMessage(form.errors);
+  const filterCount = [
+    current.status,
+    current.sort !== 'createdAt',
+    current.order !== 'desc',
+    current.limit !== '25',
+  ].filter(Boolean).length;
   return (
     <form
       aria-label={copy('listFilters')}
@@ -110,70 +115,92 @@ export function ProductCatalogueFilters({
       className="min-w-0"
     >
       {rootError && <p role="alert">{rootError}</p>}
-      <fieldset
-        disabled={disabled || form.pending}
-        className="flex min-w-0 flex-wrap items-end gap-3"
-      >
-        <div className="min-w-[12rem] max-w-full flex-1">
-          <Label htmlFor="product-search">{copy('search')}</Label>
-          <Input
-            id="product-search"
-            {...form.bind('search')}
-            value={form.values.search}
-            onChange={(event) => form.field('search')[1](event.target.value)}
-          />
-          <CatalogueFieldFeedback
-            id={form.errorId('search')}
-            error={form.errors.search}
-            message={messages.search}
-          />
-        </div>
-        {selects.map(({ field, options }) => (
-          <div key={field}>
-            <Label htmlFor={`product-filter-${field}`}>{copy(`filter_${field}`)}</Label>
-            <select
-              id={`product-filter-${field}`}
-              {...form.bind(field)}
-              value={form.values[field]}
-              onChange={(event) => form.field(field)[1](event.target.value)}
-              className="min-h-11 rounded border bg-background p-2"
-            >
-              {options.map((value) => (
-                <option key={value} value={value}>
-                  {field === 'limit' ? value : copy(value ? `query_${value}` : 'allStatuses')}
-                </option>
-              ))}
-            </select>
-            <CatalogueFieldFeedback
-              id={form.errorId(field)}
-              error={form.errors[field]}
-              message={messages[field]}
-            />
-          </div>
-        ))}
-        <CatalogueSaveButton label={copy('applyFilters')} pending={form.pending} disabled={false} />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => {
-            form.form.reset({
-              search: '',
-              status: '',
-              sort: 'createdAt',
-              order: 'desc',
-              limit: '25',
-            });
-            queries.setQuery({
-              search: '',
-              sort: 'createdAt',
-              order: 'desc',
-              filters: { status: '' },
-              pageSize: 25,
-            });
+      <fieldset disabled={disabled || form.pending} className="min-w-0">
+        <ListToolbar
+          className="items-start"
+          search={
+            <div>
+              <ListSearchInput
+                label={copy('search')}
+                id="product-search"
+                {...form.bind('search')}
+                value={form.values.search}
+                onChange={(event) => form.field('search')[1](event.target.value)}
+              />
+              {form.errors.search && (
+                <CatalogueFieldFeedback
+                  id={form.errorId('search')}
+                  error={form.errors.search}
+                  message={messages.search}
+                />
+              )}
+            </div>
+          }
+          moreFilters={{
+            label: workspaceText('historyFilters.label', locale),
+            count: filterCount ? numbers.number(filterCount) : undefined,
+            children: (
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {selects.map(({ field, options }) => (
+                  <div key={field} className="flex min-w-0 flex-col gap-2">
+                    <Label htmlFor={`product-filter-${field}`}>{copy(`filter_${field}`)}</Label>
+                    <NativeSelect
+                      id={`product-filter-${field}`}
+                      {...form.bind(field)}
+                      value={form.values[field]}
+                      onChange={(event) => form.field(field)[1](event.target.value)}
+                      className="w-full"
+                    >
+                      {options.map((value) => (
+                        <option key={value} value={value}>
+                          {field === 'limit'
+                            ? value
+                            : copy(value ? `query_${value}` : 'allStatuses')}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                    <CatalogueFieldFeedback
+                      id={form.errorId(field)}
+                      error={form.errors[field]}
+                      message={messages[field]}
+                    />
+                  </div>
+                ))}
+              </div>
+            ),
           }}
-        >
-          {copy('clearFilters')}
-        </Button>
+          actions={
+            <>
+              <Button type="submit" variant="secondary" loading={form.pending}>
+                {copy('applyFilters')}
+              </Button>
+              {(filterCount > 0 || current.search || form.form.formState.isDirty) && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    form.form.reset({
+                      search: '',
+                      status: '',
+                      sort: 'createdAt',
+                      order: 'desc',
+                      limit: '25',
+                    });
+                    queries.setQuery({
+                      search: '',
+                      sort: 'createdAt',
+                      order: 'desc',
+                      filters: { status: '' },
+                      pageSize: 25,
+                    });
+                  }}
+                >
+                  {copy('clearFilters')}
+                </Button>
+              )}
+            </>
+          }
+        />
       </fieldset>
     </form>
   );

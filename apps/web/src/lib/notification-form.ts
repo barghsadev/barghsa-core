@@ -7,13 +7,21 @@ import {
 } from '@barghsa/shared/notifications';
 import type { NotificationVariable } from './content-catalogues.js';
 
+export const NOTIFICATION_VARIABLE_LIMIT = 100;
+export const NOTIFICATION_VARIABLE_NAME_LIMIT = 100;
+export const NOTIFICATION_VARIABLE_DESCRIPTION_LIMIT = 500;
+
+export interface NotificationVariableDraft extends NotificationVariable {
+  rowId: number;
+}
+
 export interface NotificationDraft {
   eventKey: string;
   channel: 'email' | 'sms' | 'in_app';
   locale: 'en' | 'fa';
   subject: string;
   bodyTemplate: string;
-  variables: string;
+  variables: NotificationVariableDraft[];
 }
 export const emptyNotificationDraft: NotificationDraft = {
   eventKey: '',
@@ -21,26 +29,46 @@ export const emptyNotificationDraft: NotificationDraft = {
   locale: 'en',
   subject: '',
   bodyTemplate: '',
-  variables: '',
+  variables: [],
 };
-/** Preserve the editor's established deduplication and legacy variable descriptions. */
-export function parseVariablesText(text: string): NotificationVariable[] {
+/** Match the saved template's normalization without parsing the description text. */
+export function normalizeNotificationVariables(
+  rows: NotificationVariable[]
+): NotificationVariable[] {
   const out: NotificationVariable[] = [],
     seen = new Set<string>();
-  for (const raw of text.split(/[,\n]/)) {
-    const entry = raw.trim();
-    if (!entry) continue;
-    const colon = entry.indexOf(':'),
-      name = (colon === -1 ? entry : entry.slice(0, colon)).trim();
+  for (const row of rows) {
+    const name = row.name.trim();
     if (!name || seen.has(name)) continue;
     seen.add(name);
-    out.push({ name, description: colon === -1 ? null : entry.slice(colon + 1).trim() || null });
+    out.push({ name, description: row.description?.trim() || null });
   }
   return out;
 }
+
+type VariableIssue =
+  | 'variableNameRequired'
+  | 'variableDuplicate'
+  | 'variableNameTooLong'
+  | 'variableDescriptionTooLong';
+
+export function notificationVariableIssues(rows: NotificationVariable[]): (VariableIssue | null)[] {
+  const seen = new Set<string>();
+  return rows.map(({ name: rawName, description }) => {
+    const name = rawName.trim();
+    if (!name) return description?.trim() ? 'variableNameRequired' : null;
+    if (seen.has(name)) return 'variableDuplicate';
+    seen.add(name);
+    if (name.length > NOTIFICATION_VARIABLE_NAME_LIMIT) return 'variableNameTooLong';
+    if ((description?.trim().length ?? 0) > NOTIFICATION_VARIABLE_DESCRIPTION_LIMIT)
+      return 'variableDescriptionTooLong';
+    return null;
+  });
+}
+
 export function notificationInvalidFields(draft: NotificationDraft): (keyof NotificationDraft)[] {
   const fields: (keyof NotificationDraft)[] = [],
-    variables = parseVariablesText(draft.variables),
+    variables = normalizeNotificationVariables(draft.variables),
     allowed = variables.map((v) => v.name);
   if (!draft.eventKey || draft.eventKey.length > 100 || /\s/.test(draft.eventKey))
     fields.push('eventKey');
@@ -51,8 +79,8 @@ export function notificationInvalidFields(draft: NotificationDraft): (keyof Noti
   if (!draft.bodyTemplate.trim() || validateTemplate(draft.bodyTemplate, allowed).length)
     fields.push('bodyTemplate');
   if (
-    draft.variables.split(/[,\n]/).some((raw) => raw.trim() && !raw.split(':')[0]?.trim()) ||
-    variables.some((v) => v.name.length > 100 || (v.description?.length ?? 0) > 500)
+    variables.length > NOTIFICATION_VARIABLE_LIMIT ||
+    notificationVariableIssues(draft.variables).some(Boolean)
   )
     fields.push('variables');
   return fields;

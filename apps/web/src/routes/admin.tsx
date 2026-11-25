@@ -2,16 +2,21 @@ import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-r
 import { RouteSkeleton } from '../components/RouteSkeleton.js';
 import { readSessionContext } from '../lib/session-role.js';
 import { rememberSessionEnded } from '../lib/session-ended-notice.js';
+import { authReturnPath } from '../lib/auth-return.js';
 
 /**
  * Admin layout — renders sidebar navigation with lazy-loaded child routes.
  */
 export const Route = createFileRoute('/admin')({
-  beforeLoad: async ({ abortController, preload }) => {
+  beforeLoad: async ({ abortController, preload, location }) => {
     const session = await readSessionContext(abortController.signal);
     if (session === null) {
       rememberSessionEnded(preload);
-      throw redirect({ to: '/login', replace: true });
+      throw redirect({
+        to: '/login',
+        search: { returnTo: authReturnPath(location.pathname) },
+        replace: true,
+      });
     }
     if (session.operatingContext !== 'staff') throw redirect({ to: '/app', replace: true });
     return {

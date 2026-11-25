@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
+import { staffWorkText } from '@barghsa/i18n/staff-work-preview';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`staff dashboard isolates retries and reserves responsive widget space (${locale})`, async ({
@@ -35,6 +36,43 @@ for (const locale of ['en', 'fa'] as const) {
       await held;
       return route.fulfill({ json: { enabled: true, count: 0, profiles: [] } });
     });
+    const assignedTicket = 'c1000000-0000-4000-8000-000000000001';
+    const urgentConsultation = 'c1000000-0000-4000-8000-000000000002';
+    const assigned = {
+      kind: 'ticket',
+      id: assignedTicket,
+      status: 'waiting_staff',
+      title: { en: 'Check delivery date', fa: 'بررسی تاریخ تحویل' },
+      createdAt: '2026-09-27T10:00:00.000Z',
+      ownerName: null,
+      team: null,
+      assigned: true,
+      mine: true,
+      overdueHours: 24,
+    };
+    await page.route('**/api/admin/dashboard/work-queue', (route) =>
+      route.fulfill({
+        json: {
+          canOpenTickets: true,
+          canOpenConsultations: true,
+          tasks: [
+            { ...assigned, lane: 'mine' },
+            {
+              ...assigned,
+              lane: 'urgent',
+              kind: 'consultation',
+              id: urgentConsultation,
+              status: 'submitted',
+              title: { en: 'Review site capacity', fa: 'بررسی ظرفیت محل' },
+              assigned: false,
+              mine: false,
+              overdueHours: null,
+            },
+            { ...assigned, lane: 'overdue' },
+          ],
+        },
+      })
+    );
     const reads: Record<string, number> = {};
     let fail = true;
     let failuresStatus = 200;
@@ -61,16 +99,53 @@ for (const locale of ['en', 'fa'] as const) {
     await page.clock.install();
     try {
       await page.goto('/app');
+      await expect(
+        page.getByRole('heading', { name: staffWorkText('heading', locale) })
+      ).toBeVisible();
+      const preview = page.getByRole('region', {
+        name: staffWorkText('queue', locale),
+        exact: true,
+      });
+      const lane = (key: 'mine' | 'urgent' | 'overdue') =>
+        preview.getByRole('button', { name: staffWorkText(key, locale), exact: true });
+      await expect(lane('mine')).toHaveAttribute('aria-pressed', 'true');
+      await expect(
+        preview.getByRole('link').filter({ hasText: assigned.title[locale] })
+      ).toHaveAttribute('href', `/admin/tickets/${assignedTicket}?status=active`);
+      await lane('urgent').click();
+      await expect(
+        preview
+          .getByRole('link')
+          .filter({ hasText: locale === 'en' ? 'Review site capacity' : 'بررسی ظرفیت محل' })
+      ).toHaveAttribute(
+        'href',
+        `/admin/consultations/${urgentConsultation}?assignment=unassigned&priority=high`
+      );
+      const queueLinks = preview.locator('footer').getByRole('link');
+      await expect(queueLinks).toHaveCount(2);
+      await expect(queueLinks.first()).toHaveAttribute('href', '/admin/tickets?status=active');
+      await expect(queueLinks.last()).toHaveAttribute(
+        'href',
+        '/admin/consultations?assignment=unassigned&priority=high'
+      );
+      for (const link of await queueLinks.all()) {
+        expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      }
+      await lane('overdue').click();
+      await expect(
+        preview.getByRole('link').filter({ hasText: assigned.title[locale] })
+      ).toContainText(staffWorkText('respond', locale));
+      await lane('mine').click();
       const work = page.getByRole('region', {
-        name: t('dashboard.admin.work.title', locale),
+        name: staffWorkText('businessWork', locale),
         exact: true,
       });
       const queue = page.getByRole('region', {
-        name: t('dashboard.admin.work.queueTitle', locale),
+        name: staffWorkText('queueTotals', locale),
         exact: true,
       });
       const failures = page.getByRole('region', {
-        name: t('dashboard.admin.failures.title', locale),
+        name: staffWorkText('failures', locale),
         exact: true,
       });
       const verification = page.getByRole('region', {
@@ -122,6 +197,7 @@ for (const locale of ['en', 'fa'] as const) {
       for (const [width, columns] of [
         [390, 1],
         [900, 2],
+        [1227, 2],
         [1440, 3],
       ] as const) {
         await page.setViewportSize({ width, height: 1000 });
@@ -130,6 +206,17 @@ for (const locale of ['en', 'fa'] as const) {
             (card) => getComputedStyle(card.parentElement!).gridTemplateColumns.split(' ').length
           )
         ).toBe(columns);
+        if (width === 1227) {
+          const queueBox = await geometry(queue);
+          const workBox = await geometry(work);
+          const failuresBox = await geometry(failures);
+          const verificationBox = await geometry(verification);
+          expect(workBox.y).toBe(queueBox.y);
+          expect(workBox.height).toBe(queueBox.height);
+          expect(verificationBox.y).toBe(failuresBox.y);
+          expect(verificationBox.height).toBe(failuresBox.height);
+          expect(verificationBox.height).toBeLessThan(workBox.height);
+        }
         await expect
           .poll(() =>
             page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)

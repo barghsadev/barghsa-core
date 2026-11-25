@@ -23,67 +23,47 @@ import { Route as AppAiRouteImport } from './routes/_app/ai'
 import { Route as AppAppRouteImport } from './routes/_app/app'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
 import { Route as AppConsultationsRouteImport } from './routes/_app/consultations'
-import { Route as AppContractsRouteImport } from './routes/_app/contracts'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
-import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
-import { Route as AppTicketsRouteImport } from './routes/_app/tickets'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
-import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAgentSlotsRouteImport } from './routes/admin/agent-slots'
 import { Route as AdminAgentsRouteImport } from './routes/admin/agents'
 import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
-import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
-import { Route as AdminAuthorizationAuditRouteImport } from './routes/admin/authorization-audit'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCatalogueRouteImport } from './routes/admin/catalogue'
-import { Route as AdminConsultationsRouteImport } from './routes/admin/consultations'
 import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract-limits'
-import { Route as AdminContractTemplatesRouteImport } from './routes/admin/contract-templates'
-import { Route as AdminContractsRouteImport } from './routes/admin/contracts'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
-import { Route as AdminDocumentTemplatesRouteImport } from './routes/admin/document-templates'
-import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
-import { Route as AdminElectricityIncreasesRouteImport } from './routes/admin/electricity-increases'
-import { Route as AdminElectricityOrdersRouteImport } from './routes/admin/electricity-orders'
-import { Route as AdminElectricityPriceAdjustmentsRouteImport } from './routes/admin/electricity-price-adjustments'
 import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electricity-rules'
 import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
 import { Route as AdminFailedNotificationsRouteImport } from './routes/admin/failed-notifications'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminGiftCodesRouteImport } from './routes/admin/gift-codes'
 import { Route as AdminInboxRouteImport } from './routes/admin/inbox'
-import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
 import { Route as AdminMaintenanceRouteImport } from './routes/admin/maintenance'
-import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminOperationalRetentionRouteImport } from './routes/admin/operational-retention'
 import { Route as AdminPoliciesRouteImport } from './routes/admin/policies'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
-import { Route as AdminReconciliationRouteImport } from './routes/admin/reconciliation'
-import { Route as AdminRolesRouteImport } from './routes/admin/roles'
-import { Route as AdminSavingOrdersRouteImport } from './routes/admin/saving-orders'
 import { Route as AdminServiceTargetsRouteImport } from './routes/admin/service-targets'
 import { Route as AdminSolarConstructionRouteImport } from './routes/admin/solar-construction'
 import { Route as AdminSolarPostalRouteImport } from './routes/admin/solar-postal'
-import { Route as AdminSolarRequestsRouteImport } from './routes/admin/solar-requests'
-import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
-import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUploadPoliciesRouteImport } from './routes/admin/upload-policies'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVatRouteImport } from './routes/admin/vat'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
-import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
+import { Route as TermsVersionRouteImport } from './routes/terms_.$version'
 import { Route as AppConsultationsIndexRouteImport } from './routes/_app/consultations.index'
 import { Route as AppConsultationsRequestIdRouteImport } from './routes/_app/consultations.$requestId'
+import { Route as AppConsultationsNewRouteImport } from './routes/_app/consultations.new'
+import { Route as AppContractsIndexRouteImport } from './routes/_app/contracts.index'
+import { Route as AppDocumentsIndexRouteImport } from './routes/_app/documents.index'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityAdvancedRouteImport } from './routes/_app/electricity/advanced'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
@@ -91,11 +71,13 @@ import { Route as AppElectricityOrdersRouteImport } from './routes/_app/electric
 import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
 import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AppInvoicesReceiptsRouteImport } from './routes/_app/invoices/receipts'
+import { Route as AppNotificationsNotificationIdRouteImport } from './routes/_app/notifications_.$notificationId'
 import { Route as AppSavingsIndexRouteImport } from './routes/_app/savings.index'
 import { Route as AppSavingsOrderRouteImport } from './routes/_app/savings.order'
 import { Route as AppSavingsOrdersRouteImport } from './routes/_app/savings.orders'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsAddressesRouteImport } from './routes/_app/settings/addresses'
+import { Route as AppSettingsConversationIdentityRouteImport } from './routes/_app/settings/conversation-identity'
 import { Route as AppSettingsPrivacyRouteImport } from './routes/_app/settings/privacy'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
@@ -103,22 +85,180 @@ import { Route as AppSettingsTeamRouteImport } from './routes/_app/settings/team
 import { Route as AppSettingsTimezoneRouteImport } from './routes/_app/settings/timezone'
 import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
 import { Route as AppSolarRequestsRouteImport } from './routes/_app/solar.requests'
+import { Route as AppTicketsIndexRouteImport } from './routes/_app/tickets.index'
+import { Route as AppTicketsTicketIdRouteImport } from './routes/_app/tickets.$ticketId'
+import { Route as AppTicketsNewRouteImport } from './routes/_app/tickets.new'
+import { Route as AppWalletIndexRouteImport } from './routes/_app/wallet.index'
+import { Route as AdminApprovalRequestsIndexRouteImport } from './routes/admin/approval-requests.index'
+import { Route as AdminAuthorizationAuditIndexRouteImport } from './routes/admin/authorization-audit.index'
+import { Route as AdminAuthorizationAuditEventIdRouteImport } from './routes/admin/authorization-audit.$eventId'
+import { Route as AdminBrandingEditRouteImport } from './routes/admin/branding.edit'
+import { Route as AdminCatalogueCategoryRouteImport } from './routes/admin/catalogue_.$category'
+import { Route as AdminConsultationsIndexRouteImport } from './routes/admin/consultations.index'
+import { Route as AdminConsultationsRequestIdRouteImport } from './routes/admin/consultations.$requestId'
+import { Route as AdminContractLimitsViewRouteImport } from './routes/admin/contract-limits_.$view'
+import { Route as AdminContractTemplatesIndexRouteImport } from './routes/admin/contract-templates.index'
+import { Route as AdminContractTemplatesNewRouteImport } from './routes/admin/contract-templates.new'
+import { Route as AdminContractsIndexRouteImport } from './routes/admin/contracts.index'
+import { Route as AdminContractsNewRouteImport } from './routes/admin/contracts.new'
+import { Route as AdminContractsRefundsRouteImport } from './routes/admin/contracts.refunds'
 import { Route as AdminCrmIndexRouteImport } from './routes/admin/crm/index'
-import { Route as AdminCrmCorrectionsRouteImport } from './routes/admin/crm/corrections'
-import { Route as AdminCrmRecoveryRouteImport } from './routes/admin/crm/recovery'
+import { Route as AdminDocumentTemplatesIndexRouteImport } from './routes/admin/document-templates.index'
+import { Route as AdminDocumentTemplatesNewRouteImport } from './routes/admin/document-templates.new'
+import { Route as AdminDocumentsIndexRouteImport } from './routes/admin/documents.index'
+import { Route as AdminElectricityIncreasesIndexRouteImport } from './routes/admin/electricity-increases.index'
+import { Route as AdminElectricityOrdersIndexRouteImport } from './routes/admin/electricity-orders.index'
+import { Route as AdminElectricityOrdersOrderIdRouteImport } from './routes/admin/electricity-orders.$orderId'
+import { Route as AdminElectricityPriceAdjustmentsIndexRouteImport } from './routes/admin/electricity-price-adjustments.index'
+import { Route as AdminFailedJobsJobIdRouteImport } from './routes/admin/failed-jobs_.$jobId'
+import { Route as AdminFailedNotificationsHistoryRouteImport } from './routes/admin/failed-notifications_.history'
+import { Route as AdminInboxNotificationIdRouteImport } from './routes/admin/inbox_.$notificationId'
+import { Route as AdminInvoicesIndexRouteImport } from './routes/admin/invoices.index'
+import { Route as AdminInvoicesNewRouteImport } from './routes/admin/invoices.new'
+import { Route as AdminNotificationsIndexRouteImport } from './routes/admin/notifications.index'
+import { Route as AdminNotificationsNewRouteImport } from './routes/admin/notifications.new'
+import { Route as AdminNotificationsPreviewRouteImport } from './routes/admin/notifications.preview'
+import { Route as AdminNotificationsSettingsRouteImport } from './routes/admin/notifications.settings'
+import { Route as AdminOperationalRetentionViewRouteImport } from './routes/admin/operational-retention_.$view'
+import { Route as AdminProvidersIndexRouteImport } from './routes/admin/providers.index'
+import { Route as AdminProvidersChannelRouteImport } from './routes/admin/providers.$channel'
+import { Route as AdminReconciliationIndexRouteImport } from './routes/admin/reconciliation.index'
+import { Route as AdminRolesIndexRouteImport } from './routes/admin/roles.index'
+import { Route as AdminRolesRoleIdRouteImport } from './routes/admin/roles.$roleId'
+import { Route as AdminRolesCompareRouteImport } from './routes/admin/roles.compare'
+import { Route as AdminRolesEffectiveRouteImport } from './routes/admin/roles.effective'
+import { Route as AdminSavingOrdersIndexRouteImport } from './routes/admin/saving-orders.index'
+import { Route as AdminSolarRequestsIndexRouteImport } from './routes/admin/solar-requests.index'
+import { Route as AdminStaffTeamsIndexRouteImport } from './routes/admin/staff-teams.index'
+import { Route as AdminStaffTeamsAssignmentRouteImport } from './routes/admin/staff-teams.assignment'
+import { Route as AdminStaffTeamsNewRouteImport } from './routes/admin/staff-teams.new'
+import { Route as AdminStorageSectionRouteImport } from './routes/admin/storage_.$section'
+import { Route as AdminTicketsIndexRouteImport } from './routes/admin/tickets.index'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users.index'
+import { Route as AdminUsersNewRouteImport } from './routes/admin/users.new'
+import { Route as AdminVerificationSectionRouteImport } from './routes/admin/verification_.$section'
 import { Route as AdminWalletLedgerProfileIdRouteImport } from './routes/admin/wallet-ledger/$profileId'
+import { Route as AdminWalletReceiptsIndexRouteImport } from './routes/admin/wallet-receipts.index'
 import { Route as AppCrmIndexRouteImport } from './routes/app/crm/index'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
+import { Route as AppConsultationsRequestIdOfferRouteImport } from './routes/_app/consultations.$requestId_.offer'
+import { Route as AppConsultationsRequestIdReplyRouteImport } from './routes/_app/consultations.$requestId_.reply'
+import { Route as AppContractsContractIdChar123ActionChar125RouteImport } from './routes/_app/contracts.$contractId.{-$action}'
+import { Route as AppDocumentsDocumentIdChar123OperationChar125RouteImport } from './routes/_app/documents.$documentId.{-$operation}'
 import { Route as AppElectricityOrdersIndexRouteImport } from './routes/_app/electricity/orders.index'
 import { Route as AppElectricityOrdersOrderIdRouteImport } from './routes/_app/electricity/orders.$orderId'
+import { Route as AppElectricityOrdersNewRouteImport } from './routes/_app/electricity/orders.new'
 import { Route as AppSavingsOrdersIndexRouteImport } from './routes/_app/savings.orders.index'
 import { Route as AppSavingsOrdersOrderIdRouteImport } from './routes/_app/savings.orders.$orderId'
+import { Route as AppSavingsOrdersNewRouteImport } from './routes/_app/savings.orders.new'
+import { Route as AppSettingsAddressesAddressIdRouteImport } from './routes/_app/settings/addresses_.$addressId'
+import { Route as AppSettingsAddressesNewRouteImport } from './routes/_app/settings/addresses_.new'
+import { Route as AppSettingsPrivacyRequestsRouteImport } from './routes/_app/settings/privacy_.requests'
+import { Route as AppSettingsProfileEditRouteImport } from './routes/_app/settings/profile_.edit'
+import { Route as AppSettingsSecurityTelegramRouteImport } from './routes/_app/settings/security_.telegram'
+import { Route as AppSettingsTeamSectionRouteImport } from './routes/_app/settings/team_.$section'
 import { Route as AppSolarRequestsIndexRouteImport } from './routes/_app/solar.requests.index'
 import { Route as AppSolarRequestsRequestIdRouteImport } from './routes/_app/solar.requests.$requestId'
 import { Route as AppSolarRequestsNewRouteImport } from './routes/_app/solar.requests.new'
+import { Route as AppWalletTopUpMethodRouteImport } from './routes/_app/wallet.top-up.$method'
+import { Route as AdminAgentSlotsSlotKeyChar123ActionChar125RouteImport } from './routes/admin/agent-slots_.$slotKey.{-$action}'
+import { Route as AdminAgentsAgentIdChar123ActionChar125RouteImport } from './routes/admin/agents_.$agentId.{-$action}'
+import { Route as AdminAiModelsModelIdChar123ActionChar125RouteImport } from './routes/admin/ai-models_.$modelId.{-$action}'
+import { Route as AdminApprovalRequestsRequestIdChar123DecisionChar125RouteImport } from './routes/admin/approval-requests.$requestId.{-$decision}'
+import { Route as AdminApprovalRequestsThresholdsChar123ViewChar125RouteImport } from './routes/admin/approval-requests.thresholds.{-$view}'
+import { Route as AdminCatalogueCategoryProductIdRouteImport } from './routes/admin/catalogue_.$category_.$productId'
+import { Route as AdminCatalogueCategoryNewRouteImport } from './routes/admin/catalogue_.$category_.new'
+import { Route as AdminConsultationsRequestIdFeeRouteImport } from './routes/admin/consultations.$requestId.fee'
+import { Route as AdminContractTemplatesTemplateIdIndexRouteImport } from './routes/admin/contract-templates.$templateId.index'
+import { Route as AdminContractTemplatesTemplateIdEditRouteImport } from './routes/admin/contract-templates.$templateId.edit'
+import { Route as AdminCrmCorrectionsIndexRouteImport } from './routes/admin/crm/corrections.index'
+import { Route as AdminCrmCorrectionsCaseIdRouteImport } from './routes/admin/crm/corrections.$caseId'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
+import { Route as AdminCrmRecoveryIndexRouteImport } from './routes/admin/crm/recovery.index'
+import { Route as AdminCrmRecoveryCaseIdRouteImport } from './routes/admin/crm/recovery.$caseId'
+import { Route as AdminCrmRecoveryNewRouteImport } from './routes/admin/crm/recovery.new'
+import { Route as AdminDocumentTemplatesTemplateIdIndexRouteImport } from './routes/admin/document-templates.$templateId.index'
+import { Route as AdminDocumentTemplatesTemplateIdEditRouteImport } from './routes/admin/document-templates.$templateId.edit'
+import { Route as AdminElectricityIncreasesRequestIdChar123DecisionChar125RouteImport } from './routes/admin/electricity-increases.$requestId.{-$decision}'
+import { Route as AdminElectricityPriceAdjustmentsContractIdIndexRouteImport } from './routes/admin/electricity-price-adjustments.$contractId.index'
+import { Route as AdminElectricityPriceAdjustmentsContractIdNewRouteImport } from './routes/admin/electricity-price-adjustments.$contractId.new'
+import { Route as AdminElectricityRulesSectionChar123ViewChar125RouteImport } from './routes/admin/electricity-rules_.$section.{-$view}'
+import { Route as AdminFailedNotificationsDeliveryIdChar123SectionChar125RouteImport } from './routes/admin/failed-notifications_.$deliveryId.{-$section}'
+import { Route as AdminGiftCodesCodeIdChar123ActionChar125RouteImport } from './routes/admin/gift-codes_.$codeId.{-$action}'
+import { Route as AdminInvoicesInvoiceIdIndexRouteImport } from './routes/admin/invoices.$invoiceId.index'
+import { Route as AdminKnowledgeBasesRecordIdChar123ActionChar125RouteImport } from './routes/admin/knowledge-bases_.$recordId.{-$action}'
+import { Route as AdminMaintenanceCapabilityChar123ActionChar125RouteImport } from './routes/admin/maintenance_.$capability.{-$action}'
+import { Route as AdminNotificationsTemplateIdIndexRouteImport } from './routes/admin/notifications.$templateId.index'
+import { Route as AdminNotificationsTemplateIdActionRouteImport } from './routes/admin/notifications.$templateId.$action'
+import { Route as AdminPoliciesRecordIdChar123ActionChar125RouteImport } from './routes/admin/policies_.$recordId.{-$action}'
+import { Route as AdminProvidersChannelProviderIdRouteImport } from './routes/admin/providers.$channel.$providerId'
+import { Route as AdminProvidersChannelNewRouteImport } from './routes/admin/providers.$channel.new'
+import { Route as AdminReconciliationCaseIdChar123VerbChar125RouteImport } from './routes/admin/reconciliation.$caseId.{-$verb}'
+import { Route as AdminServiceTargetsSectionChar123WorkflowChar125RouteImport } from './routes/admin/service-targets_.$section.{-$workflow}'
+import { Route as AdminStaffTeamsTeamIdIndexRouteImport } from './routes/admin/staff-teams.$teamId.index'
+import { Route as AdminStaffTeamsTeamIdEditRouteImport } from './routes/admin/staff-teams.$teamId.edit'
+import { Route as AdminTicketsTicketIdChar123SectionChar125RouteImport } from './routes/admin/tickets.$ticketId.{-$section}'
+import { Route as AdminUploadPoliciesCategoryChar123ActionChar125RouteImport } from './routes/admin/upload-policies_.$category.{-$action}'
+import { Route as AdminUsersUserIdIndexRouteImport } from './routes/admin/users.$userId.index'
+import { Route as AdminUsersUserIdPermissionsRouteImport } from './routes/admin/users.$userId.permissions'
+import { Route as AdminUsersUserIdRolesRouteImport } from './routes/admin/users.$userId.roles'
+import { Route as AdminVerificationProvidersProviderIdRouteImport } from './routes/admin/verification_.providers.$providerId'
+import { Route as AdminWalletReceiptsReceiptIdChar123ActionChar125RouteImport } from './routes/admin/wallet-receipts.$receiptId.{-$action}'
+import { Route as AdminWalletReceiptsSettingsChar123ViewChar125RouteImport } from './routes/admin/wallet-receipts.settings.{-$view}'
 import { Route as AppCrmProfilesProfileIdRouteImport } from './routes/app/crm/profiles.$profileId'
+import { Route as AppContractsContractIdOperationVersionIdRouteImport } from './routes/_app/contracts.$contractId_.$operation.$versionId'
+import { Route as AppElectricityOrdersOrderIdCancelRouteImport } from './routes/_app/electricity/orders.$orderId_.cancel'
+import { Route as AppElectricityOrdersOrderIdEditRouteImport } from './routes/_app/electricity/orders.$orderId_.edit'
+import { Route as AppElectricityOrdersNewAdvancedRouteImport } from './routes/_app/electricity/orders.new_.advanced'
+import { Route as AppInvoicesInvoiceIdReceiptsReceiptIdRouteImport } from './routes/_app/invoices/$invoiceId_.receipts.$receiptId'
+import { Route as AppInvoicesInvoiceIdReceiptsNewRouteImport } from './routes/_app/invoices/$invoiceId_.receipts.new'
+import { Route as AppSavingsOrdersOrderIdEditRouteImport } from './routes/_app/savings.orders.$orderId_.edit'
+import { Route as AppSettingsAddressesAddressIdEditRouteImport } from './routes/_app/settings/addresses_.$addressId_.edit'
+import { Route as AppSolarRequestsRequestIdDocumentsRouteImport } from './routes/_app/solar.requests.$requestId_.documents'
+import { Route as AppSolarRequestsRequestIdShipmentRouteImport } from './routes/_app/solar.requests.$requestId_.shipment'
+import { Route as AdminCatalogueCategoryProductIdEditRouteImport } from './routes/admin/catalogue_.$category_.$productId_.edit'
+import { Route as AdminConsultationsRequestIdDecisionsDecisionRouteImport } from './routes/admin/consultations.$requestId.decisions.$decision'
+import { Route as AdminContractTemplatesTemplateIdVersionsVersionRouteImport } from './routes/admin/contract-templates.$templateId.versions.$version'
+import { Route as AdminContractsContractIdChar123ActionChar125Char123ItemChar125RouteImport } from './routes/admin/contracts.$contractId.{-$action}.{-$item}'
+import { Route as AdminCrmProfilesProfileIdOperationRouteImport } from './routes/admin/crm/profiles.$profileId_.$operation'
+import { Route as AdminDocumentTemplatesTemplateIdVersionsVersionRouteImport } from './routes/admin/document-templates.$templateId.versions.$version'
+import { Route as AdminElectricityOrdersOrderIdDecisionsDecisionRouteImport } from './routes/admin/electricity-orders.$orderId.decisions.$decision'
+import { Route as AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125RouteImport } from './routes/admin/electricity-price-adjustments.$contractId.$adjustmentId.{-$decision}'
+import { Route as AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125RouteImport } from './routes/admin/failed-notifications_.corrections.{-$correctionId}.{-$action}'
+import { Route as AdminGeographyProvincesProvinceIdChar123ActionChar125RouteImport } from './routes/admin/geography_.provinces.$provinceId.{-$action}'
+import { Route as AdminInvoicesReceiptsReceiptIdChar123DecisionChar125RouteImport } from './routes/admin/invoices.receipts.$receiptId.{-$decision}'
+import { Route as AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125RouteImport } from './routes/admin/invoices.tools.{-$section}.{-$service}'
+import { Route as AdminKnowledgeBasesRecordIdDocumentsDocumentIdRouteImport } from './routes/admin/knowledge-bases_.$recordId.documents.$documentId'
+import { Route as AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125RouteImport } from './routes/admin/knowledge-bases_.groups.$recordId.{-$action}'
+import { Route as AdminPoliciesGroupsRecordIdChar123ActionChar125RouteImport } from './routes/admin/policies_.groups.$recordId.{-$action}'
+import { Route as AdminProvidersChannelProviderIdDuplicateRouteImport } from './routes/admin/providers.$channel.$providerId.duplicate'
+import { Route as AdminProvidersChannelProviderIdEditRouteImport } from './routes/admin/providers.$channel.$providerId.edit'
+import { Route as AdminProvidersChannelProviderIdTestRouteImport } from './routes/admin/providers.$channel.$providerId/test'
+import { Route as AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125RouteImport } from './routes/admin/saving-orders.$orderId.{-$operation}.{-$upgradeId}'
+import { Route as AdminSolarRequestsRequestIdConstructionChar123OperationChar125RouteImport } from './routes/admin/solar-requests.$requestId.construction.{-$operation}'
+import { Route as AdminSolarRequestsRequestIdPostalChar123OperationChar125RouteImport } from './routes/admin/solar-requests.$requestId.postal.{-$operation}'
+import { Route as AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125RouteImport } from './routes/admin/solar-requests.$requestId.{-$operation}.{-$documentId}'
+import { Route as AdminTosVersionsVersionIdChar123ActionChar125RouteImport } from './routes/admin/tos_.versions.$versionId.{-$action}'
+import { Route as AdminUploadPoliciesCategoryVersionsVersionIdRouteImport } from './routes/admin/upload-policies_.$category.versions.$versionId'
+import { Route as AdminVatKindRecordIdChar123ActionChar125RouteImport } from './routes/admin/vat_.$kind.$recordId.{-$action}'
+import { Route as AppElectricityOrdersOrderIdIncreasesNewRouteImport } from './routes/_app/electricity/orders.$orderId_.increases.new'
+import { Route as AppSettingsTeamSectionRecordIdChar123ActionChar125RouteImport } from './routes/_app/settings/team_.$section_.$recordId.{-$action}'
+import { Route as AppSolarRequestsRequestIdDocumentsReviewRouteImport } from './routes/_app/solar.requests.$requestId_.documents.review'
+import { Route as AppSolarRequestsRequestIdShipmentUploadReceiptRouteImport } from './routes/_app/solar.requests.$requestId_.shipment.upload-receipt'
+import { Route as AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125RouteImport } from './routes/admin/catalogue_.$category_.$productId_.configuration.{-$operation}'
+import { Route as AdminCatalogueCategoryProductIdPricesNewRouteImport } from './routes/admin/catalogue_.$category_.$productId_.prices.new'
+import { Route as AdminCrmProfilesProfileIdCorrectionsNewRouteImport } from './routes/admin/crm/profiles.$profileId_.corrections.new'
+import { Route as AdminCrmProfilesProfileIdLegalEditRouteImport } from './routes/admin/crm/profiles.$profileId_.legal.edit'
+import { Route as AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125RouteImport } from './routes/admin/documents.$documentId.{-$section}.{-$action}.{-$holdId}'
+import { Route as AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125RouteImport } from './routes/admin/saving-orders.$orderId.documents.$documentId.{-$operation}'
+import { Route as AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125RouteImport } from './routes/_app/savings.orders.$orderId_.documents.$documentId.{-$operation}'
+import { Route as AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125RouteImport } from './routes/_app/solar.requests.$requestId_.documents.$documentId.{-$operation}'
+import { Route as AdminCrmProfilesProfileIdAddressesAddressIdEditRouteImport } from './routes/admin/crm/profiles.$profileId_.addresses.$addressId.edit'
+import { Route as AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125RouteImport } from './routes/admin/geography_.provinces.$provinceId.cities.$cityId.{-$action}'
+import { Route as AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125RouteImport } from './routes/admin/invoices.$invoiceId.$action.{-$destination}.{-$view}.{-$operation}'
+import { Route as AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125RouteImport } from './routes/_app/contracts.$contractId_.versions.$versionId.documents.$documentId.{-$operation}'
+import { Route as AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125RouteImport } from './routes/admin/contracts.$contractId.versions.$versionId.documents.$documentId.{-$operation}'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -189,19 +329,9 @@ const AppConsultationsRoute = AppConsultationsRouteImport.update({
   path: '/consultations',
   getParentRoute: () => AppRoute,
 } as any)
-const AppContractsRoute = AppContractsRouteImport.update({
-  id: '/contracts',
-  path: '/contracts',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDocumentsRoute = AppDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
@@ -214,19 +344,9 @@ const AppSavingsRoute = AppSavingsRouteImport.update({
   path: '/savings',
   getParentRoute: () => AppRoute,
 } as any)
-const AppTicketsRoute = AppTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppVideosRoute = AppVideosRouteImport.update({
   id: '/videos',
   path: '/videos',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppWalletRoute = AppWalletRouteImport.update({
-  id: '/wallet',
-  path: '/wallet',
   getParentRoute: () => AppRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -249,16 +369,6 @@ const AdminAiModelsRoute = AdminAiModelsRouteImport.update({
   path: '/ai-models',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminApprovalRequestsRoute = AdminApprovalRequestsRouteImport.update({
-  id: '/approval-requests',
-  path: '/approval-requests',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAuthorizationAuditRoute = AdminAuthorizationAuditRouteImport.update({
-  id: '/authorization-audit',
-  path: '/authorization-audit',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminBrandingRoute = AdminBrandingRouteImport.update({
   id: '/branding',
   path: '/branding',
@@ -269,24 +379,9 @@ const AdminCatalogueRoute = AdminCatalogueRouteImport.update({
   path: '/catalogue',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminConsultationsRoute = AdminConsultationsRouteImport.update({
-  id: '/consultations',
-  path: '/consultations',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminContractLimitsRoute = AdminContractLimitsRouteImport.update({
   id: '/contract-limits',
   path: '/contract-limits',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminContractTemplatesRoute = AdminContractTemplatesRouteImport.update({
-  id: '/contract-templates',
-  path: '/contract-templates',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminContractsRoute = AdminContractsRouteImport.update({
-  id: '/contracts',
-  path: '/contracts',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCrmRoute = AdminCrmRouteImport.update({
@@ -294,33 +389,6 @@ const AdminCrmRoute = AdminCrmRouteImport.update({
   path: '/crm',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminDocumentTemplatesRoute = AdminDocumentTemplatesRouteImport.update({
-  id: '/document-templates',
-  path: '/document-templates',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminElectricityIncreasesRoute =
-  AdminElectricityIncreasesRouteImport.update({
-    id: '/electricity-increases',
-    path: '/electricity-increases',
-    getParentRoute: () => AdminRoute,
-  } as any)
-const AdminElectricityOrdersRoute = AdminElectricityOrdersRouteImport.update({
-  id: '/electricity-orders',
-  path: '/electricity-orders',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminElectricityPriceAdjustmentsRoute =
-  AdminElectricityPriceAdjustmentsRouteImport.update({
-    id: '/electricity-price-adjustments',
-    path: '/electricity-price-adjustments',
-    getParentRoute: () => AdminRoute,
-  } as any)
 const AdminElectricityRulesRoute = AdminElectricityRulesRouteImport.update({
   id: '/electricity-rules',
   path: '/electricity-rules',
@@ -352,11 +420,6 @@ const AdminInboxRoute = AdminInboxRouteImport.update({
   path: '/inbox',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
-  id: '/invoices',
-  path: '/invoices',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminKnowledgeBasesRoute = AdminKnowledgeBasesRouteImport.update({
   id: '/knowledge-bases',
   path: '/knowledge-bases',
@@ -365,11 +428,6 @@ const AdminKnowledgeBasesRoute = AdminKnowledgeBasesRouteImport.update({
 const AdminMaintenanceRoute = AdminMaintenanceRouteImport.update({
   id: '/maintenance',
   path: '/maintenance',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminOperationalRetentionRoute =
@@ -388,21 +446,6 @@ const AdminProvidersRoute = AdminProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminReconciliationRoute = AdminReconciliationRouteImport.update({
-  id: '/reconciliation',
-  path: '/reconciliation',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminRolesRoute = AdminRolesRouteImport.update({
-  id: '/roles',
-  path: '/roles',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSavingOrdersRoute = AdminSavingOrdersRouteImport.update({
-  id: '/saving-orders',
-  path: '/saving-orders',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminServiceTargetsRoute = AdminServiceTargetsRouteImport.update({
   id: '/service-targets',
   path: '/service-targets',
@@ -418,24 +461,9 @@ const AdminSolarPostalRoute = AdminSolarPostalRouteImport.update({
   path: '/solar-postal',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminSolarRequestsRoute = AdminSolarRequestsRouteImport.update({
-  id: '/solar-requests',
-  path: '/solar-requests',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminStaffTeamsRoute = AdminStaffTeamsRouteImport.update({
-  id: '/staff-teams',
-  path: '/staff-teams',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTicketsRoute = AdminTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTosRoute = AdminTosRouteImport.update({
@@ -448,11 +476,6 @@ const AdminUploadPoliciesRoute = AdminUploadPoliciesRouteImport.update({
   path: '/upload-policies',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminVatRoute = AdminVatRouteImport.update({
   id: '/vat',
   path: '/vat',
@@ -461,11 +484,6 @@ const AdminVatRoute = AdminVatRouteImport.update({
 const AdminVerificationRoute = AdminVerificationRouteImport.update({
   id: '/verification',
   path: '/verification',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminWalletReceiptsRoute = AdminWalletReceiptsRouteImport.update({
-  id: '/wallet-receipts',
-  path: '/wallet-receipts',
   getParentRoute: () => AdminRoute,
 } as any)
 const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
@@ -488,6 +506,11 @@ const RegisterVerifyRoute = RegisterVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => RegisterRoute,
 } as any)
+const TermsVersionRoute = TermsVersionRouteImport.update({
+  id: '/terms_/$version',
+  path: '/terms/$version',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppConsultationsIndexRoute = AppConsultationsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -499,6 +522,21 @@ const AppConsultationsRequestIdRoute =
     path: '/$requestId',
     getParentRoute: () => AppConsultationsRoute,
   } as any)
+const AppConsultationsNewRoute = AppConsultationsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppConsultationsRoute,
+} as any)
+const AppContractsIndexRoute = AppContractsIndexRouteImport.update({
+  id: '/contracts/',
+  path: '/contracts/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppElectricityIndexRoute = AppElectricityIndexRouteImport.update({
   id: '/electricity/',
   path: '/electricity/',
@@ -534,6 +572,12 @@ const AppInvoicesReceiptsRoute = AppInvoicesReceiptsRouteImport.update({
   path: '/invoices/receipts',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNotificationsNotificationIdRoute =
+  AppNotificationsNotificationIdRouteImport.update({
+    id: '/notifications_/$notificationId',
+    path: '/notifications/$notificationId',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppSavingsIndexRoute = AppSavingsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -559,6 +603,12 @@ const AppSettingsAddressesRoute = AppSettingsAddressesRouteImport.update({
   path: '/settings/addresses',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsConversationIdentityRoute =
+  AppSettingsConversationIdentityRouteImport.update({
+    id: '/settings/conversation-identity',
+    path: '/settings/conversation-identity',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppSettingsPrivacyRoute = AppSettingsPrivacyRouteImport.update({
   id: '/settings/privacy',
   path: '/settings/privacy',
@@ -594,25 +644,296 @@ const AppSolarRequestsRoute = AppSolarRequestsRouteImport.update({
   path: '/solar/requests',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTicketsIndexRoute = AppTicketsIndexRouteImport.update({
+  id: '/tickets/',
+  path: '/tickets/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTicketsTicketIdRoute = AppTicketsTicketIdRouteImport.update({
+  id: '/tickets/$ticketId',
+  path: '/tickets/$ticketId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTicketsNewRoute = AppTicketsNewRouteImport.update({
+  id: '/tickets/new',
+  path: '/tickets/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWalletIndexRoute = AppWalletIndexRouteImport.update({
+  id: '/wallet/',
+  path: '/wallet/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AdminApprovalRequestsIndexRoute =
+  AdminApprovalRequestsIndexRouteImport.update({
+    id: '/approval-requests/',
+    path: '/approval-requests/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminAuthorizationAuditIndexRoute =
+  AdminAuthorizationAuditIndexRouteImport.update({
+    id: '/authorization-audit/',
+    path: '/authorization-audit/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminAuthorizationAuditEventIdRoute =
+  AdminAuthorizationAuditEventIdRouteImport.update({
+    id: '/authorization-audit/$eventId',
+    path: '/authorization-audit/$eventId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminBrandingEditRoute = AdminBrandingEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => AdminBrandingRoute,
+} as any)
+const AdminCatalogueCategoryRoute = AdminCatalogueCategoryRouteImport.update({
+  id: '/catalogue_/$category',
+  path: '/catalogue/$category',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConsultationsIndexRoute = AdminConsultationsIndexRouteImport.update({
+  id: '/consultations/',
+  path: '/consultations/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConsultationsRequestIdRoute =
+  AdminConsultationsRequestIdRouteImport.update({
+    id: '/consultations/$requestId',
+    path: '/consultations/$requestId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminContractLimitsViewRoute = AdminContractLimitsViewRouteImport.update({
+  id: '/contract-limits_/$view',
+  path: '/contract-limits/$view',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractTemplatesIndexRoute =
+  AdminContractTemplatesIndexRouteImport.update({
+    id: '/contract-templates/',
+    path: '/contract-templates/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminContractTemplatesNewRoute =
+  AdminContractTemplatesNewRouteImport.update({
+    id: '/contract-templates/new',
+    path: '/contract-templates/new',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminContractsIndexRoute = AdminContractsIndexRouteImport.update({
+  id: '/contracts/',
+  path: '/contracts/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractsNewRoute = AdminContractsNewRouteImport.update({
+  id: '/contracts/new',
+  path: '/contracts/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractsRefundsRoute = AdminContractsRefundsRouteImport.update({
+  id: '/contracts/refunds',
+  path: '/contracts/refunds',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCrmIndexRoute = AdminCrmIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminCrmRoute,
 } as any)
-const AdminCrmCorrectionsRoute = AdminCrmCorrectionsRouteImport.update({
-  id: '/corrections',
-  path: '/corrections',
-  getParentRoute: () => AdminCrmRoute,
+const AdminDocumentTemplatesIndexRoute =
+  AdminDocumentTemplatesIndexRouteImport.update({
+    id: '/document-templates/',
+    path: '/document-templates/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminDocumentTemplatesNewRoute =
+  AdminDocumentTemplatesNewRouteImport.update({
+    id: '/document-templates/new',
+    path: '/document-templates/new',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminDocumentsIndexRoute = AdminDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
+  getParentRoute: () => AdminRoute,
 } as any)
-const AdminCrmRecoveryRoute = AdminCrmRecoveryRouteImport.update({
-  id: '/recovery',
-  path: '/recovery',
-  getParentRoute: () => AdminCrmRoute,
+const AdminElectricityIncreasesIndexRoute =
+  AdminElectricityIncreasesIndexRouteImport.update({
+    id: '/electricity-increases/',
+    path: '/electricity-increases/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityOrdersIndexRoute =
+  AdminElectricityOrdersIndexRouteImport.update({
+    id: '/electricity-orders/',
+    path: '/electricity-orders/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityOrdersOrderIdRoute =
+  AdminElectricityOrdersOrderIdRouteImport.update({
+    id: '/electricity-orders/$orderId',
+    path: '/electricity-orders/$orderId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityPriceAdjustmentsIndexRoute =
+  AdminElectricityPriceAdjustmentsIndexRouteImport.update({
+    id: '/electricity-price-adjustments/',
+    path: '/electricity-price-adjustments/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminFailedJobsJobIdRoute = AdminFailedJobsJobIdRouteImport.update({
+  id: '/failed-jobs_/$jobId',
+  path: '/failed-jobs/$jobId',
+  getParentRoute: () => AdminRoute,
 } as any)
+const AdminFailedNotificationsHistoryRoute =
+  AdminFailedNotificationsHistoryRouteImport.update({
+    id: '/failed-notifications_/history',
+    path: '/failed-notifications/history',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminInboxNotificationIdRoute =
+  AdminInboxNotificationIdRouteImport.update({
+    id: '/inbox_/$notificationId',
+    path: '/inbox/$notificationId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminInvoicesIndexRoute = AdminInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInvoicesNewRoute = AdminInvoicesNewRouteImport.update({
+  id: '/invoices/new',
+  path: '/invoices/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsIndexRoute = AdminNotificationsIndexRouteImport.update({
+  id: '/notifications/',
+  path: '/notifications/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsNewRoute = AdminNotificationsNewRouteImport.update({
+  id: '/notifications/new',
+  path: '/notifications/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsPreviewRoute =
+  AdminNotificationsPreviewRouteImport.update({
+    id: '/notifications/preview',
+    path: '/notifications/preview',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminNotificationsSettingsRoute =
+  AdminNotificationsSettingsRouteImport.update({
+    id: '/notifications/settings',
+    path: '/notifications/settings',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminOperationalRetentionViewRoute =
+  AdminOperationalRetentionViewRouteImport.update({
+    id: '/operational-retention_/$view',
+    path: '/operational-retention/$view',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminProvidersIndexRoute = AdminProvidersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminProvidersRoute,
+} as any)
+const AdminProvidersChannelRoute = AdminProvidersChannelRouteImport.update({
+  id: '/$channel',
+  path: '/$channel',
+  getParentRoute: () => AdminProvidersRoute,
+} as any)
+const AdminReconciliationIndexRoute =
+  AdminReconciliationIndexRouteImport.update({
+    id: '/reconciliation/',
+    path: '/reconciliation/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminRolesIndexRoute = AdminRolesIndexRouteImport.update({
+  id: '/roles/',
+  path: '/roles/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRolesRoleIdRoute = AdminRolesRoleIdRouteImport.update({
+  id: '/roles/$roleId',
+  path: '/roles/$roleId',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRolesCompareRoute = AdminRolesCompareRouteImport.update({
+  id: '/roles/compare',
+  path: '/roles/compare',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRolesEffectiveRoute = AdminRolesEffectiveRouteImport.update({
+  id: '/roles/effective',
+  path: '/roles/effective',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSavingOrdersIndexRoute = AdminSavingOrdersIndexRouteImport.update({
+  id: '/saving-orders/',
+  path: '/saving-orders/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSolarRequestsIndexRoute = AdminSolarRequestsIndexRouteImport.update({
+  id: '/solar-requests/',
+  path: '/solar-requests/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStaffTeamsIndexRoute = AdminStaffTeamsIndexRouteImport.update({
+  id: '/staff-teams/',
+  path: '/staff-teams/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStaffTeamsAssignmentRoute =
+  AdminStaffTeamsAssignmentRouteImport.update({
+    id: '/staff-teams/assignment',
+    path: '/staff-teams/assignment',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminStaffTeamsNewRoute = AdminStaffTeamsNewRouteImport.update({
+  id: '/staff-teams/new',
+  path: '/staff-teams/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStorageSectionRoute = AdminStorageSectionRouteImport.update({
+  id: '/storage_/$section',
+  path: '/storage/$section',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTicketsIndexRoute = AdminTicketsIndexRouteImport.update({
+  id: '/tickets/',
+  path: '/tickets/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersNewRoute = AdminUsersNewRouteImport.update({
+  id: '/users/new',
+  path: '/users/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVerificationSectionRoute =
+  AdminVerificationSectionRouteImport.update({
+    id: '/verification_/$section',
+    path: '/verification/$section',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminWalletLedgerProfileIdRoute =
   AdminWalletLedgerProfileIdRouteImport.update({
     id: '/wallet-ledger/$profileId',
     path: '/wallet-ledger/$profileId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminWalletReceiptsIndexRoute =
+  AdminWalletReceiptsIndexRouteImport.update({
+    id: '/wallet-receipts/',
+    path: '/wallet-receipts/',
     getParentRoute: () => AdminRoute,
   } as any)
 const AppCrmIndexRoute = AppCrmIndexRouteImport.update({
@@ -632,6 +953,30 @@ const OnboardingLegalProfileIdRoute =
     path: '/legal/$profileId',
     getParentRoute: () => OnboardingRoute,
   } as any)
+const AppConsultationsRequestIdOfferRoute =
+  AppConsultationsRequestIdOfferRouteImport.update({
+    id: '/$requestId_/offer',
+    path: '/$requestId/offer',
+    getParentRoute: () => AppConsultationsRoute,
+  } as any)
+const AppConsultationsRequestIdReplyRoute =
+  AppConsultationsRequestIdReplyRouteImport.update({
+    id: '/$requestId_/reply',
+    path: '/$requestId/reply',
+    getParentRoute: () => AppConsultationsRoute,
+  } as any)
+const AppContractsContractIdChar123ActionChar125Route =
+  AppContractsContractIdChar123ActionChar125RouteImport.update({
+    id: '/contracts/$contractId/{-$action}',
+    path: '/contracts/$contractId/{-$action}',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppDocumentsDocumentIdChar123OperationChar125Route =
+  AppDocumentsDocumentIdChar123OperationChar125RouteImport.update({
+    id: '/documents/$documentId/{-$operation}',
+    path: '/documents/$documentId/{-$operation}',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppElectricityOrdersIndexRoute =
   AppElectricityOrdersIndexRouteImport.update({
     id: '/',
@@ -644,6 +989,11 @@ const AppElectricityOrdersOrderIdRoute =
     path: '/$orderId',
     getParentRoute: () => AppElectricityOrdersRoute,
   } as any)
+const AppElectricityOrdersNewRoute = AppElectricityOrdersNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppElectricityOrdersRoute,
+} as any)
 const AppSavingsOrdersIndexRoute = AppSavingsOrdersIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -653,6 +1003,44 @@ const AppSavingsOrdersOrderIdRoute = AppSavingsOrdersOrderIdRouteImport.update({
   id: '/$orderId',
   path: '/$orderId',
   getParentRoute: () => AppSavingsOrdersRoute,
+} as any)
+const AppSavingsOrdersNewRoute = AppSavingsOrdersNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppSavingsOrdersRoute,
+} as any)
+const AppSettingsAddressesAddressIdRoute =
+  AppSettingsAddressesAddressIdRouteImport.update({
+    id: '/settings/addresses_/$addressId',
+    path: '/settings/addresses/$addressId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppSettingsAddressesNewRoute = AppSettingsAddressesNewRouteImport.update({
+  id: '/settings/addresses_/new',
+  path: '/settings/addresses/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsPrivacyRequestsRoute =
+  AppSettingsPrivacyRequestsRouteImport.update({
+    id: '/settings/privacy_/requests',
+    path: '/settings/privacy/requests',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppSettingsProfileEditRoute = AppSettingsProfileEditRouteImport.update({
+  id: '/settings/profile_/edit',
+  path: '/settings/profile/edit',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsSecurityTelegramRoute =
+  AppSettingsSecurityTelegramRouteImport.update({
+    id: '/settings/security_/telegram',
+    path: '/settings/security/telegram',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppSettingsTeamSectionRoute = AppSettingsTeamSectionRouteImport.update({
+  id: '/settings/team_/$section',
+  path: '/settings/team/$section',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSolarRequestsIndexRoute = AppSolarRequestsIndexRouteImport.update({
   id: '/',
@@ -670,17 +1058,619 @@ const AppSolarRequestsNewRoute = AppSolarRequestsNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AppSolarRequestsRoute,
 } as any)
+const AppWalletTopUpMethodRoute = AppWalletTopUpMethodRouteImport.update({
+  id: '/wallet/top-up/$method',
+  path: '/wallet/top-up/$method',
+  getParentRoute: () => AppRoute,
+} as any)
+const AdminAgentSlotsSlotKeyChar123ActionChar125Route =
+  AdminAgentSlotsSlotKeyChar123ActionChar125RouteImport.update({
+    id: '/agent-slots_/$slotKey/{-$action}',
+    path: '/agent-slots/$slotKey/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminAgentsAgentIdChar123ActionChar125Route =
+  AdminAgentsAgentIdChar123ActionChar125RouteImport.update({
+    id: '/agents_/$agentId/{-$action}',
+    path: '/agents/$agentId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminAiModelsModelIdChar123ActionChar125Route =
+  AdminAiModelsModelIdChar123ActionChar125RouteImport.update({
+    id: '/ai-models_/$modelId/{-$action}',
+    path: '/ai-models/$modelId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminApprovalRequestsRequestIdChar123DecisionChar125Route =
+  AdminApprovalRequestsRequestIdChar123DecisionChar125RouteImport.update({
+    id: '/approval-requests/$requestId/{-$decision}',
+    path: '/approval-requests/$requestId/{-$decision}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminApprovalRequestsThresholdsChar123ViewChar125Route =
+  AdminApprovalRequestsThresholdsChar123ViewChar125RouteImport.update({
+    id: '/approval-requests/thresholds/{-$view}',
+    path: '/approval-requests/thresholds/{-$view}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminCatalogueCategoryProductIdRoute =
+  AdminCatalogueCategoryProductIdRouteImport.update({
+    id: '/catalogue_/$category_/$productId',
+    path: '/catalogue/$category/$productId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminCatalogueCategoryNewRoute =
+  AdminCatalogueCategoryNewRouteImport.update({
+    id: '/catalogue_/$category_/new',
+    path: '/catalogue/$category/new',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminConsultationsRequestIdFeeRoute =
+  AdminConsultationsRequestIdFeeRouteImport.update({
+    id: '/fee',
+    path: '/fee',
+    getParentRoute: () => AdminConsultationsRequestIdRoute,
+  } as any)
+const AdminContractTemplatesTemplateIdIndexRoute =
+  AdminContractTemplatesTemplateIdIndexRouteImport.update({
+    id: '/contract-templates/$templateId/',
+    path: '/contract-templates/$templateId/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminContractTemplatesTemplateIdEditRoute =
+  AdminContractTemplatesTemplateIdEditRouteImport.update({
+    id: '/contract-templates/$templateId/edit',
+    path: '/contract-templates/$templateId/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminCrmCorrectionsIndexRoute =
+  AdminCrmCorrectionsIndexRouteImport.update({
+    id: '/corrections/',
+    path: '/corrections/',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
+const AdminCrmCorrectionsCaseIdRoute =
+  AdminCrmCorrectionsCaseIdRouteImport.update({
+    id: '/corrections/$caseId',
+    path: '/corrections/$caseId',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
 const AdminCrmProfilesProfileIdRoute =
   AdminCrmProfilesProfileIdRouteImport.update({
     id: '/profiles/$profileId',
     path: '/profiles/$profileId',
     getParentRoute: () => AdminCrmRoute,
   } as any)
+const AdminCrmRecoveryIndexRoute = AdminCrmRecoveryIndexRouteImport.update({
+  id: '/recovery/',
+  path: '/recovery/',
+  getParentRoute: () => AdminCrmRoute,
+} as any)
+const AdminCrmRecoveryCaseIdRoute = AdminCrmRecoveryCaseIdRouteImport.update({
+  id: '/recovery/$caseId',
+  path: '/recovery/$caseId',
+  getParentRoute: () => AdminCrmRoute,
+} as any)
+const AdminCrmRecoveryNewRoute = AdminCrmRecoveryNewRouteImport.update({
+  id: '/recovery/new',
+  path: '/recovery/new',
+  getParentRoute: () => AdminCrmRoute,
+} as any)
+const AdminDocumentTemplatesTemplateIdIndexRoute =
+  AdminDocumentTemplatesTemplateIdIndexRouteImport.update({
+    id: '/document-templates/$templateId/',
+    path: '/document-templates/$templateId/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminDocumentTemplatesTemplateIdEditRoute =
+  AdminDocumentTemplatesTemplateIdEditRouteImport.update({
+    id: '/document-templates/$templateId/edit',
+    path: '/document-templates/$templateId/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityIncreasesRequestIdChar123DecisionChar125Route =
+  AdminElectricityIncreasesRequestIdChar123DecisionChar125RouteImport.update({
+    id: '/electricity-increases/$requestId/{-$decision}',
+    path: '/electricity-increases/$requestId/{-$decision}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityPriceAdjustmentsContractIdIndexRoute =
+  AdminElectricityPriceAdjustmentsContractIdIndexRouteImport.update({
+    id: '/electricity-price-adjustments/$contractId/',
+    path: '/electricity-price-adjustments/$contractId/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityPriceAdjustmentsContractIdNewRoute =
+  AdminElectricityPriceAdjustmentsContractIdNewRouteImport.update({
+    id: '/electricity-price-adjustments/$contractId/new',
+    path: '/electricity-price-adjustments/$contractId/new',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityRulesSectionChar123ViewChar125Route =
+  AdminElectricityRulesSectionChar123ViewChar125RouteImport.update({
+    id: '/electricity-rules_/$section/{-$view}',
+    path: '/electricity-rules/$section/{-$view}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminFailedNotificationsDeliveryIdChar123SectionChar125Route =
+  AdminFailedNotificationsDeliveryIdChar123SectionChar125RouteImport.update({
+    id: '/failed-notifications_/$deliveryId/{-$section}',
+    path: '/failed-notifications/$deliveryId/{-$section}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminGiftCodesCodeIdChar123ActionChar125Route =
+  AdminGiftCodesCodeIdChar123ActionChar125RouteImport.update({
+    id: '/gift-codes_/$codeId/{-$action}',
+    path: '/gift-codes/$codeId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminInvoicesInvoiceIdIndexRoute =
+  AdminInvoicesInvoiceIdIndexRouteImport.update({
+    id: '/invoices/$invoiceId/',
+    path: '/invoices/$invoiceId/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminKnowledgeBasesRecordIdChar123ActionChar125Route =
+  AdminKnowledgeBasesRecordIdChar123ActionChar125RouteImport.update({
+    id: '/knowledge-bases_/$recordId/{-$action}',
+    path: '/knowledge-bases/$recordId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminMaintenanceCapabilityChar123ActionChar125Route =
+  AdminMaintenanceCapabilityChar123ActionChar125RouteImport.update({
+    id: '/maintenance_/$capability/{-$action}',
+    path: '/maintenance/$capability/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminNotificationsTemplateIdIndexRoute =
+  AdminNotificationsTemplateIdIndexRouteImport.update({
+    id: '/notifications/$templateId/',
+    path: '/notifications/$templateId/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminNotificationsTemplateIdActionRoute =
+  AdminNotificationsTemplateIdActionRouteImport.update({
+    id: '/notifications/$templateId/$action',
+    path: '/notifications/$templateId/$action',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminPoliciesRecordIdChar123ActionChar125Route =
+  AdminPoliciesRecordIdChar123ActionChar125RouteImport.update({
+    id: '/policies_/$recordId/{-$action}',
+    path: '/policies/$recordId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminProvidersChannelProviderIdRoute =
+  AdminProvidersChannelProviderIdRouteImport.update({
+    id: '/$providerId',
+    path: '/$providerId',
+    getParentRoute: () => AdminProvidersChannelRoute,
+  } as any)
+const AdminProvidersChannelNewRoute =
+  AdminProvidersChannelNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AdminProvidersChannelRoute,
+  } as any)
+const AdminReconciliationCaseIdChar123VerbChar125Route =
+  AdminReconciliationCaseIdChar123VerbChar125RouteImport.update({
+    id: '/reconciliation/$caseId/{-$verb}',
+    path: '/reconciliation/$caseId/{-$verb}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminServiceTargetsSectionChar123WorkflowChar125Route =
+  AdminServiceTargetsSectionChar123WorkflowChar125RouteImport.update({
+    id: '/service-targets_/$section/{-$workflow}',
+    path: '/service-targets/$section/{-$workflow}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminStaffTeamsTeamIdIndexRoute =
+  AdminStaffTeamsTeamIdIndexRouteImport.update({
+    id: '/staff-teams/$teamId/',
+    path: '/staff-teams/$teamId/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminStaffTeamsTeamIdEditRoute =
+  AdminStaffTeamsTeamIdEditRouteImport.update({
+    id: '/staff-teams/$teamId/edit',
+    path: '/staff-teams/$teamId/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminTicketsTicketIdChar123SectionChar125Route =
+  AdminTicketsTicketIdChar123SectionChar125RouteImport.update({
+    id: '/tickets/$ticketId/{-$section}',
+    path: '/tickets/$ticketId/{-$section}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminUploadPoliciesCategoryChar123ActionChar125Route =
+  AdminUploadPoliciesCategoryChar123ActionChar125RouteImport.update({
+    id: '/upload-policies_/$category/{-$action}',
+    path: '/upload-policies/$category/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminUsersUserIdIndexRoute = AdminUsersUserIdIndexRouteImport.update({
+  id: '/users/$userId/',
+  path: '/users/$userId/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersUserIdPermissionsRoute =
+  AdminUsersUserIdPermissionsRouteImport.update({
+    id: '/users/$userId/permissions',
+    path: '/users/$userId/permissions',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminUsersUserIdRolesRoute = AdminUsersUserIdRolesRouteImport.update({
+  id: '/users/$userId/roles',
+  path: '/users/$userId/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVerificationProvidersProviderIdRoute =
+  AdminVerificationProvidersProviderIdRouteImport.update({
+    id: '/verification_/providers/$providerId',
+    path: '/verification/providers/$providerId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminWalletReceiptsReceiptIdChar123ActionChar125Route =
+  AdminWalletReceiptsReceiptIdChar123ActionChar125RouteImport.update({
+    id: '/wallet-receipts/$receiptId/{-$action}',
+    path: '/wallet-receipts/$receiptId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminWalletReceiptsSettingsChar123ViewChar125Route =
+  AdminWalletReceiptsSettingsChar123ViewChar125RouteImport.update({
+    id: '/wallet-receipts/settings/{-$view}',
+    path: '/wallet-receipts/settings/{-$view}',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AppCrmProfilesProfileIdRoute = AppCrmProfilesProfileIdRouteImport.update({
   id: '/app/crm/profiles/$profileId',
   path: '/app/crm/profiles/$profileId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppContractsContractIdOperationVersionIdRoute =
+  AppContractsContractIdOperationVersionIdRouteImport.update({
+    id: '/contracts/$contractId_/$operation/$versionId',
+    path: '/contracts/$contractId/$operation/$versionId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppElectricityOrdersOrderIdCancelRoute =
+  AppElectricityOrdersOrderIdCancelRouteImport.update({
+    id: '/$orderId_/cancel',
+    path: '/$orderId/cancel',
+    getParentRoute: () => AppElectricityOrdersRoute,
+  } as any)
+const AppElectricityOrdersOrderIdEditRoute =
+  AppElectricityOrdersOrderIdEditRouteImport.update({
+    id: '/$orderId_/edit',
+    path: '/$orderId/edit',
+    getParentRoute: () => AppElectricityOrdersRoute,
+  } as any)
+const AppElectricityOrdersNewAdvancedRoute =
+  AppElectricityOrdersNewAdvancedRouteImport.update({
+    id: '/new_/advanced',
+    path: '/new/advanced',
+    getParentRoute: () => AppElectricityOrdersRoute,
+  } as any)
+const AppInvoicesInvoiceIdReceiptsReceiptIdRoute =
+  AppInvoicesInvoiceIdReceiptsReceiptIdRouteImport.update({
+    id: '/invoices/$invoiceId_/receipts/$receiptId',
+    path: '/invoices/$invoiceId/receipts/$receiptId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppInvoicesInvoiceIdReceiptsNewRoute =
+  AppInvoicesInvoiceIdReceiptsNewRouteImport.update({
+    id: '/invoices/$invoiceId_/receipts/new',
+    path: '/invoices/$invoiceId/receipts/new',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppSavingsOrdersOrderIdEditRoute =
+  AppSavingsOrdersOrderIdEditRouteImport.update({
+    id: '/$orderId_/edit',
+    path: '/$orderId/edit',
+    getParentRoute: () => AppSavingsOrdersRoute,
+  } as any)
+const AppSettingsAddressesAddressIdEditRoute =
+  AppSettingsAddressesAddressIdEditRouteImport.update({
+    id: '/settings/addresses_/$addressId_/edit',
+    path: '/settings/addresses/$addressId/edit',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppSolarRequestsRequestIdDocumentsRoute =
+  AppSolarRequestsRequestIdDocumentsRouteImport.update({
+    id: '/$requestId_/documents',
+    path: '/$requestId/documents',
+    getParentRoute: () => AppSolarRequestsRoute,
+  } as any)
+const AppSolarRequestsRequestIdShipmentRoute =
+  AppSolarRequestsRequestIdShipmentRouteImport.update({
+    id: '/$requestId_/shipment',
+    path: '/$requestId/shipment',
+    getParentRoute: () => AppSolarRequestsRoute,
+  } as any)
+const AdminCatalogueCategoryProductIdEditRoute =
+  AdminCatalogueCategoryProductIdEditRouteImport.update({
+    id: '/catalogue_/$category_/$productId_/edit',
+    path: '/catalogue/$category/$productId/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminConsultationsRequestIdDecisionsDecisionRoute =
+  AdminConsultationsRequestIdDecisionsDecisionRouteImport.update({
+    id: '/decisions/$decision',
+    path: '/decisions/$decision',
+    getParentRoute: () => AdminConsultationsRequestIdRoute,
+  } as any)
+const AdminContractTemplatesTemplateIdVersionsVersionRoute =
+  AdminContractTemplatesTemplateIdVersionsVersionRouteImport.update({
+    id: '/contract-templates/$templateId/versions/$version',
+    path: '/contract-templates/$templateId/versions/$version',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route =
+  AdminContractsContractIdChar123ActionChar125Char123ItemChar125RouteImport.update(
+    {
+      id: '/contracts/$contractId/{-$action}/{-$item}',
+      path: '/contracts/$contractId/{-$action}/{-$item}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminCrmProfilesProfileIdOperationRoute =
+  AdminCrmProfilesProfileIdOperationRouteImport.update({
+    id: '/profiles/$profileId_/$operation',
+    path: '/profiles/$profileId/$operation',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
+const AdminDocumentTemplatesTemplateIdVersionsVersionRoute =
+  AdminDocumentTemplatesTemplateIdVersionsVersionRouteImport.update({
+    id: '/document-templates/$templateId/versions/$version',
+    path: '/document-templates/$templateId/versions/$version',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminElectricityOrdersOrderIdDecisionsDecisionRoute =
+  AdminElectricityOrdersOrderIdDecisionsDecisionRouteImport.update({
+    id: '/decisions/$decision',
+    path: '/decisions/$decision',
+    getParentRoute: () => AdminElectricityOrdersOrderIdRoute,
+  } as any)
+const AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route =
+  AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125RouteImport.update(
+    {
+      id: '/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}',
+      path: '/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route =
+  AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125RouteImport.update(
+    {
+      id: '/failed-notifications_/corrections/{-$correctionId}/{-$action}',
+      path: '/failed-notifications/corrections/{-$correctionId}/{-$action}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminGeographyProvincesProvinceIdChar123ActionChar125Route =
+  AdminGeographyProvincesProvinceIdChar123ActionChar125RouteImport.update({
+    id: '/geography_/provinces/$provinceId/{-$action}',
+    path: '/geography/provinces/$provinceId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route =
+  AdminInvoicesReceiptsReceiptIdChar123DecisionChar125RouteImport.update({
+    id: '/invoices/receipts/$receiptId/{-$decision}',
+    path: '/invoices/receipts/$receiptId/{-$decision}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route =
+  AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125RouteImport.update(
+    {
+      id: '/invoices/tools/{-$section}/{-$service}',
+      path: '/invoices/tools/{-$section}/{-$service}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute =
+  AdminKnowledgeBasesRecordIdDocumentsDocumentIdRouteImport.update({
+    id: '/knowledge-bases_/$recordId/documents/$documentId',
+    path: '/knowledge-bases/$recordId/documents/$documentId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route =
+  AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125RouteImport.update({
+    id: '/knowledge-bases_/groups/$recordId/{-$action}',
+    path: '/knowledge-bases/groups/$recordId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminPoliciesGroupsRecordIdChar123ActionChar125Route =
+  AdminPoliciesGroupsRecordIdChar123ActionChar125RouteImport.update({
+    id: '/policies_/groups/$recordId/{-$action}',
+    path: '/policies/groups/$recordId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminProvidersChannelProviderIdDuplicateRoute =
+  AdminProvidersChannelProviderIdDuplicateRouteImport.update({
+    id: '/duplicate',
+    path: '/duplicate',
+    getParentRoute: () => AdminProvidersChannelProviderIdRoute,
+  } as any)
+const AdminProvidersChannelProviderIdEditRoute =
+  AdminProvidersChannelProviderIdEditRouteImport.update({
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => AdminProvidersChannelProviderIdRoute,
+  } as any)
+const AdminProvidersChannelProviderIdTestRoute =
+  AdminProvidersChannelProviderIdTestRouteImport.update({
+    id: '/test',
+    path: '/test',
+    getParentRoute: () => AdminProvidersChannelProviderIdRoute,
+  } as any)
+const AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route =
+  AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125RouteImport.update(
+    {
+      id: '/saving-orders/$orderId/{-$operation}/{-$upgradeId}',
+      path: '/saving-orders/$orderId/{-$operation}/{-$upgradeId}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route =
+  AdminSolarRequestsRequestIdConstructionChar123OperationChar125RouteImport.update(
+    {
+      id: '/solar-requests/$requestId/construction/{-$operation}',
+      path: '/solar-requests/$requestId/construction/{-$operation}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminSolarRequestsRequestIdPostalChar123OperationChar125Route =
+  AdminSolarRequestsRequestIdPostalChar123OperationChar125RouteImport.update({
+    id: '/solar-requests/$requestId/postal/{-$operation}',
+    path: '/solar-requests/$requestId/postal/{-$operation}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route =
+  AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125RouteImport.update(
+    {
+      id: '/solar-requests/$requestId/{-$operation}/{-$documentId}',
+      path: '/solar-requests/$requestId/{-$operation}/{-$documentId}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminTosVersionsVersionIdChar123ActionChar125Route =
+  AdminTosVersionsVersionIdChar123ActionChar125RouteImport.update({
+    id: '/tos_/versions/$versionId/{-$action}',
+    path: '/tos/versions/$versionId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminUploadPoliciesCategoryVersionsVersionIdRoute =
+  AdminUploadPoliciesCategoryVersionsVersionIdRouteImport.update({
+    id: '/upload-policies_/$category/versions/$versionId',
+    path: '/upload-policies/$category/versions/$versionId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminVatKindRecordIdChar123ActionChar125Route =
+  AdminVatKindRecordIdChar123ActionChar125RouteImport.update({
+    id: '/vat_/$kind/$recordId/{-$action}',
+    path: '/vat/$kind/$recordId/{-$action}',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AppElectricityOrdersOrderIdIncreasesNewRoute =
+  AppElectricityOrdersOrderIdIncreasesNewRouteImport.update({
+    id: '/$orderId_/increases/new',
+    path: '/$orderId/increases/new',
+    getParentRoute: () => AppElectricityOrdersRoute,
+  } as any)
+const AppSettingsTeamSectionRecordIdChar123ActionChar125Route =
+  AppSettingsTeamSectionRecordIdChar123ActionChar125RouteImport.update({
+    id: '/settings/team_/$section_/$recordId/{-$action}',
+    path: '/settings/team/$section/$recordId/{-$action}',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppSolarRequestsRequestIdDocumentsReviewRoute =
+  AppSolarRequestsRequestIdDocumentsReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => AppSolarRequestsRequestIdDocumentsRoute,
+  } as any)
+const AppSolarRequestsRequestIdShipmentUploadReceiptRoute =
+  AppSolarRequestsRequestIdShipmentUploadReceiptRouteImport.update({
+    id: '/upload-receipt',
+    path: '/upload-receipt',
+    getParentRoute: () => AppSolarRequestsRequestIdShipmentRoute,
+  } as any)
+const AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route =
+  AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125RouteImport.update(
+    {
+      id: '/catalogue_/$category_/$productId_/configuration/{-$operation}',
+      path: '/catalogue/$category/$productId/configuration/{-$operation}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminCatalogueCategoryProductIdPricesNewRoute =
+  AdminCatalogueCategoryProductIdPricesNewRouteImport.update({
+    id: '/catalogue_/$category_/$productId_/prices/new',
+    path: '/catalogue/$category/$productId/prices/new',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminCrmProfilesProfileIdCorrectionsNewRoute =
+  AdminCrmProfilesProfileIdCorrectionsNewRouteImport.update({
+    id: '/profiles/$profileId_/corrections/new',
+    path: '/profiles/$profileId/corrections/new',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
+const AdminCrmProfilesProfileIdLegalEditRoute =
+  AdminCrmProfilesProfileIdLegalEditRouteImport.update({
+    id: '/profiles/$profileId_/legal/edit',
+    path: '/profiles/$profileId/legal/edit',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
+const AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route =
+  AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125RouteImport.update(
+    {
+      id: '/documents/$documentId/{-$section}/{-$action}/{-$holdId}',
+      path: '/documents/$documentId/{-$section}/{-$action}/{-$holdId}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route =
+  AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125RouteImport.update(
+    {
+      id: '/saving-orders/$orderId/documents/$documentId/{-$operation}',
+      path: '/saving-orders/$orderId/documents/$documentId/{-$operation}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route =
+  AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125RouteImport.update(
+    {
+      id: '/$orderId_/documents/$documentId/{-$operation}',
+      path: '/$orderId/documents/$documentId/{-$operation}',
+      getParentRoute: () => AppSavingsOrdersRoute,
+    } as any,
+  )
+const AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route =
+  AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125RouteImport.update(
+    {
+      id: '/$documentId/{-$operation}',
+      path: '/$documentId/{-$operation}',
+      getParentRoute: () => AppSolarRequestsRequestIdDocumentsRoute,
+    } as any,
+  )
+const AdminCrmProfilesProfileIdAddressesAddressIdEditRoute =
+  AdminCrmProfilesProfileIdAddressesAddressIdEditRouteImport.update({
+    id: '/profiles/$profileId_/addresses/$addressId/edit',
+    path: '/profiles/$profileId/addresses/$addressId/edit',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
+const AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route =
+  AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125RouteImport.update(
+    {
+      id: '/geography_/provinces/$provinceId/cities/$cityId/{-$action}',
+      path: '/geography/provinces/$provinceId/cities/$cityId/{-$action}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route =
+  AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125RouteImport.update(
+    {
+      id: '/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}',
+      path: '/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
+const AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route =
+  AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125RouteImport.update(
+    {
+      id: '/contracts/$contractId_/versions/$versionId/documents/$documentId/{-$operation}',
+      path: '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route =
+  AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125RouteImport.update(
+    {
+      id: '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}',
+      path: '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}',
+      getParentRoute: () => AdminRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -696,74 +1686,54 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
   '/consultations': typeof AppConsultationsRouteWithChildren
-  '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
-  '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRouteWithChildren
-  '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
-  '/wallet': typeof AppWalletRoute
   '/admin/agent-slots': typeof AdminAgentSlotsRoute
   '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
-  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
-  '/admin/authorization-audit': typeof AdminAuthorizationAuditRoute
-  '/admin/branding': typeof AdminBrandingRoute
+  '/admin/branding': typeof AdminBrandingRouteWithChildren
   '/admin/catalogue': typeof AdminCatalogueRoute
-  '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
-  '/admin/contract-templates': typeof AdminContractTemplatesRoute
-  '/admin/contracts': typeof AdminContractsRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
-  '/admin/document-templates': typeof AdminDocumentTemplatesRoute
-  '/admin/documents': typeof AdminDocumentsRoute
-  '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
-  '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
-  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/inbox': typeof AdminInboxRoute
-  '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
-  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/operational-retention': typeof AdminOperationalRetentionRoute
   '/admin/policies': typeof AdminPoliciesRoute
-  '/admin/providers': typeof AdminProvidersRoute
-  '/admin/reconciliation': typeof AdminReconciliationRoute
-  '/admin/roles': typeof AdminRolesRoute
-  '/admin/saving-orders': typeof AdminSavingOrdersRoute
+  '/admin/providers': typeof AdminProvidersRouteWithChildren
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/solar-construction': typeof AdminSolarConstructionRoute
   '/admin/solar-postal': typeof AdminSolarPostalRoute
-  '/admin/solar-requests': typeof AdminSolarRequestsRoute
-  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
-  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/upload-policies': typeof AdminUploadPoliciesRoute
-  '/admin/users': typeof AdminUsersRoute
   '/admin/vat': typeof AdminVatRoute
   '/admin/verification': typeof AdminVerificationRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
+  '/terms/$version': typeof TermsVersionRoute
   '/admin/': typeof AdminIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/consultations/$requestId': typeof AppConsultationsRequestIdRoute
+  '/consultations/new': typeof AppConsultationsNewRoute
   '/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/invoices/receipts': typeof AppInvoicesReceiptsRoute
+  '/notifications/$notificationId': typeof AppNotificationsNotificationIdRoute
   '/savings/order': typeof AppSavingsOrderRoute
   '/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/settings/addresses': typeof AppSettingsAddressesRoute
+  '/settings/conversation-identity': typeof AppSettingsConversationIdentityRoute
   '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -771,27 +1741,187 @@ export interface FileRoutesByFullPath {
   '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/settings/username': typeof AppSettingsUsernameRoute
   '/solar/requests': typeof AppSolarRequestsRouteWithChildren
-  '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
-  '/admin/crm/recovery': typeof AdminCrmRecoveryRoute
+  '/tickets/$ticketId': typeof AppTicketsTicketIdRoute
+  '/tickets/new': typeof AppTicketsNewRoute
+  '/admin/authorization-audit/$eventId': typeof AdminAuthorizationAuditEventIdRoute
+  '/admin/branding/edit': typeof AdminBrandingEditRoute
+  '/admin/catalogue/$category': typeof AdminCatalogueCategoryRoute
+  '/admin/consultations/$requestId': typeof AdminConsultationsRequestIdRouteWithChildren
+  '/admin/contract-limits/$view': typeof AdminContractLimitsViewRoute
+  '/admin/contract-templates/new': typeof AdminContractTemplatesNewRoute
+  '/admin/contracts/new': typeof AdminContractsNewRoute
+  '/admin/contracts/refunds': typeof AdminContractsRefundsRoute
+  '/admin/document-templates/new': typeof AdminDocumentTemplatesNewRoute
+  '/admin/electricity-orders/$orderId': typeof AdminElectricityOrdersOrderIdRouteWithChildren
+  '/admin/failed-jobs/$jobId': typeof AdminFailedJobsJobIdRoute
+  '/admin/failed-notifications/history': typeof AdminFailedNotificationsHistoryRoute
+  '/admin/inbox/$notificationId': typeof AdminInboxNotificationIdRoute
+  '/admin/invoices/new': typeof AdminInvoicesNewRoute
+  '/admin/notifications/new': typeof AdminNotificationsNewRoute
+  '/admin/notifications/preview': typeof AdminNotificationsPreviewRoute
+  '/admin/notifications/settings': typeof AdminNotificationsSettingsRoute
+  '/admin/operational-retention/$view': typeof AdminOperationalRetentionViewRoute
+  '/admin/providers/$channel': typeof AdminProvidersChannelRouteWithChildren
+  '/admin/roles/$roleId': typeof AdminRolesRoleIdRoute
+  '/admin/roles/compare': typeof AdminRolesCompareRoute
+  '/admin/roles/effective': typeof AdminRolesEffectiveRoute
+  '/admin/staff-teams/assignment': typeof AdminStaffTeamsAssignmentRoute
+  '/admin/staff-teams/new': typeof AdminStaffTeamsNewRoute
+  '/admin/storage/$section': typeof AdminStorageSectionRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/verification/$section': typeof AdminVerificationSectionRoute
   '/admin/wallet-ledger/$profileId': typeof AdminWalletLedgerProfileIdRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/consultations/': typeof AppConsultationsIndexRoute
+  '/contracts/': typeof AppContractsIndexRoute
+  '/documents/': typeof AppDocumentsIndexRoute
   '/electricity/': typeof AppElectricityIndexRoute
   '/invoices/': typeof AppInvoicesIndexRoute
   '/savings/': typeof AppSavingsIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
+  '/tickets/': typeof AppTicketsIndexRoute
+  '/wallet/': typeof AppWalletIndexRoute
+  '/admin/approval-requests/': typeof AdminApprovalRequestsIndexRoute
+  '/admin/authorization-audit/': typeof AdminAuthorizationAuditIndexRoute
+  '/admin/consultations/': typeof AdminConsultationsIndexRoute
+  '/admin/contract-templates/': typeof AdminContractTemplatesIndexRoute
+  '/admin/contracts/': typeof AdminContractsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
+  '/admin/document-templates/': typeof AdminDocumentTemplatesIndexRoute
+  '/admin/documents/': typeof AdminDocumentsIndexRoute
+  '/admin/electricity-increases/': typeof AdminElectricityIncreasesIndexRoute
+  '/admin/electricity-orders/': typeof AdminElectricityOrdersIndexRoute
+  '/admin/electricity-price-adjustments/': typeof AdminElectricityPriceAdjustmentsIndexRoute
+  '/admin/invoices/': typeof AdminInvoicesIndexRoute
+  '/admin/notifications/': typeof AdminNotificationsIndexRoute
+  '/admin/providers/': typeof AdminProvidersIndexRoute
+  '/admin/reconciliation/': typeof AdminReconciliationIndexRoute
+  '/admin/roles/': typeof AdminRolesIndexRoute
+  '/admin/saving-orders/': typeof AdminSavingOrdersIndexRoute
+  '/admin/solar-requests/': typeof AdminSolarRequestsIndexRoute
+  '/admin/staff-teams/': typeof AdminStaffTeamsIndexRoute
+  '/admin/tickets/': typeof AdminTicketsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
+  '/admin/wallet-receipts/': typeof AdminWalletReceiptsIndexRoute
   '/app/crm/': typeof AppCrmIndexRoute
+  '/consultations/$requestId/offer': typeof AppConsultationsRequestIdOfferRoute
+  '/consultations/$requestId/reply': typeof AppConsultationsRequestIdReplyRoute
+  '/contracts/$contractId/{-$action}': typeof AppContractsContractIdChar123ActionChar125Route
+  '/documents/$documentId/{-$operation}': typeof AppDocumentsDocumentIdChar123OperationChar125Route
   '/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
+  '/electricity/orders/new': typeof AppElectricityOrdersNewRoute
   '/savings/orders/$orderId': typeof AppSavingsOrdersOrderIdRoute
+  '/savings/orders/new': typeof AppSavingsOrdersNewRoute
+  '/settings/addresses/$addressId': typeof AppSettingsAddressesAddressIdRoute
+  '/settings/addresses/new': typeof AppSettingsAddressesNewRoute
+  '/settings/privacy/requests': typeof AppSettingsPrivacyRequestsRoute
+  '/settings/profile/edit': typeof AppSettingsProfileEditRoute
+  '/settings/security/telegram': typeof AppSettingsSecurityTelegramRoute
+  '/settings/team/$section': typeof AppSettingsTeamSectionRoute
   '/solar/requests/$requestId': typeof AppSolarRequestsRequestIdRoute
   '/solar/requests/new': typeof AppSolarRequestsNewRoute
+  '/wallet/top-up/$method': typeof AppWalletTopUpMethodRoute
+  '/admin/agent-slots/$slotKey/{-$action}': typeof AdminAgentSlotsSlotKeyChar123ActionChar125Route
+  '/admin/agents/$agentId/{-$action}': typeof AdminAgentsAgentIdChar123ActionChar125Route
+  '/admin/ai-models/$modelId/{-$action}': typeof AdminAiModelsModelIdChar123ActionChar125Route
+  '/admin/approval-requests/$requestId/{-$decision}': typeof AdminApprovalRequestsRequestIdChar123DecisionChar125Route
+  '/admin/approval-requests/thresholds/{-$view}': typeof AdminApprovalRequestsThresholdsChar123ViewChar125Route
+  '/admin/catalogue/$category/$productId': typeof AdminCatalogueCategoryProductIdRoute
+  '/admin/catalogue/$category/new': typeof AdminCatalogueCategoryNewRoute
+  '/admin/consultations/$requestId/fee': typeof AdminConsultationsRequestIdFeeRoute
+  '/admin/contract-templates/$templateId/edit': typeof AdminContractTemplatesTemplateIdEditRoute
+  '/admin/crm/corrections/$caseId': typeof AdminCrmCorrectionsCaseIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/admin/crm/recovery/$caseId': typeof AdminCrmRecoveryCaseIdRoute
+  '/admin/crm/recovery/new': typeof AdminCrmRecoveryNewRoute
+  '/admin/document-templates/$templateId/edit': typeof AdminDocumentTemplatesTemplateIdEditRoute
+  '/admin/electricity-increases/$requestId/{-$decision}': typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
+  '/admin/electricity-price-adjustments/$contractId/new': typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
+  '/admin/electricity-rules/$section/{-$view}': typeof AdminElectricityRulesSectionChar123ViewChar125Route
+  '/admin/failed-notifications/$deliveryId/{-$section}': typeof AdminFailedNotificationsDeliveryIdChar123SectionChar125Route
+  '/admin/gift-codes/$codeId/{-$action}': typeof AdminGiftCodesCodeIdChar123ActionChar125Route
+  '/admin/knowledge-bases/$recordId/{-$action}': typeof AdminKnowledgeBasesRecordIdChar123ActionChar125Route
+  '/admin/maintenance/$capability/{-$action}': typeof AdminMaintenanceCapabilityChar123ActionChar125Route
+  '/admin/notifications/$templateId/$action': typeof AdminNotificationsTemplateIdActionRoute
+  '/admin/policies/$recordId/{-$action}': typeof AdminPoliciesRecordIdChar123ActionChar125Route
+  '/admin/providers/$channel/$providerId': typeof AdminProvidersChannelProviderIdRouteWithChildren
+  '/admin/providers/$channel/new': typeof AdminProvidersChannelNewRoute
+  '/admin/reconciliation/$caseId/{-$verb}': typeof AdminReconciliationCaseIdChar123VerbChar125Route
+  '/admin/service-targets/$section/{-$workflow}': typeof AdminServiceTargetsSectionChar123WorkflowChar125Route
+  '/admin/staff-teams/$teamId/edit': typeof AdminStaffTeamsTeamIdEditRoute
+  '/admin/tickets/$ticketId/{-$section}': typeof AdminTicketsTicketIdChar123SectionChar125Route
+  '/admin/upload-policies/$category/{-$action}': typeof AdminUploadPoliciesCategoryChar123ActionChar125Route
+  '/admin/users/$userId/permissions': typeof AdminUsersUserIdPermissionsRoute
+  '/admin/users/$userId/roles': typeof AdminUsersUserIdRolesRoute
+  '/admin/verification/providers/$providerId': typeof AdminVerificationProvidersProviderIdRoute
+  '/admin/wallet-receipts/$receiptId/{-$action}': typeof AdminWalletReceiptsReceiptIdChar123ActionChar125Route
+  '/admin/wallet-receipts/settings/{-$view}': typeof AdminWalletReceiptsSettingsChar123ViewChar125Route
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/electricity/orders/': typeof AppElectricityOrdersIndexRoute
   '/savings/orders/': typeof AppSavingsOrdersIndexRoute
   '/solar/requests/': typeof AppSolarRequestsIndexRoute
+  '/admin/contract-templates/$templateId/': typeof AdminContractTemplatesTemplateIdIndexRoute
+  '/admin/crm/corrections/': typeof AdminCrmCorrectionsIndexRoute
+  '/admin/crm/recovery/': typeof AdminCrmRecoveryIndexRoute
+  '/admin/document-templates/$templateId/': typeof AdminDocumentTemplatesTemplateIdIndexRoute
+  '/admin/electricity-price-adjustments/$contractId/': typeof AdminElectricityPriceAdjustmentsContractIdIndexRoute
+  '/admin/invoices/$invoiceId/': typeof AdminInvoicesInvoiceIdIndexRoute
+  '/admin/notifications/$templateId/': typeof AdminNotificationsTemplateIdIndexRoute
+  '/admin/staff-teams/$teamId/': typeof AdminStaffTeamsTeamIdIndexRoute
+  '/admin/users/$userId/': typeof AdminUsersUserIdIndexRoute
+  '/contracts/$contractId/$operation/$versionId': typeof AppContractsContractIdOperationVersionIdRoute
+  '/electricity/orders/$orderId/cancel': typeof AppElectricityOrdersOrderIdCancelRoute
+  '/electricity/orders/$orderId/edit': typeof AppElectricityOrdersOrderIdEditRoute
+  '/electricity/orders/new/advanced': typeof AppElectricityOrdersNewAdvancedRoute
+  '/invoices/$invoiceId/receipts/$receiptId': typeof AppInvoicesInvoiceIdReceiptsReceiptIdRoute
+  '/invoices/$invoiceId/receipts/new': typeof AppInvoicesInvoiceIdReceiptsNewRoute
+  '/savings/orders/$orderId/edit': typeof AppSavingsOrdersOrderIdEditRoute
+  '/settings/addresses/$addressId/edit': typeof AppSettingsAddressesAddressIdEditRoute
+  '/solar/requests/$requestId/documents': typeof AppSolarRequestsRequestIdDocumentsRouteWithChildren
+  '/solar/requests/$requestId/shipment': typeof AppSolarRequestsRequestIdShipmentRouteWithChildren
+  '/admin/catalogue/$category/$productId/edit': typeof AdminCatalogueCategoryProductIdEditRoute
+  '/admin/consultations/$requestId/decisions/$decision': typeof AdminConsultationsRequestIdDecisionsDecisionRoute
+  '/admin/contract-templates/$templateId/versions/$version': typeof AdminContractTemplatesTemplateIdVersionsVersionRoute
+  '/admin/contracts/$contractId/{-$action}/{-$item}': typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
+  '/admin/crm/profiles/$profileId/$operation': typeof AdminCrmProfilesProfileIdOperationRoute
+  '/admin/document-templates/$templateId/versions/$version': typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
+  '/admin/electricity-orders/$orderId/decisions/$decision': typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
+  '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
+  '/admin/failed-notifications/corrections/{-$correctionId}/{-$action}': typeof AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route
+  '/admin/geography/provinces/$provinceId/{-$action}': typeof AdminGeographyProvincesProvinceIdChar123ActionChar125Route
+  '/admin/invoices/receipts/$receiptId/{-$decision}': typeof AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route
+  '/admin/invoices/tools/{-$section}/{-$service}': typeof AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route
+  '/admin/knowledge-bases/$recordId/documents/$documentId': typeof AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute
+  '/admin/knowledge-bases/groups/$recordId/{-$action}': typeof AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route
+  '/admin/policies/groups/$recordId/{-$action}': typeof AdminPoliciesGroupsRecordIdChar123ActionChar125Route
+  '/admin/providers/$channel/$providerId/duplicate': typeof AdminProvidersChannelProviderIdDuplicateRoute
+  '/admin/providers/$channel/$providerId/edit': typeof AdminProvidersChannelProviderIdEditRoute
+  '/admin/providers/$channel/$providerId/test': typeof AdminProvidersChannelProviderIdTestRoute
+  '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}': typeof AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route
+  '/admin/solar-requests/$requestId/construction/{-$operation}': typeof AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route
+  '/admin/solar-requests/$requestId/postal/{-$operation}': typeof AdminSolarRequestsRequestIdPostalChar123OperationChar125Route
+  '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}': typeof AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route
+  '/admin/tos/versions/$versionId/{-$action}': typeof AdminTosVersionsVersionIdChar123ActionChar125Route
+  '/admin/upload-policies/$category/versions/$versionId': typeof AdminUploadPoliciesCategoryVersionsVersionIdRoute
+  '/admin/vat/$kind/$recordId/{-$action}': typeof AdminVatKindRecordIdChar123ActionChar125Route
+  '/electricity/orders/$orderId/increases/new': typeof AppElectricityOrdersOrderIdIncreasesNewRoute
+  '/settings/team/$section/$recordId/{-$action}': typeof AppSettingsTeamSectionRecordIdChar123ActionChar125Route
+  '/solar/requests/$requestId/documents/review': typeof AppSolarRequestsRequestIdDocumentsReviewRoute
+  '/solar/requests/$requestId/shipment/upload-receipt': typeof AppSolarRequestsRequestIdShipmentUploadReceiptRoute
+  '/admin/catalogue/$category/$productId/configuration/{-$operation}': typeof AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route
+  '/admin/catalogue/$category/$productId/prices/new': typeof AdminCatalogueCategoryProductIdPricesNewRoute
+  '/admin/crm/profiles/$profileId/corrections/new': typeof AdminCrmProfilesProfileIdCorrectionsNewRoute
+  '/admin/crm/profiles/$profileId/legal/edit': typeof AdminCrmProfilesProfileIdLegalEditRoute
+  '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}': typeof AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route
+  '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}': typeof AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  '/savings/orders/$orderId/documents/$documentId/{-$operation}': typeof AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  '/solar/requests/$requestId/documents/$documentId/{-$operation}': typeof AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route
+  '/admin/crm/profiles/$profileId/addresses/$addressId/edit': typeof AdminCrmProfilesProfileIdAddressesAddressIdEditRoute
+  '/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}': typeof AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route
+  '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}': typeof AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route
+  '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}': typeof AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
+  '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}': typeof AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -803,97 +1933,236 @@ export interface FileRoutesByTo {
   '/ai': typeof AppAiRoute
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
-  '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
-  '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
-  '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
-  '/wallet': typeof AppWalletRoute
   '/admin/agent-slots': typeof AdminAgentSlotsRoute
   '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
-  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
-  '/admin/authorization-audit': typeof AdminAuthorizationAuditRoute
-  '/admin/branding': typeof AdminBrandingRoute
+  '/admin/branding': typeof AdminBrandingRouteWithChildren
   '/admin/catalogue': typeof AdminCatalogueRoute
-  '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
-  '/admin/contract-templates': typeof AdminContractTemplatesRoute
-  '/admin/contracts': typeof AdminContractsRoute
-  '/admin/document-templates': typeof AdminDocumentTemplatesRoute
-  '/admin/documents': typeof AdminDocumentsRoute
-  '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
-  '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
-  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/inbox': typeof AdminInboxRoute
-  '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
-  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/operational-retention': typeof AdminOperationalRetentionRoute
   '/admin/policies': typeof AdminPoliciesRoute
-  '/admin/providers': typeof AdminProvidersRoute
-  '/admin/reconciliation': typeof AdminReconciliationRoute
-  '/admin/roles': typeof AdminRolesRoute
-  '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/solar-construction': typeof AdminSolarConstructionRoute
   '/admin/solar-postal': typeof AdminSolarPostalRoute
-  '/admin/solar-requests': typeof AdminSolarRequestsRoute
-  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
-  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/upload-policies': typeof AdminUploadPoliciesRoute
-  '/admin/users': typeof AdminUsersRoute
   '/admin/vat': typeof AdminVatRoute
   '/admin/verification': typeof AdminVerificationRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
+  '/terms/$version': typeof TermsVersionRoute
   '/admin': typeof AdminIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
   '/register': typeof RegisterIndexRoute
   '/consultations/$requestId': typeof AppConsultationsRequestIdRoute
+  '/consultations/new': typeof AppConsultationsNewRoute
   '/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/invoices/receipts': typeof AppInvoicesReceiptsRoute
+  '/notifications/$notificationId': typeof AppNotificationsNotificationIdRoute
   '/savings/order': typeof AppSavingsOrderRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
+  '/settings/conversation-identity': typeof AppSettingsConversationIdentityRoute
   '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/team': typeof AppSettingsTeamRoute
   '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/settings/username': typeof AppSettingsUsernameRoute
-  '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
-  '/admin/crm/recovery': typeof AdminCrmRecoveryRoute
+  '/tickets/$ticketId': typeof AppTicketsTicketIdRoute
+  '/tickets/new': typeof AppTicketsNewRoute
+  '/admin/authorization-audit/$eventId': typeof AdminAuthorizationAuditEventIdRoute
+  '/admin/branding/edit': typeof AdminBrandingEditRoute
+  '/admin/catalogue/$category': typeof AdminCatalogueCategoryRoute
+  '/admin/consultations/$requestId': typeof AdminConsultationsRequestIdRouteWithChildren
+  '/admin/contract-limits/$view': typeof AdminContractLimitsViewRoute
+  '/admin/contract-templates/new': typeof AdminContractTemplatesNewRoute
+  '/admin/contracts/new': typeof AdminContractsNewRoute
+  '/admin/contracts/refunds': typeof AdminContractsRefundsRoute
+  '/admin/document-templates/new': typeof AdminDocumentTemplatesNewRoute
+  '/admin/electricity-orders/$orderId': typeof AdminElectricityOrdersOrderIdRouteWithChildren
+  '/admin/failed-jobs/$jobId': typeof AdminFailedJobsJobIdRoute
+  '/admin/failed-notifications/history': typeof AdminFailedNotificationsHistoryRoute
+  '/admin/inbox/$notificationId': typeof AdminInboxNotificationIdRoute
+  '/admin/invoices/new': typeof AdminInvoicesNewRoute
+  '/admin/notifications/new': typeof AdminNotificationsNewRoute
+  '/admin/notifications/preview': typeof AdminNotificationsPreviewRoute
+  '/admin/notifications/settings': typeof AdminNotificationsSettingsRoute
+  '/admin/operational-retention/$view': typeof AdminOperationalRetentionViewRoute
+  '/admin/providers/$channel': typeof AdminProvidersChannelRouteWithChildren
+  '/admin/roles/$roleId': typeof AdminRolesRoleIdRoute
+  '/admin/roles/compare': typeof AdminRolesCompareRoute
+  '/admin/roles/effective': typeof AdminRolesEffectiveRoute
+  '/admin/staff-teams/assignment': typeof AdminStaffTeamsAssignmentRoute
+  '/admin/staff-teams/new': typeof AdminStaffTeamsNewRoute
+  '/admin/storage/$section': typeof AdminStorageSectionRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/verification/$section': typeof AdminVerificationSectionRoute
   '/admin/wallet-ledger/$profileId': typeof AdminWalletLedgerProfileIdRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/consultations': typeof AppConsultationsIndexRoute
+  '/contracts': typeof AppContractsIndexRoute
+  '/documents': typeof AppDocumentsIndexRoute
   '/electricity': typeof AppElectricityIndexRoute
   '/invoices': typeof AppInvoicesIndexRoute
   '/savings': typeof AppSavingsIndexRoute
   '/settings': typeof AppSettingsIndexRoute
+  '/tickets': typeof AppTicketsIndexRoute
+  '/wallet': typeof AppWalletIndexRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsIndexRoute
+  '/admin/authorization-audit': typeof AdminAuthorizationAuditIndexRoute
+  '/admin/consultations': typeof AdminConsultationsIndexRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesIndexRoute
+  '/admin/contracts': typeof AdminContractsIndexRoute
   '/admin/crm': typeof AdminCrmIndexRoute
+  '/admin/document-templates': typeof AdminDocumentTemplatesIndexRoute
+  '/admin/documents': typeof AdminDocumentsIndexRoute
+  '/admin/electricity-increases': typeof AdminElectricityIncreasesIndexRoute
+  '/admin/electricity-orders': typeof AdminElectricityOrdersIndexRoute
+  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsIndexRoute
+  '/admin/invoices': typeof AdminInvoicesIndexRoute
+  '/admin/notifications': typeof AdminNotificationsIndexRoute
+  '/admin/providers': typeof AdminProvidersIndexRoute
+  '/admin/reconciliation': typeof AdminReconciliationIndexRoute
+  '/admin/roles': typeof AdminRolesIndexRoute
+  '/admin/saving-orders': typeof AdminSavingOrdersIndexRoute
+  '/admin/solar-requests': typeof AdminSolarRequestsIndexRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsIndexRoute
+  '/admin/tickets': typeof AdminTicketsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsIndexRoute
   '/app/crm': typeof AppCrmIndexRoute
+  '/consultations/$requestId/offer': typeof AppConsultationsRequestIdOfferRoute
+  '/consultations/$requestId/reply': typeof AppConsultationsRequestIdReplyRoute
+  '/contracts/$contractId/{-$action}': typeof AppContractsContractIdChar123ActionChar125Route
+  '/documents/$documentId/{-$operation}': typeof AppDocumentsDocumentIdChar123OperationChar125Route
   '/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
+  '/electricity/orders/new': typeof AppElectricityOrdersNewRoute
   '/savings/orders/$orderId': typeof AppSavingsOrdersOrderIdRoute
+  '/savings/orders/new': typeof AppSavingsOrdersNewRoute
+  '/settings/addresses/$addressId': typeof AppSettingsAddressesAddressIdRoute
+  '/settings/addresses/new': typeof AppSettingsAddressesNewRoute
+  '/settings/privacy/requests': typeof AppSettingsPrivacyRequestsRoute
+  '/settings/profile/edit': typeof AppSettingsProfileEditRoute
+  '/settings/security/telegram': typeof AppSettingsSecurityTelegramRoute
+  '/settings/team/$section': typeof AppSettingsTeamSectionRoute
   '/solar/requests/$requestId': typeof AppSolarRequestsRequestIdRoute
   '/solar/requests/new': typeof AppSolarRequestsNewRoute
+  '/wallet/top-up/$method': typeof AppWalletTopUpMethodRoute
+  '/admin/agent-slots/$slotKey/{-$action}': typeof AdminAgentSlotsSlotKeyChar123ActionChar125Route
+  '/admin/agents/$agentId/{-$action}': typeof AdminAgentsAgentIdChar123ActionChar125Route
+  '/admin/ai-models/$modelId/{-$action}': typeof AdminAiModelsModelIdChar123ActionChar125Route
+  '/admin/approval-requests/$requestId/{-$decision}': typeof AdminApprovalRequestsRequestIdChar123DecisionChar125Route
+  '/admin/approval-requests/thresholds/{-$view}': typeof AdminApprovalRequestsThresholdsChar123ViewChar125Route
+  '/admin/catalogue/$category/$productId': typeof AdminCatalogueCategoryProductIdRoute
+  '/admin/catalogue/$category/new': typeof AdminCatalogueCategoryNewRoute
+  '/admin/consultations/$requestId/fee': typeof AdminConsultationsRequestIdFeeRoute
+  '/admin/contract-templates/$templateId/edit': typeof AdminContractTemplatesTemplateIdEditRoute
+  '/admin/crm/corrections/$caseId': typeof AdminCrmCorrectionsCaseIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/admin/crm/recovery/$caseId': typeof AdminCrmRecoveryCaseIdRoute
+  '/admin/crm/recovery/new': typeof AdminCrmRecoveryNewRoute
+  '/admin/document-templates/$templateId/edit': typeof AdminDocumentTemplatesTemplateIdEditRoute
+  '/admin/electricity-increases/$requestId/{-$decision}': typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
+  '/admin/electricity-price-adjustments/$contractId/new': typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
+  '/admin/electricity-rules/$section/{-$view}': typeof AdminElectricityRulesSectionChar123ViewChar125Route
+  '/admin/failed-notifications/$deliveryId/{-$section}': typeof AdminFailedNotificationsDeliveryIdChar123SectionChar125Route
+  '/admin/gift-codes/$codeId/{-$action}': typeof AdminGiftCodesCodeIdChar123ActionChar125Route
+  '/admin/knowledge-bases/$recordId/{-$action}': typeof AdminKnowledgeBasesRecordIdChar123ActionChar125Route
+  '/admin/maintenance/$capability/{-$action}': typeof AdminMaintenanceCapabilityChar123ActionChar125Route
+  '/admin/notifications/$templateId/$action': typeof AdminNotificationsTemplateIdActionRoute
+  '/admin/policies/$recordId/{-$action}': typeof AdminPoliciesRecordIdChar123ActionChar125Route
+  '/admin/providers/$channel/$providerId': typeof AdminProvidersChannelProviderIdRouteWithChildren
+  '/admin/providers/$channel/new': typeof AdminProvidersChannelNewRoute
+  '/admin/reconciliation/$caseId/{-$verb}': typeof AdminReconciliationCaseIdChar123VerbChar125Route
+  '/admin/service-targets/$section/{-$workflow}': typeof AdminServiceTargetsSectionChar123WorkflowChar125Route
+  '/admin/staff-teams/$teamId/edit': typeof AdminStaffTeamsTeamIdEditRoute
+  '/admin/tickets/$ticketId/{-$section}': typeof AdminTicketsTicketIdChar123SectionChar125Route
+  '/admin/upload-policies/$category/{-$action}': typeof AdminUploadPoliciesCategoryChar123ActionChar125Route
+  '/admin/users/$userId/permissions': typeof AdminUsersUserIdPermissionsRoute
+  '/admin/users/$userId/roles': typeof AdminUsersUserIdRolesRoute
+  '/admin/verification/providers/$providerId': typeof AdminVerificationProvidersProviderIdRoute
+  '/admin/wallet-receipts/$receiptId/{-$action}': typeof AdminWalletReceiptsReceiptIdChar123ActionChar125Route
+  '/admin/wallet-receipts/settings/{-$view}': typeof AdminWalletReceiptsSettingsChar123ViewChar125Route
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/electricity/orders': typeof AppElectricityOrdersIndexRoute
   '/savings/orders': typeof AppSavingsOrdersIndexRoute
   '/solar/requests': typeof AppSolarRequestsIndexRoute
+  '/admin/contract-templates/$templateId': typeof AdminContractTemplatesTemplateIdIndexRoute
+  '/admin/crm/corrections': typeof AdminCrmCorrectionsIndexRoute
+  '/admin/crm/recovery': typeof AdminCrmRecoveryIndexRoute
+  '/admin/document-templates/$templateId': typeof AdminDocumentTemplatesTemplateIdIndexRoute
+  '/admin/electricity-price-adjustments/$contractId': typeof AdminElectricityPriceAdjustmentsContractIdIndexRoute
+  '/admin/invoices/$invoiceId': typeof AdminInvoicesInvoiceIdIndexRoute
+  '/admin/notifications/$templateId': typeof AdminNotificationsTemplateIdIndexRoute
+  '/admin/staff-teams/$teamId': typeof AdminStaffTeamsTeamIdIndexRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdIndexRoute
+  '/contracts/$contractId/$operation/$versionId': typeof AppContractsContractIdOperationVersionIdRoute
+  '/electricity/orders/$orderId/cancel': typeof AppElectricityOrdersOrderIdCancelRoute
+  '/electricity/orders/$orderId/edit': typeof AppElectricityOrdersOrderIdEditRoute
+  '/electricity/orders/new/advanced': typeof AppElectricityOrdersNewAdvancedRoute
+  '/invoices/$invoiceId/receipts/$receiptId': typeof AppInvoicesInvoiceIdReceiptsReceiptIdRoute
+  '/invoices/$invoiceId/receipts/new': typeof AppInvoicesInvoiceIdReceiptsNewRoute
+  '/savings/orders/$orderId/edit': typeof AppSavingsOrdersOrderIdEditRoute
+  '/settings/addresses/$addressId/edit': typeof AppSettingsAddressesAddressIdEditRoute
+  '/solar/requests/$requestId/documents': typeof AppSolarRequestsRequestIdDocumentsRouteWithChildren
+  '/solar/requests/$requestId/shipment': typeof AppSolarRequestsRequestIdShipmentRouteWithChildren
+  '/admin/catalogue/$category/$productId/edit': typeof AdminCatalogueCategoryProductIdEditRoute
+  '/admin/consultations/$requestId/decisions/$decision': typeof AdminConsultationsRequestIdDecisionsDecisionRoute
+  '/admin/contract-templates/$templateId/versions/$version': typeof AdminContractTemplatesTemplateIdVersionsVersionRoute
+  '/admin/contracts/$contractId/{-$action}/{-$item}': typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
+  '/admin/crm/profiles/$profileId/$operation': typeof AdminCrmProfilesProfileIdOperationRoute
+  '/admin/document-templates/$templateId/versions/$version': typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
+  '/admin/electricity-orders/$orderId/decisions/$decision': typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
+  '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
+  '/admin/failed-notifications/corrections/{-$correctionId}/{-$action}': typeof AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route
+  '/admin/geography/provinces/$provinceId/{-$action}': typeof AdminGeographyProvincesProvinceIdChar123ActionChar125Route
+  '/admin/invoices/receipts/$receiptId/{-$decision}': typeof AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route
+  '/admin/invoices/tools/{-$section}/{-$service}': typeof AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route
+  '/admin/knowledge-bases/$recordId/documents/$documentId': typeof AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute
+  '/admin/knowledge-bases/groups/$recordId/{-$action}': typeof AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route
+  '/admin/policies/groups/$recordId/{-$action}': typeof AdminPoliciesGroupsRecordIdChar123ActionChar125Route
+  '/admin/providers/$channel/$providerId/duplicate': typeof AdminProvidersChannelProviderIdDuplicateRoute
+  '/admin/providers/$channel/$providerId/edit': typeof AdminProvidersChannelProviderIdEditRoute
+  '/admin/providers/$channel/$providerId/test': typeof AdminProvidersChannelProviderIdTestRoute
+  '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}': typeof AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route
+  '/admin/solar-requests/$requestId/construction/{-$operation}': typeof AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route
+  '/admin/solar-requests/$requestId/postal/{-$operation}': typeof AdminSolarRequestsRequestIdPostalChar123OperationChar125Route
+  '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}': typeof AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route
+  '/admin/tos/versions/$versionId/{-$action}': typeof AdminTosVersionsVersionIdChar123ActionChar125Route
+  '/admin/upload-policies/$category/versions/$versionId': typeof AdminUploadPoliciesCategoryVersionsVersionIdRoute
+  '/admin/vat/$kind/$recordId/{-$action}': typeof AdminVatKindRecordIdChar123ActionChar125Route
+  '/electricity/orders/$orderId/increases/new': typeof AppElectricityOrdersOrderIdIncreasesNewRoute
+  '/settings/team/$section/$recordId/{-$action}': typeof AppSettingsTeamSectionRecordIdChar123ActionChar125Route
+  '/solar/requests/$requestId/documents/review': typeof AppSolarRequestsRequestIdDocumentsReviewRoute
+  '/solar/requests/$requestId/shipment/upload-receipt': typeof AppSolarRequestsRequestIdShipmentUploadReceiptRoute
+  '/admin/catalogue/$category/$productId/configuration/{-$operation}': typeof AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route
+  '/admin/catalogue/$category/$productId/prices/new': typeof AdminCatalogueCategoryProductIdPricesNewRoute
+  '/admin/crm/profiles/$profileId/corrections/new': typeof AdminCrmProfilesProfileIdCorrectionsNewRoute
+  '/admin/crm/profiles/$profileId/legal/edit': typeof AdminCrmProfilesProfileIdLegalEditRoute
+  '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}': typeof AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route
+  '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}': typeof AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  '/savings/orders/$orderId/documents/$documentId/{-$operation}': typeof AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  '/solar/requests/$requestId/documents/$documentId/{-$operation}': typeof AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route
+  '/admin/crm/profiles/$profileId/addresses/$addressId/edit': typeof AdminCrmProfilesProfileIdAddressesAddressIdEditRoute
+  '/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}': typeof AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route
+  '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}': typeof AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route
+  '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}': typeof AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
+  '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}': typeof AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -911,74 +2180,54 @@ export interface FileRoutesById {
   '/_app/app': typeof AppAppRoute
   '/_app/charts': typeof AppChartsRoute
   '/_app/consultations': typeof AppConsultationsRouteWithChildren
-  '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
-  '/_app/documents': typeof AppDocumentsRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/savings': typeof AppSavingsRouteWithChildren
-  '/_app/tickets': typeof AppTicketsRoute
   '/_app/videos': typeof AppVideosRoute
-  '/_app/wallet': typeof AppWalletRoute
   '/admin/agent-slots': typeof AdminAgentSlotsRoute
   '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
-  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
-  '/admin/authorization-audit': typeof AdminAuthorizationAuditRoute
-  '/admin/branding': typeof AdminBrandingRoute
+  '/admin/branding': typeof AdminBrandingRouteWithChildren
   '/admin/catalogue': typeof AdminCatalogueRoute
-  '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
-  '/admin/contract-templates': typeof AdminContractTemplatesRoute
-  '/admin/contracts': typeof AdminContractsRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
-  '/admin/document-templates': typeof AdminDocumentTemplatesRoute
-  '/admin/documents': typeof AdminDocumentsRoute
-  '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
-  '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
-  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/inbox': typeof AdminInboxRoute
-  '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
-  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/operational-retention': typeof AdminOperationalRetentionRoute
   '/admin/policies': typeof AdminPoliciesRoute
-  '/admin/providers': typeof AdminProvidersRoute
-  '/admin/reconciliation': typeof AdminReconciliationRoute
-  '/admin/roles': typeof AdminRolesRoute
-  '/admin/saving-orders': typeof AdminSavingOrdersRoute
+  '/admin/providers': typeof AdminProvidersRouteWithChildren
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/solar-construction': typeof AdminSolarConstructionRoute
   '/admin/solar-postal': typeof AdminSolarPostalRoute
-  '/admin/solar-requests': typeof AdminSolarRequestsRoute
-  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
-  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/upload-policies': typeof AdminUploadPoliciesRoute
-  '/admin/users': typeof AdminUsersRoute
   '/admin/vat': typeof AdminVatRoute
   '/admin/verification': typeof AdminVerificationRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
+  '/terms_/$version': typeof TermsVersionRoute
   '/admin/': typeof AdminIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/consultations/$requestId': typeof AppConsultationsRequestIdRoute
+  '/_app/consultations/new': typeof AppConsultationsNewRoute
   '/_app/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
   '/_app/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/_app/invoices/receipts': typeof AppInvoicesReceiptsRoute
+  '/_app/notifications_/$notificationId': typeof AppNotificationsNotificationIdRoute
   '/_app/savings/order': typeof AppSavingsOrderRoute
   '/_app/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/_app/settings/addresses': typeof AppSettingsAddressesRoute
+  '/_app/settings/conversation-identity': typeof AppSettingsConversationIdentityRoute
   '/_app/settings/privacy': typeof AppSettingsPrivacyRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
@@ -986,27 +2235,187 @@ export interface FileRoutesById {
   '/_app/settings/timezone': typeof AppSettingsTimezoneRoute
   '/_app/settings/username': typeof AppSettingsUsernameRoute
   '/_app/solar/requests': typeof AppSolarRequestsRouteWithChildren
-  '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
-  '/admin/crm/recovery': typeof AdminCrmRecoveryRoute
+  '/_app/tickets/$ticketId': typeof AppTicketsTicketIdRoute
+  '/_app/tickets/new': typeof AppTicketsNewRoute
+  '/admin/authorization-audit/$eventId': typeof AdminAuthorizationAuditEventIdRoute
+  '/admin/branding/edit': typeof AdminBrandingEditRoute
+  '/admin/catalogue_/$category': typeof AdminCatalogueCategoryRoute
+  '/admin/consultations/$requestId': typeof AdminConsultationsRequestIdRouteWithChildren
+  '/admin/contract-limits_/$view': typeof AdminContractLimitsViewRoute
+  '/admin/contract-templates/new': typeof AdminContractTemplatesNewRoute
+  '/admin/contracts/new': typeof AdminContractsNewRoute
+  '/admin/contracts/refunds': typeof AdminContractsRefundsRoute
+  '/admin/document-templates/new': typeof AdminDocumentTemplatesNewRoute
+  '/admin/electricity-orders/$orderId': typeof AdminElectricityOrdersOrderIdRouteWithChildren
+  '/admin/failed-jobs_/$jobId': typeof AdminFailedJobsJobIdRoute
+  '/admin/failed-notifications_/history': typeof AdminFailedNotificationsHistoryRoute
+  '/admin/inbox_/$notificationId': typeof AdminInboxNotificationIdRoute
+  '/admin/invoices/new': typeof AdminInvoicesNewRoute
+  '/admin/notifications/new': typeof AdminNotificationsNewRoute
+  '/admin/notifications/preview': typeof AdminNotificationsPreviewRoute
+  '/admin/notifications/settings': typeof AdminNotificationsSettingsRoute
+  '/admin/operational-retention_/$view': typeof AdminOperationalRetentionViewRoute
+  '/admin/providers/$channel': typeof AdminProvidersChannelRouteWithChildren
+  '/admin/roles/$roleId': typeof AdminRolesRoleIdRoute
+  '/admin/roles/compare': typeof AdminRolesCompareRoute
+  '/admin/roles/effective': typeof AdminRolesEffectiveRoute
+  '/admin/staff-teams/assignment': typeof AdminStaffTeamsAssignmentRoute
+  '/admin/staff-teams/new': typeof AdminStaffTeamsNewRoute
+  '/admin/storage_/$section': typeof AdminStorageSectionRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/verification_/$section': typeof AdminVerificationSectionRoute
   '/admin/wallet-ledger/$profileId': typeof AdminWalletLedgerProfileIdRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/_app/consultations/': typeof AppConsultationsIndexRoute
+  '/_app/contracts/': typeof AppContractsIndexRoute
+  '/_app/documents/': typeof AppDocumentsIndexRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
   '/_app/invoices/': typeof AppInvoicesIndexRoute
   '/_app/savings/': typeof AppSavingsIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
+  '/_app/tickets/': typeof AppTicketsIndexRoute
+  '/_app/wallet/': typeof AppWalletIndexRoute
+  '/admin/approval-requests/': typeof AdminApprovalRequestsIndexRoute
+  '/admin/authorization-audit/': typeof AdminAuthorizationAuditIndexRoute
+  '/admin/consultations/': typeof AdminConsultationsIndexRoute
+  '/admin/contract-templates/': typeof AdminContractTemplatesIndexRoute
+  '/admin/contracts/': typeof AdminContractsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
+  '/admin/document-templates/': typeof AdminDocumentTemplatesIndexRoute
+  '/admin/documents/': typeof AdminDocumentsIndexRoute
+  '/admin/electricity-increases/': typeof AdminElectricityIncreasesIndexRoute
+  '/admin/electricity-orders/': typeof AdminElectricityOrdersIndexRoute
+  '/admin/electricity-price-adjustments/': typeof AdminElectricityPriceAdjustmentsIndexRoute
+  '/admin/invoices/': typeof AdminInvoicesIndexRoute
+  '/admin/notifications/': typeof AdminNotificationsIndexRoute
+  '/admin/providers/': typeof AdminProvidersIndexRoute
+  '/admin/reconciliation/': typeof AdminReconciliationIndexRoute
+  '/admin/roles/': typeof AdminRolesIndexRoute
+  '/admin/saving-orders/': typeof AdminSavingOrdersIndexRoute
+  '/admin/solar-requests/': typeof AdminSolarRequestsIndexRoute
+  '/admin/staff-teams/': typeof AdminStaffTeamsIndexRoute
+  '/admin/tickets/': typeof AdminTicketsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
+  '/admin/wallet-receipts/': typeof AdminWalletReceiptsIndexRoute
   '/app/crm/': typeof AppCrmIndexRoute
+  '/_app/consultations/$requestId_/offer': typeof AppConsultationsRequestIdOfferRoute
+  '/_app/consultations/$requestId_/reply': typeof AppConsultationsRequestIdReplyRoute
+  '/_app/contracts/$contractId/{-$action}': typeof AppContractsContractIdChar123ActionChar125Route
+  '/_app/documents/$documentId/{-$operation}': typeof AppDocumentsDocumentIdChar123OperationChar125Route
   '/_app/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
+  '/_app/electricity/orders/new': typeof AppElectricityOrdersNewRoute
   '/_app/savings/orders/$orderId': typeof AppSavingsOrdersOrderIdRoute
+  '/_app/savings/orders/new': typeof AppSavingsOrdersNewRoute
+  '/_app/settings/addresses_/$addressId': typeof AppSettingsAddressesAddressIdRoute
+  '/_app/settings/addresses_/new': typeof AppSettingsAddressesNewRoute
+  '/_app/settings/privacy_/requests': typeof AppSettingsPrivacyRequestsRoute
+  '/_app/settings/profile_/edit': typeof AppSettingsProfileEditRoute
+  '/_app/settings/security_/telegram': typeof AppSettingsSecurityTelegramRoute
+  '/_app/settings/team_/$section': typeof AppSettingsTeamSectionRoute
   '/_app/solar/requests/$requestId': typeof AppSolarRequestsRequestIdRoute
   '/_app/solar/requests/new': typeof AppSolarRequestsNewRoute
+  '/_app/wallet/top-up/$method': typeof AppWalletTopUpMethodRoute
+  '/admin/agent-slots_/$slotKey/{-$action}': typeof AdminAgentSlotsSlotKeyChar123ActionChar125Route
+  '/admin/agents_/$agentId/{-$action}': typeof AdminAgentsAgentIdChar123ActionChar125Route
+  '/admin/ai-models_/$modelId/{-$action}': typeof AdminAiModelsModelIdChar123ActionChar125Route
+  '/admin/approval-requests/$requestId/{-$decision}': typeof AdminApprovalRequestsRequestIdChar123DecisionChar125Route
+  '/admin/approval-requests/thresholds/{-$view}': typeof AdminApprovalRequestsThresholdsChar123ViewChar125Route
+  '/admin/catalogue_/$category_/$productId': typeof AdminCatalogueCategoryProductIdRoute
+  '/admin/catalogue_/$category_/new': typeof AdminCatalogueCategoryNewRoute
+  '/admin/consultations/$requestId/fee': typeof AdminConsultationsRequestIdFeeRoute
+  '/admin/contract-templates/$templateId/edit': typeof AdminContractTemplatesTemplateIdEditRoute
+  '/admin/crm/corrections/$caseId': typeof AdminCrmCorrectionsCaseIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/admin/crm/recovery/$caseId': typeof AdminCrmRecoveryCaseIdRoute
+  '/admin/crm/recovery/new': typeof AdminCrmRecoveryNewRoute
+  '/admin/document-templates/$templateId/edit': typeof AdminDocumentTemplatesTemplateIdEditRoute
+  '/admin/electricity-increases/$requestId/{-$decision}': typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
+  '/admin/electricity-price-adjustments/$contractId/new': typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
+  '/admin/electricity-rules_/$section/{-$view}': typeof AdminElectricityRulesSectionChar123ViewChar125Route
+  '/admin/failed-notifications_/$deliveryId/{-$section}': typeof AdminFailedNotificationsDeliveryIdChar123SectionChar125Route
+  '/admin/gift-codes_/$codeId/{-$action}': typeof AdminGiftCodesCodeIdChar123ActionChar125Route
+  '/admin/knowledge-bases_/$recordId/{-$action}': typeof AdminKnowledgeBasesRecordIdChar123ActionChar125Route
+  '/admin/maintenance_/$capability/{-$action}': typeof AdminMaintenanceCapabilityChar123ActionChar125Route
+  '/admin/notifications/$templateId/$action': typeof AdminNotificationsTemplateIdActionRoute
+  '/admin/policies_/$recordId/{-$action}': typeof AdminPoliciesRecordIdChar123ActionChar125Route
+  '/admin/providers/$channel/$providerId': typeof AdminProvidersChannelProviderIdRouteWithChildren
+  '/admin/providers/$channel/new': typeof AdminProvidersChannelNewRoute
+  '/admin/reconciliation/$caseId/{-$verb}': typeof AdminReconciliationCaseIdChar123VerbChar125Route
+  '/admin/service-targets_/$section/{-$workflow}': typeof AdminServiceTargetsSectionChar123WorkflowChar125Route
+  '/admin/staff-teams/$teamId/edit': typeof AdminStaffTeamsTeamIdEditRoute
+  '/admin/tickets/$ticketId/{-$section}': typeof AdminTicketsTicketIdChar123SectionChar125Route
+  '/admin/upload-policies_/$category/{-$action}': typeof AdminUploadPoliciesCategoryChar123ActionChar125Route
+  '/admin/users/$userId/permissions': typeof AdminUsersUserIdPermissionsRoute
+  '/admin/users/$userId/roles': typeof AdminUsersUserIdRolesRoute
+  '/admin/verification_/providers/$providerId': typeof AdminVerificationProvidersProviderIdRoute
+  '/admin/wallet-receipts/$receiptId/{-$action}': typeof AdminWalletReceiptsReceiptIdChar123ActionChar125Route
+  '/admin/wallet-receipts/settings/{-$view}': typeof AdminWalletReceiptsSettingsChar123ViewChar125Route
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/_app/electricity/orders/': typeof AppElectricityOrdersIndexRoute
   '/_app/savings/orders/': typeof AppSavingsOrdersIndexRoute
   '/_app/solar/requests/': typeof AppSolarRequestsIndexRoute
+  '/admin/contract-templates/$templateId/': typeof AdminContractTemplatesTemplateIdIndexRoute
+  '/admin/crm/corrections/': typeof AdminCrmCorrectionsIndexRoute
+  '/admin/crm/recovery/': typeof AdminCrmRecoveryIndexRoute
+  '/admin/document-templates/$templateId/': typeof AdminDocumentTemplatesTemplateIdIndexRoute
+  '/admin/electricity-price-adjustments/$contractId/': typeof AdminElectricityPriceAdjustmentsContractIdIndexRoute
+  '/admin/invoices/$invoiceId/': typeof AdminInvoicesInvoiceIdIndexRoute
+  '/admin/notifications/$templateId/': typeof AdminNotificationsTemplateIdIndexRoute
+  '/admin/staff-teams/$teamId/': typeof AdminStaffTeamsTeamIdIndexRoute
+  '/admin/users/$userId/': typeof AdminUsersUserIdIndexRoute
+  '/_app/contracts/$contractId_/$operation/$versionId': typeof AppContractsContractIdOperationVersionIdRoute
+  '/_app/electricity/orders/$orderId_/cancel': typeof AppElectricityOrdersOrderIdCancelRoute
+  '/_app/electricity/orders/$orderId_/edit': typeof AppElectricityOrdersOrderIdEditRoute
+  '/_app/electricity/orders/new_/advanced': typeof AppElectricityOrdersNewAdvancedRoute
+  '/_app/invoices/$invoiceId_/receipts/$receiptId': typeof AppInvoicesInvoiceIdReceiptsReceiptIdRoute
+  '/_app/invoices/$invoiceId_/receipts/new': typeof AppInvoicesInvoiceIdReceiptsNewRoute
+  '/_app/savings/orders/$orderId_/edit': typeof AppSavingsOrdersOrderIdEditRoute
+  '/_app/settings/addresses_/$addressId_/edit': typeof AppSettingsAddressesAddressIdEditRoute
+  '/_app/solar/requests/$requestId_/documents': typeof AppSolarRequestsRequestIdDocumentsRouteWithChildren
+  '/_app/solar/requests/$requestId_/shipment': typeof AppSolarRequestsRequestIdShipmentRouteWithChildren
+  '/admin/catalogue_/$category_/$productId_/edit': typeof AdminCatalogueCategoryProductIdEditRoute
+  '/admin/consultations/$requestId/decisions/$decision': typeof AdminConsultationsRequestIdDecisionsDecisionRoute
+  '/admin/contract-templates/$templateId/versions/$version': typeof AdminContractTemplatesTemplateIdVersionsVersionRoute
+  '/admin/contracts/$contractId/{-$action}/{-$item}': typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
+  '/admin/crm/profiles/$profileId_/$operation': typeof AdminCrmProfilesProfileIdOperationRoute
+  '/admin/document-templates/$templateId/versions/$version': typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
+  '/admin/electricity-orders/$orderId/decisions/$decision': typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
+  '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
+  '/admin/failed-notifications_/corrections/{-$correctionId}/{-$action}': typeof AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route
+  '/admin/geography_/provinces/$provinceId/{-$action}': typeof AdminGeographyProvincesProvinceIdChar123ActionChar125Route
+  '/admin/invoices/receipts/$receiptId/{-$decision}': typeof AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route
+  '/admin/invoices/tools/{-$section}/{-$service}': typeof AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route
+  '/admin/knowledge-bases_/$recordId/documents/$documentId': typeof AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute
+  '/admin/knowledge-bases_/groups/$recordId/{-$action}': typeof AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route
+  '/admin/policies_/groups/$recordId/{-$action}': typeof AdminPoliciesGroupsRecordIdChar123ActionChar125Route
+  '/admin/providers/$channel/$providerId/duplicate': typeof AdminProvidersChannelProviderIdDuplicateRoute
+  '/admin/providers/$channel/$providerId/edit': typeof AdminProvidersChannelProviderIdEditRoute
+  '/admin/providers/$channel/$providerId/test': typeof AdminProvidersChannelProviderIdTestRoute
+  '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}': typeof AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route
+  '/admin/solar-requests/$requestId/construction/{-$operation}': typeof AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route
+  '/admin/solar-requests/$requestId/postal/{-$operation}': typeof AdminSolarRequestsRequestIdPostalChar123OperationChar125Route
+  '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}': typeof AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route
+  '/admin/tos_/versions/$versionId/{-$action}': typeof AdminTosVersionsVersionIdChar123ActionChar125Route
+  '/admin/upload-policies_/$category/versions/$versionId': typeof AdminUploadPoliciesCategoryVersionsVersionIdRoute
+  '/admin/vat_/$kind/$recordId/{-$action}': typeof AdminVatKindRecordIdChar123ActionChar125Route
+  '/_app/electricity/orders/$orderId_/increases/new': typeof AppElectricityOrdersOrderIdIncreasesNewRoute
+  '/_app/settings/team_/$section_/$recordId/{-$action}': typeof AppSettingsTeamSectionRecordIdChar123ActionChar125Route
+  '/_app/solar/requests/$requestId_/documents/review': typeof AppSolarRequestsRequestIdDocumentsReviewRoute
+  '/_app/solar/requests/$requestId_/shipment/upload-receipt': typeof AppSolarRequestsRequestIdShipmentUploadReceiptRoute
+  '/admin/catalogue_/$category_/$productId_/configuration/{-$operation}': typeof AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route
+  '/admin/catalogue_/$category_/$productId_/prices/new': typeof AdminCatalogueCategoryProductIdPricesNewRoute
+  '/admin/crm/profiles/$profileId_/corrections/new': typeof AdminCrmProfilesProfileIdCorrectionsNewRoute
+  '/admin/crm/profiles/$profileId_/legal/edit': typeof AdminCrmProfilesProfileIdLegalEditRoute
+  '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}': typeof AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route
+  '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}': typeof AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  '/_app/savings/orders/$orderId_/documents/$documentId/{-$operation}': typeof AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  '/_app/solar/requests/$requestId_/documents/$documentId/{-$operation}': typeof AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route
+  '/admin/crm/profiles/$profileId_/addresses/$addressId/edit': typeof AdminCrmProfilesProfileIdAddressesAddressIdEditRoute
+  '/admin/geography_/provinces/$provinceId/cities/$cityId/{-$action}': typeof AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route
+  '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}': typeof AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route
+  '/_app/contracts/$contractId_/versions/$versionId/documents/$documentId/{-$operation}': typeof AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
+  '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}': typeof AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1024,74 +2433,54 @@ export interface FileRouteTypes {
     | '/app'
     | '/charts'
     | '/consultations'
-    | '/contracts'
     | '/dashboard'
-    | '/documents'
     | '/notifications'
     | '/savings'
-    | '/tickets'
     | '/videos'
-    | '/wallet'
     | '/admin/agent-slots'
     | '/admin/agents'
     | '/admin/ai-models'
-    | '/admin/approval-requests'
-    | '/admin/authorization-audit'
     | '/admin/branding'
     | '/admin/catalogue'
-    | '/admin/consultations'
     | '/admin/contract-limits'
-    | '/admin/contract-templates'
-    | '/admin/contracts'
     | '/admin/crm'
-    | '/admin/document-templates'
-    | '/admin/documents'
-    | '/admin/electricity-increases'
-    | '/admin/electricity-orders'
-    | '/admin/electricity-price-adjustments'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
     | '/admin/gift-codes'
     | '/admin/inbox'
-    | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
-    | '/admin/notifications'
     | '/admin/operational-retention'
     | '/admin/policies'
     | '/admin/providers'
-    | '/admin/reconciliation'
-    | '/admin/roles'
-    | '/admin/saving-orders'
     | '/admin/service-targets'
     | '/admin/solar-construction'
     | '/admin/solar-postal'
-    | '/admin/solar-requests'
-    | '/admin/staff-teams'
     | '/admin/storage'
-    | '/admin/tickets'
     | '/admin/tos'
     | '/admin/upload-policies'
-    | '/admin/users'
     | '/admin/vat'
     | '/admin/verification'
-    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
+    | '/terms/$version'
     | '/admin/'
     | '/onboarding/'
     | '/register/'
     | '/consultations/$requestId'
+    | '/consultations/new'
     | '/electricity/advanced'
     | '/electricity/order'
     | '/electricity/orders'
     | '/invoices/$invoiceId'
     | '/invoices/receipts'
+    | '/notifications/$notificationId'
     | '/savings/order'
     | '/savings/orders'
     | '/settings/addresses'
+    | '/settings/conversation-identity'
     | '/settings/privacy'
     | '/settings/profile'
     | '/settings/security'
@@ -1099,27 +2488,187 @@ export interface FileRouteTypes {
     | '/settings/timezone'
     | '/settings/username'
     | '/solar/requests'
-    | '/admin/crm/corrections'
-    | '/admin/crm/recovery'
+    | '/tickets/$ticketId'
+    | '/tickets/new'
+    | '/admin/authorization-audit/$eventId'
+    | '/admin/branding/edit'
+    | '/admin/catalogue/$category'
+    | '/admin/consultations/$requestId'
+    | '/admin/contract-limits/$view'
+    | '/admin/contract-templates/new'
+    | '/admin/contracts/new'
+    | '/admin/contracts/refunds'
+    | '/admin/document-templates/new'
+    | '/admin/electricity-orders/$orderId'
+    | '/admin/failed-jobs/$jobId'
+    | '/admin/failed-notifications/history'
+    | '/admin/inbox/$notificationId'
+    | '/admin/invoices/new'
+    | '/admin/notifications/new'
+    | '/admin/notifications/preview'
+    | '/admin/notifications/settings'
+    | '/admin/operational-retention/$view'
+    | '/admin/providers/$channel'
+    | '/admin/roles/$roleId'
+    | '/admin/roles/compare'
+    | '/admin/roles/effective'
+    | '/admin/staff-teams/assignment'
+    | '/admin/staff-teams/new'
+    | '/admin/storage/$section'
+    | '/admin/users/new'
+    | '/admin/verification/$section'
     | '/admin/wallet-ledger/$profileId'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/consultations/'
+    | '/contracts/'
+    | '/documents/'
     | '/electricity/'
     | '/invoices/'
     | '/savings/'
     | '/settings/'
+    | '/tickets/'
+    | '/wallet/'
+    | '/admin/approval-requests/'
+    | '/admin/authorization-audit/'
+    | '/admin/consultations/'
+    | '/admin/contract-templates/'
+    | '/admin/contracts/'
     | '/admin/crm/'
+    | '/admin/document-templates/'
+    | '/admin/documents/'
+    | '/admin/electricity-increases/'
+    | '/admin/electricity-orders/'
+    | '/admin/electricity-price-adjustments/'
+    | '/admin/invoices/'
+    | '/admin/notifications/'
+    | '/admin/providers/'
+    | '/admin/reconciliation/'
+    | '/admin/roles/'
+    | '/admin/saving-orders/'
+    | '/admin/solar-requests/'
+    | '/admin/staff-teams/'
+    | '/admin/tickets/'
+    | '/admin/users/'
+    | '/admin/wallet-receipts/'
     | '/app/crm/'
+    | '/consultations/$requestId/offer'
+    | '/consultations/$requestId/reply'
+    | '/contracts/$contractId/{-$action}'
+    | '/documents/$documentId/{-$operation}'
     | '/electricity/orders/$orderId'
+    | '/electricity/orders/new'
     | '/savings/orders/$orderId'
+    | '/savings/orders/new'
+    | '/settings/addresses/$addressId'
+    | '/settings/addresses/new'
+    | '/settings/privacy/requests'
+    | '/settings/profile/edit'
+    | '/settings/security/telegram'
+    | '/settings/team/$section'
     | '/solar/requests/$requestId'
     | '/solar/requests/new'
+    | '/wallet/top-up/$method'
+    | '/admin/agent-slots/$slotKey/{-$action}'
+    | '/admin/agents/$agentId/{-$action}'
+    | '/admin/ai-models/$modelId/{-$action}'
+    | '/admin/approval-requests/$requestId/{-$decision}'
+    | '/admin/approval-requests/thresholds/{-$view}'
+    | '/admin/catalogue/$category/$productId'
+    | '/admin/catalogue/$category/new'
+    | '/admin/consultations/$requestId/fee'
+    | '/admin/contract-templates/$templateId/edit'
+    | '/admin/crm/corrections/$caseId'
     | '/admin/crm/profiles/$profileId'
+    | '/admin/crm/recovery/$caseId'
+    | '/admin/crm/recovery/new'
+    | '/admin/document-templates/$templateId/edit'
+    | '/admin/electricity-increases/$requestId/{-$decision}'
+    | '/admin/electricity-price-adjustments/$contractId/new'
+    | '/admin/electricity-rules/$section/{-$view}'
+    | '/admin/failed-notifications/$deliveryId/{-$section}'
+    | '/admin/gift-codes/$codeId/{-$action}'
+    | '/admin/knowledge-bases/$recordId/{-$action}'
+    | '/admin/maintenance/$capability/{-$action}'
+    | '/admin/notifications/$templateId/$action'
+    | '/admin/policies/$recordId/{-$action}'
+    | '/admin/providers/$channel/$providerId'
+    | '/admin/providers/$channel/new'
+    | '/admin/reconciliation/$caseId/{-$verb}'
+    | '/admin/service-targets/$section/{-$workflow}'
+    | '/admin/staff-teams/$teamId/edit'
+    | '/admin/tickets/$ticketId/{-$section}'
+    | '/admin/upload-policies/$category/{-$action}'
+    | '/admin/users/$userId/permissions'
+    | '/admin/users/$userId/roles'
+    | '/admin/verification/providers/$providerId'
+    | '/admin/wallet-receipts/$receiptId/{-$action}'
+    | '/admin/wallet-receipts/settings/{-$view}'
     | '/app/crm/profiles/$profileId'
     | '/electricity/orders/'
     | '/savings/orders/'
     | '/solar/requests/'
+    | '/admin/contract-templates/$templateId/'
+    | '/admin/crm/corrections/'
+    | '/admin/crm/recovery/'
+    | '/admin/document-templates/$templateId/'
+    | '/admin/electricity-price-adjustments/$contractId/'
+    | '/admin/invoices/$invoiceId/'
+    | '/admin/notifications/$templateId/'
+    | '/admin/staff-teams/$teamId/'
+    | '/admin/users/$userId/'
+    | '/contracts/$contractId/$operation/$versionId'
+    | '/electricity/orders/$orderId/cancel'
+    | '/electricity/orders/$orderId/edit'
+    | '/electricity/orders/new/advanced'
+    | '/invoices/$invoiceId/receipts/$receiptId'
+    | '/invoices/$invoiceId/receipts/new'
+    | '/savings/orders/$orderId/edit'
+    | '/settings/addresses/$addressId/edit'
+    | '/solar/requests/$requestId/documents'
+    | '/solar/requests/$requestId/shipment'
+    | '/admin/catalogue/$category/$productId/edit'
+    | '/admin/consultations/$requestId/decisions/$decision'
+    | '/admin/contract-templates/$templateId/versions/$version'
+    | '/admin/contracts/$contractId/{-$action}/{-$item}'
+    | '/admin/crm/profiles/$profileId/$operation'
+    | '/admin/document-templates/$templateId/versions/$version'
+    | '/admin/electricity-orders/$orderId/decisions/$decision'
+    | '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
+    | '/admin/failed-notifications/corrections/{-$correctionId}/{-$action}'
+    | '/admin/geography/provinces/$provinceId/{-$action}'
+    | '/admin/invoices/receipts/$receiptId/{-$decision}'
+    | '/admin/invoices/tools/{-$section}/{-$service}'
+    | '/admin/knowledge-bases/$recordId/documents/$documentId'
+    | '/admin/knowledge-bases/groups/$recordId/{-$action}'
+    | '/admin/policies/groups/$recordId/{-$action}'
+    | '/admin/providers/$channel/$providerId/duplicate'
+    | '/admin/providers/$channel/$providerId/edit'
+    | '/admin/providers/$channel/$providerId/test'
+    | '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}'
+    | '/admin/solar-requests/$requestId/construction/{-$operation}'
+    | '/admin/solar-requests/$requestId/postal/{-$operation}'
+    | '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}'
+    | '/admin/tos/versions/$versionId/{-$action}'
+    | '/admin/upload-policies/$category/versions/$versionId'
+    | '/admin/vat/$kind/$recordId/{-$action}'
+    | '/electricity/orders/$orderId/increases/new'
+    | '/settings/team/$section/$recordId/{-$action}'
+    | '/solar/requests/$requestId/documents/review'
+    | '/solar/requests/$requestId/shipment/upload-receipt'
+    | '/admin/catalogue/$category/$productId/configuration/{-$operation}'
+    | '/admin/catalogue/$category/$productId/prices/new'
+    | '/admin/crm/profiles/$profileId/corrections/new'
+    | '/admin/crm/profiles/$profileId/legal/edit'
+    | '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+    | '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}'
+    | '/savings/orders/$orderId/documents/$documentId/{-$operation}'
+    | '/solar/requests/$requestId/documents/$documentId/{-$operation}'
+    | '/admin/crm/profiles/$profileId/addresses/$addressId/edit'
+    | '/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}'
+    | '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}'
+    | '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+    | '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1131,97 +2680,236 @@ export interface FileRouteTypes {
     | '/ai'
     | '/app'
     | '/charts'
-    | '/contracts'
     | '/dashboard'
-    | '/documents'
     | '/notifications'
-    | '/tickets'
     | '/videos'
-    | '/wallet'
     | '/admin/agent-slots'
     | '/admin/agents'
     | '/admin/ai-models'
-    | '/admin/approval-requests'
-    | '/admin/authorization-audit'
     | '/admin/branding'
     | '/admin/catalogue'
-    | '/admin/consultations'
     | '/admin/contract-limits'
-    | '/admin/contract-templates'
-    | '/admin/contracts'
-    | '/admin/document-templates'
-    | '/admin/documents'
-    | '/admin/electricity-increases'
-    | '/admin/electricity-orders'
-    | '/admin/electricity-price-adjustments'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
     | '/admin/gift-codes'
     | '/admin/inbox'
-    | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
-    | '/admin/notifications'
     | '/admin/operational-retention'
     | '/admin/policies'
-    | '/admin/providers'
-    | '/admin/reconciliation'
-    | '/admin/roles'
-    | '/admin/saving-orders'
     | '/admin/service-targets'
     | '/admin/solar-construction'
     | '/admin/solar-postal'
-    | '/admin/solar-requests'
-    | '/admin/staff-teams'
     | '/admin/storage'
-    | '/admin/tickets'
     | '/admin/tos'
     | '/admin/upload-policies'
-    | '/admin/users'
     | '/admin/vat'
     | '/admin/verification'
-    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
+    | '/terms/$version'
     | '/admin'
     | '/onboarding'
     | '/register'
     | '/consultations/$requestId'
+    | '/consultations/new'
     | '/electricity/advanced'
     | '/electricity/order'
     | '/invoices/$invoiceId'
     | '/invoices/receipts'
+    | '/notifications/$notificationId'
     | '/savings/order'
     | '/settings/addresses'
+    | '/settings/conversation-identity'
     | '/settings/privacy'
     | '/settings/profile'
     | '/settings/security'
     | '/settings/team'
     | '/settings/timezone'
     | '/settings/username'
-    | '/admin/crm/corrections'
-    | '/admin/crm/recovery'
+    | '/tickets/$ticketId'
+    | '/tickets/new'
+    | '/admin/authorization-audit/$eventId'
+    | '/admin/branding/edit'
+    | '/admin/catalogue/$category'
+    | '/admin/consultations/$requestId'
+    | '/admin/contract-limits/$view'
+    | '/admin/contract-templates/new'
+    | '/admin/contracts/new'
+    | '/admin/contracts/refunds'
+    | '/admin/document-templates/new'
+    | '/admin/electricity-orders/$orderId'
+    | '/admin/failed-jobs/$jobId'
+    | '/admin/failed-notifications/history'
+    | '/admin/inbox/$notificationId'
+    | '/admin/invoices/new'
+    | '/admin/notifications/new'
+    | '/admin/notifications/preview'
+    | '/admin/notifications/settings'
+    | '/admin/operational-retention/$view'
+    | '/admin/providers/$channel'
+    | '/admin/roles/$roleId'
+    | '/admin/roles/compare'
+    | '/admin/roles/effective'
+    | '/admin/staff-teams/assignment'
+    | '/admin/staff-teams/new'
+    | '/admin/storage/$section'
+    | '/admin/users/new'
+    | '/admin/verification/$section'
     | '/admin/wallet-ledger/$profileId'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/consultations'
+    | '/contracts'
+    | '/documents'
     | '/electricity'
     | '/invoices'
     | '/savings'
     | '/settings'
+    | '/tickets'
+    | '/wallet'
+    | '/admin/approval-requests'
+    | '/admin/authorization-audit'
+    | '/admin/consultations'
+    | '/admin/contract-templates'
+    | '/admin/contracts'
     | '/admin/crm'
+    | '/admin/document-templates'
+    | '/admin/documents'
+    | '/admin/electricity-increases'
+    | '/admin/electricity-orders'
+    | '/admin/electricity-price-adjustments'
+    | '/admin/invoices'
+    | '/admin/notifications'
+    | '/admin/providers'
+    | '/admin/reconciliation'
+    | '/admin/roles'
+    | '/admin/saving-orders'
+    | '/admin/solar-requests'
+    | '/admin/staff-teams'
+    | '/admin/tickets'
+    | '/admin/users'
+    | '/admin/wallet-receipts'
     | '/app/crm'
+    | '/consultations/$requestId/offer'
+    | '/consultations/$requestId/reply'
+    | '/contracts/$contractId/{-$action}'
+    | '/documents/$documentId/{-$operation}'
     | '/electricity/orders/$orderId'
+    | '/electricity/orders/new'
     | '/savings/orders/$orderId'
+    | '/savings/orders/new'
+    | '/settings/addresses/$addressId'
+    | '/settings/addresses/new'
+    | '/settings/privacy/requests'
+    | '/settings/profile/edit'
+    | '/settings/security/telegram'
+    | '/settings/team/$section'
     | '/solar/requests/$requestId'
     | '/solar/requests/new'
+    | '/wallet/top-up/$method'
+    | '/admin/agent-slots/$slotKey/{-$action}'
+    | '/admin/agents/$agentId/{-$action}'
+    | '/admin/ai-models/$modelId/{-$action}'
+    | '/admin/approval-requests/$requestId/{-$decision}'
+    | '/admin/approval-requests/thresholds/{-$view}'
+    | '/admin/catalogue/$category/$productId'
+    | '/admin/catalogue/$category/new'
+    | '/admin/consultations/$requestId/fee'
+    | '/admin/contract-templates/$templateId/edit'
+    | '/admin/crm/corrections/$caseId'
     | '/admin/crm/profiles/$profileId'
+    | '/admin/crm/recovery/$caseId'
+    | '/admin/crm/recovery/new'
+    | '/admin/document-templates/$templateId/edit'
+    | '/admin/electricity-increases/$requestId/{-$decision}'
+    | '/admin/electricity-price-adjustments/$contractId/new'
+    | '/admin/electricity-rules/$section/{-$view}'
+    | '/admin/failed-notifications/$deliveryId/{-$section}'
+    | '/admin/gift-codes/$codeId/{-$action}'
+    | '/admin/knowledge-bases/$recordId/{-$action}'
+    | '/admin/maintenance/$capability/{-$action}'
+    | '/admin/notifications/$templateId/$action'
+    | '/admin/policies/$recordId/{-$action}'
+    | '/admin/providers/$channel/$providerId'
+    | '/admin/providers/$channel/new'
+    | '/admin/reconciliation/$caseId/{-$verb}'
+    | '/admin/service-targets/$section/{-$workflow}'
+    | '/admin/staff-teams/$teamId/edit'
+    | '/admin/tickets/$ticketId/{-$section}'
+    | '/admin/upload-policies/$category/{-$action}'
+    | '/admin/users/$userId/permissions'
+    | '/admin/users/$userId/roles'
+    | '/admin/verification/providers/$providerId'
+    | '/admin/wallet-receipts/$receiptId/{-$action}'
+    | '/admin/wallet-receipts/settings/{-$view}'
     | '/app/crm/profiles/$profileId'
     | '/electricity/orders'
     | '/savings/orders'
     | '/solar/requests'
+    | '/admin/contract-templates/$templateId'
+    | '/admin/crm/corrections'
+    | '/admin/crm/recovery'
+    | '/admin/document-templates/$templateId'
+    | '/admin/electricity-price-adjustments/$contractId'
+    | '/admin/invoices/$invoiceId'
+    | '/admin/notifications/$templateId'
+    | '/admin/staff-teams/$teamId'
+    | '/admin/users/$userId'
+    | '/contracts/$contractId/$operation/$versionId'
+    | '/electricity/orders/$orderId/cancel'
+    | '/electricity/orders/$orderId/edit'
+    | '/electricity/orders/new/advanced'
+    | '/invoices/$invoiceId/receipts/$receiptId'
+    | '/invoices/$invoiceId/receipts/new'
+    | '/savings/orders/$orderId/edit'
+    | '/settings/addresses/$addressId/edit'
+    | '/solar/requests/$requestId/documents'
+    | '/solar/requests/$requestId/shipment'
+    | '/admin/catalogue/$category/$productId/edit'
+    | '/admin/consultations/$requestId/decisions/$decision'
+    | '/admin/contract-templates/$templateId/versions/$version'
+    | '/admin/contracts/$contractId/{-$action}/{-$item}'
+    | '/admin/crm/profiles/$profileId/$operation'
+    | '/admin/document-templates/$templateId/versions/$version'
+    | '/admin/electricity-orders/$orderId/decisions/$decision'
+    | '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
+    | '/admin/failed-notifications/corrections/{-$correctionId}/{-$action}'
+    | '/admin/geography/provinces/$provinceId/{-$action}'
+    | '/admin/invoices/receipts/$receiptId/{-$decision}'
+    | '/admin/invoices/tools/{-$section}/{-$service}'
+    | '/admin/knowledge-bases/$recordId/documents/$documentId'
+    | '/admin/knowledge-bases/groups/$recordId/{-$action}'
+    | '/admin/policies/groups/$recordId/{-$action}'
+    | '/admin/providers/$channel/$providerId/duplicate'
+    | '/admin/providers/$channel/$providerId/edit'
+    | '/admin/providers/$channel/$providerId/test'
+    | '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}'
+    | '/admin/solar-requests/$requestId/construction/{-$operation}'
+    | '/admin/solar-requests/$requestId/postal/{-$operation}'
+    | '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}'
+    | '/admin/tos/versions/$versionId/{-$action}'
+    | '/admin/upload-policies/$category/versions/$versionId'
+    | '/admin/vat/$kind/$recordId/{-$action}'
+    | '/electricity/orders/$orderId/increases/new'
+    | '/settings/team/$section/$recordId/{-$action}'
+    | '/solar/requests/$requestId/documents/review'
+    | '/solar/requests/$requestId/shipment/upload-receipt'
+    | '/admin/catalogue/$category/$productId/configuration/{-$operation}'
+    | '/admin/catalogue/$category/$productId/prices/new'
+    | '/admin/crm/profiles/$profileId/corrections/new'
+    | '/admin/crm/profiles/$profileId/legal/edit'
+    | '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+    | '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}'
+    | '/savings/orders/$orderId/documents/$documentId/{-$operation}'
+    | '/solar/requests/$requestId/documents/$documentId/{-$operation}'
+    | '/admin/crm/profiles/$profileId/addresses/$addressId/edit'
+    | '/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}'
+    | '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}'
+    | '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+    | '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
   id:
     | '__root__'
     | '/'
@@ -1238,74 +2926,54 @@ export interface FileRouteTypes {
     | '/_app/app'
     | '/_app/charts'
     | '/_app/consultations'
-    | '/_app/contracts'
     | '/_app/dashboard'
-    | '/_app/documents'
     | '/_app/notifications'
     | '/_app/savings'
-    | '/_app/tickets'
     | '/_app/videos'
-    | '/_app/wallet'
     | '/admin/agent-slots'
     | '/admin/agents'
     | '/admin/ai-models'
-    | '/admin/approval-requests'
-    | '/admin/authorization-audit'
     | '/admin/branding'
     | '/admin/catalogue'
-    | '/admin/consultations'
     | '/admin/contract-limits'
-    | '/admin/contract-templates'
-    | '/admin/contracts'
     | '/admin/crm'
-    | '/admin/document-templates'
-    | '/admin/documents'
-    | '/admin/electricity-increases'
-    | '/admin/electricity-orders'
-    | '/admin/electricity-price-adjustments'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
     | '/admin/gift-codes'
     | '/admin/inbox'
-    | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
-    | '/admin/notifications'
     | '/admin/operational-retention'
     | '/admin/policies'
     | '/admin/providers'
-    | '/admin/reconciliation'
-    | '/admin/roles'
-    | '/admin/saving-orders'
     | '/admin/service-targets'
     | '/admin/solar-construction'
     | '/admin/solar-postal'
-    | '/admin/solar-requests'
-    | '/admin/staff-teams'
     | '/admin/storage'
-    | '/admin/tickets'
     | '/admin/tos'
     | '/admin/upload-policies'
-    | '/admin/users'
     | '/admin/vat'
     | '/admin/verification'
-    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
+    | '/terms_/$version'
     | '/admin/'
     | '/onboarding/'
     | '/register/'
     | '/_app/consultations/$requestId'
+    | '/_app/consultations/new'
     | '/_app/electricity/advanced'
     | '/_app/electricity/order'
     | '/_app/electricity/orders'
     | '/_app/invoices/$invoiceId'
     | '/_app/invoices/receipts'
+    | '/_app/notifications_/$notificationId'
     | '/_app/savings/order'
     | '/_app/savings/orders'
     | '/_app/settings/addresses'
+    | '/_app/settings/conversation-identity'
     | '/_app/settings/privacy'
     | '/_app/settings/profile'
     | '/_app/settings/security'
@@ -1313,27 +2981,187 @@ export interface FileRouteTypes {
     | '/_app/settings/timezone'
     | '/_app/settings/username'
     | '/_app/solar/requests'
-    | '/admin/crm/corrections'
-    | '/admin/crm/recovery'
+    | '/_app/tickets/$ticketId'
+    | '/_app/tickets/new'
+    | '/admin/authorization-audit/$eventId'
+    | '/admin/branding/edit'
+    | '/admin/catalogue_/$category'
+    | '/admin/consultations/$requestId'
+    | '/admin/contract-limits_/$view'
+    | '/admin/contract-templates/new'
+    | '/admin/contracts/new'
+    | '/admin/contracts/refunds'
+    | '/admin/document-templates/new'
+    | '/admin/electricity-orders/$orderId'
+    | '/admin/failed-jobs_/$jobId'
+    | '/admin/failed-notifications_/history'
+    | '/admin/inbox_/$notificationId'
+    | '/admin/invoices/new'
+    | '/admin/notifications/new'
+    | '/admin/notifications/preview'
+    | '/admin/notifications/settings'
+    | '/admin/operational-retention_/$view'
+    | '/admin/providers/$channel'
+    | '/admin/roles/$roleId'
+    | '/admin/roles/compare'
+    | '/admin/roles/effective'
+    | '/admin/staff-teams/assignment'
+    | '/admin/staff-teams/new'
+    | '/admin/storage_/$section'
+    | '/admin/users/new'
+    | '/admin/verification_/$section'
     | '/admin/wallet-ledger/$profileId'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/_app/consultations/'
+    | '/_app/contracts/'
+    | '/_app/documents/'
     | '/_app/electricity/'
     | '/_app/invoices/'
     | '/_app/savings/'
     | '/_app/settings/'
+    | '/_app/tickets/'
+    | '/_app/wallet/'
+    | '/admin/approval-requests/'
+    | '/admin/authorization-audit/'
+    | '/admin/consultations/'
+    | '/admin/contract-templates/'
+    | '/admin/contracts/'
     | '/admin/crm/'
+    | '/admin/document-templates/'
+    | '/admin/documents/'
+    | '/admin/electricity-increases/'
+    | '/admin/electricity-orders/'
+    | '/admin/electricity-price-adjustments/'
+    | '/admin/invoices/'
+    | '/admin/notifications/'
+    | '/admin/providers/'
+    | '/admin/reconciliation/'
+    | '/admin/roles/'
+    | '/admin/saving-orders/'
+    | '/admin/solar-requests/'
+    | '/admin/staff-teams/'
+    | '/admin/tickets/'
+    | '/admin/users/'
+    | '/admin/wallet-receipts/'
     | '/app/crm/'
+    | '/_app/consultations/$requestId_/offer'
+    | '/_app/consultations/$requestId_/reply'
+    | '/_app/contracts/$contractId/{-$action}'
+    | '/_app/documents/$documentId/{-$operation}'
     | '/_app/electricity/orders/$orderId'
+    | '/_app/electricity/orders/new'
     | '/_app/savings/orders/$orderId'
+    | '/_app/savings/orders/new'
+    | '/_app/settings/addresses_/$addressId'
+    | '/_app/settings/addresses_/new'
+    | '/_app/settings/privacy_/requests'
+    | '/_app/settings/profile_/edit'
+    | '/_app/settings/security_/telegram'
+    | '/_app/settings/team_/$section'
     | '/_app/solar/requests/$requestId'
     | '/_app/solar/requests/new'
+    | '/_app/wallet/top-up/$method'
+    | '/admin/agent-slots_/$slotKey/{-$action}'
+    | '/admin/agents_/$agentId/{-$action}'
+    | '/admin/ai-models_/$modelId/{-$action}'
+    | '/admin/approval-requests/$requestId/{-$decision}'
+    | '/admin/approval-requests/thresholds/{-$view}'
+    | '/admin/catalogue_/$category_/$productId'
+    | '/admin/catalogue_/$category_/new'
+    | '/admin/consultations/$requestId/fee'
+    | '/admin/contract-templates/$templateId/edit'
+    | '/admin/crm/corrections/$caseId'
     | '/admin/crm/profiles/$profileId'
+    | '/admin/crm/recovery/$caseId'
+    | '/admin/crm/recovery/new'
+    | '/admin/document-templates/$templateId/edit'
+    | '/admin/electricity-increases/$requestId/{-$decision}'
+    | '/admin/electricity-price-adjustments/$contractId/new'
+    | '/admin/electricity-rules_/$section/{-$view}'
+    | '/admin/failed-notifications_/$deliveryId/{-$section}'
+    | '/admin/gift-codes_/$codeId/{-$action}'
+    | '/admin/knowledge-bases_/$recordId/{-$action}'
+    | '/admin/maintenance_/$capability/{-$action}'
+    | '/admin/notifications/$templateId/$action'
+    | '/admin/policies_/$recordId/{-$action}'
+    | '/admin/providers/$channel/$providerId'
+    | '/admin/providers/$channel/new'
+    | '/admin/reconciliation/$caseId/{-$verb}'
+    | '/admin/service-targets_/$section/{-$workflow}'
+    | '/admin/staff-teams/$teamId/edit'
+    | '/admin/tickets/$ticketId/{-$section}'
+    | '/admin/upload-policies_/$category/{-$action}'
+    | '/admin/users/$userId/permissions'
+    | '/admin/users/$userId/roles'
+    | '/admin/verification_/providers/$providerId'
+    | '/admin/wallet-receipts/$receiptId/{-$action}'
+    | '/admin/wallet-receipts/settings/{-$view}'
     | '/app/crm/profiles/$profileId'
     | '/_app/electricity/orders/'
     | '/_app/savings/orders/'
     | '/_app/solar/requests/'
+    | '/admin/contract-templates/$templateId/'
+    | '/admin/crm/corrections/'
+    | '/admin/crm/recovery/'
+    | '/admin/document-templates/$templateId/'
+    | '/admin/electricity-price-adjustments/$contractId/'
+    | '/admin/invoices/$invoiceId/'
+    | '/admin/notifications/$templateId/'
+    | '/admin/staff-teams/$teamId/'
+    | '/admin/users/$userId/'
+    | '/_app/contracts/$contractId_/$operation/$versionId'
+    | '/_app/electricity/orders/$orderId_/cancel'
+    | '/_app/electricity/orders/$orderId_/edit'
+    | '/_app/electricity/orders/new_/advanced'
+    | '/_app/invoices/$invoiceId_/receipts/$receiptId'
+    | '/_app/invoices/$invoiceId_/receipts/new'
+    | '/_app/savings/orders/$orderId_/edit'
+    | '/_app/settings/addresses_/$addressId_/edit'
+    | '/_app/solar/requests/$requestId_/documents'
+    | '/_app/solar/requests/$requestId_/shipment'
+    | '/admin/catalogue_/$category_/$productId_/edit'
+    | '/admin/consultations/$requestId/decisions/$decision'
+    | '/admin/contract-templates/$templateId/versions/$version'
+    | '/admin/contracts/$contractId/{-$action}/{-$item}'
+    | '/admin/crm/profiles/$profileId_/$operation'
+    | '/admin/document-templates/$templateId/versions/$version'
+    | '/admin/electricity-orders/$orderId/decisions/$decision'
+    | '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
+    | '/admin/failed-notifications_/corrections/{-$correctionId}/{-$action}'
+    | '/admin/geography_/provinces/$provinceId/{-$action}'
+    | '/admin/invoices/receipts/$receiptId/{-$decision}'
+    | '/admin/invoices/tools/{-$section}/{-$service}'
+    | '/admin/knowledge-bases_/$recordId/documents/$documentId'
+    | '/admin/knowledge-bases_/groups/$recordId/{-$action}'
+    | '/admin/policies_/groups/$recordId/{-$action}'
+    | '/admin/providers/$channel/$providerId/duplicate'
+    | '/admin/providers/$channel/$providerId/edit'
+    | '/admin/providers/$channel/$providerId/test'
+    | '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}'
+    | '/admin/solar-requests/$requestId/construction/{-$operation}'
+    | '/admin/solar-requests/$requestId/postal/{-$operation}'
+    | '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}'
+    | '/admin/tos_/versions/$versionId/{-$action}'
+    | '/admin/upload-policies_/$category/versions/$versionId'
+    | '/admin/vat_/$kind/$recordId/{-$action}'
+    | '/_app/electricity/orders/$orderId_/increases/new'
+    | '/_app/settings/team_/$section_/$recordId/{-$action}'
+    | '/_app/solar/requests/$requestId_/documents/review'
+    | '/_app/solar/requests/$requestId_/shipment/upload-receipt'
+    | '/admin/catalogue_/$category_/$productId_/configuration/{-$operation}'
+    | '/admin/catalogue_/$category_/$productId_/prices/new'
+    | '/admin/crm/profiles/$profileId_/corrections/new'
+    | '/admin/crm/profiles/$profileId_/legal/edit'
+    | '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+    | '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}'
+    | '/_app/savings/orders/$orderId_/documents/$documentId/{-$operation}'
+    | '/_app/solar/requests/$requestId_/documents/$documentId/{-$operation}'
+    | '/admin/crm/profiles/$profileId_/addresses/$addressId/edit'
+    | '/admin/geography_/provinces/$provinceId/cities/$cityId/{-$action}'
+    | '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}'
+    | '/_app/contracts/$contractId_/versions/$versionId/documents/$documentId/{-$operation}'
+    | '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1347,6 +3175,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRouteWithChildren
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  TermsVersionRoute: typeof TermsVersionRoute
   AppCrmIndexRoute: typeof AppCrmIndexRoute
   AppCrmProfilesProfileIdRoute: typeof AppCrmProfilesProfileIdRoute
 }
@@ -1451,25 +3280,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConsultationsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/contracts': {
-      id: '/_app/contracts'
-      path: '/contracts'
-      fullPath: '/contracts'
-      preLoaderRoute: typeof AppContractsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/documents': {
-      id: '/_app/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof AppDocumentsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/notifications': {
@@ -1486,25 +3301,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSavingsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/tickets': {
-      id: '/_app/tickets'
-      path: '/tickets'
-      fullPath: '/tickets'
-      preLoaderRoute: typeof AppTicketsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/videos': {
       id: '/_app/videos'
       path: '/videos'
       fullPath: '/videos'
       preLoaderRoute: typeof AppVideosRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/wallet': {
-      id: '/_app/wallet'
-      path: '/wallet'
-      fullPath: '/wallet'
-      preLoaderRoute: typeof AppWalletRouteImport
       parentRoute: typeof AppRoute
     }
     '/admin/': {
@@ -1535,20 +3336,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiModelsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/approval-requests': {
-      id: '/admin/approval-requests'
-      path: '/approval-requests'
-      fullPath: '/admin/approval-requests'
-      preLoaderRoute: typeof AdminApprovalRequestsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/authorization-audit': {
-      id: '/admin/authorization-audit'
-      path: '/authorization-audit'
-      fullPath: '/admin/authorization-audit'
-      preLoaderRoute: typeof AdminAuthorizationAuditRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/branding': {
       id: '/admin/branding'
       path: '/branding'
@@ -1563,13 +3350,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCatalogueRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/consultations': {
-      id: '/admin/consultations'
-      path: '/consultations'
-      fullPath: '/admin/consultations'
-      preLoaderRoute: typeof AdminConsultationsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/contract-limits': {
       id: '/admin/contract-limits'
       path: '/contract-limits'
@@ -1577,60 +3357,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContractLimitsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/contract-templates': {
-      id: '/admin/contract-templates'
-      path: '/contract-templates'
-      fullPath: '/admin/contract-templates'
-      preLoaderRoute: typeof AdminContractTemplatesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/contracts': {
-      id: '/admin/contracts'
-      path: '/contracts'
-      fullPath: '/admin/contracts'
-      preLoaderRoute: typeof AdminContractsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/crm': {
       id: '/admin/crm'
       path: '/crm'
       fullPath: '/admin/crm'
       preLoaderRoute: typeof AdminCrmRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/document-templates': {
-      id: '/admin/document-templates'
-      path: '/document-templates'
-      fullPath: '/admin/document-templates'
-      preLoaderRoute: typeof AdminDocumentTemplatesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/documents': {
-      id: '/admin/documents'
-      path: '/documents'
-      fullPath: '/admin/documents'
-      preLoaderRoute: typeof AdminDocumentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/electricity-increases': {
-      id: '/admin/electricity-increases'
-      path: '/electricity-increases'
-      fullPath: '/admin/electricity-increases'
-      preLoaderRoute: typeof AdminElectricityIncreasesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/electricity-orders': {
-      id: '/admin/electricity-orders'
-      path: '/electricity-orders'
-      fullPath: '/admin/electricity-orders'
-      preLoaderRoute: typeof AdminElectricityOrdersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/electricity-price-adjustments': {
-      id: '/admin/electricity-price-adjustments'
-      path: '/electricity-price-adjustments'
-      fullPath: '/admin/electricity-price-adjustments'
-      preLoaderRoute: typeof AdminElectricityPriceAdjustmentsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/electricity-rules': {
@@ -1675,13 +3406,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInboxRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/invoices': {
-      id: '/admin/invoices'
-      path: '/invoices'
-      fullPath: '/admin/invoices'
-      preLoaderRoute: typeof AdminInvoicesRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/knowledge-bases': {
       id: '/admin/knowledge-bases'
       path: '/knowledge-bases'
@@ -1694,13 +3418,6 @@ declare module '@tanstack/react-router' {
       path: '/maintenance'
       fullPath: '/admin/maintenance'
       preLoaderRoute: typeof AdminMaintenanceRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/notifications': {
-      id: '/admin/notifications'
-      path: '/notifications'
-      fullPath: '/admin/notifications'
-      preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/operational-retention': {
@@ -1724,27 +3441,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProvidersRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/reconciliation': {
-      id: '/admin/reconciliation'
-      path: '/reconciliation'
-      fullPath: '/admin/reconciliation'
-      preLoaderRoute: typeof AdminReconciliationRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/roles': {
-      id: '/admin/roles'
-      path: '/roles'
-      fullPath: '/admin/roles'
-      preLoaderRoute: typeof AdminRolesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/saving-orders': {
-      id: '/admin/saving-orders'
-      path: '/saving-orders'
-      fullPath: '/admin/saving-orders'
-      preLoaderRoute: typeof AdminSavingOrdersRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/service-targets': {
       id: '/admin/service-targets'
       path: '/service-targets'
@@ -1766,32 +3462,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSolarPostalRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/solar-requests': {
-      id: '/admin/solar-requests'
-      path: '/solar-requests'
-      fullPath: '/admin/solar-requests'
-      preLoaderRoute: typeof AdminSolarRequestsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/staff-teams': {
-      id: '/admin/staff-teams'
-      path: '/staff-teams'
-      fullPath: '/admin/staff-teams'
-      preLoaderRoute: typeof AdminStaffTeamsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/storage': {
       id: '/admin/storage'
       path: '/storage'
       fullPath: '/admin/storage'
       preLoaderRoute: typeof AdminStorageRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/tickets': {
-      id: '/admin/tickets'
-      path: '/tickets'
-      fullPath: '/admin/tickets'
-      preLoaderRoute: typeof AdminTicketsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tos': {
@@ -1808,13 +3483,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUploadPoliciesRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/vat': {
       id: '/admin/vat'
       path: '/vat'
@@ -1827,13 +3495,6 @@ declare module '@tanstack/react-router' {
       path: '/verification'
       fullPath: '/admin/verification'
       preLoaderRoute: typeof AdminVerificationRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/wallet-receipts': {
-      id: '/admin/wallet-receipts'
-      path: '/wallet-receipts'
-      fullPath: '/admin/wallet-receipts'
-      preLoaderRoute: typeof AdminWalletReceiptsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/onboarding/': {
@@ -1864,6 +3525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterVerifyRouteImport
       parentRoute: typeof RegisterRoute
     }
+    '/terms_/$version': {
+      id: '/terms_/$version'
+      path: '/terms/$version'
+      fullPath: '/terms/$version'
+      preLoaderRoute: typeof TermsVersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/consultations/': {
       id: '/_app/consultations/'
       path: '/'
@@ -1877,6 +3545,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/consultations/$requestId'
       preLoaderRoute: typeof AppConsultationsRequestIdRouteImport
       parentRoute: typeof AppConsultationsRoute
+    }
+    '/_app/consultations/new': {
+      id: '/_app/consultations/new'
+      path: '/new'
+      fullPath: '/consultations/new'
+      preLoaderRoute: typeof AppConsultationsNewRouteImport
+      parentRoute: typeof AppConsultationsRoute
+    }
+    '/_app/contracts/': {
+      id: '/_app/contracts/'
+      path: '/contracts'
+      fullPath: '/contracts/'
+      preLoaderRoute: typeof AppContractsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/': {
+      id: '/_app/documents/'
+      path: '/documents'
+      fullPath: '/documents/'
+      preLoaderRoute: typeof AppDocumentsIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/electricity/': {
       id: '/_app/electricity/'
@@ -1927,6 +3616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInvoicesReceiptsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/notifications_/$notificationId': {
+      id: '/_app/notifications_/$notificationId'
+      path: '/notifications/$notificationId'
+      fullPath: '/notifications/$notificationId'
+      preLoaderRoute: typeof AppNotificationsNotificationIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/savings/': {
       id: '/_app/savings/'
       path: '/'
@@ -1960,6 +3656,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/addresses'
       fullPath: '/settings/addresses'
       preLoaderRoute: typeof AppSettingsAddressesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/conversation-identity': {
+      id: '/_app/settings/conversation-identity'
+      path: '/settings/conversation-identity'
+      fullPath: '/settings/conversation-identity'
+      preLoaderRoute: typeof AppSettingsConversationIdentityRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/privacy': {
@@ -2011,6 +3714,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSolarRequestsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/tickets/': {
+      id: '/_app/tickets/'
+      path: '/tickets'
+      fullPath: '/tickets/'
+      preLoaderRoute: typeof AppTicketsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tickets/$ticketId': {
+      id: '/_app/tickets/$ticketId'
+      path: '/tickets/$ticketId'
+      fullPath: '/tickets/$ticketId'
+      preLoaderRoute: typeof AppTicketsTicketIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tickets/new': {
+      id: '/_app/tickets/new'
+      path: '/tickets/new'
+      fullPath: '/tickets/new'
+      preLoaderRoute: typeof AppTicketsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wallet/': {
+      id: '/_app/wallet/'
+      path: '/wallet'
+      fullPath: '/wallet/'
+      preLoaderRoute: typeof AppWalletIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/admin/approval-requests/': {
+      id: '/admin/approval-requests/'
+      path: '/approval-requests'
+      fullPath: '/admin/approval-requests/'
+      preLoaderRoute: typeof AdminApprovalRequestsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/authorization-audit/': {
+      id: '/admin/authorization-audit/'
+      path: '/authorization-audit'
+      fullPath: '/admin/authorization-audit/'
+      preLoaderRoute: typeof AdminAuthorizationAuditIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/authorization-audit/$eventId': {
+      id: '/admin/authorization-audit/$eventId'
+      path: '/authorization-audit/$eventId'
+      fullPath: '/admin/authorization-audit/$eventId'
+      preLoaderRoute: typeof AdminAuthorizationAuditEventIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/branding/edit': {
+      id: '/admin/branding/edit'
+      path: '/edit'
+      fullPath: '/admin/branding/edit'
+      preLoaderRoute: typeof AdminBrandingEditRouteImport
+      parentRoute: typeof AdminBrandingRoute
+    }
+    '/admin/catalogue_/$category': {
+      id: '/admin/catalogue_/$category'
+      path: '/catalogue/$category'
+      fullPath: '/admin/catalogue/$category'
+      preLoaderRoute: typeof AdminCatalogueCategoryRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/consultations/': {
+      id: '/admin/consultations/'
+      path: '/consultations'
+      fullPath: '/admin/consultations/'
+      preLoaderRoute: typeof AdminConsultationsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/consultations/$requestId': {
+      id: '/admin/consultations/$requestId'
+      path: '/consultations/$requestId'
+      fullPath: '/admin/consultations/$requestId'
+      preLoaderRoute: typeof AdminConsultationsRequestIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-limits_/$view': {
+      id: '/admin/contract-limits_/$view'
+      path: '/contract-limits/$view'
+      fullPath: '/admin/contract-limits/$view'
+      preLoaderRoute: typeof AdminContractLimitsViewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-templates/': {
+      id: '/admin/contract-templates/'
+      path: '/contract-templates'
+      fullPath: '/admin/contract-templates/'
+      preLoaderRoute: typeof AdminContractTemplatesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-templates/new': {
+      id: '/admin/contract-templates/new'
+      path: '/contract-templates/new'
+      fullPath: '/admin/contract-templates/new'
+      preLoaderRoute: typeof AdminContractTemplatesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contracts/': {
+      id: '/admin/contracts/'
+      path: '/contracts'
+      fullPath: '/admin/contracts/'
+      preLoaderRoute: typeof AdminContractsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contracts/new': {
+      id: '/admin/contracts/new'
+      path: '/contracts/new'
+      fullPath: '/admin/contracts/new'
+      preLoaderRoute: typeof AdminContractsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contracts/refunds': {
+      id: '/admin/contracts/refunds'
+      path: '/contracts/refunds'
+      fullPath: '/admin/contracts/refunds'
+      preLoaderRoute: typeof AdminContractsRefundsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/crm/': {
       id: '/admin/crm/'
       path: '/'
@@ -2018,25 +3840,256 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmIndexRouteImport
       parentRoute: typeof AdminCrmRoute
     }
-    '/admin/crm/corrections': {
-      id: '/admin/crm/corrections'
-      path: '/corrections'
-      fullPath: '/admin/crm/corrections'
-      preLoaderRoute: typeof AdminCrmCorrectionsRouteImport
-      parentRoute: typeof AdminCrmRoute
+    '/admin/document-templates/': {
+      id: '/admin/document-templates/'
+      path: '/document-templates'
+      fullPath: '/admin/document-templates/'
+      preLoaderRoute: typeof AdminDocumentTemplatesIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/admin/crm/recovery': {
-      id: '/admin/crm/recovery'
-      path: '/recovery'
-      fullPath: '/admin/crm/recovery'
-      preLoaderRoute: typeof AdminCrmRecoveryRouteImport
-      parentRoute: typeof AdminCrmRoute
+    '/admin/document-templates/new': {
+      id: '/admin/document-templates/new'
+      path: '/document-templates/new'
+      fullPath: '/admin/document-templates/new'
+      preLoaderRoute: typeof AdminDocumentTemplatesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/documents/': {
+      id: '/admin/documents/'
+      path: '/documents'
+      fullPath: '/admin/documents/'
+      preLoaderRoute: typeof AdminDocumentsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-increases/': {
+      id: '/admin/electricity-increases/'
+      path: '/electricity-increases'
+      fullPath: '/admin/electricity-increases/'
+      preLoaderRoute: typeof AdminElectricityIncreasesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-orders/': {
+      id: '/admin/electricity-orders/'
+      path: '/electricity-orders'
+      fullPath: '/admin/electricity-orders/'
+      preLoaderRoute: typeof AdminElectricityOrdersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-orders/$orderId': {
+      id: '/admin/electricity-orders/$orderId'
+      path: '/electricity-orders/$orderId'
+      fullPath: '/admin/electricity-orders/$orderId'
+      preLoaderRoute: typeof AdminElectricityOrdersOrderIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-price-adjustments/': {
+      id: '/admin/electricity-price-adjustments/'
+      path: '/electricity-price-adjustments'
+      fullPath: '/admin/electricity-price-adjustments/'
+      preLoaderRoute: typeof AdminElectricityPriceAdjustmentsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-jobs_/$jobId': {
+      id: '/admin/failed-jobs_/$jobId'
+      path: '/failed-jobs/$jobId'
+      fullPath: '/admin/failed-jobs/$jobId'
+      preLoaderRoute: typeof AdminFailedJobsJobIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-notifications_/history': {
+      id: '/admin/failed-notifications_/history'
+      path: '/failed-notifications/history'
+      fullPath: '/admin/failed-notifications/history'
+      preLoaderRoute: typeof AdminFailedNotificationsHistoryRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/inbox_/$notificationId': {
+      id: '/admin/inbox_/$notificationId'
+      path: '/inbox/$notificationId'
+      fullPath: '/admin/inbox/$notificationId'
+      preLoaderRoute: typeof AdminInboxNotificationIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invoices/': {
+      id: '/admin/invoices/'
+      path: '/invoices'
+      fullPath: '/admin/invoices/'
+      preLoaderRoute: typeof AdminInvoicesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invoices/new': {
+      id: '/admin/invoices/new'
+      path: '/invoices/new'
+      fullPath: '/admin/invoices/new'
+      preLoaderRoute: typeof AdminInvoicesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications/': {
+      id: '/admin/notifications/'
+      path: '/notifications'
+      fullPath: '/admin/notifications/'
+      preLoaderRoute: typeof AdminNotificationsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications/new': {
+      id: '/admin/notifications/new'
+      path: '/notifications/new'
+      fullPath: '/admin/notifications/new'
+      preLoaderRoute: typeof AdminNotificationsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications/preview': {
+      id: '/admin/notifications/preview'
+      path: '/notifications/preview'
+      fullPath: '/admin/notifications/preview'
+      preLoaderRoute: typeof AdminNotificationsPreviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications/settings': {
+      id: '/admin/notifications/settings'
+      path: '/notifications/settings'
+      fullPath: '/admin/notifications/settings'
+      preLoaderRoute: typeof AdminNotificationsSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/operational-retention_/$view': {
+      id: '/admin/operational-retention_/$view'
+      path: '/operational-retention/$view'
+      fullPath: '/admin/operational-retention/$view'
+      preLoaderRoute: typeof AdminOperationalRetentionViewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/providers/': {
+      id: '/admin/providers/'
+      path: '/'
+      fullPath: '/admin/providers/'
+      preLoaderRoute: typeof AdminProvidersIndexRouteImport
+      parentRoute: typeof AdminProvidersRoute
+    }
+    '/admin/providers/$channel': {
+      id: '/admin/providers/$channel'
+      path: '/$channel'
+      fullPath: '/admin/providers/$channel'
+      preLoaderRoute: typeof AdminProvidersChannelRouteImport
+      parentRoute: typeof AdminProvidersRoute
+    }
+    '/admin/reconciliation/': {
+      id: '/admin/reconciliation/'
+      path: '/reconciliation'
+      fullPath: '/admin/reconciliation/'
+      preLoaderRoute: typeof AdminReconciliationIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles/': {
+      id: '/admin/roles/'
+      path: '/roles'
+      fullPath: '/admin/roles/'
+      preLoaderRoute: typeof AdminRolesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles/$roleId': {
+      id: '/admin/roles/$roleId'
+      path: '/roles/$roleId'
+      fullPath: '/admin/roles/$roleId'
+      preLoaderRoute: typeof AdminRolesRoleIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles/compare': {
+      id: '/admin/roles/compare'
+      path: '/roles/compare'
+      fullPath: '/admin/roles/compare'
+      preLoaderRoute: typeof AdminRolesCompareRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles/effective': {
+      id: '/admin/roles/effective'
+      path: '/roles/effective'
+      fullPath: '/admin/roles/effective'
+      preLoaderRoute: typeof AdminRolesEffectiveRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/saving-orders/': {
+      id: '/admin/saving-orders/'
+      path: '/saving-orders'
+      fullPath: '/admin/saving-orders/'
+      preLoaderRoute: typeof AdminSavingOrdersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/solar-requests/': {
+      id: '/admin/solar-requests/'
+      path: '/solar-requests'
+      fullPath: '/admin/solar-requests/'
+      preLoaderRoute: typeof AdminSolarRequestsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams/': {
+      id: '/admin/staff-teams/'
+      path: '/staff-teams'
+      fullPath: '/admin/staff-teams/'
+      preLoaderRoute: typeof AdminStaffTeamsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams/assignment': {
+      id: '/admin/staff-teams/assignment'
+      path: '/staff-teams/assignment'
+      fullPath: '/admin/staff-teams/assignment'
+      preLoaderRoute: typeof AdminStaffTeamsAssignmentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams/new': {
+      id: '/admin/staff-teams/new'
+      path: '/staff-teams/new'
+      fullPath: '/admin/staff-teams/new'
+      preLoaderRoute: typeof AdminStaffTeamsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/storage_/$section': {
+      id: '/admin/storage_/$section'
+      path: '/storage/$section'
+      fullPath: '/admin/storage/$section'
+      preLoaderRoute: typeof AdminStorageSectionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tickets/': {
+      id: '/admin/tickets/'
+      path: '/tickets'
+      fullPath: '/admin/tickets/'
+      preLoaderRoute: typeof AdminTicketsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users/'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users/new': {
+      id: '/admin/users/new'
+      path: '/users/new'
+      fullPath: '/admin/users/new'
+      preLoaderRoute: typeof AdminUsersNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/verification_/$section': {
+      id: '/admin/verification_/$section'
+      path: '/verification/$section'
+      fullPath: '/admin/verification/$section'
+      preLoaderRoute: typeof AdminVerificationSectionRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/wallet-ledger/$profileId': {
       id: '/admin/wallet-ledger/$profileId'
       path: '/wallet-ledger/$profileId'
       fullPath: '/admin/wallet-ledger/$profileId'
       preLoaderRoute: typeof AdminWalletLedgerProfileIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/wallet-receipts/': {
+      id: '/admin/wallet-receipts/'
+      path: '/wallet-receipts'
+      fullPath: '/admin/wallet-receipts/'
+      preLoaderRoute: typeof AdminWalletReceiptsIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/app/crm/': {
@@ -2060,6 +4113,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingLegalProfileIdRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/_app/consultations/$requestId_/offer': {
+      id: '/_app/consultations/$requestId_/offer'
+      path: '/$requestId/offer'
+      fullPath: '/consultations/$requestId/offer'
+      preLoaderRoute: typeof AppConsultationsRequestIdOfferRouteImport
+      parentRoute: typeof AppConsultationsRoute
+    }
+    '/_app/consultations/$requestId_/reply': {
+      id: '/_app/consultations/$requestId_/reply'
+      path: '/$requestId/reply'
+      fullPath: '/consultations/$requestId/reply'
+      preLoaderRoute: typeof AppConsultationsRequestIdReplyRouteImport
+      parentRoute: typeof AppConsultationsRoute
+    }
+    '/_app/contracts/$contractId/{-$action}': {
+      id: '/_app/contracts/$contractId/{-$action}'
+      path: '/contracts/$contractId/{-$action}'
+      fullPath: '/contracts/$contractId/{-$action}'
+      preLoaderRoute: typeof AppContractsContractIdChar123ActionChar125RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/$documentId/{-$operation}': {
+      id: '/_app/documents/$documentId/{-$operation}'
+      path: '/documents/$documentId/{-$operation}'
+      fullPath: '/documents/$documentId/{-$operation}'
+      preLoaderRoute: typeof AppDocumentsDocumentIdChar123OperationChar125RouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/electricity/orders/': {
       id: '/_app/electricity/orders/'
       path: '/'
@@ -2072,6 +4153,13 @@ declare module '@tanstack/react-router' {
       path: '/$orderId'
       fullPath: '/electricity/orders/$orderId'
       preLoaderRoute: typeof AppElectricityOrdersOrderIdRouteImport
+      parentRoute: typeof AppElectricityOrdersRoute
+    }
+    '/_app/electricity/orders/new': {
+      id: '/_app/electricity/orders/new'
+      path: '/new'
+      fullPath: '/electricity/orders/new'
+      preLoaderRoute: typeof AppElectricityOrdersNewRouteImport
       parentRoute: typeof AppElectricityOrdersRoute
     }
     '/_app/savings/orders/': {
@@ -2087,6 +4175,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/savings/orders/$orderId'
       preLoaderRoute: typeof AppSavingsOrdersOrderIdRouteImport
       parentRoute: typeof AppSavingsOrdersRoute
+    }
+    '/_app/savings/orders/new': {
+      id: '/_app/savings/orders/new'
+      path: '/new'
+      fullPath: '/savings/orders/new'
+      preLoaderRoute: typeof AppSavingsOrdersNewRouteImport
+      parentRoute: typeof AppSavingsOrdersRoute
+    }
+    '/_app/settings/addresses_/$addressId': {
+      id: '/_app/settings/addresses_/$addressId'
+      path: '/settings/addresses/$addressId'
+      fullPath: '/settings/addresses/$addressId'
+      preLoaderRoute: typeof AppSettingsAddressesAddressIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/addresses_/new': {
+      id: '/_app/settings/addresses_/new'
+      path: '/settings/addresses/new'
+      fullPath: '/settings/addresses/new'
+      preLoaderRoute: typeof AppSettingsAddressesNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/privacy_/requests': {
+      id: '/_app/settings/privacy_/requests'
+      path: '/settings/privacy/requests'
+      fullPath: '/settings/privacy/requests'
+      preLoaderRoute: typeof AppSettingsPrivacyRequestsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/profile_/edit': {
+      id: '/_app/settings/profile_/edit'
+      path: '/settings/profile/edit'
+      fullPath: '/settings/profile/edit'
+      preLoaderRoute: typeof AppSettingsProfileEditRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/security_/telegram': {
+      id: '/_app/settings/security_/telegram'
+      path: '/settings/security/telegram'
+      fullPath: '/settings/security/telegram'
+      preLoaderRoute: typeof AppSettingsSecurityTelegramRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/team_/$section': {
+      id: '/_app/settings/team_/$section'
+      path: '/settings/team/$section'
+      fullPath: '/settings/team/$section'
+      preLoaderRoute: typeof AppSettingsTeamSectionRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/solar/requests/': {
       id: '/_app/solar/requests/'
@@ -2109,12 +4246,320 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSolarRequestsNewRouteImport
       parentRoute: typeof AppSolarRequestsRoute
     }
+    '/_app/wallet/top-up/$method': {
+      id: '/_app/wallet/top-up/$method'
+      path: '/wallet/top-up/$method'
+      fullPath: '/wallet/top-up/$method'
+      preLoaderRoute: typeof AppWalletTopUpMethodRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/admin/agent-slots_/$slotKey/{-$action}': {
+      id: '/admin/agent-slots_/$slotKey/{-$action}'
+      path: '/agent-slots/$slotKey/{-$action}'
+      fullPath: '/admin/agent-slots/$slotKey/{-$action}'
+      preLoaderRoute: typeof AdminAgentSlotsSlotKeyChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agents_/$agentId/{-$action}': {
+      id: '/admin/agents_/$agentId/{-$action}'
+      path: '/agents/$agentId/{-$action}'
+      fullPath: '/admin/agents/$agentId/{-$action}'
+      preLoaderRoute: typeof AdminAgentsAgentIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ai-models_/$modelId/{-$action}': {
+      id: '/admin/ai-models_/$modelId/{-$action}'
+      path: '/ai-models/$modelId/{-$action}'
+      fullPath: '/admin/ai-models/$modelId/{-$action}'
+      preLoaderRoute: typeof AdminAiModelsModelIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/approval-requests/$requestId/{-$decision}': {
+      id: '/admin/approval-requests/$requestId/{-$decision}'
+      path: '/approval-requests/$requestId/{-$decision}'
+      fullPath: '/admin/approval-requests/$requestId/{-$decision}'
+      preLoaderRoute: typeof AdminApprovalRequestsRequestIdChar123DecisionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/approval-requests/thresholds/{-$view}': {
+      id: '/admin/approval-requests/thresholds/{-$view}'
+      path: '/approval-requests/thresholds/{-$view}'
+      fullPath: '/admin/approval-requests/thresholds/{-$view}'
+      preLoaderRoute: typeof AdminApprovalRequestsThresholdsChar123ViewChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/catalogue_/$category_/$productId': {
+      id: '/admin/catalogue_/$category_/$productId'
+      path: '/catalogue/$category/$productId'
+      fullPath: '/admin/catalogue/$category/$productId'
+      preLoaderRoute: typeof AdminCatalogueCategoryProductIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/catalogue_/$category_/new': {
+      id: '/admin/catalogue_/$category_/new'
+      path: '/catalogue/$category/new'
+      fullPath: '/admin/catalogue/$category/new'
+      preLoaderRoute: typeof AdminCatalogueCategoryNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/consultations/$requestId/fee': {
+      id: '/admin/consultations/$requestId/fee'
+      path: '/fee'
+      fullPath: '/admin/consultations/$requestId/fee'
+      preLoaderRoute: typeof AdminConsultationsRequestIdFeeRouteImport
+      parentRoute: typeof AdminConsultationsRequestIdRoute
+    }
+    '/admin/contract-templates/$templateId/': {
+      id: '/admin/contract-templates/$templateId/'
+      path: '/contract-templates/$templateId'
+      fullPath: '/admin/contract-templates/$templateId/'
+      preLoaderRoute: typeof AdminContractTemplatesTemplateIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-templates/$templateId/edit': {
+      id: '/admin/contract-templates/$templateId/edit'
+      path: '/contract-templates/$templateId/edit'
+      fullPath: '/admin/contract-templates/$templateId/edit'
+      preLoaderRoute: typeof AdminContractTemplatesTemplateIdEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/crm/corrections/': {
+      id: '/admin/crm/corrections/'
+      path: '/corrections'
+      fullPath: '/admin/crm/corrections/'
+      preLoaderRoute: typeof AdminCrmCorrectionsIndexRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/corrections/$caseId': {
+      id: '/admin/crm/corrections/$caseId'
+      path: '/corrections/$caseId'
+      fullPath: '/admin/crm/corrections/$caseId'
+      preLoaderRoute: typeof AdminCrmCorrectionsCaseIdRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
     '/admin/crm/profiles/$profileId': {
       id: '/admin/crm/profiles/$profileId'
       path: '/profiles/$profileId'
       fullPath: '/admin/crm/profiles/$profileId'
       preLoaderRoute: typeof AdminCrmProfilesProfileIdRouteImport
       parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/recovery/': {
+      id: '/admin/crm/recovery/'
+      path: '/recovery'
+      fullPath: '/admin/crm/recovery/'
+      preLoaderRoute: typeof AdminCrmRecoveryIndexRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/recovery/$caseId': {
+      id: '/admin/crm/recovery/$caseId'
+      path: '/recovery/$caseId'
+      fullPath: '/admin/crm/recovery/$caseId'
+      preLoaderRoute: typeof AdminCrmRecoveryCaseIdRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/recovery/new': {
+      id: '/admin/crm/recovery/new'
+      path: '/recovery/new'
+      fullPath: '/admin/crm/recovery/new'
+      preLoaderRoute: typeof AdminCrmRecoveryNewRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/document-templates/$templateId/': {
+      id: '/admin/document-templates/$templateId/'
+      path: '/document-templates/$templateId'
+      fullPath: '/admin/document-templates/$templateId/'
+      preLoaderRoute: typeof AdminDocumentTemplatesTemplateIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/document-templates/$templateId/edit': {
+      id: '/admin/document-templates/$templateId/edit'
+      path: '/document-templates/$templateId/edit'
+      fullPath: '/admin/document-templates/$templateId/edit'
+      preLoaderRoute: typeof AdminDocumentTemplatesTemplateIdEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-increases/$requestId/{-$decision}': {
+      id: '/admin/electricity-increases/$requestId/{-$decision}'
+      path: '/electricity-increases/$requestId/{-$decision}'
+      fullPath: '/admin/electricity-increases/$requestId/{-$decision}'
+      preLoaderRoute: typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-price-adjustments/$contractId/': {
+      id: '/admin/electricity-price-adjustments/$contractId/'
+      path: '/electricity-price-adjustments/$contractId'
+      fullPath: '/admin/electricity-price-adjustments/$contractId/'
+      preLoaderRoute: typeof AdminElectricityPriceAdjustmentsContractIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-price-adjustments/$contractId/new': {
+      id: '/admin/electricity-price-adjustments/$contractId/new'
+      path: '/electricity-price-adjustments/$contractId/new'
+      fullPath: '/admin/electricity-price-adjustments/$contractId/new'
+      preLoaderRoute: typeof AdminElectricityPriceAdjustmentsContractIdNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-rules_/$section/{-$view}': {
+      id: '/admin/electricity-rules_/$section/{-$view}'
+      path: '/electricity-rules/$section/{-$view}'
+      fullPath: '/admin/electricity-rules/$section/{-$view}'
+      preLoaderRoute: typeof AdminElectricityRulesSectionChar123ViewChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-notifications_/$deliveryId/{-$section}': {
+      id: '/admin/failed-notifications_/$deliveryId/{-$section}'
+      path: '/failed-notifications/$deliveryId/{-$section}'
+      fullPath: '/admin/failed-notifications/$deliveryId/{-$section}'
+      preLoaderRoute: typeof AdminFailedNotificationsDeliveryIdChar123SectionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/gift-codes_/$codeId/{-$action}': {
+      id: '/admin/gift-codes_/$codeId/{-$action}'
+      path: '/gift-codes/$codeId/{-$action}'
+      fullPath: '/admin/gift-codes/$codeId/{-$action}'
+      preLoaderRoute: typeof AdminGiftCodesCodeIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invoices/$invoiceId/': {
+      id: '/admin/invoices/$invoiceId/'
+      path: '/invoices/$invoiceId'
+      fullPath: '/admin/invoices/$invoiceId/'
+      preLoaderRoute: typeof AdminInvoicesInvoiceIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/knowledge-bases_/$recordId/{-$action}': {
+      id: '/admin/knowledge-bases_/$recordId/{-$action}'
+      path: '/knowledge-bases/$recordId/{-$action}'
+      fullPath: '/admin/knowledge-bases/$recordId/{-$action}'
+      preLoaderRoute: typeof AdminKnowledgeBasesRecordIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/maintenance_/$capability/{-$action}': {
+      id: '/admin/maintenance_/$capability/{-$action}'
+      path: '/maintenance/$capability/{-$action}'
+      fullPath: '/admin/maintenance/$capability/{-$action}'
+      preLoaderRoute: typeof AdminMaintenanceCapabilityChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications/$templateId/': {
+      id: '/admin/notifications/$templateId/'
+      path: '/notifications/$templateId'
+      fullPath: '/admin/notifications/$templateId/'
+      preLoaderRoute: typeof AdminNotificationsTemplateIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications/$templateId/$action': {
+      id: '/admin/notifications/$templateId/$action'
+      path: '/notifications/$templateId/$action'
+      fullPath: '/admin/notifications/$templateId/$action'
+      preLoaderRoute: typeof AdminNotificationsTemplateIdActionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/policies_/$recordId/{-$action}': {
+      id: '/admin/policies_/$recordId/{-$action}'
+      path: '/policies/$recordId/{-$action}'
+      fullPath: '/admin/policies/$recordId/{-$action}'
+      preLoaderRoute: typeof AdminPoliciesRecordIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/providers/$channel/$providerId': {
+      id: '/admin/providers/$channel/$providerId'
+      path: '/$providerId'
+      fullPath: '/admin/providers/$channel/$providerId'
+      preLoaderRoute: typeof AdminProvidersChannelProviderIdRouteImport
+      parentRoute: typeof AdminProvidersChannelRoute
+    }
+    '/admin/providers/$channel/new': {
+      id: '/admin/providers/$channel/new'
+      path: '/new'
+      fullPath: '/admin/providers/$channel/new'
+      preLoaderRoute: typeof AdminProvidersChannelNewRouteImport
+      parentRoute: typeof AdminProvidersChannelRoute
+    }
+    '/admin/reconciliation/$caseId/{-$verb}': {
+      id: '/admin/reconciliation/$caseId/{-$verb}'
+      path: '/reconciliation/$caseId/{-$verb}'
+      fullPath: '/admin/reconciliation/$caseId/{-$verb}'
+      preLoaderRoute: typeof AdminReconciliationCaseIdChar123VerbChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/service-targets_/$section/{-$workflow}': {
+      id: '/admin/service-targets_/$section/{-$workflow}'
+      path: '/service-targets/$section/{-$workflow}'
+      fullPath: '/admin/service-targets/$section/{-$workflow}'
+      preLoaderRoute: typeof AdminServiceTargetsSectionChar123WorkflowChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams/$teamId/': {
+      id: '/admin/staff-teams/$teamId/'
+      path: '/staff-teams/$teamId'
+      fullPath: '/admin/staff-teams/$teamId/'
+      preLoaderRoute: typeof AdminStaffTeamsTeamIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams/$teamId/edit': {
+      id: '/admin/staff-teams/$teamId/edit'
+      path: '/staff-teams/$teamId/edit'
+      fullPath: '/admin/staff-teams/$teamId/edit'
+      preLoaderRoute: typeof AdminStaffTeamsTeamIdEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tickets/$ticketId/{-$section}': {
+      id: '/admin/tickets/$ticketId/{-$section}'
+      path: '/tickets/$ticketId/{-$section}'
+      fullPath: '/admin/tickets/$ticketId/{-$section}'
+      preLoaderRoute: typeof AdminTicketsTicketIdChar123SectionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/upload-policies_/$category/{-$action}': {
+      id: '/admin/upload-policies_/$category/{-$action}'
+      path: '/upload-policies/$category/{-$action}'
+      fullPath: '/admin/upload-policies/$category/{-$action}'
+      preLoaderRoute: typeof AdminUploadPoliciesCategoryChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users/$userId/': {
+      id: '/admin/users/$userId/'
+      path: '/users/$userId'
+      fullPath: '/admin/users/$userId/'
+      preLoaderRoute: typeof AdminUsersUserIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users/$userId/permissions': {
+      id: '/admin/users/$userId/permissions'
+      path: '/users/$userId/permissions'
+      fullPath: '/admin/users/$userId/permissions'
+      preLoaderRoute: typeof AdminUsersUserIdPermissionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users/$userId/roles': {
+      id: '/admin/users/$userId/roles'
+      path: '/users/$userId/roles'
+      fullPath: '/admin/users/$userId/roles'
+      preLoaderRoute: typeof AdminUsersUserIdRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/verification_/providers/$providerId': {
+      id: '/admin/verification_/providers/$providerId'
+      path: '/verification/providers/$providerId'
+      fullPath: '/admin/verification/providers/$providerId'
+      preLoaderRoute: typeof AdminVerificationProvidersProviderIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/wallet-receipts/$receiptId/{-$action}': {
+      id: '/admin/wallet-receipts/$receiptId/{-$action}'
+      path: '/wallet-receipts/$receiptId/{-$action}'
+      fullPath: '/admin/wallet-receipts/$receiptId/{-$action}'
+      preLoaderRoute: typeof AdminWalletReceiptsReceiptIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/wallet-receipts/settings/{-$view}': {
+      id: '/admin/wallet-receipts/settings/{-$view}'
+      path: '/wallet-receipts/settings/{-$view}'
+      fullPath: '/admin/wallet-receipts/settings/{-$view}'
+      preLoaderRoute: typeof AdminWalletReceiptsSettingsChar123ViewChar125RouteImport
+      parentRoute: typeof AdminRoute
     }
     '/app/crm/profiles/$profileId': {
       id: '/app/crm/profiles/$profileId'
@@ -2123,17 +4568,387 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmProfilesProfileIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/contracts/$contractId_/$operation/$versionId': {
+      id: '/_app/contracts/$contractId_/$operation/$versionId'
+      path: '/contracts/$contractId/$operation/$versionId'
+      fullPath: '/contracts/$contractId/$operation/$versionId'
+      preLoaderRoute: typeof AppContractsContractIdOperationVersionIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/electricity/orders/$orderId_/cancel': {
+      id: '/_app/electricity/orders/$orderId_/cancel'
+      path: '/$orderId/cancel'
+      fullPath: '/electricity/orders/$orderId/cancel'
+      preLoaderRoute: typeof AppElectricityOrdersOrderIdCancelRouteImport
+      parentRoute: typeof AppElectricityOrdersRoute
+    }
+    '/_app/electricity/orders/$orderId_/edit': {
+      id: '/_app/electricity/orders/$orderId_/edit'
+      path: '/$orderId/edit'
+      fullPath: '/electricity/orders/$orderId/edit'
+      preLoaderRoute: typeof AppElectricityOrdersOrderIdEditRouteImport
+      parentRoute: typeof AppElectricityOrdersRoute
+    }
+    '/_app/electricity/orders/new_/advanced': {
+      id: '/_app/electricity/orders/new_/advanced'
+      path: '/new/advanced'
+      fullPath: '/electricity/orders/new/advanced'
+      preLoaderRoute: typeof AppElectricityOrdersNewAdvancedRouteImport
+      parentRoute: typeof AppElectricityOrdersRoute
+    }
+    '/_app/invoices/$invoiceId_/receipts/$receiptId': {
+      id: '/_app/invoices/$invoiceId_/receipts/$receiptId'
+      path: '/invoices/$invoiceId/receipts/$receiptId'
+      fullPath: '/invoices/$invoiceId/receipts/$receiptId'
+      preLoaderRoute: typeof AppInvoicesInvoiceIdReceiptsReceiptIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices/$invoiceId_/receipts/new': {
+      id: '/_app/invoices/$invoiceId_/receipts/new'
+      path: '/invoices/$invoiceId/receipts/new'
+      fullPath: '/invoices/$invoiceId/receipts/new'
+      preLoaderRoute: typeof AppInvoicesInvoiceIdReceiptsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/savings/orders/$orderId_/edit': {
+      id: '/_app/savings/orders/$orderId_/edit'
+      path: '/$orderId/edit'
+      fullPath: '/savings/orders/$orderId/edit'
+      preLoaderRoute: typeof AppSavingsOrdersOrderIdEditRouteImport
+      parentRoute: typeof AppSavingsOrdersRoute
+    }
+    '/_app/settings/addresses_/$addressId_/edit': {
+      id: '/_app/settings/addresses_/$addressId_/edit'
+      path: '/settings/addresses/$addressId/edit'
+      fullPath: '/settings/addresses/$addressId/edit'
+      preLoaderRoute: typeof AppSettingsAddressesAddressIdEditRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/solar/requests/$requestId_/documents': {
+      id: '/_app/solar/requests/$requestId_/documents'
+      path: '/$requestId/documents'
+      fullPath: '/solar/requests/$requestId/documents'
+      preLoaderRoute: typeof AppSolarRequestsRequestIdDocumentsRouteImport
+      parentRoute: typeof AppSolarRequestsRoute
+    }
+    '/_app/solar/requests/$requestId_/shipment': {
+      id: '/_app/solar/requests/$requestId_/shipment'
+      path: '/$requestId/shipment'
+      fullPath: '/solar/requests/$requestId/shipment'
+      preLoaderRoute: typeof AppSolarRequestsRequestIdShipmentRouteImport
+      parentRoute: typeof AppSolarRequestsRoute
+    }
+    '/admin/catalogue_/$category_/$productId_/edit': {
+      id: '/admin/catalogue_/$category_/$productId_/edit'
+      path: '/catalogue/$category/$productId/edit'
+      fullPath: '/admin/catalogue/$category/$productId/edit'
+      preLoaderRoute: typeof AdminCatalogueCategoryProductIdEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/consultations/$requestId/decisions/$decision': {
+      id: '/admin/consultations/$requestId/decisions/$decision'
+      path: '/decisions/$decision'
+      fullPath: '/admin/consultations/$requestId/decisions/$decision'
+      preLoaderRoute: typeof AdminConsultationsRequestIdDecisionsDecisionRouteImport
+      parentRoute: typeof AdminConsultationsRequestIdRoute
+    }
+    '/admin/contract-templates/$templateId/versions/$version': {
+      id: '/admin/contract-templates/$templateId/versions/$version'
+      path: '/contract-templates/$templateId/versions/$version'
+      fullPath: '/admin/contract-templates/$templateId/versions/$version'
+      preLoaderRoute: typeof AdminContractTemplatesTemplateIdVersionsVersionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contracts/$contractId/{-$action}/{-$item}': {
+      id: '/admin/contracts/$contractId/{-$action}/{-$item}'
+      path: '/contracts/$contractId/{-$action}/{-$item}'
+      fullPath: '/admin/contracts/$contractId/{-$action}/{-$item}'
+      preLoaderRoute: typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/crm/profiles/$profileId_/$operation': {
+      id: '/admin/crm/profiles/$profileId_/$operation'
+      path: '/profiles/$profileId/$operation'
+      fullPath: '/admin/crm/profiles/$profileId/$operation'
+      preLoaderRoute: typeof AdminCrmProfilesProfileIdOperationRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/document-templates/$templateId/versions/$version': {
+      id: '/admin/document-templates/$templateId/versions/$version'
+      path: '/document-templates/$templateId/versions/$version'
+      fullPath: '/admin/document-templates/$templateId/versions/$version'
+      preLoaderRoute: typeof AdminDocumentTemplatesTemplateIdVersionsVersionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-orders/$orderId/decisions/$decision': {
+      id: '/admin/electricity-orders/$orderId/decisions/$decision'
+      path: '/decisions/$decision'
+      fullPath: '/admin/electricity-orders/$orderId/decisions/$decision'
+      preLoaderRoute: typeof AdminElectricityOrdersOrderIdDecisionsDecisionRouteImport
+      parentRoute: typeof AdminElectricityOrdersOrderIdRoute
+    }
+    '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': {
+      id: '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
+      path: '/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
+      fullPath: '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
+      preLoaderRoute: typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-notifications_/corrections/{-$correctionId}/{-$action}': {
+      id: '/admin/failed-notifications_/corrections/{-$correctionId}/{-$action}'
+      path: '/failed-notifications/corrections/{-$correctionId}/{-$action}'
+      fullPath: '/admin/failed-notifications/corrections/{-$correctionId}/{-$action}'
+      preLoaderRoute: typeof AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/geography_/provinces/$provinceId/{-$action}': {
+      id: '/admin/geography_/provinces/$provinceId/{-$action}'
+      path: '/geography/provinces/$provinceId/{-$action}'
+      fullPath: '/admin/geography/provinces/$provinceId/{-$action}'
+      preLoaderRoute: typeof AdminGeographyProvincesProvinceIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invoices/receipts/$receiptId/{-$decision}': {
+      id: '/admin/invoices/receipts/$receiptId/{-$decision}'
+      path: '/invoices/receipts/$receiptId/{-$decision}'
+      fullPath: '/admin/invoices/receipts/$receiptId/{-$decision}'
+      preLoaderRoute: typeof AdminInvoicesReceiptsReceiptIdChar123DecisionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invoices/tools/{-$section}/{-$service}': {
+      id: '/admin/invoices/tools/{-$section}/{-$service}'
+      path: '/invoices/tools/{-$section}/{-$service}'
+      fullPath: '/admin/invoices/tools/{-$section}/{-$service}'
+      preLoaderRoute: typeof AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/knowledge-bases_/$recordId/documents/$documentId': {
+      id: '/admin/knowledge-bases_/$recordId/documents/$documentId'
+      path: '/knowledge-bases/$recordId/documents/$documentId'
+      fullPath: '/admin/knowledge-bases/$recordId/documents/$documentId'
+      preLoaderRoute: typeof AdminKnowledgeBasesRecordIdDocumentsDocumentIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/knowledge-bases_/groups/$recordId/{-$action}': {
+      id: '/admin/knowledge-bases_/groups/$recordId/{-$action}'
+      path: '/knowledge-bases/groups/$recordId/{-$action}'
+      fullPath: '/admin/knowledge-bases/groups/$recordId/{-$action}'
+      preLoaderRoute: typeof AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/policies_/groups/$recordId/{-$action}': {
+      id: '/admin/policies_/groups/$recordId/{-$action}'
+      path: '/policies/groups/$recordId/{-$action}'
+      fullPath: '/admin/policies/groups/$recordId/{-$action}'
+      preLoaderRoute: typeof AdminPoliciesGroupsRecordIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/providers/$channel/$providerId/duplicate': {
+      id: '/admin/providers/$channel/$providerId/duplicate'
+      path: '/duplicate'
+      fullPath: '/admin/providers/$channel/$providerId/duplicate'
+      preLoaderRoute: typeof AdminProvidersChannelProviderIdDuplicateRouteImport
+      parentRoute: typeof AdminProvidersChannelProviderIdRoute
+    }
+    '/admin/providers/$channel/$providerId/edit': {
+      id: '/admin/providers/$channel/$providerId/edit'
+      path: '/edit'
+      fullPath: '/admin/providers/$channel/$providerId/edit'
+      preLoaderRoute: typeof AdminProvidersChannelProviderIdEditRouteImport
+      parentRoute: typeof AdminProvidersChannelProviderIdRoute
+    }
+    '/admin/providers/$channel/$providerId/test': {
+      id: '/admin/providers/$channel/$providerId/test'
+      path: '/test'
+      fullPath: '/admin/providers/$channel/$providerId/test'
+      preLoaderRoute: typeof AdminProvidersChannelProviderIdTestRouteImport
+      parentRoute: typeof AdminProvidersChannelProviderIdRoute
+    }
+    '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}': {
+      id: '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}'
+      path: '/saving-orders/$orderId/{-$operation}/{-$upgradeId}'
+      fullPath: '/admin/saving-orders/$orderId/{-$operation}/{-$upgradeId}'
+      preLoaderRoute: typeof AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/solar-requests/$requestId/construction/{-$operation}': {
+      id: '/admin/solar-requests/$requestId/construction/{-$operation}'
+      path: '/solar-requests/$requestId/construction/{-$operation}'
+      fullPath: '/admin/solar-requests/$requestId/construction/{-$operation}'
+      preLoaderRoute: typeof AdminSolarRequestsRequestIdConstructionChar123OperationChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/solar-requests/$requestId/postal/{-$operation}': {
+      id: '/admin/solar-requests/$requestId/postal/{-$operation}'
+      path: '/solar-requests/$requestId/postal/{-$operation}'
+      fullPath: '/admin/solar-requests/$requestId/postal/{-$operation}'
+      preLoaderRoute: typeof AdminSolarRequestsRequestIdPostalChar123OperationChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}': {
+      id: '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}'
+      path: '/solar-requests/$requestId/{-$operation}/{-$documentId}'
+      fullPath: '/admin/solar-requests/$requestId/{-$operation}/{-$documentId}'
+      preLoaderRoute: typeof AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tos_/versions/$versionId/{-$action}': {
+      id: '/admin/tos_/versions/$versionId/{-$action}'
+      path: '/tos/versions/$versionId/{-$action}'
+      fullPath: '/admin/tos/versions/$versionId/{-$action}'
+      preLoaderRoute: typeof AdminTosVersionsVersionIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/upload-policies_/$category/versions/$versionId': {
+      id: '/admin/upload-policies_/$category/versions/$versionId'
+      path: '/upload-policies/$category/versions/$versionId'
+      fullPath: '/admin/upload-policies/$category/versions/$versionId'
+      preLoaderRoute: typeof AdminUploadPoliciesCategoryVersionsVersionIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vat_/$kind/$recordId/{-$action}': {
+      id: '/admin/vat_/$kind/$recordId/{-$action}'
+      path: '/vat/$kind/$recordId/{-$action}'
+      fullPath: '/admin/vat/$kind/$recordId/{-$action}'
+      preLoaderRoute: typeof AdminVatKindRecordIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_app/electricity/orders/$orderId_/increases/new': {
+      id: '/_app/electricity/orders/$orderId_/increases/new'
+      path: '/$orderId/increases/new'
+      fullPath: '/electricity/orders/$orderId/increases/new'
+      preLoaderRoute: typeof AppElectricityOrdersOrderIdIncreasesNewRouteImport
+      parentRoute: typeof AppElectricityOrdersRoute
+    }
+    '/_app/settings/team_/$section_/$recordId/{-$action}': {
+      id: '/_app/settings/team_/$section_/$recordId/{-$action}'
+      path: '/settings/team/$section/$recordId/{-$action}'
+      fullPath: '/settings/team/$section/$recordId/{-$action}'
+      preLoaderRoute: typeof AppSettingsTeamSectionRecordIdChar123ActionChar125RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/solar/requests/$requestId_/documents/review': {
+      id: '/_app/solar/requests/$requestId_/documents/review'
+      path: '/review'
+      fullPath: '/solar/requests/$requestId/documents/review'
+      preLoaderRoute: typeof AppSolarRequestsRequestIdDocumentsReviewRouteImport
+      parentRoute: typeof AppSolarRequestsRequestIdDocumentsRoute
+    }
+    '/_app/solar/requests/$requestId_/shipment/upload-receipt': {
+      id: '/_app/solar/requests/$requestId_/shipment/upload-receipt'
+      path: '/upload-receipt'
+      fullPath: '/solar/requests/$requestId/shipment/upload-receipt'
+      preLoaderRoute: typeof AppSolarRequestsRequestIdShipmentUploadReceiptRouteImport
+      parentRoute: typeof AppSolarRequestsRequestIdShipmentRoute
+    }
+    '/admin/catalogue_/$category_/$productId_/configuration/{-$operation}': {
+      id: '/admin/catalogue_/$category_/$productId_/configuration/{-$operation}'
+      path: '/catalogue/$category/$productId/configuration/{-$operation}'
+      fullPath: '/admin/catalogue/$category/$productId/configuration/{-$operation}'
+      preLoaderRoute: typeof AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/catalogue_/$category_/$productId_/prices/new': {
+      id: '/admin/catalogue_/$category_/$productId_/prices/new'
+      path: '/catalogue/$category/$productId/prices/new'
+      fullPath: '/admin/catalogue/$category/$productId/prices/new'
+      preLoaderRoute: typeof AdminCatalogueCategoryProductIdPricesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/crm/profiles/$profileId_/corrections/new': {
+      id: '/admin/crm/profiles/$profileId_/corrections/new'
+      path: '/profiles/$profileId/corrections/new'
+      fullPath: '/admin/crm/profiles/$profileId/corrections/new'
+      preLoaderRoute: typeof AdminCrmProfilesProfileIdCorrectionsNewRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/profiles/$profileId_/legal/edit': {
+      id: '/admin/crm/profiles/$profileId_/legal/edit'
+      path: '/profiles/$profileId/legal/edit'
+      fullPath: '/admin/crm/profiles/$profileId/legal/edit'
+      preLoaderRoute: typeof AdminCrmProfilesProfileIdLegalEditRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}': {
+      id: '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+      path: '/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+      fullPath: '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+      preLoaderRoute: typeof AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}': {
+      id: '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}'
+      path: '/saving-orders/$orderId/documents/$documentId/{-$operation}'
+      fullPath: '/admin/saving-orders/$orderId/documents/$documentId/{-$operation}'
+      preLoaderRoute: typeof AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_app/savings/orders/$orderId_/documents/$documentId/{-$operation}': {
+      id: '/_app/savings/orders/$orderId_/documents/$documentId/{-$operation}'
+      path: '/$orderId/documents/$documentId/{-$operation}'
+      fullPath: '/savings/orders/$orderId/documents/$documentId/{-$operation}'
+      preLoaderRoute: typeof AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125RouteImport
+      parentRoute: typeof AppSavingsOrdersRoute
+    }
+    '/_app/solar/requests/$requestId_/documents/$documentId/{-$operation}': {
+      id: '/_app/solar/requests/$requestId_/documents/$documentId/{-$operation}'
+      path: '/$documentId/{-$operation}'
+      fullPath: '/solar/requests/$requestId/documents/$documentId/{-$operation}'
+      preLoaderRoute: typeof AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125RouteImport
+      parentRoute: typeof AppSolarRequestsRequestIdDocumentsRoute
+    }
+    '/admin/crm/profiles/$profileId_/addresses/$addressId/edit': {
+      id: '/admin/crm/profiles/$profileId_/addresses/$addressId/edit'
+      path: '/profiles/$profileId/addresses/$addressId/edit'
+      fullPath: '/admin/crm/profiles/$profileId/addresses/$addressId/edit'
+      preLoaderRoute: typeof AdminCrmProfilesProfileIdAddressesAddressIdEditRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/geography_/provinces/$provinceId/cities/$cityId/{-$action}': {
+      id: '/admin/geography_/provinces/$provinceId/cities/$cityId/{-$action}'
+      path: '/geography/provinces/$provinceId/cities/$cityId/{-$action}'
+      fullPath: '/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}'
+      preLoaderRoute: typeof AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}': {
+      id: '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}'
+      path: '/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}'
+      fullPath: '/admin/invoices/$invoiceId/$action/{-$destination}/{-$view}/{-$operation}'
+      preLoaderRoute: typeof AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_app/contracts/$contractId_/versions/$versionId/documents/$documentId/{-$operation}': {
+      id: '/_app/contracts/$contractId_/versions/$versionId/documents/$documentId/{-$operation}'
+      path: '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+      fullPath: '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+      preLoaderRoute: typeof AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}': {
+      id: '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+      path: '/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+      fullPath: '/admin/contracts/$contractId/versions/$versionId/documents/$documentId/{-$operation}'
+      preLoaderRoute: typeof AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AppConsultationsRouteChildren {
   AppConsultationsRequestIdRoute: typeof AppConsultationsRequestIdRoute
+  AppConsultationsNewRoute: typeof AppConsultationsNewRoute
   AppConsultationsIndexRoute: typeof AppConsultationsIndexRoute
+  AppConsultationsRequestIdOfferRoute: typeof AppConsultationsRequestIdOfferRoute
+  AppConsultationsRequestIdReplyRoute: typeof AppConsultationsRequestIdReplyRoute
 }
 
 const AppConsultationsRouteChildren: AppConsultationsRouteChildren = {
   AppConsultationsRequestIdRoute: AppConsultationsRequestIdRoute,
+  AppConsultationsNewRoute: AppConsultationsNewRoute,
   AppConsultationsIndexRoute: AppConsultationsIndexRoute,
+  AppConsultationsRequestIdOfferRoute: AppConsultationsRequestIdOfferRoute,
+  AppConsultationsRequestIdReplyRoute: AppConsultationsRequestIdReplyRoute,
 }
 
 const AppConsultationsRouteWithChildren =
@@ -2141,12 +4956,19 @@ const AppConsultationsRouteWithChildren =
 
 interface AppSavingsOrdersRouteChildren {
   AppSavingsOrdersOrderIdRoute: typeof AppSavingsOrdersOrderIdRoute
+  AppSavingsOrdersNewRoute: typeof AppSavingsOrdersNewRoute
   AppSavingsOrdersIndexRoute: typeof AppSavingsOrdersIndexRoute
+  AppSavingsOrdersOrderIdEditRoute: typeof AppSavingsOrdersOrderIdEditRoute
+  AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route: typeof AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
 }
 
 const AppSavingsOrdersRouteChildren: AppSavingsOrdersRouteChildren = {
   AppSavingsOrdersOrderIdRoute: AppSavingsOrdersOrderIdRoute,
+  AppSavingsOrdersNewRoute: AppSavingsOrdersNewRoute,
   AppSavingsOrdersIndexRoute: AppSavingsOrdersIndexRoute,
+  AppSavingsOrdersOrderIdEditRoute: AppSavingsOrdersOrderIdEditRoute,
+  AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route:
+    AppSavingsOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route,
 }
 
 const AppSavingsOrdersRouteWithChildren =
@@ -2170,27 +4992,78 @@ const AppSavingsRouteWithChildren = AppSavingsRoute._addFileChildren(
 
 interface AppElectricityOrdersRouteChildren {
   AppElectricityOrdersOrderIdRoute: typeof AppElectricityOrdersOrderIdRoute
+  AppElectricityOrdersNewRoute: typeof AppElectricityOrdersNewRoute
   AppElectricityOrdersIndexRoute: typeof AppElectricityOrdersIndexRoute
+  AppElectricityOrdersOrderIdCancelRoute: typeof AppElectricityOrdersOrderIdCancelRoute
+  AppElectricityOrdersOrderIdEditRoute: typeof AppElectricityOrdersOrderIdEditRoute
+  AppElectricityOrdersNewAdvancedRoute: typeof AppElectricityOrdersNewAdvancedRoute
+  AppElectricityOrdersOrderIdIncreasesNewRoute: typeof AppElectricityOrdersOrderIdIncreasesNewRoute
 }
 
 const AppElectricityOrdersRouteChildren: AppElectricityOrdersRouteChildren = {
   AppElectricityOrdersOrderIdRoute: AppElectricityOrdersOrderIdRoute,
+  AppElectricityOrdersNewRoute: AppElectricityOrdersNewRoute,
   AppElectricityOrdersIndexRoute: AppElectricityOrdersIndexRoute,
+  AppElectricityOrdersOrderIdCancelRoute:
+    AppElectricityOrdersOrderIdCancelRoute,
+  AppElectricityOrdersOrderIdEditRoute: AppElectricityOrdersOrderIdEditRoute,
+  AppElectricityOrdersNewAdvancedRoute: AppElectricityOrdersNewAdvancedRoute,
+  AppElectricityOrdersOrderIdIncreasesNewRoute:
+    AppElectricityOrdersOrderIdIncreasesNewRoute,
 }
 
 const AppElectricityOrdersRouteWithChildren =
   AppElectricityOrdersRoute._addFileChildren(AppElectricityOrdersRouteChildren)
 
+interface AppSolarRequestsRequestIdDocumentsRouteChildren {
+  AppSolarRequestsRequestIdDocumentsReviewRoute: typeof AppSolarRequestsRequestIdDocumentsReviewRoute
+  AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route: typeof AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route
+}
+
+const AppSolarRequestsRequestIdDocumentsRouteChildren: AppSolarRequestsRequestIdDocumentsRouteChildren =
+  {
+    AppSolarRequestsRequestIdDocumentsReviewRoute:
+      AppSolarRequestsRequestIdDocumentsReviewRoute,
+    AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route:
+      AppSolarRequestsRequestIdDocumentsDocumentIdChar123OperationChar125Route,
+  }
+
+const AppSolarRequestsRequestIdDocumentsRouteWithChildren =
+  AppSolarRequestsRequestIdDocumentsRoute._addFileChildren(
+    AppSolarRequestsRequestIdDocumentsRouteChildren,
+  )
+
+interface AppSolarRequestsRequestIdShipmentRouteChildren {
+  AppSolarRequestsRequestIdShipmentUploadReceiptRoute: typeof AppSolarRequestsRequestIdShipmentUploadReceiptRoute
+}
+
+const AppSolarRequestsRequestIdShipmentRouteChildren: AppSolarRequestsRequestIdShipmentRouteChildren =
+  {
+    AppSolarRequestsRequestIdShipmentUploadReceiptRoute:
+      AppSolarRequestsRequestIdShipmentUploadReceiptRoute,
+  }
+
+const AppSolarRequestsRequestIdShipmentRouteWithChildren =
+  AppSolarRequestsRequestIdShipmentRoute._addFileChildren(
+    AppSolarRequestsRequestIdShipmentRouteChildren,
+  )
+
 interface AppSolarRequestsRouteChildren {
   AppSolarRequestsRequestIdRoute: typeof AppSolarRequestsRequestIdRoute
   AppSolarRequestsNewRoute: typeof AppSolarRequestsNewRoute
   AppSolarRequestsIndexRoute: typeof AppSolarRequestsIndexRoute
+  AppSolarRequestsRequestIdDocumentsRoute: typeof AppSolarRequestsRequestIdDocumentsRouteWithChildren
+  AppSolarRequestsRequestIdShipmentRoute: typeof AppSolarRequestsRequestIdShipmentRouteWithChildren
 }
 
 const AppSolarRequestsRouteChildren: AppSolarRequestsRouteChildren = {
   AppSolarRequestsRequestIdRoute: AppSolarRequestsRequestIdRoute,
   AppSolarRequestsNewRoute: AppSolarRequestsNewRoute,
   AppSolarRequestsIndexRoute: AppSolarRequestsIndexRoute,
+  AppSolarRequestsRequestIdDocumentsRoute:
+    AppSolarRequestsRequestIdDocumentsRouteWithChildren,
+  AppSolarRequestsRequestIdShipmentRoute:
+    AppSolarRequestsRequestIdShipmentRouteWithChildren,
 }
 
 const AppSolarRequestsRouteWithChildren =
@@ -2201,20 +5074,18 @@ interface AppRouteChildren {
   AppAppRoute: typeof AppAppRoute
   AppChartsRoute: typeof AppChartsRoute
   AppConsultationsRoute: typeof AppConsultationsRouteWithChildren
-  AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
-  AppDocumentsRoute: typeof AppDocumentsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppSavingsRoute: typeof AppSavingsRouteWithChildren
-  AppTicketsRoute: typeof AppTicketsRoute
   AppVideosRoute: typeof AppVideosRoute
-  AppWalletRoute: typeof AppWalletRoute
   AppElectricityAdvancedRoute: typeof AppElectricityAdvancedRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
   AppElectricityOrdersRoute: typeof AppElectricityOrdersRouteWithChildren
   AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppInvoicesReceiptsRoute: typeof AppInvoicesReceiptsRoute
+  AppNotificationsNotificationIdRoute: typeof AppNotificationsNotificationIdRoute
   AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
+  AppSettingsConversationIdentityRoute: typeof AppSettingsConversationIdentityRoute
   AppSettingsPrivacyRoute: typeof AppSettingsPrivacyRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
@@ -2222,9 +5093,30 @@ interface AppRouteChildren {
   AppSettingsTimezoneRoute: typeof AppSettingsTimezoneRoute
   AppSettingsUsernameRoute: typeof AppSettingsUsernameRoute
   AppSolarRequestsRoute: typeof AppSolarRequestsRouteWithChildren
+  AppTicketsTicketIdRoute: typeof AppTicketsTicketIdRoute
+  AppTicketsNewRoute: typeof AppTicketsNewRoute
+  AppContractsIndexRoute: typeof AppContractsIndexRoute
+  AppDocumentsIndexRoute: typeof AppDocumentsIndexRoute
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
   AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppTicketsIndexRoute: typeof AppTicketsIndexRoute
+  AppWalletIndexRoute: typeof AppWalletIndexRoute
+  AppContractsContractIdChar123ActionChar125Route: typeof AppContractsContractIdChar123ActionChar125Route
+  AppDocumentsDocumentIdChar123OperationChar125Route: typeof AppDocumentsDocumentIdChar123OperationChar125Route
+  AppSettingsAddressesAddressIdRoute: typeof AppSettingsAddressesAddressIdRoute
+  AppSettingsAddressesNewRoute: typeof AppSettingsAddressesNewRoute
+  AppSettingsPrivacyRequestsRoute: typeof AppSettingsPrivacyRequestsRoute
+  AppSettingsProfileEditRoute: typeof AppSettingsProfileEditRoute
+  AppSettingsSecurityTelegramRoute: typeof AppSettingsSecurityTelegramRoute
+  AppSettingsTeamSectionRoute: typeof AppSettingsTeamSectionRoute
+  AppWalletTopUpMethodRoute: typeof AppWalletTopUpMethodRoute
+  AppContractsContractIdOperationVersionIdRoute: typeof AppContractsContractIdOperationVersionIdRoute
+  AppInvoicesInvoiceIdReceiptsReceiptIdRoute: typeof AppInvoicesInvoiceIdReceiptsReceiptIdRoute
+  AppInvoicesInvoiceIdReceiptsNewRoute: typeof AppInvoicesInvoiceIdReceiptsNewRoute
+  AppSettingsAddressesAddressIdEditRoute: typeof AppSettingsAddressesAddressIdEditRoute
+  AppSettingsTeamSectionRecordIdChar123ActionChar125Route: typeof AppSettingsTeamSectionRecordIdChar123ActionChar125Route
+  AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route: typeof AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -2232,20 +5124,18 @@ const AppRouteChildren: AppRouteChildren = {
   AppAppRoute: AppAppRoute,
   AppChartsRoute: AppChartsRoute,
   AppConsultationsRoute: AppConsultationsRouteWithChildren,
-  AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
-  AppDocumentsRoute: AppDocumentsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppSavingsRoute: AppSavingsRouteWithChildren,
-  AppTicketsRoute: AppTicketsRoute,
   AppVideosRoute: AppVideosRoute,
-  AppWalletRoute: AppWalletRoute,
   AppElectricityAdvancedRoute: AppElectricityAdvancedRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
   AppElectricityOrdersRoute: AppElectricityOrdersRouteWithChildren,
   AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppInvoicesReceiptsRoute: AppInvoicesReceiptsRoute,
+  AppNotificationsNotificationIdRoute: AppNotificationsNotificationIdRoute,
   AppSettingsAddressesRoute: AppSettingsAddressesRoute,
+  AppSettingsConversationIdentityRoute: AppSettingsConversationIdentityRoute,
   AppSettingsPrivacyRoute: AppSettingsPrivacyRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
@@ -2253,131 +5143,500 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsTimezoneRoute: AppSettingsTimezoneRoute,
   AppSettingsUsernameRoute: AppSettingsUsernameRoute,
   AppSolarRequestsRoute: AppSolarRequestsRouteWithChildren,
+  AppTicketsTicketIdRoute: AppTicketsTicketIdRoute,
+  AppTicketsNewRoute: AppTicketsNewRoute,
+  AppContractsIndexRoute: AppContractsIndexRoute,
+  AppDocumentsIndexRoute: AppDocumentsIndexRoute,
   AppElectricityIndexRoute: AppElectricityIndexRoute,
   AppInvoicesIndexRoute: AppInvoicesIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppTicketsIndexRoute: AppTicketsIndexRoute,
+  AppWalletIndexRoute: AppWalletIndexRoute,
+  AppContractsContractIdChar123ActionChar125Route:
+    AppContractsContractIdChar123ActionChar125Route,
+  AppDocumentsDocumentIdChar123OperationChar125Route:
+    AppDocumentsDocumentIdChar123OperationChar125Route,
+  AppSettingsAddressesAddressIdRoute: AppSettingsAddressesAddressIdRoute,
+  AppSettingsAddressesNewRoute: AppSettingsAddressesNewRoute,
+  AppSettingsPrivacyRequestsRoute: AppSettingsPrivacyRequestsRoute,
+  AppSettingsProfileEditRoute: AppSettingsProfileEditRoute,
+  AppSettingsSecurityTelegramRoute: AppSettingsSecurityTelegramRoute,
+  AppSettingsTeamSectionRoute: AppSettingsTeamSectionRoute,
+  AppWalletTopUpMethodRoute: AppWalletTopUpMethodRoute,
+  AppContractsContractIdOperationVersionIdRoute:
+    AppContractsContractIdOperationVersionIdRoute,
+  AppInvoicesInvoiceIdReceiptsReceiptIdRoute:
+    AppInvoicesInvoiceIdReceiptsReceiptIdRoute,
+  AppInvoicesInvoiceIdReceiptsNewRoute: AppInvoicesInvoiceIdReceiptsNewRoute,
+  AppSettingsAddressesAddressIdEditRoute:
+    AppSettingsAddressesAddressIdEditRoute,
+  AppSettingsTeamSectionRecordIdChar123ActionChar125Route:
+    AppSettingsTeamSectionRecordIdChar123ActionChar125Route,
+  AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route:
+    AppContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface AdminBrandingRouteChildren {
+  AdminBrandingEditRoute: typeof AdminBrandingEditRoute
+}
+
+const AdminBrandingRouteChildren: AdminBrandingRouteChildren = {
+  AdminBrandingEditRoute: AdminBrandingEditRoute,
+}
+
+const AdminBrandingRouteWithChildren = AdminBrandingRoute._addFileChildren(
+  AdminBrandingRouteChildren,
+)
+
 interface AdminCrmRouteChildren {
-  AdminCrmCorrectionsRoute: typeof AdminCrmCorrectionsRoute
-  AdminCrmRecoveryRoute: typeof AdminCrmRecoveryRoute
   AdminCrmIndexRoute: typeof AdminCrmIndexRoute
+  AdminCrmCorrectionsCaseIdRoute: typeof AdminCrmCorrectionsCaseIdRoute
   AdminCrmProfilesProfileIdRoute: typeof AdminCrmProfilesProfileIdRoute
+  AdminCrmRecoveryCaseIdRoute: typeof AdminCrmRecoveryCaseIdRoute
+  AdminCrmRecoveryNewRoute: typeof AdminCrmRecoveryNewRoute
+  AdminCrmCorrectionsIndexRoute: typeof AdminCrmCorrectionsIndexRoute
+  AdminCrmRecoveryIndexRoute: typeof AdminCrmRecoveryIndexRoute
+  AdminCrmProfilesProfileIdOperationRoute: typeof AdminCrmProfilesProfileIdOperationRoute
+  AdminCrmProfilesProfileIdCorrectionsNewRoute: typeof AdminCrmProfilesProfileIdCorrectionsNewRoute
+  AdminCrmProfilesProfileIdLegalEditRoute: typeof AdminCrmProfilesProfileIdLegalEditRoute
+  AdminCrmProfilesProfileIdAddressesAddressIdEditRoute: typeof AdminCrmProfilesProfileIdAddressesAddressIdEditRoute
 }
 
 const AdminCrmRouteChildren: AdminCrmRouteChildren = {
-  AdminCrmCorrectionsRoute: AdminCrmCorrectionsRoute,
-  AdminCrmRecoveryRoute: AdminCrmRecoveryRoute,
   AdminCrmIndexRoute: AdminCrmIndexRoute,
+  AdminCrmCorrectionsCaseIdRoute: AdminCrmCorrectionsCaseIdRoute,
   AdminCrmProfilesProfileIdRoute: AdminCrmProfilesProfileIdRoute,
+  AdminCrmRecoveryCaseIdRoute: AdminCrmRecoveryCaseIdRoute,
+  AdminCrmRecoveryNewRoute: AdminCrmRecoveryNewRoute,
+  AdminCrmCorrectionsIndexRoute: AdminCrmCorrectionsIndexRoute,
+  AdminCrmRecoveryIndexRoute: AdminCrmRecoveryIndexRoute,
+  AdminCrmProfilesProfileIdOperationRoute:
+    AdminCrmProfilesProfileIdOperationRoute,
+  AdminCrmProfilesProfileIdCorrectionsNewRoute:
+    AdminCrmProfilesProfileIdCorrectionsNewRoute,
+  AdminCrmProfilesProfileIdLegalEditRoute:
+    AdminCrmProfilesProfileIdLegalEditRoute,
+  AdminCrmProfilesProfileIdAddressesAddressIdEditRoute:
+    AdminCrmProfilesProfileIdAddressesAddressIdEditRoute,
 }
 
 const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
   AdminCrmRouteChildren,
 )
 
+interface AdminProvidersChannelProviderIdRouteChildren {
+  AdminProvidersChannelProviderIdDuplicateRoute: typeof AdminProvidersChannelProviderIdDuplicateRoute
+  AdminProvidersChannelProviderIdEditRoute: typeof AdminProvidersChannelProviderIdEditRoute
+  AdminProvidersChannelProviderIdTestRoute: typeof AdminProvidersChannelProviderIdTestRoute
+}
+
+const AdminProvidersChannelProviderIdRouteChildren: AdminProvidersChannelProviderIdRouteChildren =
+  {
+    AdminProvidersChannelProviderIdDuplicateRoute:
+      AdminProvidersChannelProviderIdDuplicateRoute,
+    AdminProvidersChannelProviderIdEditRoute:
+      AdminProvidersChannelProviderIdEditRoute,
+    AdminProvidersChannelProviderIdTestRoute:
+      AdminProvidersChannelProviderIdTestRoute,
+  }
+
+const AdminProvidersChannelProviderIdRouteWithChildren =
+  AdminProvidersChannelProviderIdRoute._addFileChildren(
+    AdminProvidersChannelProviderIdRouteChildren,
+  )
+
+interface AdminProvidersChannelRouteChildren {
+  AdminProvidersChannelProviderIdRoute: typeof AdminProvidersChannelProviderIdRouteWithChildren
+  AdminProvidersChannelNewRoute: typeof AdminProvidersChannelNewRoute
+}
+
+const AdminProvidersChannelRouteChildren: AdminProvidersChannelRouteChildren = {
+  AdminProvidersChannelProviderIdRoute:
+    AdminProvidersChannelProviderIdRouteWithChildren,
+  AdminProvidersChannelNewRoute: AdminProvidersChannelNewRoute,
+}
+
+const AdminProvidersChannelRouteWithChildren =
+  AdminProvidersChannelRoute._addFileChildren(
+    AdminProvidersChannelRouteChildren,
+  )
+
+interface AdminProvidersRouteChildren {
+  AdminProvidersChannelRoute: typeof AdminProvidersChannelRouteWithChildren
+  AdminProvidersIndexRoute: typeof AdminProvidersIndexRoute
+}
+
+const AdminProvidersRouteChildren: AdminProvidersRouteChildren = {
+  AdminProvidersChannelRoute: AdminProvidersChannelRouteWithChildren,
+  AdminProvidersIndexRoute: AdminProvidersIndexRoute,
+}
+
+const AdminProvidersRouteWithChildren = AdminProvidersRoute._addFileChildren(
+  AdminProvidersRouteChildren,
+)
+
+interface AdminConsultationsRequestIdRouteChildren {
+  AdminConsultationsRequestIdFeeRoute: typeof AdminConsultationsRequestIdFeeRoute
+  AdminConsultationsRequestIdDecisionsDecisionRoute: typeof AdminConsultationsRequestIdDecisionsDecisionRoute
+}
+
+const AdminConsultationsRequestIdRouteChildren: AdminConsultationsRequestIdRouteChildren =
+  {
+    AdminConsultationsRequestIdFeeRoute: AdminConsultationsRequestIdFeeRoute,
+    AdminConsultationsRequestIdDecisionsDecisionRoute:
+      AdminConsultationsRequestIdDecisionsDecisionRoute,
+  }
+
+const AdminConsultationsRequestIdRouteWithChildren =
+  AdminConsultationsRequestIdRoute._addFileChildren(
+    AdminConsultationsRequestIdRouteChildren,
+  )
+
+interface AdminElectricityOrdersOrderIdRouteChildren {
+  AdminElectricityOrdersOrderIdDecisionsDecisionRoute: typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
+}
+
+const AdminElectricityOrdersOrderIdRouteChildren: AdminElectricityOrdersOrderIdRouteChildren =
+  {
+    AdminElectricityOrdersOrderIdDecisionsDecisionRoute:
+      AdminElectricityOrdersOrderIdDecisionsDecisionRoute,
+  }
+
+const AdminElectricityOrdersOrderIdRouteWithChildren =
+  AdminElectricityOrdersOrderIdRoute._addFileChildren(
+    AdminElectricityOrdersOrderIdRouteChildren,
+  )
+
 interface AdminRouteChildren {
   AdminAgentSlotsRoute: typeof AdminAgentSlotsRoute
   AdminAgentsRoute: typeof AdminAgentsRoute
   AdminAiModelsRoute: typeof AdminAiModelsRoute
-  AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
-  AdminAuthorizationAuditRoute: typeof AdminAuthorizationAuditRoute
-  AdminBrandingRoute: typeof AdminBrandingRoute
+  AdminBrandingRoute: typeof AdminBrandingRouteWithChildren
   AdminCatalogueRoute: typeof AdminCatalogueRoute
-  AdminConsultationsRoute: typeof AdminConsultationsRoute
   AdminContractLimitsRoute: typeof AdminContractLimitsRoute
-  AdminContractTemplatesRoute: typeof AdminContractTemplatesRoute
-  AdminContractsRoute: typeof AdminContractsRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
-  AdminDocumentTemplatesRoute: typeof AdminDocumentTemplatesRoute
-  AdminDocumentsRoute: typeof AdminDocumentsRoute
-  AdminElectricityIncreasesRoute: typeof AdminElectricityIncreasesRoute
-  AdminElectricityOrdersRoute: typeof AdminElectricityOrdersRoute
-  AdminElectricityPriceAdjustmentsRoute: typeof AdminElectricityPriceAdjustmentsRoute
   AdminElectricityRulesRoute: typeof AdminElectricityRulesRoute
   AdminFailedJobsRoute: typeof AdminFailedJobsRoute
   AdminFailedNotificationsRoute: typeof AdminFailedNotificationsRoute
   AdminGeographyRoute: typeof AdminGeographyRoute
   AdminGiftCodesRoute: typeof AdminGiftCodesRoute
   AdminInboxRoute: typeof AdminInboxRoute
-  AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
   AdminMaintenanceRoute: typeof AdminMaintenanceRoute
-  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminOperationalRetentionRoute: typeof AdminOperationalRetentionRoute
   AdminPoliciesRoute: typeof AdminPoliciesRoute
-  AdminProvidersRoute: typeof AdminProvidersRoute
-  AdminReconciliationRoute: typeof AdminReconciliationRoute
-  AdminRolesRoute: typeof AdminRolesRoute
-  AdminSavingOrdersRoute: typeof AdminSavingOrdersRoute
+  AdminProvidersRoute: typeof AdminProvidersRouteWithChildren
   AdminServiceTargetsRoute: typeof AdminServiceTargetsRoute
   AdminSolarConstructionRoute: typeof AdminSolarConstructionRoute
   AdminSolarPostalRoute: typeof AdminSolarPostalRoute
-  AdminSolarRequestsRoute: typeof AdminSolarRequestsRoute
-  AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
   AdminStorageRoute: typeof AdminStorageRoute
-  AdminTicketsRoute: typeof AdminTicketsRoute
   AdminTosRoute: typeof AdminTosRoute
   AdminUploadPoliciesRoute: typeof AdminUploadPoliciesRoute
-  AdminUsersRoute: typeof AdminUsersRoute
   AdminVatRoute: typeof AdminVatRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
-  AdminWalletReceiptsRoute: typeof AdminWalletReceiptsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminAuthorizationAuditEventIdRoute: typeof AdminAuthorizationAuditEventIdRoute
+  AdminCatalogueCategoryRoute: typeof AdminCatalogueCategoryRoute
+  AdminConsultationsRequestIdRoute: typeof AdminConsultationsRequestIdRouteWithChildren
+  AdminContractLimitsViewRoute: typeof AdminContractLimitsViewRoute
+  AdminContractTemplatesNewRoute: typeof AdminContractTemplatesNewRoute
+  AdminContractsNewRoute: typeof AdminContractsNewRoute
+  AdminContractsRefundsRoute: typeof AdminContractsRefundsRoute
+  AdminDocumentTemplatesNewRoute: typeof AdminDocumentTemplatesNewRoute
+  AdminElectricityOrdersOrderIdRoute: typeof AdminElectricityOrdersOrderIdRouteWithChildren
+  AdminFailedJobsJobIdRoute: typeof AdminFailedJobsJobIdRoute
+  AdminFailedNotificationsHistoryRoute: typeof AdminFailedNotificationsHistoryRoute
+  AdminInboxNotificationIdRoute: typeof AdminInboxNotificationIdRoute
+  AdminInvoicesNewRoute: typeof AdminInvoicesNewRoute
+  AdminNotificationsNewRoute: typeof AdminNotificationsNewRoute
+  AdminNotificationsPreviewRoute: typeof AdminNotificationsPreviewRoute
+  AdminNotificationsSettingsRoute: typeof AdminNotificationsSettingsRoute
+  AdminOperationalRetentionViewRoute: typeof AdminOperationalRetentionViewRoute
+  AdminRolesRoleIdRoute: typeof AdminRolesRoleIdRoute
+  AdminRolesCompareRoute: typeof AdminRolesCompareRoute
+  AdminRolesEffectiveRoute: typeof AdminRolesEffectiveRoute
+  AdminStaffTeamsAssignmentRoute: typeof AdminStaffTeamsAssignmentRoute
+  AdminStaffTeamsNewRoute: typeof AdminStaffTeamsNewRoute
+  AdminStorageSectionRoute: typeof AdminStorageSectionRoute
+  AdminUsersNewRoute: typeof AdminUsersNewRoute
+  AdminVerificationSectionRoute: typeof AdminVerificationSectionRoute
   AdminWalletLedgerProfileIdRoute: typeof AdminWalletLedgerProfileIdRoute
+  AdminApprovalRequestsIndexRoute: typeof AdminApprovalRequestsIndexRoute
+  AdminAuthorizationAuditIndexRoute: typeof AdminAuthorizationAuditIndexRoute
+  AdminConsultationsIndexRoute: typeof AdminConsultationsIndexRoute
+  AdminContractTemplatesIndexRoute: typeof AdminContractTemplatesIndexRoute
+  AdminContractsIndexRoute: typeof AdminContractsIndexRoute
+  AdminDocumentTemplatesIndexRoute: typeof AdminDocumentTemplatesIndexRoute
+  AdminDocumentsIndexRoute: typeof AdminDocumentsIndexRoute
+  AdminElectricityIncreasesIndexRoute: typeof AdminElectricityIncreasesIndexRoute
+  AdminElectricityOrdersIndexRoute: typeof AdminElectricityOrdersIndexRoute
+  AdminElectricityPriceAdjustmentsIndexRoute: typeof AdminElectricityPriceAdjustmentsIndexRoute
+  AdminInvoicesIndexRoute: typeof AdminInvoicesIndexRoute
+  AdminNotificationsIndexRoute: typeof AdminNotificationsIndexRoute
+  AdminReconciliationIndexRoute: typeof AdminReconciliationIndexRoute
+  AdminRolesIndexRoute: typeof AdminRolesIndexRoute
+  AdminSavingOrdersIndexRoute: typeof AdminSavingOrdersIndexRoute
+  AdminSolarRequestsIndexRoute: typeof AdminSolarRequestsIndexRoute
+  AdminStaffTeamsIndexRoute: typeof AdminStaffTeamsIndexRoute
+  AdminTicketsIndexRoute: typeof AdminTicketsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
+  AdminWalletReceiptsIndexRoute: typeof AdminWalletReceiptsIndexRoute
+  AdminAgentSlotsSlotKeyChar123ActionChar125Route: typeof AdminAgentSlotsSlotKeyChar123ActionChar125Route
+  AdminAgentsAgentIdChar123ActionChar125Route: typeof AdminAgentsAgentIdChar123ActionChar125Route
+  AdminAiModelsModelIdChar123ActionChar125Route: typeof AdminAiModelsModelIdChar123ActionChar125Route
+  AdminApprovalRequestsRequestIdChar123DecisionChar125Route: typeof AdminApprovalRequestsRequestIdChar123DecisionChar125Route
+  AdminApprovalRequestsThresholdsChar123ViewChar125Route: typeof AdminApprovalRequestsThresholdsChar123ViewChar125Route
+  AdminCatalogueCategoryProductIdRoute: typeof AdminCatalogueCategoryProductIdRoute
+  AdminCatalogueCategoryNewRoute: typeof AdminCatalogueCategoryNewRoute
+  AdminContractTemplatesTemplateIdEditRoute: typeof AdminContractTemplatesTemplateIdEditRoute
+  AdminDocumentTemplatesTemplateIdEditRoute: typeof AdminDocumentTemplatesTemplateIdEditRoute
+  AdminElectricityIncreasesRequestIdChar123DecisionChar125Route: typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
+  AdminElectricityPriceAdjustmentsContractIdNewRoute: typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
+  AdminElectricityRulesSectionChar123ViewChar125Route: typeof AdminElectricityRulesSectionChar123ViewChar125Route
+  AdminFailedNotificationsDeliveryIdChar123SectionChar125Route: typeof AdminFailedNotificationsDeliveryIdChar123SectionChar125Route
+  AdminGiftCodesCodeIdChar123ActionChar125Route: typeof AdminGiftCodesCodeIdChar123ActionChar125Route
+  AdminKnowledgeBasesRecordIdChar123ActionChar125Route: typeof AdminKnowledgeBasesRecordIdChar123ActionChar125Route
+  AdminMaintenanceCapabilityChar123ActionChar125Route: typeof AdminMaintenanceCapabilityChar123ActionChar125Route
+  AdminNotificationsTemplateIdActionRoute: typeof AdminNotificationsTemplateIdActionRoute
+  AdminPoliciesRecordIdChar123ActionChar125Route: typeof AdminPoliciesRecordIdChar123ActionChar125Route
+  AdminReconciliationCaseIdChar123VerbChar125Route: typeof AdminReconciliationCaseIdChar123VerbChar125Route
+  AdminServiceTargetsSectionChar123WorkflowChar125Route: typeof AdminServiceTargetsSectionChar123WorkflowChar125Route
+  AdminStaffTeamsTeamIdEditRoute: typeof AdminStaffTeamsTeamIdEditRoute
+  AdminTicketsTicketIdChar123SectionChar125Route: typeof AdminTicketsTicketIdChar123SectionChar125Route
+  AdminUploadPoliciesCategoryChar123ActionChar125Route: typeof AdminUploadPoliciesCategoryChar123ActionChar125Route
+  AdminUsersUserIdPermissionsRoute: typeof AdminUsersUserIdPermissionsRoute
+  AdminUsersUserIdRolesRoute: typeof AdminUsersUserIdRolesRoute
+  AdminVerificationProvidersProviderIdRoute: typeof AdminVerificationProvidersProviderIdRoute
+  AdminWalletReceiptsReceiptIdChar123ActionChar125Route: typeof AdminWalletReceiptsReceiptIdChar123ActionChar125Route
+  AdminWalletReceiptsSettingsChar123ViewChar125Route: typeof AdminWalletReceiptsSettingsChar123ViewChar125Route
+  AdminContractTemplatesTemplateIdIndexRoute: typeof AdminContractTemplatesTemplateIdIndexRoute
+  AdminDocumentTemplatesTemplateIdIndexRoute: typeof AdminDocumentTemplatesTemplateIdIndexRoute
+  AdminElectricityPriceAdjustmentsContractIdIndexRoute: typeof AdminElectricityPriceAdjustmentsContractIdIndexRoute
+  AdminInvoicesInvoiceIdIndexRoute: typeof AdminInvoicesInvoiceIdIndexRoute
+  AdminNotificationsTemplateIdIndexRoute: typeof AdminNotificationsTemplateIdIndexRoute
+  AdminStaffTeamsTeamIdIndexRoute: typeof AdminStaffTeamsTeamIdIndexRoute
+  AdminUsersUserIdIndexRoute: typeof AdminUsersUserIdIndexRoute
+  AdminCatalogueCategoryProductIdEditRoute: typeof AdminCatalogueCategoryProductIdEditRoute
+  AdminContractTemplatesTemplateIdVersionsVersionRoute: typeof AdminContractTemplatesTemplateIdVersionsVersionRoute
+  AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route: typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
+  AdminDocumentTemplatesTemplateIdVersionsVersionRoute: typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
+  AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route: typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
+  AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route: typeof AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route
+  AdminGeographyProvincesProvinceIdChar123ActionChar125Route: typeof AdminGeographyProvincesProvinceIdChar123ActionChar125Route
+  AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route: typeof AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route
+  AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route: typeof AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route
+  AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute: typeof AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute
+  AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route: typeof AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route
+  AdminPoliciesGroupsRecordIdChar123ActionChar125Route: typeof AdminPoliciesGroupsRecordIdChar123ActionChar125Route
+  AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route: typeof AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route
+  AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route: typeof AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route
+  AdminSolarRequestsRequestIdPostalChar123OperationChar125Route: typeof AdminSolarRequestsRequestIdPostalChar123OperationChar125Route
+  AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route: typeof AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route
+  AdminTosVersionsVersionIdChar123ActionChar125Route: typeof AdminTosVersionsVersionIdChar123ActionChar125Route
+  AdminUploadPoliciesCategoryVersionsVersionIdRoute: typeof AdminUploadPoliciesCategoryVersionsVersionIdRoute
+  AdminVatKindRecordIdChar123ActionChar125Route: typeof AdminVatKindRecordIdChar123ActionChar125Route
+  AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route: typeof AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route
+  AdminCatalogueCategoryProductIdPricesNewRoute: typeof AdminCatalogueCategoryProductIdPricesNewRoute
+  AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route: typeof AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route
+  AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route: typeof AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route
+  AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route: typeof AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route
+  AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route: typeof AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route
+  AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route: typeof AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAgentSlotsRoute: AdminAgentSlotsRoute,
   AdminAgentsRoute: AdminAgentsRoute,
   AdminAiModelsRoute: AdminAiModelsRoute,
-  AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
-  AdminAuthorizationAuditRoute: AdminAuthorizationAuditRoute,
-  AdminBrandingRoute: AdminBrandingRoute,
+  AdminBrandingRoute: AdminBrandingRouteWithChildren,
   AdminCatalogueRoute: AdminCatalogueRoute,
-  AdminConsultationsRoute: AdminConsultationsRoute,
   AdminContractLimitsRoute: AdminContractLimitsRoute,
-  AdminContractTemplatesRoute: AdminContractTemplatesRoute,
-  AdminContractsRoute: AdminContractsRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
-  AdminDocumentTemplatesRoute: AdminDocumentTemplatesRoute,
-  AdminDocumentsRoute: AdminDocumentsRoute,
-  AdminElectricityIncreasesRoute: AdminElectricityIncreasesRoute,
-  AdminElectricityOrdersRoute: AdminElectricityOrdersRoute,
-  AdminElectricityPriceAdjustmentsRoute: AdminElectricityPriceAdjustmentsRoute,
   AdminElectricityRulesRoute: AdminElectricityRulesRoute,
   AdminFailedJobsRoute: AdminFailedJobsRoute,
   AdminFailedNotificationsRoute: AdminFailedNotificationsRoute,
   AdminGeographyRoute: AdminGeographyRoute,
   AdminGiftCodesRoute: AdminGiftCodesRoute,
   AdminInboxRoute: AdminInboxRoute,
-  AdminInvoicesRoute: AdminInvoicesRoute,
   AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
   AdminMaintenanceRoute: AdminMaintenanceRoute,
-  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminOperationalRetentionRoute: AdminOperationalRetentionRoute,
   AdminPoliciesRoute: AdminPoliciesRoute,
-  AdminProvidersRoute: AdminProvidersRoute,
-  AdminReconciliationRoute: AdminReconciliationRoute,
-  AdminRolesRoute: AdminRolesRoute,
-  AdminSavingOrdersRoute: AdminSavingOrdersRoute,
+  AdminProvidersRoute: AdminProvidersRouteWithChildren,
   AdminServiceTargetsRoute: AdminServiceTargetsRoute,
   AdminSolarConstructionRoute: AdminSolarConstructionRoute,
   AdminSolarPostalRoute: AdminSolarPostalRoute,
-  AdminSolarRequestsRoute: AdminSolarRequestsRoute,
-  AdminStaffTeamsRoute: AdminStaffTeamsRoute,
   AdminStorageRoute: AdminStorageRoute,
-  AdminTicketsRoute: AdminTicketsRoute,
   AdminTosRoute: AdminTosRoute,
   AdminUploadPoliciesRoute: AdminUploadPoliciesRoute,
-  AdminUsersRoute: AdminUsersRoute,
   AdminVatRoute: AdminVatRoute,
   AdminVerificationRoute: AdminVerificationRoute,
-  AdminWalletReceiptsRoute: AdminWalletReceiptsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminAuthorizationAuditEventIdRoute: AdminAuthorizationAuditEventIdRoute,
+  AdminCatalogueCategoryRoute: AdminCatalogueCategoryRoute,
+  AdminConsultationsRequestIdRoute:
+    AdminConsultationsRequestIdRouteWithChildren,
+  AdminContractLimitsViewRoute: AdminContractLimitsViewRoute,
+  AdminContractTemplatesNewRoute: AdminContractTemplatesNewRoute,
+  AdminContractsNewRoute: AdminContractsNewRoute,
+  AdminContractsRefundsRoute: AdminContractsRefundsRoute,
+  AdminDocumentTemplatesNewRoute: AdminDocumentTemplatesNewRoute,
+  AdminElectricityOrdersOrderIdRoute:
+    AdminElectricityOrdersOrderIdRouteWithChildren,
+  AdminFailedJobsJobIdRoute: AdminFailedJobsJobIdRoute,
+  AdminFailedNotificationsHistoryRoute: AdminFailedNotificationsHistoryRoute,
+  AdminInboxNotificationIdRoute: AdminInboxNotificationIdRoute,
+  AdminInvoicesNewRoute: AdminInvoicesNewRoute,
+  AdminNotificationsNewRoute: AdminNotificationsNewRoute,
+  AdminNotificationsPreviewRoute: AdminNotificationsPreviewRoute,
+  AdminNotificationsSettingsRoute: AdminNotificationsSettingsRoute,
+  AdminOperationalRetentionViewRoute: AdminOperationalRetentionViewRoute,
+  AdminRolesRoleIdRoute: AdminRolesRoleIdRoute,
+  AdminRolesCompareRoute: AdminRolesCompareRoute,
+  AdminRolesEffectiveRoute: AdminRolesEffectiveRoute,
+  AdminStaffTeamsAssignmentRoute: AdminStaffTeamsAssignmentRoute,
+  AdminStaffTeamsNewRoute: AdminStaffTeamsNewRoute,
+  AdminStorageSectionRoute: AdminStorageSectionRoute,
+  AdminUsersNewRoute: AdminUsersNewRoute,
+  AdminVerificationSectionRoute: AdminVerificationSectionRoute,
   AdminWalletLedgerProfileIdRoute: AdminWalletLedgerProfileIdRoute,
+  AdminApprovalRequestsIndexRoute: AdminApprovalRequestsIndexRoute,
+  AdminAuthorizationAuditIndexRoute: AdminAuthorizationAuditIndexRoute,
+  AdminConsultationsIndexRoute: AdminConsultationsIndexRoute,
+  AdminContractTemplatesIndexRoute: AdminContractTemplatesIndexRoute,
+  AdminContractsIndexRoute: AdminContractsIndexRoute,
+  AdminDocumentTemplatesIndexRoute: AdminDocumentTemplatesIndexRoute,
+  AdminDocumentsIndexRoute: AdminDocumentsIndexRoute,
+  AdminElectricityIncreasesIndexRoute: AdminElectricityIncreasesIndexRoute,
+  AdminElectricityOrdersIndexRoute: AdminElectricityOrdersIndexRoute,
+  AdminElectricityPriceAdjustmentsIndexRoute:
+    AdminElectricityPriceAdjustmentsIndexRoute,
+  AdminInvoicesIndexRoute: AdminInvoicesIndexRoute,
+  AdminNotificationsIndexRoute: AdminNotificationsIndexRoute,
+  AdminReconciliationIndexRoute: AdminReconciliationIndexRoute,
+  AdminRolesIndexRoute: AdminRolesIndexRoute,
+  AdminSavingOrdersIndexRoute: AdminSavingOrdersIndexRoute,
+  AdminSolarRequestsIndexRoute: AdminSolarRequestsIndexRoute,
+  AdminStaffTeamsIndexRoute: AdminStaffTeamsIndexRoute,
+  AdminTicketsIndexRoute: AdminTicketsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
+  AdminWalletReceiptsIndexRoute: AdminWalletReceiptsIndexRoute,
+  AdminAgentSlotsSlotKeyChar123ActionChar125Route:
+    AdminAgentSlotsSlotKeyChar123ActionChar125Route,
+  AdminAgentsAgentIdChar123ActionChar125Route:
+    AdminAgentsAgentIdChar123ActionChar125Route,
+  AdminAiModelsModelIdChar123ActionChar125Route:
+    AdminAiModelsModelIdChar123ActionChar125Route,
+  AdminApprovalRequestsRequestIdChar123DecisionChar125Route:
+    AdminApprovalRequestsRequestIdChar123DecisionChar125Route,
+  AdminApprovalRequestsThresholdsChar123ViewChar125Route:
+    AdminApprovalRequestsThresholdsChar123ViewChar125Route,
+  AdminCatalogueCategoryProductIdRoute: AdminCatalogueCategoryProductIdRoute,
+  AdminCatalogueCategoryNewRoute: AdminCatalogueCategoryNewRoute,
+  AdminContractTemplatesTemplateIdEditRoute:
+    AdminContractTemplatesTemplateIdEditRoute,
+  AdminDocumentTemplatesTemplateIdEditRoute:
+    AdminDocumentTemplatesTemplateIdEditRoute,
+  AdminElectricityIncreasesRequestIdChar123DecisionChar125Route:
+    AdminElectricityIncreasesRequestIdChar123DecisionChar125Route,
+  AdminElectricityPriceAdjustmentsContractIdNewRoute:
+    AdminElectricityPriceAdjustmentsContractIdNewRoute,
+  AdminElectricityRulesSectionChar123ViewChar125Route:
+    AdminElectricityRulesSectionChar123ViewChar125Route,
+  AdminFailedNotificationsDeliveryIdChar123SectionChar125Route:
+    AdminFailedNotificationsDeliveryIdChar123SectionChar125Route,
+  AdminGiftCodesCodeIdChar123ActionChar125Route:
+    AdminGiftCodesCodeIdChar123ActionChar125Route,
+  AdminKnowledgeBasesRecordIdChar123ActionChar125Route:
+    AdminKnowledgeBasesRecordIdChar123ActionChar125Route,
+  AdminMaintenanceCapabilityChar123ActionChar125Route:
+    AdminMaintenanceCapabilityChar123ActionChar125Route,
+  AdminNotificationsTemplateIdActionRoute:
+    AdminNotificationsTemplateIdActionRoute,
+  AdminPoliciesRecordIdChar123ActionChar125Route:
+    AdminPoliciesRecordIdChar123ActionChar125Route,
+  AdminReconciliationCaseIdChar123VerbChar125Route:
+    AdminReconciliationCaseIdChar123VerbChar125Route,
+  AdminServiceTargetsSectionChar123WorkflowChar125Route:
+    AdminServiceTargetsSectionChar123WorkflowChar125Route,
+  AdminStaffTeamsTeamIdEditRoute: AdminStaffTeamsTeamIdEditRoute,
+  AdminTicketsTicketIdChar123SectionChar125Route:
+    AdminTicketsTicketIdChar123SectionChar125Route,
+  AdminUploadPoliciesCategoryChar123ActionChar125Route:
+    AdminUploadPoliciesCategoryChar123ActionChar125Route,
+  AdminUsersUserIdPermissionsRoute: AdminUsersUserIdPermissionsRoute,
+  AdminUsersUserIdRolesRoute: AdminUsersUserIdRolesRoute,
+  AdminVerificationProvidersProviderIdRoute:
+    AdminVerificationProvidersProviderIdRoute,
+  AdminWalletReceiptsReceiptIdChar123ActionChar125Route:
+    AdminWalletReceiptsReceiptIdChar123ActionChar125Route,
+  AdminWalletReceiptsSettingsChar123ViewChar125Route:
+    AdminWalletReceiptsSettingsChar123ViewChar125Route,
+  AdminContractTemplatesTemplateIdIndexRoute:
+    AdminContractTemplatesTemplateIdIndexRoute,
+  AdminDocumentTemplatesTemplateIdIndexRoute:
+    AdminDocumentTemplatesTemplateIdIndexRoute,
+  AdminElectricityPriceAdjustmentsContractIdIndexRoute:
+    AdminElectricityPriceAdjustmentsContractIdIndexRoute,
+  AdminInvoicesInvoiceIdIndexRoute: AdminInvoicesInvoiceIdIndexRoute,
+  AdminNotificationsTemplateIdIndexRoute:
+    AdminNotificationsTemplateIdIndexRoute,
+  AdminStaffTeamsTeamIdIndexRoute: AdminStaffTeamsTeamIdIndexRoute,
+  AdminUsersUserIdIndexRoute: AdminUsersUserIdIndexRoute,
+  AdminCatalogueCategoryProductIdEditRoute:
+    AdminCatalogueCategoryProductIdEditRoute,
+  AdminContractTemplatesTemplateIdVersionsVersionRoute:
+    AdminContractTemplatesTemplateIdVersionsVersionRoute,
+  AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route:
+    AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route,
+  AdminDocumentTemplatesTemplateIdVersionsVersionRoute:
+    AdminDocumentTemplatesTemplateIdVersionsVersionRoute,
+  AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route:
+    AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route,
+  AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route:
+    AdminFailedNotificationsCorrectionsChar123CorrectionIdChar125Char123ActionChar125Route,
+  AdminGeographyProvincesProvinceIdChar123ActionChar125Route:
+    AdminGeographyProvincesProvinceIdChar123ActionChar125Route,
+  AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route:
+    AdminInvoicesReceiptsReceiptIdChar123DecisionChar125Route,
+  AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route:
+    AdminInvoicesToolsChar123SectionChar125Char123ServiceChar125Route,
+  AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute:
+    AdminKnowledgeBasesRecordIdDocumentsDocumentIdRoute,
+  AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route:
+    AdminKnowledgeBasesGroupsRecordIdChar123ActionChar125Route,
+  AdminPoliciesGroupsRecordIdChar123ActionChar125Route:
+    AdminPoliciesGroupsRecordIdChar123ActionChar125Route,
+  AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route:
+    AdminSavingOrdersOrderIdChar123OperationChar125Char123UpgradeIdChar125Route,
+  AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route:
+    AdminSolarRequestsRequestIdConstructionChar123OperationChar125Route,
+  AdminSolarRequestsRequestIdPostalChar123OperationChar125Route:
+    AdminSolarRequestsRequestIdPostalChar123OperationChar125Route,
+  AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route:
+    AdminSolarRequestsRequestIdChar123OperationChar125Char123DocumentIdChar125Route,
+  AdminTosVersionsVersionIdChar123ActionChar125Route:
+    AdminTosVersionsVersionIdChar123ActionChar125Route,
+  AdminUploadPoliciesCategoryVersionsVersionIdRoute:
+    AdminUploadPoliciesCategoryVersionsVersionIdRoute,
+  AdminVatKindRecordIdChar123ActionChar125Route:
+    AdminVatKindRecordIdChar123ActionChar125Route,
+  AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route:
+    AdminCatalogueCategoryProductIdConfigurationChar123OperationChar125Route,
+  AdminCatalogueCategoryProductIdPricesNewRoute:
+    AdminCatalogueCategoryProductIdPricesNewRoute,
+  AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route:
+    AdminDocumentsDocumentIdChar123SectionChar125Char123ActionChar125Char123HoldIdChar125Route,
+  AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route:
+    AdminSavingOrdersOrderIdDocumentsDocumentIdChar123OperationChar125Route,
+  AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route:
+    AdminGeographyProvincesProvinceIdCitiesCityIdChar123ActionChar125Route,
+  AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route:
+    AdminInvoicesInvoiceIdActionChar123DestinationChar125Char123ViewChar125Char123OperationChar125Route,
+  AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route:
+    AdminContractsContractIdVersionsVersionIdDocumentsDocumentIdChar123OperationChar125Route,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -2425,6 +5684,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRouteWithChildren,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  TermsVersionRoute: TermsVersionRoute,
   AppCrmIndexRoute: AppCrmIndexRoute,
   AppCrmProfilesProfileIdRoute: AppCrmProfilesProfileIdRoute,
 }

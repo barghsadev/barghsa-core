@@ -31,7 +31,7 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ json: config });
     });
     const label = (key: string) => t(`admin.green.${key}`, locale);
-    await page.goto('/admin/electricity-rules');
+    await page.goto('/admin/electricity-rules/rules/edit');
     await expect(page.getByRole('alert')).toContainText(label('limits_incompatible'));
     const save = page.getByRole('button', { name: label('save'), exact: true });
     await save.click();
@@ -101,7 +101,6 @@ for (const locale of ['en', 'fa'] as const)
         },
       },
     ];
-    await page.goto('/admin/electricity-rules');
     for (const { path, title, region, field, before, after, config, apply } of settings) {
       const revision = { id: '33333333-3333-4333-8333-333333333333', version: 1, config };
       const draft = {
@@ -136,9 +135,16 @@ for (const locale of ['en', 'fa'] as const)
         apply();
         return route.fulfill({ json: { config, version, draftId: draft.id } });
       });
-      const toggle = page.getByRole('button', { name: label(title), exact: true });
+      const section = path === 'wizard-draft-ttl' ? 'retention' : 'template';
+      const overview = '/admin/electricity-rules/' + section;
+      await page.goto(overview + '/edit');
       await expect(page.locator(field)).toHaveValue(before);
-      await toggle.click();
+      const back = page.locator(`main a[href="${overview}"]`);
+      await back.click();
+      await expect(page.locator(field)).toHaveCount(0);
+      await page.getByRole('link', { name: label(title), exact: true }).click();
+      await expect(page).toHaveURL(overview + '/history');
+      await expect(page.locator(field)).toHaveCount(0);
       const panel = page.locator(`#${region}`);
       const dialog = page.getByRole('dialog');
       const confirm = dialog.getByRole('button', {
@@ -155,7 +161,7 @@ for (const locale of ['en', 'fa'] as const)
       await confirm.click();
       const activate = panel.getByRole('button', { name: label('recoveryActivate'), exact: true });
       await expect(activate).toBeVisible();
-      await expect(page.locator(field)).toHaveValue(before);
+      await expect(page.locator(field)).toHaveCount(0);
       expect(commands).toEqual([{ sourceId: revision.id, expectedVersion: 2 }]);
       expect((await new AxeBuilder({ page }).include(`#${region}`).analyze()).violations).toEqual(
         []
@@ -163,13 +169,15 @@ for (const locale of ['en', 'fa'] as const)
       await activate.click();
       await expect(dialog).toContainText(label('settingsRecoveryActivateConfirm'));
       await confirm.click();
-      await expect(page.locator(field)).toHaveValue(after);
       await expect(activate).toHaveCount(0);
+      await back.click();
+      const editTitle = section === 'retention' ? 'editRetention' : 'editTemplate';
+      await page.getByRole('link', { name: label(editTitle), exact: true }).click();
+      await expect(page.locator(field)).toHaveValue(after);
       expect(commands).toEqual([
         { sourceId: revision.id, expectedVersion: 2 },
         { draftId: draft.id, expectedVersion: 2 },
       ]);
-      await toggle.click();
     }
   });
 
@@ -219,7 +227,9 @@ for (const locale of ['en', 'fa'] as const)
       pending = null;
       return route.fulfill({ json: { config: active, version, draftId: draft.id } });
     });
-    const toggle = page.getByRole('button', { name: label('recoveryTitle'), exact: true });
+    const history = page
+      .getByRole('main')
+      .getByRole('link', { name: label('recoveryTitle'), exact: true });
     const threshold = page.locator('#simpleOrder-threshold');
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', {
@@ -228,8 +238,11 @@ for (const locale of ['en', 'fa'] as const)
     });
     const activate = page.getByRole('button', { name: label('recoveryActivate'), exact: true });
     await page.goto('/admin/electricity-rules');
-    await expect(threshold).toHaveValue('1250');
-    await toggle.click();
+    const summary = page.getByTestId('saved-electricity-rules');
+    await expect(summary).toContainText((1250).toLocaleString(locale));
+    await expect(threshold).toHaveCount(0);
+    await history.click();
+    await expect(page).toHaveURL('/admin/electricity-rules/history');
     await page
       .getByRole('button', {
         name: label('recoveryStage').replace('{version}', locale === 'fa' ? '۱' : '1'),
@@ -241,19 +254,26 @@ for (const locale of ['en', 'fa'] as const)
     await expect(activate).toBeVisible();
     expect(stageCommands).toEqual([{ sourceId: revision.id, expectedVersion: 2 }]);
     expect(activationCommands).toEqual([]);
-    await expect(threshold).toHaveValue('1250');
+    expect(active.simpleOrder.averagePowerThresholdKw).toBe(1250);
     await page.reload();
-    await toggle.click();
     await expect(activate).toBeVisible();
-    await expect(threshold).toHaveValue('1250');
+    await expect(page.getByRole('main')).toContainText(
+      label('recoveryCurrent').replace('{version}', locale === 'fa' ? '۲' : '2')
+    );
     expect(
       (await new AxeBuilder({ page }).include('#green-rule-recovery').analyze()).violations
     ).toEqual([]);
     await activate.click();
     await expect(dialog).toContainText(label('recoveryActivateConfirm'));
     await confirm.click();
-    await expect(threshold).toHaveValue('1000');
     await expect(activate).toHaveCount(0);
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: label('quoteRules'), exact: true })
+      .click();
+    await expect(summary).toContainText((1000).toLocaleString(locale));
+    await page.getByRole('link', { name: label('editRules'), exact: true }).click();
+    await expect(threshold).toHaveValue('1000');
     expect(activationCommands).toEqual([{ draftId: draft.id, expectedVersion: 2 }]);
   });
 
@@ -304,6 +324,10 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: { ...templateSetting, selectedVersionId: selected } });
       });
       await page.goto('/admin/electricity-rules');
+      const main = page.getByRole('main');
+      await expect(main.locator('form')).toHaveCount(0);
+      await main.getByRole('link', { name: label('editRules'), exact: true }).click();
+      await expect(page).toHaveURL('/admin/electricity-rules/rules/edit');
       const simple = page.locator('#simpleOrder-threshold'),
         ttl = page.locator('#electricity-draft-ttl'),
         template = page.locator('#electricity-contract-template');
@@ -319,12 +343,12 @@ for (const locale of ['en', 'fa'] as const)
           name: locale === 'fa' ? 'انصراف' : 'Cancel',
           exact: true,
         });
-      await expect(ttl).toHaveValue('7');
+      await expect(ttl).toHaveCount(0);
       if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
         for (const mode of ['simpleOrder', 'advancedOrder']) {
-          const range = page.locator('#' + mode + '-share');
+          const share = page.locator('#' + mode + '-share');
           const toggle = page.locator(`label[for="${mode}-enabled"]`);
-          for (const target of [range, toggle]) {
+          for (const target of [share, toggle]) {
             await expect(target).toBeVisible();
             const { height, width } = (await target.boundingBox())!;
             expect(height).toBeGreaterThanOrEqual(44);
@@ -339,26 +363,47 @@ for (const locale of ['en', 'fa'] as const)
       await expect(simple).toBeFocused();
       await expect(simple).toHaveAttribute('aria-invalid', 'true');
       await expect(dialog).toHaveCount(0);
-      await ttl.fill('366');
-      await saveTtl.click();
-      await expect(ttl).toBeFocused();
-      await expect(ttl).toHaveAttribute('aria-invalid', 'true');
       expect(writes).toEqual([]);
-      await expect(
-        template.locator('option').filter({ hasText: 'Retired agreement' })
-      ).toBeDisabled();
+      await expect(template).toHaveCount(0);
       const raw = locale === 'fa' ? ' ۱۷۵۰ ' : ' ١٧٥٠ ';
       await simple.fill(raw);
-      await ttl.fill(' ۱۴ ');
-      await template.selectOption(templateId);
+      const share = page.locator('#simpleOrder-share');
+      await share.fill('۱۰۰٫۱');
+      await saveRules.click();
+      await expect(share).toBeFocused();
+      await expect(share).toHaveAttribute('aria-invalid', 'true');
+      await expect(dialog).toHaveCount(0);
+      expect(writes).toEqual([]);
+      await share.fill(locale === 'fa' ? ' ۴٫۵ ' : ' ٤٫٥ ');
       await saveRules.click();
       await expect(dialog).toContainText(label('enabledState'));
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(simple).toHaveValue('1750');
-      await expect(ttl).toHaveValue(' ۱۴ ');
-      await expect(template).toHaveValue(templateId);
-      expect(writes[0]).toMatchObject({ simpleOrder: { averagePowerThresholdKw: 1750 } });
+      await expect(share).toHaveValue('4.5');
+      expect(writes[0]).toMatchObject({
+        simpleOrder: { averagePowerThresholdKw: 1750, mandatoryGreenSharePercent: 4.5 },
+      });
+      await expect(page.getByRole('main')).toContainText(label('quoteImpact'));
+      await main.locator('header a[href="/admin/electricity-rules"]').click();
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: label('draftTtlTitle'), exact: true })
+        .click();
+      await expect(ttl).toHaveCount(0);
+      const links = page.getByRole('navigation', { name: label('title'), exact: true });
+      await expect(links.locator('[aria-current="page"]')).toHaveCount(1);
+      await expect(
+        links.getByRole('link', { name: label('draftTtlTitle'), exact: true })
+      ).toHaveAttribute('aria-current', 'page');
+      await main.getByRole('link', { name: label('editRetention'), exact: true }).click();
+      await expect(ttl).toHaveValue('7');
+      await ttl.fill('366');
+      await saveTtl.click();
+      await expect(ttl).toBeFocused();
+      await expect(ttl).toHaveAttribute('aria-invalid', 'true');
+      expect(writes).toHaveLength(1);
+      await ttl.fill(' ۱۴ ');
       await saveTtl.click();
       await confirm.click();
       await expect(dialog).toHaveCount(0);
@@ -371,6 +416,17 @@ for (const locale of ['en', 'fa'] as const)
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(ttl).toHaveValue('14');
+      await main.locator('header a[href="/admin/electricity-rules/retention"]').click();
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: label('templateTitle'), exact: true })
+        .click();
+      await expect(template).toHaveCount(0);
+      await main.getByRole('link', { name: label('editTemplate'), exact: true }).click();
+      await expect(
+        template.locator('option').filter({ hasText: 'Retired agreement' })
+      ).toBeDisabled();
+      await template.selectOption(templateId);
       await saveTemplate.click();
       await expect(dialog).toContainText('Supply agreement');
       await confirm.click();
@@ -388,8 +444,6 @@ for (const locale of ['en', 'fa'] as const)
       await expect(template).toHaveValue(templateId);
       expect(selected).toBe(templateId);
       await page.reload();
-      await expect(simple).toHaveValue('1750');
-      await expect(ttl).toHaveValue('14');
       await expect(template).toHaveValue(templateId);
       expect(
         (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
@@ -400,16 +454,22 @@ for (const locale of ['en', 'fa'] as const)
       if (locale === 'fa' && dark && testInfo.project.name === 'mobile-safari') {
         const viewport = page.viewportSize()!;
         await page.setViewportSize({ ...viewport, height: 1400 });
-        for (const [key, name] of [
-          ['ruleEditor', 'green'],
-          ['draftTtlTitle', 'retention'],
-          ['templateTitle', 'template'],
-        ])
-          await page.getByRole('form', { name: label(key), exact: true }).screenshot({
+        for (const [key, name, path] of [
+          ['ruleEditor', 'green', '/admin/electricity-rules/rules/edit'],
+          ['draftTtlTitle', 'retention', '/admin/electricity-rules/retention/edit'],
+          ['templateTitle', 'template', '/admin/electricity-rules/template/edit'],
+        ]) {
+          await page.goto(path!);
+          await page.getByRole('form', { name: label(key!), exact: true }).screenshot({
             path: `/tmp/barghsa-electricity-settings-${name}-fa-dark-mobile.png`,
           });
+        }
         await page.setViewportSize(viewport);
       }
+      await page.goto('/admin/electricity-rules/retention/edit');
+      await expect(ttl).toHaveValue('14');
+      await page.goto('/admin/electricity-rules/rules/edit');
+      await expect(simple).toHaveValue('1750');
       denied = true;
       await simple.fill('1900');
       await saveRules.click();
@@ -441,18 +501,16 @@ for (const locale of ['en', 'fa'] as const) {
       await route.continue();
     });
     try {
-      await page.goto('/admin/electricity-rules');
+      await page.goto('/admin/electricity-rules/retention/edit');
       const ttl = page.locator('#electricity-draft-ttl');
       await expect(ttl).toHaveValue('7');
       await ttl.fill('14');
       await page.getByRole('button', { name: label('draftTtlSave'), exact: true }).click();
       await seen;
-      for (const id of [
-        'simpleOrder-threshold',
-        'electricity-draft-ttl',
-        'electricity-contract-template',
-      ])
-        await expect(page.locator(`#${id}`)).toBeDisabled();
+      await expect(ttl).toBeDisabled();
+      await expect(
+        page.locator('#simpleOrder-threshold, #electricity-contract-template')
+      ).toHaveCount(0);
       await page.route(`**${base}/wizard-draft-ttl`, (route) =>
         route.fulfill({ json: { days: 9 } })
       );
@@ -483,7 +541,7 @@ for (const locale of ['en', 'fa'] as const) {
     page.on('request', (request) => {
       if (request.method() === 'PUT' && request.url().includes(base)) writes++;
     });
-    await page.goto('/admin/electricity-rules');
+    await page.goto('/admin/electricity-rules/retention/edit');
     const ttl = page.locator('#electricity-draft-ttl');
     await expect(ttl).toHaveValue('7');
     await ttl.fill(' ۱۴ ');

@@ -1,19 +1,22 @@
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { LoadingStatus, Button, Card, CardContent } from '@barghsa/ui';
+import { LoadingStatus, Button, buttonVariants, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
+import { tSavingChange } from '@barghsa/i18n/saving-change';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { SavingOrderComments } from '../components/SavingOrderComments.js';
+import { OrderDiscussionSection } from '../components/OrderDiscussionSection.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
 import { SavingOrderChangePanel } from '../components/SavingOrderChangePanel.js';
 import {
@@ -147,6 +150,15 @@ function validDetail(detail: Detail | null, orderId: string): detail is Detail {
 
 export function SavingOrderDetailPage() {
   const { orderId } = useParams({ from: '/_app/savings/orders/$orderId' });
+  return <SavingOrderWorkspace orderId={orderId} />;
+}
+
+export function SavingOrderEditPage() {
+  const { orderId } = useParams({ from: '/_app/savings/orders/$orderId_/edit' });
+  return <SavingOrderWorkspace orderId={orderId} edit />;
+}
+
+function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit?: boolean }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -159,6 +171,7 @@ export function SavingOrderDetailPage() {
   const currentScope = useRef(scope);
   currentScope.current = scope;
   const commandLock = useRef<{ scope: string; locked: boolean }>({ scope, locked: false });
+  const [lockedEditor, setLockedEditor] = useState<string | null>(null);
   const [loadedDetail, setDetail] = useState<{ scope: string; value: Detail } | null>(null);
   const currentDetail = useRef(loadedDetail);
   currentDetail.current = loadedDetail;
@@ -166,6 +179,7 @@ export function SavingOrderDetailPage() {
   const [revision, setRevision] = useState(0);
   const detail =
     loadedDetail?.scope === scope && loadedDetail.value.id === orderId ? loadedDetail.value : null;
+  const canEdit = detail?.can_edit === true;
   function refresh() {
     if (
       currentScope.current !== scope ||
@@ -228,6 +242,98 @@ export function SavingOrderDetailPage() {
       void client.cancelQueries({ queryKey: detailQueryKey, exact: true });
     };
   }, [orderId, revision, scope]);
+  const readFeedback = (
+    <>
+      {time.notice}
+      {state === 'loading' && <LoadingStatus>{loadingText('loading', locale)}</LoadingStatus>}
+      {state === 'notFound' && <p role="alert">{loadingText('recordUnavailable', locale)}</p>}
+      {state === 'error' && (
+        <div className="space-y-2">
+          <p role="alert">{loadingText('readError', locale)}</p>
+          <Button variant="outline" onClick={refresh}>
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
+    </>
+  );
+
+  if (edit) {
+    return (
+      <div
+        className="mx-auto w-full max-w-2xl min-w-0 space-y-4"
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      >
+        <RecordCommandGuard
+          blocked={() => commandLock.current.scope === scope && commandLock.current.locked}
+        />
+        <header className="space-y-2">
+          <Link
+            to="/savings/orders/$orderId"
+            params={{ orderId }}
+            disabled={lockedEditor === scope}
+            className="touch-action text-sm text-primary hover:underline aria-disabled:opacity-60"
+          >
+            {copy('orderDetail')}
+          </Link>
+          <h1 className="text-2xl font-semibold">{copy('changeOrder')}</h1>
+          {canEdit && <p className="text-sm text-muted-foreground">{copy('changeOrderHelp')}</p>}
+        </header>
+        {readFeedback}
+        {detail &&
+          (canEdit ? (
+            <>
+              <dl className="grid grid-cols-2 gap-3 rounded-lg border bg-card px-4 py-3 text-sm">
+                <div className="min-w-0">
+                  <dt className="text-xs text-muted-foreground">{copy('stepPlan')}</dt>
+                  <dd className="font-medium wrap-anywhere">
+                    <bdi>{detail.pricing_snapshot.plan.title[locale]}</bdi>
+                  </dd>
+                </div>
+                <div className="min-w-0">
+                  <dt className="text-xs text-muted-foreground">
+                    {tSavingChange('customerCurrentTotal', locale)}
+                  </dt>
+                  <dd className="font-medium wrap-anywhere">
+                    <bdi>{numbers.money(detail.pricing_snapshot.totalIrR)}</bdi>
+                  </dd>
+                </div>
+              </dl>
+              <SavingOrderChangePanel
+                key={detail.contract_version_id}
+                orderId={detail.id}
+                profileId={detail.profile_id}
+                planId={detail.saving_plan_id}
+                currentHardwareId={detail.hardware_product_id}
+                currentAddressId={detail.installation_address_id}
+                currentVersionId={detail.contract_version_id}
+                invoiceId={detail.invoice_id ?? ''}
+                billIdentifier={detail.bill_identifier}
+                agreementVersionId={detail.agreement_version_id}
+                onCommandLock={(locked) => {
+                  if (currentScope.current !== scope || currentDetail.current !== loadedDetail)
+                    return;
+                  commandLock.current = { scope, locked };
+                  setLockedEditor(locked ? scope : null);
+                }}
+                onWithdrawal={() => {
+                  if (currentScope.current !== scope || currentDetail.current !== loadedDetail)
+                    return;
+                  commandLock.current = { scope, locked: false };
+                  setLockedEditor(null);
+                  setDetail(null);
+                  setState('error');
+                }}
+                onChanged={refresh}
+              />
+            </>
+          ) : (
+            <p role="status">{tSavingChange('customerEditingUnavailable', locale)}</p>
+          ))}
+      </div>
+    );
+  }
+
   const action = detail ? savingNextAction(detail) : null;
   const latestCompletedStage = detail?.stages.filter((stage) => stage.completed_at).at(-1);
   const actionOwner =
@@ -248,19 +354,31 @@ export function SavingOrderDetailPage() {
         >
           {copy('orders')}
         </Link>
-        <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
-      </header>
-      {time.notice}
-      {state === 'loading' && <LoadingStatus>{loadingText('loading', locale)}</LoadingStatus>}
-      {state === 'notFound' && <p role="alert">{loadingText('recordUnavailable', locale)}</p>}
-      {state === 'error' && (
-        <div className="space-y-2">
-          <p role="alert">{loadingText('readError', locale)}</p>
-          <Button variant="outline" onClick={refresh}>
-            {copy('retry')}
-          </Button>
+        <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2">
+          <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
+          {detail && (
+            <div className="flex flex-wrap items-center gap-3">
+              {canEdit && (
+                <Link
+                  to="/savings/orders/$orderId/edit"
+                  params={{ orderId }}
+                  className={buttonVariants()}
+                >
+                  {copy('changeOrder')}
+                </Link>
+              )}
+              <Link
+                className="touch-action text-sm font-medium text-primary underline underline-offset-4"
+                to="/tickets/new"
+                search={{ relatedType: 'order', relatedId: detail.order_id }}
+              >
+                {tTicketForms('getHelp', locale)}
+              </Link>
+            </div>
+          )}
         </div>
-      )}
+      </header>
+      {readFeedback}
       {detail && (
         <>
           <WorkflowStatusBanner
@@ -323,32 +441,6 @@ export function SavingOrderDetailPage() {
             profileId={detail.profile_id}
             scopeKey={JSON.stringify([scope, detail.id, detail.contract_version_id])}
           />
-          {detail.can_edit && (
-            <SavingOrderChangePanel
-              key={detail.contract_version_id}
-              orderId={detail.id}
-              profileId={detail.profile_id}
-              planId={detail.saving_plan_id}
-              currentHardwareId={detail.hardware_product_id}
-              currentAddressId={detail.installation_address_id}
-              currentVersionId={detail.contract_version_id}
-              invoiceId={detail.invoice_id ?? ''}
-              billIdentifier={detail.bill_identifier}
-              agreementVersionId={detail.agreement_version_id}
-              onCommandLock={(locked) => {
-                if (currentScope.current === scope && currentDetail.current === loadedDetail)
-                  commandLock.current = { scope, locked };
-              }}
-              onWithdrawal={() => {
-                if (currentScope.current !== scope || currentDetail.current !== loadedDetail)
-                  return;
-                commandLock.current = { scope, locked: false };
-                setDetail(null);
-                setState('error');
-              }}
-              onChanged={refresh}
-            />
-          )}
           <Card>
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-xl font-semibold">{copy('invoice')}</h2>
@@ -402,8 +494,8 @@ export function SavingOrderDetailPage() {
                 detail.contract_state
               ) ? (
                 <Link
-                  to="/contracts"
-                  search={{ contractId: detail.contract_id }}
+                  to="/contracts/$contractId/{-$action}"
+                  params={{ contractId: detail.contract_id }}
                   className="inline-block text-primary hover:underline"
                 >
                   {copy('viewContract')}
@@ -435,12 +527,18 @@ export function SavingOrderDetailPage() {
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <SavingOrderDocuments orderId={detail.order_id} profileId={detail.profile_id} />
+              <SavingOrderDocuments
+                orderId={detail.order_id}
+                recordId={orderId}
+                profileId={detail.profile_id}
+                status={detail.status}
+              />
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <SavingOrderComments
+              <OrderDiscussionSection
+                kind="saving"
                 orderId={detail.id}
                 profileId={detail.profile_id}
                 sourceVersion={detail.contract_version_id}

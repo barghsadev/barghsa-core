@@ -290,7 +290,12 @@ export function usePasswordRecoveryForm(
     }
   }
   function restart() {
-    if (!alive.current || busy || !uncertainRef.current) return;
+    if (
+      !alive.current ||
+      busy ||
+      (!uncertainRef.current && (!authority.current.authorization || owner.current))
+    )
+      return false;
     generation.current++;
     owner.current = null;
     abort.current?.abort();
@@ -303,6 +308,7 @@ export function usePasswordRecoveryForm(
     setLocked(false);
     setBusy(false);
     resetForm({ ...emptyRecovery, username: form.getValues('username') });
+    return true;
   }
   return {
     form,

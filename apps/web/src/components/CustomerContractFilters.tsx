@@ -25,6 +25,7 @@ export interface CustomerContractHistoryControls {
   dateRange: DateRangeFilterValue;
   onQueryChange: (query: ContractListQuery) => void;
   onClear?: (() => void) | undefined;
+  onClearStatuses?: (() => void) | undefined;
   onApply?: ((selection: HistoryFilterSelection<ContractListQuery>) => void) | undefined;
   onRemoveFilter?: ((key: HistoryFilterKey, value?: string) => void) | undefined;
   onStatusesChange: (statuses: string[]) => void;

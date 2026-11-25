@@ -122,23 +122,17 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await page.goto('/admin/providers');
 
-      const providerRow = page
-        .locator('table:visible tbody tr, ol[role=list]:visible > li')
-        .filter({ hasText: 'Saved email' });
-      const send = providerRow.getByRole('button', { name: text('test.run'), exact: false });
+      await page.getByRole('link', { name: 'Saved email', exact: true }).click();
+      await expect(page).toHaveURL(/\/admin\/providers\/email\/saved-email$/);
+      const detail = page.getByRole('main');
+      const send = detail.getByRole('button', { name: text('test.run'), exact: false });
       await expect(send).toBeDisabled();
-      await providerRow.locator('input[type=email]').fill('staff@example.test');
+      await detail.locator('input[type=email]').fill('staff@example.test');
       await expect(send).toContainText('staff@example.test');
       await send.click();
-      await expect(
-        providerRow.getByText(text('test.passed'), { exact: true }).first()
-      ).toBeVisible();
+      await expect(detail.getByText(text('test.passed'), { exact: true }).first()).toBeVisible();
       const edit = () =>
-        page
-          .locator('table:visible tbody tr, ol[role=list]:visible > li')
-          .filter({ hasText: 'Saved email' })
-          .getByRole('button', { name: text('update'), exact: true })
-          .click();
+        detail.getByRole('link', { name: text('update.title'), exact: true }).click();
       await edit();
       const form = page.locator('form').filter({ has: page.locator('#email-provider-label') });
       await expect(form.getByLabel(text('field.fromEmail'), { exact: false })).toHaveValue(
@@ -194,9 +188,7 @@ for (const locale of ['en', 'fa'] as const) {
       await form.locator('button[type=submit]').click();
       await expect(form).toHaveCount(0);
       await expect(
-        page
-          .locator('table:visible, ol[role=list]:visible')
-          .getByText('Renamed email', { exact: true })
+        detail.getByRole('heading', { name: 'Renamed email', exact: true })
       ).toBeVisible();
       await expect(page.getByText(text('test.passed'), { exact: true })).toHaveCount(0);
       await expect(
@@ -228,18 +220,13 @@ for (const locale of ['en', 'fa'] as const) {
         ],
       })
     );
-    await page.goto('/admin/providers');
+    await page.goto('/admin/providers/email/bad-email/edit');
 
     for (const bad of [
       null,
       { host: 'smtp.example.test', from_email: 'mail@example.test', port: '465' },
     ]) {
       config = bad;
-      await page
-        .locator('table:visible tbody tr, ol[role=list]:visible > li')
-        .filter({ hasText: 'Bad email' })
-        .getByRole('button', { name: text('update'), exact: true })
-        .click();
       const alert = page.getByRole('alert').filter({ hasText: text('error.load') });
       await expect(alert).toBeVisible();
       await expect(page.locator('#email-provider-label')).toHaveCount(0);
@@ -249,11 +236,6 @@ for (const locale of ['en', 'fa'] as const) {
           : { host: 'smtp.example.test', from_email: 'mail@example.test', port: 465 };
       await alert.getByRole('button', { name: text('retry'), exact: true }).click();
     }
-    await page
-      .locator('table:visible tbody tr, ol[role=list]:visible > li')
-      .filter({ hasText: 'Bad email' })
-      .getByRole('button', { name: text('update'), exact: true })
-      .click();
     await expect(page.locator('#email-provider-label')).toHaveValue('Bad email');
   });
 }

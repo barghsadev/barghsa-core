@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import type { GiftCodeDto } from '@barghsa/shared/promotions';
-import { GIFT_CODE_PAGE_SIZE, isGiftCodePage } from '../lib/gift-code-catalogue.js';
+import { isGiftCodePage } from '../lib/gift-code-catalogue.js';
+import { GIFT_CODE_PAGE_SIZE } from '../lib/gift-list-query.js';
 import type { useCatalogueScope } from './useCatalogueResource.js';
 import { useAccountUser } from './useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';

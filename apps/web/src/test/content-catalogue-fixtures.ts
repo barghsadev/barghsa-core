@@ -1,7 +1,7 @@
 import type { NotificationTemplate, TosVersion } from '../lib/content-catalogues.js';
 export function notificationTemplate(): NotificationTemplate {
   return {
-    id: 'template-recovery',
+    id: '30000000-0000-4000-8000-000000000001',
     eventKey: 'welcome_email',
     channel: 'email',
     locale: 'en',

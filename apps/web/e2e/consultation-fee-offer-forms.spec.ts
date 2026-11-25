@@ -5,7 +5,7 @@ import type { Locator, Page } from '@playwright/test';
 import type { ConsultationPaidFeeReview } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n/app';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import { tConsultationFee } from '@barghsa/i18n/consultation-fee';
 import { test, expect } from './coverage-fixture';
 import {
@@ -77,7 +77,8 @@ async function holdSchema(page: Page) {
 async function chooseExternally(page: Page, id: string) {
   await page.evaluate((id) => {
     const url = new URL(location.href);
-    url.searchParams.set('requestId', id);
+    url.pathname = '/admin/consultations/' + id + '/fee';
+    url.searchParams.delete('requestId');
     window.history.pushState({}, '', url);
     window.dispatchEvent(new PopStateEvent('popstate'));
   }, id);
@@ -86,13 +87,34 @@ for (const [locale, theme] of [
   ['en', 'light'],
   ['fa', 'dark'],
 ] as const) {
-  const copy = (key: string) => tConsultation(key, locale);
+  const copy = (key: string) => tStaffConsultation(key, locale);
   const formCopy = (key: string) => tConsultationFee(key, locale);
   const form = (page: Page) => page.getByTestId('consultation-fee-form');
   const fee = (page: Page) => page.locator('#consultation-fee');
   const deadline = (page: Page) => page.locator('#consultation-valid-until');
   const reason = (page: Page) => page.locator('#consultation-offer-reason');
   const staffReason = (page: Page) => page.locator('#consultation-reason');
+  const backToRequest = (page: Page) =>
+    page.getByRole('link', { name: copy('backToFeeRequest'), exact: true });
+  async function openFee(page: Page) {
+    const path = new URL(page.url()).pathname.replace(/\/$/, '') + '/fee';
+    await page.locator(`a[href="${path}"], a[href^="${path}?"]`).click();
+    await expect(page).toHaveURL(new RegExp(path + '([?].*)?$'));
+    await expect(form(page)).toBeVisible();
+  }
+  const openRejection = (page: Page) => page.locator('a[href*="/decisions/reject"]').click();
+  async function fillStaffReason(page: Page, draft: string) {
+    await openRejection(page);
+    await staffReason(page).fill(draft);
+    await backToRequest(page).click();
+  }
+  async function checkStaffReason(page: Page, draft: string, reopen = true) {
+    await backToRequest(page).click();
+    await openRejection(page);
+    await expect(staffReason(page)).toHaveValue(draft);
+    await backToRequest(page).click();
+    if (reopen) await openFee(page);
+  }
   const submit = (page: Page) => form(page).locator('button[type=submit]');
   const retry = (page: Page) => page.getByTestId('consultation-fee-retry');
   const dialog = (page: Page) => page.getByRole('dialog');
@@ -116,10 +138,11 @@ for (const [locale, theme] of [
     );
     const release = await holdSchema(page);
     await page.goto(`/admin/consultations?requestId=${informationRequest}`);
-    await expect(fee(page)).toBeVisible();
+    await expect(form(page)).toHaveCount(0);
     const scope = page.locator('#consultation-scope'),
       deliverables = page.locator('#consultation-deliverables');
-    await staffReason(page).fill('  Independent nonfinancial decision draft  ');
+    await fillStaffReason(page, '  Independent nonfinancial decision draft  ');
+    await openFee(page);
     await fee(page).fill('0');
     await scope.fill('  Supply assessment  ');
     await deliverables.fill('  Written energy report  ');
@@ -153,8 +176,16 @@ for (const [locale, theme] of [
     await submit(page).click();
     await focusedError(fee(page));
     await expect(form(page)).not.toContainText('PRIVATE_FEE_SERVER_TEXT');
-    await expect(staffReason(page)).toHaveValue('  Independent nonfinancial decision draft  ');
+    await checkStaffReason(page, '  Independent nonfinancial decision draft  ');
     await inspect(page, form(page), '[data-testid="consultation-fee-form"]', submit(page));
+    const viewport = page.viewportSize()!;
+    await page.setViewportSize({ ...viewport, width: 320 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await expect(fee(page)).toBeVisible();
+    await expect(deadline(page)).toBeVisible();
+    await page.setViewportSize(viewport);
     expect(state.previews[0]!.body).toEqual({
       fee: '600000',
       scope: 'Supply assessment',
@@ -230,18 +261,23 @@ for (const [locale, theme] of [
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(submit(page)).toHaveText(copy('adjustPaidFee'));
-    await expect(staffReason(page)).toHaveValue('  Independent nonfinancial decision draft  ');
+    await checkStaffReason(page, '  Independent nonfinancial decision draft  ', false);
     expect(state.writes.map((call) => call.raw)).toEqual(Array(4).fill(command.raw));
     expect(state.writes.slice(1).map((call) => call.csrf)).toEqual(
       Array(3).fill('consultation-fee-rotated')
     );
     expect(state.effects).toBe(1);
 
-    await page.getByRole('button', { name: /Replacement consultation buyer/ }).click();
-    await expect(submit(page)).toHaveText(copy('replaceFee'));
-    await expect(deadline(page)).toHaveValue('2030-01-01T12:30');
+    await page.clock.fastForward(6_000);
+    await page.getByRole('link', { name: copy('backToStaffRequests'), exact: true }).click();
+    await page.getByRole('link', { name: /Replacement consultation buyer/ }).click();
+    await openRejection(page);
     await expect(staffReason(page)).toHaveValue('');
     await staffReason(page).fill('  Keep the replacement decision draft  ');
+    await backToRequest(page).click();
+    await openFee(page);
+    await expect(submit(page)).toHaveText(copy('replaceFee'));
+    await expect(deadline(page)).toHaveValue('2030-01-01T12:30');
     await fee(page).fill('550000');
     await reason(page).fill('x'.repeat(2001));
     await submit(page).click();
@@ -291,7 +327,7 @@ for (const [locale, theme] of [
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(reason(page)).toHaveValue('');
-    await expect(staffReason(page)).toHaveValue('  Keep the replacement decision draft  ');
+    await checkStaffReason(page, '  Keep the replacement decision draft  ');
     expect(
       state.writes.filter((call) => call.id === unpaidRequest).map((call) => call.raw)
     ).toEqual([replaceCommand.raw, replaceCommand.raw]);
@@ -338,9 +374,10 @@ for (const [locale, theme] of [
       locale
     );
     await page.goto(`/admin/consultations?requestId=${paidRequest}`);
+    await fillStaffReason(page, '  Independent paid consultation decision  ');
+    await openFee(page);
     await expect(submit(page)).toHaveText(copy('adjustPaidFee'));
     await expect(deadline(page)).toHaveValue('2030-01-01T12:30');
-    await staffReason(page).fill('  Independent paid consultation decision  ');
     await submit(page).click();
     await focusedError(fee(page));
     await fee(page).fill('700000');
@@ -426,7 +463,7 @@ for (const [locale, theme] of [
     await expect(fee(page)).toHaveValue('700000');
     await expect(deadline(page)).toHaveValue('2030-01-01T23:00');
     await expect(reason(page)).toHaveValue('');
-    await expect(staffReason(page)).toHaveValue('  Independent paid consultation decision  ');
+    await checkStaffReason(page, '  Independent paid consultation decision  ');
     expect(state.writes.map((call) => call.raw)).toEqual(Array(3).fill(charge.raw));
     expect(state.writes.slice(1).map((call) => call.csrf)).toEqual(
       Array(2).fill('consultation-fee-rotated')
@@ -493,7 +530,7 @@ for (const [locale, theme] of [
     await expect(retry(page)).toHaveCount(0);
     await expect(fee(page)).toHaveValue('300000');
     await expect(reason(page)).toHaveValue('');
-    await expect(staffReason(page)).toHaveValue('  Independent paid consultation decision  ');
+    await checkStaffReason(page, '  Independent paid consultation decision  ');
     expect(state.writes.slice(3).map((call) => call.raw)).toEqual([credit.raw, credit.raw]);
     expect(state.effects).toBe(2);
     await fee(page).fill('350000');

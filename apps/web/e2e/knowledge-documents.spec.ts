@@ -110,7 +110,13 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ status: 200 });
       });
       await page.goto('/admin/knowledge-bases');
-      await button(`${label('open')} ${kb.title}`).click();
+      await page.getByRole('link', { name: `${label('open')} ${kb.title}`, exact: true }).click();
+      await page.getByRole('link', { name: label('documents'), exact: true }).click();
+      const methods = page.getByRole('navigation', { name: copy('attachmentMethods') });
+      await methods.getByRole('link', { name: copy('newUploadShort') }).press('Enter');
+      await expect(page.locator('#kb-new-document-upload')).toBeFocused();
+      await methods.getByRole('link', { name: copy('fileLibrary') }).press('Enter');
+      await expect(page.locator('#kb-library-documents')).toBeFocused();
       const selected = page.locator('#kb-file'),
         search = page.locator('#kb-file-search'),
         file = page.locator('#kb-new-document');
@@ -146,6 +152,8 @@ for (const locale of ['en', 'fa'] as const)
       );
       await button(label('attach')).click();
       let dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText(guide.fileName);
+      await expect(dialog).toContainText(kb.title);
       await dialog.locator('button[type=submit]').click();
       await dialog.locator('input[type=password]').fill('Document-password-123!');
       await dialog.locator('button[type=submit]').click();
@@ -153,6 +161,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(button(`${label('detach')} Guide.txt`)).toBeVisible();
       await expect(selected).toHaveValue('');
       await button(`${label('detach')} Guide.txt`).click();
+      await expect(dialog).toContainText(guide.fileName);
+      await expect(dialog).toContainText(kb.title);
       await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'destructive');
       await page.getByRole('dialog').locator('button[type=submit]').click();
@@ -176,21 +186,27 @@ for (const locale of ['en', 'fa'] as const)
         path: info.outputPath('knowledge-documents-feedback.png'),
         fullPage: true,
       });
-      await file.setInputFiles({
+      const chooserPromise = page.waitForEvent('filechooser');
+      await file.press('Enter');
+      await (await chooserPromise).setFiles({
         name: uploaded.fileName,
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-test'),
       });
+      await expect(file).toHaveAccessibleName(copy('changeFile'));
+      await expect(page.locator('#kb-upload-selection')).toHaveText(uploaded.fileName);
       await button(label('upload')).click();
       dialog = page.getByRole('dialog');
       await expect(dialog).toBeVisible();
+      await expect(dialog).toContainText(uploaded.fileName);
+      await expect(dialog).toContainText(kb.title);
       await dialog
         .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
         .click();
       await button(label('attachUploaded')).click();
       await page.getByRole('dialog').locator('button[type=submit]').click();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(page.getByText(copy('uncertain'), { exact: true })).toBeVisible();
+      await expect(page.getByText(copy('documentRecovery'), { exact: true })).toBeVisible();
       await expect(button(copy('reset'))).toBeDisabled();
       await expect(file).not.toBeEmpty();
       expect(puts).toBe(1);

@@ -10,6 +10,11 @@ import type { PreparedAttachmentCopies } from '../storage/verified-attachments.s
 import { withCopyReplayLock, withCopyTransaction } from '../storage/storage-copy-transaction.js';
 import { withRelatedTicketRecords, type RelatedTicketRecord } from './ticket-related-records.js';
 import {
+  customerTicketReplies,
+  withTicketReplyPreviews,
+  type TicketQueueRow,
+} from './ticket-reply-activity.js';
+import {
   authorizeTicketAccess,
   authorizeTicketMutation,
   type TicketActor,
@@ -128,6 +133,7 @@ export interface TicketCommentRow {
     fileIndex: number;
   }[];
   attachmentCount: number;
+  unreadReply?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -213,6 +219,7 @@ function mapCommentRow(row: Record<string, unknown>): TicketCommentRow {
         : 'unknown',
     attachments: [],
     attachmentCount: Array.isArray(row.attachments) ? row.attachments.length : 0,
+    ...(typeof row.unread_reply === 'boolean' ? { unreadReply: row.unread_reply } : {}),
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
   };
@@ -321,7 +328,7 @@ export class TicketsService {
         title: localizedContent.en.title,
         body: localizedContent.en.body,
         localizedContent,
-        link: `${staff ? '/admin' : ''}/tickets?ticketId=${ticket.id}`,
+        link: staff ? `/admin/tickets/${ticket.id}` : `/tickets/${ticket.id}`,
       } as const;
       const eventKey =
         event === 'reply'
@@ -369,7 +376,13 @@ export class TicketsService {
     ).rows;
   }
 
-  async creationOptions(userId: string, profileId?: string, recordPage = 1, client?: PoolClient) {
+  async creationOptions(
+    userId: string,
+    profileId?: string,
+    recordPage = 1,
+    client?: PoolClient,
+    related?: { type: 'order' | 'invoice' | 'contract'; id: string }
+  ) {
     if (!Number.isSafeInteger(recordPage) || recordPage < 1 || recordPage > 100000)
       throw new HttpException('Invalid record page', 400);
     if (profileId && !z.uuid().safeParse(profileId).success)
@@ -382,19 +395,39 @@ export class TicketsService {
         [userId]
       )
     ).rows;
-    if (!profileId) return { profiles, records: [] };
+    const relatedRecords = `
+      SELECT id,'order' AS type,created_at,profile_id,NULL::text AS contract_number FROM orders
+      UNION ALL SELECT id,'invoice' AS type,created_at,profile_id,NULL::text FROM invoices
+      UNION ALL SELECT id,'contract' AS type,created_at,profile_id,contract_number::text FROM contracts
+        WHERE EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)
+    `;
+    if (!profileId) {
+      const suggested = related
+        ? (
+            await pool.query<{ profile_id: string }>(
+              `SELECT records.profile_id FROM (${relatedRecords}) records
+             JOIN profiles p ON p.id=records.profile_id
+             WHERE records.id=$1 AND records.type=$2 AND p.user_id=$3 AND NOT p.archived`,
+              [related.id, related.type, userId]
+            )
+          ).rows[0]
+        : undefined;
+      return {
+        profiles,
+        records: [],
+        ...(suggested && profiles.some((profile) => profile.id === suggested.profile_id)
+          ? { suggestedProfileId: suggested.profile_id }
+          : {}),
+      };
+    }
     if (!profiles.some((profile) => profile.id === profileId))
       throw new HttpException('Profile not found', 404);
     const records = (
       await pool.query(
-        `SELECT * FROM (
-      SELECT id,'order' AS type,created_at FROM orders WHERE profile_id=$1
-        UNION ALL SELECT id,'invoice' AS type,created_at FROM invoices WHERE profile_id=$1
-        UNION ALL SELECT id,'contract' AS type,created_at FROM contracts WHERE profile_id=$1
-          AND EXISTS (SELECT 1 FROM contract_publications WHERE contract_id=contracts.id)
-      ) records WHERE EXISTS (SELECT 1 FROM profiles WHERE id=$1 AND user_id=$3 AND NOT archived)
-      ORDER BY created_at DESC,id DESC LIMIT 21 OFFSET $2`,
-        [profileId, (recordPage - 1) * 20, userId]
+        `SELECT id,type,created_at,contract_number AS "contractNumber" FROM (${relatedRecords}) records
+      WHERE profile_id=$1 AND EXISTS (SELECT 1 FROM profiles WHERE id=$1 AND user_id=$3 AND NOT archived)
+      ORDER BY (id=$4::uuid AND type=$5::text) DESC NULLS LAST,created_at DESC,id DESC LIMIT 21 OFFSET $2`,
+        [profileId, (recordPage - 1) * 20, userId, related?.id ?? null, related?.type ?? null]
       )
     ).rows;
     return { profiles, records: records.slice(0, 20), hasMoreRecords: records.length > 20 };
@@ -1305,7 +1338,7 @@ export class TicketsService {
     userId: string,
     options: Partial<ListTicketsOptions> = {},
     client?: PoolClient
-  ): Promise<PaginatedResult<TicketRow>> {
+  ): Promise<PaginatedResult<TicketQueueRow>> {
     const pool = client ?? getDbPool();
     const { page, limit, offset } = ticketPagination(options.page, options.limit);
 
@@ -1381,7 +1414,7 @@ export class TicketsService {
     const data = await withRelatedTicketRecords(dataResult.rows.map(mapRow), pool);
 
     return {
-      data,
+      data: await withTicketReplyPreviews(data, pool, userId),
       total,
       page,
       limit,
@@ -1565,10 +1598,7 @@ export class TicketsService {
         [ticketId]
       );
     } else {
-      result = await pool.query(
-        `SELECT * FROM ticket_comments WHERE ticket_id = $1 AND visibility = 'public' ORDER BY created_at ASC, id ASC`,
-        [ticketId]
-      );
+      result = await customerTicketReplies(ticketId, userId, pool);
     }
 
     return this.commentRecords(result.rows, pool);
@@ -1952,7 +1982,7 @@ export class TicketsService {
   async staffListTickets(
     options: Partial<ListTicketsOptions & { assignedTo?: string }> = {},
     client?: PoolClient
-  ): Promise<PaginatedResult<TicketRow>> {
+  ): Promise<PaginatedResult<TicketQueueRow>> {
     const pool = client ?? getDbPool();
     const { page, limit, offset } = ticketPagination(options.page, options.limit);
 
@@ -2029,7 +2059,7 @@ export class TicketsService {
     const data = await withRelatedTicketRecords(dataResult.rows.map(mapRow), pool);
 
     return {
-      data,
+      data: await withTicketReplyPreviews(data, pool),
       total,
       page,
       limit,

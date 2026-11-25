@@ -63,8 +63,8 @@ for (const scope of ['branding', 'otp', 'service-response-targets'] as const)
           scope === 'branding'
             ? '/admin/branding'
             : scope === 'otp'
-              ? '/admin/verification'
-              : '/admin/service-targets'
+              ? '/admin/verification/codes'
+              : '/admin/service-targets/response-times'
         );
         if (scope === 'branding')
           await page

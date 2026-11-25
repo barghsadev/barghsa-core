@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { FormStep, type FieldPath, type FieldValues, type UseFormReturn } from '@barghsa/ui/form';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { FormWizard, type FormWizardProps } from './FormWizard.js';
 
@@ -11,6 +11,7 @@ export function ValidatedFormWizard<Input extends FieldValues>({
   disabled,
   onInvalidStep,
   onPendingChange,
+  actionsInContent,
   children,
   onNext,
   onSubmit,
@@ -24,7 +25,8 @@ export function ValidatedFormWizard<Input extends FieldValues>({
   onPendingChange: (pending: boolean) => void;
   onNext: () => Promise<unknown>;
   onSubmit: () => Promise<unknown>;
-  children: (pending: boolean) => ReactNode;
+  actionsInContent?: boolean;
+  children: (pending: boolean, actions?: ReactNode) => ReactNode;
 }) {
   const locale = useLocale();
   const region = useRef<HTMLDivElement>(null);
@@ -72,15 +74,10 @@ export function ValidatedFormWizard<Input extends FieldValues>({
         if (index >= 0 && index + 1 !== wizard.step) await onInvalidStep(index + 1);
       }}
     >
-      {({ next, submit, pending: validating }) => (
-        <div ref={region}>
-          <FormWizard
-            {...wizard}
-            saving={wizard.saving || validating}
-            onNext={() => void next()}
-            onSubmit={() => void submit()}
-          >
-            {children(validating)}
+      {({ next, submit, pending: validating }) => {
+        const renderContent = (actions?: ReactNode) => (
+          <>
+            {children(validating, actions)}
             <div className="my-3 space-y-1" aria-live="polite">
               {(fields[wizard.step - 1] ?? [])
                 .filter(({ name }) => form.getFieldState(name).invalid)
@@ -92,9 +89,21 @@ export function ValidatedFormWizard<Input extends FieldValues>({
                   </p>
                 ))}
             </div>
-          </FormWizard>
-        </div>
-      )}
+          </>
+        );
+        return (
+          <div ref={region}>
+            <FormWizard
+              {...wizard}
+              saving={wizard.saving || validating}
+              onNext={() => void next()}
+              onSubmit={() => void submit()}
+            >
+              {actionsInContent ? renderContent : renderContent()}
+            </FormWizard>
+          </div>
+        );
+      }}
     </FormStep>
   );
 }

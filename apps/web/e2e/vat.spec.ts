@@ -57,7 +57,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toHaveCount(2);
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
-    await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
     await page.getByLabel(fa ? 'نرخ (درصد)' : 'Rate (%)', { exact: true }).fill('7.25');
     await page.getByRole('button', { name: fa ? 'ذخیره نرخ' : 'Save rate', exact: true }).click();
     const dialog = page.getByRole('dialog'),
@@ -103,7 +103,7 @@ for (const skippedTime of [false, true]) {
       return route.fulfill({ json: [] });
     });
     await page.goto('/admin/vat');
-    await page.getByRole('button', { name: 'Add rate', exact: true }).click();
+    await page.getByRole('link', { name: 'Add rate', exact: true }).click();
     // Initialize timezone classes before replacing Date.prototype with the fake clock.
     await page.clock.setFixedTime(
       new Date(skippedTime ? '2026-03-08T12:00:00Z' : '2026-03-21T12:00:00Z')
@@ -272,7 +272,7 @@ for (const locale of ['en', 'fa'] as const) {
       .poll(() => scrollRegion.evaluate((element) => Math.abs(element.scrollLeft)))
       .toBeGreaterThan(0);
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
-    await page.getByRole('button', { name: label('addOverride'), exact: true }).click();
+    await page.getByRole('link', { name: label('addOverride'), exact: true }).click();
     await page.getByLabel(label('product'), { exact: true }).selectOption('product');
     await page.getByLabel(label('rate'), { exact: true }).selectOption('current');
     await page.getByRole('button', { name: label('save'), exact: true }).click();
@@ -287,6 +287,13 @@ for (const locale of ['en', 'fa'] as const) {
       await button.click();
     };
     await confirm();
+    await expect(page.getByRole('heading', { name: product, level: 1 })).toBeVisible();
+    const back = () =>
+      page
+        .getByRole('main')
+        .getByRole('link', { name: label('title'), exact: true })
+        .click();
+    await back();
     const table = page.getByRole('table', { name: label('overrides'), exact: true });
     await expect(table.getByRole('rowheader', { name: product })).toBeVisible();
     await expect(
@@ -300,28 +307,30 @@ for (const locale of ['en', 'fa'] as const) {
       body: { productId: 'product', vatConfigId: 'current' },
     });
     await table
-      .getByRole('button', { name: `${label('endOverride')} ${product}`, exact: true })
+      .getByRole('link', { name: `${label('endOverride')} ${product}`, exact: true })
       .click();
     await page
       .getByRole('form')
       .getByRole('button', { name: label('end'), exact: true })
       .click();
     await confirm(true);
+    await back();
     await expect(
       table.getByRole('cell', { name: label('status.expired'), exact: true })
     ).toHaveCount(2);
     expect(writes[1]).toEqual({ path: '/api/admin/finance/vat/overrides/override/end', body: {} });
     await history
-      .getByRole('button', { name: `${label('end')} ${label('category.hardware')}`, exact: true })
+      .getByRole('link', { name: `${label('end')} ${label('category.hardware')}`, exact: true })
       .click();
     await page
       .getByRole('form')
       .getByRole('button', { name: label('end'), exact: true })
       .click();
     await confirm(true);
+    await back();
     await expect(history.getByRole('row')).toHaveCount(4);
     await expect(
-      history.getByRole('button', {
+      history.getByRole('link', {
         name: `${label('end')} ${label('category.hardware')}`,
         exact: true,
       })

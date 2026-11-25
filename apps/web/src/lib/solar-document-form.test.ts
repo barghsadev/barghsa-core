@@ -10,14 +10,15 @@ import { solarGuidanceSchema, solarReviewSchema } from './solar-document-form-sc
 const messages = {
   fa: 'guidance',
   en: 'guidance',
-  faSuggestions: 'suggestions',
-  enSuggestions: 'suggestions',
+  items: 'suggestions',
 };
 const draft = {
   fa: ' راهنما ',
   en: ' Guidance ',
-  faSuggestions: ' سند اول \n\n سند دوم ',
-  enSuggestions: ' First file \n Second file ',
+  items: [
+    { fa: ' سند اول ', en: ' First file ' },
+    { fa: ' سند دوم ', en: ' Second file ' },
+  ],
 };
 const paths = (value: ReturnType<typeof safeParse>) =>
   value.success ? [] : value.error.issues.map((issue) => issue.path.join('.'));
@@ -59,8 +60,7 @@ describe('solar guidance form', () => {
     expect(solarGuidanceDraft(body)).toEqual({
       fa: 'راهنما',
       en: 'Guidance',
-      faSuggestions: 'سند اول\nسند دوم',
-      enSuggestions: 'First file\nSecond file',
+      items: body.suggestions,
     });
   });
   for (const field of ['fa', 'en'] as const) {
@@ -74,47 +74,22 @@ describe('solar guidance form', () => {
       ).toBe(true);
     });
   }
-  for (const [field, other] of [
-    ['faSuggestions', 'enSuggestions'],
-    ['enSuggestions', 'faSuggestions'],
-  ] as const) {
-    it(`${field} accepts 30 paired 200-character lines and rejects excess text or count`, () => {
-      const thirty = Array.from({ length: 30 }, () => 'x'.repeat(200)).join('\n');
-      expect(
-        safeParse(solarGuidanceSchema(messages), { ...draft, [field]: thirty, [other]: thirty })
-          .success
-      ).toBe(true);
-      expect(
-        paths(
-          safeParse(solarGuidanceSchema(messages), {
-            ...draft,
-            [field]: 'x'.repeat(201) + '\nsecond',
-          })
-        )
-      ).toEqual([field]);
-      const thirtyOne = thirty + '\nlast';
-      expect(
-        paths(
-          safeParse(solarGuidanceSchema(messages), {
-            ...draft,
-            [field]: thirtyOne,
-            [other]: thirtyOne,
-          })
-        )
-      ).toEqual(['faSuggestions', 'enSuggestions']);
-    });
-  }
-  it('unequal translated counts mark both owned fields while empty paired lists are allowed', () => {
+  it('validates both translations, exact limits, and the optional empty list', () => {
+    const schema = solarGuidanceSchema(messages);
+    const items = Array.from({ length: 30 }, () => ({ fa: 'x'.repeat(200), en: 'x'.repeat(200) }));
+    expect(safeParse(schema, { ...draft, items }).success).toBe(true);
+    expect(paths(safeParse(schema, { ...draft, items: [...items, items[0]] }))).toEqual(['items']);
     expect(
-      paths(safeParse(solarGuidanceSchema(messages), { ...draft, enSuggestions: 'First' }))
-    ).toEqual(['faSuggestions', 'enSuggestions']);
-    expect(
-      safeParse(solarGuidanceSchema(messages), {
-        ...draft,
-        faSuggestions: ' \n',
-        enSuggestions: '',
-      }).success
-    ).toBe(true);
+      paths(safeParse(schema, { ...draft, items: [{ fa: ' ', en: 'x'.repeat(201) }] }))
+    ).toEqual(['items.0.fa', 'items.0.en']);
+    expect(safeParse(schema, { ...draft, items: [] }).success).toBe(true);
+  });
+  it('keeps an existing line break inside its original translation pair', () => {
+    const current = {
+      ...solarGuidanceBody(draft),
+      suggestions: [{ fa: 'صفحه اول\nصفحه دوم', en: 'Both pages' }],
+    };
+    expect(solarGuidanceBody(solarGuidanceDraft(current))).toEqual(current);
   });
   it('requires all captured receipt content and suggestion order to match', () => {
     const body = solarGuidanceBody(draft);

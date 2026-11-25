@@ -9,6 +9,8 @@ const profileId = '11111111-1111-4111-8111-111111111111';
 const p1 = '22222222-2222-4222-8222-222222222222';
 const p2 = '33333333-3333-4333-8333-333333333333';
 const c1 = '44444444-4444-4444-8444-444444444444';
+const addressId = '66666666-6666-4666-8666-666666666666';
+const newAddressId = '77777777-7777-4777-8777-777777777777';
 const c2 = '55555555-5555-4555-8555-555555555555';
 type Locale = 'fa' | 'en';
 async function fixture(page: Page, locale: Locale) {
@@ -22,7 +24,7 @@ async function fixture(page: Page, locale: Locale) {
     keyedWrites: [] as { raw: string; key: unknown }[],
   };
   let address = {
-    id: '66666666-6666-4666-8666-666666666666',
+    id: addressId,
     profileId,
     provinceId: p1,
     cityId: c1,
@@ -123,7 +125,7 @@ async function fixture(page: Page, locale: Locale) {
       address = {
         ...address,
         ...body,
-        id: '77777777-7777-4777-8777-777777777777',
+        id: newAddressId,
         mainAddress: !addressWrite,
         updatedAt: '2026-10-01T00:01:00Z',
       };
@@ -161,7 +163,15 @@ async function fixture(page: Page, locale: Locale) {
   await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
     route.request().method() === 'POST' ? write(route) : route.fulfill({ json: { addresses } })
   );
-  await page.route(`**/api/profiles/${profileId}/addresses/${address.id}`, (route) => write(route));
+  await page.route(`**/api/profiles/${profileId}/addresses/access`, (route) =>
+    route.fulfill({ json: { profileId, canEdit: true } })
+  );
+  await page.route(new RegExp(`/api/profiles/${profileId}/addresses/[a-f0-9-]{36}$`), (route) => {
+    if (route.request().method() !== 'GET') return write(route);
+    const id = new URL(route.request().url()).pathname.split('/').at(-1);
+    const saved = addresses.find((item) => item.id === id);
+    return saved ? route.fulfill({ json: saved }) : route.fulfill({ status: 404, json: {} });
+  });
   await page.route('**/api/geography/provinces', (route) =>
     route.fulfill({
       status: state.provinceFailed ? 503 : 200,
@@ -202,8 +212,14 @@ for (const locale of ['en', 'fa'] as const)
         .toBe(locale === 'fa');
       if (surface === 'addresses')
         await page
-          .getByRole('button', { name: t('settings.addresses.add', locale), exact: true })
+          .getByRole('link', { name: t('settings.addresses.add', locale), exact: true })
           .click();
+      else {
+        await page
+          .getByRole('link', { name: tSettingsForms('editProfile', locale), exact: true })
+          .click();
+        await expect(page).toHaveURL(/\/settings\/profile\/edit$/);
+      }
       const province = page.locator(
         surface === 'addresses' ? '#addresses-field-1' : '#profile-province'
       );
@@ -232,7 +248,7 @@ for (const locale of ['en', 'fa'] as const)
       const save = () =>
         surface === 'addresses'
           ? page
-              .getByRole('dialog')
+              .getByRole('main')
               .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
           : page.getByRole('button', {
               name: crmText('settings.profile.save', locale),
@@ -254,18 +270,15 @@ for (const locale of ['en', 'fa'] as const)
       await city.selectOption(c2);
       await expect(full).toHaveValue('Retained address draft');
       await expect(city).toHaveAttribute('data-slot', 'dependent-select');
-      const scan = new AxeBuilder({ page }).include(
-        surface === 'addresses' ? '[role=dialog]' : '.container'
-      );
+      const editor = `[data-slot=settings-${surface === 'addresses' ? 'address' : 'profile'}-form]`;
+      const scan = new AxeBuilder({ page }).include(editor);
       expect((await scan.withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual(
         []
       );
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
-      await (
-        surface === 'addresses' ? page.getByRole('dialog') : page.locator('.container').last()
-      ).screenshot({
+      await page.locator(editor).screenshot({
         path: `/tmp/barghsa-order-address-${surface}-${locale}-${test.info().project.name}.png`,
       });
       await save().click();
@@ -278,16 +291,14 @@ for (const locale of ['en', 'fa'] as const)
       if (surface === 'addresses') {
         await expect(
           page
-            .getByRole('dialog')
+            .getByRole('main')
             .getByRole('alert')
             .filter({ hasText: tSettingsForms('uncertain', locale) })
         ).toBeVisible();
-        expect(
-          await page.getByRole('dialog').evaluate((dialog) => {
-            const bounds = dialog.getBoundingClientRect();
-            return bounds.top >= 0 && bounds.bottom <= innerHeight;
-          })
-        ).toBe(true);
+        await expect(page.locator('[data-slot=settings-address-form]')).toBeVisible();
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+          true
+        );
       }
       await expect(full).toHaveValue('Retained address draft');
       state.writeFailed = false;
@@ -307,7 +318,10 @@ for (const locale of ['en', 'fa'] as const)
       expect(state.keyedWrites[0]!.key).toMatch(/^[0-9a-f-]{36}$/i);
       expect(state.keyedWrites[1]).toEqual(state.keyedWrites[0]);
       if (surface === 'profile') await expect(city).toHaveValue(c2);
-      else await expect(page.locator('.container').last()).toContainText('Retained address draft');
+      else {
+        await expect(page).toHaveURL(`/settings/addresses/${newAddressId}`);
+        await expect(page.getByRole('main')).toContainText('Retained address draft');
+      }
     });
   }
 
@@ -323,7 +337,7 @@ for (const locale of ['en', 'fa'] as const)
         .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
         .toBe(locale === 'fa');
       await page
-        .getByRole('button', {
+        .getByRole('link', {
           name: t(
             operation === 'create' ? 'settings.addresses.add' : 'settings.addresses.edit',
             locale
@@ -331,17 +345,20 @@ for (const locale of ['en', 'fa'] as const)
           exact: true,
         })
         .click();
-      const dialog = page.getByRole('dialog');
-      await expect(dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
-      const province = dialog.locator('#addresses-field-1');
-      const city = dialog.locator('#addresses-field-2');
-      const full = dialog.locator('#addresses-field-3');
-      const postal = dialog.locator('#addresses-field-4');
-      const save = dialog.getByRole('button', {
+      const editor = page
+        .getByRole('main')
+        .locator('[dir]')
+        .filter({ has: page.locator('[data-slot=settings-address-form]') });
+      await expect(editor).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      const province = editor.locator('#addresses-field-1');
+      const city = editor.locator('#addresses-field-2');
+      const full = editor.locator('#addresses-field-3');
+      const postal = editor.locator('#addresses-field-4');
+      const save = editor.getByRole('button', {
         name: t('settings.addresses.form.save', locale),
         exact: true,
       });
-      await expect(dialog.getByRole('alert')).toHaveCount(0);
+      await expect(editor.getByRole('alert')).toHaveCount(0);
       if (operation === 'edit') {
         await expect(full).toHaveValue('Saved address');
         await expect(postal).toHaveValue('1234567890');
@@ -356,7 +373,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(full).toBeFocused();
       await expect(full).toHaveAttribute('aria-invalid', 'true');
       await expect(
-        dialog
+        editor
           .getByRole('alert')
           .filter({ hasText: t('settings.addresses.validation.fullAddress', locale) })
       ).toBeVisible();
@@ -370,11 +387,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(postal).toBeFocused();
       await expect(postal).toHaveAttribute('aria-invalid', 'true');
       await expect(full).toHaveValue('  Retained address correction  ');
-      await expect(dialog).not.toContainText('private-server-detail');
+      await expect(editor).not.toContainText('private-server-detail');
       expect(
         (
           await new AxeBuilder({ page })
-            .include('[role=dialog]')
+            .include('[data-slot=settings-address-form]')
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
             .analyze()
         ).violations
@@ -382,7 +399,7 @@ for (const locale of ['en', 'fa'] as const)
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
-      await dialog.screenshot({
+      await editor.screenshot({
         path: `/tmp/barghsa-form-${operation}-${locale}-${test.info().project.name}.png`,
       });
       state.validationFields = [];
@@ -392,7 +409,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await save.click();
       await expect.poll(() => state.writes.length).toBe(2);
-      const saving = dialog.getByRole('button', {
+      const saving = editor.getByRole('button', {
         name: t('settings.addresses.form.saving', locale),
         exact: true,
       });
@@ -402,19 +419,22 @@ for (const locale of ['en', 'fa'] as const)
       await expect(postal).toBeDisabled();
       await expect(province).toBeDisabled();
       await expect(city).toBeDisabled();
-      for (const cancel of await dialog
+      for (const cancel of await editor
         .getByRole('button', { name: t('settings.addresses.form.cancel', locale), exact: true })
         .all())
         await expect(cancel).toBeDisabled();
-      await dialog.locator('form').evaluate((form: HTMLFormElement) => {
+      await editor.locator('form').evaluate((form: HTMLFormElement) => {
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       });
       await page.keyboard.press('Escape');
-      await expect(dialog).toBeVisible();
+      await expect(editor).toBeVisible();
       expect(state.writes).toHaveLength(2);
       release();
-      await expect(dialog).toHaveCount(0);
+      await expect(page).toHaveURL(
+        `/settings/addresses/${operation === 'edit' ? addressId : newAddressId}`
+      );
+      await expect(editor).toHaveCount(0);
       expect(state.writes).toEqual(
         Array(2).fill({
           provinceId: p2,
@@ -423,5 +443,5 @@ for (const locale of ['en', 'fa'] as const)
           postalCode: '2345678901',
         })
       );
-      await expect(page.locator('.container').last()).toContainText('Retained address correction');
+      await expect(page.getByRole('main')).toContainText('Retained address correction');
     });

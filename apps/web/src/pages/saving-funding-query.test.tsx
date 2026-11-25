@@ -5,7 +5,7 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { SavingsOrderPage } from './SavingsOrderPage.js';
 import { t } from '@barghsa/i18n/workspace';
 
-const wizard = vi.hoisted(() => ({ step: 6, go: vi.fn(), restore: vi.fn(), reset: vi.fn() }));
+const wizard = vi.hoisted(() => ({ step: 3, go: vi.fn(), restore: vi.fn(), reset: vi.fn() }));
 vi.mock('../hooks/useWizardStep.js', () => ({ useWizardStep: () => wizard }));
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),

@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import AxeBuilder from '@axe-core/playwright';
 import { approveRiskConfirmation } from './confirmation-fixture';
 test.use({ viewport: { width: 390, height: 844 } });
@@ -46,16 +47,21 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
-    await page
-      .getByRole('button', { name: fa ? 'افزودن سیاست' : 'Add policy', exact: true })
-      .click();
+    await page.getByRole('link', { name: fa ? 'افزودن سیاست' : 'Add policy', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local draft');
     await page
       .getByLabel(fa ? 'نوع سیاست' : 'Policy type', { exact: true })
       .selectOption(fa ? 'data_access_scope' : 'disallowed_actions');
-    await page
-      .getByLabel(fa ? 'محدوده دسترسی به داده' : 'Disallowed actions', { exact: true })
-      .fill('Meter readings\nBilling');
+    const listText = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
+      knowledgePolicyFormText(key, fa ? 'fa' : 'en');
+    await page.getByRole('button', { name: listText('editPastedList') }).click();
+    await page.locator('textarea#policy-items').fill('Meter readings\n\nBilling\nExtra');
+    await page.getByRole('button', { name: listText('editIndividualItems') }).click();
+    await expect(page.locator('#policy-items')).toBeFocused();
+    await expect(page.locator('#policy-items-2')).toHaveValue('Billing');
+    await expect(page.locator('#policy-items-3')).toHaveValue('Extra');
+    await page.locator('#policy-items-3').locator('..').getByRole('button').click();
+    await expect(page.locator('#policy-items-2')).toBeFocused();
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
@@ -173,21 +179,18 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
         .click();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(
-        page
-          .getByRole('button', { name: label('addPolicy'), exact: true })
-          .or(page.getByRole('button', { name: label('addGroup'), exact: true }))
-      ).toBeEnabled();
     };
     await page.goto('/admin/policies');
-    await page.getByRole('button', { name: `${label('edit')} Energy`, exact: true }).click();
+    await page.getByRole('link', { name: `${label('edit')} Energy`, exact: true }).click();
     await expect(page.getByLabel(label('allowed_topics'), { exact: true })).toHaveValue('energy');
-    await page.getByLabel(label('allowed_topics'), { exact: true }).fill('energy\nsolar');
+    await page.getByLabel(label('allowed_topics'), { exact: true }).press('Enter');
+    await expect(page.locator('#policy-items-2')).toBeFocused();
+    await page.locator('#policy-items-2').fill('solar');
     await page.getByLabel(label('priority'), { exact: true }).fill('25');
     await click('save');
     await confirm();
     expect(writes.at(-1)).toMatchObject({ rules: { topics: ['energy', 'solar'] }, priority: 25 });
-    await click('addPolicy');
+    await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Style');
     await page.getByLabel(label('type'), { exact: true }).selectOption('response_style');
     await page.getByLabel(label('tone'), { exact: true }).fill('Concise');
@@ -201,7 +204,7 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'response_style',
       rules: { tone: 'Concise', language: locale, maxLength: 500, requireSources: true },
     });
-    await click('addPolicy');
+    await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Filter');
     await page.getByLabel(label('type'), { exact: true }).selectOption('content_filter');
     await page.getByLabel(label('content_filter'), { exact: true }).fill('secret');
@@ -211,7 +214,7 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'content_filter',
       rules: { blockedTerms: ['secret'] },
     });
-    await click('addPolicy');
+    await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Format');
     await page.getByLabel(label('type'), { exact: true }).selectOption('output_format');
     await page.getByLabel(label('format'), { exact: true }).selectOption('json_object');
@@ -221,7 +224,7 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'output_format',
       rules: { format: 'json_object' },
     });
-    await click('addPolicy');
+    await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Limit');
     await page.getByLabel(label('type'), { exact: true }).selectOption('rate_limit');
     await page.getByLabel(label('maxRequests'), { exact: true }).fill('3');
@@ -232,13 +235,12 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'rate_limit',
       rules: { maxRequests: 3, windowSeconds: 120 },
     });
-    await click('policy-groups');
-    await click('addGroup');
+    await page.goto('/admin/policies/groups/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Support');
     await click('save');
     await confirm();
     expect(writes.at(-1)).toEqual({ title: 'Support', description: '' });
-    await page.getByRole('button', { name: `${label('open')} Support`, exact: true }).click();
+    await expect(page).toHaveURL(`/admin/policies/groups/${group.id}`);
     await page.getByLabel(label('selectPolicy'), { exact: true }).selectOption(policy.id);
     await click('link');
     await confirm();

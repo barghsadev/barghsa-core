@@ -1,7 +1,7 @@
 import { Icon } from './Icon.js';
 import { useEffect, useRef } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { shellText } from '@barghsa/i18n/shell';
 import type { NavigationGroup } from './AppShell.js';
 import { currentNavigation } from '../lib/shell-navigation.js';
@@ -18,6 +18,13 @@ export function BreadcrumbBar({
   locale: 'en' | 'fa';
 }) {
   const current = currentNavigation(groups, pathname);
+  const segment = pathname.split('/').filter(Boolean).at(-1);
+  const pageLabel =
+    segment === 'edit' || segment === 'service-dates'
+      ? 'editPage'
+      : segment === 'new'
+        ? 'newPage'
+        : 'details';
   const root = {
     to: '/app',
     label: shellText(area === 'admin' ? 'administration' : 'workspace', locale),
@@ -29,7 +36,7 @@ export function BreadcrumbBar({
           root,
           ...(current && current.to !== '/app' ? [current] : []),
           ...(pathname !== current?.to
-            ? [{ to: pathname, label: shellText('details', locale) }]
+            ? [{ to: pathname, label: shellText(pageLabel, locale) }]
             : []),
         ];
   const parents = crumbs.slice(0, -1);
@@ -58,6 +65,7 @@ export function BreadcrumbBar({
   const parentLink = (crumb: typeof root) => (
     <Link
       to={crumb.to}
+      activeOptions={{ exact: true }}
       className="shell-breadcrumb-parent"
       title={crumb.label}
       aria-label={shellText('backToPage', locale).replace('{page}', crumb.label)}
@@ -89,7 +97,7 @@ export function BreadcrumbBar({
                   aria-label={shellText('parentPages', locale)}
                   className="shell-breadcrumb-trigger"
                 >
-                  …
+                  {area === 'admin' ? <ChevronDown aria-hidden="true" className="size-4" /> : '…'}
                 </summary>
                 <ol className="shell-breadcrumb-menu">
                   {parents.map((crumb) => (
@@ -97,7 +105,7 @@ export function BreadcrumbBar({
                   ))}
                 </ol>
               </details>
-              {separator}
+              {area === 'dashboard' && separator}
             </>
           )}
         </li>

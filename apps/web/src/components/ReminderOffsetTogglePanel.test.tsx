@@ -61,7 +61,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     await act(async () => {
       root.render(
         <QueryComponentProvider>
-          <ReminderOffsetTogglePanel />
+          <ReminderOffsetTogglePanel service="electricity" />
         </QueryComponentProvider>
       );
     });
@@ -70,13 +70,12 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     });
   }
 
-  it('renders a switch for every service type × offset and loads the matrix', async () => {
+  it('renders each offset for the selected service and loads the full matrix', async () => {
     await renderPanel();
 
-    expect(container.textContent).toContain('Payment reminders by service type');
-    expect(container.textContent).toContain('Electricity');
+    expect(container.textContent).toContain('Schedule relative to the due date');
     expect(container.textContent).toContain('7 days before');
-    expect(container.querySelectorAll('[role="switch"]')).toHaveLength(24);
+    expect(container.querySelectorAll('[role="switch"]')).toHaveLength(6);
     expect(
       (
         container.querySelector(
@@ -104,7 +103,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     await act(async () => reload.click());
 
     expect(container.querySelector('[role="alert"]')).toBeNull();
-    expect(container.querySelectorAll('[role="switch"]')).toHaveLength(24);
+    expect(container.querySelectorAll('[role="switch"]')).toHaveLength(6);
     expect(fetchMock.mock.calls.map(([, init]) => init?.method ?? 'GET')).toEqual(['GET', 'GET']);
   });
 
@@ -146,7 +145,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     await renderPanel();
 
     const toggle = container.querySelector(
-      '[data-testid="reminder-toggle-manual-0"]'
+      '[data-testid="reminder-toggle-electricity-0"]'
     ) as HTMLInputElement;
     await act(async () => {
       toggle.click();
@@ -218,7 +217,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     await renderPanel();
 
     const first = await clickToggle('reminder-toggle-electricity--7');
-    const second = await clickToggle('reminder-toggle-manual-0');
+    const second = await clickToggle('reminder-toggle-electricity-0');
 
     expect(puts).toHaveLength(2);
     expect(first.disabled).toBe(true);
@@ -247,14 +246,14 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     await renderPanel();
 
     const first = await clickToggle('reminder-toggle-electricity--7');
-    const second = await clickToggle('reminder-toggle-manual-0');
+    const second = await clickToggle('reminder-toggle-electricity-0');
 
     expect(puts).toHaveLength(2);
 
     await act(async () => {
       puts[1]!.resolve({
         ok: true,
-        json: async () => matrixWith('manual', 0, false),
+        json: async () => matrixWith('electricity', 0, false),
       });
     });
     await act(async () => {

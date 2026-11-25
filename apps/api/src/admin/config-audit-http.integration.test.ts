@@ -178,6 +178,17 @@ it('records a denial and exposes it only to the authorized audit dashboard', asy
     correlationId: error.correlationId,
   });
   expect(JSON.stringify(page)).not.toMatch(/scope=|do-not-record|barghsa_session/);
+  const date = item.createdAt.slice(0, 10);
+  const exact = await pageResponse(await call(`scope=authorization&eventId=${item.id}`));
+  expect(exact.items).toEqual([item]);
+  expect(exact.nextCursor).toBeNull();
+  const filtered = await pageResponse(
+    await call(`scope=authorization&actor=reader&action=GET&from=${date}&through=${date}`)
+  );
+  expect(filtered.items).toContainEqual(item);
+  expect(filtered.items.every((entry) => entry.actorId === 'reader')).toBe(true);
+  expect((await call(`scope=authorization&eventId=${item.id}&actor=reader`)).status).toBe(400);
+  expect((await call('scope=authorization&from=2026-02-30')).status).toBe(400);
   for (const actor of ['admin', 'reader']) {
     const bootstrap = await fetch(`${http.base}/api/auth/user`, { headers: headers[actor]! });
     expect(bootstrap.status).toBe(200);

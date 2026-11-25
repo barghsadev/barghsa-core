@@ -1,10 +1,20 @@
-import { test as base, type Page } from '@playwright/test';
+import { test as base, type Locator, type Page } from '@playwright/test';
+import { t } from '@barghsa/i18n/workspace';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, basename } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { browserFixtureProxy } from './local-network';
 
 export * from '@playwright/test';
+
+export async function expandListFilters(
+  scope: Page | Locator,
+  locale: 'en' | 'fa',
+  label = t('historyFilters.label', locale)
+) {
+  const toggle = scope.getByRole('button', { name: label, exact: true });
+  if ((await toggle.getAttribute('aria-expanded')) === 'false') await toggle.click();
+}
 
 const componentBuilds = new Map<string, string>();
 const checkpoints = new WeakMap<Page, () => Promise<void>>();

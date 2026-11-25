@@ -1,3 +1,5 @@
+import { RefreshCw } from 'lucide-react';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -54,7 +56,16 @@ import {
 } from '../lib/solar-tracking-form.js';
 import { SolarPostalTrackingSummary } from './SolarPostalTrackingSummary.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 function TrackingDateControl({
   id,
@@ -84,6 +95,7 @@ interface Proposal {
   settled: boolean;
   unconfirmed: boolean;
 }
+
 export function SolarPostalTrackingEditor(
   props: Parameters<typeof OwnedSolarPostalTrackingEditor>[0]
 ) {
@@ -97,10 +109,14 @@ function OwnedSolarPostalTrackingEditor({
   requestId,
   onSaved,
   onDenied,
+  standalone,
+  editorPage = false,
 }: {
   requestId: string;
   onSaved: () => void;
   onDenied: () => void;
+  standalone?: boolean;
+  editorPage?: boolean;
 }) {
   const client = useQueryClient();
   const reader = useId();
@@ -430,17 +446,46 @@ function OwnedSolarPostalTrackingEditor({
   const estimate = form.watch('estimatedArrivalDate');
   const formatted = (value: string | null) =>
     postalCalendarDate(value, locale) ?? copy('postalNotRecorded');
-  const message = (name: keyof SolarTrackingDraft) => (
-    <div className="grid">
-      <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-        {messages[name]}
-      </p>
-      <FormMessage className="col-start-1 row-start-1" />
-    </div>
-  );
+  const Heading = editorPage ? 'h2' : 'h3';
+  const message = (name: keyof SolarTrackingDraft) =>
+    editorPage ? (
+      <FormMessage />
+    ) : (
+      <div className="grid">
+        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
+          {messages[name]}
+        </p>
+        <FormMessage className="col-start-1 row-start-1" />
+      </div>
+    );
   return (
-    <section className="space-y-4 border-t pt-4" aria-label={copy('postalTrackingUpdate')}>
-      <h3 className="text-lg font-semibold">{copy('postalTrackingUpdate')}</h3>
+    <section className="space-y-3" aria-label={copy('postalTrackingUpdate')}>
+      {standalone && (
+        <RecordCommandGuard
+          blocked={() =>
+            commandPendingRef.current ||
+            !!recovering.current ||
+            (proposalRef.current?.attempted === true && !proposalRef.current.settled)
+          }
+        />
+      )}
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <Heading className="text-base font-semibold">
+          {editorPage ? tSolarStaffRecord('shipmentContext', locale) : copy('postalTrackingUpdate')}
+        </Heading>
+        <Button
+          id="postal-tracking-reload"
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label={copy('postalTrackingReload')}
+          title={copy('postalTrackingReload')}
+          disabled={commandPending}
+          onClick={reload}
+        >
+          <RefreshCw aria-hidden="true" />
+        </Button>
+      </header>
       {!detail && !error && <p role="status">{copy('loading')}</p>}
       {error && (
         <Alert variant="destructive">
@@ -454,15 +499,6 @@ function OwnedSolarPostalTrackingEditor({
           <AlertDescription>{copy('postalTrackingUnconfirmed')}</AlertDescription>
         </Alert>
       )}
-      <Button
-        id="postal-tracking-reload"
-        type="button"
-        variant="outline"
-        disabled={commandPending}
-        onClick={reload}
-      >
-        {copy('postalTrackingReload')}
-      </Button>
       {unconfirmed && shownDetail && recovering.current && (
         <Button
           type="button"
@@ -481,132 +517,162 @@ function OwnedSolarPostalTrackingEditor({
       )}
       {shownDetail && (
         <>
-          <SolarPostalTrackingSummary tracking={shownDetail} />
+          {editorPage && shownDetail.canEdit ? (
+            <div className="space-y-2 rounded-lg bg-muted/45 p-3">
+              <p className="wrap-anywhere text-sm">
+                {copy('postalTracking')}{' '}
+                <bdi dir="ltr" className="font-medium">
+                  {shownDetail.trackingNumber ?? copy('postalNotRecorded')}
+                </bdi>
+              </p>
+              <details>
+                <summary className="w-fit cursor-pointer text-sm text-primary">
+                  {copy('postalTrackingPrevious')}
+                </summary>
+                <SolarPostalTrackingSummary tracking={shownDetail} />
+              </details>
+            </div>
+          ) : (
+            <SolarPostalTrackingSummary tracking={shownDetail} />
+          )}
           {!shownDetail.canEdit && <p>{copy('postalTrackingBlocked')}</p>}
           {shownDetail.canEdit && (
             <Form {...form}>
               <form
                 id="postal-tracking-form"
                 noValidate
-                className="space-y-4"
+                className={recordEditorSurface}
                 aria-label={copy('postalTrackingReview')}
                 onSubmit={(event) => void review(event)}
               >
-                {form.formState.errors.root && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{copy('progressValidationUnavailable')}</AlertDescription>
-                  </Alert>
-                )}
-                <FormField
-                  control={form.control}
-                  name="estimatedArrivalDate"
-                  render={({ field }) => (
-                    <FormItem id="postal-arrival-estimate">
-                      <FormLabel id="postal-arrival-estimate-label">
-                        {copy('postalArrivalEstimate')}
-                      </FormLabel>
-                      <FormControl>
-                        <TrackingDateControl
-                          locale={locale}
-                          timezone={time.timezone}
-                          disabled={locked || time.status !== 'ready'}
-                          {...(field.value
-                            ? { value: datePickerCalendarDate(field.value, time.timezone) }
-                            : {})}
-                          {...(shownDetail.sendDate
-                            ? {
-                                minDate: datePickerCalendarDate(
-                                  shownDetail.sendDate,
-                                  time.timezone
-                                ),
-                              }
-                            : {})}
-                          triggerProps={{
-                            ref: field.ref,
-                            name: field.name,
-                            'aria-labelledby': 'postal-arrival-estimate-label',
-                          }}
-                          onBlur={field.onBlur}
-                          onChange={(value) => {
-                            dirty.current = true;
-                            field.onChange(postalDateInput(value, time.timezone));
-                          }}
-                        />
-                      </FormControl>
-                      {estimate && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          disabled={locked}
-                          onClick={() => {
-                            dirty.current = true;
-                            form.setValue('estimatedArrivalDate', '', {
-                              shouldDirty: true,
-                              shouldTouch: true,
-                              shouldValidate: true,
-                            });
-                          }}
-                        >
-                          {copy('postalClearEstimate')}
-                        </Button>
+                <RecordEditorSection title={tSolarStaffRecord('trackingDetails', locale)}>
+                  {form.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('progressValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  <div className={recordEditorGrid}>
+                    <FormField
+                      control={form.control}
+                      name="estimatedArrivalDate"
+                      render={({ field }) => (
+                        <FormItem id="postal-arrival-estimate" className={recordEditorField}>
+                          <FormLabel id="postal-arrival-estimate-label">
+                            {copy('postalArrivalEstimate')}
+                          </FormLabel>
+                          <FormControl>
+                            <TrackingDateControl
+                              locale={locale}
+                              timezone={time.timezone}
+                              disabled={locked || time.status !== 'ready'}
+                              {...(field.value
+                                ? { value: datePickerCalendarDate(field.value, time.timezone) }
+                                : {})}
+                              {...(shownDetail.sendDate
+                                ? {
+                                    minDate: datePickerCalendarDate(
+                                      shownDetail.sendDate,
+                                      time.timezone
+                                    ),
+                                  }
+                                : {})}
+                              triggerProps={{
+                                ref: field.ref,
+                                name: field.name,
+                                'aria-labelledby': 'postal-arrival-estimate-label',
+                              }}
+                              onBlur={field.onBlur}
+                              onChange={(value) => {
+                                dirty.current = true;
+                                field.onChange(postalDateInput(value, time.timezone));
+                              }}
+                            />
+                          </FormControl>
+                          {estimate && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              disabled={locked}
+                              onClick={() => {
+                                dirty.current = true;
+                                form.setValue('estimatedArrivalDate', '', {
+                                  shouldDirty: true,
+                                  shouldTouch: true,
+                                  shouldValidate: true,
+                                });
+                              }}
+                            >
+                              {copy('postalClearEstimate')}
+                            </Button>
+                          )}
+                          <FormDescription>{copy('postalEstimateHelp')}</FormDescription>
+                          {message('estimatedArrivalDate')}
+                        </FormItem>
                       )}
-                      <FormDescription>{copy('postalEstimateHelp')}</FormDescription>
-                      {message('estimatedArrivalDate')}
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="trackingUrl"
-                  render={({ field }) => (
-                    <FormItem id="postal-tracking-url">
-                      <FormLabel>{copy('postalTrackingUrl')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="url"
-                          dir="ltr"
-                          disabled={locked}
-                          onChange={(event) => {
-                            dirty.current = true;
-                            field.onChange(event);
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>{copy('postalTrackingUrlHelp')}</FormDescription>
-                      {message('trackingUrl')}
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="note"
-                  render={({ field }) => (
-                    <FormItem id="postal-tracking-note">
-                      <FormLabel>{copy('postalTrackingNote')}</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          aria-required="true"
-                          disabled={locked}
-                          onChange={(event) => {
-                            dirty.current = true;
-                            field.onChange(event);
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>{copy('postalTrackingNoteHelp')}</FormDescription>
-                      {message('note')}
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  loading={preparing}
-                  disabled={locked || time.status !== 'ready'}
-                >
-                  {copy('postalTrackingReview')}
-                </Button>
+                    />
+                    <FormField
+                      control={form.control}
+                      name="trackingUrl"
+                      render={({ field }) => (
+                        <FormItem id="postal-tracking-url" className={recordEditorField}>
+                          <FormLabel>{copy('postalTrackingUrl')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="url"
+                              dir="ltr"
+                              placeholder="https://"
+                              disabled={locked}
+                              onChange={(event) => {
+                                dirty.current = true;
+                                field.onChange(event);
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription>{copy('postalTrackingUrlHelp')}</FormDescription>
+                          {message('trackingUrl')}
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </RecordEditorSection>
+                <RecordEditorSection title={tSolarStaffRecord('trackingUpdateNote', locale)}>
+                  <FormField
+                    control={form.control}
+                    name="note"
+                    render={({ field }) => (
+                      <FormItem id="postal-tracking-note" className={recordEditorField}>
+                        <FormLabel>{copy('postalTrackingNote')}</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            aria-required="true"
+                            disabled={locked}
+                            rows={2}
+                            className="min-h-14 max-h-40 resize-y"
+                            placeholder={tSolarStaffRecord('trackingNoteExample', locale)}
+                            onChange={(event) => {
+                              dirty.current = true;
+                              field.onChange(event);
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>{copy('postalTrackingNoteHelp')}</FormDescription>
+                        {message('note')}
+                      </FormItem>
+                    )}
+                  />
+                </RecordEditorSection>
+                <RecordEditorActions>
+                  <Button
+                    type="submit"
+                    loading={preparing}
+                    disabled={locked || time.status !== 'ready'}
+                  >
+                    {copy('postalTrackingReview')}
+                  </Button>
+                </RecordEditorActions>
               </form>
             </Form>
           )}
@@ -615,6 +681,7 @@ function OwnedSolarPostalTrackingEditor({
       {proposal && proposal.generation === generation.current && (
         <TeamActionDialog
           action={proposal.action}
+          toastErrors={!editorPage}
           onClose={() => {
             if (proposalRef.current === proposal && proposal.generation === generation.current)
               closeProposal();

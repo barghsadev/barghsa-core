@@ -1,4 +1,7 @@
 const en: Record<string, string> = {
+  staffRecordTitle: 'Saving order',
+  staffBackToQueue: 'Back to saving orders',
+  staffOrderSections: 'Order sections',
   staffReviewTitle: 'Saving order financial review',
   staffReviewProfile: 'Buyer profile',
   staffReviewLoading: 'Checking the decision outcome…',
@@ -54,6 +57,9 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
+  staffRecordTitle: 'سفارش صرفه‌جویی',
+  staffBackToQueue: 'بازگشت به صف سفارش‌های صرفه‌جویی',
+  staffOrderSections: 'بخش‌های سفارش',
   staffReviewTitle: 'بررسی مالی سفارش صرفه‌جویی',
   staffReviewProfile: 'پروفایل خریدار',
   staffReviewLoading: 'در حال بررسی نتیجه تصمیم…',

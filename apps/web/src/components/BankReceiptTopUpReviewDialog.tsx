@@ -3,6 +3,7 @@ import { FinancialConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import { t } from '@barghsa/i18n/workspace';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
+import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 
 export default function BankReceiptTopUpReviewDialog({
   review,
@@ -32,6 +33,7 @@ export default function BankReceiptTopUpReviewDialog({
       loading={loading}
     >
       <FinancialReviewSummary
+        compact
         title={t('wallet.page.reviewSummary', locale)}
         rows={[
           {
@@ -42,7 +44,7 @@ export default function BankReceiptTopUpReviewDialog({
           {
             id: 'date',
             label: t('wallet.page.receiptDateLabel', locale),
-            value: review.data.paymentDate,
+            value: <ReceiptDepositDate value={review.data.paymentDate} locale={locale} />,
           },
           {
             id: 'reference',

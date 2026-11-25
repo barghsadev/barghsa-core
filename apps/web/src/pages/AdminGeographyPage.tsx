@@ -1,32 +1,40 @@
+import {
+  Ban as TableBanIcon,
+  CheckCircle as TableCheckCircleIcon,
+  MapPin as TableMapPinIcon,
+  Pencil as TablePencilIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { LoadingStatus, Alert, AlertDescription, Button, Input, ListPage } from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
+import {
+  LoadingStatus,
+  Alert,
+  AlertDescription,
+  Button,
+  buttonVariants,
+  ListPage,
+  ListRefreshButton,
+  ListSearchInput,
+  NativeSelect,
+} from '@barghsa/ui';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { listProvinces } from '../lib/geography-api.js';
 import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
 import { CitiesPanel } from './AdminCitiesPanel.js';
-import {
-  GeographyDialog,
-  useGeographyEditorAddress,
-  type GeographyEditorAddress,
-  type GeographyModal,
-} from './AdminGeographyDialog.js';
-const selectClass =
-  'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
+import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { geographyBasis, useGeographyList } from '../hooks/useGeographyList.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-export interface GeographyQueryBinding {
-  provinces: ListQueryBinding;
-  cities: ListQueryBinding;
-  expanded: string | null;
-  provinceEditor: GeographyEditorAddress;
-  cityEditor: GeographyEditorAddress;
-  setExpanded: (id: string | null, replace?: boolean) => void;
-  clear: () => void;
-}
-export default function AdminGeographyPage({ query }: { query?: GeographyQueryBinding } = {}) {
+export default function AdminGeographyPage({
+  query,
+  routeSearch,
+}: {
+  query?: ListQueryBinding;
+  routeSearch?: Record<string, unknown>;
+} = {}) {
   const locale = useLocale();
   const t = (key: GeographyTextKey) => geographyText(key, locale);
   const { number } = useNumberFormatting(locale);
@@ -37,20 +45,15 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
   const [localStatus, setLocalStatus] = useState('');
   const queryRef = useRef(query);
   queryRef.current = query;
-  const expanded = query ? query.expanded : localExpanded;
-  const page = query?.provinces.query.page ?? localPage;
-  const search = query?.provinces.query.search ?? localSearch;
-  const searchInput = query?.provinces.searchInput ?? localSearchInput;
-  const status = query?.provinces.query.filters.status ?? localStatus;
-  const setExpanded = useCallback((id: string | null, replace = false) => {
-    if (queryRef.current) {
-      if (queryRef.current.expanded !== id) queryRef.current.setExpanded(id, replace);
-    } else setLocalExpanded(id);
-  }, []);
+  const expanded = localExpanded;
+  const page = query?.query.page ?? localPage;
+  const search = query?.query.search ?? localSearch;
+  const searchInput = query?.searchInput ?? localSearchInput;
+  const status = query?.query.filters.status ?? localStatus;
   const setPage = useCallback((next: number | ((value: number) => number), replace = false) => {
     if (queryRef.current) {
-      const value = typeof next === 'function' ? next(queryRef.current.provinces.query.page) : next;
-      queryRef.current.provinces.setQuery({ page: value }, replace);
+      const value = typeof next === 'function' ? next(queryRef.current.query.page) : next;
+      queryRef.current.setQuery({ page: value }, replace);
     } else setLocalPage(next);
   }, []);
   const repairPage = useCallback((value: number) => setPage(value, true), [setPage]);
@@ -93,29 +96,19 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
   const ready = !scope.denied && !!list.data && !loading && !error;
   const modalPage = useRef(1),
     acceptedCriteria = useRef(criteria);
-  const publishEditor = useGeographyEditorAddress(
-    query?.provinceEditor,
-    provinces,
-    ready && list.acceptedPage === page && acceptedCriteria.current === criteria,
-    heading,
-    (value) => {
-      if (value) openModal(value, false);
-      else setModal(null);
-    }
-  );
   useEffect(() => {
     if (acceptedCriteria.current === criteria) return;
     savedTrigger.current = null;
     acceptedCriteria.current = criteria;
-    if (!queryRef.current) setExpanded(null, true);
+    setLocalExpanded(null);
     setModal(null);
   }, [criteria]);
   useEffect(() => {
     if (!list.data || loading || error) return;
-    if (expanded && !list.data.rows.some((row) => row.id === expanded)) setExpanded(null, true);
+    if (expanded && !list.data.rows.some((row) => row.id === expanded)) setLocalExpanded(null);
     if (modal?.province && list.acceptedPage === modalPage.current) {
       const next = list.data.rows.find((row) => row.id === modal.province?.id);
-      if (!next || geographyBasis(next) !== geographyBasis(modal.province)) closeModal(true);
+      if (!next || geographyBasis(next) !== geographyBasis(modal.province)) setModal(null);
     }
   }, [list.data, list.acceptedPage, loading, error, expanded, modal]);
   useEffect(() => {
@@ -128,16 +121,11 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
     });
     return () => cancelAnimationFrame(frame);
   }, [ready, modal]);
-  function openModal(value: GeographyModal, publish = true) {
+  function openModal(value: GeographyModal) {
     if (!ready) return;
     savedTrigger.current = null;
     modalPage.current = list.acceptedPage;
     setModal(value);
-    if (publish && value.kind !== 'deactivate') publishEditor(value.province?.id ?? 'new');
-  }
-  function closeModal(replace = false) {
-    setModal(null);
-    publishEditor(null, replace);
   }
   function refresh() {
     if (scope.denied) scope.recover();
@@ -164,49 +152,61 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
           {t('title')}
         </h1>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" disabled={loading} onClick={refresh}>
-            {t('refresh')}
-          </Button>
-          <Button
-            disabled={!ready}
-            onClick={(event) =>
-              openModal({ kind: 'add', province: null, trigger: event.currentTarget })
-            }
-          >
-            {t('add')}
-          </Button>
+          {routeSearch && ready ? (
+            <Link
+              className={buttonVariants({ className: 'min-h-11' })}
+              to="/admin/geography/provinces/$provinceId/{-$action}"
+              params={{ provinceId: 'new' }}
+              search={routeSearch}
+            >
+              {t('add')}
+            </Link>
+          ) : (
+            <Button
+              disabled={!ready}
+              onClick={(event) =>
+                openModal({ kind: 'add', province: null, trigger: event.currentTarget })
+              }
+            >
+              {t('add')}
+            </Button>
+          )}
         </div>
       </header>
       <ListPage>
-        <ListPage.Toolbar className="flex flex-wrap gap-4">
-          <Input
-            className="max-w-sm"
-            aria-label={t('search')}
-            placeholder={t('search')}
-            value={searchInput}
-            onChange={(event) =>
-              query
-                ? query.provinces.setSearchInput(event.target.value)
-                : setLocalSearchInput(event.target.value)
-            }
-          />
-          <select
-            className={selectClass}
-            aria-label={t('filterStatus')}
-            value={status}
-            onChange={(event) => {
-              if (query) query.provinces.setQuery({ filters: { status: event.target.value } });
-              else {
-                setLocalStatus(event.target.value);
-                setPage(1);
+        <ListPage.Toolbar
+          search={
+            <ListSearchInput
+              label={t('search')}
+              value={searchInput}
+              onChange={(event) =>
+                query
+                  ? query.setSearchInput(event.target.value)
+                  : setLocalSearchInput(event.target.value)
               }
-            }}
-          >
-            <option value="">{t('all')}</option>
-            <option value="active">{t('active')}</option>
-            <option value="inactive">{t('inactive')}</option>
-          </select>
-        </ListPage.Toolbar>
+            />
+          }
+          sort={
+            <NativeSelect
+              aria-label={t('filterStatus')}
+              value={status}
+              onChange={(event) => {
+                if (query) query.setQuery({ filters: { status: event.target.value } });
+                else {
+                  setLocalStatus(event.target.value);
+                  setPage(1);
+                }
+              }}
+            >
+              <option value="">{t('all')}</option>
+              <option value="active">{t('active')}</option>
+              <option value="inactive">{t('inactive')}</option>
+            </NativeSelect>
+          }
+          refresh={
+            <ListRefreshButton label={t('refresh')} refreshing={loading} onClick={refresh} />
+          }
+        />
         {scope.denied && <p role="alert">{t('denied')}</p>}
         <ListPage.Content
           loading={loading}
@@ -235,39 +235,105 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
                 tableClassName="min-w-[42rem]"
                 loading={loading}
                 error={error}
+                {...(routeSearch && ready
+                  ? {
+                      renderName: (province, name) => (
+                        <Link
+                          to="/admin/geography/provinces/$provinceId/{-$action}"
+                          params={{ provinceId: province.id }}
+                          search={routeSearch}
+                          className="font-semibold text-primary underline-offset-4 hover:underline"
+                        >
+                          {name}
+                        </Link>
+                      ),
+                    }
+                  : {})}
                 renderActions={(province) => (
                   <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      data-city-disclosure={province.id}
-                      aria-expanded={expanded === province.id}
-                      aria-controls={expanded === province.id ? `cities-${province.id}` : undefined}
-                      onClick={() => setExpanded(expanded === province.id ? null : province.id)}
-                    >
-                      {t('cities')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={!ready}
-                      onClick={(event) =>
-                        openModal({ kind: 'edit', province, trigger: event.currentTarget })
-                      }
-                    >
-                      {t('edit')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={!ready}
-                      onClick={(event) =>
-                        openModal({
-                          kind: province.status === 'active' ? 'deactivate' : 'edit',
-                          province,
-                          trigger: event.currentTarget,
-                        })
-                      }
-                    >
-                      {t(province.status === 'active' ? 'deactivate' : 'activate')}
-                    </Button>
+                    {routeSearch ? (
+                      <>
+                        {ready && (
+                          <>
+                            <Link
+                              className={buttonVariants({
+                                variant: 'outline',
+                                className: 'min-h-11',
+                              })}
+                              to="/admin/geography/provinces/$provinceId/{-$action}"
+                              params={{ provinceId: province.id }}
+                              search={routeSearch}
+                              data-table-action-tooltip={t('cities')}
+                            >
+                              <TableActionIcon icon={TableMapPinIcon}>
+                                {t('cities')}
+                              </TableActionIcon>
+                            </Link>
+                            <Link
+                              className={buttonVariants({
+                                variant: 'outline',
+                                className: 'min-h-11',
+                              })}
+                              to="/admin/geography/provinces/$provinceId/{-$action}"
+                              params={{ provinceId: province.id, action: 'edit' }}
+                              search={routeSearch}
+                              data-table-action-tooltip={t('edit')}
+                            >
+                              <TableActionIcon icon={TablePencilIcon}>{t('edit')}</TableActionIcon>
+                            </Link>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outline"
+                          data-city-disclosure={province.id}
+                          aria-expanded={expanded === province.id}
+                          aria-controls={
+                            expanded === province.id ? `cities-${province.id}` : undefined
+                          }
+                          onClick={() =>
+                            setLocalExpanded(expanded === province.id ? null : province.id)
+                          }
+                          data-table-action-tooltip={t('cities')}
+                        >
+                          <TableActionIcon icon={TableMapPinIcon}>{t('cities')}</TableActionIcon>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          disabled={!ready}
+                          onClick={(event) =>
+                            openModal({ kind: 'edit', province, trigger: event.currentTarget })
+                          }
+                          data-table-action-tooltip={t('edit')}
+                        >
+                          <TableActionIcon icon={TablePencilIcon}>{t('edit')}</TableActionIcon>
+                        </Button>
+                      </>
+                    )}
+                    {(!routeSearch || province.status === 'active') && (
+                      <Button
+                        variant="outline"
+                        disabled={!ready}
+                        onClick={(event) =>
+                          openModal({
+                            kind: province.status === 'active' ? 'deactivate' : 'edit',
+                            province,
+                            trigger: event.currentTarget,
+                          })
+                        }
+                        data-table-action-tooltip={t(
+                          province.status === 'active' ? 'deactivate' : 'activate'
+                        )}
+                      >
+                        <TableActionIcon
+                          icon={province.status === 'active' ? TableBanIcon : TableCheckCircleIcon}
+                        >
+                          {t(province.status === 'active' ? 'deactivate' : 'activate')}
+                        </TableActionIcon>
+                      </Button>
+                    )}
                   </div>
                 )}
               />
@@ -280,7 +346,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
                     parentReady={ready}
                     parentRecovery={recovery}
                     onClose={() => {
-                      setExpanded(null);
+                      setLocalExpanded(null);
                       const trigger = Array.from(
                         document.querySelectorAll<HTMLButtonElement>('button[data-city-disclosure]')
                       ).find(
@@ -290,7 +356,6 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
                       );
                       trigger?.focus();
                     }}
-                    {...(query ? { query: query.cities, editorAddress: query.cityEditor } : {})}
                   />
                 </div>
               )}
@@ -334,10 +399,10 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
           readReady={ready}
           recovery={recovery}
           onDenied={scope.deny}
-          onClose={() => closeModal()}
+          onClose={() => setModal(null)}
           onSaved={() => {
             savedTrigger.current = modal.trigger;
-            closeModal(true);
+            setModal(null);
             list.retry();
           }}
         />

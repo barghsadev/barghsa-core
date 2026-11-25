@@ -4,6 +4,8 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
+import { RefreshCw } from 'lucide-react';
 import {
   LoadingStatus,
   Alert,
@@ -13,6 +15,7 @@ import {
   Label,
   ListPage,
   Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import {
   Form,
@@ -30,7 +33,11 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import type { SolarProgress } from '../lib/solar-progress.js';
+import {
+  solarMilestonePaths,
+  type SolarMilestone,
+  type SolarProgress,
+} from '../lib/solar-progress.js';
 import {
   captureProgress,
   confirmedProgress,
@@ -42,9 +49,23 @@ import {
 } from '../lib/solar-progress-form.js';
 import { withCsrf } from '../lib/csrf.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
+import { SolarStaffRecordHeader } from '../components/SolarStaffRecordHeader.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
+
+const milestoneExamples = {
+  in_progress: 'milestoneExampleWork',
+  delivered: 'milestoneExampleDelivery',
+  installed: 'milestoneExampleInstallation',
+} as const;
+
 interface Row {
   requestId: string;
   contractId: string;
@@ -91,10 +112,14 @@ function OwnedAdminSolarConstructionPage({
   queries,
   selected,
   onSelect,
+  queueSearch,
+  milestoneEditor,
 }: {
-  queries: ListQueryBinding;
+  queries?: ListQueryBinding;
   selected: string | null;
-  onSelect: (id: string | null) => void;
+  onSelect?: (id: string | null) => void;
+  queueSearch?: Record<string, unknown>;
+  milestoneEditor?: SolarMilestone;
 }) {
   const readActor = useAccountUser();
   const readProfileRevision = useProfileContextRevision();
@@ -117,6 +142,7 @@ function OwnedAdminSolarConstructionPage({
     'loading'
   );
   const [detailRevision, setDetailRevision] = useState(0);
+  const [recordedMilestone, setRecordedMilestone] = useState<SolarMilestone | null>(null);
   const [preparing, setPreparing] = useState(false);
   const preparingRef = useRef(false);
   const [pending, setPending] = useState(false);
@@ -129,8 +155,9 @@ function OwnedAdminSolarConstructionPage({
   const previewAbort = useRef<AbortController | null>(null);
   const mounted = useRef(false);
   const accessDenied = useRef(false);
-  const q = queries.query.search,
-    before = queries.query.cursor;
+  const q = queries?.query.search ?? '',
+    before = queries?.query.cursor ?? '';
+  const showQueue = !!queries;
   const queueKey = JSON.stringify([q, before]);
   const currentActor = useRef(actor);
   if (currentActor.current !== actor) {
@@ -184,6 +211,7 @@ function OwnedAdminSolarConstructionPage({
     setPending(false);
     setUncertain(false);
     setSaveError(false);
+    setRecordedMilestone(null);
   }
   function deny() {
     accessDenied.current = true;
@@ -230,7 +258,7 @@ function OwnedAdminSolarConstructionPage({
   }
   useEffect(() => {
     const abort = new AbortController();
-    if (accessDenied.current) return () => abort.abort();
+    if (!showQueue || accessDenied.current) return () => abort.abort();
     setQueueState('loading');
     const params = new URLSearchParams();
     if (q) params.set('q', q);
@@ -266,7 +294,7 @@ function OwnedAdminSolarConstructionPage({
           setQueueState('error');
       });
     return () => abort.abort();
-  }, [q, before, queueRevision, actor, readStaff]);
+  }, [showQueue, q, before, queueRevision, actor, readStaff]);
   useEffect(() => {
     const abort = new AbortController();
     if (accessDenied.current) return () => abort.abort();
@@ -318,6 +346,7 @@ function OwnedAdminSolarConstructionPage({
             setAction(null);
             form.reset({ note: '' });
             setSaveError(false);
+            if (milestoneEditor) setRecordedMilestone(recoveryAtRead.captured.command.stage);
           }
           setProgress(result);
           setProgressScope(scope);
@@ -329,12 +358,14 @@ function OwnedAdminSolarConstructionPage({
           setDetailState('error');
       });
     return () => abort.abort();
-  }, [scope, detailRevision, readStaff]);
+  }, [scope, detailRevision, readStaff, milestoneEditor]);
   function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (
       !progress?.canRecord ||
       !progress.nextMilestone ||
+      (milestoneEditor && progress.nextMilestone !== milestoneEditor) ||
+      recordedMilestone ||
       progressScope !== scope ||
       busy() ||
       reviewed.current
@@ -458,106 +489,184 @@ function OwnedAdminSolarConstructionPage({
     queue?.actor === actor && queue.search === q && queueState !== 'denied' ? queue.items : [];
   const fresh = queue?.actor === actor && queue.key === queueKey && queueState === 'ready';
   const command = reviewed.current?.captured.command;
+  const nextMilestone = visible?.nextMilestone;
+  const canRecord = !!visible?.canRecord && !!nextMilestone;
+  const editingStage = uncertain
+    ? command?.stage
+    : canRecord && (!milestoneEditor || milestoneEditor === nextMilestone)
+      ? nextMilestone
+      : null;
+  const lastMilestone = visible?.events.at(-1);
   const locked = preparing || pending || form.formState.isSubmitting || !!action || uncertain;
+  function constructionQueueLabel(row: Row) {
+    return (
+      <>
+        <span>
+          {copy('solarViewContract')}: <bdi>{row.contractNumber}</bdi>
+        </span>
+        <span className="text-sm text-muted-foreground">
+          {row.stage ? copy(`construction_${row.stage}`) : copy('constructionNoUpdates')}
+        </span>
+        <span className="text-xs text-muted-foreground break-all">
+          <bdi>{row.requestId}</bdi>
+        </span>
+        <time className="text-xs text-muted-foreground" dateTime={row.submittedAt}>
+          {time.format(row.submittedAt, { dateStyle: 'medium' })}
+        </time>
+      </>
+    );
+  }
+  const navigationBlocked = () =>
+    pendingRef.current ||
+    uncertainRef.current ||
+    (reviewed.current?.attempted === true && !!action);
+  const reloadProgress = (
+    <Button
+      id="solar-construction-reload"
+      variant="ghost"
+      size="icon"
+      aria-label={copy('constructionReload')}
+      title={copy('constructionReload')}
+      disabled={busy() || detailState === 'loading'}
+      onClick={() => {
+        if (!busy()) setDetailRevision((v) => v + 1);
+      }}
+    >
+      <RefreshCw aria-hidden="true" />
+    </Button>
+  );
   return (
-    <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header>
-        <h1 className="text-3xl font-semibold">{copy('constructionStaffTitle')}</h1>
-        <p className="mt-2 text-muted-foreground">{copy('constructionStaffDescription')}</p>
-      </header>
-      {time.notice}
-      <ListPage>
-        <ListPage.Toolbar
-          search={
-            <div className="max-w-md space-y-2">
-              <Label htmlFor="solar-construction-search">{copy('constructionSearch')}</Label>
-              <Input
-                id="solar-construction-search"
-                value={queries.searchInput}
-                disabled={pending || !!action}
-                onChange={(event) => {
-                  if (!pendingRef.current && !action) queries.setSearchInput(event.target.value);
+    <div
+      data-slot={showQueue ? undefined : 'solar-staff-construction'}
+      className={showQueue ? 'space-y-6' : 'mx-auto max-w-3xl space-y-3'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {showQueue ? (
+        <header>
+          <h1 className="text-3xl font-semibold">{copy('constructionStaffTitle')}</h1>
+          <p className="mt-2 text-muted-foreground">{copy('constructionStaffDescription')}</p>
+        </header>
+      ) : (
+        <SolarStaffRecordHeader
+          stage="construction"
+          search={queueSearch ?? {}}
+          reference={selected && <bdi dir="ltr">{selected}</bdi>}
+          blocked={navigationBlocked}
+          {...(milestoneEditor && { headingText: tSolarStaffRecord('recordMilestone', locale) })}
+          action={milestoneEditor && visible && !recordedMilestone ? reloadProgress : undefined}
+          backLink={
+            milestoneEditor && selected ? (
+              <Link
+                to="/admin/solar-requests/$requestId/construction/{-$operation}"
+                params={{ requestId: selected, operation: undefined }}
+                search={queueSearch ?? {}}
+                className="touch-action text-sm text-primary underline underline-offset-4"
+                aria-disabled={navigationBlocked() || undefined}
+                onClick={(event) => {
+                  if (navigationBlocked()) event.preventDefault();
                 }}
-              />
-            </div>
+              >
+                {tSolarStaffRecord('backToConstructionRecord', locale)}
+              </Link>
+            ) : undefined
           }
         />
-        <ListPage.Content
-          loading={queueState === 'loading'}
-          error={queueState === 'error' || queueState === 'denied'}
-          empty={!rows.length}
-          retainContent={!!rows.length}
-          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-          errorView={
-            <div className="space-y-2">
-              <p role="alert">
-                {copy(queueState === 'denied' ? 'staffQueueForbidden' : 'staffQueueLoadError')}
-              </p>
-              {queueState !== 'denied' && (
-                <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
-                  {copy('retry')}
-                </Button>
-              )}
-            </div>
-          }
-          emptyView={<p>{copy('constructionEmpty')}</p>}
-        >
-          <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {rows.map((row) => (
-              <li key={row.requestId}>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-auto w-full min-w-0 flex-col items-start gap-2 whitespace-normal p-4 text-start"
-                  aria-pressed={selected === row.requestId}
+      )}
+      {time.notice}
+      {queries && (
+        <ListPage>
+          <ListPage.Toolbar
+            search={
+              <div className="max-w-md space-y-2">
+                <Label htmlFor="solar-construction-search">{copy('constructionSearch')}</Label>
+                <Input
+                  id="solar-construction-search"
+                  value={queries.searchInput}
                   disabled={pending || !!action}
-                  onClick={() => {
-                    if (pendingRef.current || action || selected === row.requestId) return;
-                    invalidate();
-                    form.reset({ note: '' });
-                    setProgress(null);
-                    onSelect(row.requestId);
+                  onChange={(event) => {
+                    if (!pendingRef.current && !action) queries.setSearchInput(event.target.value);
                   }}
-                >
-                  <span>
-                    {copy('solarViewContract')}: <bdi>{row.contractNumber}</bdi>
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {row.stage ? copy(`construction_${row.stage}`) : copy('constructionNoUpdates')}
-                  </span>
-                  <span className="text-xs text-muted-foreground break-all">
-                    <bdi>{row.requestId}</bdi>
-                  </span>
-                  <time className="text-xs text-muted-foreground" dateTime={row.submittedAt}>
-                    {time.format(row.submittedAt, { dateStyle: 'medium' })}
-                  </time>
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </ListPage.Content>
-        <ListPage.Pagination
-          kind="cursor"
-          loading={queueState === 'loading'}
-          hasMore={fresh && !!queue?.nextBefore && queries.canAdvance(queue.nextBefore)}
-          label={copy('constructionStaffTitle')}
-          nextLabel={copy('moreRequests')}
-          onNext={() => {
-            if (pendingRef.current || action) return;
-            invalidate();
-            if (queue?.nextBefore) queries.next(queue.nextBefore);
-          }}
-          previous={{
-            enabled: queries.hasPrevious,
-            label: copy('previous'),
-            onClick: () => {
+                />
+              </div>
+            }
+          />
+          <ListPage.Content
+            loading={queueState === 'loading'}
+            error={queueState === 'error' || queueState === 'denied'}
+            empty={!rows.length}
+            retainContent={!!rows.length}
+            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+            errorView={
+              <div className="space-y-2">
+                <p role="alert">
+                  {copy(queueState === 'denied' ? 'staffQueueForbidden' : 'staffQueueLoadError')}
+                </p>
+                {queueState !== 'denied' && (
+                  <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
+                    {copy('retry')}
+                  </Button>
+                )}
+              </div>
+            }
+            emptyView={<p>{copy('constructionEmpty')}</p>}
+          >
+            <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {rows.map((row) => (
+                <li key={row.requestId}>
+                  {queueSearch ? (
+                    <Link
+                      to="/admin/solar-requests/$requestId/construction/{-$operation}"
+                      params={{ requestId: row.requestId }}
+                      search={queueSearch}
+                      className="flex flex-col items-start gap-2 rounded-lg border bg-card p-4 text-start hover:border-primary"
+                    >
+                      {constructionQueueLabel(row)}
+                    </Link>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-auto w-full min-w-0 flex-col items-start gap-2 whitespace-normal p-4 text-start"
+                      aria-pressed={selected === row.requestId}
+                      disabled={pending || !!action}
+                      onClick={() => {
+                        if (pendingRef.current || action || selected === row.requestId) return;
+                        invalidate();
+                        form.reset({ note: '' });
+                        setProgress(null);
+                        onSelect?.(row.requestId);
+                      }}
+                    >
+                      {constructionQueueLabel(row)}
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </ListPage.Content>
+          <ListPage.Pagination
+            kind="cursor"
+            loading={queueState === 'loading'}
+            hasMore={fresh && !!queue?.nextBefore && queries.canAdvance(queue.nextBefore)}
+            label={copy('constructionStaffTitle')}
+            nextLabel={copy('moreRequests')}
+            onNext={() => {
               if (pendingRef.current || action) return;
               invalidate();
-              queries.previous();
-            },
-          }}
-        />
-      </ListPage>
+              if (queue?.nextBefore) queries.next(queue.nextBefore);
+            }}
+            previous={{
+              enabled: queries.hasPrevious,
+              label: copy('previous'),
+              onClick: () => {
+                if (pendingRef.current || action) return;
+                invalidate();
+                queries.previous();
+              },
+            }}
+          />
+        </ListPage>
+      )}
       {uncertain && !accessDenied.current && (
         <Alert variant="destructive">
           <AlertDescription>{copy('progressActionUnconfirmed')}</AlertDescription>
@@ -592,7 +701,6 @@ function OwnedAdminSolarConstructionPage({
           </div>
         </Alert>
       )}
-      {!selected && <p>{copy('constructionSelect')}</p>}
       {selected && !visible && (
         <div className="space-y-2">
           <p role={detailState === 'loading' ? 'status' : 'alert'}>
@@ -611,90 +719,125 @@ function OwnedAdminSolarConstructionPage({
           )}
         </div>
       )}
-      {visible && (
+      {visible && !milestoneEditor && (
         <>
           <div className="flex flex-wrap items-center justify-between gap-3">
             {visible.contractId && (
               <Link
                 className="underline"
-                to="/admin/contracts"
-                search={{ contractId: visible.contractId }}
+                to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                params={{ contractId: visible.contractId }}
               >
                 {copy('solarViewContract')}
               </Link>
             )}
-            <Button
-              id="solar-construction-reload"
-              variant="outline"
-              disabled={busy()}
-              onClick={() => {
-                if (busy()) return;
-                setDetailRevision((v) => v + 1);
-              }}
-            >
-              {copy('constructionReload')}
-            </Button>
+            {reloadProgress}
           </div>
-          <SolarStageProgress progress={visible} showTimeNotice={false} />
-          {(visible.canRecord && visible.nextMilestone) || uncertain ? (
-            <Form {...form}>
-              <form
-                aria-label={copy('constructionReviewTitle')}
-                noValidate
-                className="space-y-4 rounded-xl border bg-card p-5"
-                onSubmit={review}
+          {selected && !onSelect && canRecord && nextMilestone && (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 sm:px-6">
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground">{copy('construction_current')}</p>
+                <p className="font-medium">{copy(`construction_${nextMilestone}`)}</p>
+              </div>
+              <Link
+                to="/admin/solar-requests/$requestId/construction/{-$operation}"
+                params={{ requestId: selected, operation: solarMilestonePaths[nextMilestone] }}
+                search={queueSearch ?? {}}
+                className={buttonVariants({ size: 'sm' })}
               >
-                <h2 className="text-lg font-semibold">
-                  {copy(`construction_${uncertain ? command?.stage : visible.nextMilestone}`)}
-                </h2>
-                {form.formState.errors.root && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{copy('progressValidationUnavailable')}</AlertDescription>
-                  </Alert>
-                )}
-                <FormField
-                  control={form.control}
-                  name="note"
-                  render={({ field }) => (
-                    <FormItem id="solar-construction-note">
-                      <FormLabel>{copy('constructionNote')}</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} aria-required="true" disabled={locked} />
-                      </FormControl>
-                      <FormDescription>{copy('progressNoteHelp')}</FormDescription>
-                      <div className="grid">
-                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                          {copy('progressNoteInvalid')}
-                        </p>
-                        <FormMessage className="col-start-1 row-start-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                {saveError && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{copy('constructionSaveError')}</AlertDescription>
-                  </Alert>
-                )}
-                <Button
-                  type="submit"
-                  loading={preparing || form.formState.isSubmitting}
-                  disabled={pending || !!action || uncertain || !visible.canRecord}
-                >
-                  {copy('constructionReview')}
-                </Button>
-              </form>
-            </Form>
-          ) : (
-            <p role="status">
-              {copy(visible.revision === 3 ? 'constructionDone' : 'constructionBlocked')}
-            </p>
+                {tSolarStaffRecord('recordMilestone', locale)}
+              </Link>
+            </div>
           )}
+          <SolarStageProgress progress={visible} showTimeNotice={false} />
         </>
+      )}
+      {recordedMilestone && (
+        <div role="status" className="rounded-xl border bg-card px-4 py-4 sm:px-6">
+          <p className="font-medium">{tSolarStaffRecord('milestoneRecorded', locale)}</p>
+          <p className="text-sm text-muted-foreground">
+            {copy(`construction_${recordedMilestone}`)}
+          </p>
+        </div>
+      )}
+      {visible && !recordedMilestone && editingStage && (milestoneEditor || onSelect) && (
+        <Form {...form}>
+          <form
+            aria-label={copy('constructionReviewTitle')}
+            noValidate
+            className={recordEditorSurface}
+            onSubmit={review}
+          >
+            <RecordEditorSection title={copy(`construction_${editingStage}`)}>
+              {milestoneEditor && lastMilestone && (
+                <dl className="space-y-1 rounded-lg bg-muted/45 p-3 text-sm">
+                  <dt className="text-muted-foreground">
+                    {tSolarStaffRecord('previousMilestone', locale)}
+                  </dt>
+                  <dd className="flex flex-wrap items-baseline gap-x-2">
+                    <span>{copy(`construction_${lastMilestone.stage}`)}</span>
+                    <time className="text-muted-foreground" dateTime={lastMilestone.recordedAt}>
+                      {time.format(lastMilestone.recordedAt, { dateStyle: 'medium' })}
+                    </time>
+                  </dd>
+                </dl>
+              )}
+              {form.formState.errors.root && (
+                <Alert variant="destructive">
+                  <AlertDescription>{copy('progressValidationUnavailable')}</AlertDescription>
+                </Alert>
+              )}
+              <FormField
+                control={form.control}
+                name="note"
+                render={({ field }) => (
+                  <FormItem id="solar-construction-note" className={recordEditorField}>
+                    <FormLabel>{copy('constructionNote')}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        dir="auto"
+                        aria-required="true"
+                        disabled={locked}
+                        rows={2}
+                        className="min-h-14 max-h-36 resize-y"
+                        placeholder={tSolarStaffRecord(milestoneExamples[editingStage], locale)}
+                      />
+                    </FormControl>
+                    <FormDescription>{copy('progressNoteHelp')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {saveError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{copy('constructionSaveError')}</AlertDescription>
+                </Alert>
+              )}
+            </RecordEditorSection>
+            <RecordEditorActions>
+              <Button
+                type="submit"
+                loading={preparing || form.formState.isSubmitting}
+                disabled={pending || !!action || uncertain || !visible.canRecord}
+              >
+                {copy('constructionReview')}
+              </Button>
+            </RecordEditorActions>
+          </form>
+        </Form>
+      )}
+      {visible && !recordedMilestone && !editingStage && (
+        <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+          {canRecord
+            ? tSolarStaffRecord('milestoneUnavailable', locale)
+            : copy(visible.revision === 3 ? 'constructionDone' : 'constructionBlocked')}
+        </p>
       )}
       {action && reviewed.current && (
         <TeamActionDialog
           action={action}
+          toastErrors={!milestoneEditor}
           confirmationDisabled={uncertain}
           onClose={closeAction}
           onDenied={() => {
@@ -736,6 +879,10 @@ function OwnedAdminSolarConstructionPage({
             form.reset({ note: '' });
             setSaveError(false);
             setQueueRevision((v) => v + 1);
+            if (milestoneEditor) {
+              setRecordedMilestone(captured.captured.command.stage);
+              return undefined;
+            }
             return confirmationText('recorded', locale);
           }}
           summary={

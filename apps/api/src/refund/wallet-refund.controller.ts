@@ -56,17 +56,25 @@ export class WalletRefundController {
   @ApiOperation({ summary: 'Read refundable invoice balance and its wallet refund requests' })
   @ApiQuery({ name: 'invoiceId', format: 'uuid' })
   @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  @ApiQuery({
+    name: 'refundId',
+    required: false,
+    format: 'uuid',
+    description: 'Filter to a single refund on this invoice, without a cursor.',
+  })
   async forInvoice(
     @Req() req: AuthenticatedRequest,
     @Query('invoiceId') invoiceId: string,
-    @Query('before') before?: string
+    @Query('before') before?: string,
+    @Query('refundId') refundId?: string
   ) {
     this.authorize(req);
     const id = refundUuid.safeParse(invoiceId),
-      cursor = refundUuid.optional().safeParse(before);
-    if (!id.success || !cursor.success)
+      cursor = refundUuid.optional().safeParse(before),
+      target = refundUuid.optional().safeParse(refundId);
+    if (!id.success || !cursor.success || !target.success || (cursor.data && target.data))
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.refunds.refundsForInvoice(id.data, req.session, 'wallet', cursor.data);
+    return this.refunds.refundsForInvoice(id.data, req.session, 'wallet', cursor.data, target.data);
   }
   @Post('review')
   @HttpCode(200)

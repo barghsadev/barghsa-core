@@ -61,7 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
         json: { draftId: draft.id, config: source.config, version: active.version },
       });
     });
-    await page.goto('/admin/storage');
+    await page.goto('/admin/storage/cleanup');
     const hours = page.getByRole('spinbutton', { name: t('admin.storage.cleanupHours', locale) });
     await expect(hours).toHaveValue('24');
     await page.getByRole('button', { name: text('recoveryTitle') }).click();
@@ -132,7 +132,7 @@ for (const locale of ['en', 'fa'] as const) {
         json: { draftId: draft.id, config: source.config, version: active.version },
       });
     });
-    await page.goto('/admin/storage');
+    await page.goto('/admin/storage/edit');
     const pathStyle = page.locator('#storage-path-style');
     await expect(pathStyle).toBeChecked();
     await page.getByRole('button', { name: text('recoveryTitle'), exact: true }).click();
@@ -211,12 +211,12 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('dialog')
           .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
           .click();
-      await page.goto('/admin/storage', { waitUntil: 'domcontentloaded' });
+      await page.goto('/admin/storage/edit', { waitUntil: 'domcontentloaded' });
       const bucket = page.locator('#storage-bucket'),
         secret = page.locator('#storage-secret');
       await expect(secret).toBeVisible();
       await checkRoutePresentation(page, info, locale);
-      for (const id of ['storage-bucket', 'storage-region', 'storage-cleanup-hours'])
+      for (const id of ['storage-bucket', 'storage-region'])
         await expect(page.locator(`#${id}`)).toHaveAttribute('aria-required', 'true');
       await expect(page.locator('#storage-endpoint')).not.toHaveAttribute('aria-required', 'true');
       if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
@@ -260,7 +260,10 @@ for (const locale of ['en', 'fa'] as const)
       expect(storageWrites).toHaveLength(2);
       expect(storageWrites[1]).toEqual(storageWrites[0]);
       await secret.fill('unsaved-companion');
+      await page.getByRole('link', { name: storage('cleanupTitle'), exact: true }).click();
+      await expect(secret).toHaveCount(0);
       const hours = page.locator('#storage-cleanup-hours');
+      await expect(hours).toHaveAttribute('aria-required', 'true');
       await hours.fill('1.5');
       await page.getByRole('button', { name: storage('cleanupSave'), exact: true }).click();
       await expect(hours).toBeFocused();
@@ -270,7 +273,7 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(hours).toBeFocused();
-      await expect(secret).toHaveValue('unsaved-companion');
+      await expect(secret).toHaveCount(0);
       await page.getByRole('button', { name: storage('cleanupSave'), exact: true }).click();
       await confirm();
       await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -278,12 +281,19 @@ for (const locale of ['en', 'fa'] as const)
         { hours: 48, version: 3 },
         { hours: 48, version: 3 },
       ]);
-      await expect(secret).toHaveValue('unsaved-companion');
+      await expect(secret).toHaveCount(0);
       await page.route('**/api/admin/upload-policies/access', (route) =>
         route.fulfill({ json: { canEdit: true } })
       );
       await page.route('**/api/admin/upload-policies/limits', (route) =>
         route.fulfill({ json: [policyLimit] })
+      );
+      await page.route('**/api/admin/upload-policies?category=document', (route) =>
+        route.fulfill({ json: [savedPolicy] })
+      );
+      await page.route(
+        `**/api/admin/upload-policies/document/versions/${savedPolicy.id}`,
+        (route) => route.fulfill({ json: savedPolicy })
       );
       await page.route('**/api/admin/upload-policies', (route) => {
         if (route.request().method() === 'GET') return route.fulfill({ json: [savedPolicy] });
@@ -305,7 +315,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/upload-policies');
       await page
-        .getByRole('button', {
+        .getByRole('link', {
           name: `${policy('edit')} ${policy('category.document')}`,
           exact: true,
         })
@@ -326,29 +336,17 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(size).toBeFocused();
       await expect(pdf).toBeChecked();
-      await expect(page.getByRole('dialog')).not.toContainText('private-server-value');
-      await expect
-        .poll(() =>
-          page.getByRole('dialog').evaluate((node) => {
-            const overlay = document.querySelector('[data-slot="dialog-overlay"]');
-            return [node, ...(overlay ? [overlay] : [])].every(
-              (element) =>
-                getComputedStyle(element).opacity === '1' &&
-                element
-                  .getAnimations({ subtree: true })
-                  .every((animation) => animation.playState === 'finished')
-            );
-          })
-        )
-        .toBe(true);
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(page.getByRole('main')).not.toContainText('private-server-value');
       expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
       if (locale === 'fa' && dark)
         await page
-          .getByRole('dialog')
+          .getByRole('form')
           .screenshot({ path: `/tmp/barghsa-upload-policy-form-fa-dark-${info.project.name}.png` });
       await page.getByRole('button', { name: policy('save'), exact: true }).click();
       await confirm();
       await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(page).toHaveURL(`/admin/upload-policies/document/versions/${savedPolicy.id}`);
       expect(policyWrites).toEqual([
         { category: 'document', allowedExtensions: ['.pdf'], maxSizeBytes: 1048576 },
         { category: 'document', allowedExtensions: ['.pdf'], maxSizeBytes: 1048576 },
@@ -377,7 +375,7 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('dialog')
         .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
         .click();
-    await page.goto('/admin/storage');
+    await page.goto('/admin/storage/edit');
     await page.locator('#storage-secret').fill('retained-secret');
     await page.getByRole('button', { name: storage('save'), exact: true }).click();
     await confirm();
@@ -402,6 +400,9 @@ for (const locale of ['en', 'fa'] as const)
     await page.route('**/api/admin/upload-policies/limits', (route) =>
       route.fulfill({ json: [policyLimit] })
     );
+    await page.route('**/api/admin/upload-policies?category=document', (route) =>
+      route.fulfill({ json: [uploadPolicy] })
+    );
     await page.route('**/api/admin/upload-policies', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [uploadPolicy] });
       writes++;
@@ -409,7 +410,7 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.goto('/admin/upload-policies');
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: `${policy('edit')} ${policy('category.document')}`,
         exact: true,
       })

@@ -9,12 +9,20 @@ export const solarConstructionQueryOptions: ListQueryOptions = {
   defaultPageSize: 50,
   pagination: 'cursor',
 };
-export function solarConstructionSearch(raw: Record<string, unknown>): Record<string, unknown> {
+export function solarConstructionQueueSearch(
+  raw: Record<string, unknown>
+): Record<string, unknown> {
   const q =
     typeof raw.q === 'number' && Number.isSafeInteger(raw.q) && raw.q >= 0 ? String(raw.q) : raw.q;
   return {
     q: listText(200)(q) || undefined,
-    cursor: staffOrderId(raw.cursor) || undefined,
-    requestId: staffOrderId(raw.requestId) || undefined,
+    cursor: staffOrderId(raw.cursor).toLowerCase() || undefined,
+  };
+}
+
+export function solarConstructionSearch(raw: Record<string, unknown>): Record<string, unknown> {
+  return {
+    ...solarConstructionQueueSearch(raw),
+    requestId: staffOrderId(raw.requestId).toLowerCase() || undefined,
   };
 }

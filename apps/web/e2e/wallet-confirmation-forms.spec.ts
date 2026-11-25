@@ -5,6 +5,10 @@ import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
+import {
+  enterWalletReceiptInvoiceId,
+  openWalletReceiptAction,
+} from './wallet-receipt-action-navigation';
 
 const receiptId = 'abcdefab-0000-4000-8000-000000000001';
 const invoiceId = 'abcdefab-0000-4000-8000-000000000002';
@@ -86,12 +90,15 @@ for (const locale of ['en', 'fa'] as const)
       writes++;
       return route.fulfill({ status: 500 });
     });
-    await page.goto('/admin/wallet-receipts');
+    await page.goto(`/admin/wallet-receipts/${receiptId}`);
+    await openWalletReceiptAction(page, 'reject');
+    await page.locator('#reject-reason').fill('Keep this separate draft');
+    await openWalletReceiptAction(page, 'confirm');
+    await enterWalletReceiptInvoiceId(page, locale);
     const confirm = page.getByTestId('wallet-receipt-confirm');
     const invoice = page.locator('#apply-invoice-id');
     const rejection = page.locator('#reject-reason');
     await expect(confirm).toBeEnabled();
-    await rejection.fill('Keep this separate draft');
     const input = ` ${invoiceId.toUpperCase()} `;
     await invoice.fill(input);
     await expect.poll(() => reviewed).toEqual([null, invoiceId]);
@@ -109,8 +116,9 @@ for (const locale of ['en', 'fa'] as const)
       .click();
     await expect(confirm).toBeEnabled();
     await expect(invoice).toHaveValue(input);
-    await expect(rejection).toHaveValue('Keep this separate draft');
     expect(reviewed).toEqual([null, invoiceId, invoiceId]);
+    await openWalletReceiptAction(page, 'reject');
+    await expect(rejection).toHaveValue('Keep this separate draft');
     expect(writes).toBe(0);
   });
 
@@ -192,7 +200,11 @@ for (const emergency of [false, true]) {
             },
           });
         });
-        await page.goto('/admin/wallet-receipts');
+        await page.goto(`/admin/wallet-receipts/${receiptId}`);
+        await openWalletReceiptAction(page, 'reject');
+        await page.locator('#reject-reason').fill('Keep a valid companion draft');
+        await openWalletReceiptAction(page, emergency ? 'emergency' : 'confirm');
+        if (!emergency) await enterWalletReceiptInvoiceId(page, locale);
         await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
         const region = page.getByTestId('admin-wallet-receipts-page');
         const invoice = page.locator('#apply-invoice-id');
@@ -202,8 +214,15 @@ for (const emergency of [false, true]) {
         );
         const rejection = page.locator('#reject-reason');
         await expect(button).toBeEnabled();
-        await rejection.fill('Keep a valid companion draft');
-        if (emergency) await expect(invoice).toHaveAttribute('readonly', '');
+        await expect
+          .poll(() =>
+            button.evaluate((node: HTMLButtonElement) => {
+              const actions = node.parentElement;
+              return actions ? actions.scrollWidth - actions.clientWidth : 0;
+            })
+          )
+          .toBeLessThanOrEqual(1);
+        if (emergency) await expect(invoice).toHaveCount(0);
         await field.fill(emergency ? ' ' : 'bad-invoice');
         await button.click();
         await expect(field).toBeFocused();
@@ -247,7 +266,11 @@ for (const emergency of [false, true]) {
         await confirmFinancialReview(page, locale);
         await expect.poll(() => writes.length).toBe(1);
         await expect(field).toBeDisabled();
-        await expect(rejection).toBeDisabled();
+        await expect(rejection).toHaveCount(0);
+        await expect(page.getByTestId('wallet-receipt-back-to-review')).toHaveAttribute(
+          'aria-disabled',
+          'true'
+        );
         await expect(button).toHaveAttribute('aria-busy', 'true');
         const dialog = page.getByRole('dialog');
         const password = page.getByTestId('wallet-receipt-step-up-password');
@@ -299,8 +322,7 @@ for (const emergency of [false, true]) {
         await expect(field).toBeFocused();
         await expect(field).toBeEnabled();
         await expect(field).toHaveValue(raw);
-        await expect(rejection).toHaveValue('Keep a valid companion draft');
-        await expect(invoice).toHaveValue(emergency ? invoiceId : raw);
+        if (!emergency) await expect(invoice).toHaveValue(raw);
         await expect(region.getByRole('alert')).toHaveText(message);
         const ids = (await field.getAttribute('aria-describedby'))!.split(' ');
         expect(await region.getByRole('alert').getAttribute('id')).toBe(ids.at(-1));
@@ -328,7 +350,10 @@ for (const emergency of [false, true]) {
           text('admin.walletReceipts.error.save', locale)
         );
         await expect(field).toHaveValue(raw);
+        await openWalletReceiptAction(page, 'reject');
         await expect(rejection).toHaveValue('Keep a valid companion draft');
+        await openWalletReceiptAction(page, emergency ? 'emergency' : 'confirm');
+        await expect(field).toHaveValue(raw);
         await expect(page.getByText('private-confirmation-diagnostic')).toHaveCount(0);
         mode = 'service';
         await button.click();
@@ -381,12 +406,15 @@ for (const emergency of [false, true]) {
           json: { error: { code: ErrorCodes.AUTHZ_FORBIDDEN.code } },
         });
       });
-      await page.goto('/admin/wallet-receipts');
+      await page.goto(`/admin/wallet-receipts/${receiptId}`);
+      await openWalletReceiptAction(page, 'reject');
+      await page.locator('#reject-reason').fill('Private rejection draft');
+      await openWalletReceiptAction(page, emergency ? 'emergency' : 'confirm');
+      if (!emergency) await enterWalletReceiptInvoiceId(page, 'en');
       const button = page.getByTestId(
         emergency ? 'wallet-receipt-emergency-confirm' : 'wallet-receipt-confirm'
       );
       await expect(button).toBeEnabled();
-      await page.locator('#reject-reason').fill('Private rejection draft');
       await page
         .locator(emergency ? '#receipt-emergency-reason' : '#apply-invoice-id')
         .fill(emergency ? 'Private emergency draft' : invoiceId);

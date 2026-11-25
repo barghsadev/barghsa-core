@@ -167,10 +167,7 @@ async function fill(id: string, value: string) {
   const input = document.getElementById(id) as HTMLInputElement | HTMLSelectElement;
   expect(input, id).not.toBeNull();
   await act(async () => {
-    Object.getOwnPropertyDescriptor(
-      input.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype,
-      'value'
-    )!.set!.call(input, value);
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value')!.set!.call(input, value);
     input.dispatchEvent(
       new Event(input.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })
     );
@@ -224,6 +221,7 @@ it('guards duplicate lazy validation and discards old invalid results after edit
   capture.lazy = gate.promise;
   const fetcher = mock();
   await render(fetcher);
+  await settled(() => expect(document.getElementById(reasonId('hardware'))).not.toBeNull());
   await submit();
   await submit();
   expect(capture.started).toBe(1);
@@ -252,6 +250,7 @@ it.each(['en', 'fa'] as const)(
   async (locale) => {
     const fetcher = mock();
     await render(fetcher, locale);
+    await settled(() => expect(document.getElementById(reasonId('hardware'))).not.toBeNull());
     const field = document.getElementById(reasonId('hardware'))!;
     expect(field.getAttribute('aria-invalid')).not.toBe('true');
     await act(async () => field.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));

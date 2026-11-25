@@ -27,9 +27,11 @@ beforeAll(async () => {
   holder.pool = http.pool;
   await http.pool.query(`INSERT INTO staff_roles(role_id,name,description,permissions) VALUES
     ('ledger-reconciler','Ledger reconciler','Test','["admin:reconciliation:view"]'),
+    ('ledger-receipt-linker','Ledger and receipt reviewer','Test','["admin:reconciliation:view","admin:finance:wallet:bank-receipt-confirm"]'),
     ('ledger-unrelated','Ledger unrelated','Test','["contracts:write"]')`);
   for (const [user, role, context] of [
     ['ledger-staff', 'ledger-reconciler', 'staff'],
+    ['ledger-reviewer', 'ledger-receipt-linker', 'staff'],
     ['ledger-unrelated', 'ledger-unrelated', 'staff'],
     ['ledger-customer-grant', 'ledger-reconciler', 'customer'],
     ['ledger-customer', null, 'customer'],
@@ -96,6 +98,12 @@ it('reads exact profile-scoped financial history without private metadata or fin
   );
   const body = (await response.json()) as LedgerPage;
   expect(body.profileId).toBe(profile);
+  expect(body.balance).toEqual({
+    posted: '9007199254741003',
+    reserved: '0',
+    available: '9007199254741003',
+    updatedAt: expect.any(String),
+  });
   expect(body.nextCursor).toBeNull();
   expect(body.transactions).toHaveLength(2);
   expect(body.transactions.map((tx: { id: string }) => tx.id)).toEqual([credits[1], credits[0]]);
@@ -106,6 +114,7 @@ it('reads exact profile-scoped financial history without private metadata or fin
     state: 'Completed',
     refId: expect.stringMatching(/^[0-9a-f-]{36}$/),
     description: 'Exact principal',
+    staffSource: 'ledger',
     createdAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*\.\d{6}Z$/),
   });
   expect(JSON.stringify(body)).not.toContain('private-ledger-fixture');
@@ -130,6 +139,7 @@ it('paginates without duplicates and rejects cursors belonging to another profil
   expect(second.status, http.logs()).toBe(200);
   expect(await second.json()).toEqual({
     profileId: profile,
+    balance: expect.objectContaining({ posted: '9007199254741003' }),
     transactions: [expect.objectContaining({ id: credits[0], amount: '9007199254740993' })],
     nextCursor: null,
   });
@@ -171,24 +181,67 @@ it('limits reconciliation search to visible ledger fields', async () => {
   expect(response.status, http.logs()).toBe(200);
   expect(await response.json()).toEqual({
     profileId: receiptProfile,
+    balance: expect.objectContaining({ posted: '0', reserved: '0', available: '0' }),
     transactions: [
-      expect.objectContaining({ id: receiptId, description: 'Receipt awaiting review' }),
+      expect.objectContaining({
+        id: receiptId,
+        description: 'Receipt awaiting review',
+        staffSource: 'bank_receipt',
+      }),
     ],
     nextCursor: null,
   });
+  const readWithPermission = await get(receiptProfile, 'ledger-reviewer');
+  expect(readWithPermission.status).toBe(200);
+  expect(((await readWithPermission.json()) as LedgerPage).transactions[0]).toMatchObject({
+    id: receiptId,
+    staffSource: 'bank_receipt',
+    receiptId,
+  });
+  const readWithoutReceiptPermission = (await (await get(receiptProfile)).json()) as LedgerPage;
+  expect(readWithoutReceiptPermission.transactions[0]).not.toHaveProperty('receiptId');
   const metadataSearch = await get(receiptProfile, 'ledger-staff', '?q=PRIVATE-FIXTURE-REFERENCE');
   expect(metadataSearch.status, http.logs()).toBe(200);
   expect(await metadataSearch.json()).toEqual({
     profileId: receiptProfile,
+    balance: expect.objectContaining({ posted: '0', reserved: '0', available: '0' }),
     transactions: [],
     nextCursor: null,
   });
+  const wallet = new WalletService();
+  const metadata = { channel: 'bank_receipt', pendingTransactionId: receiptId };
+  const linked = await wallet.credit(
+    receiptProfile,
+    100n,
+    { type: 'topup', metadata, description: 'Credit for this receipt' },
+    randomUUID()
+  );
+  const foreign = await wallet.credit(
+    other,
+    100n,
+    { type: 'topup', metadata, description: 'Foreign receipt reference' },
+    randomUUID()
+  );
+  const ownedCredits = (await (await get(receiptProfile, 'ledger-reviewer')).json()) as LedgerPage;
+  expect(ownedCredits.transactions.find((entry) => entry.id === linked.id)).toMatchObject({
+    staffSource: 'bank_receipt',
+    receiptId,
+  });
+  const foreignCredits = (await (await get(other, 'ledger-reviewer')).json()) as LedgerPage;
+  expect(foreignCredits.transactions.find((entry) => entry.id === foreign.id)).not.toHaveProperty(
+    'receiptId'
+  );
 });
 
 it('returns an empty history without creating a wallet, and 404 for an unknown profile', async () => {
   const response = await get(empty);
   expect(response.status, http.logs()).toBe(200);
-  expect(await response.json()).toEqual({ profileId: empty, transactions: [], nextCursor: null });
+  expect(await response.json()).toEqual({
+    profileId: empty,
+    balance: null,
+    transactions: [],
+    nextCursor: null,
+  });
   expect(
     (await http.pool.query('SELECT * FROM wallets WHERE profile_id=$1', [empty])).rows
   ).toEqual([]);

@@ -17,6 +17,11 @@ const en = {
   denied: 'Sign in with finance configuration permission to change these settings.',
   verifyTitle: 'Confirm default due period',
   verifyDescription: 'Confirm your password to save this payment period for new invoices.',
+  currentPeriod: 'Current payment period',
+  reviewedPeriod: 'New payment period',
+  periodLength: '{days} days after issue',
+  oneDayPeriod: '1 day after issue',
+  effectiveSince: 'Effective since',
 };
 const fa: Record<keyof typeof en, string> = {
   title: 'مهلت پیش‌فرض پرداخت فاکتور',
@@ -36,6 +41,11 @@ const fa: Record<keyof typeof en, string> = {
   denied: 'برای تغییر این تنظیمات با حساب دارای دسترسی تنظیمات مالی وارد شوید.',
   verifyTitle: 'تأیید مهلت پیش‌فرض پرداخت',
   verifyDescription: 'برای ذخیره این مهلت پرداخت برای فاکتورهای جدید، رمز عبور خود را تأیید کنید.',
+  currentPeriod: 'مهلت پرداخت فعلی',
+  reviewedPeriod: 'مهلت پرداخت جدید',
+  periodLength: '{days} روز پس از صدور',
+  oneDayPeriod: '۱ روز پس از صدور',
+  effectiveSince: 'زمان شروع اعتبار',
 };
 export function tDuePeriods(key: keyof typeof en, locale: 'fa' | 'en'): string {
   return (locale === 'fa' ? fa : en)[key];

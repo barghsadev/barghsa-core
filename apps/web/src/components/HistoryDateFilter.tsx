@@ -8,12 +8,14 @@ export function HistoryDateFilter({
   locale,
   time,
   label,
+  inline,
 }: {
   value: DateRangeValue;
   onChange: (value: DateRangeValue) => void;
   locale: 'en' | 'fa';
   time: Pick<ReturnType<typeof useAccountTime>, 'timezone' | 'status'>;
   label?: string;
+  inline?: boolean;
 }) {
   const copy = (key: string) => t(`historyDates.${key}`, locale);
   return (
@@ -23,6 +25,7 @@ export function HistoryDateFilter({
       locale={locale}
       timezone={time.timezone}
       disabled={time.status !== 'ready'}
+      inline={inline ?? false}
       labels={{
         label: label ?? copy('label'),
         preset: copy('preset'),

@@ -124,6 +124,17 @@ it('requires staff authority and step-up, versions changes, and records the audi
     fetch(path, { method: 'PUT', headers, body: JSON.stringify(value) });
 
   expect((await fetch(path, { method: 'PUT', body: JSON.stringify(body) })).status).toBe(401);
+  expect((await fetch(path)).status).toBe(401);
+  const initial = await fetch(path, { headers });
+  expect(initial.status, http.logs()).toBe(200);
+  expect(initial.headers.get('cache-control')).toContain('no-store');
+  expect(await initial.json()).toMatchObject({
+    capability: 'saving_orders',
+    active: false,
+    version: 0,
+    canEdit: true,
+  });
+  expect((await fetch(`${http.base}/api/admin/maintenance/invalid`, { headers })).status).toBe(400);
   const invalid = await put({ ...body, reason: null });
   expect(invalid.status).toBe(400);
   expect(await invalid.json()).toMatchObject({
@@ -189,6 +200,15 @@ it('requires staff authority and step-up, versions changes, and records the audi
   const receipt = await savedPrivate.json();
   expect(receipt).toMatchObject({ active: true, reason: standardMaintenanceNotice, version: 2 });
   expect(JSON.stringify(receipt)).not.toContain(privateReason.en);
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:config:read"]' WHERE role_id='test-maintenance'`
+  );
+  const detail = await fetch(path, { headers });
+  expect(detail.status, http.logs()).toBe(200);
+  expect(await detail.json()).toEqual({ ...receipt, canEdit: false });
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:config:read","admin:config:write"]' WHERE role_id='test-maintenance'`
+  );
   const row = (
     await http.pool.query("SELECT value FROM app_config WHERE key='maintenance.saving_orders'")
   ).rows[0]!.value;

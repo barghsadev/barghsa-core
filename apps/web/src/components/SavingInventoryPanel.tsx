@@ -1,6 +1,14 @@
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+  recordEditorGrid,
+} from './RecordEditorLayout.js';
 import { CommandFeedback } from './CommandFeedback.js';
-import { useCallback } from 'react';
-import { LoadingStatus, Button, Input, Label, Alert } from '@barghsa/ui';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
+import { useCallback, type ReactNode } from 'react';
+import { LoadingStatus, Button, ListRefreshButton, Input, Label, Alert } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -19,8 +27,16 @@ import { TeamActionDialog } from './TeamActionDialog.js';
 
 export function SavingInventoryPanel({
   hardwareId,
+  standalone = false,
+  onProductRefresh,
+  heading,
   ...props
-}: CatalogueEditorProps & { hardwareId: string }) {
+}: CatalogueEditorProps & {
+  hardwareId: string;
+  standalone?: boolean;
+  onProductRefresh?: () => void;
+  heading?: ReactNode;
+}) {
   const locale = useLocale();
   const label = (key: string) => tCatalogue(key, locale);
   const numbers = useNumberFormatting(locale);
@@ -59,18 +75,24 @@ export function SavingInventoryPanel({
   const command = editor.action?.body as
     { stockTracking: boolean; stockCount: number; reservationMinutes: number } | undefined;
   return (
-    <section className="space-y-3 border-y py-5" aria-label={label('inventory')}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold">{label('inventory')}</h2>
-        <Button
-          type="button"
-          variant="outline"
-          disabled={editor.busy || props.disabled}
-          onClick={editor.refresh}
-        >
-          {label(editor.resource.error || editor.denied ? 'retry' : 'refresh')}
-        </Button>
-      </div>
+    <section className="space-y-3" aria-label={label('inventory')}>
+      {standalone && (
+        <RecordCommandGuard blocked={() => editor.commandPending || editor.uncertain} />
+      )}
+      <header className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+        {heading ??
+          (!standalone && <h2 className="text-lg font-semibold">{label('inventory')}</h2>)}
+        <ListRefreshButton
+          label={label(editor.resource.error || editor.denied ? 'retry' : 'refresh')}
+          disabled={
+            props.disabled ||
+            !!editor.action ||
+            editor.commandPending ||
+            (!onProductRefresh && editor.pending)
+          }
+          onClick={editor.pending && onProductRefresh ? onProductRefresh : editor.refresh}
+        />
+      </header>
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
       {editor.resource.error && <Alert variant="destructive">{label('inventoryLoadError')}</Alert>}
       {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
@@ -81,7 +103,7 @@ export function SavingInventoryPanel({
           aria-label={label('inventory')}
           noValidate
           aria-busy={editor.pending || undefined}
-          className="space-y-3"
+          className={recordEditorSurface}
           onSubmit={(event) =>
             void editor.submit(event, (values) => ({
               path,
@@ -98,63 +120,108 @@ export function SavingInventoryPanel({
             }))
           }
         >
-          {rootError && <Alert variant="destructive">{rootError}</Alert>}
-          <p>
-            {label('reservedCount')}: <bdi>{numbers.number(inventory.reservedCount)}</bdi>
-          </p>
-          <fieldset disabled={editor.disabled} className="min-w-0 space-y-3 border-0 p-0">
-            <div>
-              <label className="flex items-center gap-2" htmlFor="saving-stock-tracking">
-                <input
-                  id="saving-stock-tracking"
-                  type="checkbox"
-                  {...editor.bind('stockTracking')}
-                  checked={tracking}
-                  onChange={(event) => setTracking(event.target.checked)}
-                />
-                {label('trackStock')}
-              </label>
-              {editor.feedback('stockTracking')}
-            </div>
-            <div>
-              <Label htmlFor="saving-stock-count">{label('stockCount')}</Label>
-              <Input
-                id="saving-stock-count"
-                {...editor.bind('stockCount')}
-                dir="ltr"
-                inputMode="numeric"
-                value={count}
-                onChange={(event) => setCount(event.target.value)}
-              />
-              {editor.feedback('stockCount')}
-            </div>
-            <div>
-              <Label htmlFor="saving-reservation-minutes">{label('reservationMinutes')}</Label>
-              <Input
-                id="saving-reservation-minutes"
-                {...editor.bind('reservationMinutes')}
-                dir="ltr"
-                inputMode="numeric"
-                value={minutes}
-                onChange={(event) => setMinutes(event.target.value)}
-              />
-              {editor.feedback('reservationMinutes')}
-            </div>
-            <Button type="submit" aria-busy={editor.pending || undefined}>
-              {editor.pending && (
-                <span
-                  aria-hidden="true"
-                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                />
+          {rootError && (
+            <Alert variant="destructive" className="m-4">
+              {rootError}
+            </Alert>
+          )}
+          <fieldset disabled={editor.disabled} className="min-w-0">
+            <legend className="sr-only">{label('inventory')}</legend>
+            {standalone && (
+              <RecordEditorSection title={label('currentInventory')}>
+                {inventory.stockTracking ? (
+                  <dl className="grid grid-cols-3 gap-2 text-sm">
+                    {(
+                      [
+                        ['savedStockCount', inventory.stockCount],
+                        ['reservedCount', inventory.reservedCount],
+                        ['availableStockCount', inventory.stockCount - inventory.reservedCount],
+                      ] as const
+                    ).map(([key, value]) => (
+                      <div key={key} className="min-w-0 rounded-lg bg-muted/45 px-2 py-2 sm:px-3">
+                        <dt className="text-muted-foreground">{label(key)}</dt>
+                        <dd className="mt-1 font-semibold tabular-nums">
+                          <bdi>{numbers.number(value)}</bdi>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : (
+                  <p className="text-sm text-muted-foreground">{label('inventoryTrackingOff')}</p>
+                )}
+              </RecordEditorSection>
+            )}
+            <RecordEditorSection title={label('stockSettings')}>
+              <div className={recordEditorField}>
+                <label
+                  className="flex min-h-8 w-fit cursor-pointer items-center gap-2"
+                  htmlFor="saving-stock-tracking"
+                >
+                  <input
+                    id="saving-stock-tracking"
+                    type="checkbox"
+                    className="size-4 accent-primary"
+                    {...editor.bind('stockTracking')}
+                    checked={tracking}
+                    onChange={(event) => setTracking(event.target.checked)}
+                  />
+                  {label('trackStock')}
+                </label>
+                {(!standalone || editor.errors.stockTracking) && editor.feedback('stockTracking')}
+              </div>
+              <div className={recordEditorGrid}>
+                <div className={recordEditorField}>
+                  <Label htmlFor="saving-stock-count">{label('stockCount')}</Label>
+                  <Input
+                    id="saving-stock-count"
+                    {...editor.bind('stockCount')}
+                    dir="ltr"
+                    inputMode="numeric"
+                    value={count}
+                    onChange={(event) => setCount(event.target.value)}
+                  />
+                  {(!standalone || editor.errors.stockCount) && editor.feedback('stockCount')}
+                </div>
+                <div className={recordEditorField}>
+                  <Label htmlFor="saving-reservation-minutes">{label('reservationMinutes')}</Label>
+                  <Input
+                    id="saving-reservation-minutes"
+                    {...editor.bind('reservationMinutes')}
+                    dir="ltr"
+                    inputMode="numeric"
+                    value={minutes}
+                    onChange={(event) => setMinutes(event.target.value)}
+                  />
+                  {(!standalone || editor.errors.reservationMinutes) &&
+                    editor.feedback('reservationMinutes')}
+                </div>
+              </div>
+              {standalone ? (
+                <p className="text-sm text-muted-foreground">{label('reservationPeriodHelp')}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {label('reservedCount')}: <bdi>{numbers.number(inventory.reservedCount)}</bdi>
+                </p>
               )}
-              {label(editor.pending ? 'working' : 'saveInventory')}
-            </Button>
+            </RecordEditorSection>
+            <RecordEditorActions>
+              <Button type="submit" aria-busy={editor.pending || undefined}>
+                {editor.pending && (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                  />
+                )}
+                {label(editor.pending ? 'working' : 'saveInventory')}
+              </Button>
+            </RecordEditorActions>
           </fieldset>
         </form>
       )}
       {editor.action && command && (
         <TeamActionDialog
           action={editor.action}
+          toastErrors={!standalone}
           confirmationDisabled={!editor.ready || editor.uncertain}
           onClose={editor.close}
           onDenied={editor.onDenied}

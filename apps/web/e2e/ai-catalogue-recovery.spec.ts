@@ -23,24 +23,37 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await setupCatalogueForms(page, locale, false);
-    await page.route('**/api/admin/ai-models', (route) => route.fulfill({ json: [aiModel] }));
+    let catalogueReads = 0;
+    await page.route('**/api/admin/ai-models', (route) => {
+      catalogueReads++;
+      return route.fulfill({ json: [aiModel] });
+    });
+    const record = `/admin/ai-models/${aiModel.id}`;
+    await page.route(`**/api${record}`, (route) => route.fulfill({ json: aiModel }));
     await page.goto('/admin/ai-models');
-    await page.getByRole('button', { name: m('edit'), exact: true }).click();
+    await page.getByRole('main').getByRole('link', { name: aiModel.title, exact: true }).click();
+    await expect(page).toHaveURL(record);
+    await page.reload();
+    await expect(page.getByRole('heading', { name: aiModel.title, exact: true })).toBeVisible();
+    expect(catalogueReads).toBe(1);
+    await page.getByRole('link', { name: m('edit'), exact: true }).click();
     const modelTitle = page.locator('#ai-model-title');
     await expect(modelTitle).toHaveValue(aiModel.title);
-    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === aiModel.id);
-    await page.getByRole('button', { name: m('budgetEdit'), exact: true }).click();
-    await expect(page).toHaveURL(
-      (url) =>
-        url.searchParams.get('selected') === aiModel.id && url.searchParams.get('mode') === 'budget'
-    );
+    await expect(page).toHaveURL(`${record}/edit`);
+    await page.getByRole('button', { name: m('cancel'), exact: true }).click();
+    await expect(page).toHaveURL(record);
+    await page.getByRole('link', { name: m('budgetEdit'), exact: true }).click();
+    await expect(page).toHaveURL(`${record}/budget`);
     const limit = page.locator('#ai-model-monthlyTokenLimit');
     await limit.fill('99999');
     await page.reload();
     await expect(limit).toHaveValue(String(aiModel.budget.monthlyTokenLimit));
     await page.goBack();
-    await expect(modelTitle).toHaveValue(aiModel.title);
+    await expect(page).toHaveURL(record);
     await expect(limit).toHaveCount(0);
+    await page.goto(`/admin/ai-models?selected=${aiModel.id}&mode=budget`);
+    await expect(page).toHaveURL(`${record}/budget`);
+    await expect(limit).toHaveValue(String(aiModel.budget.monthlyTokenLimit));
 
     await page.route('**/api/admin/agents', (route) => route.fulfill({ json: [aiAgent] }));
     await page.route('**/api/admin/agents/options', (route) => route.fulfill({ json: aiOptions }));
@@ -48,8 +61,8 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: aiDetail })
     );
     await page.goto('/admin/agents');
-    await page.getByRole('button', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === aiAgent.id);
+    await page.getByRole('link', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
+    await expect(page).toHaveURL(`/admin/agents/${aiAgent.id}/edit`);
     await page.reload();
     const prompt = page.locator('#agent-system-prompt');
     await expect(prompt).toHaveValue(aiDetail.systemPrompt);
@@ -81,6 +94,20 @@ for (const locale of ['en', 'fa'] as const) {
               }
       )
     );
+    await page.route(`**/api/admin/ai-models/${aiModel.id}`, (route) =>
+      route.fulfill(
+        deny
+          ? { status: 401, json: {} }
+          : fail
+            ? { status: 503, json: {} }
+            : {
+                json: {
+                  ...aiModel,
+                  budget: { ...aiModel.budget, usedInputTokens: usage, monthlyTokenLimit: limit },
+                },
+              }
+      )
+    );
     // Keep the desktop table visible with a pane narrow enough to require scrolling.
     await page.setViewportSize({ width: 1024, height: 900 });
     await page.goto('/admin/ai-models');
@@ -97,7 +124,7 @@ for (const locale of ['en', 'fa'] as const) {
       .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
       .toBeGreaterThan(0);
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.getByRole('button', { name: m('add'), exact: true }).click();
+    await page.getByRole('link', { name: m('add'), exact: true }).click();
     await page.locator('#ai-model-title').fill('Draft model');
     await page.locator('#ai-model-token').fill('test-only-private-token');
     fail = true;
@@ -109,7 +136,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: m('retry'), exact: true }).click();
     await expect(page.locator('#ai-model-modelName')).toHaveValue('During recovery');
     await page.getByRole('button', { name: m('cancel'), exact: true }).click();
-    await page.getByRole('button', { name: m('budgetEdit'), exact: true }).click();
+    await page.getByRole('link', { name: m('budgetEdit'), exact: true }).click();
     await page.locator('#ai-model-monthlyTokenLimit').fill('15000');
     usage = 900;
     await page.getByRole('button', { name: m('refresh'), exact: true }).click();
@@ -120,6 +147,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#ai-model-monthlyTokenLimit')).toHaveValue('15000');
     await page.getByRole('button', { name: aiModelFormText('reset', locale), exact: true }).click();
     await expect(page.locator('#ai-model-monthlyTokenLimit')).toHaveValue('20000');
+    await page.getByRole('button', { name: m('cancel'), exact: true }).click();
     await page.getByRole('button', { name: m('test'), exact: true }).click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: appT('team.confirm', locale), exact: true });
@@ -144,6 +172,7 @@ for (const locale of ['en', 'fa'] as const) {
     await setupCatalogueForms(page, locale, false);
     let failList = false,
       failOptions = false,
+      failDetail = false,
       removed = false,
       deny = false,
       optionReads = 0,
@@ -169,27 +198,41 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.route(`**/api/admin/agents/${aiAgent.id}`, (route) => {
       detailReads++;
-      return route.fulfill({ json: aiDetail });
+      return route.fulfill(
+        deny
+          ? { status: 403, json: {} }
+          : failDetail
+            ? { status: 503, json: {} }
+            : { json: aiDetail }
+      );
     });
     await page.goto('/admin/agents');
     await page.locator('#test-chat-message').fill('Keep test question');
-    await page.getByRole('button', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
-    await expect(page.locator('#agent-system-prompt')).toHaveValue(aiDetail.systemPrompt);
-    expect(optionReads).toBe(1);
-    expect(listReads).toBe(1);
-    await expect(page.locator('#test-chat-message')).toHaveValue('Keep test question');
-    await page.locator('#agent-system-prompt').fill('Retained system prompt');
     failList = true;
     await page.getByRole('button', { name: a('refresh'), exact: true }).click();
     await expect(page.getByRole('alert').filter({ hasText: a('error') })).toContainText(a('error'));
+    failList = false;
+    await page.getByRole('button', { name: a('retry'), exact: true }).click();
+    await expect(page.locator('#test-chat-message')).toHaveValue('Keep test question');
+    const priorLists = listReads;
+    await page.getByRole('link', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
+    await expect(page.locator('#agent-system-prompt')).toHaveValue(aiDetail.systemPrompt);
+    await expect(page.locator('#test-chat-message')).toHaveCount(0);
+    expect(listReads).toBe(priorLists);
+    await page.locator('#agent-system-prompt').fill('Retained system prompt');
+    failDetail = true;
+    await page.getByRole('button', { name: a('refresh'), exact: true }).click();
+    await expect(page.getByRole('alert').filter({ hasText: a('detailError') })).toContainText(
+      a('detailError')
+    );
     await page.locator('#agent-description').fill('During recovery');
     const optionsBefore = optionReads,
       detailBefore = detailReads;
-    failList = false;
-    await page.getByRole('button', { name: a('retry'), exact: true }).click();
+    failDetail = false;
+    await page.getByRole('button', { name: a('detailRetry'), exact: true }).click();
     await expect(page.locator('#agent-description')).toHaveValue('During recovery');
     expect(optionReads).toBe(optionsBefore);
-    expect(detailReads).toBe(detailBefore);
+    await expect.poll(() => detailReads).toBe(detailBefore + 1);
     failOptions = true;
     await page.getByRole('button', { name: a('refresh'), exact: true }).click();
     await expect(page.getByRole('alert').filter({ hasText: a('optionsError') })).toContainText(
@@ -269,15 +312,14 @@ for (const locale of ['en', 'fa'] as const) {
             }
       )
     );
-    await page.goto('/admin/agents');
-    await page.getByRole('button', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
+    await page.goto(`/admin/agents/${aiAgent.id}/edit`);
     await expect(page.getByRole('alert').filter({ hasText: a('detailError') })).toContainText(
       a('detailError')
     );
     fail = false;
     await page.getByRole('button', { name: a('detailRetry'), exact: true }).click();
     await expect(page.locator('#agent-system-prompt')).toHaveValue(aiDetail.systemPrompt);
-    expect(lists).toBe(1);
+    expect(lists).toBe(0);
     expect(options).toBe(1);
     await page.locator('#agent-system-prompt').fill('Keep my prompt');
     phase = 1;

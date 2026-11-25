@@ -114,7 +114,16 @@ for (const locale of ['en', 'fa'] as const)
       const ledger = page.getByRole('region', { name: ledgerWord('title'), exact: true });
       const content = ledger.locator('[data-slot="list-content"]');
       const id = ledger.getByRole('textbox', { name: ledgerWord('searchId'), exact: true });
-      await expect(id).toHaveValue(first);
+      const detail = page.getByRole('region', { name: ledgerWord('detail'), exact: true });
+      await expect(detail.getByText(first, { exact: true })).toBeVisible();
+      await expect(page).toHaveURL(new RegExp(`/admin/invoices/${first}\\?`));
+      expect(params(page).get('invoiceId')).toBeNull();
+      expect(reads).toHaveLength(0);
+      await page.reload();
+      await expect(detail.getByText(first, { exact: true })).toBeVisible();
+      expect(reads).toHaveLength(0);
+      await page.getByRole('link', { name: ledgerWord('backToInvoices'), exact: true }).click();
+      await expect(id).toHaveValue('');
       await expect(
         ledger.getByRole('textbox', { name: ledgerWord('searchProfileId'), exact: true })
       ).toHaveValue(profile);
@@ -124,18 +133,17 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
       ).toHaveCount(1);
-      expect(reads.at(-1)!.searchParams.get('invoiceId')).toBe(first);
-      await id.fill('');
-      await ledger.getByRole('button', { name: ledgerWord('search'), exact: true }).click();
-      await expect.poll(() => params(page).get('invoiceId')).toBeNull();
-      await expect(
-        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
-      ).toHaveCount(1);
+      expect(reads.at(-1)!.searchParams.get('invoiceId')).toBeNull();
       await ledger
-        .getByRole('button', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
+        .getByRole('link', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
         .click();
-      const detail = ledger.getByRole('region', { name: ledgerWord('detail'), exact: true });
       await expect(detail.getByText(first, { exact: true })).toBeVisible();
+      await expect(ledger).toHaveCount(0);
+      await page.getByRole('link', { name: ledgerWord('backToInvoices'), exact: true }).click();
+      await id.fill(first);
+      await ledger.getByRole('button', { name: ledgerWord('search'), exact: true }).click();
+      await expect(detail.getByText(first, { exact: true })).toBeVisible();
+      await page.getByRole('link', { name: ledgerWord('backToInvoices'), exact: true }).click();
       await ledger.getByRole('button', { name: ledgerWord('more'), exact: true }).click();
       await expect(
         content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
@@ -148,7 +156,6 @@ for (const locale of ['en', 'fa'] as const)
       expect(reads.at(-1)!.searchParams.get('profileId')).toBe(profile);
       expect(reads.at(-1)!.searchParams.get('orderId')).toBe(order);
       expect(reads.at(-1)!.searchParams.get('beforeAt')).toBe(stamp);
-      await expect(detail.getByText(first, { exact: true })).toBeVisible();
       await expect(
         ledger.getByRole('button', { name: ledgerWord('previous'), exact: true })
       ).toBeEnabled();
@@ -157,7 +164,7 @@ for (const locale of ['en', 'fa'] as const)
         content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
       ).toHaveCount(1);
       await expect(
-        content.getByRole('button', { name: `${ledgerWord('detail')}: ${older}`, exact: true })
+        content.getByRole('link', { name: `${ledgerWord('detail')}: ${older}`, exact: true })
       ).toBeVisible();
       await expect(
         ledger.getByRole('navigation', {
@@ -167,7 +174,7 @@ for (const locale of ['en', 'fa'] as const)
       ).toHaveCount(0);
       await page.goBack();
       await expect(
-        content.getByRole('button', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
+        content.getByRole('link', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
       ).toBeVisible();
       await expect(
         content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
@@ -248,6 +255,22 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(`/admin/invoices?${query}`);
       const history = page.getByRole('region', { name: receiptWord('historyTitle'), exact: true });
       const content = history.locator('[data-slot="list-content"]');
+      const filterLabel = appText('historyFilters.label', locale);
+      const openFilters = () =>
+        history.getByRole('button', { name: filterLabel, exact: true }).click();
+      const drawer = page.getByRole('dialog', { name: filterLabel, exact: true });
+      const outcome = drawer.getByRole('combobox', {
+        name: receiptWord('historyState'),
+        exact: true,
+      });
+      const invoiceFilter = drawer.getByRole('textbox', {
+        name: receiptWord('invoice'),
+        exact: true,
+      });
+      const applyFilters = () =>
+        drawer
+          .getByRole('button', { name: appText('historyFilters.apply', locale), exact: true })
+          .click();
       const previous = history.getByRole('button', {
         name: receiptWord('historyPrevious'),
         exact: true,
@@ -264,17 +287,16 @@ for (const locale of ['en', 'fa'] as const)
       await page.reload();
       await expect(content.getByText(older, { exact: true })).toBeVisible();
       await expect(previous).toBeDisabled();
-      await history
-        .getByRole('combobox', { name: receiptWord('historyState'), exact: true })
-        .selectOption('Rejected');
+      await openFilters();
+      await expect(outcome).toHaveValue('Confirmed');
+      await outcome.selectOption('Rejected');
+      await applyFilters();
       await expect.poll(() => params(page).get('receipt_cursor')).toBeNull();
       await expect(content.getByText(first, { exact: true })).toHaveCount(2);
       expect(params(page).get('state')).toBe('Paid');
       expect(params(page).get('profileId')).toBe(profile);
       await page.goBack();
-      await expect(
-        history.getByRole('combobox', { name: receiptWord('historyState'), exact: true })
-      ).toHaveValue('Confirmed');
+      await expect.poll(() => params(page).get('receipt_state')).toBe('Confirmed');
       await expect(content.getByText(older, { exact: true })).toBeVisible();
       await page.goForward();
       await expect(content.getByText(first, { exact: true })).toHaveCount(2);
@@ -285,22 +307,20 @@ for (const locale of ['en', 'fa'] as const)
       await expect(history).toHaveCount(0);
       expect(params(page).get('receipt_state')).toBe('Rejected');
       await queue.getByRole('button', { name: receiptWord('historyTitle'), exact: true }).click();
-      await expect(
-        history.getByRole('combobox', { name: receiptWord('historyState'), exact: true })
-      ).toHaveValue('Rejected');
-      await expect(
-        history.getByRole('textbox', { name: receiptWord('invoice'), exact: true })
-      ).toHaveValue(first);
+      await expect(content.getByText(first, { exact: true })).toHaveCount(2);
+      await openFilters();
+      await expect(outcome).toHaveValue('Rejected');
+      await expect(invoiceFilter).toHaveValue(first);
       const count = reads.length;
-      await history
-        .getByRole('textbox', { name: receiptWord('invoice'), exact: true })
-        .fill('invalid');
-      await history.getByRole('button', { name: receiptWord('historyApply'), exact: true }).click();
-      await expect(history.getByRole('alert')).toHaveText(receiptWord('historyInvalidInvoice'));
-      await expect(
-        history.getByRole('textbox', { name: receiptWord('invoice'), exact: true })
-      ).toHaveAccessibleDescription(receiptWord('historyInvalidInvoice'));
+      await invoiceFilter.fill('invalid');
+      await applyFilters();
+      await expect(drawer.getByRole('alert')).toHaveText(receiptWord('historyInvalidInvoice'));
+      await expect(invoiceFilter).toHaveAccessibleDescription(receiptWord('historyInvalidInvoice'));
+      await expect(invoiceFilter).toBeFocused();
       expect(reads).toHaveLength(count);
+      await drawer
+        .getByRole('button', { name: appText('historyFilters.cancel', locale), exact: true })
+        .click();
       await inspect(
         page,
         'section[aria-label="' + receiptWord('historyTitle') + '"]',

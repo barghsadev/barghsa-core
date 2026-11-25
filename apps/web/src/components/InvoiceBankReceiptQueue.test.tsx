@@ -1,5 +1,6 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
+import { fireEvent, screen, within } from '@testing-library/dom';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -173,7 +174,7 @@ it('switches receipt views without refetching or clearing an open rejection draf
   });
   const count = fetcher.mock.calls.length;
   await click('Table');
-  expect(container.querySelectorAll('th')).toHaveLength(8);
+  expect(container.querySelectorAll('th[scope="col"]')).toHaveLength(8);
   expect(container.querySelector<HTMLTextAreaElement>('#invoice-receipt-reason')!.value).toBe(
     'Retain bank investigation'
   );
@@ -332,28 +333,22 @@ it('filters and pages terminal receipts, then opens their historic detail', asyn
   await click('Reviewed receipt history');
   expect(container.textContent).toContain(RECEIPT);
   expect(container.textContent).toContain('Bank Mellat');
-  const history = container.querySelector('[aria-label="Reviewed receipt history"]')!;
-  const state = history.querySelector('select')!;
+  await click('Filters');
+  const filters = within(screen.getByRole('dialog', { name: 'Filters' }));
   await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(
-      state,
-      'Rejected'
-    );
-    state.dispatchEvent(new Event('change', { bubbles: true }));
+    fireEvent.change(filters.getByRole('combobox', { name: 'Review outcome' }), {
+      target: { value: 'Rejected' },
+    });
+    fireEvent.input(filters.getByRole('textbox', { name: 'Invoice ID' }), {
+      target: { value: INVOICE },
+    });
   });
-  expect(fetcher.mock.calls.some(([url]) => String(url).includes('state=Rejected'))).toBe(true);
-  const invoiceInput = history.querySelector('input')!;
-  await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
-      invoiceInput,
-      INVOICE
-    );
-    invoiceInput.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  await click('Apply filter');
-  expect(fetcher.mock.calls.some(([url]) => String(url).includes(`invoiceId=${INVOICE}`))).toBe(
-    true
-  );
+  expect(fetcher.mock.calls.some(([url]) => String(url).includes('state=Rejected'))).toBe(false);
+  await act(async () => fireEvent.click(filters.getByRole('button', { name: 'Apply filters' })));
+  const filtersRequested = new URL(fetcher.mock.calls.at(-1)![0], 'https://app.example.test')
+    .searchParams;
+  expect(filtersRequested.get('state')).toBe('Rejected');
+  expect(filtersRequested.get('invoiceId')).toBe(INVOICE);
   await click('Review receipt');
   expect(container.textContent).toContain('Reference mismatch');
   expect(fetcher.mock.calls.some(([url]) => String(url).endsWith('/allocation'))).toBe(false);

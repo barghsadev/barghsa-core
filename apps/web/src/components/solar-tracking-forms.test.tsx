@@ -155,11 +155,11 @@ function receipt(body: SolarTrackingCommand) {
     recordedAt: '2026-10-02T10:00:00Z',
   };
 }
-function button(host: ParentNode, text: string) {
+function button(host: ParentNode, name: string) {
   const found = [...host.querySelectorAll<HTMLButtonElement>('button')].find(
-    (item) => item.textContent?.trim() === text
+    (item) => (item.getAttribute('aria-label') ?? item.textContent?.trim()) === name
   );
-  expect(found, text).toBeDefined();
+  expect(found, name).toBeDefined();
   return found!;
 }
 function ScopeProbe({ actor, inspect }: { actor: string; inspect?: () => void }) {

@@ -103,11 +103,11 @@ for (const locale of ['en', 'fa'] as const)
       const table = page.getByRole('table');
       await expect(table).toContainText(fa ? 'عضو نمونه' : 'Example Member');
       await expect(table).toContainText('m***@example.test');
-      await expect(table).toContainText('i***@example.test');
+      await expect(table).not.toContainText('i***@example.test');
       await expect(table).toContainText('+989 *** 4567');
       await expect(table).not.toContainText('member@example.test');
       await expect(table).not.toContainText('+989121234567');
-      await expect(table.locator('[data-slot=avatar]')).toHaveCount(3);
+      await expect(table.locator('[data-slot=avatar]')).toHaveCount(2);
       await expect(table.locator('time[datetime="2026-09-15T00:00:00Z"]')).toBeVisible();
       const owner = table.getByRole('row').filter({ hasText: fa ? 'مالک نمونه' : 'Example Owner' });
       await expect(
@@ -117,31 +117,28 @@ for (const locale of ['en', 'fa'] as const)
         })
       ).toBeEnabled();
       await expect(
-        owner.getByRole('button', { name: fa ? 'حذف عضو' : 'Remove member', exact: true })
-      ).toBeDisabled();
+        owner.getByRole('link', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles' })
+      ).toHaveCount(0);
       expect(
         (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
       expect((await owner.boundingBox())!.height).toBeLessThan(240);
-      const role = table
-        .getByRole('row')
-        .filter({ hasText: fa ? 'عضو نمونه' : 'Example Member' })
-        .locator('input[type=checkbox]:not(:checked)')
-        .first();
-      const roleValue = await role.getAttribute('value');
-      await role.check();
+      const edit = fa ? 'ویرایش نقش‌ها' : 'Edit roles';
+      await table.getByRole('link', { name: edit, exact: true }).click();
+      const finance = page.getByRole('checkbox', { name: fa ? 'مالی' : 'Finance', exact: true });
+      await finance.check();
       await page.setViewportSize({ width: 390, height: 844 });
-      const cards = page.getByRole('list', {
-        name: fa ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
-        exact: true,
-      });
+      await expect(finance).toBeChecked();
+      await finance.uncheck();
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: fa ? 'اعضا' : 'Members', exact: true })
+        .click();
+      const cards = page.getByRole('list', { name: fa ? 'اعضا' : 'Members', exact: true });
       await expect(table).toHaveCount(0);
-      await expect(cards.getByRole('listitem')).toHaveCount(3);
+      await expect(cards.getByRole('listitem')).toHaveCount(2);
       await expect(cards).toContainText('m***@example.test');
       await expect(cards).not.toContainText('member@example.test');
-      const mobileRole = cards.locator(`input[value="${roleValue}"]`);
-      await expect(mobileRole).toBeChecked();
-      await mobileRole.uncheck();
       expect(
         (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
@@ -155,9 +152,9 @@ for (const locale of ['en', 'fa'] as const)
         fullPage: true,
       });
       await page
-        .getByRole('button', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
+        .getByRole('link', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
         .click();
-      const dialog = page.getByRole('dialog');
+      const dialog = page.getByRole('form', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member' });
       await dialog.locator('#team-username').fill('new@example.test');
       await dialog.locator('#invite-role').selectOption('Finance');
       await dialog.locator('#invite-role').focus();
@@ -172,9 +169,7 @@ for (const locale of ['en', 'fa'] as const)
           )
         )
         .toBe(true);
-      expect(
-        (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
-      ).toEqual([]);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       const send = dialog.getByRole('button', {
         name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation',
         exact: true,
@@ -185,12 +180,7 @@ for (const locale of ['en', 'fa'] as const)
       await send.click();
       await expect(dialog).toHaveCount(0);
       expect(sent).toEqual({ username: 'new@example.test', role: 'Finance', message: note });
-      await expect(
-        page.getByRole('button', {
-          name: fa ? 'دعوت عضو تیم' : 'Invite a team member',
-          exact: true,
-        })
-      ).toBeFocused();
+      await expect(page).toHaveURL(/settings\/team\/invitations\/new-note$/);
       recipient = true;
       await page.goto('/dashboard');
       await page.getByText(fa ? 'مشاهده جزئیات' : 'View details', { exact: true }).click();

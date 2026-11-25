@@ -1,6 +1,11 @@
+import {
+  Eye as TableEyeIcon,
+  Pencil as TablePencilIcon,
+  Trash2 as TableTrash2Icon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
-import { useRecordAddress } from '../hooks/useRecordAddress.js';
-import type { CatalogueWorkspace } from '../lib/catalogue-workspace.js';
+import type { CatalogueRecordWorkspace } from '../lib/catalogue-workspace.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useCatalogueConfirmationRead } from '../hooks/useCatalogueConfirmationRead.js';
@@ -10,7 +15,11 @@ import {
   validCatalogueCount,
   type KnowledgeDocumentCommand,
 } from '../lib/knowledge-documents.js';
-import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
+import {
+  CatalogueMembershipReview,
+  CatalogueRelationEditor,
+  type ReviewedMembershipCommand,
+} from '../components/CatalogueRelationEditor.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
 import {
   matchesMembership,
@@ -19,12 +28,21 @@ import {
 } from '../lib/catalogue-membership.js';
 import { CatalogueQueryEditor } from '../components/CatalogueQueryEditor.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
+import { FormField } from '@barghsa/ui/form';
+import { RecordListField } from '../components/RecordListField.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
   CatalogueFieldFeedback,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import {
   type KnowledgeDraft as Draft,
@@ -33,9 +51,24 @@ import {
   matchesAiCatalogueReceipt,
 } from '../lib/knowledge-policy-form.js';
 import type { KnowledgeCatalogueKind } from '../lib/catalogue-category-query.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
-import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
+import { useEffect, useState, useRef, useCallback, useMemo, type FormEvent } from 'react';
+import {
+  Badge,
+  Alert,
+  LoadingStatus,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  ListRefreshButton,
+  NativeSelect,
+  Textarea,
+  buttonVariants,
+} from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
+import { toast } from '../lib/toast-api.js';
 import { KnowledgeBaseDocumentPicker } from '../components/KnowledgeBaseDocumentPicker.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -58,9 +91,23 @@ interface Entry {
   documentCount?: number;
   memberCount?: number;
 }
+type DocumentReview = KnowledgeDocumentCommand & { fileName: string; baseTitle: string };
+type IndexReview = { title: string; source: string; state: string };
+type KnowledgeAction = TeamAction & { indexReview?: IndexReview };
 interface Detail extends Entry {
   members?: { id: string; title: string }[];
-  documents?: { id: string; fileName: string; storageKey: string; processingStatus: string }[];
+  groups?: { id: string; title: string }[];
+  documents?: KnowledgeDocument[];
+}
+interface KnowledgeDocument {
+  id: string;
+  fileName: string;
+  storageKey: string;
+  processingStatus: string;
+  processingError?: string | null;
+  sizeBytes?: number | string | null;
+  mimeType?: string | null;
+  updatedAt?: string;
 }
 interface QueryResult {
   id: string;
@@ -115,6 +162,11 @@ function validDetail(value: unknown): value is Detail {
         value.members.every(
           (v) => record(v) && typeof v.id === 'string' && typeof v.title === 'string'
         ))) &&
+    (value.groups === undefined ||
+      (Array.isArray(value.groups) &&
+        value.groups.every(
+          (v) => record(v) && typeof v.id === 'string' && typeof v.title === 'string'
+        ))) &&
     (value.documents === undefined ||
       (Array.isArray(value.documents) &&
         value.documents.every(
@@ -122,7 +174,17 @@ function validDetail(value: unknown): value is Detail {
             record(v) &&
             ['id', 'fileName', 'storageKey', 'processingStatus'].every(
               (k) => typeof v[k] === 'string'
-            )
+            ) &&
+            ['mimeType', 'processingError'].every(
+              (key) => v[key] === undefined || v[key] === null || typeof v[key] === 'string'
+            ) &&
+            (v.updatedAt === undefined || typeof v.updatedAt === 'string') &&
+            (v.sizeBytes === undefined ||
+              v.sizeBytes === null ||
+              ((typeof v.sizeBytes === 'number' ||
+                (typeof v.sizeBytes === 'string' && /^\d+$/.test(v.sizeBytes))) &&
+                Number.isSafeInteger(Number(v.sizeBytes)) &&
+                Number(v.sizeBytes) >= 0))
         )))
   );
 }
@@ -168,7 +230,7 @@ function draftFor(entry?: Entry): Draft {
   };
 }
 type CataloguePageProps = {
-  workspace?: CatalogueWorkspace;
+  workspace?: CatalogueRecordWorkspace;
   initialKind?: KnowledgeCatalogueKind;
   focusCategory?: boolean;
   onKindChange?: (value: KnowledgeCatalogueKind) => void;
@@ -186,6 +248,7 @@ function OwnedKnowledgeBasesPage({
 }: CataloguePageProps = {}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
+  const time = useAccountTime(locale);
   const label = (key: string) => t(`admin.kb.${key}`, locale);
   const processingError = (code: string | null | undefined) =>
     label(
@@ -200,6 +263,18 @@ function OwnedKnowledgeBasesPage({
       )[code ?? ''] ?? 'errorGeneric'
     );
   const [kind, setKind] = useState<Kind>(initialKind);
+  const recordId = workspace?.recordId;
+  const isList = !workspace || workspace.view === 'list';
+  const heading = useRef<HTMLHeadingElement>(null);
+  const editorInitialized = useRef(false);
+  const linkTo = (id: string, action?: 'edit' | 'documents' | 'ingestion') => ({
+    to:
+      kind === 'kb-groups'
+        ? ('/admin/knowledge-bases/groups/$recordId/{-$action}' as const)
+        : ('/admin/knowledge-bases/$recordId/{-$action}' as const),
+    params: { recordId: id, action },
+  });
+  const listSearch = kind === 'kb-groups' ? { kind: 'kb-groups' as const } : {};
   const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
     knowledgePolicyFormText(key, locale);
   const kindRef = useRef(kind);
@@ -235,15 +310,15 @@ function OwnedKnowledgeBasesPage({
     requiredRead = useRef(0);
   const formCapture = useRef<{ body: Record<string, unknown>; id?: string } | null>(null);
   const actionRef = useRef<TeamAction | null>(null);
-  const operationCapture = useRef<MembershipCommand | null>(null),
-    uncertainOperation = useRef<MembershipCommand | KnowledgeDocumentCommand | null>(null);
-  const documentCapture = useRef<KnowledgeDocumentCommand | null>(null);
+  const operationCapture = useRef<ReviewedMembershipCommand | null>(null),
+    uncertainOperation = useRef<ReviewedMembershipCommand | DocumentReview | null>(null);
+  const documentCapture = useRef<DocumentReview | null>(null);
   const requiredOperationRead = useRef<{ detail: number; choices: number | null }>({
     detail: 0,
     choices: null,
   });
   const [operationUncertain, setOperationUncertain] = useState(false);
-  const setAction = useCallback((value: TeamAction | null) => {
+  const setAction = useCallback((value: KnowledgeAction | null) => {
     actionRef.current = value;
     if (!value) {
       formCapture.current = null;
@@ -257,9 +332,10 @@ function OwnedKnowledgeBasesPage({
     setPending(value);
   }, []);
 
-  const [selected, setSelected] = useState<string | null>(null);
+  const [localSelected, setSelected] = useState<string | null>(null);
+  const selected = recordId ?? localSelected;
   const [member, setMember] = useState('');
-  const [action, updateAction] = useState<TeamAction | null>(null),
+  const [action, updateAction] = useState<KnowledgeAction | null>(null),
     [notice, setNotice] = useState(false);
   const [queryText, setQueryText] = useState('');
   const [queryState, setQueryState] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -287,7 +363,6 @@ function OwnedKnowledgeBasesPage({
     setAction(null);
     detailBasis.current = null;
   }, [setAction]);
-  const clearAddress = workspace?.clear;
   const clearWork = useCallback(() => {
     clearDetail();
     setDraft(null);
@@ -300,14 +375,20 @@ function OwnedKnowledgeBasesPage({
     validationBusy.current = false;
     form.setValidationPending(false);
     onPendingChange(false);
-    clearAddress?.();
-  }, [clearDetail, setAction, setDraft, form.setValidationPending, onPendingChange, clearAddress]);
+    editorInitialized.current = false;
+  }, [clearDetail, setAction, setDraft, form.setValidationPending, onPendingChange]);
   const scope = useCatalogueScope(clearWork);
   const confirmationRead = useCatalogueConfirmationRead(scope);
-  const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
+  const collection = useCatalogueResource(
+    scope,
+    recordId ? null : `/api/admin/${kind}`,
+    validEntries
+  );
   const choices = useCatalogueResource(
     scope,
-    kind === 'kb-groups' ? '/api/admin/knowledge-bases' : null,
+    kind === 'kb-groups' && (isList || workspace?.view === 'detail')
+      ? '/api/admin/knowledge-bases'
+      : null,
     validEntries
   );
   const validateDetail = useCallback(
@@ -317,43 +398,28 @@ function OwnedKnowledgeBasesPage({
   const selectedRead = useCatalogueResource(
     scope,
     selected ? `/api/admin/${kind}/${encodeURIComponent(selected)}` : null,
-    validateDetail
+    validateDetail,
+    { clearOnMissing: true }
   );
+  const singleRow = useMemo(
+    () => (selectedRead.data ? [selectedRead.data] : null),
+    [selectedRead.data]
+  );
+  const list = recordId ? { ...selectedRead, data: singleRow } : collection;
   const rows = list.data ?? [],
     kbs = kind === 'knowledge-bases' ? rows : (choices.data ?? []),
     detail = selectedRead.data;
   const disabled = scope.denied || list.loading || list.error;
-  const selectDraft = useRecordAddress(
-    workspace?.editor,
-    rows,
-    (row) => row.id,
-    !disabled && list.data !== null,
-    (row) => {
-      if (row) edit(row, false);
-      else {
-        generation.current++;
-        formCapture.current = null;
-        setAction(null);
-        setDraft(null);
-        draftBasis.current = null;
-        setUncertain(false);
-        setChanged(false);
-        validationBusy.current = false;
-        form.setValidationPending(false);
-        onPendingChange(false);
-      }
-    }
-  );
-  const selectDetail = useRecordAddress(
-    workspace?.detail,
-    rows,
-    (row) => row.id,
-    !disabled && list.data !== null,
-    (row) => {
-      if (row) setSelected(row.id);
-      else clearDetail();
-    }
-  );
+  useEffect(() => {
+    if (workspace?.view !== 'list') heading.current?.focus({ preventScroll: true });
+  }, [workspace?.view, recordId]);
+  useEffect(() => {
+    if (disabled || editorInitialized.current) return;
+    if (workspace?.view === 'create') edit(undefined, false);
+    else if (workspace?.view === 'edit' && detail) edit(detail, false);
+    else return;
+    editorInitialized.current = true;
+  }, [disabled, workspace?.view, detail]);
   const detailDisabled = disabled || selectedRead.loading || selectedRead.error;
   const memberDisabled = detailDisabled || choices.loading || choices.error;
   const work = useRef({
@@ -410,7 +476,6 @@ function OwnedKnowledgeBasesPage({
     }
     if (current.selected && !list.data.some((row) => row.id === current.selected)) {
       clearDetail();
-      selectDetail(null, true);
     }
   }, [list.data, clearDetail, setAction, form.setValidationPending]);
   useEffect(() => {
@@ -446,7 +511,6 @@ function OwnedKnowledgeBasesPage({
       return;
     clearDetail();
     setSelected(value);
-    selectDetail(value);
   }
   function edit(entry?: Entry, publish = true) {
     if (
@@ -466,7 +530,6 @@ function OwnedKnowledgeBasesPage({
     setDraft(draftFor(entry));
     draftBasis.current = entry ? JSON.stringify(draftFor(entry)) : null;
     setNotice(false);
-    if (publish) selectDraft(entry?.id ?? null);
   }
   function refresh() {
     if (networkPending.current) return;
@@ -479,7 +542,7 @@ function OwnedKnowledgeBasesPage({
     else {
       list.retry();
       choices.retry();
-      selectedRead.retry();
+      if (!recordId) selectedRead.retry();
     }
   }
   function commandDisabled(path: string, body?: unknown) {
@@ -536,7 +599,8 @@ function OwnedKnowledgeBasesPage({
     method: TeamAction['method'],
     title: string,
     description: string,
-    body?: unknown
+    body?: unknown,
+    indexReview?: IndexReview
   ) {
     if (
       operationUncertain ||
@@ -566,6 +630,7 @@ function OwnedKnowledgeBasesPage({
       title,
       description,
       ...(body === undefined ? {} : { body }),
+      ...(indexReview ? { indexReview } : {}),
       forbiddenMessage: label('denied'),
       errorMessages: { 'VALIDATION:PARSE:ZOD_ERROR': label('invalid') },
     });
@@ -642,9 +707,35 @@ function OwnedKnowledgeBasesPage({
         choices.error ||
         choices.readAttempt === null ||
         choices.readAttempt < requiredOperationRead.current.choices));
+  const reviewDocument = ({ fileName, baseTitle }: DocumentReview) => (
+    <dl className="grid min-w-0 gap-3 rounded-lg border bg-muted/25 px-3 py-2.5 sm:grid-cols-2">
+      <div className="min-w-0">
+        <dt className="text-xs text-muted-foreground">{label('searchFiles')}</dt>
+        <dd className="text-sm font-medium [overflow-wrap:anywhere]">
+          <bdi>{fileName}</bdi>
+        </dd>
+      </div>
+      <div className="min-w-0">
+        <dt className="text-xs text-muted-foreground">{copy('documentTarget')}</dt>
+        <dd className="text-sm font-medium [overflow-wrap:anywhere]">
+          <bdi>{baseTitle}</bdi>
+        </dd>
+      </div>
+    </dl>
+  );
+  const uncertainDocument =
+    uncertainOperation.current && 'fileName' in uncertainOperation.current
+      ? uncertainOperation.current
+      : null;
+  const uncertainMember =
+    uncertainOperation.current && 'memberTitle' in uncertainOperation.current
+      ? uncertainOperation.current
+      : null;
   const operationRecovery = operationUncertain && (
-    <div className="space-y-2">
-      <p role="alert">{copy('uncertain')}</p>
+    <div className="space-y-3">
+      <Alert variant="warning">{copy(uncertainDocument ? 'documentRecovery' : 'uncertain')}</Alert>
+      {uncertainDocument && reviewDocument(uncertainDocument)}
+      {uncertainMember && <CatalogueMembershipReview command={uncertainMember} locale={locale} />}
       <Button
         type="button"
         variant="outline"
@@ -674,7 +765,14 @@ function OwnedKnowledgeBasesPage({
       (operation.choicesRequired ? work.current.memberDisabled : work.current.detailDisabled)
     )
       return;
-    operationCapture.current = operation;
+    const entry = (operation.choicesRequired ? kbs : detail?.members)?.find(
+      (item) => item.id === operation.memberId
+    );
+    operationCapture.current = {
+      ...operation,
+      memberTitle: entry?.title ?? operation.memberId,
+      groupTitle: detail?.title ?? operation.groupId,
+    };
     propose(
       `/api/admin/kb-groups/${operation.groupId}/members${method === 'DELETE' ? `/${operation.memberId}` : ''}`,
       method,
@@ -756,55 +854,213 @@ function OwnedKnowledgeBasesPage({
       }
     }
   }
+  const view = workspace?.view;
+  const showIngestion =
+    !workspace || view === 'ingestion' || (kind === 'kb-groups' && view === 'detail');
+  const sourceName = (sourceType: Entry['sourceType']) =>
+    label(
+      sourceType === 'url' ? 'sourceUrl' : sourceType === 'api' ? 'sourceApi' : 'sourceDocument'
+    );
+  const index =
+    showIngestion && kind === 'knowledge-bases' && detail
+      ? {
+          title: detail.title,
+          source: sourceName(detail.sourceType),
+          state: label(`state${detail.contentState ?? 'empty'}`),
+        }
+      : null;
+  const hasIndexSource =
+    !!detail && (detail.sourceType !== 'document' || !!detail.documents?.length);
+  const queryRows = queryResult?.id === detail?.id ? queryResult?.rows : undefined;
+  const showDocuments = !workspace || view === 'documents' || view === 'document';
+  const showDetail = !workspace || (view !== 'list' && view !== 'edit' && view !== 'create');
+  const doc = workspace?.documentId
+    ? detail?.documents?.find((item) => item.id === workspace.documentId)
+    : undefined;
+  const listAction = buttonVariants({ variant: 'outline', className: 'min-h-11' });
+  const statusLabel = (status: string) =>
+    label(['pending', 'processing', 'ready', 'failed'].includes(status) ? status : 'unknown');
+  function removeDocument(source: Detail, document: KnowledgeDocument) {
+    if (detailDisabled || actionRef.current || networkPending.current || operationUncertain) return;
+    documentCapture.current = {
+      kbId: source.id,
+      documentId: document.id,
+      storageKey: document.storageKey,
+      fileName: document.fileName,
+      baseTitle: source.title,
+      expected: 'absent',
+      choicesRequired: false,
+    };
+    propose(
+      `/api/admin/knowledge-bases/${source.id}/documents/${document.id}`,
+      'DELETE',
+      label('detach'),
+      label('confirmDetach')
+    );
+  }
+  const reviewedDocument = action ? documentCapture.current : null;
+  const reviewedMembership = action ? operationCapture.current : null;
+  const DocumentHeading = workspace ? 'h2' : 'h3';
+  const isEditor = view === 'create' || view === 'edit';
+  const hasInlineRefresh =
+    isEditor ||
+    view === 'documents' ||
+    view === 'document' ||
+    view === 'ingestion' ||
+    (view === 'detail' && kind === 'kb-groups');
+  const reviewedIndex = action?.indexReview;
+  const actionReadIssue = list.error || choices.error || selectedRead.error || selectedRead.loading;
+  const actionContext = reviewedDocument ? (
+    reviewDocument(reviewedDocument)
+  ) : reviewedMembership ? (
+    <CatalogueMembershipReview
+      command={reviewedMembership}
+      locale={locale}
+      refresh={
+        actionReadIssue
+          ? undefined
+          : {
+              label: label('refresh'),
+              disabled: pending || list.loading || choices.loading,
+              onClick: refresh,
+            }
+      }
+    />
+  ) : (
+    reviewedIndex && (
+      <dl className="space-y-2 rounded-lg border bg-muted/25 p-3 text-sm [overflow-wrap:anywhere]">
+        <div>
+          <dt className="text-xs text-muted-foreground">{copy('documentTarget')}</dt>
+          <dd className="font-medium">
+            <bdi>{reviewedIndex.title}</bdi>
+          </dd>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <dt className="text-xs text-muted-foreground">{label('sourceType')}</dt>
+            <dd>{reviewedIndex.source}</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-muted-foreground">{copy('indexStatus')}</dt>
+            <dd>{reviewedIndex.state}</dd>
+          </div>
+        </div>
+      </dl>
+    )
+  );
   return (
     <div
-      className="mx-auto min-w-0 flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
+      className={`mx-auto flex w-full min-w-0 flex-col p-4 md:px-8 ${isEditor ? 'max-w-3xl gap-4' : 'max-w-5xl gap-6 md:py-8'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
-      <div className="flex flex-wrap gap-2">
-        {(['knowledge-bases', 'kb-groups'] as const).map((value) => (
-          <Button
-            key={value}
-            autoFocus={focusCategory && kind === value}
-            disabled={pending}
-            variant={kind === value ? 'default' : 'outline'}
-            aria-pressed={kind === value}
-            onClick={() => {
-              if (kind === value) return;
-              clearWork();
-              if (onKindChange) onKindChange(value);
-              else {
-                scope.recover();
-                setKind(value);
-              }
-            }}
+      <header className="flex min-w-0 items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {!isList && (
+            <div className="flex flex-wrap items-center gap-2 text-sm text-primary">
+              <Link
+                to="/admin/knowledge-bases"
+                search={listSearch}
+                className="underline-offset-4 hover:underline"
+              >
+                {label(kind)}
+              </Link>
+              {detail && view !== 'detail' && (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <Link {...linkTo(detail.id)} className="underline-offset-4 hover:underline">
+                    <bdi>{detail.title}</bdi>
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+          <h1
+            ref={heading}
+            data-slot="editor-heading"
+            tabIndex={isList ? undefined : -1}
+            className="text-2xl font-semibold outline-none! [overflow-wrap:anywhere]"
           >
-            {label(value)}
+            {view === 'edit'
+              ? copy(kind === 'knowledge-bases' ? 'editKnowledge' : 'editGroup')
+              : view === 'document'
+                ? (doc?.fileName ?? label('documentDetails'))
+                : view === 'documents'
+                  ? label('documents')
+                  : view === 'ingestion'
+                    ? label('ingestion')
+                    : detail && !isList
+                      ? detail.title
+                      : label(
+                          view === 'create'
+                            ? kind === 'knowledge-bases'
+                              ? 'addKb'
+                              : 'addGroup'
+                            : 'title'
+                        )}
+          </h1>
+        </div>
+        {hasInlineRefresh && (
+          <ListRefreshButton
+            label={label('refresh')}
+            disabled={pending || list.loading || choices.loading || selectedRead.loading}
+            onClick={refresh}
+          />
+        )}
+      </header>
+      {!hasInlineRefresh && (
+        <div className="flex flex-wrap gap-2">
+          {isList &&
+            (['knowledge-bases', 'kb-groups'] as const).map((value) => (
+              <Button
+                key={value}
+                autoFocus={focusCategory && kind === value}
+                disabled={pending}
+                variant={kind === value ? 'default' : 'outline'}
+                aria-pressed={kind === value}
+                onClick={() => {
+                  if (kind === value) return;
+                  clearWork();
+                  if (onKindChange) onKindChange(value);
+                  else {
+                    scope.recover();
+                    setKind(value);
+                  }
+                }}
+              >
+                {label(value)}
+              </Button>
+            ))}
+          <Button
+            variant="outline"
+            disabled={pending || list.loading || choices.loading || selectedRead.loading}
+            onClick={refresh}
+          >
+            {label('refresh')}
           </Button>
-        ))}
-        <Button
-          variant="outline"
-          disabled={pending || list.loading || choices.loading || selectedRead.loading}
-          onClick={refresh}
-        >
-          {label('refresh')}
-        </Button>
-      </div>
+        </div>
+      )}
       <ListPage>
         {scope.denied ? (
           <p role="alert">{label('denied')}</p>
         ) : (
           <>
             <CommandFeedback message={notice ? label('saved') : null} />
-            <ListPage.Toolbar>
-              <Button
-                disabled={disabled || form.pending || !!action || pending || uncertain}
-                onClick={() => edit()}
-              >
-                {label(kind === 'knowledge-bases' ? 'addKb' : 'addGroup')}
-              </Button>
-            </ListPage.Toolbar>
+            {isList && (
+              <ListPage.Toolbar>
+                {workspace && !disabled && !form.pending && !action && !pending && !uncertain ? (
+                  <Link {...linkTo('new')} className={buttonVariants({ className: 'min-h-11' })}>
+                    {label(kind === 'knowledge-bases' ? 'addKb' : 'addGroup')}
+                  </Link>
+                ) : (
+                  <Button
+                    disabled={disabled || form.pending || !!action || pending || uncertain}
+                    onClick={() => edit()}
+                  >
+                    {label(kind === 'knowledge-bases' ? 'addKb' : 'addGroup')}
+                  </Button>
+                )}
+              </ListPage.Toolbar>
+            )}
             {choices.loading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
             {choices.error && (
               <div role="alert">
@@ -813,9 +1069,18 @@ function OwnedKnowledgeBasesPage({
               </div>
             )}
             {selectedRead.loading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
+            {!isList && !recordId && collection.loading && (
+              <LoadingStatus>{label('loading')}</LoadingStatus>
+            )}
+            {!isList && !recordId && collection.error && (
+              <div role="alert" className="space-y-2">
+                <p>{label('error')}</p>
+                <Button onClick={collection.retry}>{label('retry')}</Button>
+              </div>
+            )}
             {selectedRead.error && (
               <div role="alert">
-                <p>{label('detailError')}</p>
+                <p>{label(selectedRead.missing ? 'missing' : 'detailError')}</p>
                 <Button onClick={selectedRead.retry}>{label('detailRetry')}</Button>
               </div>
             )}
@@ -825,453 +1090,721 @@ function OwnedKnowledgeBasesPage({
                 aria-busy={form.pending || undefined}
                 onSubmit={(event) => void save(event)}
                 aria-label={label('editor')}
-                className="flex flex-col gap-4 border-y py-5"
+                className={recordEditorSurface}
               >
-                {changed && <p role="alert">{copy('changed')}</p>}
-                {uncertain && <p role="alert">{copy('uncertain')}</p>}
-                {catalogueRootMessage(form.errors) && (
-                  <p role="alert">{catalogueRootMessage(form.errors)}</p>
+                {changed && (
+                  <p className="mx-4 mt-4 text-sm text-destructive" role="alert">
+                    {copy('changed')}
+                  </p>
                 )}
-                <fieldset disabled={form.pending || !!action || pending} className="contents">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="kb-title">{label('name')}</Label>
-                    <Input
-                      {...form.bind('title')}
-                      id="kb-title"
-                      required
-                      aria-required="true"
-                      maxLength={120}
-                      value={draft.title}
-                      onChange={(event) =>
-                        form.field('title')[1](event.target.value as Draft['title'])
-                      }
-                    />
-                    <CatalogueFieldFeedback
-                      id={form.errorId('title')}
-                      error={form.errors.title}
-                      message={messages.title}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="kb-description">{label('description')}</Label>
-                    <textarea
-                      {...form.bind('description')}
-                      id="kb-description"
-                      className="min-h-24 rounded-md border bg-background p-3"
-                      maxLength={2000}
-                      value={draft.description}
-                      onChange={(event) =>
-                        form.field('description')[1](event.target.value as Draft['description'])
-                      }
-                    />
-                    <CatalogueFieldFeedback
-                      id={form.errorId('description')}
-                      error={form.errors.description}
-                      message={messages.description}
-                    />
-                  </div>
+                {uncertain && (
+                  <p className="mx-4 mt-4 text-sm text-destructive" role="alert">
+                    {copy('uncertain')}
+                  </p>
+                )}
+                {catalogueRootMessage(form.errors) && (
+                  <p className="mx-4 mt-4 text-sm text-destructive" role="alert">
+                    {catalogueRootMessage(form.errors)}
+                  </p>
+                )}
+                <fieldset disabled={form.pending || !!action || pending} className="min-w-0">
+                  <legend className="sr-only">{label('editor')}</legend>
+                  <RecordEditorSection
+                    title={copy(kind === 'knowledge-bases' ? 'knowledgeDetails' : 'groupDetails')}
+                  >
+                    <div className={recordEditorField}>
+                      <Label htmlFor="kb-title">{label('name')}</Label>
+                      <Input
+                        {...form.bind('title')}
+                        id="kb-title"
+                        dir="auto"
+                        required
+                        aria-required="true"
+                        maxLength={120}
+                        value={draft.title}
+                        onChange={(event) =>
+                          form.field('title')[1](event.target.value as Draft['title'])
+                        }
+                      />
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('title')}
+                        error={form.errors.title}
+                        message={messages.title}
+                      />
+                    </div>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="kb-description">{label('description')}</Label>
+                      <Textarea
+                        {...form.bind('description')}
+                        id="kb-description"
+                        dir="auto"
+                        rows={2}
+                        placeholder={copy(
+                          kind === 'knowledge-bases' ? 'knowledgeDescription' : 'groupDescription'
+                        )}
+                        className="max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]"
+                        maxLength={2000}
+                        value={draft.description}
+                        onChange={(event) =>
+                          form.field('description')[1](event.target.value as Draft['description'])
+                        }
+                      />
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('description')}
+                        error={form.errors.description}
+                        message={messages.description}
+                      />
+                    </div>
+                  </RecordEditorSection>
                   {kind === 'knowledge-bases' && (
                     <>
-                      <div className="flex flex-col gap-2">
-                        <Label htmlFor="kb-audience">{label('audience')}</Label>
-                        <select
-                          {...form.bind('audience')}
-                          id="kb-audience"
-                          aria-required="true"
-                          aria-describedby={
-                            form.errors.audience
-                              ? `${form.errorId('audience')} kb-audience-help`
-                              : 'kb-audience-help'
-                          }
-                          className="rounded-md border bg-background p-2"
-                          value={draft.audience}
-                          onChange={(event) =>
-                            form.field('audience')[1](event.target.value as Draft['audience'])
-                          }
-                        >
-                          {(['admin', 'staff', 'customer', 'public'] as const).map((value) => (
-                            <option key={value} value={value}>
-                              {label(`audience${value}`)}
-                            </option>
-                          ))}
-                        </select>
-                        <CatalogueFieldFeedback
-                          id={form.errorId('audience')}
-                          error={form.errors.audience}
-                          message={messages.audience}
-                        />
-                        <p id="kb-audience-help" className="text-sm text-muted-foreground">
-                          {label('audienceHelp')}
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
-                        <select
-                          {...form.bind('sourceType')}
-                          id="kb-source-type"
-                          aria-required="true"
-                          className="rounded-md border bg-background p-2"
-                          value={draft.sourceType}
-                          onChange={(event) => {
-                            form.field('sourceType')[1](event.target.value as Draft['sourceType']);
-                            form.form.clearErrors('sourceUrl');
-                          }}
-                        >
-                          <option value="document">{label('sourceDocument')}</option>
-                          <option value="url">{label('sourceUrl')}</option>
-                          <option value="api">{label('sourceApi')}</option>
-                        </select>
-                        <CatalogueFieldFeedback
-                          id={form.errorId('sourceType')}
-                          error={form.errors.sourceType}
-                          message={messages.sourceType}
-                        />
-                      </div>
-                      {draft.sourceType !== 'document' && (
-                        <div className="flex flex-col gap-2">
-                          <Label htmlFor="kb-source-url">{label('sourceAddress')}</Label>
-                          {draft.sourceType === 'url' ? (
-                            <>
-                              <textarea
-                                {...form.bind('sourceUrl')}
-                                id="kb-source-url"
-                                required
-                                aria-required="true"
-                                aria-describedby={
-                                  form.errors.sourceUrl
-                                    ? `${form.errorId('sourceUrl')} kb-source-urls-help`
-                                    : 'kb-source-urls-help'
-                                }
-                                maxLength={40960}
-                                rows={3}
-                                className="rounded-md border bg-background p-3"
-                                value={draft.sourceUrl}
-                                onChange={(event) =>
-                                  form.field('sourceUrl')[1](
-                                    event.target.value as Draft['sourceUrl']
-                                  )
-                                }
-                              />
-                              <CatalogueFieldFeedback
-                                id={form.errorId('sourceUrl')}
-                                error={form.errors.sourceUrl}
-                                message={messages.sourceUrl}
-                              />
-                              <p id="kb-source-urls-help" className="text-sm text-muted-foreground">
-                                {label('sourceUrlsHelp')}
-                              </p>
-                            </>
-                          ) : (
-                            <>
-                              <Input
-                                {...form.bind('sourceUrl')}
-                                id="kb-source-url"
-                                type="url"
-                                required
-                                aria-required="true"
-                                maxLength={2048}
-                                placeholder="https://"
-                                value={draft.sourceUrl}
-                                onChange={(event) =>
-                                  form.field('sourceUrl')[1](
-                                    event.target.value as Draft['sourceUrl']
-                                  )
-                                }
-                              />
-                              <CatalogueFieldFeedback
-                                id={form.errorId('sourceUrl')}
-                                error={form.errors.sourceUrl}
-                                message={messages.sourceUrl}
-                              />
-                            </>
-                          )}
+                      <RecordEditorSection title={copy('sourceSettings')}>
+                        <div className={recordEditorGrid}>
+                          <div className={recordEditorField}>
+                            <Label htmlFor="kb-audience">{label('audience')}</Label>
+                            <NativeSelect
+                              {...form.bind('audience')}
+                              id="kb-audience"
+                              aria-required="true"
+                              aria-describedby={
+                                form.errors.audience
+                                  ? `${form.errorId('audience')} kb-audience-help`
+                                  : 'kb-audience-help'
+                              }
+                              className="w-full"
+                              value={draft.audience}
+                              onChange={(event) =>
+                                form.field('audience')[1](event.target.value as Draft['audience'])
+                              }
+                            >
+                              {(['admin', 'staff', 'customer', 'public'] as const).map((value) => (
+                                <option key={value} value={value}>
+                                  {label(`audience${value}`)}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                            <CatalogueFieldFeedback
+                              compact
+                              id={form.errorId('audience')}
+                              error={form.errors.audience}
+                              message={messages.audience}
+                            />
+                            <p id="kb-audience-help" className="text-xs text-muted-foreground">
+                              {label('audienceHelp')}
+                            </p>
+                          </div>
+                          <div className={recordEditorField}>
+                            <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
+                            <NativeSelect
+                              {...form.bind('sourceType')}
+                              id="kb-source-type"
+                              aria-required="true"
+                              className="w-full"
+                              value={draft.sourceType}
+                              onChange={(event) => {
+                                form.field('sourceType')[1](
+                                  event.target.value as Draft['sourceType']
+                                );
+                                form.form.clearErrors('sourceUrl');
+                              }}
+                            >
+                              <option value="document">{label('sourceDocument')}</option>
+                              <option value="url">{label('sourceUrl')}</option>
+                              <option value="api">{label('sourceApi')}</option>
+                            </NativeSelect>
+                            <CatalogueFieldFeedback
+                              compact
+                              id={form.errorId('sourceType')}
+                              error={form.errors.sourceType}
+                              message={messages.sourceType}
+                            />
+                          </div>
                         </div>
-                      )}
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="flex flex-col gap-2">
-                          <Label htmlFor="kb-chunk-size">{label('chunkSize')}</Label>
-                          <Input
-                            {...form.bind('chunkSize')}
-                            id="kb-chunk-size"
-                            type="text"
-                            inputMode="numeric"
-                            dir="ltr"
-                            min={100}
-                            max={4000}
-                            required
-                            aria-required="true"
-                            value={draft.chunkSize}
-                            onChange={(event) =>
-                              form.field('chunkSize')[1](event.target.value as Draft['chunkSize'])
-                            }
-                          />
-                          <CatalogueFieldFeedback
-                            id={form.errorId('chunkSize')}
-                            error={form.errors.chunkSize}
-                            message={messages.chunkSize}
-                          />
+                        {draft.sourceType !== 'document' && (
+                          <div className={recordEditorField}>
+                            {draft.sourceType === 'url' ? (
+                              <>
+                                <FormField
+                                  control={form.form.control}
+                                  name="sourceUrl"
+                                  render={({ field }) => (
+                                    <RecordListField
+                                      id="kb-source-url"
+                                      label={label('sourceAddress')}
+                                      value={field.value}
+                                      focusRef={field.ref}
+                                      onBlur={form.bind('sourceUrl').onBlur}
+                                      onChange={form.field('sourceUrl')[1]}
+                                      limit={20}
+                                      rowHelp={copy('urlRowsHelp')}
+                                      bulkHelp={label('sourceUrlsHelp')}
+                                      descriptionId={
+                                        form.errors.sourceUrl
+                                          ? form.errorId('sourceUrl')
+                                          : undefined
+                                      }
+                                      invalid={!!form.errors.sourceUrl}
+                                      urls
+                                    />
+                                  )}
+                                />
+                                <CatalogueFieldFeedback
+                                  compact
+                                  id={form.errorId('sourceUrl')}
+                                  error={form.errors.sourceUrl}
+                                  message={messages.sourceUrl}
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <Label htmlFor="kb-source-url">{label('sourceAddress')}</Label>
+                                <Input
+                                  {...form.bind('sourceUrl')}
+                                  id="kb-source-url"
+                                  type="url"
+                                  dir="ltr"
+                                  required
+                                  aria-required="true"
+                                  aria-describedby={form.errorId('sourceUrl')}
+                                  maxLength={2048}
+                                  placeholder="https://"
+                                  value={draft.sourceUrl}
+                                  onChange={(event) =>
+                                    form.field('sourceUrl')[1](
+                                      event.target.value as Draft['sourceUrl']
+                                    )
+                                  }
+                                />
+                                <CatalogueFieldFeedback
+                                  compact
+                                  id={form.errorId('sourceUrl')}
+                                  error={form.errors.sourceUrl}
+                                  message={messages.sourceUrl}
+                                  hint={copy('apiSourceHint')}
+                                />
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </RecordEditorSection>
+                      <RecordEditorSection
+                        title={copy('indexing')}
+                        description={copy('indexingHelp')}
+                      >
+                        <div className={recordEditorGrid}>
+                          <div className={recordEditorField}>
+                            <Label htmlFor="kb-chunk-size">{label('chunkSize')}</Label>
+                            <Input
+                              {...form.bind('chunkSize')}
+                              id="kb-chunk-size"
+                              type="text"
+                              inputMode="numeric"
+                              dir="ltr"
+                              min={100}
+                              max={4000}
+                              required
+                              aria-required="true"
+                              value={draft.chunkSize}
+                              onChange={(event) =>
+                                form.field('chunkSize')[1](event.target.value as Draft['chunkSize'])
+                              }
+                            />
+                            <CatalogueFieldFeedback
+                              compact
+                              id={form.errorId('chunkSize')}
+                              error={form.errors.chunkSize}
+                              message={messages.chunkSize}
+                            />
+                          </div>
+                          <div className={recordEditorField}>
+                            <Label htmlFor="kb-chunk-overlap">{label('chunkOverlap')}</Label>
+                            <Input
+                              {...form.bind('chunkOverlap')}
+                              id="kb-chunk-overlap"
+                              type="text"
+                              inputMode="numeric"
+                              dir="ltr"
+                              min={0}
+                              max={1000}
+                              required
+                              aria-required="true"
+                              value={draft.chunkOverlap}
+                              onChange={(event) =>
+                                form.field('chunkOverlap')[1](
+                                  event.target.value as Draft['chunkOverlap']
+                                )
+                              }
+                            />
+                            <CatalogueFieldFeedback
+                              compact
+                              id={form.errorId('chunkOverlap')}
+                              error={form.errors.chunkOverlap}
+                              message={messages.chunkOverlap}
+                            />
+                          </div>
                         </div>
-                        <div className="flex flex-col gap-2">
-                          <Label htmlFor="kb-chunk-overlap">{label('chunkOverlap')}</Label>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="kb-embedding-model">{label('embeddingModel')}</Label>
                           <Input
-                            {...form.bind('chunkOverlap')}
-                            id="kb-chunk-overlap"
-                            type="text"
-                            inputMode="numeric"
-                            dir="ltr"
-                            min={0}
-                            max={1000}
-                            required
-                            aria-required="true"
-                            value={draft.chunkOverlap}
+                            {...form.bind('vectorEmbeddingModel')}
+                            id="kb-embedding-model"
+                            dir="auto"
+                            maxLength={120}
+                            value={draft.vectorEmbeddingModel}
                             onChange={(event) =>
-                              form.field('chunkOverlap')[1](
-                                event.target.value as Draft['chunkOverlap']
+                              form.field('vectorEmbeddingModel')[1](
+                                event.target.value as Draft['vectorEmbeddingModel']
                               )
                             }
                           />
                           <CatalogueFieldFeedback
-                            id={form.errorId('chunkOverlap')}
-                            error={form.errors.chunkOverlap}
-                            message={messages.chunkOverlap}
+                            compact
+                            id={form.errorId('vectorEmbeddingModel')}
+                            error={form.errors.vectorEmbeddingModel}
+                            message={messages.vectorEmbeddingModel}
                           />
                         </div>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Label htmlFor="kb-embedding-model">{label('embeddingModel')}</Label>
-                        <Input
-                          {...form.bind('vectorEmbeddingModel')}
-                          id="kb-embedding-model"
-                          maxLength={120}
-                          value={draft.vectorEmbeddingModel}
-                          onChange={(event) =>
-                            form.field('vectorEmbeddingModel')[1](
-                              event.target.value as Draft['vectorEmbeddingModel']
-                            )
-                          }
-                        />
-                        <CatalogueFieldFeedback
-                          id={form.errorId('vectorEmbeddingModel')}
-                          error={form.errors.vectorEmbeddingModel}
-                          message={messages.vectorEmbeddingModel}
-                        />
-                      </div>
+                      </RecordEditorSection>
                     </>
                   )}
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={resetDisabled}
-                      onClick={resetDraft}
-                    >
-                      {copy('reset')}
-                    </Button>
-                    <CatalogueSaveButton
-                      label={label('save')}
-                      pending={form.pending}
-                      disabled={disabled || changed || uncertain}
-                    />
+                  <RecordEditorActions
+                    secondary={
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={resetDisabled}
+                        onClick={resetDraft}
+                      >
+                        {copy('reset')}
+                      </Button>
+                    }
+                  >
                     <Button
                       type="button"
                       variant="outline"
                       disabled={uncertain}
                       onClick={() => {
                         setDraft(null);
-                        selectDraft(null);
+                        if (workspace && workspace.view !== 'list') {
+                          if (recordId) workspace.showRecord(recordId);
+                          else workspace.showList();
+                        }
                       }}
                     >
                       {label('cancel')}
                     </Button>
-                  </div>
+                    <CatalogueSaveButton
+                      label={label('save')}
+                      pending={form.pending}
+                      disabled={disabled || changed || uncertain}
+                    />
+                  </RecordEditorActions>
                 </fieldset>
               </form>
             )}
-            <ListPage.Content
-              loading={list.loading}
-              error={list.error}
-              empty={!rows.length}
-              retainContent={rows.length > 0}
-              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
-              errorView={
-                <div role="alert">
-                  <p>{label('error')}</p>
-                  <Button onClick={list.retry}>{label('retry')}</Button>
-                </div>
-              }
-              emptyView={<p>{label('empty')}</p>}
-            >
-              <CatalogueRecordTable
-                rows={rows}
-                locale={locale}
-                caption={label(kind)}
-                nameLabel={label('name')}
-                detailsLabel={copy('tableDetails')}
-                actionsLabel={copy('tableActions')}
-                renderDetails={(row) => (
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <p className="text-sm text-muted-foreground">
-                      {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
-                      {(kind === 'knowledge-bases' ? row.documentCount : row.memberCount) ===
-                      undefined
-                        ? '—'
-                        : numbers.number(
-                            (kind === 'knowledge-bases' ? row.documentCount : row.memberCount)!
-                          )}
-                    </p>
-                    {kind === 'knowledge-bases' && (
-                      <div className="space-y-1 text-sm text-muted-foreground">
-                        <p>
-                          {label('contentState')}:{' '}
-                          {row.contentState === undefined
-                            ? label('unknown')
-                            : label(`state${row.contentState}`)}
-                          {' · '}
-                          {row.isEnabled === undefined
-                            ? label('unknown')
-                            : label(row.isEnabled ? 'enabled' : 'disabled')}
-                        </p>
-                        <p>
-                          {label('audience')}:{' '}
-                          {row.audience === undefined
-                            ? label('unknown')
-                            : label(`audience${row.audience}`)}
-                        </p>
-                      </div>
+            {isList && (
+              <ListPage.Content
+                loading={list.loading}
+                error={list.error}
+                empty={!rows.length}
+                retainContent={rows.length > 0}
+                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                errorView={
+                  <div role="alert">
+                    <p>{label('error')}</p>
+                    <Button onClick={list.retry}>{label('retry')}</Button>
+                  </div>
+                }
+                emptyView={<p>{label('empty')}</p>}
+              >
+                <CatalogueRecordTable
+                  rows={rows}
+                  locale={locale}
+                  caption={label(kind)}
+                  nameLabel={label('name')}
+                  detailsLabel={copy('tableDetails')}
+                  actionsLabel={copy('tableActions')}
+                  {...(workspace && {
+                    renderTitle: (row: Entry) => (
+                      <Link
+                        {...linkTo(row.id)}
+                        className="text-primary underline-offset-4 hover:underline"
+                      >
+                        <bdi>{row.title}</bdi>
+                      </Link>
+                    ),
+                  })}
+                  renderDetails={(row) => (
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
+                        {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
+                        {(kind === 'knowledge-bases' ? row.documentCount : row.memberCount) ===
+                        undefined
+                          ? '—'
+                          : numbers.number(
+                              (kind === 'knowledge-bases' ? row.documentCount : row.memberCount)!
+                            )}
+                      </p>
+                      {kind === 'knowledge-bases' && (
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <p>
+                            {label('contentState')}:{' '}
+                            {row.contentState === undefined
+                              ? label('unknown')
+                              : label(`state${row.contentState}`)}
+                            {' · '}
+                            {row.isEnabled === undefined
+                              ? label('unknown')
+                              : label(row.isEnabled ? 'enabled' : 'disabled')}
+                          </p>
+                          <p>
+                            {label('audience')}:{' '}
+                            {row.audience === undefined
+                              ? label('unknown')
+                              : label(`audience${row.audience}`)}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  renderActions={(row) => (
+                    <>
+                      {workspace && !action && !pending && !disabled && !form.pending ? (
+                        <>
+                          <Link
+                            {...linkTo(row.id)}
+                            className={listAction}
+                            aria-label={`${label('open')} ${row.title}`}
+                            data-table-action-tooltip={label('open')}
+                          >
+                            <TableActionIcon icon={TableEyeIcon}>{label('open')}</TableActionIcon>
+                          </Link>
+                          <Link
+                            {...linkTo(row.id, 'edit')}
+                            className={listAction}
+                            aria-label={`${label('edit')} ${row.title}`}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            variant="outline"
+                            disabled={disabled || form.pending || !!action || pending}
+                            onClick={() => open(row.id)}
+                            aria-label={`${label('open')} ${row.title}`}
+                            data-table-action-tooltip={label('open')}
+                          >
+                            <TableActionIcon icon={TableEyeIcon}>{label('open')}</TableActionIcon>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            disabled={disabled || form.pending || !!action || pending}
+                            onClick={() => edit(row)}
+                            aria-label={`${label('edit')} ${row.title}`}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Button>
+                        </>
+                      )}
+                      <Button
+                        variant="outline"
+                        disabled={disabled || form.pending || !!action || pending}
+                        onClick={() =>
+                          propose(
+                            `/api/admin/${kind}/${row.id}`,
+                            'DELETE',
+                            label('delete'),
+                            `${row.title}. ${label('confirmDelete')}`
+                          )
+                        }
+                        aria-label={`${label('delete')} ${row.title}`}
+                        data-table-action-tooltip={label('delete')}
+                      >
+                        <TableActionIcon icon={TableTrash2Icon}>{label('delete')}</TableActionIcon>
+                      </Button>
+                    </>
+                  )}
+                />
+              </ListPage.Content>
+            )}
+            {detail && showDetail && (
+              <section
+                aria-label={detail.title}
+                className={
+                  view === 'documents' || view === 'ingestion'
+                    ? 'flex min-w-0 flex-col gap-4'
+                    : 'flex min-w-0 flex-col gap-4 rounded-xl border bg-card p-4 sm:p-6'
+                }
+              >
+                {!workspace && (
+                  <h2 className="break-words text-xl font-semibold">{detail.title}</h2>
+                )}
+                {workspace && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    {view !== 'detail' && (
+                      <Link {...linkTo(detail.id)} className={listAction}>
+                        {label('overview')}
+                      </Link>
+                    )}
+                    {kind === 'knowledge-bases' && view !== 'documents' && (
+                      <Link {...linkTo(detail.id, 'documents')} className={listAction}>
+                        {label('documents')}
+                      </Link>
+                    )}
+                    {kind === 'knowledge-bases' && view !== 'ingestion' && (
+                      <Link {...linkTo(detail.id, 'ingestion')} className={listAction}>
+                        {label('ingestion')}
+                      </Link>
+                    )}
+                    {view === 'detail' && (
+                      <Link
+                        {...linkTo(detail.id, 'edit')}
+                        className={listAction}
+                        aria-label={`${label('edit')} ${detail.title}`}
+                      >
+                        {label('edit')}
+                      </Link>
+                    )}
+                    {view === 'detail' && (
+                      <Button
+                        variant="outline"
+                        disabled={detailDisabled || !!action || pending}
+                        onClick={() =>
+                          propose(
+                            `/api/admin/${kind}/${detail.id}`,
+                            'DELETE',
+                            label('delete'),
+                            `${detail.title}. ${label('confirmDelete')}`
+                          )
+                        }
+                      >
+                        {label('delete')}
+                      </Button>
                     )}
                   </div>
                 )}
-                renderActions={(row) => (
-                  <>
-                    <Button
-                      variant="outline"
-                      disabled={disabled || form.pending || !!action || pending}
-                      onClick={() => open(row.id)}
-                      aria-label={`${label('open')} ${row.title}`}
-                    >
-                      {label('open')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={disabled || form.pending || !!action || pending}
-                      onClick={() => edit(row)}
-                      aria-label={`${label('edit')} ${row.title}`}
-                    >
-                      {label('edit')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={disabled || form.pending || !!action || pending}
-                      onClick={() =>
-                        propose(
-                          `/api/admin/${kind}/${row.id}`,
-                          'DELETE',
-                          label('delete'),
-                          `${row.title}. ${label('confirmDelete')}`
-                        )
-                      }
-                      aria-label={`${label('delete')} ${row.title}`}
-                    >
-                      {label('delete')}
-                    </Button>
-                  </>
+                {view === 'detail' && detail.description && (
+                  <p className="whitespace-pre-wrap [overflow-wrap:anywhere] text-sm text-muted-foreground">
+                    {detail.description}
+                  </p>
                 )}
-              />
-            </ListPage.Content>
-            {detail && (
-              <section aria-label={detail.title} className="flex flex-col gap-4 border-t pt-5">
-                <h2 className="break-words text-xl font-semibold">{detail.title}</h2>
-                {kind === 'knowledge-bases' && (
-                  <div className="flex items-center gap-3">
-                    <span>
-                      {label('contentState')}: {label(`state${detail.contentState ?? 'empty'}`)}
-                    </span>
-                    <Button
-                      variant="outline"
-                      disabled={detailDisabled || detail.contentState !== 'ready'}
-                      onClick={() =>
-                        propose(
-                          `/api/admin/knowledge-bases/${detail.id}`,
-                          'PUT',
-                          label(detail.isEnabled ? 'disable' : 'enable'),
-                          label('confirmSave'),
-                          { isEnabled: !detail.isEnabled }
-                        )
-                      }
-                    >
-                      {label(detail.isEnabled ? 'disable' : 'enable')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={
-                        detailDisabled ||
-                        (detail.sourceType === 'document' && !detail.documents?.length)
-                      }
-                      onClick={() =>
-                        propose(
-                          `/api/admin/knowledge-bases/${detail.id}/reprocess`,
-                          'POST',
-                          label('reprocess'),
-                          detail.audience && detail.audience !== 'admin'
-                            ? `${label('confirmReprocess')} ${label('audienceWarning')}`
-                            : label('confirmReprocess')
-                        )
-                      }
-                    >
-                      {label('reprocess')}
-                    </Button>
+
+                {kind === 'knowledge-bases' && (!index || !workspace) && (
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge variant="outline">
+                      {label('contentState')} · {label(`state${detail.contentState ?? 'empty'}`)}
+                    </Badge>
+                    {(!workspace || view === 'detail') && (
+                      <Button
+                        variant="outline"
+                        disabled={detailDisabled || detail.contentState !== 'ready'}
+                        onClick={() =>
+                          propose(
+                            `/api/admin/knowledge-bases/${detail.id}`,
+                            'PUT',
+                            label(detail.isEnabled ? 'disable' : 'enable'),
+                            label('confirmSave'),
+                            { isEnabled: !detail.isEnabled }
+                          )
+                        }
+                      >
+                        {label(detail.isEnabled ? 'disable' : 'enable')}
+                      </Button>
+                    )}
                   </div>
                 )}
-                {kind === 'knowledge-bases' && detail.contentState === 'error' && (
+                {kind === 'knowledge-bases' && !index && detail.contentState === 'error' && (
                   <p role="alert">
                     {label('processingError')}: {processingError(detail.contentError)}
                   </p>
                 )}
-                <CatalogueQueryEditor
-                  key={detail.id}
-                  locale={locale}
-                  value={queryText}
-                  epoch={generation.current}
-                  disabled={
-                    detailDisabled ||
-                    !!action ||
-                    pending ||
-                    (kind === 'knowledge-bases' && detail.contentState !== 'ready')
-                  }
-                  label={label('testQuery')}
-                  saveLabel={label('runQuery')}
-                  onChange={(value) => {
-                    queryRequest.current?.abort();
-                    setQueryState('idle');
-                    setQueryResult(null);
-                    setQueryText(value);
-                  }}
-                  onQuery={testQuery}
-                />
-                {queryState === 'loading' && <LoadingStatus>{label('queryLoading')}</LoadingStatus>}
-                {queryState === 'error' && <p role="alert">{label('queryError')}</p>}
-                {queryResult?.id === detail.id &&
-                  (queryResult.rows.length ? (
-                    <ol className="divide-y" aria-label={label('queryResults')}>
-                      {queryResult.rows.map((item) => (
-                        <li key={item.id} className="py-3">
-                          <p className="text-sm text-muted-foreground">
-                            {item.metadata.fileName ?? item.metadata.url ?? item.kbId}
-                            {' · '}
-                            {label('relevance')}: {numbers.percent(Math.max(0, item.score))}
-                          </p>
-                          <p className="whitespace-pre-wrap break-words">{item.excerpt}</p>
-                        </li>
-                      ))}
-                    </ol>
-                  ) : (
-                    <p>{label('noMatches')}</p>
-                  ))}
+                {view === 'detail' && kind === 'knowledge-bases' && (
+                  <dl className="grid gap-3 border-y py-4 text-sm sm:grid-cols-3">
+                    <div>
+                      <dt className="text-muted-foreground">{label('sourceType')}</dt>
+                      <dd>{sourceName(detail.sourceType)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{label('audience')}</dt>
+                      <dd>{label(detail.audience ? `audience${detail.audience}` : 'unknown')}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{label('documents')}</dt>
+                      <dd>
+                        {numbers.number(detail.documents?.length ?? detail.documentCount ?? 0)}
+                      </dd>
+                    </div>
+                    {!!detail.groups?.length && (
+                      <div className="sm:col-span-3">
+                        <dt className="text-muted-foreground">{label('kb-groups')}</dt>
+                        <dd>
+                          <ul className="flex flex-wrap gap-3">
+                            {detail.groups.map((group) => (
+                              <li key={group.id}>
+                                <Link
+                                  to="/admin/knowledge-bases/groups/$recordId/{-$action}"
+                                  params={{ recordId: group.id, action: undefined }}
+                                  className="text-primary underline-offset-4 hover:underline"
+                                >
+                                  <bdi>{group.title}</bdi>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                )}
+                {showIngestion && (
+                  <div
+                    className={
+                      index
+                        ? 'grid min-w-0 items-start gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'
+                        : 'min-w-0'
+                    }
+                  >
+                    <CatalogueQueryEditor
+                      key={detail.id}
+                      locale={locale}
+                      value={queryText}
+                      epoch={generation.current}
+                      headingLevel={workspace ? 2 : 3}
+                      notIndexed={kind === 'knowledge-bases' && detail.contentState !== 'ready'}
+                      disabled={
+                        detailDisabled ||
+                        !!action ||
+                        pending ||
+                        (kind === 'knowledge-bases' && detail.contentState !== 'ready')
+                      }
+                      label={label('testQuery')}
+                      saveLabel={label('runQuery')}
+                      onChange={(value) => {
+                        queryRequest.current?.abort();
+                        setQueryState('idle');
+                        setQueryResult(null);
+                        setQueryText(value);
+                      }}
+                      onQuery={testQuery}
+                    >
+                      {(queryState !== 'idle' || queryRows) && (
+                        <div className="min-w-0 border-t px-4 py-3">
+                          {queryState === 'loading' && (
+                            <LoadingStatus>{label('queryLoading')}</LoadingStatus>
+                          )}
+                          {queryState === 'error' && (
+                            <Alert variant="warning">{label('queryError')}</Alert>
+                          )}
+                          {!!queryRows?.length && (
+                            <>
+                              <p role="status" className="mb-2 text-sm font-semibold">
+                                {copy('queryResultCount').replace(
+                                  '{count}',
+                                  numbers.number(queryRows.length)
+                                )}
+                              </p>
+                              <ol className="divide-y" aria-label={label('queryResults')}>
+                                {queryRows.map((item) => {
+                                  const source =
+                                    item.kbId === detail.id
+                                      ? detail.title
+                                      : (detail.members?.find((member) => member.id === item.kbId)
+                                          ?.title ?? item.kbId);
+                                  return (
+                                    <li key={item.id} className="space-y-1 py-2.5">
+                                      <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                                        <p className="min-w-0 text-sm font-medium [overflow-wrap:anywhere]">
+                                          <bdi>
+                                            {item.metadata.fileName ?? item.metadata.url ?? source}
+                                          </bdi>
+                                        </p>
+                                        <Badge variant="outline">
+                                          {label('relevance')}{' '}
+                                          <bdi>{numbers.percent(Math.max(0, item.score))}</bdi>
+                                        </Badge>
+                                      </div>
+                                      <p
+                                        dir="auto"
+                                        className="whitespace-pre-wrap text-sm leading-relaxed [overflow-wrap:anywhere]"
+                                      >
+                                        {item.excerpt}
+                                      </p>
+                                    </li>
+                                  );
+                                })}
+                              </ol>
+                            </>
+                          )}
+                          {queryRows?.length === 0 && (
+                            <p role="status" className="text-sm text-muted-foreground">
+                              {label('noMatches')}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </CatalogueQueryEditor>
+                    {index && (
+                      <section className={recordEditorSurface} aria-labelledby="kb-index-title">
+                        <header className="flex flex-wrap items-center justify-between gap-2 border-b bg-muted/30 px-4 py-3">
+                          <DocumentHeading id="kb-index-title" className="text-base font-semibold">
+                            {copy('indexStatus')}
+                          </DocumentHeading>
+                          <Badge variant="outline">{index.state}</Badge>
+                        </header>
+                        <div className="space-y-3 px-4 py-3">
+                          <dl className="text-sm">
+                            <dt className="text-xs text-muted-foreground">{label('sourceType')}</dt>
+                            <dd className="font-medium">{index.source}</dd>
+                          </dl>
+                          {detail.contentState === 'error' && (
+                            <Alert variant="warning">
+                              {label('processingError')}: {processingError(detail.contentError)}
+                            </Alert>
+                          )}
+                          {!hasIndexSource && (
+                            <p className="text-sm text-muted-foreground">{copy('indexNoFiles')}</p>
+                          )}
+                        </div>
+                        <RecordEditorActions>
+                          <Button
+                            variant="outline"
+                            disabled={detailDisabled || !hasIndexSource || !!action || pending}
+                            onClick={() =>
+                              propose(
+                                `/api/admin/knowledge-bases/${detail.id}/reprocess`,
+                                'POST',
+                                label('reprocess'),
+                                detail.audience && detail.audience !== 'admin'
+                                  ? `${label('confirmReprocess')} ${label('audienceWarning')}`
+                                  : label('confirmReprocess'),
+                                undefined,
+                                index
+                              )
+                            }
+                          >
+                            {label('reprocess')}
+                          </Button>
+                        </RecordEditorActions>
+                      </section>
+                    )}
+                  </div>
+                )}
                 {operationRecovery}
                 {kind === 'kb-groups' ? (
                   <>
                     <CatalogueRelationEditor
                       key={detail.id}
+                      headingLevel={workspace ? 2 : 3}
                       mode="kb"
                       locale={locale}
                       id="kb-member"
@@ -1306,132 +1839,236 @@ function OwnedKnowledgeBasesPage({
                         )
                       }
                     />
-                    <ul className="divide-y">
-                      {detail.members?.map((item) => (
-                        <li key={item.id} className="flex items-center justify-between gap-3 py-3">
-                          <span className="min-w-0 break-words">{item.title}</span>
-                          <Button
-                            variant="outline"
-                            onClick={() =>
-                              proposeMembership(
-                                {
-                                  groupId: detail.id,
-                                  memberId: item.id,
-                                  expected: 'absent',
-                                  choicesRequired: false,
-                                },
-                                'DELETE'
-                              )
-                            }
-                            disabled={detailDisabled || !!action || pending || operationUncertain}
-                            aria-label={`${label('unlink')} ${item.title}`}
-                          >
-                            {label('unlink')}
-                          </Button>
-                        </li>
-                      ))}
-                    </ul>
+                    <section
+                      className={recordEditorSurface}
+                      aria-labelledby="kb-group-members-title"
+                    >
+                      <DocumentHeading
+                        id="kb-group-members-title"
+                        className="border-b bg-muted/30 px-4 py-3 text-base font-semibold"
+                      >
+                        {copy('groupMembers')}
+                      </DocumentHeading>
+                      {detail.members?.length ? (
+                        <ul className="divide-y">
+                          {detail.members?.map((item) => (
+                            <li
+                              key={item.id}
+                              className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2"
+                            >
+                              <span className="min-w-0 text-sm font-medium [overflow-wrap:anywhere]">
+                                <bdi>{item.title}</bdi>
+                              </span>
+                              <Button
+                                variant="ghost"
+                                onClick={() =>
+                                  proposeMembership(
+                                    {
+                                      groupId: detail.id,
+                                      memberId: item.id,
+                                      expected: 'absent',
+                                      choicesRequired: false,
+                                    },
+                                    'DELETE'
+                                  )
+                                }
+                                disabled={
+                                  detailDisabled || !!action || pending || operationUncertain
+                                }
+                                aria-label={`${label('unlink')} ${item.title}`}
+                              >
+                                {label('unlink')}
+                              </Button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="px-4 py-3 text-sm text-muted-foreground">
+                          {copy('emptyMembers')}
+                        </p>
+                      )}
+                    </section>
                   </>
                 ) : (
-                  <>
-                    <h3 className="font-semibold">{label('documents')}</h3>
-                    {(detail.sourceType === 'url' || detail.sourceType === 'api') && (
-                      <p className="text-sm text-muted-foreground">{copy('documentSource')}</p>
-                    )}
-                    <KnowledgeBaseDocumentPicker
-                      key={detail.id}
-                      attachedKeys={detail.documents?.map((doc) => doc.storageKey) ?? []}
-                      disabled={
-                        detailDisabled ||
-                        !!action ||
-                        pending ||
-                        form.pending ||
-                        operationUncertain ||
-                        detail.sourceType === 'url' ||
-                        detail.sourceType === 'api'
-                      }
-                      onDenied={scope.deny}
-                      onAttach={((target, version, basis) => (key, owner) => {
-                        const current = work.current;
-                        if (
-                          version !== selectionGeneration.current ||
-                          target !== current.selected ||
-                          !current.detail ||
-                          basis !== retrievalBasis(current.detail) ||
-                          current.detailDisabled ||
-                          actionRef.current ||
-                          networkPending.current ||
-                          operationUncertain
-                        )
-                          return;
-                        documentCapture.current = {
-                          kbId: target,
-                          storageKey: key,
-                          expected: 'present',
-                          choicesRequired: false,
-                          owner,
-                        };
-                        propose(
-                          `/api/admin/knowledge-bases/${target}/documents`,
-                          'POST',
-                          label('attach'),
-                          detail.audience && detail.audience !== 'admin'
-                            ? `${label('confirmAttach')} ${label('audienceWarning')}`
-                            : label('confirmAttach'),
-                          { storageKey: key }
-                        );
-                      })(detail.id, selectionGeneration.current, retrievalBasis(detail))}
-                    />
+                  showDocuments && (
+                    <>
+                      {view !== 'document' && (
+                        <>
+                          {detail.sourceType === 'url' || detail.sourceType === 'api' ? (
+                            <p className="rounded-lg border bg-card p-4 text-sm text-muted-foreground">
+                              {copy('documentSource')}
+                            </p>
+                          ) : (
+                            <KnowledgeBaseDocumentPicker
+                              key={detail.id}
+                              headingLevel={workspace ? 2 : 3}
+                              attachedKeys={detail.documents?.map((doc) => doc.storageKey) ?? []}
+                              disabled={
+                                detailDisabled ||
+                                !!action ||
+                                pending ||
+                                form.pending ||
+                                operationUncertain
+                              }
+                              onDenied={scope.deny}
+                              onAttach={(
+                                (target, version, basis) =>
+                                ({ storageKey, fileName }, owner) => {
+                                  const current = work.current;
+                                  if (
+                                    version !== selectionGeneration.current ||
+                                    target !== current.selected ||
+                                    !current.detail ||
+                                    basis !== retrievalBasis(current.detail) ||
+                                    current.detailDisabled ||
+                                    actionRef.current ||
+                                    networkPending.current ||
+                                    operationUncertain
+                                  )
+                                    return;
+                                  documentCapture.current = {
+                                    kbId: target,
+                                    storageKey,
+                                    fileName,
+                                    baseTitle: current.detail.title,
+                                    expected: 'present',
+                                    choicesRequired: false,
+                                    owner,
+                                  };
+                                  propose(
+                                    `/api/admin/knowledge-bases/${target}/documents`,
+                                    'POST',
+                                    label('attach'),
+                                    detail.audience && detail.audience !== 'admin'
+                                      ? `${label('confirmAttach')} ${label('audienceWarning')}`
+                                      : label('confirmAttach'),
+                                    { storageKey }
+                                  );
+                                }
+                              )(detail.id, selectionGeneration.current, retrievalBasis(detail))}
+                            />
+                          )}
 
-                    {!detail.documents?.length && <p>{label('noDocuments')}</p>}
-                    <ul className="divide-y">
-                      {detail.documents?.map((doc) => (
-                        <li key={doc.id} className="flex flex-col gap-1 py-3">
-                          <span className="break-words">{doc.fileName}</span>
-                          <div>
-                            <Button
-                              variant="outline"
-                              disabled={detailDisabled || !!action || pending || operationUncertain}
-                              aria-label={`${label('detach')} ${doc.fileName}`}
-                              onClick={() => {
-                                if (
-                                  detailDisabled ||
-                                  actionRef.current ||
-                                  networkPending.current ||
-                                  operationUncertain
-                                )
-                                  return;
-                                documentCapture.current = {
-                                  kbId: detail.id,
-                                  documentId: doc.id,
-                                  storageKey: doc.storageKey,
-                                  expected: 'absent',
-                                  choicesRequired: false,
-                                };
-                                propose(
-                                  `/api/admin/knowledge-bases/${detail.id}/documents/${doc.id}`,
-                                  'DELETE',
-                                  label('detach'),
-                                  label('confirmDetach')
-                                );
-                              }}
+                          <section
+                            className={recordEditorSurface}
+                            aria-labelledby="kb-attached-title"
+                          >
+                            <DocumentHeading
+                              id="kb-attached-title"
+                              className="border-b bg-muted/30 px-4 py-3 text-base font-semibold"
                             >
-                              {label('detach')}
-                            </Button>
-                          </div>
-                          <span>
-                            {label(
-                              ['pending', 'processing', 'ready', 'failed'].includes(
-                                doc.processingStatus
-                              )
-                                ? doc.processingStatus
-                                : 'unknown'
+                              {copy('attachedDocuments')}
+                            </DocumentHeading>
+                            {!detail.documents?.length && (
+                              <p className="px-4 py-3 text-sm text-muted-foreground">
+                                {label('noDocuments')}
+                              </p>
                             )}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
+                            {!!detail.documents?.length && (
+                              <ul className="divide-y">
+                                {detail.documents?.map((doc) => (
+                                  <li
+                                    key={doc.id}
+                                    className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2"
+                                  >
+                                    {workspace ? (
+                                      <Link
+                                        to="/admin/knowledge-bases/$recordId/documents/$documentId"
+                                        params={{ recordId: detail.id, documentId: doc.id }}
+                                        className="inline-flex min-h-11 min-w-0 items-center text-sm font-medium text-primary underline-offset-4 [overflow-wrap:anywhere] hover:underline"
+                                      >
+                                        <bdi>{doc.fileName}</bdi>
+                                      </Link>
+                                    ) : (
+                                      <span className="break-words">{doc.fileName}</span>
+                                    )}
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <Badge variant="secondary">
+                                        {statusLabel(doc.processingStatus)}
+                                      </Badge>
+                                      <Button
+                                        variant="ghost"
+                                        disabled={
+                                          detailDisabled ||
+                                          !!action ||
+                                          pending ||
+                                          operationUncertain
+                                        }
+                                        aria-label={`${label('detach')} ${doc.fileName}`}
+                                        onClick={() => removeDocument(detail, doc)}
+                                      >
+                                        {label('detach')}
+                                      </Button>
+                                    </div>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </section>
+                        </>
+                      )}
+                      {view === 'document' &&
+                        (doc ? (
+                          <>
+                            {time.notice}
+                            <dl className="grid gap-4 border-y py-4 text-sm sm:grid-cols-2">
+                              <div>
+                                <dt className="text-muted-foreground">{label('contentState')}</dt>
+                                <dd>{statusLabel(doc.processingStatus)}</dd>
+                              </div>
+                              {doc.mimeType && (
+                                <div>
+                                  <dt className="text-muted-foreground">{label('documentType')}</dt>
+                                  <dd>
+                                    <bdi>{doc.mimeType}</bdi>
+                                  </dd>
+                                </div>
+                              )}
+                              {doc.sizeBytes != null && (
+                                <div>
+                                  <dt className="text-muted-foreground">{label('documentSize')}</dt>
+                                  <dd>
+                                    {label('bytes').replace(
+                                      '{size}',
+                                      numbers.number(Number(doc.sizeBytes))
+                                    )}
+                                  </dd>
+                                </div>
+                              )}
+                              {doc.updatedAt && Number.isFinite(Date.parse(doc.updatedAt)) && (
+                                <div>
+                                  <dt className="text-muted-foreground">
+                                    {label('documentUpdated')}
+                                  </dt>
+                                  <dd>
+                                    <time dateTime={doc.updatedAt}>
+                                      {time.format(doc.updatedAt)}
+                                    </time>
+                                  </dd>
+                                </div>
+                              )}
+                            </dl>
+                            {doc.processingStatus === 'failed' && (
+                              <p role="alert">{processingError(doc.processingError)}</p>
+                            )}
+                            <div>
+                              <Button
+                                variant="outline"
+                                disabled={
+                                  detailDisabled || !!action || pending || operationUncertain
+                                }
+                                aria-label={`${label('detach')} ${doc.fileName}`}
+                                onClick={() => removeDocument(detail, doc)}
+                              >
+                                {label('detach')}
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          <p role="alert">{label('documentMissing')}</p>
+                        ))}
+                    </>
+                  )
                 )}
               </section>
             )}
@@ -1453,7 +2090,16 @@ function OwnedKnowledgeBasesPage({
             (formCapture.current ? ownedFields(fields) : false)
           }
           onUnconfirmed={unconfirmed}
-          summary={recovery}
+          summary={
+            actionContext ? (
+              <>
+                {actionContext}
+                {actionReadIssue && recovery}
+              </>
+            ) : (
+              recovery
+            )
+          }
           onClose={() => {
             generation.current++;
             setAction(null);
@@ -1519,12 +2165,20 @@ function OwnedKnowledgeBasesPage({
             if (command.body && typeof command.body === 'object' && 'title' in command.body) {
               setDraft(null);
               draftBasis.current = null;
-              selectDraft(null, true);
+              if (workspace && workspace.view !== 'list' && validEntries([value])) {
+                toast.success(label('saved'));
+                workspace.showRecord((value as Entry).id, true);
+                return;
+              }
             }
             if (command.path.endsWith('/members')) setMember('');
             if (command.method === 'DELETE' && command.path === `/api/admin/${kind}/${selected}`) {
               clearDetail();
-              selectDetail(null, true);
+              if (workspace && workspace.view !== 'list') {
+                toast.success(label('saved'));
+                workspace.showList(true);
+                return;
+              }
             }
             setNotice(true);
             list.retry();

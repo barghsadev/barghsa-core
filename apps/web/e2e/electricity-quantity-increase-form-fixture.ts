@@ -333,7 +333,17 @@ export async function setupElectricityQuantityIncreaseForms(
       ? route.fulfill({ status: 403, json: {} })
       : route.fulfill({ json: { requests: state.rows, nextBefore: null } })
   );
+  const decided = new Map<string, ReturnType<typeof increaseRequest>>();
   for (const row of state.rows) {
+    await page.route(`**/api/staff/electricity/increase-requests/${row.requestId}`, (route) => {
+      if (state.queueDenied) return route.fulfill({ status: 403, json: {} });
+      const record =
+        state.rows.find((current) => current.requestId === row.requestId) ??
+        decided.get(row.requestId);
+      return record
+        ? route.fulfill({ json: { ...record, canReview: true } })
+        : route.fulfill({ status: 404, json: {} });
+    });
     for (const action of ['approve', 'reject'] as const) {
       const path = `**/api/staff/electricity/increase-requests/${row.requestId}/${action}`;
       await page.route(`${path}/review`, (route) => {
@@ -380,6 +390,7 @@ export async function setupElectricityQuantityIncreaseForms(
                 reviewedAt,
                 reviewedBy: increaseStaffId,
               };
+        decided.set(row.requestId, result);
         state.rows = state.rows.filter((current) => current.requestId !== row.requestId);
         return route.fulfill({ status: 201, json: result });
       });

@@ -109,8 +109,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/invoices/receipts');
       const main = page.getByRole('main');
-      const detail = (id: string) =>
-        main.locator(`a[href="/invoices/${invoice}#bank-receipt-${id}"]`);
+      const detail = (id: string) => main.locator(`a[href^="/invoices/${invoice}/receipts/${id}"]`);
       await expect(detail(receipt)).toBeVisible();
       await page.getByRole('button', { name: copy('older'), exact: true }).click();
       await expect(detail(older)).toBeVisible();
@@ -131,14 +130,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(table.getByText(formatCurrencyIrr(amount, locale), { exact: true })).toHaveCount(
         2
       );
-      await expect(table.locator('time[datetime="2026-09-01"]').first()).toHaveText(
-        new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-ca-gregory' : 'en-US', {
-          dateStyle: 'medium',
-          timeZone: 'UTC',
-        }).format(new Date('2026-09-01T00:00:00Z'))
-      );
+      const transferDate = locale === 'fa' ? '۱۰ شهریور ۱۴۰۵' : 'Sep 1, 2026';
+      await expect(table.locator('time[datetime="2026-09-01"]').first()).toHaveText(transferDate);
       await cardButton.click();
       await expect(detail(older)).toBeVisible();
+      await expect(detail(older).locator('time[datetime="2026-09-01"]')).toHaveText(transferDate);
       expect(requests.length).toBe(count);
       // Keep the mobile project's real viewport. Resizing it can leave WebKit
       // rendering to the original device height while laying out at the new height.

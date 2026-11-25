@@ -65,3 +65,31 @@ export function validDocumentDetail(
     )
   );
 }
+
+export function canReplaceDocument(
+  document: BusinessDocument,
+  staff: boolean,
+  solarCustomer = false,
+  savingPreSubmissionOnly = false
+) {
+  if (
+    document.permissions?.replace === false ||
+    document.permissions?.write === false ||
+    (!staff && document.businessRecordType === 'contract' && document.contractRole !== 'signed')
+  )
+    return false;
+  if (solarCustomer)
+    return (
+      document.uploadedByType === 'customer' &&
+      ['Available', 'SubmittedForReview', 'Approved', 'Rejected'].includes(document.state)
+    );
+  if (savingPreSubmissionOnly)
+    return document.uploadedByType === 'customer' && document.state === 'Available';
+  return (
+    ['Available', 'Approved', 'Rejected'].includes(document.state) ||
+    (staff &&
+      document.state === 'Quarantined' &&
+      document.businessRecordType === 'contract' &&
+      document.contractRole === 'original')
+  );
+}

@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import type { TicketListFilters } from '../lib/support-list-query.js';
 import {
   Badge,
   Button,
@@ -9,11 +11,18 @@ import {
   type ListView,
 } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
-import { formatRelativeTime } from '../lib/notification-content.js';
+import { formatRelativeTime } from '../lib/relative-time.js';
 
 export type TicketStatus =
   'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed';
+export interface TicketViewer {
+  userId: string;
+  canWrite: boolean;
+  canAssignOthers: boolean;
+  canApproveClosure?: boolean;
+}
 export interface Ticket {
   id: string;
   subject: string;
@@ -55,6 +64,9 @@ export interface Ticket {
     mobile: string | null;
     profile: { id: string; title: string | null } | null;
   };
+  viewer?: TicketViewer;
+  latestReply?: { id: string; preview: string; createdAt: string } | null;
+  hasUnreadReply?: boolean;
 }
 export function RelatedTicketRecord({
   ticket,
@@ -81,13 +93,13 @@ export function RelatedTicketRecord({
   ) {
     const id = encodeURIComponent(record.id);
     if (record.destination === 'contract' && ticket.relatedEntityType === 'contract')
-      href = `${staff ? '/admin/contracts' : '/contracts'}?contractId=${id}`;
+      href = staff ? `/admin/contracts/${id}` : `/contracts/${id}`;
     if (record.destination === 'invoice' && ticket.relatedEntityType === 'invoice')
-      href = staff ? `/admin/invoices?invoiceId=${id}` : `/invoices/${id}`;
+      href = staff ? `/admin/invoices/${id}` : `/invoices/${id}`;
     if (record.destination === 'electricity_order' && ticket.relatedEntityType === 'order')
-      href = staff ? `/admin/electricity-orders?orderId=${id}` : `/electricity/orders/${id}`;
+      href = staff ? `/admin/electricity-orders/${id}` : `/electricity/orders/${id}`;
     if (record.destination === 'saving_order' && ticket.relatedEntityType === 'order')
-      href = staff ? `/admin/saving-orders?orderId=${id}` : `/savings/orders/${id}`;
+      href = staff ? `/admin/saving-orders/${id}` : `/savings/orders/${id}`;
   } else if (record === undefined && !staff && ticket.relatedEntityType === 'invoice') {
     href = `/invoices/${encodeURIComponent(ticket.relatedEntityId)}`;
   }
@@ -119,6 +131,7 @@ export function TicketQueueRecords({
   assignees,
   responseTargetHours,
   formatDate,
+  recordSearch,
   onSelect,
 }: {
   items: readonly Ticket[];
@@ -130,9 +143,11 @@ export function TicketQueueRecords({
   assignees: readonly { id: string; name: string }[];
   responseTargetHours?: number | null | undefined;
   formatDate: (value: string) => string;
+  recordSearch?: TicketListFilters;
   onSelect: (id: string) => void;
 }) {
   const text = (key: string) => t(`tickets.${key}`, locale);
+  const copy = (key: string) => tTicketForms(key, locale);
   const [now, setNow] = useState(() => new Date());
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set());
   useEffect(() => {
@@ -147,6 +162,18 @@ export function TicketQueueRecords({
     });
   }, [items]);
   function subject(item: Ticket) {
+    if (recordSearch) {
+      return (
+        <Link
+          to={staff ? '/admin/tickets/$ticketId/{-$section}' : '/tickets/$ticketId'}
+          params={{ ticketId: item.id }}
+          search={recordSearch}
+          className="inline-flex min-h-8 max-w-full items-center break-words text-start font-medium text-primary hover:underline"
+        >
+          {item.subject}
+        </Link>
+      );
+    }
     return (
       <Button
         variant="link"
@@ -163,6 +190,27 @@ export function TicketQueueRecords({
   const priority = (item: Ticket) => (
     <TicketPriorityBadge priority={item.priority} locale={locale} />
   );
+  const unread = (item: Ticket) =>
+    !staff && item.hasUnreadReply ? (
+      <Badge className="bg-primary text-primary-foreground">{copy('newReply')}</Badge>
+    ) : null;
+  function replyPreview(item: Ticket) {
+    const reply = item.latestReply;
+    if (!reply) return null;
+    return (
+      <div data-slot="ticket-reply-preview" className="min-w-0 space-y-1">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs text-muted-foreground">
+          <span className="font-medium">
+            {copy(staff ? 'latestPublicReply' : 'latestStaffReply')}
+          </span>
+          <time dateTime={reply.createdAt}>{formatDate(reply.createdAt)}</time>
+        </div>
+        <p dir="auto" className="line-clamp-2 break-words text-sm">
+          {reply.preview || copy('replyWithAttachment')}
+        </p>
+      </div>
+    );
+  }
   function updated(item: Ticket) {
     const stamp = new Date(item.updatedAt);
     const age = now.getTime() - stamp.getTime();
@@ -188,8 +236,27 @@ export function TicketQueueRecords({
       ? formatDate(due.toISOString())
       : text('none');
   }
+  function owner(item: Ticket) {
+    return (
+      assignees.find((person) => person.id === item.assignedTo)?.name ??
+      item.assignedTo ??
+      text('unassigned')
+    );
+  }
   const columns: HistoryColumn<Ticket>[] = [
-    { id: 'subject', label: text('subject'), render: subject },
+    {
+      id: 'subject',
+      label: text('subject'),
+      render: (item) => (
+        <div className="min-w-48 max-w-80 space-y-2">
+          <div className="flex flex-wrap items-center gap-x-2">
+            {subject(item)}
+            {unread(item)}
+          </div>
+          {replyPreview(item)}
+        </div>
+      ),
+    },
     {
       id: 'category',
       label: text('category'),
@@ -213,10 +280,7 @@ export function TicketQueueRecords({
           {
             id: 'assignee',
             label: text('assignee'),
-            render: (item: Ticket) =>
-              assignees.find((person) => person.id === item.assignedTo)?.name ??
-              item.assignedTo ??
-              text('unassigned'),
+            render: owner,
           },
           { id: 'target', label: text('target'), render: target },
         ]
@@ -241,13 +305,27 @@ export function TicketQueueRecords({
                   <div className="flex flex-wrap gap-2">
                     {status(item)}
                     {priority(item)}
+                    {unread(item)}
                   </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-3">
+                  {replyPreview(item)}
                   <div>
                     <p className="text-sm text-muted-foreground">{text('updated')}</p>
                     {updated(item)}
                   </div>
+                  {staff && (
+                    <dl className="grid grid-cols-2 gap-3">
+                      <div className="min-w-0 break-words">
+                        <dt className="text-xs text-muted-foreground">{text('assignee')}</dt>
+                        <dd className="text-sm">{owner(item)}</dd>
+                      </div>
+                      <div className="min-w-0 break-words">
+                        <dt className="text-xs text-muted-foreground">{text('target')}</dt>
+                        <dd className="text-sm">{target(item)}</dd>
+                      </div>
+                    </dl>
+                  )}
                   <details open={expanded.has(item.id)}>
                     <summary
                       className="cursor-pointer rounded py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring pointer-coarse:min-h-11 pointer-coarse:py-3"
@@ -269,7 +347,14 @@ export function TicketQueueRecords({
                       {columns
                         .filter(
                           (column) =>
-                            !['subject', 'status', 'priority', 'updated'].includes(column.id)
+                            ![
+                              'subject',
+                              'status',
+                              'priority',
+                              'updated',
+                              'assignee',
+                              'target',
+                            ].includes(column.id)
                         )
                         .map((column) => (
                           <div key={column.id} className="min-w-0 break-words">

@@ -240,6 +240,46 @@ function validActivityRow(row: Record<string, unknown>): boolean {
   return typeof row.id === 'string' && typeof row.state === 'string' && amount(row.amount);
 }
 
+function validReceiptRow(row: Record<string, unknown>): boolean {
+  return (
+    validActivityRow(row) &&
+    typeof row.paymentDate === 'string' &&
+    typeof row.payerReference === 'string' &&
+    typeof row.createdAt === 'string' &&
+    [row.bankName, row.customerNote, row.rejectionReason, row.confirmedAt].every(optionalText) &&
+    optionalRows(
+      row.statusHistory,
+      (event) =>
+        typeof event.state === 'string' &&
+        typeof event.occurredAt === 'string' &&
+        typeof event.backfilled === 'boolean' &&
+        [event.actorType, event.actorName, event.reason].every(optionalText)
+    )
+  );
+}
+
+export async function fetchInvoiceReceipt(
+  invoiceId: string,
+  receiptId: string,
+  signal: AbortSignal
+): Promise<InvoiceReceiptActivity> {
+  const response = await fetch(
+    `/api/invoices/${encodeURIComponent(invoiceId)}/bank-receipts/${encodeURIComponent(receiptId)}`,
+    { credentials: 'include', signal, headers: { Accept: 'application/json' } }
+  );
+  if (!response.ok) throw new InvoiceRequestError(response.status, 'Could not load bank receipt');
+  const body: unknown = await response.json();
+  if (
+    !record(body) ||
+    body.invoiceId !== invoiceId.toLowerCase() ||
+    !record(body.receipt) ||
+    body.receipt.id !== receiptId.toLowerCase() ||
+    !validReceiptRow(body.receipt)
+  )
+    throw new InvoiceRequestError(502, 'Invalid bank receipt details');
+  return body.receipt as unknown as InvoiceReceiptActivity;
+}
+
 export function validInvoiceActivity(
   value: unknown
 ): value is Pick<CustomerInvoiceDetails, 'payments' | 'bankReceipts' | 'refunds'> {
@@ -250,25 +290,7 @@ export function validInvoiceActivity(
       (row) =>
         validActivityRow(row) && typeof row.source === 'string' && typeof row.createdAt === 'string'
     ) &&
-    optionalRows(
-      value.bankReceipts,
-      (row) =>
-        validActivityRow(row) &&
-        typeof row.paymentDate === 'string' &&
-        typeof row.payerReference === 'string' &&
-        typeof row.createdAt === 'string' &&
-        [row.bankName, row.customerNote, row.rejectionReason, row.confirmedAt].every(
-          optionalText
-        ) &&
-        optionalRows(
-          row.statusHistory,
-          (event) =>
-            typeof event.state === 'string' &&
-            typeof event.occurredAt === 'string' &&
-            typeof event.backfilled === 'boolean' &&
-            [event.actorType, event.actorName, event.reason].every(optionalText)
-        )
-    ) &&
+    optionalRows(value.bankReceipts, validReceiptRow) &&
     optionalRows(
       value.refunds,
       (row) =>

@@ -1,8 +1,9 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { lazy, Suspense, useState, useEffect, useCallback, useRef, type FormEvent } from 'react';
+import { Link } from '@tanstack/react-router';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
-import { LoadingStatus, Alert, Button } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, buttonVariants } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -29,8 +30,11 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { OtpConfigPanel } from '../components/OtpConfigPanel.js';
 import { VerificationPolicySettings } from '../components/VerificationPolicySettings.js';
+import { verificationSections, type VerificationSection } from '../lib/verification-location.js';
+const VerificationProviders = lazy(() => import('../components/VerificationProviders.js'));
 const SecurityRateLimitPanel = lazy(() => import('../components/SecurityRateLimitPanel.js'));
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
@@ -65,35 +69,112 @@ function validModeHistory(value: unknown): value is ModeHistory {
     (nextBeforeVersion === null || historyVersion(nextBeforeVersion))
   );
 }
-export default function AdminVerificationConfig() {
+const sectionLabels = {
+  mode: 'modeSection',
+  requirements: 'requirementsSection',
+  codes: 'codesSection',
+  'rate-limits': 'limitsSection',
+  providers: 'providerSection',
+} as const;
+type VerificationWorkspace = { section?: VerificationSection; providerId?: string };
+
+export default function AdminVerificationConfig(props: VerificationWorkspace = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedVerificationSettings key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedVerificationSettings
+      key={JSON.stringify([actor, revision, props.section, props.providerId])}
+      {...props}
+    />
+  );
 }
-function OwnedVerificationSettings() {
+function OwnedVerificationSettings({ section, providerId }: VerificationWorkspace) {
   const locale = useLocale();
+  const text = (key: Parameters<typeof verificationConfigText>[0]) =>
+    verificationConfigText(key, locale);
   const [denied, setDenied] = useState(false);
   const denyRead = useCallback(() => setDenied(true), []);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (section && section !== 'mode') heading.current?.focus({ preventScroll: true });
+  }, [section, providerId]);
+  const navClass = (active: boolean) =>
+    buttonVariants({
+      variant: active ? 'secondary' : 'ghost',
+      className: 'min-h-9',
+    });
   return (
     <div
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
-      className="rounded-lg bg-background p-6 text-foreground space-y-5"
+      className="mx-auto w-full max-w-3xl space-y-4 text-foreground"
     >
-      <h1 className="text-2xl font-bold">{verificationConfigText('title', locale)}</h1>
+      <h1
+        ref={heading}
+        tabIndex={section && section !== 'mode' ? -1 : undefined}
+        className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+      >
+        {text(
+          providerId
+            ? 'providerDetails'
+            : section && section !== 'mode'
+              ? sectionLabels[section]
+              : 'title'
+        )}
+      </h1>
+      {section && (
+        <nav aria-label={text('navigation')} className="flex min-w-0 flex-wrap gap-1 border-b pb-2">
+          <Link
+            to="/admin/verification"
+            className={navClass(section === 'mode')}
+            activeOptions={{ exact: true }}
+          >
+            {text(sectionLabels.mode)}
+          </Link>
+          {verificationSections.map((id) => (
+            <Link
+              key={id}
+              to="/admin/verification/$section"
+              params={{ section: id }}
+              className={navClass(section === id)}
+              activeOptions={{ exact: true }}
+            >
+              {text(sectionLabels[id])}
+            </Link>
+          ))}
+        </nav>
+      )}
       {denied ? (
         <Alert variant="destructive">
-          {verificationConfigText('forbidden', locale)}{' '}
+          {text('forbidden')}{' '}
           <Button type="button" onClick={() => setDenied(false)}>
-            {verificationConfigText('reload', locale)}
+            {text('reload')}
           </Button>
         </Alert>
+      ) : section === 'codes' ? (
+        <OtpConfigPanel onReadDenied={denyRead} />
+      ) : section === 'requirements' ? (
+        <VerificationPolicySettings onReadDenied={denyRead} />
+      ) : section === 'rate-limits' ? (
+        <Suspense fallback={<LoadingStatus>{text('loading')}</LoadingStatus>}>
+          <SecurityRateLimitPanel onReadDenied={denyRead} />
+        </Suspense>
+      ) : section === 'providers' ? (
+        <Suspense fallback={<LoadingStatus>{text('loading')}</LoadingStatus>}>
+          <VerificationProviders onDenied={denyRead} {...(providerId ? { providerId } : {})} />
+        </Suspense>
       ) : (
-        <VerificationSettings onReadDenied={denyRead} />
+        <VerificationSettings onReadDenied={denyRead} legacy={!section} />
       )}
     </div>
   );
 }
-function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
+function VerificationSettings({
+  onReadDenied,
+  legacy,
+}: {
+  onReadDenied: () => void;
+  legacy: boolean;
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [rateLimitsOpened, setRateLimitsOpened] = useState(false);
@@ -328,7 +409,7 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
     <>
       <p className="text-sm text-muted-foreground">{text('description')}</p>
       <p className="text-sm">{text('warning')}</p>
-      {current && (
+      {current && legacy && (
         <p className="text-sm">
           {text('activeMode')}: {text(current.mode)}
         </p>
@@ -364,76 +445,99 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
         aria-label={text('title')}
         aria-busy={form.pending || undefined}
         onSubmit={(event) => void prepare('draft', event)}
-        className="max-w-xl space-y-4"
+        className={recordEditorSurface}
       >
-        {catalogueRootMessage(form.errors) && (
-          <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
-        )}
-        <fieldset
-          ref={groupRef}
-          disabled={blocked || busy}
-          className="min-w-0 space-y-4"
-          aria-invalid={form.bind('mode')['aria-invalid']}
-          aria-describedby={form.bind('mode')['aria-describedby']}
-          onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) form.bind('mode').onBlur();
-          }}
-        >
-          <legend className="sr-only">{text('title')}</legend>
-          {verificationModes.map((mode) => (
-            <label
-              key={mode}
-              htmlFor={`verification-mode-${mode}`}
-              className={`block p-4 border rounded-lg text-card-foreground transition-colors ${form.values.mode === mode ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
-            >
-              <span className="flex items-center gap-3">
-                <input
-                  type="radio"
-                  id={`verification-mode-${mode}`}
-                  name="verification-mode"
-                  value={mode}
-                  disabled={mode === 'API'}
-                  checked={state.hydrated && !!current && form.values.mode === mode}
-                  aria-describedby={[
-                    `verification-mode-${mode}-description`,
-                    form.bind('mode')['aria-describedby'],
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onChange={() => {
-                    form.field('mode')[1](mode);
-                    setSaveFailed(false);
-                    setSaved(false);
-                    setActivated(false);
-                  }}
-                  className="accent-primary focus-visible:outline-2 focus-visible:outline-ring"
-                />
-                <span>
-                  <span className="block font-medium text-sm">{text(mode)}</span>
-                  <span
-                    id={`verification-mode-${mode}-description`}
-                    className="block text-xs text-foreground/80 mt-0.5"
-                  >
-                    {text(`${mode}_description`)}
+        <div className="space-y-3 px-4 py-4 sm:px-6">
+          {current && !legacy && (
+            <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+              <div>
+                <dt className="text-muted-foreground">{text('activeMode')}</dt>
+                <dd className="mt-1 font-medium">{text(current.mode)}</dd>
+                <dd className="mt-1 text-muted-foreground">
+                  {text('rateRecoveryVersion').replace(
+                    '{version}',
+                    numbers.number(current.version, { useGrouping: false })
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">{text('proposedMode')}</dt>
+                <dd className="mt-1 font-medium">{text(form.values.mode)}</dd>
+              </div>
+            </dl>
+          )}
+          {catalogueRootMessage(form.errors) && (
+            <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
+          )}
+          <fieldset
+            ref={groupRef}
+            disabled={blocked || busy}
+            className="m-0 min-w-0 space-y-2 border-0 p-0"
+            aria-invalid={form.bind('mode')['aria-invalid']}
+            aria-describedby={form.bind('mode')['aria-describedby']}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) form.bind('mode').onBlur();
+            }}
+          >
+            <legend className="sr-only">{text('title')}</legend>
+            {verificationModes.map((mode) => (
+              <label
+                key={mode}
+                htmlFor={`verification-mode-${mode}`}
+                className={`block rounded-lg border px-3 py-2.5 transition-colors ${form.values.mode === mode ? 'border-primary bg-primary/10' : 'border-border bg-card'} ${mode === 'API' ? 'text-muted-foreground' : 'cursor-pointer'}`}
+              >
+                <span className="flex items-start gap-3">
+                  <input
+                    type="radio"
+                    id={`verification-mode-${mode}`}
+                    name="verification-mode"
+                    value={mode}
+                    disabled={mode === 'API'}
+                    checked={state.hydrated && !!current && form.values.mode === mode}
+                    aria-describedby={[
+                      `verification-mode-${mode}-description`,
+                      form.bind('mode')['aria-describedby'],
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onChange={() => {
+                      form.field('mode')[1](mode);
+                      setSaveFailed(false);
+                      setSaved(false);
+                      setActivated(false);
+                    }}
+                    className="mt-1 accent-primary focus-visible:outline-2 focus-visible:outline-ring"
+                  />
+                  <span>
+                    <span className="block font-medium text-sm">{text(mode)}</span>
+                    <span
+                      id={`verification-mode-${mode}-description`}
+                      className="block text-xs text-foreground/80 mt-0.5"
+                    >
+                      {text(`${mode}_description`)}
+                    </span>
                   </span>
                 </span>
-              </span>
-            </label>
-          ))}
-        </fieldset>
-        <CatalogueFieldFeedback
-          id={form.errorId('mode')}
-          error={form.errors.mode}
-          message={text('invalidMode')}
-        />
-        <CatalogueSaveButton
-          label={text('save')}
-          pending={form.pending}
-          disabled={blocked || busy || form.values.mode === (current?.draft ?? current?.mode)}
-        />
+              </label>
+            ))}
+          </fieldset>
+          <CatalogueFieldFeedback
+            id={form.errorId('mode')}
+            error={form.errors.mode}
+            message={text('invalidMode')}
+            compact
+          />
+        </div>
+        <RecordEditorActions>
+          <CatalogueSaveButton
+            label={text('save')}
+            pending={form.pending}
+            disabled={blocked || busy || form.values.mode === (current?.draft ?? current?.mode)}
+          />
+        </RecordEditorActions>
       </form>
       {current?.draft && (
-        <div className="max-w-xl space-y-3 border-t border-border pt-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/35 px-4 py-3 text-sm">
           <p>
             {text('draftMode')}: {text(current.draft)}
           </p>
@@ -579,23 +683,27 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
           />
         </Suspense>
       )}
-      <OtpConfigPanel onReadDenied={onReadDenied} />
-      <VerificationPolicySettings onReadDenied={onReadDenied} />
-      <details
-        className="max-w-xl rounded border p-3"
-        onToggle={(event) => {
-          if (event.currentTarget.open) setRateLimitsOpened(true);
-        }}
-      >
-        <summary className="min-h-11 cursor-pointer content-center font-medium">
-          {text('rateLimitTitle')}
-        </summary>
-        {rateLimitsOpened && (
-          <Suspense fallback={<LoadingStatus>{text('loading')}</LoadingStatus>}>
-            <SecurityRateLimitPanel onReadDenied={onReadDenied} />
-          </Suspense>
-        )}
-      </details>
+      {legacy && (
+        <>
+          <OtpConfigPanel onReadDenied={onReadDenied} />
+          <VerificationPolicySettings onReadDenied={onReadDenied} />
+          <details
+            className="max-w-xl rounded border p-3"
+            onToggle={(event) => {
+              if (event.currentTarget.open) setRateLimitsOpened(true);
+            }}
+          >
+            <summary className="min-h-11 cursor-pointer content-center font-medium">
+              {text('rateLimitTitle')}
+            </summary>
+            {rateLimitsOpened && (
+              <Suspense fallback={<LoadingStatus>{text('loading')}</LoadingStatus>}>
+                <SecurityRateLimitPanel onReadDenied={onReadDenied} />
+              </Suspense>
+            )}
+          </details>
+        </>
+      )}
     </>
   );
 }

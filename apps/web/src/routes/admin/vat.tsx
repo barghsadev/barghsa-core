@@ -1,34 +1,38 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
-import { useCallback } from 'react';
+import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 
 const Page = lazyRouteComponent(() => import('../../pages/AdminVatPage.js'));
-function VatRoute() {
-  const raw: Record<string, unknown> = Route.useSearch();
-  const { mode, selected } = raw;
-  let id: string | null = null;
-  if (mode === 'rate' || mode === 'override') id = mode;
-  if (
-    (mode === 'endRate' || mode === 'endOverride') &&
-    typeof selected === 'string' &&
-    /^[a-zA-Z0-9_-]{1,128}$/.test(selected)
-  ) {
-    id = `${mode}/${selected}`;
-  }
-  const navigate = Route.useNavigate();
-  const set = useCallback(
-    (key: string | null, replace = false) => {
-      const [mode, selected] = key?.split('/') ?? [];
-      void navigate({ search: { mode, selected }, replace, resetScroll: false });
-    },
-    [navigate]
-  );
-  return <Page selection={{ id, set }} />;
-}
 
 export const Route = createFileRoute('/admin/vat')({
-  component: VatRoute,
+  beforeLoad: ({ search }: { search: Record<string, unknown> }) => {
+    const { mode, selected } = search;
+    if (mode === 'rate' || mode === 'override')
+      throw redirect({
+        to: '/admin/vat/$kind/$recordId/{-$action}',
+        params: {
+          kind: mode === 'rate' ? 'rates' : 'overrides',
+          recordId: 'new',
+          action: undefined,
+        },
+        replace: true,
+      });
+    if (
+      (mode === 'endRate' || mode === 'endOverride') &&
+      typeof selected === 'string' &&
+      /^[a-z0-9_-]{1,128}$/i.test(selected)
+    )
+      throw redirect({
+        to: '/admin/vat/$kind/$recordId/{-$action}',
+        params: {
+          kind: mode === 'endRate' ? 'rates' : 'overrides',
+          recordId: selected,
+          action: 'end',
+        },
+        replace: true,
+      });
+  },
+  component: () => <Page workspace={{ view: 'list' }} />,
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,
 });

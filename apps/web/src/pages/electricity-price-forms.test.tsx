@@ -156,10 +156,14 @@ async function click(label: string) {
   await act(async () => button!.click());
 }
 async function fill(id: string, value: string) {
-  const input = host.querySelector<HTMLInputElement>(`#${id}`)!;
+  const input = host.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)!;
   expect(input, id).not.toBeNull();
+  const prototype =
+    input instanceof HTMLTextAreaElement
+      ? HTMLTextAreaElement.prototype
+      : HTMLInputElement.prototype;
   await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(input, value);
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
   return input;

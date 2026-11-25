@@ -44,6 +44,9 @@ async function render(locale: 'en' | 'fa' = 'en') {
 function nameInput() {
   return document.body.querySelector<HTMLInputElement>('input:not([type=file])')!;
 }
+function sharingInput(name: 'shareInActivity' | 'shareInPaymentActivity') {
+  return document.body.querySelector<HTMLInputElement>(`input[name=${name}]`)!;
+}
 async function name(value: string) {
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
@@ -157,7 +160,7 @@ it('refreshes the revision after conflict without replacing the unsaved draft', 
   vi.stubGlobal('fetch', request);
   const close = await render();
   await name('My edit');
-  await act(async () => document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!.click());
+  await act(async () => sharingInput('shareInActivity').click());
   await submit();
   expect(nameInput().value).toBe('My edit');
   expect(close).not.toHaveBeenCalled();
@@ -369,12 +372,12 @@ for (const locale of ['en', 'fa'] as const) {
       );
     vi.stubGlobal('fetch', request);
     await render(locale);
-    const checkbox = document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!;
-    expect(checkbox.getAttribute('aria-checked')).toBe('false');
+    const checkbox = sharingInput('shareInActivity');
+    expect(checkbox.checked).toBe(false);
     expect(document.body.textContent).toContain(t('conversationIdentity.activityHelp', locale));
     await act(async () => checkbox.click());
     await submit();
-    expect(checkbox.getAttribute('aria-checked')).toBe('true');
+    expect(checkbox.checked).toBe(true);
     await submit();
     const proposals = request.mock.calls
       .slice(1)
@@ -405,20 +408,20 @@ it('clears both activity consents with an empty name and requires new choices af
       )
   );
   await render();
-  const checkbox = document.body.querySelector<HTMLButtonElement>('[role=checkbox]')!;
-  const payment = document.body.querySelectorAll('[role=checkbox]')[1]!;
-  expect(payment.getAttribute('aria-checked')).toBe('true');
-  expect(checkbox.getAttribute('aria-checked')).toBe('true');
+  const checkbox = sharingInput('shareInActivity');
+  const payment = sharingInput('shareInPaymentActivity');
+  expect(payment.checked).toBe(true);
+  expect(checkbox.checked).toBe(true);
   await name('');
-  expect(checkbox.getAttribute('aria-checked')).toBe('false');
-  expect(checkbox.getAttribute('aria-disabled')).toBe('true');
-  expect(payment.getAttribute('aria-checked')).toBe('false');
-  expect(payment.getAttribute('aria-disabled')).toBe('true');
+  expect(checkbox.checked).toBe(false);
+  expect(checkbox.matches(':disabled')).toBe(true);
+  expect(payment.checked).toBe(false);
+  expect(payment.matches(':disabled')).toBe(true);
   await name('New name');
-  expect(checkbox.getAttribute('aria-disabled')).not.toBe('true');
-  expect(checkbox.getAttribute('aria-checked')).toBe('false');
-  expect(payment.getAttribute('aria-disabled')).not.toBe('true');
-  expect(payment.getAttribute('aria-checked')).toBe('false');
+  expect(checkbox.matches(':disabled')).toBe(false);
+  expect(checkbox.checked).toBe(false);
+  expect(payment.matches(':disabled')).toBe(false);
+  expect(payment.checked).toBe(false);
 });
 
 for (const locale of ['en', 'fa'] as const) {
@@ -430,15 +433,16 @@ for (const locale of ['en', 'fa'] as const) {
       .mockResolvedValueOnce(response({ ...initial, shareInPaymentActivity: true, revision: 3 }));
     vi.stubGlobal('fetch', request);
     await render(locale);
-    const [business, payment] = [...document.body.querySelectorAll<HTMLElement>('[role=checkbox]')];
-    expect(payment!.getAttribute('aria-checked')).toBe('false');
+    const business = sharingInput('shareInActivity');
+    const payment = sharingInput('shareInPaymentActivity');
+    expect(payment.checked).toBe(false);
     expect(document.body.textContent).toContain(
       t('conversationIdentity.paymentActivityHelp', locale)
     );
-    await act(async () => payment!.click());
-    expect(business!.getAttribute('aria-checked')).toBe('false');
+    await act(async () => payment.click());
+    expect(business.checked).toBe(false);
     await submit();
-    expect(payment!.getAttribute('aria-checked')).toBe('true');
+    expect(payment.checked).toBe(true);
     await submit();
     expect(
       request.mock.calls.slice(1).map(([, options]) => JSON.parse(options!.body as string))

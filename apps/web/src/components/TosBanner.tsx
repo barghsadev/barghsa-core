@@ -3,22 +3,13 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { sendToast } from '../lib/toast-api.js';
 import { useRouterState } from '@tanstack/react-router';
-import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useLayoutEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n/terms';
-import { SkeletonText, Button } from '@barghsa/ui';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@barghsa/ui';
-import { AlertCircleIcon, Loader2Icon } from 'lucide-react';
+import { Button } from '@barghsa/ui';
+import { AlertCircleIcon } from 'lucide-react';
 import { readWithDeadline } from '../lib/server-query-client.js';
 
-const TosContent = lazy(() => import('./TosContent.js'));
+const TosReviewDialog = lazy(() => import('./TosReviewDialog.js'));
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -70,7 +61,6 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
     );
   const reviewRequest = useRef(0);
   const statusRequest = useRef(0);
-  const time = useAccountTime(locale);
   const [requiresAcceptance, setRequiresAcceptance] = useState(false);
   const [checking, setChecking] = useState(true);
   const [statusFailed, setStatusFailed] = useState(false);
@@ -329,94 +319,35 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
         </div>
       </div>
 
-      {/* Review modal */}
-      <Dialog
-        open={showModal}
-        onOpenChange={(open) => {
-          if (!open) {
-            reviewController.current?.abort();
-            reviewRequest.current++;
-            setLoadingTos(false);
+      {showModal && (
+        <Suspense
+          fallback={
+            <p role="status" className="sr-only">
+              {t('tos.page.loading', locale)}
+            </p>
           }
-          if (!open) setDismissedAutoModal(true);
-          setShowModal(open);
-        }}
-      >
-        <DialogContent
-          className="sm:max-w-lg max-h-[80vh] flex flex-col"
-          closeLabel={t('tos.modal.close', locale)}
         >
-          <DialogHeader className="pointer-coarse:pe-[2.75rem]">
-            <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
-            {currentTos && (
-              <DialogDescription>
-                {t('tos.page.lastUpdated', locale).replace(
-                  '{date}',
-                  time.format(currentTos.updatedAt, { dateStyle: 'long' })
-                )}
-              </DialogDescription>
-            )}
-          </DialogHeader>
-
-          {time.notice}
-          {/* TOS content area */}
-          <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[50vh] border rounded-md p-4 bg-background">
-            {loadingTos && (
-              <div
-                role="status"
-                aria-label={t('tos.page.loading', locale)}
-                className="flex items-center justify-center h-full"
-              >
-                <SkeletonText lines={3} className="w-full max-w-md" />
-              </div>
-            )}
-            {error && (
-              <div className="flex items-center justify-center h-full text-destructive">
-                <p role="alert">{error}</p>
-              </div>
-            )}
-            {currentTos && !loadingTos && !error && (
-              <Suspense
-                fallback={
-                  <p role="status" className="sr-only">
-                    {t('tos.page.loading', locale)}
-                  </p>
-                }
-              >
-                <TosContent content={currentTos.content} language={locale} onReady={markRendered} />
-              </Suspense>
-            )}
-          </div>
-
-          <DialogFooter>
-            {acceptanceUnconfirmed && (
-              <Button variant="outline" onClick={reviewAfterChecking}>
-                {t('tos.banner.retry', locale)}
-              </Button>
-            )}
-            <Button
-              onClick={handleAccept}
-              disabled={
-                accepting ||
-                acceptanceUnconfirmed ||
-                loadingTos ||
-                !!error ||
-                !currentTos ||
-                renderedVersion !== renderKey
-              }
-            >
-              {accepting ? (
-                <>
-                  <Loader2Icon className="h-4 w-4 me-2 animate-spin" />
-                  {t('tos.modal.accepting', locale)}
-                </>
-              ) : (
-                t('tos.modal.accept', locale)
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <TosReviewDialog
+            locale={locale}
+            currentTos={currentTos}
+            error={error}
+            loadingTos={loadingTos}
+            accepting={accepting}
+            acceptanceUnconfirmed={acceptanceUnconfirmed}
+            contentReady={renderedVersion === renderKey}
+            markRendered={markRendered}
+            handleAccept={() => void handleAccept()}
+            reviewAfterChecking={() => void reviewAfterChecking()}
+            close={() => {
+              reviewController.current?.abort();
+              reviewRequest.current++;
+              setLoadingTos(false);
+              setDismissedAutoModal(true);
+              setShowModal(false);
+            }}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

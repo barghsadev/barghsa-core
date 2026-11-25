@@ -6,7 +6,7 @@ const Page = lazyRouteComponent(() => import('../../pages/AdminAgentSlotsPage.js
 export const Route = createFileRoute('/admin/agent-slots')({
   component: () => (
     <AdminAiSections section="/admin/agent-slots">
-      <Page />
+      <Page workspace={{ view: 'list' }} />
     </AdminAiSections>
   ),
   pendingComponent: () => <RouteSkeleton layout="admin" />,

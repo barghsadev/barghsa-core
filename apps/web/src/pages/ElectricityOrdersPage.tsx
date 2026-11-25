@@ -1,10 +1,13 @@
+import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
 import { LoadingStatus, ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
 } from '../hooks/useHistoryFilterDraft.js';
 import { useListView } from '../hooks/useListView.js';
-import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from '../components/HistoryTable.js';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { ArrowUpRight } from 'lucide-react';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
@@ -68,7 +71,7 @@ function nextActionLink(order: ListedOrder): { href: string; label: string } | n
     case 'accept_contract':
       return typeof order.contractId === 'string' && isInvoiceUuid(order.contractId)
         ? {
-            href: `/contracts?contractId=${encodeURIComponent(order.contractId)}`,
+            href: `/contracts/${encodeURIComponent(order.contractId)}`,
             label: 'electricity.orders.reviewContract',
           }
         : null;
@@ -100,6 +103,7 @@ export function ElectricityOrdersPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onShowAllStatuses,
   onApplyFilters,
   onRemoveFilter,
 }: {
@@ -111,6 +115,7 @@ export function ElectricityOrdersPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onShowAllStatuses?: () => void;
   onApplyFilters?: (selection: HistoryFilterSelection<HistoryQuery>) => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
@@ -189,10 +194,24 @@ export function ElectricityOrdersPage({
     },
     {
       id: 'quantity',
-      label: t('electricity.order.quantity', locale),
-      render: (order) => <bdi>{numbers.irrDigits(order.totalKwh)} kWh</bdi>,
+      label: t('recordTable.orderTerms', locale),
+      render: (order) => (
+        <TableCellDetails
+          fields={[
+            {
+              id: 'quantity',
+              label: t('electricity.order.quantity', locale),
+              value: <bdi>{numbers.irrDigits(order.totalKwh)} kWh</bdi>,
+            },
+            {
+              id: 'period',
+              label: t('electricity.order.period.selection', locale),
+              value: formatPeriod(order),
+            },
+          ]}
+        />
+      ),
     },
-    { id: 'period', label: t('electricity.order.period.selection', locale), render: formatPeriod },
     {
       id: 'submitted',
       label: t('historyView.submitted', locale),
@@ -204,11 +223,12 @@ export function ElectricityOrdersPage({
     },
     {
       id: 'action',
+      actions: true,
       label: t('electricity.order.nextAction', locale),
       render: (order) => {
         const action = nextActionLink(order);
         return (
-          <div className="min-w-44 space-y-2">
+          <div className="min-w-32 space-y-2">
             <p className="text-muted-foreground">
               {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
             </p>
@@ -216,8 +236,9 @@ export function ElectricityOrdersPage({
               <a
                 className="touch-action font-medium text-primary underline underline-offset-4"
                 href={action.href}
+                data-table-action-tooltip={t(action.label, locale)}
               >
-                {t(action.label, locale)}
+                <TableActionIcon icon={ArrowUpRight}>{t(action.label, locale)}</TableActionIcon>
               </a>
             )}
           </div>
@@ -354,8 +375,11 @@ export function ElectricityOrdersPage({
             </div>
           }
           emptyView={
-            <p>
-              {t(
+            <HistoryStatusEmpty
+              locale={locale}
+              probe={history.statusProbe}
+              showAll={onShowAllStatuses}
+              message={t(
                 !noProfile && (statuses.length || dateRange.from || dateRange.to || query.q)
                   ? 'historyDates.empty'
                   : pendingOnly
@@ -363,7 +387,7 @@ export function ElectricityOrdersPage({
                     : 'electricity.orders.empty',
                 locale
               )}
-            </p>
+            />
           }
         >
           {view === 'table' ? (

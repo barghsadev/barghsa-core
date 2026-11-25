@@ -1,6 +1,7 @@
 import { loadReceiptAttachments } from '../finance/receipt-attachment-access.js';
 import {
   loadCustomerInvoiceActivity,
+  loadCustomerInvoiceReceipts,
   type CustomerInvoiceActivity,
 } from './customer-invoice-activity.js';
 import type { Pool, PoolClient } from 'pg';
@@ -670,6 +671,22 @@ export class CustomerInvoiceDetailsService {
         solarRequestId: origin?.solar_request_id ?? null,
         ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId, canViewRefunds)),
       };
+    });
+  }
+
+  async receiptForUser(
+    userId: string,
+    invoiceId: string,
+    receiptId: string,
+    actor?: InvoiceReadActor
+  ) {
+    invoiceId = invoiceId.toLowerCase();
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      if (!(await this.loadInvoice(invoiceId, profileId, client)))
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+      const [receipt] = await loadCustomerInvoiceReceipts(client, invoiceId, profileId, receiptId);
+      if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+      return { invoiceId, receipt };
     });
   }
 

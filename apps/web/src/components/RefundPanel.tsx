@@ -2,22 +2,28 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
+import { refundEditorMessages } from '@barghsa/i18n/refund-editor';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   LoadingStatus,
   Button,
-  Card,
-  CardContent,
   Input,
+  ListRefreshButton,
   Field,
   FieldLabel,
   StatusBadge,
+  Textarea,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+import {
+  contractRefundOperation,
+  refundOperations,
+  type InvoiceRefundDecision,
+} from '../lib/invoice-refund-route.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -33,6 +39,12 @@ import {
 import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisionControls.js';
 import { RefundFieldFeedback, RefundFormAlert } from './RefundFormFeedback.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 const loadRefundSummary = () => import('./RefundFinancialReviewSummary.js');
 interface InvoiceBalance {
@@ -108,7 +120,20 @@ const externalKeys = new Set([
   'secondReviewer',
 ]);
 
-type PanelProps = { destination: 'wallet' | 'external_bank'; selectedInvoiceId?: string };
+type PanelProps = {
+  destination: 'wallet' | 'external_bank';
+  selectedInvoiceId?: string;
+  recordView?: 'request' | 'history' | 'decision';
+  decision?: InvoiceRefundDecision | undefined;
+  fromContractRefunds?: boolean;
+  renderDecisionLink?: (
+    refundId: string,
+    operation: RefundOperation,
+    label: string,
+    disabled: boolean
+  ) => React.ReactNode;
+  onLocked?: (locked: boolean) => void;
+};
 export function RefundPanel(props: PanelProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -119,7 +144,15 @@ export function RefundPanel(props: PanelProps) {
     />
   );
 }
-function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
+function RefundWorkspace({
+  destination,
+  selectedInvoiceId = '',
+  recordView,
+  decision,
+  fromContractRefunds,
+  renderDecisionLink,
+  onLocked,
+}: PanelProps) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const word = (key: string) =>
@@ -127,8 +160,17 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
       `admin.invoices.${destination === 'external_bank' && externalKeys.has(key) ? 'externalRefunds' : 'walletRefunds'}.${key}`,
       locale
     );
+  const decisionWord = (key: string) =>
+    fromContractRefunds
+      ? key === 'bankReference'
+        ? contractText('cancellationBankReference', locale)
+        : ['record-transfer', 'reconcile', 'process'].includes(key)
+          ? contractText('cancellation.queue.' + key, locale)
+          : word(key)
+      : word(key);
   const path = destination === 'wallet' ? 'wallet-refunds' : 'external-refunds';
   const fieldPrefix = destination === 'wallet' ? 'wallet-refund' : 'external-refund';
+  const editorText = refundEditorMessages[locale];
   const lookup = useRefundLookupForm(selectedInvoiceId, word('invalidInvoiceId'));
   const [input, setInput] = lookup.field('invoiceId');
   const [invoiceId, setInvoiceId] = useState(
@@ -136,6 +178,9 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
   );
   const [invoice, setInvoice] = useState<InvoiceBalance | null>(null);
   const [refunds, setRefunds] = useState<WalletRefund[]>([]);
+  const [loadedTarget, setLoadedTarget] = useState<string>();
+  const decisionId = decision?.refundId;
+  const targetCurrent = loadedTarget === decisionId;
   const [before, setBefore] = useState<string | null>(null),
     [nextBefore, setNextBefore] = useState<string | null>(null),
     [revision, setRevision] = useState(0);
@@ -144,6 +189,8 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
   const [amount, setAmount] = draft.field('amount'),
     [reason, setReason] = draft.field('reason');
   const cachedDrafts = useRef<Record<string, RefundDecisionValues>>({});
+  const decisionKey = decision && decision.refundId + ':' + decision.operation;
+  const [recordedDecision, setRecordedDecision] = useState<string>();
   const [action, setAction] = useState<TeamAction | null>(null),
     [summary, setSummary] = useState<React.ReactNode>(null),
     [reviewBusy, setReviewBusy] = useState(false);
@@ -165,10 +212,20 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     invoice: null,
     refunds: [],
   });
+  const historyRows = useRef<WalletRefund[]>([]);
   const selection = useRef<{ invoice: InvoiceBalance; refund?: WalletRefund } | null>(null);
   const statusRef = useRef(status);
   statusRef.current = status;
   const busy = reviewBusy || !!action;
+  const locked = busy || !!heldRequest || Boolean(recordView && draft.form.formState.isSubmitting);
+  useEffect(() => {
+    onLocked?.(locked);
+    return () => onLocked?.(false);
+  }, [locked, onLocked]);
+  useEffect(() => {
+    setDecisionError(null);
+    setRecordedDecision(undefined);
+  }, [decisionKey]);
   useEffect(() => {
     live.current = true;
     return () => {
@@ -192,6 +249,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     setHeldRequest(null);
     readController.current?.abort();
     accepted.current = { invoice: null, refunds: [] };
+    historyRows.current = [];
     cachedDrafts.current = {};
     setInvoice(null);
     setRefunds([]);
@@ -205,25 +263,33 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     const controller = new AbortController();
     readController.current = controller;
     setStatus('loading');
+    const query = new URLSearchParams({ invoiceId });
+    if (decisionId) query.set('refundId', decisionId);
+    else if (before) query.set('before', before);
     void readWithDeadline(controller.signal, (signal) =>
-      documentRequest<RefundPage>(
-        `/api/admin/${path}?invoiceId=${encodeURIComponent(invoiceId)}${before ? '&before=' + encodeURIComponent(before) : ''}`,
-        { signal, cache: 'no-store' }
-      )
+      documentRequest<RefundPage>(`/api/admin/${path}?${query}`, { signal, cache: 'no-store' })
     )
       .then((page) => {
         if (controller.signal.aborted) return;
         if (!validPage(page, invoiceId, destination)) throw new Error('Invalid refund page');
-        const rows = before
-          ? [
-              ...accepted.current.refunds.map(
-                (row) => page.refunds.find((item) => item.id === row.id) ?? row
-              ),
-              ...page.refunds.filter(
-                (row) => !accepted.current.refunds.some((old) => old.id === row.id)
-              ),
-            ]
-          : page.refunds;
+        if (
+          decisionId &&
+          (page.nextBefore !== null ||
+            page.refunds.length > 1 ||
+            page.refunds.some((row) => row.id !== decisionId))
+        )
+          throw new Error('Invalid refund target');
+        const previous = historyRows.current;
+        const rows =
+          !decisionId && before
+            ? [
+                ...previous.map((row) => page.refunds.find((item) => item.id === row.id) ?? row),
+                ...page.refunds.filter((row) => !previous.some((old) => old.id === row.id)),
+              ]
+            : page.refunds;
+        historyRows.current = decisionId
+          ? previous.flatMap((row) => (row.id === decisionId ? rows : [row]))
+          : rows;
         const selected = selection.current;
         if (
           selected &&
@@ -236,19 +302,29 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
         setInvoice(page.invoice);
         setRefunds(rows);
         setNextBefore(page.nextBefore);
+        setLoadedTarget(decisionId);
         setStatus('ready');
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status)) deny();
-        else setStatus('error');
+        if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status)) {
+          deny();
+        } else {
+          if (decisionId !== loadedTarget) {
+            accepted.current = { invoice: null, refunds: [] };
+            setInvoice(null);
+            setRefunds([]);
+          }
+          setStatus('error');
+        }
+        setLoadedTarget(decisionId);
       });
     return () => controller.abort();
-  }, [invoiceId, before, revision, destination, path]);
+  }, [invoiceId, before, revision, destination, path, decisionId]);
   function refresh() {
     readController.current?.abort();
     setStatus('loading');
-    setBefore(null);
+    if (!decisionId) setBefore(null);
     setRevision((value) => value + 1);
   }
   function load(event: FormEvent<HTMLFormElement>) {
@@ -267,6 +343,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
         close();
         setDecisionError(null);
         accepted.current = { invoice: null, refunds: [] };
+        historyRows.current = [];
         cachedDrafts.current = {};
         setInvoice(null);
         setRefunds([]);
@@ -283,7 +360,9 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
       current.current ||
       heldRequest ||
       statusRef.current !== 'ready' ||
+      !targetCurrent ||
       !accepted.current.invoice ||
+      (refund && !accepted.current.refunds.includes(refund)) ||
       lookup.form.getValues('invoiceId').trim().toLowerCase() !== invoiceId
     )
       return null;
@@ -446,8 +525,15 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
           if (!owns(owner)) return;
           const chosen: TeamAction = {
             risk: operation === 'reject' ? 'both' : 'financial',
-            title: word(operation),
-            description: word('confirmDecision'),
+            title: decisionWord(operation),
+            description: fromContractRefunds
+              ? contractText(
+                  operation === 'reconcile'
+                    ? 'cancellationQueueReconcileNotice'
+                    : 'cancellationQueueRetryNotice',
+                  locale
+                )
+              : word('confirmDecision'),
             path: actionPath,
             method: 'POST',
             body: { ...body, expectedReviewHash: review.hash },
@@ -481,87 +567,213 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
       .finally(() => finish(owner));
   }
   const matches = input.trim().toLowerCase() === invoiceId;
-  const unavailable = status !== 'ready' || busy || !matches || !!heldRequest;
+  const visibleStatus = targetCurrent ? status : 'loading';
+  const unavailable = visibleStatus !== 'ready' || busy || !matches || !!heldRequest;
+  const requestView = recordView === 'request';
+  const focusedRefund =
+    decision && targetCurrent && refunds.find((refund) => refund.id === decision.refundId);
+  const queueOperation =
+    focusedRefund && fromContractRefunds
+      ? contractRefundOperation(focusedRefund, focusedRefund.retry?.exhausted)
+      : undefined;
+  const decisionOperations = focusedRefund
+    ? fromContractRefunds
+      ? queueOperation
+        ? [queueOperation]
+        : []
+      : refundOperations(focusedRefund)
+    : [];
+  const decisionMessage =
+    decisionError === 'unconfirmed'
+      ? confirmationText('unconfirmed', locale)
+      : decisionError
+        ? word(decisionError)
+        : undefined;
+  const reasonField = draft.bind('reason');
+  const ReasonInput = requestView ? Textarea : Input;
   return (
     <section
       id={destination === 'wallet' ? 'wallet-refunds-panel' : 'external-refunds-panel'}
-      className="space-y-4 rounded-xl border bg-card p-5"
+      className={recordEditorSurface}
       aria-label={word('title')}
     >
-      <h2 className="text-lg font-semibold">{word('title')}</h2>
-      <p className="text-sm text-muted-foreground">{word('description')}</p>
-      <form
-        onSubmit={load}
-        noValidate
-        aria-busy={lookup.form.formState.isSubmitting || undefined}
-        className="flex flex-wrap items-end gap-3"
-      >
-        <Field className="min-w-0 flex-1">
-          <FieldLabel htmlFor={fieldPrefix + '-invoice'}>{word('invoiceId')}</FieldLabel>
-          <Input
-            id={fieldPrefix + '-invoice'}
-            dir="ltr"
-            value={input}
-            {...lookup.bind('invoiceId')}
-            disabled={busy || !!heldRequest || lookup.form.formState.isSubmitting}
-            onChange={(event) => setInput(event.target.value)}
-          />
-          <RefundFieldFeedback
-            id={lookup.errorId('invoiceId')}
-            error={lookup.errors.invoiceId}
-            message={word('invalidInvoiceId')}
-          />
-        </Field>
-        <Button
-          type="submit"
-          disabled={busy || !!heldRequest || lookup.form.formState.isSubmitting}
-        >
-          {lookup.form.formState.isSubmitting && (
-            <span
-              aria-hidden="true"
-              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-            />
-          )}
-          {word('load')}
-        </Button>
-        <RefundFormAlert message={lookup.errors.root?.validation?.message} />
-      </form>
-      {status === 'loading' && <LoadingStatus>{word('loading')}</LoadingStatus>}
-      <RefundFormAlert
-        message={
-          status === 'error' ? word('error') : status === 'denied' ? word('forbidden') : undefined
-        }
-      />
-      {invoice && !matches && (
-        <RefundFormAlert message={contractText('refundLoadInvoice', locale)} />
-      )}
-      {invoice && (
-        <>
-          <Card>
-            <CardContent className="space-y-2 pt-6 text-sm">
-              <p>
-                {word('state')}: {appText(`invoices.state.${invoice.state}`, locale)}
-              </p>
-              {(['paid', 'refunded', 'reserved', 'available'] as const).map((key) => (
-                <p key={key} className={key === 'available' ? 'font-semibold' : undefined}>
-                  {word(key)}:{' '}
-                  {numbers.money(
-                    invoice[
-                      key === 'paid'
-                        ? 'paidAmount'
-                        : key === 'refunded'
-                          ? 'refundedAmount'
-                          : key === 'reserved'
-                            ? 'reservedAmount'
-                            : 'availableAmount'
-                    ]
+      <div className="min-w-0 space-y-2.5 border-b px-4 py-4 sm:px-6">
+        {!recordView && (
+          <header className="space-y-1">
+            <h2 className="text-base font-semibold">{word('title')}</h2>
+            <p className="text-sm text-muted-foreground">{word('description')}</p>
+          </header>
+        )}
+        {requestView && (
+          <p className="text-sm text-muted-foreground">
+            {t(
+              destination === 'wallet'
+                ? 'admin.invoices.refunds.walletDestination'
+                : 'admin.invoices.refunds.bankDestination',
+              locale
+            )}
+          </p>
+        )}
+        {recordView === 'history' && (
+          <p className="text-sm text-muted-foreground">{word('description')}</p>
+        )}
+        {!recordView && (
+          <form
+            onSubmit={load}
+            noValidate
+            aria-busy={lookup.form.formState.isSubmitting || undefined}
+            className="space-y-2"
+          >
+            <Field className="min-w-0 gap-1">
+              <FieldLabel htmlFor={fieldPrefix + '-invoice'}>{word('invoiceId')}</FieldLabel>
+              <div className="flex gap-2">
+                <Input
+                  id={fieldPrefix + '-invoice'}
+                  dir="ltr"
+                  value={input}
+                  {...lookup.bind('invoiceId')}
+                  disabled={busy || !!heldRequest || lookup.form.formState.isSubmitting}
+                  onChange={(event) => setInput(event.target.value)}
+                />
+                <Button
+                  type="submit"
+                  disabled={busy || !!heldRequest || lookup.form.formState.isSubmitting}
+                >
+                  {lookup.form.formState.isSubmitting && (
+                    <span
+                      aria-hidden="true"
+                      className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                    />
                   )}
-                </p>
-              ))}
-            </CardContent>
-          </Card>
-          {heldRequest && !action && (
+                  {word('load')}
+                </Button>
+              </div>
+              <RefundFieldFeedback
+                id={lookup.errorId('invoiceId')}
+                error={lookup.errors.invoiceId}
+                message={word('invalidInvoiceId')}
+              />
+            </Field>
+            <RefundFormAlert message={lookup.errors.root?.validation?.message} />
+          </form>
+        )}
+        {visibleStatus === 'loading' && <LoadingStatus>{word('loading')}</LoadingStatus>}
+        <RefundFormAlert
+          message={
+            visibleStatus === 'error'
+              ? word('error')
+              : visibleStatus === 'denied'
+                ? word('forbidden')
+                : undefined
+          }
+        />
+        {visibleStatus === 'error' &&
+          (requestView ||
+            (recordView === 'history' && !invoice) ||
+            (decision && !focusedRefund)) && (
+            <Button type="button" variant="outline" disabled={busy} onClick={refresh}>
+              {word('refresh')}
+            </Button>
+          )}
+        {targetCurrent && invoice && !matches && (
+          <RefundFormAlert message={contractText('refundLoadInvoice', locale)} />
+        )}
+        {!decision && targetCurrent && invoice && (
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <div className="col-span-2 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
+              <dt className="text-muted-foreground">{word('available')}</dt>
+              <dd className="min-w-0 break-words text-lg font-semibold tabular-nums">
+                {numbers.money(invoice.availableAmount)}
+              </dd>
+            </div>
+            <div className="min-w-0">
+              <dt className="text-muted-foreground">{word('state')}</dt>
+              <dd>{appText(`invoices.state.${invoice.state}`, locale)}</dd>
+            </div>
+            {(['paid', 'refunded', 'reserved'] as const).map((key) => (
+              <div key={key} className="min-w-0">
+                <dt className="text-muted-foreground">{word(key)}</dt>
+                <dd className="break-words tabular-nums">
+                  {numbers.money(invoice[`${key}Amount`])}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        {decision && focusedRefund && (
+          <div className="space-y-2">
+            <div className="rounded-lg bg-muted/40 px-3 py-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <dl className="min-w-0">
+                  <dt className="text-sm text-muted-foreground">{editorText.refundAmount}</dt>
+                  <dd className="break-words text-lg font-semibold tabular-nums">
+                    {numbers.money(focusedRefund.amount)}
+                  </dd>
+                </dl>
+                <div className="flex items-center gap-2">
+                  <StatusBadge label={word(`state.${focusedRefund.state}`)} />
+                  <ListRefreshButton
+                    label={word('refresh')}
+                    refreshing={visibleStatus === 'loading'}
+                    onClick={refresh}
+                  />
+                </div>
+              </div>
+              {focusedRefund.bankReference && (
+                <dl className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-2 border-t pt-2">
+                  <dt className="text-sm text-muted-foreground">{word('recordedReference')}</dt>
+                  <dd className="break-all text-sm font-medium" dir="auto">
+                    {focusedRefund.bankReference}
+                  </dd>
+                </dl>
+              )}
+            </div>
+            <RefundFormAlert message={decisionMessage} />
+          </div>
+        )}
+        {decision &&
+          visibleStatus === 'ready' &&
+          !decisionOperations.includes(decision.operation) && (
             <div className="space-y-2">
+              <p role="status" className="text-sm text-muted-foreground">
+                {recordedDecision === decisionKey
+                  ? contractText('refundUpdateRecorded', locale)
+                  : editorText.decisionUnavailable}
+              </p>
+              {focusedRefund && renderDecisionLink && (
+                <div className="flex flex-wrap gap-2">
+                  {decisionOperations.map((operation) =>
+                    renderDecisionLink(
+                      focusedRefund.id,
+                      operation,
+                      decisionWord(operation),
+                      unavailable
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+      </div>
+      {decision && focusedRefund && decisionOperations.includes(decision.operation) && (
+        <RefundDecisionControls
+          key={decision.refundId + ':' + decision.operation}
+          row={focusedRefund}
+          operation={decision.operation}
+          prefix={fieldPrefix}
+          word={decisionWord}
+          disabled={unavailable}
+          initial={cachedDrafts.current[focusedRefund.id] ?? { reason: '', bankReference: '' }}
+          saveDraft={(values) => {
+            cachedDrafts.current[focusedRefund.id] = values;
+          }}
+          onChoose={(operation, form) => decide(focusedRefund, operation, form)}
+        />
+      )}
+      {!decision && targetCurrent && invoice && (
+        <>
+          {heldRequest && !action && (
+            <div className="space-y-2 px-4 py-3 sm:px-6">
               <RefundFormAlert message={confirmationText('unconfirmed', locale)} />
               <Button
                 type="button"
@@ -579,132 +791,192 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
               </Button>
             </div>
           )}
-          {invoice.requestable ? (
-            <form
-              noValidate
-              onSubmit={request}
-              aria-busy={reviewBusy || draft.form.formState.isSubmitting || undefined}
-              className="space-y-3"
-            >
-              <Field>
-                <FieldLabel htmlFor={fieldPrefix + '-amount'}>{word('requestAmount')}</FieldLabel>
-                <Input
-                  id={fieldPrefix + '-amount'}
-                  dir="ltr"
-                  inputMode="numeric"
-                  value={amount}
-                  {...draft.bind('amount')}
-                  disabled={unavailable}
-                  onChange={(event) => setAmount(event.target.value)}
-                />
-                <RefundFieldFeedback
-                  id={draft.errorId('amount')}
-                  error={draft.errors.amount}
-                  message={contractText('refundAmountInvalid', locale)}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor={fieldPrefix + '-reason'}>{word('reason')}</FieldLabel>
-                <Input
-                  id={fieldPrefix + '-reason'}
-                  maxLength={1000}
-                  value={reason}
-                  {...draft.bind('reason')}
-                  disabled={unavailable}
-                  onChange={(event) => setReason(event.target.value)}
-                />
-                <RefundFieldFeedback
-                  id={draft.errorId('reason')}
-                  error={draft.errors.reason}
-                  message={contractText('cancellationReasonInvalid', locale)}
-                />
-              </Field>
-              <RefundFormAlert
-                message={
-                  draft.errors.root?.validation?.message ??
-                  (reviewError ? word(reviewError) : undefined)
-                }
-              />
-              <Button type="submit" disabled={unavailable}>
-                {draft.form.formState.isSubmitting && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {word('request')}
-              </Button>
-            </form>
-          ) : (
-            <p role="status">{word('notRequestable')}</p>
-          )}
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="font-medium">{word('requests')}</h3>
-            <Button variant="outline" disabled={status === 'loading'} onClick={refresh}>
-              {word('refresh')}
-            </Button>
-          </div>
-          <RefundFormAlert
-            message={
-              decisionError === 'unconfirmed'
-                ? confirmationText('unconfirmed', locale)
-                : decisionError
-                  ? word(decisionError)
-                  : undefined
-            }
-          />
-          {!refunds.length && status === 'ready' && <p>{word('empty')}</p>}
-          <ul className="space-y-3">
-            {refunds.map((refund) => (
-              <li key={refund.id} className="space-y-3 rounded-lg border p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <strong>{numbers.money(refund.amount)}</strong>
-                  <StatusBadge label={word(`state.${refund.state}`)} />
-                </div>
-                <p className="break-all text-xs text-muted-foreground">{refund.id}</p>
-                {destination === 'external_bank' && refund.bankReference && (
-                  <p className="break-all text-sm">
-                    {word('recordedReference')}: {refund.bankReference}
-                  </p>
-                )}
-                {refund.approvalRequestId && (
-                  <a
-                    className="text-primary underline"
-                    href={
-                      '/admin/approval-requests?requestId=' +
-                      encodeURIComponent(refund.approvalRequestId)
+          {recordView !== 'history' &&
+            (invoice.requestable ? (
+              <form
+                noValidate
+                onSubmit={request}
+                aria-busy={reviewBusy || draft.form.formState.isSubmitting || undefined}
+              >
+                <RecordEditorSection title={refundEditorMessages[locale].requestDetails}>
+                  <div className={requestView ? 'min-w-0 space-y-3' : recordEditorGrid}>
+                    <Field className={requestView ? 'min-w-0 gap-1 sm:max-w-sm' : 'min-w-0 gap-1'}>
+                      <div className="flex flex-wrap items-center justify-between gap-x-2">
+                        <FieldLabel htmlFor={fieldPrefix + '-amount'}>
+                          {word('requestAmount')}{' '}
+                          <span className="font-normal text-muted-foreground">
+                            ({editorText.amountUnit})
+                          </span>
+                        </FieldLabel>
+                        {requestView && invoice.availableAmount !== '0' && (
+                          <Button
+                            type="button"
+                            variant="link"
+                            className="px-0"
+                            disabled={unavailable}
+                            onClick={() => setAmount(invoice.availableAmount)}
+                          >
+                            {editorText.useAvailable}
+                          </Button>
+                        )}
+                      </div>
+                      <Input
+                        id={fieldPrefix + '-amount'}
+                        dir="ltr"
+                        inputMode="numeric"
+                        value={amount}
+                        {...draft.bind('amount')}
+                        disabled={unavailable}
+                        onChange={(event) => setAmount(event.target.value)}
+                      />
+                      <RefundFieldFeedback
+                        id={draft.errorId('amount')}
+                        error={draft.errors.amount}
+                        message={contractText('refundAmountInvalid', locale)}
+                        reserveSpace={!requestView}
+                      />
+                    </Field>
+                    <Field className="min-w-0 gap-1">
+                      <FieldLabel htmlFor={fieldPrefix + '-reason'}>{word('reason')}</FieldLabel>
+                      {requestView && (
+                        <p
+                          id={fieldPrefix + '-reason-help'}
+                          className="text-sm text-muted-foreground"
+                        >
+                          {editorText.reasonHelp}
+                        </p>
+                      )}
+                      <ReasonInput
+                        id={fieldPrefix + '-reason'}
+                        maxLength={1000}
+                        rows={requestView ? 2 : undefined}
+                        dir={requestView ? 'auto' : undefined}
+                        className={
+                          requestView
+                            ? `min-h-12 ${locale === 'fa' ? 'placeholder:text-right' : ''}`
+                            : undefined
+                        }
+                        placeholder={editorText.reasonExample}
+                        value={reason}
+                        {...reasonField}
+                        aria-describedby={
+                          requestView
+                            ? [fieldPrefix + '-reason-help', reasonField['aria-describedby']]
+                                .filter(Boolean)
+                                .join(' ')
+                            : reasonField['aria-describedby']
+                        }
+                        disabled={unavailable}
+                        onChange={(event) => setReason(event.target.value)}
+                      />
+                      <RefundFieldFeedback
+                        id={draft.errorId('reason')}
+                        error={draft.errors.reason}
+                        message={contractText('cancellationReasonInvalid', locale)}
+                        reserveSpace={!requestView}
+                      />
+                    </Field>
+                  </div>
+                  <RefundFormAlert
+                    message={
+                      draft.errors.root?.validation?.message ??
+                      (reviewError ? word(reviewError) : undefined)
                     }
-                  >
-                    {word('approval')}
-                  </a>
-                )}
-                <RefundDecisionControls
-                  row={refund}
-                  prefix={fieldPrefix}
-                  word={word}
-                  disabled={unavailable}
-                  initial={cachedDrafts.current[refund.id] ?? { reason: '', bankReference: '' }}
-                  saveDraft={(values) => {
-                    cachedDrafts.current[refund.id] = values;
-                  }}
-                  onChoose={(operation, form) => decide(refund, operation, form)}
-                />
-                {destination === 'wallet' && refund.state === 'Failed' && (
-                  <p role="status">
-                    {refund.retry?.exhausted ? word('retryExhausted') : word('retryScheduled')}
-                  </p>
-                )}
-              </li>
+                  />
+                </RecordEditorSection>
+                <RecordEditorActions>
+                  <Button type="submit" disabled={unavailable}>
+                    {draft.form.formState.isSubmitting && (
+                      <span
+                        aria-hidden="true"
+                        className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                      />
+                    )}
+                    {word('request')}
+                  </Button>
+                </RecordEditorActions>
+              </form>
+            ) : (
+              <p className="px-4 py-3 text-sm text-muted-foreground sm:px-6" role="status">
+                {word('notRequestable')}
+              </p>
             ))}
-          </ul>
-          {nextBefore && (
-            <Button
-              variant="outline"
-              disabled={status === 'loading' || status === 'error'}
-              onClick={() => setBefore(nextBefore)}
-            >
-              {word('more')}
-            </Button>
+          {recordView !== 'request' && (
+            <div className="space-y-2.5 px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-medium">{word('requests')}</h3>
+                <ListRefreshButton
+                  label={word('refresh')}
+                  refreshing={status === 'loading'}
+                  onClick={refresh}
+                />
+              </div>
+              <RefundFormAlert message={decisionMessage} />
+              {!refunds.length && status === 'ready' && (
+                <p className="text-sm text-muted-foreground">{word('empty')}</p>
+              )}
+              <ul className="space-y-3">
+                {refunds.map((refund) => (
+                  <li key={refund.id} className="space-y-3 rounded-lg border p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <strong>{numbers.money(refund.amount)}</strong>
+                      <StatusBadge label={word(`state.${refund.state}`)} />
+                    </div>
+                    <p className="break-all text-xs text-muted-foreground">{refund.id}</p>
+                    {destination === 'external_bank' && refund.bankReference && (
+                      <p className="break-all text-sm">
+                        {word('recordedReference')}: {refund.bankReference}
+                      </p>
+                    )}
+                    {refund.approvalRequestId && (
+                      <a
+                        className="text-primary underline"
+                        href={
+                          '/admin/approval-requests/' + encodeURIComponent(refund.approvalRequestId)
+                        }
+                      >
+                        {word('approval')}
+                      </a>
+                    )}
+                    {renderDecisionLink ? (
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {refundOperations(refund).map((operation) =>
+                          renderDecisionLink(refund.id, operation, word(operation), unavailable)
+                        )}
+                      </div>
+                    ) : (
+                      <RefundDecisionControls
+                        row={refund}
+                        prefix={fieldPrefix}
+                        word={word}
+                        disabled={unavailable}
+                        initial={
+                          cachedDrafts.current[refund.id] ?? { reason: '', bankReference: '' }
+                        }
+                        saveDraft={(values) => {
+                          cachedDrafts.current[refund.id] = values;
+                        }}
+                        onChoose={(operation, form) => decide(refund, operation, form)}
+                      />
+                    )}
+                    {destination === 'wallet' && refund.state === 'Failed' && (
+                      <p role="status">
+                        {refund.retry?.exhausted ? word('retryExhausted') : word('retryScheduled')}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              {nextBefore && (
+                <Button
+                  variant="outline"
+                  disabled={status === 'loading' || status === 'error'}
+                  onClick={() => setBefore(nextBefore)}
+                >
+                  {word('more')}
+                </Button>
+              )}
+            </div>
           )}
         </>
       )}
@@ -719,7 +991,11 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
             </>
           }
           confirmationDisabled={status !== 'ready'}
-          finalFocus={() => document.getElementById(fieldPrefix + '-amount')}
+          finalFocus={() =>
+            decision
+              ? document.querySelector<HTMLElement>('[data-refund-decision-submit]')
+              : document.getElementById(fieldPrefix + '-amount')
+          }
           onClose={() => {
             if (current.current === action) close();
           }}
@@ -745,6 +1021,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
             if (!tools?.receipt(result, !!heldRequest))
               throw new Error('Refund acknowledgement mismatch');
             toast.success(contractText('refundUpdateRecorded', locale));
+            if (decisionKey) setRecordedDecision(decisionKey);
             setHeldRequest(null);
             tools.reset();
             close();

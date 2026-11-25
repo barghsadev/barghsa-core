@@ -3,17 +3,17 @@ import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
-import { Button, Input } from '@barghsa/ui';
+import { Alert, Button, Textarea, buttonVariants } from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
+import { CompactFieldFeedback } from './CompactFieldFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+  savingOperationPath,
+  savingOperations,
+  type SavingOperationRoute,
+} from '../lib/saving-operation-route.js';
+import type { SavingQueueFilters } from '../lib/staff-order-list-query.js';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingOperations } from '@barghsa/i18n/saving-operations';
@@ -44,13 +44,18 @@ interface Command {
   owner: SavingHardwareOwner;
   rejected: boolean;
 }
-function initialIntent(order: SavingOperationSource): SavingOperationIntent {
-  return order.status === 'awaiting_staff_review'
+function initialIntent(
+  order: SavingOperationSource,
+  operation?: 'reject' | SavingOperationStage
+): SavingOperationIntent {
+  return operation === 'reject' || order.status === 'awaiting_staff_review'
     ? { kind: 'decision', action: 'reject' }
     : {
         kind: 'stage',
         stage:
-          order.stages.find((row) => row.status === 'in_progress')?.stage ?? 'product_delivery',
+          operation ??
+          order.stages.find((row) => row.status === 'in_progress')?.stage ??
+          'product_delivery',
         action: 'complete',
       };
 }
@@ -65,6 +70,7 @@ export function SavingStaffOperationForm(
 }
 function OwnedSavingStaffOperationForm({
   order,
+  workflow,
   draft,
   onDraft,
   owner,
@@ -78,6 +84,9 @@ function OwnedSavingStaffOperationForm({
   summary,
 }: {
   order: SavingOperationSource;
+  workflow?:
+    | { orderId: string; search: SavingQueueFilters; operation?: SavingOperationRoute | undefined }
+    | undefined;
   draft: SavingOperationDraft;
   onDraft: (draft: SavingOperationDraft) => void;
   owner: RefObject<SavingHardwareOwner | null>;
@@ -91,6 +100,10 @@ function OwnedSavingStaffOperationForm({
   summary: (review: SavingOperationReview) => ReactNode;
 }) {
   const actor = useAccountUser();
+  const routeOperation = workflow?.operation;
+  const operation = routeOperation ? savingOperations[routeOperation] : undefined;
+  const visibleOperation = useRef(routeOperation);
+  visibleOperation.current = routeOperation;
   const profileRevision = useProfileContextRevision();
   const readFinancial = useOwnedFinancialRead(
     actor,
@@ -107,7 +120,7 @@ function OwnedSavingStaffOperationForm({
   const privateWithdrawn = useRef(false);
   const operationOwner = useRef<SavingHardwareOwner | null>(null);
   const captured = useRef<Command | null>(null);
-  const intent = useRef<SavingOperationIntent>(initialIntent(order));
+  const intent = useRef<SavingOperationIntent>(initialIntent(order, operation));
   const [action, setAction] = useState<TeamAction | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
@@ -148,6 +161,13 @@ function OwnedSavingStaffOperationForm({
       }
     };
   }, []);
+  useEffect(() => {
+    if (!workflow) return;
+    if (operationOwner.current) release();
+    intent.current = initialIntent(order, operation);
+    setError(false);
+    form.reset(draft);
+  }, [routeOperation]);
   function release() {
     ++request.current;
     preparing.current = false;
@@ -158,7 +178,7 @@ function OwnedSavingStaffOperationForm({
     setAction(null);
     setBusy(false);
     setUncertain(false);
-    intent.current = initialIntent(order);
+    intent.current = initialIntent(order, operation);
     notify();
   }
   function withdraw(reason: 'forbidden' | 'missing') {
@@ -230,6 +250,14 @@ function OwnedSavingStaffOperationForm({
   }
   function prepare(currentIntent: SavingOperationIntent) {
     if (
+      workflow &&
+      (currentIntent.kind === 'stage'
+        ? operation !== currentIntent.stage
+        : (operation && operation !== 'reject') ||
+          currentIntent.action !== (operation === 'reject' ? 'reject' : 'approve'))
+    )
+      return;
+    if (
       !active() ||
       owner.current ||
       preparing.current ||
@@ -264,7 +292,11 @@ function OwnedSavingStaffOperationForm({
     onPending();
     const generation = ++request.current;
     const raw = JSON.stringify(form.getValues());
-    const authorized = () => active() && generation === request.current && owner.current === token;
+    const authorized = () =>
+      active() &&
+      visibleOperation.current === routeOperation &&
+      generation === request.current &&
+      owner.current === token;
     const fresh = () => authorized() && raw === JSON.stringify(form.getValues());
     void form
       .handleSubmit(async (values) => {
@@ -386,163 +418,284 @@ function OwnedSavingStaffOperationForm({
   const frozen = !!captured.current || pending.current || uncertain;
   const blocked = busy || !!owner.current;
   const reviewing = order.status === 'awaiting_staff_review';
-  const explanationRequired =
-    !reviewing && order.stages.some((row) => row.status === 'in_progress');
+  const reviewingForm = reviewing && (!workflow || operation === 'reject');
+  const inProgress = ['approved', 'in_progress'].includes(order.status)
+    ? order.stages.filter((row) => row.status === 'in_progress')
+    : [];
+  const activeStages = workflow ? inProgress.filter((row) => row.stage === operation) : inProgress;
+  const progress = order.stages.filter((row) => !inProgress.includes(row));
+  const explanationRequired = activeStages.length > 0;
+  const handoverStage = activeStages.some((row) => row.stage === 'equipment_handover');
+  const showEditor = reviewingForm || explanationRequired;
+  const actionTitle = reviewing
+    ? formCopy('decisionTitle')
+    : activeStages.length === 1
+      ? copy(activeStages[0]!.stage)
+      : copy('staffFulfillmentLane');
+  const ProgressFrame = workflow ? 'details' : 'section';
   const command = captured.current;
+  const openOperation = (entry: SavingOperationRoute, label: string) =>
+    workflow && (
+      <Link
+        key={entry}
+        to={savingOperationPath}
+        params={{ orderId: workflow.orderId, operation: entry }}
+        search={workflow.search}
+        className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+        disabled={blocked}
+      >
+        {label}
+      </Link>
+    );
+  const stageAction = (
+    stage: SavingOperationStage,
+    action: 'complete' | 'skip',
+    blockedByStage: boolean
+  ) => (
+    <Button
+      type="button"
+      variant={action === 'skip' ? 'outline' : 'default'}
+      disabled={blocked || blockedByStage}
+      onClick={() => prepare({ kind: 'stage', stage, action })}
+    >
+      {copy(action === 'skip' ? 'staffSkip' : 'staffComplete')}
+    </Button>
+  );
   return (
     <div data-testid="saving-staff-operation-form" className="space-y-3">
-      <Form {...form}>
-        <form
-          className="space-y-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            prepare(intent.current);
-          }}
-        >
+      {workflow && !operation && (
+        <div className="flex flex-wrap gap-2">
           {reviewing && (
-            <div className="flex flex-wrap gap-2">
+            <>
               <Button
-                type="button"
                 disabled={blocked}
                 onClick={() => prepare({ kind: 'decision', action: 'approve' })}
               >
                 {copy('staffApprove')}
               </Button>
-              <Button
-                type="button"
-                variant="destructive"
-                className="dark:bg-destructive/10 dark:hover:bg-destructive/20"
-                disabled={blocked}
-                onClick={() => prepare({ kind: 'decision', action: 'reject' })}
-              >
-                {copy('staffReject')}
-              </Button>
+              {openOperation('reject', copy('staffReject'))}
+            </>
+          )}
+          {inProgress.map((stage) => {
+            const entry = stage.stage.replaceAll('_', '-') as SavingOperationRoute;
+            return openOperation(entry, copy(stage.stage));
+          })}
+        </div>
+      )}
+      {operation && !showEditor && !uncertain && (
+        <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+          {formCopy('actionUnavailable')}
+        </p>
+      )}
+      <Form {...form}>
+        <form
+          className="space-y-3"
+          aria-label={
+            routeOperation ? copy(operation === 'reject' ? 'staffReject' : operation!) : undefined
+          }
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (showEditor) prepare(intent.current);
+          }}
+        >
+          {showEditor && (
+            <div className={recordEditorSurface}>
+              {!workflow && (
+                <header className="border-b bg-muted/25 px-4 py-3">
+                  <h3 className="font-semibold">{actionTitle}</h3>
+                </header>
+              )}
+              <div className="space-y-4 px-4 py-4 sm:px-6">
+                {operation === 'reject' && (
+                  <p className="rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+                    {formCopy('rejectionNotice')}
+                  </p>
+                )}
+                <div className={handoverStage ? 'grid gap-x-4 gap-y-3 md:grid-cols-2' : undefined}>
+                  <FormField
+                    control={form.control}
+                    name="note"
+                    render={({ field, fieldState }) => (
+                      <FormItem id="saving-staff-note">
+                        <FormLabel>
+                          {reviewingForm ? formCopy('rejectionReason') : copy('staffReason')}
+                        </FormLabel>
+                        {operation && (
+                          <p
+                            id="saving-staff-note-prompt"
+                            className="text-sm text-muted-foreground"
+                          >
+                            {formCopy(
+                              operation === 'reject' ? 'rejectionPrompt' : operation + 'Prompt'
+                            )}
+                          </p>
+                        )}
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            rows={operation ? 3 : 2}
+                            className="max-h-44 min-h-14 bg-background"
+                            dir="auto"
+                            aria-describedby={operation ? 'saving-staff-note-prompt' : undefined}
+                            aria-required={!!operation || explanationRequired || undefined}
+                            disabled={frozen}
+                            onChange={(event) => {
+                              if (frozen || !active()) return;
+                              field.onChange(event);
+                              onDraft({ ...form.getValues(), note: event.target.value });
+                            }}
+                          />
+                        </FormControl>
+                        <CompactFieldFeedback
+                          help={
+                            operation
+                              ? formCopy(reviewingForm ? 'noteLimit' : 'noteVisible')
+                              : formCopy(reviewingForm ? 'rejectionHelp' : 'explanationHelp')
+                          }
+                          validationMessage={messages.note}
+                          invalid={!!fieldState.error?.message}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                  {handoverStage && (
+                    <FormField
+                      control={form.control}
+                      name="handover"
+                      render={({ field, fieldState }) => (
+                        <FormItem id="saving-handover">
+                          <FormLabel>{copy('staffHandover')}</FormLabel>
+                          <p id="saving-handover-prompt" className="text-sm text-muted-foreground">
+                            {formCopy('handoverExample')}
+                          </p>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              rows={operation ? 3 : 2}
+                              className="max-h-44 min-h-14 bg-background"
+                              dir="auto"
+                              aria-describedby="saving-handover-prompt"
+                              disabled={frozen}
+                              onChange={(event) => {
+                                if (frozen || !active()) return;
+                                field.onChange(event);
+                                onDraft({ ...form.getValues(), handover: event.target.value });
+                              }}
+                            />
+                          </FormControl>
+                          <CompactFieldFeedback
+                            help={formCopy('handoverHelp')}
+                            validationMessage={messages.handover}
+                            invalid={!!fieldState.error?.message}
+                          />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+                {activeStages.map((stage) => {
+                  const reasons = prerequisites(stage.stage);
+                  return (
+                    (reasons.length > 0 || stage.explanation || stage.handover_description) && (
+                      <div key={stage.stage} className="space-y-1 text-sm wrap-anywhere">
+                        {stage.explanation && <p>{stage.explanation}</p>}
+                        {stage.handover_description && <p>{stage.handover_description}</p>}
+                        {reasons.length > 0 && (
+                          <p className="text-muted-foreground">{reasons.join(' ')}</p>
+                        )}
+                      </div>
+                    )
+                  );
+                })}
+              </div>
+              {reviewingForm && (
+                <RecordEditorActions>
+                  {!workflow && (
+                    <Button
+                      type="button"
+                      disabled={blocked}
+                      onClick={() => prepare({ kind: 'decision', action: 'approve' })}
+                    >
+                      {copy('staffApprove')}
+                    </Button>
+                  )}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    disabled={blocked}
+                    onClick={() => prepare({ kind: 'decision', action: 'reject' })}
+                  >
+                    {copy('staffReject')}
+                  </Button>
+                </RecordEditorActions>
+              )}
+              {activeStages.map((stage) => {
+                const blockedByStage = prerequisites(stage.stage).length > 0;
+                return (
+                  <RecordEditorActions key={stage.stage}>
+                    {activeStages.length > 1 && (
+                      <strong className="text-sm">{copy(stage.stage)}</strong>
+                    )}
+                    {stage.stage === 'equipment_handover' &&
+                      stageAction(stage.stage, 'skip', blockedByStage)}
+                    {stageAction(stage.stage, 'complete', blockedByStage)}
+                  </RecordEditorActions>
+                );
+              })}
             </div>
           )}
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem id="saving-staff-note">
-                <FormLabel>{copy('staffReason')}</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    aria-required={explanationRequired || undefined}
-                    disabled={frozen}
-                    onChange={(event) => {
-                      if (frozen || !active()) return;
-                      field.onChange(event);
-                      onDraft({ ...form.getValues(), note: event.target.value });
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>
-                  {formCopy(reviewing ? 'rejectionHelp' : 'explanationHelp')}
-                </FormDescription>
-                <FormMessage reserveSpace />
-              </FormItem>
-            )}
-          />
-          {order.stages.some(
-            (row) => row.stage === 'equipment_handover' && row.status === 'in_progress'
-          ) && (
-            <FormField
-              control={form.control}
-              name="handover"
-              render={({ field }) => (
-                <FormItem id="saving-handover">
-                  <FormLabel>{copy('staffHandover')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={frozen}
-                      onChange={(event) => {
-                        if (frozen || !active()) return;
-                        field.onChange(event);
-                        onDraft({ ...form.getValues(), handover: event.target.value });
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription>{formCopy('handoverHelp')}</FormDescription>
-                  <FormMessage reserveSpace />
-                </FormItem>
-              )}
-            />
-          )}
-          <ol className="space-y-2">
-            {order.stages.map((stage) => {
-              const reasons = prerequisites(stage.stage);
-              return (
-                <li key={stage.stage} className="rounded-md border p-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span>
-                      <strong>{copy(stage.stage)}</strong> · {copy(stage.status)}
-                    </span>
-                    {stage.status === 'in_progress' && (
-                      <span className="flex gap-2">
-                        <Button
-                          size="sm"
-                          type="button"
-                          disabled={blocked || reasons.length > 0}
-                          onClick={() =>
-                            prepare({ kind: 'stage', stage: stage.stage, action: 'complete' })
-                          }
-                        >
-                          {copy('staffComplete')}
-                        </Button>
-                        {stage.stage === 'equipment_handover' && (
-                          <Button
-                            size="sm"
-                            type="button"
-                            variant="outline"
-                            disabled={blocked}
-                            onClick={() =>
-                              prepare({ kind: 'stage', stage: stage.stage, action: 'skip' })
-                            }
-                          >
-                            {copy('staffSkip')}
-                          </Button>
-                        )}
-                      </span>
-                    )}
-                  </div>
-                  {stage.explanation && (
-                    <p className="mt-2 text-sm">
-                      {stage.stage === 'request_confirmation' &&
-                      stage.status === 'completed' &&
-                      stage.explanation === 'Staff approved request'
-                        ? copy('stageConfirmedNote')
-                        : stage.explanation}
-                    </p>
-                  )}
-                  {stage.status === 'in_progress' && reasons.length > 0 && (
-                    <p className="mt-2 text-sm text-muted-foreground">{reasons.join(' ')}</p>
-                  )}
-                  {stage.handover_description && (
-                    <p className="mt-2 text-sm">{stage.handover_description}</p>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
           {busy && (
-            <p role="status" className="flex items-center gap-2">
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-              />
+            <p role="status" className="text-sm text-muted-foreground">
               {formCopy('checking')}
             </p>
           )}
-          {error && <p role="alert">{copy('staffReviewError')}</p>}
+          {error && <Alert variant="destructive">{copy('staffReviewError')}</Alert>}
           {form.formState.errors.root?.validation && (
             <p role="alert">{formCopy('validationUnavailable')}</p>
+          )}
+          {progress.length > 0 && (
+            <ProgressFrame className="space-y-2" aria-label={formCopy('stageProgress')}>
+              {workflow ? (
+                <summary className="touch-action cursor-pointer rounded-lg border bg-card px-4 py-2 text-sm font-medium">
+                  {formCopy('stageProgress')}
+                </summary>
+              ) : (
+                <h3 className="text-sm font-medium">{formCopy('stageProgress')}</h3>
+              )}
+              <ol className="divide-y rounded-lg border">
+                {progress.map((stage) => (
+                  <li key={stage.stage} className="px-3 py-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                      <strong>{copy(stage.stage)}</strong>
+                      <span className="text-xs text-muted-foreground">
+                        {copy(stage.status === 'in_progress' ? 'inProgress' : stage.status)}
+                      </span>
+                    </div>
+                    {stage.explanation && (
+                      <p className="mt-2 text-sm">
+                        {stage.stage === 'request_confirmation' &&
+                        stage.status === 'completed' &&
+                        stage.explanation === 'Staff approved request'
+                          ? copy('stageConfirmedNote')
+                          : stage.explanation}
+                      </p>
+                    )}
+                    {stage.handover_description && (
+                      <p className="mt-1 wrap-anywhere text-sm">{stage.handover_description}</p>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </ProgressFrame>
           )}
         </form>
       </Form>
       {uncertain && (
-        <div role="alert" className="space-y-2">
+        <div
+          role="alert"
+          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-destructive/30 px-4 py-3 text-sm"
+        >
           <p>{formCopy('uncertain')}</p>
           <Button
             type="button"
@@ -558,6 +711,7 @@ function OwnedSavingStaffOperationForm({
       {action && command && live(command, action) && (
         <TeamActionDialog
           action={action}
+          focusSummary
           summary={summary(command.review)}
           onClose={() => close(command, action)}
           onValidationError={() => false}

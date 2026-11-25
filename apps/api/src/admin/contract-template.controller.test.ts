@@ -79,10 +79,11 @@ describe('Contract template permission gate (T-09.12.04)', () => {
     });
   });
 
-  it('rejects non-admin on get and every mutation', async () => {
+  it('rejects non-admin on reads and every mutation', async () => {
     const { controller } = makeController();
     const attempts: Promise<unknown>[] = [
       controller.get(nonAdminReq, TEMPLATE_ID),
+      controller.previewVersion(nonAdminReq, TEMPLATE_ID, '1'),
       controller.create(nonAdminReq, { name: 'X' }),
       controller.update(nonAdminReq, TEMPLATE_ID, { status: 'inactive' }),
       controller.uploadVersion(nonAdminReq, TEMPLATE_ID, {

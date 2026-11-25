@@ -272,6 +272,9 @@ export interface StaffUserRoleSummary {
   name: string;
 }
 
+const STAFF_MEMBERSHIP_CONDITION =
+  'u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)';
+
 /** One staff account in the admin staff list. */
 export interface StaffUserSummary {
   userId: string;
@@ -3118,15 +3121,32 @@ export class AdminService {
   }
 
   async listStaffTeams(): Promise<StaffTeamRecord[]> {
-    const pool = getDbPool();
-    const teamsResult = await pool.query(
+    return this.readStaffTeams(getDbPool());
+  }
+
+  async getStaffTeam(id: string, actor: StaffReadActor): Promise<StaffTeamRecord> {
+    return withStaffReadAuthority(actor, 'admin:staff-teams:edit', async (client) => {
+      const [team] = await this.readStaffTeams(client, id);
+      if (!team) throw new NotFoundException('Staff team not found');
+      return team;
+    });
+  }
+
+  private async readStaffTeams(
+    db: Pick<PoolClient, 'query'>,
+    id?: string
+  ): Promise<StaffTeamRecord[]> {
+    const teamsResult = await db.query(
       `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
        FROM staff_teams
-       ORDER BY name ASC`
+       ${id === undefined ? '' : 'WHERE id = $1'}
+       ORDER BY name ASC
+       ${id === undefined ? '' : 'FOR SHARE'}`,
+      id === undefined ? [] : [id]
     );
     if (teamsResult.rows.length === 0) return [];
 
-    const membersResult = await pool.query(
+    const membersResult = await db.query(
       `SELECT team_id, user_id
        FROM staff_team_members
        WHERE team_id = ANY($1::uuid[])
@@ -3640,16 +3660,32 @@ export class AdminService {
     const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200);
     const offset = Math.max(Math.trunc(query.offset ?? 0), 0);
 
-    const staffWhere = `u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)`;
-
     const countResult = await pool.query<{ total: number }>(
       `SELECT COUNT(*)::int AS total
        FROM users u
-       WHERE ${staffWhere}`
+       WHERE ${STAFF_MEMBERSHIP_CONDITION}`
     );
     const total = countResult.rows[0]?.total ?? 0;
 
-    const listResult = await pool.query<{
+    const items = await this.readStaffRows(pool, limit, offset);
+    return { items, total, limit, offset };
+  }
+
+  async getStaffAccount(userId: string, actor: StaffReadActor): Promise<StaffUserSummary> {
+    return withStaffReadAuthority(actor, 'admin:staff:view', async (client) => {
+      const [account] = await this.readStaffRows(client, 1, 0, userId);
+      if (!account) throw new NotFoundException('Staff account not found');
+      return account;
+    });
+  }
+
+  private async readStaffRows(
+    db: Pick<PoolClient, 'query'>,
+    limit: number,
+    offset: number,
+    userId?: string
+  ): Promise<StaffUserSummary[]> {
+    const listResult = await db.query<{
       user_id: string;
       username: string;
       email: string | null;
@@ -3680,16 +3716,16 @@ export class AdminService {
         AND p.is_default = true
        LEFT JOIN user_roles ur ON ur.user_id = u.user_id
        LEFT JOIN staff_roles r ON r.role_id = ur.role_id
-       WHERE ${staffWhere}
+       WHERE (${STAFF_MEMBERSHIP_CONDITION}) ${userId === undefined ? '' : 'AND u.user_id = $3'}
        GROUP BY u.user_id, u.username, u.email, u.mobile, u.is_admin,
                 u.created_at, u.last_login_at, u.disabled_at,
                 p.first_name, p.last_name
        ORDER BY u.created_at DESC, u.user_id DESC
        LIMIT $1 OFFSET $2`,
-      [limit, offset]
+      userId === undefined ? [limit, offset] : [limit, offset, userId]
     );
 
-    const items: StaffUserSummary[] = listResult.rows.map((row) => ({
+    return listResult.rows.map((row) => ({
       userId: row.user_id,
       username: row.username,
       email: row.email,
@@ -3705,8 +3741,6 @@ export class AdminService {
       activationExpiresAt: row.activation_expires_at?.toISOString() ?? null,
       createdAt: row.created_at.toISOString(),
     }));
-
-    return { items, total, limit, offset };
   }
 
   /**

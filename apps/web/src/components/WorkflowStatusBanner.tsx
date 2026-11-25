@@ -13,6 +13,7 @@ export interface WorkflowStatusBannerProps {
   nextAction: string;
   owner: WorkflowOwner;
   actionHref?: string | null | undefined;
+  actionLink?: ReactNode;
   supportHref?: string;
   submittedAt?: ReactNode;
   expectedResponse?: ReactNode;
@@ -26,104 +27,87 @@ export function WorkflowStatusBanner({
   nextAction,
   owner,
   actionHref,
+  actionLink,
   supportHref = '/tickets',
   submittedAt,
   expectedResponse,
 }: WorkflowStatusBannerProps) {
   const safeSupportHref =
     supportHref.startsWith('/') && !supportHref.startsWith('//') ? supportHref : '/tickets';
+  const waiting = owner === 'staff';
+  const label = (key: string) => t(`workflow.${key}`, locale);
+  const actionClass = 'touch-action font-medium text-primary underline underline-offset-4';
+  const supportLink = (
+    <Link className="touch-action text-primary underline underline-offset-4" to={safeSupportHref}>
+      {label('support')}
+    </Link>
+  );
+  const action =
+    actionLink ??
+    (actionHref ? (
+      actionHref.startsWith('#') ? (
+        <a href={actionHref} className={actionClass}>
+          {nextAction}
+        </a>
+      ) : (
+        <Link to={actionHref} className={actionClass}>
+          {nextAction}
+        </Link>
+      )
+    ) : (
+      <span dir={waiting ? undefined : 'auto'}>{nextAction}</span>
+    ));
   return (
     <section
-      aria-label={t('workflow.summary', locale)}
+      aria-label={label('summary')}
       className="space-y-4 rounded-xl border border-primary/20 bg-primary/5 p-5"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <div>
-        <p className="text-sm text-muted-foreground">{t('workflow.status', locale)}</p>
+        <p className="text-sm text-muted-foreground">{label('status')}</p>
         <h2 className="text-xl font-semibold" dir="auto">
           {status}
         </h2>
       </div>
-      {owner === 'staff' ? (
+      {waiting ? (
         <WaitingForBarghsa
           title={workflowFeedback('waiting', locale)}
-          description={`${t('workflow.owner', locale)}: ${t('workflow.owner.staff', locale)}`}
+          description={`${label('owner')}: ${label('owner.staff')}`}
           submittedAt={submittedAt ?? workflowFeedback('submissionUnknown', locale)}
           update={
             <p className="wrap-anywhere">
-              {t('workflow.happened', locale)}: <bdi>{happened}</bdi>
+              {label('happened')}: <bdi>{happened}</bdi>
             </p>
           }
           expectedResponse={expectedResponse ?? workflowFeedback('responseUnknown', locale)}
           help={
             <div className="flex flex-wrap gap-3">
-              <span>{t('workflow.nextAction', locale)}:</span>
-              {actionHref ? (
-                actionHref.startsWith('#') ? (
-                  <a href={actionHref} className="touch-action underline">
-                    {nextAction}
-                  </a>
-                ) : (
-                  <Link to={actionHref} className="touch-action underline">
-                    {nextAction}
-                  </Link>
-                )
-              ) : (
-                <span>{nextAction}</span>
-              )}
-              <span>{t('workflow.help', locale)}:</span>
-              <Link to={safeSupportHref} className="touch-action underline">
-                {t('workflow.support', locale)}
-              </Link>
+              <span>{label('nextAction')}:</span>
+              {action}
+              <span>{label('help')}:</span>
+              {supportLink}
             </div>
           }
         />
       ) : (
         <dl className="grid gap-4 text-sm sm:grid-cols-2">
           <div>
-            <dt className="font-medium">{t('workflow.happened', locale)}</dt>
+            <dt className="font-medium">{label('happened')}</dt>
             <dd className="mt-1 text-muted-foreground wrap-anywhere" dir="auto">
               {happened}
             </dd>
           </div>
           <div>
-            <dt className="font-medium">{t('workflow.nextAction', locale)}</dt>
-            <dd className="mt-1">
-              {actionHref ? (
-                actionHref.startsWith('#') ? (
-                  <a
-                    className="touch-action font-medium text-primary underline underline-offset-4"
-                    href={actionHref}
-                  >
-                    {nextAction}
-                  </a>
-                ) : (
-                  <Link
-                    className="touch-action font-medium text-primary underline underline-offset-4"
-                    to={actionHref}
-                  >
-                    {nextAction}
-                  </Link>
-                )
-              ) : (
-                <span dir="auto">{nextAction}</span>
-              )}
-            </dd>
+            <dt className="font-medium">{label('nextAction')}</dt>
+            <dd className="mt-1">{action}</dd>
           </div>
           <div>
-            <dt className="font-medium">{t('workflow.owner', locale)}</dt>
-            <dd className="mt-1">{t(`workflow.owner.${owner}`, locale)}</dd>
+            <dt className="font-medium">{label('owner')}</dt>
+            <dd className="mt-1">{label(`owner.${owner}`)}</dd>
           </div>
           <div>
-            <dt className="font-medium">{t('workflow.help', locale)}</dt>
-            <dd className="mt-1">
-              <Link
-                className="touch-action text-primary underline underline-offset-4"
-                to={safeSupportHref}
-              >
-                {t('workflow.support', locale)}
-              </Link>
-            </dd>
+            <dt className="font-medium">{label('help')}</dt>
+            <dd className="mt-1">{supportLink}</dd>
           </div>
         </dl>
       )}

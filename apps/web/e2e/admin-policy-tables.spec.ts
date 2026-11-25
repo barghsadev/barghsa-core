@@ -43,7 +43,7 @@ async function desktop(
 }
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`terms history keeps one version view and raw draft through responsive recovery (${locale})`, async ({
+  test(`terms history links to one version and retains raw draft through responsive recovery (${locale})`, async ({
     page,
   }, info) => {
     await crmShell(page, locale);
@@ -61,6 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
     };
     let status = 200,
       reads = 0,
+      exactReads = 0,
       writes = 0;
     await page.route('**/api/admin/tos/versions', (route) => {
       if (route.request().method() !== 'GET') {
@@ -69,6 +70,15 @@ for (const locale of ['en', 'fa'] as const) {
       }
       reads++;
       return route.fulfill({ status, json: status === 200 ? [termsVersion(), published] : {} });
+    });
+    await page.route('**/api/admin/tos/versions/published', (route) => {
+      exactReads++;
+      return route.fulfill({ json: published });
+    });
+    await page.route(`**/api/admin/tos/versions/${termsVersion().id}`, (route) => {
+      if (route.request().method() !== 'GET') writes++;
+      exactReads++;
+      return route.fulfill({ status, json: status === 200 ? termsVersion() : {} });
     });
     await page.goto('/admin/tos');
     await page.setViewportSize({ width: 900, height: 900 });
@@ -86,25 +96,20 @@ for (const locale of ['en', 'fa'] as const) {
         published.publishedAt
       )
     );
-    const view = saved.getByRole('button', { name: text.view, exact: true });
+    const view = saved.getByRole('link', { name: text.view, exact: true });
     await view.focus();
     await page.keyboard.press('Enter');
-    const dialog = page.getByRole('dialog');
-    await expect(dialog).toHaveCount(1);
-    await expect(dialog).toContainText('staff-sample');
+    const main = page.getByRole('main');
+    const heading = main.getByRole('heading', { name: `${text.versionTitle} v1`, exact: true });
+    await expect(heading).toBeFocused();
+    await expect(main).toContainText('staff-sample');
     await page.setViewportSize({ width: 390, height: 844 });
-    await expect(dialog).toBeVisible();
+    await expect(heading).toBeVisible();
     await page.setViewportSize({ width: 900, height: 900 });
-    await expect(dialog).toHaveCount(1);
-    expect([reads, writes]).toEqual([1, 0]);
-    await dialog.getByRole('button', { name: text.close, exact: true }).click();
-    await expect(view).toBeFocused();
-    await page.keyboard.press('Enter');
-    await expect(dialog).toHaveCount(1);
+    await expect(heading).toHaveCount(1);
+    expect([reads, exactReads, writes]).toEqual([1, 1, 0]);
     await page.setViewportSize({ width: 390, height: 844 });
-    await expect(view).not.toBeVisible();
-    await dialog.getByRole('button', { name: text.close, exact: true }).click();
-    await expect(page.getByRole('button', { name: text.refresh, exact: true })).toBeFocused();
+    await main.getByRole('link', { name: text.history, exact: true }).click();
     const cards = page.getByRole('list', { name: text.history, exact: true });
     await expect(cards.locator(':scope > li')).toHaveCount(2);
     await expect(page.getByRole('table', { name: text.history, exact: true })).not.toBeVisible();
@@ -114,7 +119,7 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({ path: `${screenshotRoot}/terms-card-fa.png` });
-    await cards.getByRole('button', { name: text.edit, exact: true }).click();
+    await cards.getByRole('link', { name: text.edit, exact: true }).click();
     const raw = page.getByRole('textbox', { name: text.english, exact: true });
     await raw.fill('  Local unpublished terms  ');
     const form = page.locator('form').filter({ has: raw });
@@ -122,12 +127,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(raw).toContainText('  Local unpublished terms  ');
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.locator('#admintospage-field-1')).toHaveCount(1);
-    expect([reads, writes]).toEqual([1, 0]);
+    expect([reads, exactReads, writes]).toEqual([2, 2, 0]);
     status = 503;
     await page.getByRole('button', { name: text.refresh, exact: true }).click();
     await expect(form.locator('button[type=submit]')).toBeDisabled();
     await expect(raw).toContainText('Local unpublished terms');
-    await expect(cards.locator(':scope > li')).toHaveCount(2);
+    await expect(cards).toHaveCount(0);
     status = 200;
     await page.getByRole('button', { name: text.refresh, exact: true }).click();
     await expect(form.locator('button[type=submit]')).toBeEnabled();
@@ -251,6 +256,12 @@ for (const locale of ['en', 'fa'] as const) {
       reads++;
       return route.fulfill({ status, json: status === 200 ? [uploadPolicy] : {} });
     });
+    await page.route('**/api/admin/upload-policies?category=document', (route) => {
+      reads++;
+      return route.fulfill({ status, json: status === 200 ? [uploadPolicy] : {} });
+    });
+    const versionPath = `/admin/upload-policies/document/versions/${uploadPolicy.id}`;
+    await page.route(`**/api${versionPath}`, (route) => route.fulfill({ json: uploadPolicy }));
     await page.goto('/admin/upload-policies');
     await page.setViewportSize({ width: 900, height: 900 });
     const table = await desktop(page, label('catalogue'), locale, 1, 5);
@@ -260,13 +271,18 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(record.locator('td').nth(0)).not.toContainText('.docx');
     await expect(record).toContainText(`${locale === 'fa' ? '2' : '۲'} ${label('mib')}`);
     await expect(record).toContainText(label('configured'));
-    await record.locator('summary').click();
-    await expect(record.locator('details')).toHaveAttribute('open', '');
-    await expect(record.locator('time')).toHaveAttribute(
+    await record
+      .getByRole('link', { name: `${label('history')} · ${label('category.document')}` })
+      .click();
+    await expect(page).toHaveURL('/admin/upload-policies/document/history');
+    await page.getByRole('link', { name: label('version'), exact: true }).click();
+    await expect(page).toHaveURL(versionPath);
+    const time = page.getByRole('main').locator('time');
+    await expect(time).toHaveAttribute(
       'datetime',
       new Date(uploadPolicy.effectiveFrom).toISOString()
     );
-    await expect(record.locator('time')).toHaveText(
+    await expect(time).toHaveText(
       await formatBrowserDate(
         page,
         locale,
@@ -274,30 +290,30 @@ for (const locale of ['en', 'fa'] as const) {
         uploadPolicy.effectiveFrom
       )
     );
+    await expect(page.getByRole('main')).toContainText(uploadPolicy.createdBy);
+    await expect(page.getByRole('main')).toContainText(label('openEnded'));
+    const main = page.getByRole('main');
+    await main.getByRole('link', { name: label('title'), exact: true }).click();
     await page.setViewportSize({ width: 390, height: 844 });
     const cards = page.getByRole('list', { name: label('catalogue'), exact: true });
     const card = cards.locator(':scope > li');
     await expect(card).toHaveCount(1);
-    await expect(card.locator('details')).toHaveAttribute('open', '');
-    await expect(card).toContainText(uploadPolicy.createdBy);
-    await expect(card).toContainText(label('openEnded'));
-    expect(reads).toBe(3);
     expect(writes).toBe(0);
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({ path: `${screenshotRoot}/upload-card-fa.png` });
     await card
-      .getByRole('button', { name: `${label('edit')} ${label('category.document')}`, exact: true })
+      .getByRole('link', { name: `${label('edit')} ${label('category.document')}`, exact: true })
       .click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('main');
     const raw = dialog.locator('#upload-policy-size');
     await raw.fill('1.25');
+    const editorReads = reads;
     await page.setViewportSize({ width: 900, height: 900 });
-    await expect(dialog).toHaveCount(1);
     await expect(raw).toHaveValue('1.25');
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(raw).toHaveValue('1.25');
-    expect(reads).toBe(3);
+    expect(reads).toBe(editorReads);
     expect(writes).toBe(0);
     status = 503;
     await dialog.getByRole('button', { name: refresh, exact: true }).click();
@@ -308,27 +324,27 @@ for (const locale of ['en', 'fa'] as const) {
     await dialog.getByRole('button', { name: t('admin.jobs.reload', locale), exact: true }).click();
     await expect(dialog.getByRole('button', { name: label('save'), exact: true })).toBeEnabled();
     await dialog.getByRole('button', { name: label('cancel'), exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(page.getByRole('button', { name: refresh, exact: true })).toBeFocused();
-    await expect(card.locator('details')).toHaveAttribute('open', '');
-    await page.setViewportSize({ width: 900, height: 900 });
-    await expect(record.locator('details')).toHaveAttribute('open', '');
-    await page.setViewportSize({ width: 390, height: 844 });
-    await card
-      .getByRole('button', { name: `${label('edit')} ${label('category.document')}`, exact: true })
-      .click();
+    await expect(page).toHaveURL('/admin/upload-policies/document');
+    await expect(raw).toHaveCount(0);
+    await page.getByRole('link', { name: label('edit'), exact: true }).click();
+    await expect(raw).toBeVisible();
     pendingAccess = new Promise<void>((resolve) => {
       releaseAccess = resolve;
     });
     await dialog.getByRole('button', { name: refresh, exact: true }).click();
     await expect(dialog.getByRole('button', { name: refresh, exact: true })).toBeDisabled();
-    await dialog.getByRole('button', { name: label('cancel'), exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(
-      page.getByRole('heading', { name: label('title'), level: 1, exact: true })
-    ).toBeFocused();
     releaseAccess();
     pendingAccess = null;
+    await dialog.getByRole('button', { name: label('cancel'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/upload-policies/document');
+    await expect(raw).toHaveCount(0);
+    await expect(
+      page.getByRole('heading', {
+        name: `${label('details')} · ${label('category.document')}`,
+        level: 1,
+        exact: true,
+      })
+    ).toBeFocused();
     await expect(page.getByRole('button', { name: refresh, exact: true })).toBeEnabled();
     canEdit = false;
     await page.getByRole('button', { name: refresh, exact: true }).click();
@@ -336,7 +352,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('table,ol[role=list],#upload-policy-size')).toHaveCount(0);
     canEdit = true;
     await page.getByRole('button', { name: refresh, exact: true }).click();
-    await expect(card.locator('details')).not.toHaveAttribute('open', '');
+    await expect(page.getByRole('link', { name: label('edit'), exact: true })).toBeVisible();
     expect(writes).toBe(0);
   });
 }

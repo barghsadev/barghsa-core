@@ -55,3 +55,6 @@ export function validCancellationAmount(raw: string, available: string) {
     BigInt(raw) <= 9223372036854775807n
   );
 }
+export type ContractCancellationView =
+  | { action: 'request' | 'cancel' | 'reject' }
+  | { action: 'review-cancellation' | 'decline-cancellation'; requestId: string };

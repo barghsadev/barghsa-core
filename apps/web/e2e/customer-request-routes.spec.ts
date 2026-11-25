@@ -271,7 +271,7 @@ test('consultation list opens its request detail route', async ({ page }) => {
     submissions.push(route.request().postDataJSON() as Record<string, unknown>);
     return route.fulfill({ status: 201, json: { requestId: consultationId, status: 'submitted' } });
   });
-  await page.goto('/consultations');
+  await page.goto('/consultations/new');
   await page.getByRole('radio', { name: 'Site advice' }).check();
   await page
     .getByRole('checkbox', { name: 'I confirm this request is for the selected profile.' })

@@ -375,9 +375,7 @@ it.each(['en', 'fa'] as const)(
       expect(view.host.querySelector('label[for=solar-construction-note]')).not.toBeNull();
       const message = view.host.querySelector('#solar-construction-note-message')!;
       expect(message.textContent).toBe(copy('progressNoteInvalid', locale));
-      expect(message.parentElement?.querySelector('[aria-hidden=true]')?.textContent).toBe(
-        message.textContent
-      );
+      expect(message.parentElement?.querySelector('[aria-hidden=true]')).toBeNull();
       expect(view.previews).toEqual([]);
       await view.change('x'.repeat(1001));
       await view.submit();

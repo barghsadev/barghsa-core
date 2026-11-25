@@ -145,7 +145,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(route.request().postDataJSON()).toEqual({ password: 'Test-password' });
         return route.fulfill({ json: { verified: true } });
       });
-      await page.goto('/admin/invoices?invoiceId=' + invoiceId);
+      await page.goto(`/admin/invoices/${invoiceId}/refunds/wallet/new`);
       const panel = page.locator('#wallet-refunds-panel'),
         amount = panel.locator('#wallet-refund-amount'),
         reason = panel.locator('#wallet-refund-reason');
@@ -155,14 +155,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(amount).toHaveAttribute('aria-describedby', /.+/);
       await amount.fill('۴۰');
       await reason.fill('  Raw request reason  ');
-      await panel.locator('#wallet-refund-invoice').fill(refundId);
-      await expect(
-        panel.getByRole('button', { name: word('request'), exact: true })
-      ).toBeDisabled();
-      await expect(
-        panel.getByText(contractText('refundLoadInvoice', locale), { exact: true })
-      ).toBeVisible();
-      await panel.locator('#wallet-refund-invoice').fill(invoiceId);
+      await expect(panel.locator('#wallet-refund-invoice')).toHaveCount(0);
+      await expect(page).toHaveURL(`/admin/invoices/${invoiceId}/refunds/wallet/new`);
       await expect(amount).toHaveValue('۴۰');
       await panel.getByRole('button', { name: word('request'), exact: true }).click();
       const dialog = page.getByRole('dialog'),
@@ -294,15 +288,20 @@ for (const locale of ['en', 'fa'] as const)
         state = 'Completed';
         return route.fulfill({ json: row() });
       });
-      await page.goto('/admin/invoices?invoiceId=' + invoiceId);
+      await page.goto(`/admin/invoices/${invoiceId}/refunds/bank/new`);
       const panel = page.locator('#external-refunds-panel'),
         amount = panel.locator('#external-refund-amount'),
         reason = panel.locator('#external-refund-reason'),
         decisionReason = panel.locator('#external-refund-reason-' + refundId),
         reference = panel.locator('#refund-bank-reference-' + refundId);
-      await expect(reference).toBeVisible();
       await amount.fill('۴۰');
       await reason.fill('  Companion request  ');
+      await page.getByTestId('invoice-refund-view-requests').click();
+      const backToHistory = page.getByTestId('invoice-refund-back-to-history');
+      const cancelLink = page.getByTestId(`invoice-refund-cancel-${refundId}`);
+      const transferLink = page.getByTestId(`invoice-refund-record-transfer-${refundId}`);
+      await expect(reference).toHaveCount(0);
+      await cancelLink.click();
       await panel.getByRole('button', { name: shared('cancel'), exact: true }).click();
       await expect(decisionReason).toBeFocused();
       await decisionReason.fill('  Decline return  ');
@@ -310,13 +309,21 @@ for (const locale of ['en', 'fa'] as const)
       const dialog = page.getByRole('dialog');
       await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
       await expect(decisionReason).toHaveValue('  Decline return  ');
+      await backToHistory.click();
+      await transferLink.click();
+      await expect(decisionReason).toHaveCount(0);
       await panel.getByRole('button', { name: bank('record-transfer'), exact: true }).click();
       await expect(reference).toBeFocused();
       await reference.fill('  BANK-123  ');
       await panel.getByRole('button', { name: bank('record-transfer'), exact: true }).click();
       await expect(reference).toHaveAttribute('aria-invalid', 'true');
       await expect(reference).toBeFocused();
+      await backToHistory.click();
+      await cancelLink.click();
       await expect(decisionReason).toHaveValue('  Decline return  ');
+      await backToHistory.click();
+      await transferLink.click();
+      await expect(reference).toHaveValue('  BANK-123  ');
       await panel.getByRole('button', { name: bank('record-transfer'), exact: true }).click();
       const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
       await expect(confirm).toBeDisabled();
@@ -327,7 +334,7 @@ for (const locale of ['en', 'fa'] as const)
         await expect(
           panel.getByText(confirmationText('unconfirmed', locale), { exact: true })
         ).toBeVisible();
-        await expect(amount).toHaveValue('۴۰');
+        await expect(amount).toHaveCount(0);
         await expect(reference).toHaveValue('  BANK-123  ');
         expect(transferAttempts).toBe(index + 1);
         const record = panel.getByRole('button', { name: bank('record-transfer'), exact: true });
@@ -342,8 +349,8 @@ for (const locale of ['en', 'fa'] as const)
       }
       await confirm.click();
       await expect(dialog).toHaveCount(0);
+      await page.getByTestId(`invoice-refund-reconcile-${refundId}`).click();
       await expect(panel.getByText(bank('secondReviewer'), { exact: true })).toBeVisible();
-      await expect(reason).toHaveValue('  Companion request  ');
       await reference.fill('BANK-WRONG');
       await panel.getByRole('button', { name: bank('reconcile'), exact: true }).click();
       await expect(reference).toBeFocused();
@@ -357,12 +364,14 @@ for (const locale of ['en', 'fa'] as const)
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(panel.getByText(shared('state.Completed'), { exact: true })).toBeVisible();
+      await backToHistory.click();
+      await page.getByTestId('invoice-refund-new').click();
       await expect(amount).toHaveValue('۴۰');
       await expect(reason).toHaveValue('  Companion request  ');
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*\bdark\b)/);
       await finishLayout(page, '#external-refunds-panel', locale);
     });
-    test(`refund queue corrects references and binds confirmation to a financial review (${locale}, ${dark ? 'dark' : 'light'})`, async ({
+    test(`contract refund form corrects references and binds confirmation to a financial review (${locale}, ${dark ? 'dark' : 'light'})`, async ({
       page,
     }) => {
       await shell(page, locale, dark);
@@ -375,12 +384,8 @@ for (const locale of ['en', 'fa'] as const)
       const heldReply = new Promise<void>((resolve) => {
         releaseReply = resolve;
       });
-      await page.route('**/api/admin/contracts?*', (route) =>
-        route.fulfill({ json: { contracts: [], nextBefore: null } })
-      );
       await page.route('**/api/admin/wallet-refunds/contract-obligations', (route) =>
         route.fulfill({
-          status: reads,
           json: {
             obligations: [
               {
@@ -389,9 +394,8 @@ for (const locale of ['en', 'fa'] as const)
                 invoiceId,
                 amount: '40',
                 destination: 'external_bank',
-                state,
-                bankReference: state === 'Processing' ? 'BANK-123' : null,
-                nextAttemptAt: null,
+                state: 'Approved',
+                bankReference: null,
                 exhausted: false,
                 orderId: null,
               },
@@ -400,6 +404,38 @@ for (const locale of ['en', 'fa'] as const)
           },
         })
       );
+      await page.route('**/api/admin/external-refunds?*', (route) => {
+        expect(new URL(route.request().url()).searchParams.get('refundId')).toBe(refundId);
+        return route.fulfill({
+          status: reads,
+          json: {
+            invoice: {
+              invoiceId,
+              profileId: '33333333-3333-4333-8333-333333333333',
+              state: 'Paid',
+              paidAmount: '100',
+              refundedAmount: '0',
+              reservedAmount: '40',
+              availableAmount: '60',
+              requestable: true,
+            },
+            refunds: [
+              {
+                id: refundId,
+                invoiceId,
+                amount: '40',
+                destination: 'external_bank',
+                state,
+                bankReference: state === 'Processing' ? 'BANK-123' : null,
+                reconciliationStatus: state === 'Processing' ? 'Pending' : null,
+                approvalRequestId: null,
+                retry: null,
+              },
+            ],
+            nextBefore: null,
+          },
+        });
+      });
       await page.route(
         `**/api/admin/external-refunds/${refundId}/record-transfer/review`,
         (route) => {
@@ -450,9 +486,12 @@ for (const locale of ['en', 'fa'] as const)
           });
         }
       );
-      await page.goto('/admin/contracts');
-      const queue = page.locator('#refund-obligations'),
-        reference = queue.locator('#bank-return-' + refundId),
+      await page.goto('/admin/contracts/refunds');
+      await page
+        .getByRole('link', { name: word('cancellation.queue.record-transfer'), exact: true })
+        .click();
+      const queue = page.locator('#external-refunds-panel'),
+        reference = queue.locator('#refund-bank-reference-' + refundId),
         button = queue.getByRole('button', {
           name: word('cancellation.queue.record-transfer'),
           exact: true,
@@ -466,7 +505,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(reference).toHaveValue('  BANK-123  ');
       await expect(reference).toBeDisabled();
       reads = 200;
-      await queue.getByRole('button', { name: word('retry'), exact: true }).click();
+      await queue.getByRole('button', { name: word('refresh'), exact: true }).click();
       await expect(reference).toBeEnabled();
       await button.click();
       await expect(reference).toHaveAttribute('aria-invalid', 'true');
@@ -493,12 +532,12 @@ for (const locale of ['en', 'fa'] as const)
         queue.getByText(confirmationText('unconfirmed', locale), { exact: true })
       ).toBeVisible();
       await expect(
-        queue.getByRole('button', { name: word('cancellation.queue.reconcile'), exact: true })
+        queue.getByRole('link', { name: word('cancellation.queue.reconcile'), exact: true })
       ).toBeVisible();
       releaseReply();
       expect(commandAttempts).toBe(2);
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*\bdark\b)/);
-      await finishLayout(page, '#refund-obligations', locale);
+      await finishLayout(page, '#external-refunds-panel', locale);
       if (locale === 'fa' && dark && test.info().project.name === 'mobile-safari')
         await page.screenshot({ path: test.info().outputPath('refunds-fa-dark-mobile.png') });
     });
@@ -520,7 +559,7 @@ for (const locale of ['en', 'fa'] as const)
       previews++;
       return route.fulfill({ status: 500, json: {} });
     });
-    await page.goto('/admin/invoices?invoiceId=' + invoiceId);
+    await page.goto(`/admin/invoices/${invoiceId}/refunds/wallet/new`);
     const panel = page.locator('#wallet-refunds-panel');
     await panel.locator('#wallet-refund-amount').fill('40');
     await panel.locator('#wallet-refund-reason').fill('Retained request');
@@ -573,27 +612,22 @@ for (const locale of ['en', 'fa'] as const)
       commits++;
       return route.fulfill({ status: 500, json: {} });
     });
-    await page.goto('/admin/invoices');
-    const open = page.getByRole('button', {
-      name: contractText('refundOpen', locale),
-      exact: true,
-    });
-    await expect(open).toBeVisible();
+    await page.goto('/admin/invoices/tools');
+    const locator = page.locator('form').filter({ has: page.locator('#tools-invoice-id') });
+    await expect(locator).toBeVisible();
     await expect(page.locator('#wallet-refunds-panel')).toHaveCount(0);
     expect(workspaceLoads).toBe(0);
-    await open.click();
+    await locator.locator('#tools-invoice-id').fill(invoiceId);
+    await locator.locator('select').selectOption('refunds');
+    await locator.locator('button[type=submit]').click();
+    await expect(page).toHaveURL(`/admin/invoices/${invoiceId}/refunds/wallet`);
+    await page.getByTestId('invoice-refund-new').click();
     const panel = page.locator('#wallet-refunds-panel'),
       request = panel.getByRole('button', {
         name: adminText('admin.invoices.walletRefunds.request', locale),
         exact: true,
       });
-    await panel.locator('#wallet-refund-invoice').fill(invoiceId);
-    await panel
-      .getByRole('button', {
-        name: adminText('admin.invoices.walletRefunds.load', locale),
-        exact: true,
-      })
-      .click();
+
     await panel.locator('#wallet-refund-amount').fill('۴۰');
     await panel.locator('#wallet-refund-reason').fill('  Retained request  ');
     await request.click();

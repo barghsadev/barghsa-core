@@ -1,3 +1,4 @@
+import { manualRecordDateTime, selectRecordDateTime } from './record-date-time-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -101,21 +102,28 @@ for (const [locale, theme] of [
       .click();
   }
   async function refresh(page: Page) {
-    await page
-      .getByRole('region', { name: word('staffTitle'), exact: true })
+    await terms(page)
       .getByRole('button', { name: word('refresh'), exact: true })
       .first()
       .click();
   }
   async function lockedWorkspace(page: Page, reads: string[]) {
     const count = reads.length;
-    const refreshes = page.getByRole('button', { name: word('refresh'), exact: true });
-    for (const button of await refreshes.all()) {
-      await expect(button).toBeDisabled();
-      await button.dispatchEvent('click');
-    }
-    await expect(page.locator('#contracts-number')).toBeDisabled();
-    await page.locator('#contracts-number').locator('xpath=ancestor::form').dispatchEvent('submit');
+    const path = page.url();
+    const back = page.getByRole('link', {
+      name:
+        path.endsWith('/new') && !path.includes('/amendments/')
+          ? word('backToContracts')
+          : path.includes('/amendments/') ||
+              path.endsWith('/edit') ||
+              path.endsWith('/service-dates')
+            ? word('backToContract')
+            : word('backToContracts'),
+      exact: true,
+      includeHidden: true,
+    });
+    await back.dispatchEvent('click');
+    await expect(page).toHaveURL(path);
     expect(reads).toHaveLength(count);
   }
   async function outcomeCapture(page: Page, text: string, path: string) {
@@ -134,7 +142,7 @@ for (const [locale, theme] of [
     const release = await holdSchema(page);
     state.holdChoices = true;
     await page.goto('/admin/contracts');
-    await page.getByRole('button', { name: word('draftCreate'), exact: true }).click();
+    await page.getByRole('link', { name: word('draftCreate'), exact: true }).click();
     await expect.poll(() => !!state.heldChoices).toBe(true);
     const oldChoices = state.heldChoices!;
     state.holdChoices = false;
@@ -175,7 +183,6 @@ for (const [locale, theme] of [
     );
     await draftField(page, 'variableContractDescription').fill('  Hidden variable draft  ');
     await draftField(page, 'statedContractValue').selectOption('fixed');
-    await page.locator('#contracts-number').fill('  23  ');
     const reason = draftField(page, 'contextReason');
     await reason.fill('x'.repeat(1001));
     await draftField(page, 'titleField').focus();
@@ -239,7 +246,7 @@ for (const [locale, theme] of [
     await expect(retry(page)).toBeEnabled();
     await expect(reason).toBeDisabled();
     await lockedWorkspace(page, state.reads);
-    await expect(page.locator('#contracts-number')).toHaveValue('23');
+    await expect(page.locator('#contracts-number')).toHaveCount(0);
     await draftForm(page).dispatchEvent('submit');
     expect(state.writes).toHaveLength(count);
     state.heldWrite = undefined;
@@ -279,9 +286,10 @@ for (const [locale, theme] of [
       true
     );
     expect(state.verifications.length).toBeGreaterThan(0);
-    await page.getByRole('button', { name: rowName(2), exact: true }).click();
+    await page.getByRole('link', { name: word('backToContracts'), exact: true }).click();
+    await page.getByRole('link', { name: rowName(2), exact: true }).click();
     await terms(page)
-      .getByRole('button', { name: word('draftEdit'), exact: true })
+      .getByRole('link', { name: word('draftEdit'), exact: true })
       .click();
     await expect(draftField(page, 'draftTerms')).toHaveValue(originalContent.text);
     for (const key of ['titleField', 'draftTerms'])
@@ -311,7 +319,7 @@ for (const [locale, theme] of [
     // A current authorized-read denial withdraws the selected private source, without echoing server text.
     state.denied = true;
     await refresh(page);
-    await expect(terms(page)).toHaveCount(0);
+    await expect(terms(page).getByRole('alert')).toContainText(word('error'));
     await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Revised imported delivery terms'
     );
@@ -327,12 +335,13 @@ for (const [locale, theme] of [
     const { state, persist, error } = fixture;
     const release = await holdSchema(page);
     await page.goto('/admin/contracts');
-    await page.getByRole('button', { name: rowName(2), exact: true }).click();
+    await page.getByRole('link', { name: rowName(2), exact: true }).click();
     await terms(page)
-      .getByRole('button', { name: word('editContext'), exact: true })
+      .getByRole('link', { name: word('editContext'), exact: true })
       .click();
-    const start = page.locator('#contract-context-start'),
-      end = page.locator('#contract-context-end'),
+    await expect(page).toHaveURL(/\/service-dates$/);
+    const start = await manualRecordDateTime(page, 'contract-context-start'),
+      end = await manualRecordDateTime(page, 'contract-context-end'),
       invoice = page.locator('#contract-context-invoice'),
       reason = page.locator('#contract-context-reason');
     const contextSubmit = contextForm(page).locator('button[type=submit]');
@@ -342,6 +351,9 @@ for (const [locale, theme] of [
       await expect(optional).not.toHaveAttribute('aria-required', 'true');
     await expect(start).toHaveValue('2030-01-02T11:30');
     await expect(end).toHaveValue('2030-01-03T11:30');
+    await contextForm(page)
+      .getByRole('button', { name: tContractAuthoring('invoiceEnterId', locale) })
+      .click();
     await invoice.fill('invalid-invoice');
     await reason.fill('  Keep the original seconds  ');
     await end.focus();
@@ -371,7 +383,9 @@ for (const [locale, theme] of [
     await expect(end).toHaveValue('2030-01-03T11:30');
     await expect(reason).toHaveValue('  Keep the original seconds  ');
     await invoice.fill(invoiceId.toUpperCase());
-    await end.fill('2030-01-04T11:30');
+    await page.locator('button[aria-controls="date-time-entry-contract-context-end"]').click();
+    await selectRecordDateTime(page, 'contract-context-end', '2030-01-04T11:30', locale);
+    await manualRecordDateTime(page, 'contract-context-end');
     state.heldWrite = undefined;
     await contextSubmit.click();
     await confirm(page);
@@ -431,24 +445,25 @@ for (const [locale, theme] of [
     expect(state.effects).toBe(1);
     for (const command of state.writes.slice(capturedIndex)) expect(command.raw).toBe(captured.raw);
     await terms(page)
-      .getByRole('button', { name: word('editContext'), exact: true })
+      .getByRole('link', { name: word('editContext'), exact: true })
       .click();
     await expect(contextForm(page)).toContainText('UTC');
+    await manualRecordDateTime(page, 'contract-context-start');
+    await manualRecordDateTime(page, 'contract-context-end');
     await expect(start).toHaveValue('2030-01-02T08:00');
     await expect(end).toHaveValue('2030-01-04T08:00');
-    await terms(page)
-      .getByRole('button', { name: word('editContext'), exact: true })
-      .click();
+    await page.getByRole('link', { name: word('backToContract'), exact: true }).click();
+    await expect(page).not.toHaveURL(/\/service-dates$/);
     const baseVersion = state.currentVersionId;
     expect(baseVersion).not.toBe(draftVersionId);
     fixture.acceptCurrent();
     await refresh(page);
     await expect(terms(page)).toContainText(word('Accepted'));
     await expect(
-      terms(page).getByRole('button', { name: word('amendmentCreate'), exact: true })
+      terms(page).getByRole('link', { name: word('amendmentCreate'), exact: true })
     ).toBeEnabled();
     await terms(page)
-      .getByRole('button', { name: word('amendmentCreate'), exact: true })
+      .getByRole('link', { name: word('amendmentCreate'), exact: true })
       .click();
     await draftField(page, 'statedContractValue').selectOption('variable');
     await draftField(page, 'variableContractDescription').fill('  Indexed delivery value  ');

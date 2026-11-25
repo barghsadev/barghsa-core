@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { completeOtp, mockOtpStepUp } from './otp-step-up-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { staffAccess, staffRoles, staffUser } from '../src/test/staff-directory-fixtures';
@@ -71,6 +72,20 @@ for (const locale of ['en', 'fa'] as const) {
             },
           })
     );
+    await page.route('**/api/admin/staff/accounts/target', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'target',
+          username: 'target@example.test',
+          firstName: 'Target',
+          lastName: 'Staff',
+          roles: [],
+          status: 'active',
+          isAdmin: false,
+          lastLoginAt: null,
+        },
+      })
+    );
     const auth = await mockOtpStepUp(page);
     await page.route('**/api/admin/users/target/roles', (route) => {
       attempts.push(route.request().postDataJSON());
@@ -95,8 +110,9 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
     ).toHaveCount(0);
+    await page.getByRole('link', { name: 'Target Staff', exact: true }).click();
     await page
-      .getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
+      .getByRole('link', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
       .click();
     await page.locator('form summary').click();
     await page.getByRole('checkbox', { name: fa ? /مالی/ : /Finance/ }).check();
@@ -253,20 +269,48 @@ for (const locale of ['en', 'fa'] as const) {
         },
       });
     });
-    await page.goto('/admin/users');
+    await page.route(`**/api/admin/staff/accounts/${target}`, (route) =>
+      route.fulfill({ json: { ...staffUser, userId: target, username: 'history@example.test' } })
+    );
+    await page.goto(`/admin/users/${target}`);
     await page
-      .locator('table:visible tbody tr, ol[role=list]:visible > li')
-      .filter({ hasText: 'history@example.test' })
       .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
       .click();
     const history = page.getByRole('region', {
       name: fa ? 'تاریخچه مجوزها' : 'Permission history',
       exact: true,
     });
+    const filterLabel = appText('historyFilters.label', locale);
+    const openFilters = () =>
+      history.getByRole('button', { name: filterLabel, exact: true }).click();
+    const drawer = page.getByRole('dialog', { name: filterLabel, exact: true });
+    const from = drawer.getByRole('combobox', {
+      name: appText('historyDates.start', locale),
+      exact: true,
+    });
+    const to = drawer.getByRole('combobox', {
+      name: appText('historyDates.end', locale),
+      exact: true,
+    });
+    const apply = drawer.getByRole('button', {
+      name: appText('historyFilters.apply', locale),
+      exact: true,
+    });
+    const cancel = drawer.getByRole('button', {
+      name: appText('historyFilters.cancel', locale),
+      exact: true,
+    });
+    const preset = drawer.getByRole('combobox', {
+      name: appText('historyDates.preset', locale),
+      exact: true,
+    });
     // Load timezone Date subclasses before Playwright replaces Date.prototype.
     await page.clock.setFixedTime(new Date('2026-03-21T12:00:00Z'));
     await expect(history.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#staff-audit-from')).toBeDisabled();
+    await openFilters();
+    await expect(from).toBeDisabled();
+    await expect(preset).toBeDisabled();
+    await cancel.click();
     failTimezone = false;
     fail = false;
     await history.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
@@ -296,7 +340,23 @@ for (const locale of ['en', 'fa'] as const) {
     await page.evaluate(() => document.documentElement.classList.remove('dark'));
     await history.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
-    await page.locator('#staff-audit-from').click();
+    const readsBeforeDraft = queries.length;
+    await openFilters();
+    await expect(drawer).toContainText('Asia/Tehran');
+    await drawer.evaluate(async (node) => {
+      await Promise.all(
+        node.getAnimations().map((animation) => animation.finished.catch(() => {}))
+      );
+    });
+    expect(
+      (await new AxeBuilder({ page }).include('[data-slot="sheet-content"]').analyze()).violations
+    ).toEqual([]);
+    await preset.selectOption('last7');
+    await cancel.click();
+    expect(queries).toHaveLength(readsBeforeDraft);
+    await openFilters();
+    await expect(preset).toHaveValue('custom');
+    await from.click();
     const calendar = page.locator('[data-slot="calendar"]');
     await expect(
       calendar.getByRole('button', { name: fa ? 'رفتن به ماه بعد' : 'Go to the Next Month' })
@@ -309,31 +369,32 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.locator('[data-slot="calendar"] .rdp-today button').click();
     await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
-    await page.locator('#staff-audit-to').click();
+    await to.click();
     await page.locator('[data-slot="calendar"] .rdp-today button').click();
     await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
-    await history
-      .getByRole('button', { name: fa ? 'اعمال فیلتر' : 'Apply filters', exact: true })
-      .click();
+    expect(queries).toHaveLength(readsBeforeDraft);
+    await apply.click();
     await expect.poll(() => queries.at(-1)?.get('from')).not.toBeNull();
     const expected = { from: '2026-03-20T20:30:00.000Z', to: '2026-03-21T20:29:59.999Z' };
-    await expect(history).toContainText('Asia/Tehran');
     expect(queries.at(-1)?.get('from')).toBe(expected.from);
     expect(queries.at(-1)?.get('to')).toBe(expected.to);
     expect(queries.at(-1)?.get('offset')).toBe('0');
-    await page.locator('#staff-audit-from').click();
+    expect(queries).toHaveLength(readsBeforeDraft + 1);
+    await openFilters();
+    await from.click();
     await expect(calendar.locator('.rdp-today button')).toHaveAccessibleName(
       fa ? /انتخاب شده$/ : /selected$/
     );
     await page.locator('[data-slot="calendar"] .rdp-today button').press('ArrowDown');
     await page.keyboard.press('Enter');
     await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
-    await expect(
-      history.getByRole('button', { name: fa ? 'اعمال فیلتر' : 'Apply filters', exact: true })
-    ).toBeDisabled();
-    await expect(history.getByRole('alert')).toBeVisible();
+    await apply.click();
+    await expect(to).toHaveAccessibleDescription(appText('historyDates.invalid', locale));
+    await expect(to).toBeFocused();
+    expect(queries).toHaveLength(readsBeforeDraft + 1);
+    await cancel.click();
     await history
-      .getByRole('button', { name: fa ? 'پاک کردن تاریخ‌ها' : 'Clear dates', exact: true })
+      .getByRole('button', { name: appText('historyFilters.clearAll', locale), exact: true })
       .click();
     await expect.poll(() => queries.at(-1)?.get('from')).toBeNull();
     await expect.poll(() => queries.at(-1)?.get('to')).toBeNull();
@@ -423,7 +484,21 @@ for (const locale of ['en', 'fa'] as const) {
           })
         : route.fulfill({ json: attempts === 2 ? { ok: true } : { deliveryStatus: 'queued' } });
     });
-    await page.goto('/admin/users');
+    await page.route('**/api/admin/staff/accounts/pending', (route) =>
+      route.fulfill({
+        json: {
+          ...staffUser,
+          userId: 'pending',
+          username: 'pending@example.test',
+          firstName: 'Pending',
+          lastName: 'Staff',
+          roles: [],
+          activationPending: true,
+          activationExpiresAt: '2026-01-01T00:00:00Z',
+        },
+      })
+    );
+    await page.goto('/admin/users/pending');
     await page
       .getByRole('button', {
         name: fa ? 'ارسال دوباره فعال‌سازی' : 'Resend activation',
@@ -481,17 +556,15 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/staff-role-options', (route) =>
       route.fulfill({ json: staffRoles })
     );
-    await page.route('**/api/admin/staff?*', (route) =>
-      route.fulfill({
-        json: { items: [{ ...staffUser, status: disabled ? 'disabled' : 'active' }], total: 1 },
-      })
+    await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+      route.fulfill({ json: { ...staffUser, status: disabled ? 'disabled' : 'active' } })
     );
     await page.route(`**/api/admin/staff/${staffUser.userId}/disable`, (route) => {
       expect(route.request().method()).toBe('POST');
       writes++;
       disabled = true;
     });
-    await page.goto('/admin/users');
+    await page.goto(`/admin/users/${staffUser.userId}`);
     const disable = page.getByRole('button', { name: text('disable'), exact: true });
     const refresh = page.getByRole('button', { name: text('refresh'), exact: true });
     const dialog = page.getByRole('dialog');

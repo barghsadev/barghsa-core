@@ -11,6 +11,7 @@ export function DeliveryProviderTable<T extends { id: string; label: string }>({
   actionHeader,
   fields,
   renderActions,
+  renderLabel,
   loading,
   emptyMessage,
   tableClassName,
@@ -21,7 +22,8 @@ export function DeliveryProviderTable<T extends { id: string; label: string }>({
   labelHeader: string;
   actionHeader: string;
   fields: { id: string; label: string; render: (row: T) => ReactNode }[];
-  renderActions: (row: T) => ReactNode;
+  renderActions?: (row: T) => ReactNode;
+  renderLabel?: (row: T) => ReactNode;
   loading: boolean;
   emptyMessage: string;
   tableClassName: string;
@@ -53,7 +55,7 @@ export function DeliveryProviderTable<T extends { id: string; label: string }>({
           {
             id: 'label',
             header: labelHeader,
-            cell: (row) => <TextCell value={row.label} />,
+            cell: (row) => (renderLabel ? renderLabel(row) : <TextCell value={row.label} />),
             rowHeader: true,
             cellClassName: 'p-3 align-top font-medium',
           },
@@ -63,17 +65,21 @@ export function DeliveryProviderTable<T extends { id: string; label: string }>({
             cell: field.render,
             cellClassName: 'p-3 align-top',
           })),
-          {
-            id: 'actions',
-            header: actionHeader,
-            cell: renderActions,
-            cellClassName: 'p-3 align-top',
-          },
+          ...(renderActions
+            ? [
+                {
+                  id: 'actions',
+                  header: actionHeader,
+                  cell: renderActions,
+                  cellClassName: 'p-3 align-top',
+                },
+              ]
+            : []),
         ]}
         renderCard={(row) => (
           <div className="min-w-0 space-y-3 [overflow-wrap:anywhere]">
             <h2 className="font-semibold">
-              <TextCell value={row.label} />
+              {renderLabel ? renderLabel(row) : <TextCell value={row.label} />}
             </h2>
             <dl className="space-y-3 text-sm">
               {fields.map((field) => (
@@ -83,7 +89,7 @@ export function DeliveryProviderTable<T extends { id: string; label: string }>({
                 </div>
               ))}
             </dl>
-            {renderActions(row)}
+            {renderActions?.(row)}
           </div>
         )}
       />

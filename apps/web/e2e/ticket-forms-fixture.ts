@@ -206,7 +206,9 @@ export async function setupTicketForms(page: Page, locale: 'en' | 'fa', staff: b
           { id: otherProfileId, title: 'Second owned profile' },
         ],
         records:
-          chosen === profileId ? [{ id: relatedId, type: 'contract', created_at: instant }] : [],
+          chosen === profileId
+            ? [{ id: relatedId, type: 'contract', created_at: instant, contractNumber: '10482' }]
+            : [],
         hasMoreRecords: false,
       },
     });
@@ -448,6 +450,12 @@ export async function setupTicketForms(page: Page, locale: 'en' | 'fa', staff: b
                 ...structuredClone(ticket),
                 ...(staff
                   ? {
+                      viewer: {
+                        userId: state.actor,
+                        canWrite: true,
+                        canAssignOthers: true,
+                        canApproveClosure: true,
+                      },
                       customer: {
                         userId: customerActor,
                         username: 'masked-customer',

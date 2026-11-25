@@ -60,9 +60,17 @@ for (const locale of ['en', 'fa'] as const)
               : {},
         });
       });
-      await page.route('**/api/admin/ai-models/*', (route) => {
+      await page.route(`**/api/admin/ai-models/${model.id}`, (route) => {
         if (route.request().method() !== 'GET') writes++;
-        return route.fulfill({ status: 404, json: {} });
+        return route.fulfill({
+          status: modelStatus,
+          json:
+            modelStatus === 200
+              ? unsafePayload
+                ? { ...model, apiToken: privateToken }
+                : model
+              : {},
+        });
       });
       let releaseAgentRead!: () => void;
       const agentGate = new Promise<void>((resolve) => {
@@ -94,7 +102,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       await page.route(`**/api/admin/agents/${agent.id}`, (route) => {
         if (route.request().method() !== 'GET') writes++;
-        return route.fulfill({ json: agent });
+        return route.fulfill({ status: agentStatus, json: agentStatus === 200 ? agent : {} });
       });
       const number = new Intl.NumberFormat(locale, { numberingSystem: numerals });
       const dollars = new Intl.NumberFormat(locale, {
@@ -151,22 +159,15 @@ for (const locale of ['en', 'fa'] as const)
       await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
       await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(before.left);
       await page.setViewportSize({ width: 1280, height: 900 });
-      await modelRow.getByRole('button', { name: modelText('edit'), exact: true }).press('Enter');
+      await modelRow.getByRole('link', { name: modelText('edit'), exact: true }).press('Enter');
       const modelDraft = page.locator('#ai-model-title');
       await expect(modelDraft).toHaveValue(model.title);
       await modelDraft.fill('Retained model draft');
       await page.setViewportSize({ width: 390, height: 844 });
       const modelCards = page.getByRole('list', { name: modelCaption, exact: true });
-      await expect(modelCards).toBeVisible();
+      await expect(modelCards).toHaveCount(0);
       await expect(modelTable).toHaveCount(0);
       await expect(modelDraft).toHaveValue('Retained model draft');
-      await expect(modelCards.getByRole('listitem').first()).toContainText(dollars.format(1.25));
-      await expect(
-        modelCards
-          .getByRole('listitem')
-          .nth(1)
-          .getByRole('button', { name: modelText('enable'), exact: true })
-      ).toBeDisabled();
       await expect(page.locator('main[data-area=admin]')).not.toContainText(privateToken);
       await expect(page.locator('main[data-area=admin] script')).toHaveCount(0);
       modelStatus = 503;
@@ -174,25 +175,37 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         page.getByRole('button', { name: modelText('retry'), exact: true })
       ).toBeVisible();
-      const modelControls = modelCards.getByRole('button');
-      expect(await modelControls.count()).toBe(10);
-      for (const control of await modelControls.all()) await expect(control).toBeDisabled();
+      const saveModel = page.getByRole('button', { name: modelText('save'), exact: true });
+      await expect(saveModel).toBeDisabled();
       await expect(modelDraft).toHaveValue('Retained model draft');
       modelStatus = 200;
       await page.getByRole('button', { name: modelText('retry'), exact: true }).click();
-      await expect(modelControls.first()).toBeEnabled();
+      await expect(saveModel).toBeEnabled();
       unsafePayload = true;
       await page.getByRole('button', { name: modelText('refresh'), exact: true }).click();
       await expect(
         page.getByRole('button', { name: modelText('retry'), exact: true })
       ).toBeVisible();
-      await expect(modelControls.first()).toBeDisabled();
+      await expect(saveModel).toBeDisabled();
       await expect(modelDraft).toHaveValue('Retained model draft');
       await expect(page.locator('main[data-area=admin]')).not.toContainText(privateToken);
       unsafePayload = false;
       await page.getByRole('button', { name: modelText('retry'), exact: true }).click();
-      await expect(modelControls.first()).toBeEnabled();
+      await expect(saveModel).toBeEnabled();
       await page.getByRole('button', { name: modelText('cancel'), exact: true }).click();
+      await expect(page).toHaveURL(`/admin/ai-models/${model.id}`);
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: modelText('title'), exact: true })
+        .click();
+      await expect(modelCards).toBeVisible();
+      await expect(modelCards.getByRole('listitem').first()).toContainText(dollars.format(1.25));
+      await expect(
+        modelCards
+          .getByRole('listitem')
+          .nth(1)
+          .getByRole('button', { name: modelText('enable'), exact: true })
+      ).toBeDisabled();
       await modelCards
         .getByRole('listitem')
         .first()
@@ -234,32 +247,37 @@ for (const locale of ['en', 'fa'] as const)
       await expect(agentTable.locator('tbody tr').nth(1).locator('dd').first()).toHaveText('—');
       await inspect('agent-table-desktop.png');
       await agentRow
-        .getByRole('button', { name: `${agentText('edit')} ${agent.title}`, exact: true })
+        .getByRole('link', { name: `${agentText('edit')} ${agent.title}`, exact: true })
         .press('Enter');
       const agentDraft = page.locator('#agent-title');
       await expect(agentDraft).toHaveValue(agent.title);
       await agentDraft.fill('Retained agent draft');
       await page.setViewportSize({ width: 390, height: 844 });
       const agentCards = page.getByRole('list', { name: agentText('title'), exact: true });
-      await expect(agentCards).toBeVisible();
+      await expect(agentCards).toHaveCount(0);
       await expect(agentTable).toHaveCount(0);
       await expect(agentDraft).toHaveValue('Retained agent draft');
-      await expect(agentCards.getByRole('listitem').first().locator('dd').first()).toHaveText(
-        number.format(12)
-      );
       agentStatus = 503;
       await page.getByRole('button', { name: agentText('refresh'), exact: true }).click();
       await expect(
-        page.getByRole('button', { name: agentText('retry'), exact: true })
+        page.getByRole('button', { name: agentText('detailRetry'), exact: true })
       ).toBeVisible();
-      const agentControls = agentCards.getByRole('button');
-      expect(await agentControls.count()).toBe(4);
-      for (const control of await agentControls.all()) await expect(control).toBeDisabled();
+      const saveAgent = page.getByRole('button', { name: agentText('save'), exact: true });
+      await expect(saveAgent).toBeDisabled();
       await expect(agentDraft).toHaveValue('Retained agent draft');
       agentStatus = 200;
-      await page.getByRole('button', { name: agentText('retry'), exact: true }).click();
-      await expect(agentControls.first()).toBeEnabled();
+      await page.getByRole('button', { name: agentText('detailRetry'), exact: true }).click();
+      await expect(saveAgent).toBeEnabled();
       await page.getByRole('button', { name: agentText('cancel'), exact: true }).click();
+      await expect(page).toHaveURL(`/admin/agents/${agent.id}`);
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: agentText('title'), exact: true })
+        .click();
+      await expect(agentCards).toBeVisible();
+      await expect(agentCards.getByRole('listitem').first().locator('dd').first()).toHaveText(
+        number.format(12)
+      );
       await agentCards
         .getByRole('listitem')
         .first()

@@ -3,9 +3,9 @@ import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { mockOtpStepUp } from './otp-step-up-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { productionManifest } from './production-manifest';
 import { t } from '@barghsa/i18n/admin-ui';
 import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
-import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { staffAccess, staffRoles, staffUser } from '../src/test/staff-directory-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
 const email = {
@@ -39,6 +39,13 @@ for (const locale of ['en', 'fa'] as const)
         page,
       }, info) => {
         await crmShell(page, locale);
+        const manifest = await productionManifest();
+        const codePromptChunk = manifest['src/components/StepUpAuthGate.tsx'].file;
+        const codePromptRequests: string[] = [];
+        page.on('request', (request) => {
+          if (new URL(request.url()).pathname.endsWith(`/${codePromptChunk}`))
+            codePromptRequests.push(request.url());
+        });
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
             json: {
@@ -98,24 +105,10 @@ for (const locale of ['en', 'fa'] as const)
           await page.route(`**/api/admin/${action}-providers/${action}`, (route) =>
             mutate(route, { ...(action === 'email' ? email : sms), label: 'Reviewed change' })
           );
-          await page.goto('/admin/providers');
-          if (action === 'email') {
-            await page
-              .getByRole('listitem')
-              .filter({ hasText: 'Saved provider' })
-              .getByRole('button', {
-                name: providerText('admin.providers.update', locale),
-                exact: true,
-              })
-              .click();
-            await page.locator('#email-provider-label').fill('Reviewed change');
-          } else {
-            await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-            await page
-              .getByRole('button', { name: smsProviderText('edit', locale), exact: true })
-              .click();
-            await page.locator('#sms-label').fill('Reviewed change');
-          }
+          await page.goto(`/admin/providers/${action}/${action}/edit`);
+          await page
+            .locator(action === 'email' ? '#email-provider-label' : '#sms-label')
+            .fill('Reviewed change');
           await page.locator('form button[type=submit]').click();
         } else if (action === 'threshold') {
           await page.route('**/api/admin/approval-requests?*', (route) =>
@@ -126,8 +119,9 @@ for (const locale of ['en', 'fa'] as const)
               ? route.fulfill({ json: { thresholdIrR: 100000 } })
               : mutate(route, { thresholdIrR: 250000 })
           );
-          await page.goto('/admin/approval-requests');
+          await page.goto('/admin/approval-requests/thresholds/edit');
           await page.locator('#receipt-threshold').fill('250000');
+          expect(codePromptRequests).toHaveLength(0);
           await page
             .getByRole('button', {
               name: tWalletReceipts('admin.receiptThreshold.save', locale),
@@ -151,10 +145,10 @@ for (const locale of ['en', 'fa'] as const)
               previousRoleIds: ['role-finance'],
             })
           );
-          await page.goto('/admin/users');
-          await page
-            .getByRole('button', { name: t('admin.staff.editRoles', locale), exact: true })
-            .click();
+          await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+            route.fulfill({ json: staffUser })
+          );
+          await page.goto(`/admin/users/${staffUser.userId}/roles`);
           await page.locator('#staff-role-reason').fill('Reviewed finance duties');
           await page
             .getByRole('button', { name: t('admin.staff.saveRoles', locale), exact: true })
@@ -166,6 +160,7 @@ for (const locale of ['en', 'fa'] as const)
         const dialog = page.getByRole('dialog'),
           word = (key: string) => t(`admin.stepUp.${key}`, locale);
         await expect(dialog).toContainText(word('required'));
+        expect(codePromptRequests).toHaveLength(1);
         expect(writes).toEqual([]);
         const send = dialog.getByRole('button', { name: word('send'), exact: true });
         if (action === 'roles') {
@@ -187,6 +182,9 @@ for (const locale of ['en', 'fa'] as const)
           await dialog.screenshot({ path: `/tmp/barghsa-otp-step-up-${theme}.png` });
         await code.press('Enter');
         await expect(dialog.getByRole('alert')).toContainText(word('invalid'));
+        await expect(code).toBeFocused();
+        await expect(code).toHaveAttribute('aria-invalid', 'true');
+        await expect(code).toHaveAttribute('aria-describedby', /-delivery .*?-error/);
         expect(writes).toEqual([]);
         await code.fill('123456');
         await code.press('Enter');

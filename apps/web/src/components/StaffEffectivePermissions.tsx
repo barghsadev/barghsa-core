@@ -20,12 +20,14 @@ export function StaffEffectivePermissions({
   onClose,
   onDenied,
   finalFocus,
+  standalone = false,
 }: {
   target: { userId: string; username: string; name: string };
   paused: boolean;
   onClose: () => void;
   onDenied: (status: 401 | 403) => void;
-  finalFocus: ComponentProps<typeof DialogContent>['finalFocus'];
+  finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
+  standalone?: boolean;
 }) {
   const locale = useLocale();
   const text = (key: string) => t(`admin.roles.effective.${key}`, locale);
@@ -80,6 +82,40 @@ export function StaffEffectivePermissions({
     })();
     return () => controller.abort();
   }, [target.userId, revision, paused]);
+  const permissions = (
+    <>
+      {paused ? (
+        <p role="status">{text('paused')}</p>
+      ) : loading ? (
+        <LoadingStatus>{text('loading')}</LoadingStatus>
+      ) : null}
+      {error && (
+        <div role="alert" className="space-y-2">
+          <p>{t(error, locale)}</p>
+          {accepted && <p>{text('retained')}</p>}
+        </div>
+      )}
+      {accepted && (
+        <EffectivePermissionsView data={accepted} headingLevel={standalone ? 'h2' : 'h3'} />
+      )}
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button
+          variant="outline"
+          disabled={paused || loading}
+          onClick={() => setRevision((value) => value + 1)}
+        >
+          {error ? t('admin.roles.retry', locale) : t('admin.jobs.refresh', locale)}
+        </Button>
+        {!standalone && (
+          <Button variant="outline" onClick={onClose}>
+            {text('close')}
+          </Button>
+        )}
+      </div>
+    </>
+  );
+  if (standalone)
+    return <section className="space-y-4 rounded-lg border bg-card p-4">{permissions}</section>;
   return (
     <Dialog
       open
@@ -101,30 +137,7 @@ export function StaffEffectivePermissions({
             </bdi>
           </DialogDescription>
         </DialogHeader>
-        {paused ? (
-          <p role="status">{text('paused')}</p>
-        ) : loading ? (
-          <LoadingStatus>{text('loading')}</LoadingStatus>
-        ) : null}
-        {error && (
-          <div role="alert" className="space-y-2">
-            <p>{t(error, locale)}</p>
-            {accepted && <p>{text('retained')}</p>}
-          </div>
-        )}
-        {accepted && <EffectivePermissionsView data={accepted} />}
-        <div className="flex flex-wrap justify-end gap-2">
-          <Button
-            variant="outline"
-            disabled={paused || loading}
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {error ? t('admin.roles.retry', locale) : t('admin.jobs.refresh', locale)}
-          </Button>
-          <Button variant="outline" onClick={onClose}>
-            {text('close')}
-          </Button>
-        </div>
+        {permissions}
       </DialogContent>
     </Dialog>
   );

@@ -10,6 +10,9 @@ import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText as copy } from '@barghsa/i18n/security-settings-forms';
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
+  Link: ({ children }: { children: string }) => (
+    <a href="/settings/security/telegram">{children}</a>
+  ),
 }));
 vi.mock('../../../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (v: string) => v }),

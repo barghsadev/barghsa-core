@@ -208,9 +208,9 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
   const contractHref = await contracts
     .getByRole('link', { name: 'View contract · 42' })
     .getAttribute('href');
-  const contractSearch = new URL(contractHref!, 'http://localhost').searchParams;
-  expect(contractSearch.get('state')).toBe('Active');
-  expect(contractSearch.get('contractId')).toBe(contractId);
+  const contractUrl = new URL(contractHref!, 'http://localhost');
+  expect(contractUrl.pathname).toBe(`/contracts/${contractId}`);
+  expect(contractUrl.searchParams.get('state')).toBe('Active');
   await expect(contracts.getByRole('link', { name: 'View all' })).toHaveAttribute(
     'href',
     /\/contracts\?state=Active/
@@ -256,7 +256,7 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
     .getByRole('radiogroup', { name: 'Switch active profile' })
     .locator(`[role=radio][data-profile-id="${secondProfile}"]`)
     .click();
-  await expect(page.getByRole('heading', { name: 'Welcome, Nova Energy' })).toBeVisible();
+  await expect(page.getByRole('main').getByText('Nova Energy', { exact: true })).toBeVisible();
   expect(profileSwitches).toBe(1);
   await expect(invoices.getByText('No unpaid invoices for this profile.')).toBeVisible();
   await expect(invoices.getByRole('link', { name: `Pay now · ${invoiceId}` })).toHaveCount(0);

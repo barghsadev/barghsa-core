@@ -27,7 +27,9 @@ export default function ContractLimitsRecovery(props: Props) {
             <div key={key} className="contents">
               <dt>{label(key)}</dt>
               <dd>
-                <bdi>{numbers.number(config[key])}</bdi>
+                <bdi>
+                  {numbers.number(config[key])} {label(`unit.${key}`)}
+                </bdi>
               </dd>
             </div>
           ))}

@@ -210,14 +210,12 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       'Customer: Electricity Buyer'
     );
     expect(
-      container.querySelector(
-        'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
-      )?.textContent
+      container.querySelector('a[href="/admin/invoices/11111111-1111-7111-8111-111111111111"]')
+        ?.textContent
     ).toBe('Open invoice');
     expect(
-      container.querySelector(
-        'a[href="/admin/contracts?contractId=22222222-2222-7222-8222-222222222222"]'
-      )?.textContent
+      container.querySelector('a[href="/admin/contracts/22222222-2222-7222-8222-222222222222"]')
+        ?.textContent
     ).toBe('Open contract');
     expect(container.textContent).toContain('Review order changes');
     expect(container.textContent).toContain('Order timeline');
@@ -518,9 +516,9 @@ it('opens a linked order directly even when it is no longer in the review queue'
     expect(container.textContent).not.toContain('No orders await review.');
     expect(container.textContent).toContain('Contract and order activated');
     expect(container.textContent).toContain('No text template is attached.');
-    expect(
-      container.querySelector(`a[href="/admin/contracts?contractId=${contractId}"]`)?.textContent
-    ).toBe('Open contract');
+    expect(container.querySelector(`a[href="/admin/contracts/${contractId}"]`)?.textContent).toBe(
+      'Open contract'
+    );
     const lookup = container.querySelector<HTMLInputElement>('#electricity-order-lookup')!;
     const form = lookup.closest('form')!;
     async function submitLookup(id: string) {

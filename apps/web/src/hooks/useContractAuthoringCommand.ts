@@ -180,6 +180,7 @@ export function useContractAuthoringCommand({
     frozen: !!displayed,
     uncertain,
     action,
+    navigationBlocked: () => command.current?.attempted === true && !command.current.rejected,
     blocked: () =>
       !fresh() ||
       claiming.current ||

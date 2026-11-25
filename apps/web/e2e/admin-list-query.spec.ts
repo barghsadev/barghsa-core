@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect, type Page } from './coverage-fixture';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { geographyText } from '@barghsa/i18n/geography';
 import { t } from '@barghsa/i18n/crm';
@@ -61,6 +61,9 @@ for (const locale of ['en', 'fa'] as const)
         reads.push(query);
         return route.fulfill({ json: { provinces: [province], total: 61 } });
       });
+      await page.route('**/api/admin/geography/provinces/selected', (route) =>
+        route.fulfill({ json: province })
+      );
       await page.route('**/api/admin/geography/provinces/selected/cities?*', (route) => {
         const query = new URL(route.request().url());
         reads.push(query);
@@ -79,15 +82,17 @@ for (const locale of ['en', 'fa'] as const)
         exact: true,
       });
       await expect(cities).toBeVisible();
-      await expect(page.getByRole('textbox', { name: text('search'), exact: true })).toHaveValue(
-        'Province'
+      await expect(page).toHaveURL(
+        (location) => location.pathname === '/admin/geography/provinces/selected'
       );
+      expect(url(page).get('q')).toBe('Province');
+      expect(url(page).get('province')).toBeNull();
       await expect(
-        cities.getByRole('textbox', { name: text('citySearch'), exact: true })
+        cities.getByRole('searchbox', { name: text('citySearch'), exact: true })
       ).toHaveValue('City');
       const lastCityRead = () =>
         reads.filter((query) => query.pathname.endsWith('/cities')).at(-1)!;
-      expect(lastCityRead().searchParams.get('page')).toBe('2');
+      await expect.poll(() => lastCityRead()?.searchParams.get('page')).toBe('2');
       expect(lastCityRead().searchParams.get('status')).toBe('inactive');
       await cities.getByRole('button', { name: text('next'), exact: true }).click();
       await expect.poll(() => url(page).get('city_page')).toBe('3');
@@ -110,10 +115,18 @@ for (const locale of ['en', 'fa'] as const)
         cities.getByRole('combobox', { name: text('filterStatus'), exact: true })
       ).toHaveValue('active');
       await cities
-        .getByRole('textbox', { name: text('citySearch'), exact: true })
+        .getByRole('searchbox', { name: text('citySearch'), exact: true })
         .fill('Changed city');
       await expect.poll(() => url(page).get('city_q')).toBe('Changed city');
       expect(url(page).get('q')).toBe('Province');
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: text('title'), exact: true })
+        .click();
+      await expect(page.getByRole('searchbox', { name: text('search'), exact: true })).toHaveValue(
+        'Province'
+      );
+      expect(url(page).get('page')).toBe('2');
       await page
         .getByRole('combobox', { name: text('filterStatus'), exact: true })
         .first()
@@ -123,9 +136,11 @@ for (const locale of ['en', 'fa'] as const)
       expect(url(page).get('province')).toBeNull();
       expect(url(page).get('city_q')).toBeNull();
       await page.goBack();
+      await expect.poll(() => url(page).get('status')).toBe('active');
+      await page.goBack();
       await expect(cities).toBeVisible();
       await expect(
-        cities.getByRole('textbox', { name: text('citySearch'), exact: true })
+        cities.getByRole('searchbox', { name: text('citySearch'), exact: true })
       ).toHaveValue('Changed city');
       expect(url(page).get('page')).toBe('2');
       await inspect(page, locale, info.project.name, 'geography', dark);
@@ -158,6 +173,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#crm-search')).toHaveValue('Customer');
       await expect(page.locator('#crm-type')).toHaveValue('LEGAL');
       await expect(page.locator('#crm-verification')).toHaveValue('PENDING');
+      await expandListFilters(page, locale);
       await expect(page.getByRole('checkbox', { name: label('staffOnly') })).toBeChecked();
       expect(reads.at(-1)!.searchParams.get('cursor')).toBe('restored');
       expect(reads.at(-1)!.searchParams.get('dateFrom')).toBe('2026-02-27T20:30:00.000Z');
@@ -180,6 +196,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         page.getByRole('button', { name: label('previous'), exact: true })
       ).toBeDisabled();
+      await expandListFilters(page, locale);
       await page.locator('#crm-verification').selectOption('VERIFIED');
       await expect.poll(() => url(page).get('cursor')).toBeNull();
       expect(url(page).get('q')).toBe('Customer');

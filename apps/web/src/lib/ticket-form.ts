@@ -1,4 +1,4 @@
-import type { Ticket, TicketStatus } from '../components/TicketQueueRecords.js';
+import type { Ticket, TicketStatus, TicketViewer } from '../components/TicketQueueRecords.js';
 import { documentUrl } from './documents.js';
 export interface TicketIntakeValues {
   subject: string;
@@ -74,6 +74,16 @@ const sealed = (v: unknown, prefix: string): v is string =>
     `^${prefix}/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/[0-9a-f]{64}$`,
     'i'
   ).test(v);
+export function ticketViewer(value: unknown, actor: string | null): value is TicketViewer {
+  return (
+    object(value) &&
+    account(value.userId) &&
+    (!actor || value.userId === actor) &&
+    typeof value.canWrite === 'boolean' &&
+    typeof value.canAssignOthers === 'boolean' &&
+    (value.canApproveClosure === undefined || typeof value.canApproveClosure === 'boolean')
+  );
+}
 export function ticketRecord(value: unknown, expectedId?: string): Ticket | null {
   if (
     !object(value) ||
@@ -101,6 +111,17 @@ export function ticketRecord(value: unknown, expectedId?: string): Ticket | null
     value.attachments.length > 5 ||
     !value.attachments.every((key) => sealed(key, 'ticket-attachments')) ||
     new Set(value.attachments).size !== value.attachments.length
+  )
+    return null;
+  const latest = value.latestReply;
+  if (
+    (value.hasUnreadReply !== undefined && typeof value.hasUnreadReply !== 'boolean') ||
+    (latest != null &&
+      (!object(latest) ||
+        !uuid(latest.id) ||
+        typeof latest.preview !== 'string' ||
+        latest.preview.length > 320 ||
+        !date(latest.createdAt)))
   )
     return null;
   if (
@@ -224,8 +245,9 @@ export function ticketReplyReceipt(
 }
 export interface TicketOptions {
   profiles: { id: string; title: string | null }[];
-  records: { id: string; type: string; created_at: string }[];
+  records: { id: string; type: string; created_at: string; contractNumber?: string | null }[];
   hasMoreRecords?: boolean;
+  suggestedProfileId?: string;
 }
 export interface TicketTeam {
   id: string;
@@ -254,9 +276,15 @@ export function ticketOptions(value: unknown): TicketOptions | null {
         uuid(r.id) &&
         typeof r.type === 'string' &&
         ['order', 'contract', 'invoice'].includes(r.type) &&
-        date(r.created_at)
+        date(r.created_at) &&
+        (r.contractNumber == null ||
+          (r.type === 'contract' &&
+            typeof r.contractNumber === 'string' &&
+            /^[1-9][0-9]{0,18}$/.test(r.contractNumber)))
     ) ||
     new Set(value.profiles.map((p) => p.id)).size !== value.profiles.length ||
+    (value.suggestedProfileId !== undefined &&
+      !value.profiles.some((p) => p.id === value.suggestedProfileId)) ||
     new Set(value.records.map((r) => r.type + ':' + r.id)).size !== value.records.length
   )
     return null;

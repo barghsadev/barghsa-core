@@ -1,5 +1,8 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { ShieldCheck } from 'lucide-react';
 import {
+  lazy,
+  Suspense,
   useEffect,
   useRef,
   useState,
@@ -21,15 +24,19 @@ import {
   DialogFooter,
   Input,
   Label,
+  LoadingStatus,
   ConfirmationFields,
   useConfirmationGate,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
-import { StepUpAuthGate } from './StepUpAuthGate.js';
 import { getProfileContextRevision } from '../lib/profile-context.js';
 import { sendToast } from '../lib/toast-api.js';
+
+const StepUpAuthGate = lazy(() =>
+  import('./StepUpAuthGate.js').then((module) => ({ default: module.StepUpAuthGate }))
+);
 
 export interface TeamAction {
   title: string;
@@ -56,6 +63,9 @@ export function TeamActionDialog({
   summary,
   confirmationDisabled = false,
   focusConfirmation = false,
+  focusSummary = false,
+  inlineConfirmLabel,
+  financialAcknowledgement,
   toastErrors = true,
   onClose,
   onSuccess,
@@ -79,10 +89,13 @@ export function TeamActionDialog({
   onSuccess: (result: unknown) => Promise<void | string>;
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
   focusConfirmation?: boolean;
+  focusSummary?: boolean;
+  inlineConfirmLabel?: string;
+  financialAcknowledgement?: string;
   summary?: ReactNode;
   confirmationDisabled?: boolean;
   toastErrors?: boolean;
-  onDenied?: (status?: 401 | 403) => void;
+  onDenied?: (status?: 401 | 403, code?: string) => void;
   onValidationError?: (fields: unknown[]) => boolean;
   onUnconfirmed?: () => void;
   onPendingChange?: (pending: boolean) => void;
@@ -105,9 +118,12 @@ export function TeamActionDialog({
           },
         }
       : {}),
-    ...(financial ? { acknowledgement: confirmationText('acknowledge', locale) } : {}),
+    ...(financial
+      ? { acknowledgement: financialAcknowledgement ?? confirmationText('acknowledge', locale) }
+      : {}),
   });
   const cancel = useRef<HTMLButtonElement>(null);
+  const reviewTitle = useRef<HTMLHeadingElement>(null);
   const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
@@ -131,10 +147,10 @@ export function TeamActionDialog({
   const [invalidPassword, setInvalidPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
-  const focusPasswordFor = useRef<TeamAction | null>(null);
+  const focusPasswordFor = useRef<TeamAction | undefined | null>(null);
   useEffect(() => {
     const challenged = focusPasswordFor.current;
-    if (!challenged || !needsPassword || busy) return;
+    if (challenged === null || !needsPassword || busy) return;
     focusPasswordFor.current = null;
     if (challenged === action) passwordInput.current?.focus();
   }, [action, busy, needsPassword]);
@@ -199,6 +215,7 @@ export function TeamActionDialog({
         setPassword('');
         if (rateLimited(verified)) return;
         if (!verified.ok) {
+          focusPasswordFor.current = action;
           setInvalidPassword(true);
           showError(t('team.passwordError', locale));
           return;
@@ -256,7 +273,7 @@ export function TeamActionDialog({
         return;
       }
       if ((response.status === 401 || response.status === 403) && onDenied) {
-        onDenied(response.status);
+        onDenied(response.status, typeof code === 'string' ? code : undefined);
         return;
       }
       if (rateLimited(response)) return;
@@ -311,6 +328,139 @@ export function TeamActionDialog({
     }
   }
 
+  const content = needsOtp ? (
+    <div className="space-y-4">
+      {!inlineConfirmLabel && (
+        <DialogHeader className="pe-10">
+          <DialogTitle
+            ref={reviewTitle}
+            tabIndex={focusSummary ? -1 : undefined}
+            className={focusSummary ? 'w-fit max-w-full rounded-sm' : undefined}
+          >
+            {copy.title}
+          </DialogTitle>
+          <DialogDescription>{copy.description}</DialogDescription>
+        </DialogHeader>
+      )}
+      {summary}
+      <ConfirmationFields gate={gate} disabled={busy || confirmationDisabled} />
+      <Suspense fallback={<LoadingStatus>{t('team.working', locale)}</LoadingStatus>}>
+        <StepUpAuthGate
+          disabled={confirmationDisabled || !gate.allowed || busy}
+          {...(onDenied ? { onDenied } : {})}
+          onVerified={async () => {
+            if (!mounted.current || !canConfirm.current || currentAction.current !== action) return;
+            setNeedsOtp(false);
+            setNeedsPassword(false);
+            await submit(undefined, true);
+          }}
+        />
+      </Suspense>
+      {!inlineConfirmLabel && (
+        <DialogFooter>
+          <Button ref={cancel} type="button" variant="ghost" disabled={busy} onClick={onClose}>
+            {t('team.cancel', locale)}
+          </Button>
+        </DialogFooter>
+      )}
+    </div>
+  ) : selection && !needsPassword ? (
+    selection
+  ) : (
+    <form
+      aria-label={inlineConfirmLabel ? copy.title : undefined}
+      onSubmit={submit}
+      className="space-y-4"
+    >
+      {!inlineConfirmLabel && (
+        <DialogHeader className="pe-10">
+          <DialogTitle
+            ref={reviewTitle}
+            tabIndex={focusSummary ? -1 : undefined}
+            className={focusSummary ? 'w-fit max-w-full rounded-sm' : undefined}
+          >
+            {copy.title}
+          </DialogTitle>
+          <DialogDescription>{copy.description}</DialogDescription>
+        </DialogHeader>
+      )}
+      {error && !invalidPassword && <Alert variant="destructive">{error}</Alert>}
+      {summary}
+      <ConfirmationFields gate={gate} disabled={busy || confirmationDisabled} />
+      {needsPassword && (
+        <div className="space-y-2 rounded-xl border bg-muted/25 px-4 py-3">
+          <Label htmlFor="team-step-up-password" className="flex items-center gap-2">
+            <ShieldCheck aria-hidden="true" className="size-4 shrink-0" />
+            {t('team.password', locale)}
+          </Label>
+          <Input
+            ref={passwordInput}
+            id="team-step-up-password"
+            type="password"
+            autoComplete="current-password"
+            className="bg-background"
+            required
+            aria-required="true"
+            aria-invalid={invalidPassword || undefined}
+            aria-describedby={invalidPassword ? 'team-step-up-password-error' : undefined}
+            autoFocus={!destructive && !financial}
+            value={password}
+            disabled={busy}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              if (invalidPassword) {
+                setInvalidPassword(false);
+                setError(null);
+              }
+            }}
+          />
+          {invalidPassword && (
+            <p id="team-step-up-password-error" role="alert" className="text-sm text-destructive">
+              {error}
+            </p>
+          )}
+        </div>
+      )}
+      {remaining > 0 && (
+        <p role="status">
+          {t('team.retryAfter', locale).replace('{seconds}', numbers.number(remaining))}
+        </p>
+      )}
+      <DialogFooter
+        className={inlineConfirmLabel ? 'mx-0 mb-0 bg-transparent px-0 pb-0' : undefined}
+      >
+        {!inlineConfirmLabel && (
+          <Button ref={cancel} type="button" variant="outline" disabled={busy} onClick={onClose}>
+            {t('team.cancel', locale)}
+          </Button>
+        )}
+        <Button
+          type="submit"
+          aria-busy={busy || undefined}
+          autoFocus={focusConfirmation && !needsPassword && !destructive && !financial}
+          variant={destructive ? 'destructive' : financial ? 'warning' : 'default'}
+          disabled={
+            confirmationDisabled ||
+            !gate.allowed ||
+            busy ||
+            remaining > 0 ||
+            (needsPassword && !password)
+          }
+        >
+          {busy && (
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+            />
+          )}
+          {(!busy && !needsPassword && inlineConfirmLabel) ||
+            t(busy ? 'team.working' : 'team.confirm', locale)}
+        </Button>
+      </DialogFooter>
+    </form>
+  );
+
+  if (inlineConfirmLabel) return content;
   return (
     <Dialog
       open
@@ -319,117 +469,18 @@ export function TeamActionDialog({
       }}
     >
       <DialogContent
+        size={focusSummary ? 'lg' : 'default'}
         className="max-h-[90dvh] overflow-y-auto"
         showCloseButton={!busy}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         finalFocus={finalFocus}
-        {...(destructive || financial ? { initialFocus: cancel } : {})}
+        {...(focusSummary
+          ? { initialFocus: reviewTitle }
+          : destructive || financial
+            ? { initialFocus: cancel }
+            : {})}
       >
-        {needsOtp ? (
-          <div className="space-y-4">
-            <DialogHeader className="pr-8">
-              <DialogTitle>{copy.title}</DialogTitle>
-              <DialogDescription>{copy.description}</DialogDescription>
-            </DialogHeader>
-            {summary}
-            <ConfirmationFields gate={gate} disabled={busy} />
-            <StepUpAuthGate
-              disabled={confirmationDisabled || !gate.allowed || busy}
-              {...(onDenied ? { onDenied } : {})}
-              onVerified={async () => {
-                if (!mounted.current || !canConfirm.current || currentAction.current !== action)
-                  return;
-                setNeedsOtp(false);
-                setNeedsPassword(false);
-                await submit(undefined, true);
-              }}
-            />
-            <Button ref={cancel} type="button" variant="outline" disabled={busy} onClick={onClose}>
-              {t('team.cancel', locale)}
-            </Button>
-          </div>
-        ) : selection && !needsPassword ? (
-          selection
-        ) : (
-          <form onSubmit={submit} className="space-y-4">
-            <DialogHeader className="pr-8">
-              <DialogTitle>{copy.title}</DialogTitle>
-              <DialogDescription>{copy.description}</DialogDescription>
-            </DialogHeader>
-            {error && (
-              <Alert
-                id={invalidPassword ? 'team-step-up-password-error' : undefined}
-                variant="destructive"
-              >
-                {error}
-              </Alert>
-            )}
-            {summary}
-            <ConfirmationFields gate={gate} disabled={busy} />
-            {needsPassword && (
-              <div className="space-y-2">
-                <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>
-                <Input
-                  ref={passwordInput}
-                  id="team-step-up-password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  aria-required="true"
-                  aria-invalid={invalidPassword || undefined}
-                  aria-describedby={invalidPassword ? 'team-step-up-password-error' : undefined}
-                  autoFocus={!destructive && !financial}
-                  value={password}
-                  disabled={busy}
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                    if (invalidPassword) {
-                      setInvalidPassword(false);
-                      setError(null);
-                    }
-                  }}
-                />
-              </div>
-            )}
-            {remaining > 0 && (
-              <p role="status">
-                {t('team.retryAfter', locale).replace('{seconds}', numbers.number(remaining))}
-              </p>
-            )}
-            <DialogFooter>
-              <Button
-                ref={cancel}
-                type="button"
-                variant="outline"
-                disabled={busy}
-                onClick={onClose}
-              >
-                {t('team.cancel', locale)}
-              </Button>
-              <Button
-                type="submit"
-                aria-busy={busy || undefined}
-                autoFocus={focusConfirmation && !needsPassword && !destructive && !financial}
-                variant={destructive ? 'destructive' : financial ? 'warning' : 'default'}
-                disabled={
-                  confirmationDisabled ||
-                  !gate.allowed ||
-                  busy ||
-                  remaining > 0 ||
-                  (needsPassword && !password)
-                }
-              >
-                {busy && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {t(busy ? 'team.working' : 'team.confirm', locale)}
-              </Button>
-            </DialogFooter>
-          </form>
-        )}
+        {content}
       </DialogContent>
     </Dialog>
   );

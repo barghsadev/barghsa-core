@@ -7,7 +7,6 @@ import {
   SmartphoneIcon,
   MailIcon,
   BellRingIcon,
-  SaveIcon,
   GlobeIcon,
   ShieldCheckIcon,
   UserIcon,
@@ -16,6 +15,8 @@ import {
   ChevronRightIcon,
   FingerprintIcon,
   ShieldAlertIcon,
+  UsersIcon,
+  MessageCircleIcon,
 } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, PageHeader } from '@barghsa/ui';
 import { Form } from '@barghsa/ui/form';
@@ -26,9 +27,11 @@ import {
   usePreferenceSettingsForm,
 } from '../../../hooks/usePreferenceSettingsForm.js';
 import { PreferenceSettingsStatus } from '../../../components/PreferenceSettingsStatus.js';
+import { RecordEditorActions } from '../../../components/RecordEditorLayout.js';
 import { PreferenceSwitch } from '../../../components/PreferenceSwitch.js';
 import { HighContrastPreference } from '../../../components/HighContrastPreference.js';
-import { AnalyticsConsentSettings } from '../../../providers/AnalyticsConsentProvider.js';
+import { LanguageSwitcher } from '../../../components/LanguageSwitcher.js';
+import { AnalyticsConsentSettings } from '../../../components/AnalyticsConsentSettings.js';
 import {
   notificationSettings,
   notificationValues,
@@ -46,6 +49,11 @@ export const Route = createFileRoute('/_app/settings/')({ component: SettingsInd
 
 const accountSections = [
   { to: '/settings/profile', label: 'settings.profile.title', icon: UserIcon, customerOnly: true },
+  {
+    to: '/settings/conversation-identity',
+    label: 'conversationIdentity.title',
+    icon: MessageCircleIcon,
+  },
   { to: '/settings/username', label: 'settings.username.title', icon: FingerprintIcon },
   { to: '/settings/security', label: 'settings.security.title', icon: ShieldCheckIcon },
   { to: '/settings/timezone', label: 'settings.timezone.title', icon: GlobeIcon },
@@ -56,10 +64,11 @@ const accountSections = [
     customerOnly: true,
   },
   { to: '/settings/privacy', label: 'settings.privacy.title', icon: ShieldAlertIcon },
+  { to: '/settings/team', label: 'team.title', icon: UsersIcon, customerOnly: true },
 ] as const;
 
 function SettingsIndexPage() {
-  const { isStaff } = Route.useRouteContext();
+  const { isStaff, navigation } = Route.useRouteContext();
   const time = useAccountTime(),
     locale = useLocale(),
     scope = usePreferenceSettingsOwner();
@@ -134,6 +143,8 @@ function SettingsIndexPage() {
                 <ul className="divide-y">
                   {accountSections.map((section) => {
                     if (isStaff && 'customerOnly' in section) return null;
+                    if (section.to === '/settings/team' && !navigation?.paths.includes(section.to))
+                      return null;
                     const Icon = section.icon;
                     return (
                       <li key={section.to}>
@@ -162,7 +173,8 @@ function SettingsIndexPage() {
             <CardHeader>
               <h2 className="text-lg font-semibold">{preferencesText('display', locale)}</h2>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-3">
+              <LanguageSwitcher />
               <HighContrastPreference />
             </CardContent>
           </Card>
@@ -172,158 +184,186 @@ function SettingsIndexPage() {
             <p role="alert">{copy('forbidden')}</p>
           ) : (
             <>
-              <Card>
-                <CardContent className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-lg font-semibold">
-                    <BellIcon className="h-5 w-5" aria-hidden="true" />
-                    {t('settings.notifications.title', locale)}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.notifications.description', locale)}
-                  </p>
-                  <Form {...notifications.form}>
-                    <form
-                      noValidate
-                      ref={notifications.feedback.element}
-                      onSubmit={notifications.submit}
-                      aria-label={t('settings.notifications.title', locale)}
-                      className="space-y-3"
+              <Card className="gap-0 overflow-hidden py-0 shadow-none">
+                <Form {...notifications.form}>
+                  <form
+                    noValidate
+                    ref={notifications.feedback.element}
+                    onSubmit={notifications.submit}
+                    aria-label={t('settings.notifications.title', locale)}
+                  >
+                    <div className="space-y-2.5 px-4 py-4 sm:px-6">
+                      <h2 className="flex items-center gap-2 text-base font-semibold">
+                        <BellIcon
+                          className="size-4 shrink-0 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        {t('settings.notifications.title', locale)}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {t('settings.notifications.description', locale)}
+                      </p>
+                      {notifications.source && (
+                        <>
+                          <div className="divide-y">
+                            {channelToggles.map(({ key, icon: Icon }) => {
+                              const available =
+                                notifications.source!.availableChannels.includes(key);
+                              return (
+                                <PreferenceSwitch
+                                  key={key}
+                                  form={notifications.form}
+                                  name={key}
+                                  id={`notification-${key}`}
+                                  label={t(`settings.notifications.channel.${key}`, locale)}
+                                  icon={
+                                    <Icon
+                                      className="size-4 shrink-0 text-muted-foreground"
+                                      aria-hidden="true"
+                                    />
+                                  }
+                                  description={
+                                    key === 'IN_APP'
+                                      ? preferencesText('alwaysOn', locale)
+                                      : available
+                                        ? undefined
+                                        : preferencesText('unavailableChannel', locale)
+                                  }
+                                  disabled={
+                                    notifications.locked ||
+                                    key === 'IN_APP' ||
+                                    (!available && !channels[key])
+                                  }
+                                  guarded={() => scope.isLocked() || !notifications.ready}
+                                />
+                              );
+                            })}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {preferencesText('securityAlerts', locale)}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                    <RecordEditorActions
+                      secondary={
+                        <PreferenceSettingsStatus
+                          editor={notifications}
+                          locale={locale}
+                          locked={scope.locked}
+                          enabled={scope.isCurrent()}
+                          loadError={preferencesText('loadFailed', locale)}
+                          retry={preferencesText('retry', locale)}
+                          success={t('settings.notifications.success', locale)}
+                          saveError={t('settings.notifications.error.save', locale)}
+                          compactRefresh
+                        />
+                      }
                     >
-                      {notifications.source &&
-                        channelToggles.map(({ key, icon: Icon }) => {
-                          const available = notifications.source!.availableChannels.includes(key);
-                          return (
+                      <Button
+                        type="submit"
+                        loading={notifications.busy}
+                        disabled={notifications.locked}
+                      >
+                        {t(
+                          notifications.busy
+                            ? 'settings.notifications.saving'
+                            : 'settings.profile.save',
+                          locale
+                        )}
+                      </Button>
+                    </RecordEditorActions>
+                  </form>
+                </Form>
+              </Card>
+              <Card className="gap-0 overflow-hidden py-0 shadow-none">
+                <Form {...marketing.form}>
+                  <form
+                    noValidate
+                    ref={marketing.feedback.element}
+                    onSubmit={marketing.submit}
+                    aria-label={t('settings.marketing.title', locale)}
+                  >
+                    <div className="space-y-2.5 px-4 py-4 sm:px-6">
+                      <h2 className="flex items-center gap-2 text-base font-semibold">
+                        <MegaphoneIcon
+                          className="size-4 shrink-0 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        {t('settings.marketing.title', locale)}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {t('settings.marketing.description', locale)}
+                      </p>
+                      {showMarketingDates && time.notice && (
+                        <fieldset
+                          disabled={scope.locked}
+                          onClickCapture={(event) => {
+                            if (scope.isLocked()) {
+                              event.preventDefault();
+                              event.stopPropagation();
+                            }
+                          }}
+                        >
+                          {time.notice}
+                        </fieldset>
+                      )}
+                      {marketing.source && (
+                        <div className="divide-y">
+                          {(['email', 'sms'] as const).map((key) => (
                             <PreferenceSwitch
                               key={key}
-                              form={notifications.form}
+                              form={marketing.form}
                               name={key}
-                              id={`notification-${key}`}
-                              label={t(`settings.notifications.channel.${key}`, locale)}
-                              icon={<Icon className="size-5 shrink-0" aria-hidden="true" />}
+                              id={`marketing-${key}`}
+                              label={t(
+                                key === 'email'
+                                  ? 'settings.marketing.optInEmailLabel'
+                                  : 'settings.marketing.optInSmsLabel',
+                                locale
+                              )}
                               description={
-                                available
-                                  ? undefined
-                                  : preferencesText('unavailableChannel', locale)
+                                marketing.source?.channels[key].lastChangedAt
+                                  ? t('settings.marketing.lastChangedAt', locale).replace(
+                                      '{date}',
+                                      time.format(marketing.source.channels[key].lastChangedAt!)
+                                    )
+                                  : t('settings.marketing.neverChanged', locale)
                               }
-                              disabled={
-                                notifications.locked ||
-                                key === 'IN_APP' ||
-                                (!available && !channels[key])
-                              }
-                              guarded={() => scope.isLocked() || !notifications.ready}
+                              disabled={marketing.locked}
+                              guarded={() => scope.isLocked() || !marketing.ready}
                             />
-                          );
-                        })}
-                      <p className="text-xs text-muted-foreground bg-muted/50 rounded p-2">
-                        {t('settings.notifications.hint', locale)}
-                      </p>
-                      <div className="flex justify-end">
-                        <Button type="submit" disabled={notifications.locked} className="gap-2">
-                          <SaveIcon className="h-4 w-4" aria-hidden="true" />
-                          {t(
-                            notifications.busy
-                              ? 'settings.notifications.saving'
-                              : 'settings.profile.save',
-                            locale
-                          )}
-                        </Button>
-                      </div>
-                    </form>
-                  </Form>
-                  <PreferenceSettingsStatus
-                    editor={notifications}
-                    locale={locale}
-                    locked={scope.locked}
-                    enabled={scope.isCurrent()}
-                    loadError={preferencesText('loadFailed', locale)}
-                    retry={preferencesText('retry', locale)}
-                    success={t('settings.notifications.success', locale)}
-                    saveError={t('settings.notifications.error.save', locale)}
-                  />
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-lg font-semibold">
-                    <MegaphoneIcon className="h-5 w-5" aria-hidden="true" />
-                    {t('settings.marketing.title', locale)}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.marketing.description', locale)}
-                  </p>
-                  {showMarketingDates && time.notice && (
-                    <fieldset
-                      disabled={scope.locked}
-                      onClickCapture={(event) => {
-                        if (scope.isLocked()) {
-                          event.preventDefault();
-                          event.stopPropagation();
-                        }
-                      }}
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <RecordEditorActions
+                      secondary={
+                        <PreferenceSettingsStatus
+                          editor={marketing}
+                          locale={locale}
+                          locked={scope.locked}
+                          enabled={scope.isCurrent()}
+                          loadError={preferencesText('loadFailed', locale)}
+                          retry={preferencesText('retry', locale)}
+                          success={t('settings.marketing.success', locale)}
+                          saveError={t('settings.marketing.error.save', locale)}
+                          compactRefresh
+                        />
+                      }
                     >
-                      {time.notice}
-                    </fieldset>
-                  )}
-                  <Form {...marketing.form}>
-                    <form
-                      noValidate
-                      ref={marketing.feedback.element}
-                      onSubmit={marketing.submit}
-                      aria-label={t('settings.marketing.title', locale)}
-                      className="space-y-3"
-                    >
-                      {marketing.source &&
-                        (['email', 'sms'] as const).map((key) => (
-                          <PreferenceSwitch
-                            key={key}
-                            form={marketing.form}
-                            name={key}
-                            id={`marketing-${key}`}
-                            label={t(
-                              key === 'email'
-                                ? 'settings.marketing.optInEmailLabel'
-                                : 'settings.marketing.optInSmsLabel',
-                              locale
-                            )}
-                            description={
-                              marketing.source?.channels[key].lastChangedAt
-                                ? t('settings.marketing.lastChangedAt', locale).replace(
-                                    '{date}',
-                                    time.format(marketing.source.channels[key].lastChangedAt!)
-                                  )
-                                : t('settings.marketing.neverChanged', locale)
-                            }
-                            disabled={marketing.locked}
-                            guarded={() => scope.isLocked() || !marketing.ready}
-                          />
-                        ))}
-                      <div className="flex justify-end">
-                        <Button type="submit" disabled={marketing.locked} className="gap-2">
-                          <SaveIcon className="h-4 w-4" aria-hidden="true" />
-                          {t(
-                            marketing.busy ? 'settings.marketing.saving' : 'settings.profile.save',
-                            locale
-                          )}
-                        </Button>
-                      </div>
-                    </form>
-                  </Form>
-                  <PreferenceSettingsStatus
-                    editor={marketing}
-                    locale={locale}
-                    locked={scope.locked}
-                    enabled={scope.isCurrent()}
-                    loadError={preferencesText('loadFailed', locale)}
-                    retry={preferencesText('retry', locale)}
-                    success={t('settings.marketing.success', locale)}
-                    saveError={t('settings.marketing.error.save', locale)}
-                  />
-                </CardContent>
+                      <Button type="submit" loading={marketing.busy} disabled={marketing.locked}>
+                        {t(
+                          marketing.busy ? 'settings.marketing.saving' : 'settings.profile.save',
+                          locale
+                        )}
+                      </Button>
+                    </RecordEditorActions>
+                  </form>
+                </Form>
               </Card>
-              <Card>
-                <CardContent>
-                  <AnalyticsConsentSettings coordination={analyticsCoordination} />
-                </CardContent>
+              <Card id="analytics-consent" className="gap-0 overflow-hidden py-0 shadow-none">
+                <AnalyticsConsentSettings coordination={analyticsCoordination} />
               </Card>
             </>
           )}

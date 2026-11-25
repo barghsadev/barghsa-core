@@ -1,7 +1,17 @@
+import {
+  ArrowLeftRight as TableArrowLeftRightIcon,
+  Eye as TableEyeIcon,
+  Save as TableSaveIcon,
+  Trash2 as TableTrash2Icon,
+  Undo2 as TableUndo2Icon,
+  UserCog as TableUserCogIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { Link } from '@tanstack/react-router';
 import {
   useCallback,
   useEffect,
@@ -19,12 +29,15 @@ import {
   Badge,
   Textarea,
   ListPage,
+  ListRefreshButton,
   cn,
   Button,
+  buttonVariants,
   Dialog,
   DialogContent,
   Input,
   Label,
+  NativeSelect,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -40,8 +53,15 @@ import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+import { teamRecordLink, type TeamWorkspace } from '../lib/team-workspace.js';
+import { toast } from '../lib/toast-api.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { AgentDetailDialog } from '../components/AgentDetailDialog.js';
+import {
+  RecordEditorActions,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import {
   TeamIdentity,
   TeamRoleFields,
@@ -63,9 +83,9 @@ import {
   type Team,
 } from '../lib/team-catalogue.js';
 
-export function TeamPage() {
+export function TeamPage({ workspace }: { workspace?: TeamWorkspace } = {}) {
   const revision = useProfileContextRevision();
-  return <TeamCatalogue key={revision} />;
+  return <TeamCatalogue key={revision} workspace={workspace} />;
 }
 const transferStatus = {
   accept: 'Completed',
@@ -73,7 +93,7 @@ const transferStatus = {
   cancelTransfer: 'Cancelled',
 } as const;
 type TransferDecision = keyof typeof transferStatus;
-function TeamCatalogue() {
+function TeamCatalogue({ workspace }: { workspace?: TeamWorkspace | undefined }) {
   const locale = useLocale();
   const time = useAccountTime();
   const word = (key: string) => t(`team.${key}`, locale);
@@ -99,12 +119,16 @@ function TeamCatalogue() {
   }, []);
   const scope = useCatalogueScope(clearPrivate);
   const profiles = useCatalogueResource(scope, '/api/profiles', validTeamProfiles);
+  const showTransfers = !workspace || workspace.section === 'transfers';
+  const editing = workspace?.section === 'invite' || workspace?.edit;
+  const tabClass = editing ? 'min-h-11 px-2.5 sm:px-3' : 'min-h-11';
+  const needTransfers = showTransfers || (workspace?.section === 'members' && !workspace.recordId);
   const checkSessionAfterAcceptance = useCallback(() => {
     if (decisionRecovery?.decision === 'accept') window.location.assign('/login');
   }, [decisionRecovery]);
   const transfers = useCatalogueResource(
     scope,
-    '/api/profiles/ownership-transfers',
+    needTransfers ? '/api/profiles/ownership-transfers' : null,
     validTransfers,
     { onUnauthorized: checkSessionAfterAcceptance }
   );
@@ -140,130 +164,198 @@ function TeamCatalogue() {
       refreshTransfers.current?.focus();
     }
   }, [review, transferReady, stale, decisionPending, decisionRecovery, transfers.readAttempt]);
+  const profileRefresh = (
+    <ListRefreshButton
+      label={word('refreshProfiles')}
+      onClick={() => (scope.denied ? scope.recover() : profiles.retry())}
+    />
+  );
   return (
     <div
-      className="mx-auto min-w-0 max-w-4xl space-y-6 rounded-lg bg-background p-4 text-foreground"
+      className={cn(
+        'mx-auto min-w-0 max-w-4xl rounded-lg bg-background p-4 text-foreground',
+        editing ? 'space-y-3' : 'space-y-6'
+      )}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {time.notice}
-      <h1 className="text-2xl font-bold">{word('title')}</h1>
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <h1 className="text-2xl font-semibold">{word('title')}</h1>
+          {workspace && active?.profileType === 'LEGAL' && active.title && (
+            <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
+              <bdi>{active.title}</bdi>
+            </p>
+          )}
+        </div>
+        {editing && profileRefresh}
+      </header>
+      {workspace && (
+        <nav
+          aria-label={word('title')}
+          className={cn(
+            'flex flex-wrap border-b',
+            editing ? 'gap-x-1.5 gap-y-1 pb-1.5' : 'gap-2 pb-3'
+          )}
+        >
+          <Link
+            to="/settings/team"
+            className={buttonVariants({
+              variant: workspace.section === 'members' ? 'secondary' : 'ghost',
+              className: tabClass,
+            })}
+            aria-current={workspace.section === 'members' ? 'page' : undefined}
+          >
+            {word('membersOnly')}
+          </Link>
+          {(['invitations', 'roles', 'transfers'] as const).map((section) => {
+            const current =
+              workspace.section === section ||
+              (section === 'invitations' && workspace.section === 'invite');
+            return (
+              <Link
+                key={section}
+                to="/settings/team/$section"
+                params={{ section }}
+                aria-current={current ? 'page' : undefined}
+                className={buttonVariants({
+                  variant: current ? 'secondary' : 'ghost',
+                  className: tabClass,
+                })}
+              >
+                {word(section)}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+      {!showTransfers &&
+        transfers.data?.transfers.some((item) => item.direction === 'incoming') && (
+          <Alert>
+            <AlertDescription>
+              <Link
+                to="/settings/team/$section"
+                params={{ section: 'transfers' }}
+                className="text-primary underline"
+              >
+                {word('banner')}
+              </Link>
+            </AlertDescription>
+          </Alert>
+        )}
       {notice && (
         <p role="status" className="text-success">
           {notice}
         </p>
       )}
-      <section aria-labelledby="ownership-title">
-        <ListPage>
-          <ListPage.Toolbar>
-            <h2 id="ownership-title" className="text-lg font-semibold">
-              {word('transfers')}
-            </h2>
-            <Button
-              ref={refreshTransfers}
-              variant="outline"
-              disabled={decisionPending || transferLoading}
-              onClick={() => (scope.denied ? scope.recover() : reloadTransfers())}
+      {showTransfers && (
+        <section aria-labelledby="ownership-title">
+          <ListPage>
+            <ListPage.Toolbar>
+              <h2 id="ownership-title" className="text-lg font-semibold">
+                {word('transfers')}
+              </h2>
+              <ListRefreshButton
+                label={word('refreshTransfers')}
+                ref={refreshTransfers}
+                disabled={decisionPending || transferLoading}
+                onClick={() => (scope.denied ? scope.recover() : reloadTransfers())}
+              />
+            </ListPage.Toolbar>
+            {decisionRecovery && !review && (
+              <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+            )}
+            <ListPage.Content
+              loading={transferLoading}
+              error={transfers.error || scope.denied}
+              retainContent={!!transfers.data?.transfers.length}
+              empty={!!transfers.data && !transfers.data.transfers.length}
+              loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
+              errorView={
+                <p role="alert">{word(scope.denied ? 'forbidden' : 'loadTransfersError')}</p>
+              }
+              emptyView={<p>{word('noTransfers')}</p>}
             >
-              {word('refreshTransfers')}
-            </Button>
-          </ListPage.Toolbar>
-          {decisionRecovery && !review && (
-            <p role="alert">{confirmationText('unconfirmed', locale)}</p>
-          )}
+              <div className="space-y-3">
+                {transfers.data?.transfers.map((transfer) => (
+                  <article key={transfer.id} className="rounded border bg-card p-4 space-y-2">
+                    <h3 className="font-medium [overflow-wrap:anywhere]">{transfer.profileName}</h3>
+                    <p>{word(transfer.direction === 'incoming' ? 'incoming' : 'outgoing')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {word('expires')}{' '}
+                      <time dateTime={transfer.expiresAt}>{time.format(transfer.expiresAt)}</time>
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {(transfer.direction === 'incoming'
+                        ? (['accept', 'decline'] as const)
+                        : (['cancelTransfer'] as const)
+                      ).map((decision) => (
+                        <Button
+                          key={decision}
+                          variant={decision === 'accept' ? 'default' : 'outline'}
+                          disabled={!transferReady || !!review || !!decisionRecovery}
+                          onClick={() => {
+                            setNotice(null);
+                            setReview({
+                              id: transfer.id,
+                              profileId: transfer.profileId,
+                              decision,
+                              basis: transferBasis(transfer),
+                              action: {
+                                risk: 'destructive',
+                                title: word(decision),
+                                description: word(
+                                  decision === 'accept' ? 'acceptWarning' : 'decisionWarning'
+                                ),
+                                path: `/api/profiles/${encodeURIComponent(transfer.profileId)}/ownership-${decision === 'cancelTransfer' ? 'cancel' : decision}`,
+                                method: 'POST',
+                                body: { transferId: transfer.id },
+                              },
+                            });
+                          }}
+                        >
+                          {word(decision)}
+                        </Button>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </ListPage.Content>
+          </ListPage>
+        </section>
+      )}
+      {workspace?.section !== 'transfers' && (
+        <ListPage>
+          {!editing && <ListPage.Toolbar>{profileRefresh}</ListPage.Toolbar>}
           <ListPage.Content
-            loading={transferLoading}
-            error={transfers.error || scope.denied}
-            retainContent={!!transfers.data?.transfers.length}
-            empty={!!transfers.data && !transfers.data.transfers.length}
+            loading={profiles.loading}
+            error={profiles.error || scope.denied}
+            retainContent={!!profiles.data}
+            empty={false}
+            emptyView={null}
             loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
-            errorView={
-              <p role="alert">{word(scope.denied ? 'forbidden' : 'loadTransfersError')}</p>
-            }
-            emptyView={<p>{word('noTransfers')}</p>}
+            errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
           >
-            <div className="space-y-3">
-              {transfers.data?.transfers.map((transfer) => (
-                <article key={transfer.id} className="rounded border bg-card p-4 space-y-2">
-                  <h3 className="font-medium [overflow-wrap:anywhere]">{transfer.profileName}</h3>
-                  <p>{word(transfer.direction === 'incoming' ? 'incoming' : 'outgoing')}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {word('expires')}{' '}
-                    <time dateTime={transfer.expiresAt}>{time.format(transfer.expiresAt)}</time>
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {(transfer.direction === 'incoming'
-                      ? (['accept', 'decline'] as const)
-                      : (['cancelTransfer'] as const)
-                    ).map((decision) => (
-                      <Button
-                        key={decision}
-                        variant={decision === 'accept' ? 'default' : 'outline'}
-                        disabled={!transferReady || !!review || !!decisionRecovery}
-                        onClick={() => {
-                          setNotice(null);
-                          setReview({
-                            id: transfer.id,
-                            profileId: transfer.profileId,
-                            decision,
-                            basis: transferBasis(transfer),
-                            action: {
-                              risk: 'destructive',
-                              title: word(decision),
-                              description: word(
-                                decision === 'accept' ? 'acceptWarning' : 'decisionWarning'
-                              ),
-                              path: `/api/profiles/${encodeURIComponent(transfer.profileId)}/ownership-${decision === 'cancelTransfer' ? 'cancel' : decision}`,
-                              method: 'POST',
-                              body: { transferId: transfer.id },
-                            },
-                          });
-                        }}
-                      >
-                        {word(decision)}
-                      </Button>
-                    ))}
-                  </div>
-                </article>
+            {!scope.denied &&
+              profiles.data &&
+              (active?.profileType === 'LEGAL' ? (
+                <TeamMembers
+                  key={`${scope.version}:${active.id}`}
+                  profile={active}
+                  profileReady={profileReady}
+                  transferAllowed={transferAllowed}
+                  transferLoading={transferLoading}
+                  refreshTransfers={reloadTransfers}
+                  onSessionDenied={scope.deny}
+                  workspace={workspace}
+                />
+              ) : (
+                <p role="status">{word('selectLegal')}</p>
               ))}
-            </div>
           </ListPage.Content>
         </ListPage>
-      </section>
-      <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            variant="outline"
-            onClick={() => (scope.denied ? scope.recover() : profiles.retry())}
-          >
-            {word('refreshProfiles')}
-          </Button>
-        </ListPage.Toolbar>
-        <ListPage.Content
-          loading={profiles.loading}
-          error={profiles.error || scope.denied}
-          retainContent={!!profiles.data}
-          empty={false}
-          emptyView={null}
-          loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
-          errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
-        >
-          {!scope.denied &&
-            profiles.data &&
-            (active?.profileType === 'LEGAL' ? (
-              <TeamMembers
-                key={`${scope.version}:${active.id}`}
-                profile={active}
-                profileReady={profileReady}
-                transferAllowed={transferAllowed}
-                transferLoading={transferLoading}
-                refreshTransfers={reloadTransfers}
-                onSessionDenied={scope.deny}
-              />
-            ) : (
-              <p role="status">{word('selectLegal')}</p>
-            ))}
-        </ListPage.Content>
-      </ListPage>
+      )}
       {review && (
         <TeamActionDialog
           action={review.action}
@@ -326,6 +418,7 @@ function TeamMembers({
   transferLoading,
   refreshTransfers,
   onSessionDenied,
+  workspace,
 }: {
   profile: { id: string; title?: string | null };
   profileReady: boolean;
@@ -333,12 +426,27 @@ function TeamMembers({
   transferLoading: boolean;
   refreshTransfers: () => void;
   onSessionDenied: () => void;
+  workspace?: TeamWorkspace | undefined;
 }) {
   const time = useAccountTime();
   const actor = useAccountUser();
   const locale = useLocale();
   const compact = useCompactRecords();
-  const [detail, setDetail] = useState<{ type: 'agent' | 'invitation'; id: string } | null>(null);
+  const [localDetail, setDetail] = useState<{ type: 'agent' | 'invitation'; id: string } | null>(
+    null
+  );
+  const section = workspace?.section;
+  const routedId = workspace?.recordId;
+  const detail = routedId
+    ? {
+        type: section === 'invitations' ? ('invitation' as const) : ('agent' as const),
+        id: routedId,
+      }
+    : localDetail;
+  const routedInvite = section === 'invite';
+  const showMembers = !workspace || (section === 'members' && !routedId);
+  const showInvitations = !workspace || (section === 'invitations' && !routedId);
+  const rosterLabel = !workspace ? 'members' : showInvitations ? 'invitations' : 'membersOnly';
   const detailTrigger = useRef<HTMLButtonElement | null>(null);
   const [activityRevision, setActivityRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -384,7 +492,8 @@ function TeamMembers({
     t('team.error', locale)
   );
   const [inviting, setInviting] = useState(false);
-  const [invitationOpen, setInvitationOpen] = useState(false);
+  const [localInvite, setInvitationOpen] = useState(false);
+  const invitationOpen = routedInvite || localInvite;
   const [inviteRecovery, setInviteRecovery] = useState<{
     username: string;
     role: Role;
@@ -498,7 +607,7 @@ function TeamMembers({
   }
   useEffect(() => {
     if (!ready || !inviteRecovery || resource.readAttempt !== inviteRecovery.readAttempt) return;
-    const matched = resource.data?.agents.some(
+    const matched = resource.data?.agents.find(
       (entry) =>
         entry.type === 'invitation' &&
         entry.username === inviteRecovery.username &&
@@ -507,6 +616,11 @@ function TeamMembers({
     );
     setInviteRecovery(null);
     if (matched) {
+      if (routedInvite && workspace) {
+        toast.success(t('team.invitePendingFound', locale));
+        workspace.navigate('invitations', matched.id, false, true);
+        return;
+      }
       resetInvitation({ username: '', role: inviteRecovery.role, message: '' });
       restoreInviteFocus.current = invitationOpen;
       setInvitationOpen(false);
@@ -523,6 +637,8 @@ function TeamMembers({
     invitationOpen,
     resetInvitation,
     locale,
+    routedInvite,
+    workspace,
   ]);
   useEffect(() => {
     if (loading) focusRefreshPending.current = false;
@@ -651,6 +767,11 @@ function TeamMembers({
           recover();
           return;
         }
+        if (routedInvite && workspace) {
+          toast.success(word('invited'));
+          workspace.navigate('invitations', result.id, false, true);
+          return;
+        }
         resetInvitation({ username: '', role: values.role, message: '' });
         restoreInviteFocus.current = true;
         setInvitationOpen(false);
@@ -687,16 +808,32 @@ function TeamMembers({
     (detail?.type === 'invitation'
       ? invitations.find((entry) => entry.id === detail.id)
       : undefined);
+  const refreshInEditor = !!(workspace?.edit && detailedEntry);
+  const memberRefresh = (
+    <ListRefreshButton
+      label={word('refreshMembers')}
+      ref={refreshMembers}
+      disabled={memberPending}
+      onClick={reloadMembers}
+    />
+  );
   const closeDetail = () => {
+    if (routedId && workspace) {
+      workspace.navigate(
+        section === 'invitations' ? 'invitations' : 'members',
+        workspace.edit ? routedId : undefined
+      );
+      return;
+    }
     setDetail(null);
     (detailTrigger.current?.isConnected ? detailTrigger.current : refreshMembers.current)?.focus();
   };
   useEffect(() => {
-    if (ready && detail && !detailedEntry) {
+    if (ready && localDetail && !detailedEntry) {
       setDetail(null);
       refreshMembers.current?.focus();
     }
-  }, [ready, detail, detailedEntry]);
+  }, [ready, localDetail, detailedEntry]);
   const base = `/api/profiles/${encodeURIComponent(team?.profileId ?? '')}`;
   const openAction = (next: MemberAction) => {
     if (!ready) return;
@@ -742,6 +879,23 @@ function TeamMembers({
       return;
     }
     action?.onConfirmed?.();
+    if (routedId && workspace) {
+      if (action?.method === 'DELETE') {
+        toast.success(action.successMessage ?? word('saved'));
+        workspace.navigate(
+          section === 'invitations' ? 'invitations' : 'members',
+          undefined,
+          false,
+          true
+        );
+        return;
+      }
+      if (workspace.edit && action?.method === 'PUT') {
+        toast.success(action.successMessage ?? word('saved'));
+        workspace.navigate('members', routedId, false, true);
+        return;
+      }
+    }
     setActivityRevision((value) => value + 1);
     await load();
     setNotice(action?.successMessage ?? word('saved'));
@@ -801,6 +955,169 @@ function TeamMembers({
     setAction(null);
   };
 
+  const inviteForm = invitationOpen ? (
+    <form
+      noValidate
+      onSubmit={invite}
+      aria-label={word('invite')}
+      className={routedInvite ? `max-w-2xl ${recordEditorSurface}` : 'min-w-0'}
+    >
+      {routedInvite && (
+        <div className="space-y-1 px-4 pt-4 sm:px-6">
+          <h2 className="text-lg font-semibold">{word('invite')}</h2>
+          <p className="text-sm text-muted-foreground">{word('consent')}</p>
+        </div>
+      )}
+      <div className={cn('space-y-3', routedInvite && 'px-4 py-4 sm:px-6')}>
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        <div className={cn(recordEditorGrid, 'sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]')}>
+          <div className="min-w-0 space-y-1">
+            <Label htmlFor="team-username">{word('username')}</Label>
+            <Input
+              {...invitation.bind('username')}
+              autoFocus
+              id="team-username"
+              dir="ltr"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="name@example.com"
+              required
+              aria-required="true"
+              maxLength={254}
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              disabled={inviting || !!inviteRecovery}
+            />
+            {invitation.errors.username && (
+              <p
+                id={invitation.errorId('username')}
+                role="alert"
+                className="text-sm text-destructive"
+              >
+                {invitation.errors.username.message}
+              </p>
+            )}
+          </div>
+          <div className="min-w-0 space-y-1">
+            <Label htmlFor="invite-role">{word('role')}</Label>
+            <NativeSelect
+              {...invitation.bind('role')}
+              id="invite-role"
+              aria-required="true"
+              className="w-full"
+              aria-describedby={[
+                'invite-role-effect',
+                invitation.errors.role ? invitation.errorId('role') : null,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              value={role}
+              onChange={(event) => setRole(event.target.value as Role)}
+              disabled={inviting || !!inviteRecovery}
+            >
+              {ROLES.map((item) => (
+                <option key={item} value={item}>
+                  {word(item)}
+                </option>
+              ))}
+            </NativeSelect>
+            <p id="invite-role-effect" className="text-sm text-muted-foreground">
+              {word(`roleEffect.${role}`)}
+            </p>
+            {invitation.errors.role && (
+              <p id={invitation.errorId('role')} role="alert" className="text-sm text-destructive">
+                {invitation.errors.role.message}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="invite-message">{word('message')}</Label>
+          <Textarea
+            {...invitation.bind('message')}
+            id="invite-message"
+            rows={2}
+            placeholder={word('messageExample')}
+            maxLength={1000}
+            value={message}
+            aria-describedby={[
+              'invite-message-hint',
+              invitation.errors.message ? invitation.errorId('message') : null,
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            disabled={inviting || !!inviteRecovery}
+            onChange={(event) => setMessage(event.target.value)}
+          />
+          <p id="invite-message-hint" className="text-sm text-muted-foreground">
+            {word('messageHint')}
+          </p>
+          {invitation.errors.message && (
+            <p id={invitation.errorId('message')} role="alert" className="text-sm text-destructive">
+              {invitation.errors.message.message}
+            </p>
+          )}
+        </div>
+        {username.trim() && (
+          <p
+            role="status"
+            className="rounded-md bg-muted/60 px-3 py-2 text-sm [overflow-wrap:anywhere]"
+          >
+            {word('invitePreview')
+              .replace('{username}', username.trim())
+              .replace('{role}', word(role))
+              .replace('{entity}', team?.profileName ?? word('legalEntity'))}
+          </p>
+        )}
+      </div>
+      <RecordEditorActions
+        secondary={
+          <ListRefreshButton
+            ref={routedInvite ? refreshMembers : undefined}
+            label={word('refreshMembers')}
+            disabled={loading || inviting}
+            onClick={reloadMembers}
+          />
+        }
+      >
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={inviting || invitation.form.formState.isSubmitting}
+          onClick={() => {
+            if (invitationPending.current) return;
+            if (routedInvite && workspace) workspace.navigate('invitations');
+            else {
+              restoreInviteFocus.current = true;
+              setInvitationOpen(false);
+            }
+          }}
+        >
+          {word('cancel')}
+        </Button>
+        <Button
+          type="submit"
+          aria-busy={inviting || invitation.form.formState.isSubmitting || undefined}
+          disabled={
+            !ready || inviting || !!inviteRecovery || invitation.form.formState.isSubmitting
+          }
+        >
+          {inviting && (
+            <Loader2
+              aria-hidden="true"
+              className="size-4 animate-spin motion-reduce:animate-none"
+            />
+          )}
+          {word(inviting ? 'working' : 'sendInvite')}
+        </Button>
+      </RecordEditorActions>
+    </form>
+  ) : null;
+
   return (
     <section className="min-w-0 space-y-4">
       <h2 ref={teamHeading} tabIndex={-1} className="sr-only">
@@ -822,33 +1139,29 @@ function TeamMembers({
         </p>
       )}
       <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            ref={refreshMembers}
-            variant="outline"
-            disabled={memberPending}
-            onClick={reloadMembers}
-          >
-            {word('refreshMembers')}
-          </Button>
-          {team?.canTransferOwnership &&
-            !Array.from(members.values()).some((member) => member.roles.includes('Owner')) && (
-              <Button
-                ref={transferTrigger}
-                variant="outline"
-                disabled={
-                  !ready ||
-                  !transferAllowed ||
-                  !eligibleOwners.length ||
-                  !!action ||
-                  !!ownershipStep
-                }
-                onClick={startOwnership}
-              >
-                {word('transfer')}
-              </Button>
-            )}
-        </ListPage.Toolbar>
+        {((!routedInvite && !refreshInEditor) || !team) && (
+          <ListPage.Toolbar>
+            {memberRefresh}
+            {showMembers &&
+              team?.canTransferOwnership &&
+              !Array.from(members.values()).some((member) => member.roles.includes('Owner')) && (
+                <Button
+                  ref={transferTrigger}
+                  variant="outline"
+                  disabled={
+                    !ready ||
+                    !transferAllowed ||
+                    !eligibleOwners.length ||
+                    !!action ||
+                    !!ownershipStep
+                  }
+                  onClick={startOwnership}
+                >
+                  {word('transfer')}
+                </Button>
+              )}
+          </ListPage.Toolbar>
+        )}
         <ListPage.Content
           loading={loading}
           error={resource.error || scope.denied}
@@ -860,143 +1173,218 @@ function TeamMembers({
         >
           {team && (
             <>
-              {' '}
-              <Button
-                ref={inviteTrigger}
-                disabled={!ready || !!action || !!ownershipStep}
-                onClick={() => {
-                  if (!inviteRecovery) setError(null);
-                  setInvitationOpen(true);
-                }}
-              >
-                {word('invite')}
-              </Button>
-              <div className="space-y-3">
-                <h2 id="members-title" className="text-lg font-semibold">
-                  {word('members')}
-                </h2>
-                <p className="text-sm text-muted-foreground">{word('lastActiveHint')}</p>
-                <div
-                  role="region"
-                  aria-label={word('members')}
-                  // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard scrolling for the overflowing table.
-                  tabIndex={0}
-                  className="min-w-0 md:overflow-x-auto md:rounded-lg md:border md:bg-card md:text-card-foreground"
+              {workspace && (showMembers || showInvitations) && (
+                <Link
+                  to="/settings/team/$section"
+                  params={{ section: 'invite' }}
+                  className={buttonVariants({ className: 'min-h-11' })}
+                  disabled={!ready || !!action || !!ownershipStep}
                 >
-                  <table
-                    role={compact ? 'presentation' : undefined}
-                    className="block w-full text-start text-sm md:table"
+                  {word('invite')}
+                </Link>
+              )}
+              {!workspace && (
+                <Button
+                  ref={inviteTrigger}
+                  disabled={!ready || !!action || !!ownershipStep}
+                  onClick={() => {
+                    if (!inviteRecovery) setError(null);
+                    setInvitationOpen(true);
+                  }}
+                >
+                  {word('invite')}
+                </Button>
+              )}
+              {section === 'roles' && (
+                <section className="space-y-4">
+                  <h2 className="text-lg font-semibold">{word('roles')}</h2>
+                  <p className="text-sm text-muted-foreground">{word('rolesCombine')}</p>
+                  <ul className="grid gap-3 sm:grid-cols-2">
+                    {(['Owner', ...ROLES] as const).map((role) => (
+                      <li key={role} className="space-y-2 rounded-lg border bg-card p-4">
+                        <h3 className="font-semibold">{word(role === 'Owner' ? 'owner' : role)}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {word(`roleEffect.${role}`)}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              {routedId && ready && !detailedEntry && <p role="alert">{word('recordMissing')}</p>}
+              {(showMembers || showInvitations) && (
+                <div className="space-y-3">
+                  <h2 id="members-title" className="text-lg font-semibold">
+                    {word(rosterLabel)}
+                  </h2>
+                  {showMembers && (
+                    <p className="text-sm text-muted-foreground">{word('lastActiveHint')}</p>
+                  )}
+                  <div
+                    role="region"
+                    aria-label={word(rosterLabel)}
+                    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard scrolling for the overflowing table.
+                    tabIndex={0}
+                    className="min-w-0 md:overflow-x-auto md:rounded-lg md:border md:bg-card md:text-card-foreground"
                   >
-                    <caption className="sr-only">{word('members')}</caption>
-                    <thead className="hidden md:table-header-group">
-                      <tr className="border-b">
-                        {[
-                          word('agent'),
-                          word('roles'),
-                          word('status'),
-                          word('invitedOn'),
-                          word('joined'),
-                          word('lastActive'),
-                          word('actions'),
-                        ].map((label) => (
-                          <th key={label} scope="col" className="p-3 text-start font-medium">
-                            {label}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody
-                      role={compact ? 'list' : undefined}
-                      aria-label={compact ? word('members') : undefined}
-                      className="block space-y-3 md:table-row-group md:space-y-0"
+                    <table
+                      role={compact ? 'presentation' : undefined}
+                      className="block w-full text-start text-sm md:table"
                     >
-                      {members.size === 0 && invitations.length === 0 && (
-                        <tr role={compact ? 'listitem' : undefined} className="block md:table-row">
-                          <TeamRecordCell compact={compact} colSpan={7}>
-                            {word('empty')}
-                          </TeamRecordCell>
+                      <caption className="sr-only">{word(rosterLabel)}</caption>
+                      <thead className="hidden md:table-header-group">
+                        <tr className="border-b">
+                          {[
+                            word('agent'),
+                            word('roles'),
+                            word('status'),
+                            word('invitedOn'),
+                            word('joined'),
+                            word('lastActive'),
+                            word('actions'),
+                          ].map((label) => (
+                            <th
+                              key={label}
+                              scope="col"
+                              data-table-actions={label === word('actions') ? '' : undefined}
+                              className="p-3 text-start font-medium"
+                            >
+                              {label}
+                            </th>
+                          ))}
                         </tr>
-                      )}
-                      {Array.from(members, ([userId, member]) => (
-                        <Member
-                          formatJoinedAt={(value) => time.format(value, { dateStyle: 'medium' })}
-                          key={userId}
-                          compact={compact}
-                          entry={member.entry}
-                          onTransfer={
-                            team.canTransferOwnership && member.roles.includes('Owner')
-                              ? startOwnership
-                              : undefined
-                          }
-                          transferRef={transferTrigger}
-                          canTransfer={transferAllowed && !!eligibleOwners.length}
-                          canCommand={ready}
-                          locked={!!action || !!ownershipStep}
-                          roles={member.roles}
-                          onDetails={(button) => {
-                            detailTrigger.current = button;
-                            setDetail({ type: 'agent', id: userId });
-                          }}
-                          onSave={(roles, onConfirmed, onValidationError) =>
-                            saveMember(userId, member.entry, roles, onConfirmed, onValidationError)
-                          }
-                          onRemove={() => removeMember(userId, member.entry)}
-                        />
-                      ))}
-                      {invitations.map((entry) => (
-                        <tr
-                          key={entry.id}
-                          role={compact ? 'listitem' : undefined}
-                          className={teamRecordClass}
-                        >
-                          <TeamRecordCell compact={compact}>
-                            <TeamIdentity entry={entry} />
-                          </TeamRecordCell>
-                          <TeamRecordCell compact={compact} label={word('roles')}>
-                            <Badge variant="secondary">{word(entry.role)}</Badge>
-                          </TeamRecordCell>
-                          <TeamRecordCell compact={compact} label={word('status')}>
-                            {word('pending')}
-                          </TeamRecordCell>
-                          <TeamRecordCell compact={compact} label={word('invitedOn')}>
-                            <time dateTime={entry.createdAt}>
-                              {time.format(entry.createdAt, { dateStyle: 'medium' })}
-                            </time>
-                          </TeamRecordCell>
-                          <TeamRecordCell compact={compact} className="hidden md:table-cell">
-                            —
-                          </TeamRecordCell>
-                          <TeamRecordCell compact={compact} className="hidden md:table-cell">
-                            —
-                          </TeamRecordCell>
-                          <TeamRecordCell
-                            compact={compact}
-                            className="flex flex-wrap gap-2 md:table-cell"
-                          >
-                            <Button
-                              variant="outline"
-                              disabled={!ready || !!action || !!ownershipStep}
-                              onClick={(event) => {
-                                detailTrigger.current = event.currentTarget;
-                                setDetail({ type: 'invitation', id: entry.id });
+                      </thead>
+                      <tbody
+                        role={compact ? 'list' : undefined}
+                        aria-label={compact ? word(rosterLabel) : undefined}
+                        className="block space-y-3 md:table-row-group md:space-y-0"
+                      >
+                        {(!showMembers || members.size === 0) &&
+                          (!showInvitations || invitations.length === 0) && (
+                            <tr
+                              role={compact ? 'listitem' : undefined}
+                              className="block md:table-row"
+                            >
+                              <TeamRecordCell compact={compact} colSpan={7}>
+                                {word('empty')}
+                              </TeamRecordCell>
+                            </tr>
+                          )}
+                        {showMembers &&
+                          Array.from(members, ([userId, member]) => (
+                            <Member
+                              formatJoinedAt={(value) =>
+                                time.format(value, { dateStyle: 'medium' })
+                              }
+                              key={userId}
+                              compact={compact}
+                              entry={member.entry}
+                              onTransfer={
+                                team.canTransferOwnership && member.roles.includes('Owner')
+                                  ? startOwnership
+                                  : undefined
+                              }
+                              transferRef={transferTrigger}
+                              canTransfer={transferAllowed && !!eligibleOwners.length}
+                              canCommand={ready}
+                              locked={!!action || !!ownershipStep}
+                              roles={member.roles}
+                              recordId={workspace ? userId : undefined}
+                              onDetails={(button) => {
+                                detailTrigger.current = button;
+                                setDetail({ type: 'agent', id: userId });
                               }}
+                              onSave={(roles, onConfirmed, onValidationError) =>
+                                saveMember(
+                                  userId,
+                                  member.entry,
+                                  roles,
+                                  onConfirmed,
+                                  onValidationError
+                                )
+                              }
+                              onRemove={() => removeMember(userId, member.entry)}
+                            />
+                          ))}
+                        {showInvitations &&
+                          invitations.map((entry) => (
+                            <tr
+                              key={entry.id}
+                              role={compact ? 'listitem' : undefined}
+                              className={teamRecordClass}
                             >
-                              {word('details')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={!ready || !!action || !!ownershipStep}
-                              onClick={() => withdraw(entry)}
-                            >
-                              {word('withdraw')}
-                            </Button>
-                          </TeamRecordCell>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                              <TeamRecordCell compact={compact}>
+                                <TeamIdentity entry={entry} />
+                              </TeamRecordCell>
+                              <TeamRecordCell compact={compact} label={word('roles')}>
+                                <Badge variant="secondary">{word(entry.role)}</Badge>
+                              </TeamRecordCell>
+                              <TeamRecordCell compact={compact} label={word('status')}>
+                                {word('pending')}
+                              </TeamRecordCell>
+                              <TeamRecordCell compact={compact} label={word('invitedOn')}>
+                                <time dateTime={entry.createdAt}>
+                                  {time.format(entry.createdAt, { dateStyle: 'medium' })}
+                                </time>
+                              </TeamRecordCell>
+                              <TeamRecordCell compact={compact} className="hidden md:table-cell">
+                                —
+                              </TeamRecordCell>
+                              <TeamRecordCell compact={compact} className="hidden md:table-cell">
+                                —
+                              </TeamRecordCell>
+                              <TeamRecordCell
+                                compact={compact}
+                                data-table-actions={compact ? undefined : ''}
+                                className="flex flex-wrap gap-2 md:table-cell"
+                              >
+                                {workspace ? (
+                                  <Link
+                                    {...teamRecordLink('invitations', entry.id)}
+                                    className={buttonVariants({
+                                      variant: 'outline',
+                                      className: 'min-h-11',
+                                    })}
+                                    disabled={!ready || !!action || !!ownershipStep}
+                                    data-table-action-tooltip={word('details')}
+                                  >
+                                    <TableActionIcon icon={TableEyeIcon}>
+                                      {word('details')}
+                                    </TableActionIcon>
+                                  </Link>
+                                ) : (
+                                  <Button
+                                    variant="outline"
+                                    disabled={!ready || !!action || !!ownershipStep}
+                                    onClick={(event) => {
+                                      detailTrigger.current = event.currentTarget;
+                                      setDetail({ type: 'invitation', id: entry.id });
+                                    }}
+                                    data-table-action-tooltip={word('details')}
+                                  >
+                                    <TableActionIcon icon={TableEyeIcon}>
+                                      {word('details')}
+                                    </TableActionIcon>
+                                  </Button>
+                                )}
+                                <Button
+                                  variant="outline"
+                                  disabled={!ready || !!action || !!ownershipStep}
+                                  onClick={() => withdraw(entry)}
+                                  data-table-action-tooltip={word('withdraw')}
+                                >
+                                  <TableActionIcon icon={TableUndo2Icon}>
+                                    {word('withdraw')}
+                                  </TableActionIcon>
+                                </Button>
+                              </TeamRecordCell>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </ListPage.Content>
@@ -1019,11 +1407,14 @@ function TeamMembers({
           onWithdraw={() => withdraw(detailedEntry)}
           revision={activityRevision}
           refreshMembers={reloadMembers}
+          editorRefresh={refreshInEditor ? memberRefresh : undefined}
           recoveryNotice={memberRecovery ? confirmationText('unconfirmed', locale) : undefined}
           refreshError={memberRecovery !== null && resource.error}
+          page={routedId ? (workspace?.edit ? 'edit' : 'detail') : undefined}
         />
       )}
-      {invitationOpen && (
+      {routedInvite && team && !scope.denied && inviteForm}
+      {localInvite && (
         <Dialog
           open
           onOpenChange={(open) => {
@@ -1043,133 +1434,7 @@ function TeamMembers({
               <DialogTitle>{word('invite')}</DialogTitle>
               <DialogDescription>{word('consent')}</DialogDescription>
             </DialogHeader>
-            <form noValidate onSubmit={invite} className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              <div className="flex-1 min-w-48 space-y-1">
-                <Label htmlFor="team-username">{word('username')}</Label>
-                <Input
-                  {...invitation.bind('username')}
-                  autoFocus
-                  id="team-username"
-                  required
-                  aria-required="true"
-                  maxLength={254}
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  disabled={inviting || !!inviteRecovery}
-                />
-                {invitation.errors.username && (
-                  <p
-                    id={invitation.errorId('username')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {invitation.errors.username.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="invite-role">{word('role')}</Label>
-                <select
-                  {...invitation.bind('role')}
-                  id="invite-role"
-                  aria-required="true"
-                  tabIndex={0}
-                  className="block rounded border border-input bg-background text-foreground p-2"
-                  value={role}
-                  onChange={(event) => setRole(event.target.value as Role)}
-                  disabled={inviting || !!inviteRecovery}
-                >
-                  {ROLES.map((item) => (
-                    <option key={item} value={item}>
-                      {word(item)}
-                    </option>
-                  ))}
-                </select>
-                {invitation.errors.role && (
-                  <p
-                    id={invitation.errorId('role')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {invitation.errors.role.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="invite-message">{word('message')}</Label>
-                <Textarea
-                  {...invitation.bind('message')}
-                  id="invite-message"
-                  maxLength={1000}
-                  value={message}
-                  aria-describedby={[
-                    'invite-message-hint',
-                    invitation.errors.message ? invitation.errorId('message') : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  disabled={inviting || !!inviteRecovery}
-                  onChange={(event) => setMessage(event.target.value)}
-                />
-                <p id="invite-message-hint" className="text-sm text-muted-foreground">
-                  {word('messageHint')}
-                </p>
-                {invitation.errors.message && (
-                  <p
-                    id={invitation.errorId('message')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {invitation.errors.message.message}
-                  </p>
-                )}
-              </div>
-              {username.trim() && (
-                <p role="status" className="[overflow-wrap:anywhere]">
-                  {word('invitePreview')
-                    .replace('{username}', username.trim())
-                    .replace('{role}', word(role))
-                    .replace('{entity}', team?.profileName ?? word('legalEntity'))}
-                </p>
-              )}
-              <Button type="button" variant="outline" disabled={loading} onClick={reloadMembers}>
-                {word('refreshMembers')}
-              </Button>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={inviting || invitation.form.formState.isSubmitting}
-                  onClick={() => {
-                    if (invitationPending.current) return;
-                    restoreInviteFocus.current = true;
-                    setInvitationOpen(false);
-                  }}
-                >
-                  {word('cancel')}
-                </Button>
-                <Button
-                  type="submit"
-                  aria-busy={inviting || invitation.form.formState.isSubmitting || undefined}
-                  disabled={
-                    !ready || inviting || !!inviteRecovery || invitation.form.formState.isSubmitting
-                  }
-                >
-                  {inviting && (
-                    <Loader2
-                      aria-hidden="true"
-                      className="size-4 animate-spin motion-reduce:animate-none"
-                    />
-                  )}
-                  {word(inviting ? 'working' : 'sendInvite')}
-                </Button>
-              </DialogFooter>
-            </form>
+            {inviteForm}
           </DialogContent>
         </Dialog>
       )}
@@ -1331,6 +1596,7 @@ function TeamRecordCell({
 
 function Member({
   entry,
+  recordId,
   roles,
   compact,
   onSave,
@@ -1344,6 +1610,7 @@ function Member({
   onDetails,
 }: {
   entry: Entry;
+  recordId?: string | undefined;
   compact: boolean;
   onDetails: (button: HTMLButtonElement) => void;
   onTransfer: (() => void) | undefined;
@@ -1380,7 +1647,9 @@ function Member({
             </Badge>
           ))}
         </div>
-        {!owner && <TeamRoleFields draft={draft} locked={locked} canCommand={canCommand} />}
+        {!owner && !recordId && (
+          <TeamRoleFields draft={draft} locked={locked} canCommand={canCommand} />
+        )}
       </TeamRecordCell>
       <TeamRecordCell compact={compact} label={word('status')}>
         {word('active')}
@@ -1411,45 +1680,79 @@ function Member({
           '—'
         )}
       </TeamRecordCell>
-      <TeamRecordCell compact={compact} className="md:min-w-80">
+      <TeamRecordCell compact={compact} data-table-actions={compact ? undefined : ''}>
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            disabled={!canCommand || locked}
-            onClick={(event) => onDetails(event.currentTarget)}
-          >
-            {word('details')}
-          </Button>
+          {recordId ? (
+            <Link
+              {...teamRecordLink('members', recordId)}
+              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              disabled={!canCommand || locked}
+              data-table-action-tooltip={word('details')}
+            >
+              <TableActionIcon icon={TableEyeIcon}>{word('details')}</TableActionIcon>
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              disabled={!canCommand || locked}
+              onClick={(event) => onDetails(event.currentTarget)}
+              data-table-action-tooltip={word('details')}
+            >
+              <TableActionIcon icon={TableEyeIcon}>{word('details')}</TableActionIcon>
+            </Button>
+          )}
           {onTransfer && (
             <Button
               ref={transferRef}
               variant="outline"
               disabled={!canCommand || locked || !canTransfer}
               onClick={onTransfer}
+              data-table-action-tooltip={word('transfer')}
             >
-              {word('transfer')}
+              <TableActionIcon icon={TableArrowLeftRightIcon}>{word('transfer')}</TableActionIcon>
             </Button>
           )}
-          <Button
-            variant="outline"
-            disabled={
-              !canCommand ||
-              locked ||
-              stale ||
-              owner ||
-              draft.form.formState.isSubmitting ||
-              draft.unchanged
-            }
-            onClick={draft.form.handleSubmit(
-              ({ roles }) =>
-                liveCanSave.current && onSave(roles, draft.confirm, draft.onValidationError)
-            )}
-          >
-            {word('saveRoles')}
-          </Button>
-          <Button variant="outline" disabled={!canCommand || locked || owner} onClick={onRemove}>
-            {word('remove')}
-          </Button>
+          {recordId ? (
+            !owner && (
+              <Link
+                {...teamRecordLink('members', recordId, true)}
+                className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                disabled={!canCommand || locked}
+                data-table-action-tooltip={word('editRoles')}
+              >
+                <TableActionIcon icon={TableUserCogIcon}>{word('editRoles')}</TableActionIcon>
+              </Link>
+            )
+          ) : (
+            <Button
+              variant="outline"
+              disabled={
+                !canCommand ||
+                locked ||
+                stale ||
+                owner ||
+                draft.form.formState.isSubmitting ||
+                draft.unchanged
+              }
+              onClick={draft.form.handleSubmit(
+                ({ roles }) =>
+                  liveCanSave.current && onSave(roles, draft.confirm, draft.onValidationError)
+              )}
+              data-table-action-tooltip={word('saveRoles')}
+            >
+              <TableActionIcon icon={TableSaveIcon}>{word('saveRoles')}</TableActionIcon>
+            </Button>
+          )}
+          {!recordId && (
+            <Button
+              variant="outline"
+              disabled={!canCommand || locked || owner}
+              onClick={onRemove}
+              data-table-action-tooltip={word('remove')}
+            >
+              <TableActionIcon icon={TableTrash2Icon}>{word('remove')}</TableActionIcon>
+            </Button>
+          )}
         </div>
         {owner && <p className="mt-2 text-sm text-muted-foreground">{word('lastOwner')}</p>}
       </TeamRecordCell>

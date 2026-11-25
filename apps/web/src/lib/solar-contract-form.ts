@@ -103,6 +103,8 @@ const integer = (value: unknown, min: number, max: number): value is number =>
 export const solarInt8 = 9_223_372_036_854_775_807n;
 export const solarRowPrice = (value: unknown): value is string =>
   typeof value === 'string' && /^[0-9]{1,19}$/.test(value) && BigInt(value) <= solarInt8;
+export const solarInvoiceInteger = (value: unknown, min: number, max: number) =>
+  typeof value === 'string' && !!value.trim() && integer(Number(value), min, max);
 export function solarContractOptions(value: unknown): SolarContractOptions | null {
   if (
     !record(value) ||
@@ -153,6 +155,16 @@ export function selectedSolarSource(raw: string, options: SolarContractOptions) 
       } as const)
     : null;
 }
+function solarInvoiceLines(lines: SolarInvoiceDraft[]): SolarContractBody['invoiceLines'] {
+  return lines.map((line) => ({
+    description: line.description.trim(),
+    quantity: Number(line.quantity),
+    unitPrice: line.unitPrice,
+    vatRate: Number(line.vatRate),
+    isTaxable: line.isTaxable,
+  }));
+}
+
 export function solarContractBody(
   draft: SolarContractDraft,
   profileId: string,
@@ -174,13 +186,7 @@ export function solarContractBody(
       kind === 'template'
         ? { kind: 'template', templateVersionId: id }
         : { kind: 'document', documentId: id },
-    invoiceLines: draft.invoiceLines.map((line) => ({
-      description: line.description.trim(),
-      quantity: Number(line.quantity),
-      unitPrice: line.unitPrice,
-      vatRate: Number(line.vatRate),
-      isTaxable: line.isTaxable,
-    })),
+    invoiceLines: solarInvoiceLines(draft.invoiceLines),
   };
 }
 export function solarContractAmounts(lines: SolarContractBody['invoiceLines']) {
@@ -206,6 +212,22 @@ export function solarContractAmounts(lines: SolarContractBody['invoiceLines']) {
     vat: vat.toString(),
     total: (subtotal + vat).toString(),
   };
+}
+
+export function draftSolarInvoiceTotals(lines: SolarInvoiceDraft[]) {
+  if (
+    !lines.length ||
+    !lines.every(
+      (line) =>
+        solarInvoiceInteger(line.quantity, 1, 2_147_483_647) &&
+        solarRowPrice(line.unitPrice) &&
+        solarInvoiceInteger(line.vatRate, 0, 10_000)
+    )
+  )
+    return undefined;
+  const totals = solarContractAmounts(solarInvoiceLines(lines));
+  const total = BigInt(totals.total);
+  return total > 0n && total <= solarInt8 ? totals : undefined;
 }
 export function matchedSolarContractReview(
   value: unknown,

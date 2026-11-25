@@ -20,8 +20,15 @@ export const documentStates = [
   'Removed',
 ] as const;
 export type DocumentState = (typeof documentStates)[number];
-export type DocumentAction =
-  'submit' | 'approve' | 'reject' | 'request-changes' | 'quarantine' | 'remove';
+export const documentActions = [
+  'submit',
+  'approve',
+  'reject',
+  'request-changes',
+  'quarantine',
+  'remove',
+] as const;
+export type DocumentAction = (typeof documentActions)[number];
 export interface BusinessDocument {
   id: string;
   profileId: string;

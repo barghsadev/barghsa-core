@@ -1,5 +1,5 @@
 import { useCallback, useId, useRef, useState, type ReactNode } from 'react';
-import { ChevronDownIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react';
+import { SlidersHorizontalIcon, XIcon } from 'lucide-react';
 import { Badge } from './badge';
 import { Button } from './button';
 import {
@@ -17,6 +17,7 @@ import { FilterApplyContext, type PrepareFilter } from './filter-apply-context';
 export interface ListFilterChip {
   id: string;
   label: string;
+  displayLabel?: string;
   onRemove: () => void;
 }
 
@@ -83,12 +84,11 @@ export function ListFilterPanel({
     >
       <SlidersHorizontalIcon aria-hidden="true" data-icon="inline-start" />
       {labels.filters}
-      {activeCount > 0 && <Badge aria-hidden="true">{countLabel}</Badge>}
-      <ChevronDownIcon
-        aria-hidden="true"
-        data-icon="inline-end"
-        className={open ? 'rotate-180' : undefined}
-      />
+      {activeCount > 0 && (
+        <Badge variant="secondary" aria-hidden="true">
+          {countLabel}
+        </Badge>
+      )}
     </Button>
   );
   const panel = (
@@ -112,16 +112,17 @@ export function ListFilterPanel({
             <li key={chip.id} className="max-w-full">
               <Button
                 type="button"
-                variant="outline"
-                className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
+                variant="ghost"
+                className="h-auto min-h-11 max-w-full whitespace-normal rounded-full bg-muted px-3 py-2 text-start sm:min-h-9"
                 aria-label={labels.remove.replace('{filter}', chip.label)}
+                title={chip.displayLabel ? chip.label : undefined}
                 onClick={() => {
                   filterButton.current?.focus();
                   chip.onRemove();
                 }}
               >
                 <span className="min-w-0 break-words">
-                  <bdi>{chip.label}</bdi>
+                  <bdi>{chip.displayLabel ?? chip.label}</bdi>
                 </span>
                 <XIcon aria-hidden="true" data-icon="inline-end" />
               </Button>

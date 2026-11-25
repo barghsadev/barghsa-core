@@ -38,15 +38,15 @@ for (const locale of ['fa', 'en']) {
   }) => {
     await openRegistration(page, locale);
     const brand = page.getByRole('complementary');
-    await expect(brand).toBeVisible();
-    const benefits = brand.getByRole('listitem', { includeHidden: true });
-    await expect(benefits).toHaveCount(3);
-    const wideLayout = await page.evaluate(() => matchMedia('(min-width: 768px)').matches);
-    for (const benefit of await benefits.all()) {
-      if (wideLayout) await expect(benefit).toBeVisible();
-      else await expect(benefit).toBeHidden();
+    const wideLayout = await page.evaluate(() => matchMedia('(min-width: 64rem)').matches);
+    if (wideLayout) {
+      await expect(brand).toBeVisible();
+      await expect(brand.locator('p')).toHaveCount(2);
+      await expect(brand.locator('p').last()).not.toBeEmpty();
+    } else {
+      await expect(brand).toBeHidden();
     }
-    await expect(brand.getByRole('link')).toHaveAttribute('href', '/');
+    await expect(page.getByRole('banner').getByRole('link')).toHaveAttribute('href', '/');
     await expect(page.locator('main a[href="/login"]')).toBeVisible();
     await expect(page.locator('main a[href="/forgot-password"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -61,7 +61,9 @@ for (const locale of ['fa', 'en']) {
     await expect(username).toHaveAttribute('aria-invalid', 'true');
     await expect(secret).toHaveCount(0);
     await username.fill('draft@example.test');
+    await expect(secret).toBeVisible();
     await username.press('Tab');
+    await expect(secret).toBeFocused();
     await expect(secret).toHaveAttribute('autocomplete', 'new-password');
     await expect(page.getByRole('checkbox')).not.toBeChecked();
     await username.focus();
@@ -234,7 +236,7 @@ for (const locale of ['fa', 'en']) {
     );
     await page.locator('input[inputmode="numeric"]').first().fill('123456');
     await expect(page.locator('main [role="alert"]')).toBeVisible();
-    await page.getByRole('complementary').getByRole('link').click();
+    await page.getByRole('banner').getByRole('link').click();
     await expect(page).toHaveURL(/\/$/);
     await page.clock.fastForward(1_000);
     await expect(page).toHaveURL(/\/$/);

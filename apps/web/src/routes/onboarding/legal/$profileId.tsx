@@ -2,6 +2,7 @@ import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import {
   OnboardingWizard,
+  OnboardingProfileHeader,
   OnboardingReview,
   OnboardingSubmissionNotice,
 } from '../../../components/OnboardingWizard.js';
@@ -16,15 +17,24 @@ import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useState, useCallback, useRef, useMemo } from 'react';
-import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
+import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { useLocale } from '../../../hooks/useLocale.js';
 import {
   validateLegalNationalIdentifier,
   validatePostalCode,
   validateNationalId,
 } from '@barghsa/shared/validation';
-import { ChevronRightIcon, UploadIcon } from 'lucide-react';
-import { Input, Label, DependentSelect, DatePicker, datePickerCalendarDate } from '@barghsa/ui';
+import { FileText, Trash2, UploadIcon } from 'lucide-react';
+import {
+  Button,
+  Input,
+  Label,
+  DependentSelect,
+  NativeSelect,
+  Textarea,
+  DatePicker,
+  datePickerCalendarDate,
+} from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/legal/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -482,14 +492,15 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
       required?: boolean;
       maxLength?: number;
       placeholder?: string;
-      inputMode?: 'text' | 'numeric' | 'email' | 'tel';
+      inputMode?: 'text' | 'numeric' | 'email' | 'tel' | undefined;
+      autoComplete?: string | undefined;
     }
   ) {
     const isTouched = touched[field];
     const error = errors[field as keyof FormErrors];
 
     return (
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-1">
         <Label htmlFor={field}>
           {label}
           {options?.required && (
@@ -501,12 +512,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
         {field === 'representativeFullAddress' ? (
           <>
             {' '}
-            <textarea
+            <Textarea
               id={field}
               ref={form.register(field).ref}
               required
               aria-required="true"
-              rows={3}
+              rows={2}
               maxLength={500}
               value={value}
               onChange={(event) => onChange(event.target.value)}
@@ -514,7 +525,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               disabled={locked}
               aria-invalid={isTouched && !!error}
               aria-describedby={isTouched && error ? `${field}-error` : undefined}
-              className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              className="min-h-14"
             />
             <p className="text-xs text-muted-foreground text-end">
               {numbers.number(value.length)}/{numbers.number(500)}
@@ -549,6 +560,8 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             ref={form.register(field).ref}
             type={options?.type ?? 'text'}
             inputMode={options?.inputMode}
+            dir={options?.inputMode === 'numeric' ? 'ltr' : undefined}
+            autoComplete={options?.autoComplete}
             required={options?.required}
             aria-required={options?.required || undefined}
             maxLength={options?.maxLength}
@@ -572,25 +585,14 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
 
   return (
     <div
-      className="container mx-auto flex min-h-screen items-start justify-center p-4 pt-12"
+      className="container mx-auto flex min-h-dvh items-start justify-center px-4 py-4 sm:py-8"
       dir={isRtl ? 'rtl' : 'ltr'}
     >
-      <div className="w-full max-w-3xl">
-        {/* Back link */}
-        <Link
-          to="/onboarding"
-          className="touch-action mb-4 inline-flex items-center text-sm pointer-coarse:min-h-[45px]! text-muted-foreground hover:text-primary"
-        >
-          <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
-          {isRtl ? 'بازگشت' : 'Back'}
-        </Link>
-
-        <h1 className="mb-1 text-2xl font-bold">{isRtl ? 'پروفایل حقوقی' : 'Legal Profile'}</h1>
-        <p className="mb-6 text-sm text-muted-foreground">
-          {isRtl
-            ? 'لطفاً اطلاعات شخص حقوقی را وارد کنید'
-            : 'Please enter the legal entity information'}
-        </p>
+      <div className="w-full min-w-0 max-w-3xl">
+        <OnboardingProfileHeader
+          title={t('onboarding.legal.title', locale)}
+          description={t('onboarding.legal.subtitle', locale)}
+        />
 
         <OnboardingSubmissionNotice {...submission} />
 
@@ -621,18 +623,16 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                 <>
                   {' '}
                   <fieldset disabled={!draft.ready || locked}>
-                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                    <legend className="mb-3 w-full border-b pb-2 text-base font-semibold">
                       {isRtl ? 'اطلاعات نماینده' : 'Authorized Representative'}
                     </legend>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                       {(
                         [
-                          'representativeHonorific',
                           'representativeFirstName',
                           'representativeLastName',
                           'representativeNationalId',
-                          'representativeFullAddress',
-                          'representativePostalCode',
+                          'representativeHonorific',
                         ] as const
                       ).map((field) => (
                         <div key={field}>
@@ -644,117 +644,32 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               setRepresentative((prev) => ({
                                 ...prev,
                                 [field]:
-                                  field === 'representativeNationalId' ||
-                                  field === 'representativePostalCode'
+                                  field === 'representativeNationalId'
                                     ? normalizeProfileDigits(value)
                                     : value,
                               })),
                             {
                               required: field !== 'representativeHonorific',
                               maxLength:
-                                field === 'representativeFullAddress'
-                                  ? 500
+                                field === 'representativeNationalId'
+                                  ? 10
                                   : field === 'representativeHonorific'
                                     ? 50
-                                    : field === 'representativeNationalId' ||
-                                        field === 'representativePostalCode'
-                                      ? 10
-                                      : 100,
+                                    : 100,
+                              inputMode:
+                                field === 'representativeNationalId' ? 'numeric' : undefined,
+                              autoComplete:
+                                field === 'representativeFirstName'
+                                  ? 'given-name'
+                                  : field === 'representativeLastName'
+                                    ? 'family-name'
+                                    : field === 'representativeHonorific'
+                                      ? 'honorific-prefix'
+                                      : undefined,
                             }
                           )}
                         </div>
                       ))}
-                      {(['representativeProvinceId', 'representativeCityId'] as const).map(
-                        (field) => (
-                          <div key={field} className="space-y-2">
-                            <Label htmlFor={field}>
-                              {t(`onboarding.legal.${field}`, locale)}
-                              <span aria-hidden="true" className="text-destructive ms-0.5">
-                                *
-                              </span>
-                            </Label>
-                            {field === 'representativeCityId' ? (
-                              <DependentSelect
-                                className="h-11 pointer-coarse:min-h-[45px]!"
-                                id={field}
-                                ref={form.register(field).ref}
-                                required
-                                aria-required="true"
-                                dependencyValue={representative.representativeProvinceId}
-                                value={representative[field]}
-                                ready={representativeCityOptions.ready}
-                                loading={representativeCityOptions.loading}
-                                options={representativeCities.map((city) => ({
-                                  value: city.id,
-                                  label: isRtl ? city.nameFa : city.nameEn,
-                                  dependencyValue: city.provinceId ?? '',
-                                }))}
-                                placeholder={t(`onboarding.legal.${field}`, locale)}
-                                disabled={locked}
-                                onChange={(event) =>
-                                  setRepresentative((prev) => ({
-                                    ...prev,
-                                    representativeCityId: event.target.value,
-                                  }))
-                                }
-                                onBlur={() => handleBlur(field)}
-                                aria-invalid={touched[field] && !!errors[field]}
-                                aria-describedby={
-                                  touched[field] && errors[field] ? `${field}-error` : undefined
-                                }
-                              />
-                            ) : (
-                              <select
-                                id={field}
-                                ref={form.register(field).ref}
-                                required
-                                aria-required="true"
-                                value={representative[field]}
-                                disabled={locked || !provinceOptions.ready}
-                                onChange={(event) =>
-                                  setRepresentative((prev) => ({
-                                    ...prev,
-                                    [field]: event.target.value,
-                                    ...(field === 'representativeProvinceId'
-                                      ? { representativeCityId: '' }
-                                      : {}),
-                                  }))
-                                }
-                                onBlur={() => handleBlur(field)}
-                                aria-invalid={touched[field] && !!errors[field]}
-                                aria-describedby={
-                                  touched[field] && errors[field] ? `${field}-error` : undefined
-                                }
-                                className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm"
-                              >
-                                <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
-                                {provinces.map((item) => (
-                                  <option key={item.id} value={item.id}>
-                                    {isRtl ? item.nameFa : item.nameEn}
-                                  </option>
-                                ))}
-                              </select>
-                            )}
-                            {field === 'representativeCityId' && (
-                              <GeographyLoadError
-                                {...representativeCityOptions}
-                                message={t('onboarding.individual.error.loadCities', locale)}
-                                locale={locale}
-                                testId="onboarding-representative-cities-retry"
-                              />
-                            )}
-                            {touched[field] && errors[field] && (
-                              <p
-                                id={`${field}-error`}
-                                role="alert"
-                                className="text-sm text-destructive"
-                              >
-                                {errors[field]}
-                              </p>
-                            )}
-                          </div>
-                        )
-                      )}
                       {renderField(
                         'representativeTitle',
                         isRtl ? 'عنوان/سمت نماینده' : 'Representative Title',
@@ -780,6 +695,133 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         }
                       )}
                     </div>
+                    <fieldset className="mt-4 space-y-3">
+                      <legend className="mb-2 w-full border-t pt-3 text-sm font-semibold">
+                        {t('onboarding.wizard.representativeAddress', locale)}
+                      </legend>
+                      <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
+                        {(['representativeProvinceId', 'representativeCityId'] as const).map(
+                          (field) => (
+                            <div key={field} className="min-w-0 space-y-1">
+                              <Label htmlFor={field}>
+                                {t(`onboarding.legal.${field}`, locale)}
+                                <span aria-hidden="true" className="text-destructive ms-0.5">
+                                  *
+                                </span>
+                              </Label>
+                              {field === 'representativeCityId' ? (
+                                <DependentSelect
+                                  className="h-11 pointer-coarse:min-h-[45px]!"
+                                  id={field}
+                                  ref={form.register(field).ref}
+                                  required
+                                  aria-required="true"
+                                  dependencyValue={representative.representativeProvinceId}
+                                  value={representative[field]}
+                                  ready={representativeCityOptions.ready}
+                                  loading={representativeCityOptions.loading}
+                                  options={representativeCities.map((city) => ({
+                                    value: city.id,
+                                    label: isRtl ? city.nameFa : city.nameEn,
+                                    dependencyValue: city.provinceId ?? '',
+                                  }))}
+                                  placeholder={t(`onboarding.legal.${field}`, locale)}
+                                  disabled={locked}
+                                  onChange={(event) =>
+                                    setRepresentative((prev) => ({
+                                      ...prev,
+                                      representativeCityId: event.target.value,
+                                    }))
+                                  }
+                                  onBlur={() => handleBlur(field)}
+                                  aria-invalid={touched[field] && !!errors[field]}
+                                  aria-describedby={
+                                    touched[field] && errors[field] ? `${field}-error` : undefined
+                                  }
+                                />
+                              ) : (
+                                <NativeSelect
+                                  id={field}
+                                  ref={form.register(field).ref}
+                                  required
+                                  aria-required="true"
+                                  value={representative[field]}
+                                  disabled={locked || !provinceOptions.ready}
+                                  onChange={(event) =>
+                                    setRepresentative((prev) => ({
+                                      ...prev,
+                                      [field]: event.target.value,
+                                      ...(field === 'representativeProvinceId'
+                                        ? { representativeCityId: '' }
+                                        : {}),
+                                    }))
+                                  }
+                                  onBlur={() => handleBlur(field)}
+                                  aria-invalid={touched[field] && !!errors[field]}
+                                  aria-describedby={
+                                    touched[field] && errors[field] ? `${field}-error` : undefined
+                                  }
+                                  className="w-full"
+                                >
+                                  <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
+                                  {provinces.map((item) => (
+                                    <option key={item.id} value={item.id}>
+                                      {isRtl ? item.nameFa : item.nameEn}
+                                    </option>
+                                  ))}
+                                </NativeSelect>
+                              )}
+                              {field === 'representativeCityId' && (
+                                <GeographyLoadError
+                                  {...representativeCityOptions}
+                                  message={t('onboarding.individual.error.loadCities', locale)}
+                                  locale={locale}
+                                  testId="onboarding-representative-cities-retry"
+                                />
+                              )}
+                              {touched[field] && errors[field] && (
+                                <p
+                                  id={`${field}-error`}
+                                  role="alert"
+                                  className="text-sm text-destructive"
+                                >
+                                  {errors[field]}
+                                </p>
+                              )}
+                            </div>
+                          )
+                        )}
+                      </div>
+                      {renderField(
+                        'representativeFullAddress',
+                        t('onboarding.legal.representativeFullAddress', locale),
+                        representative.representativeFullAddress,
+                        (value) =>
+                          setRepresentative((previous) => ({
+                            ...previous,
+                            representativeFullAddress: value,
+                          })),
+                        { required: true }
+                      )}
+                      <div className="max-w-[16rem]">
+                        {renderField(
+                          'representativePostalCode',
+                          t('onboarding.legal.representativePostalCode', locale),
+                          representative.representativePostalCode,
+                          (value) =>
+                            setRepresentative((previous) => ({
+                              ...previous,
+                              representativePostalCode: normalizeProfileDigits(value),
+                            })),
+                          {
+                            required: true,
+                            maxLength: 10,
+                            inputMode: 'numeric',
+                            autoComplete: 'postal-code',
+                          }
+                        )}
+                      </div>
+                    </fieldset>
                   </fieldset>
                 </>
               ),
@@ -800,10 +842,10 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                 <>
                   {' '}
                   <fieldset disabled={!draft.ready || locked}>
-                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                    <legend className="mb-3 w-full border-b pb-2 text-base font-semibold">
                       {isRtl ? 'اطلاعات شخص حقوقی' : 'Legal Entity'}
                     </legend>
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {renderField(
                         'legalName',
                         isRtl ? 'نام شخص حقوقی' : 'Legal Name',
@@ -816,7 +858,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         }
                       )}
 
-                      <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                         {renderField(
                           'nationalIdentifier',
                           isRtl ? 'شناسه ملی' : 'National Identifier',
@@ -847,9 +889,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         )}
                       </div>
 
-                      <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                         {/* Company type (select) */}
-                        <div className="space-y-2">
+                        <div className="min-w-0 space-y-1">
                           <Label htmlFor="companyTypeId">
                             {isRtl ? 'نوع شرکت' : 'Company Type'}
                             <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -875,7 +917,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               </button>
                             </div>
                           ) : (
-                            <select
+                            <NativeSelect
                               id="companyTypeId"
                               aria-required="true"
                               ref={form.register('companyTypeId').ref}
@@ -883,7 +925,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               onChange={(e) => setCompanyTypeId(e.target.value)}
                               onBlur={() => handleBlur('companyTypeId')}
                               disabled={locked}
-                              className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="w-full"
                               aria-invalid={touched.companyTypeId && !!errors.companyTypeId}
                               aria-describedby={
                                 touched.companyTypeId && errors.companyTypeId
@@ -899,7 +941,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                   {isRtl ? ct.nameFa : ct.nameEn}
                                 </option>
                               ))}
-                            </select>
+                            </NativeSelect>
                           )}
                           {touched.companyTypeId && errors.companyTypeId && (
                             <p
@@ -924,7 +966,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         )}
                       </div>
 
-                      <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                         {renderField(
                           'economicCode',
                           isRtl ? 'کد اقتصادی' : 'Economic Code',
@@ -979,13 +1021,13 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                 <>
                   {' '}
                   <fieldset disabled={!draft.ready || locked}>
-                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                    <legend className="mb-3 w-full border-b pb-2 text-base font-semibold">
                       {isRtl ? 'آدرس رسمی' : 'Official Address'}
                     </legend>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid min-w-0 gap-x-4 gap-y-3 min-[380px]:grid-cols-2">
                       {/* Province */}
-                      <div className="space-y-2">
+                      <div className="min-w-0 space-y-1">
                         <Label htmlFor="officialProvinceId">
                           {isRtl ? 'استان' : 'Province'}
                           <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -998,7 +1040,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
                           </div>
                         ) : (
-                          <select
+                          <NativeSelect
                             id="officialProvinceId"
                             ref={form.register('officialProvinceId').ref}
                             required
@@ -1016,7 +1058,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 : undefined
                             }
                             disabled={locked || !provinceOptions.ready}
-                            className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full"
                           >
                             <option value="">
                               {isRtl ? 'استان را انتخاب کنید' : 'Select province'}
@@ -1026,7 +1068,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 {isRtl ? p.nameFa : p.nameEn}
                               </option>
                             ))}
-                          </select>
+                          </NativeSelect>
                         )}
                         {touched.officialProvinceId && errors.officialProvinceId && (
                           <p
@@ -1040,7 +1082,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       </div>
 
                       {/* City */}
-                      <div className="space-y-2">
+                      <div className="min-w-0 space-y-1">
                         <Label htmlFor="officialCityId">
                           {isRtl ? 'شهر' : 'City'}
                           <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -1092,26 +1134,26 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     </div>
 
                     {/* Full Address */}
-                    <div className="mt-4 space-y-2">
+                    <div className="mt-3 min-w-0 space-y-1">
                       <Label htmlFor="officialFullAddress">
                         {isRtl ? 'آدرس کامل' : 'Full Address'}
                         <span aria-hidden="true" className="text-destructive ms-0.5">
                           *
                         </span>
                       </Label>
-                      <textarea
+                      <Textarea
                         id="officialFullAddress"
                         ref={form.register('officialFullAddress').ref}
                         required
                         aria-required="true"
                         maxLength={500}
-                        rows={3}
+                        rows={2}
                         value={officialFullAddress}
                         onChange={(e) => setOfficialFullAddress(e.target.value)}
                         onBlur={() => handleBlur('officialFullAddress')}
                         disabled={locked}
                         placeholder={isRtl ? 'آدرس کامل محل شرکت' : 'Full company address'}
-                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="min-h-14"
                         aria-invalid={touched.officialFullAddress && !!errors.officialFullAddress}
                         aria-describedby={
                           touched.officialFullAddress && errors.officialFullAddress
@@ -1134,7 +1176,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     </div>
 
                     {/* Postal Code */}
-                    <div className="mt-4 space-y-2">
+                    <div className="mt-3 min-w-0 space-y-1">
                       <Label htmlFor="officialPostalCode">
                         {isRtl ? 'کد پستی' : 'Postal Code'}
                         <span aria-hidden="true" className="text-destructive ms-0.5">
@@ -1143,6 +1185,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       <Input
                         id="officialPostalCode"
+                        dir="ltr"
+                        autoComplete="postal-code"
+                        className="max-w-[16rem]"
                         aria-required="true"
                         ref={form.register('officialPostalCode').ref}
                         type="text"
@@ -1157,22 +1202,25 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         }}
                         onBlur={() => handleBlur('officialPostalCode')}
                         disabled={locked}
-                        placeholder={isRtl ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'}
                         aria-invalid={touched.officialPostalCode && !!errors.officialPostalCode}
                         aria-describedby={
                           touched.officialPostalCode && errors.officialPostalCode
                             ? 'officialPostalCode-error'
-                            : undefined
+                            : 'officialPostalCode-hint'
                         }
                       />
-                      <div className="min-h-10">
-                        {touched.officialPostalCode && errors.officialPostalCode && (
+                      <div className="min-h-8 text-xs leading-4">
+                        {touched.officialPostalCode && errors.officialPostalCode ? (
                           <p
                             id="officialPostalCode-error"
-                            className="text-sm text-destructive"
+                            className="text-destructive"
                             role="alert"
                           >
                             {errors.officialPostalCode}
+                          </p>
+                        ) : (
+                          <p id="officialPostalCode-hint" className="text-muted-foreground">
+                            {t('onboarding.individual.postalCode.placeholder', locale)}
                           </p>
                         )}
                       </div>
@@ -1187,13 +1235,11 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                 <>
                   {' '}
                   <fieldset disabled={!draft.ready || locked}>
-                    <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
+                    <legend className="mb-3 w-full border-b pb-2 text-base font-semibold">
                       {isRtl ? 'بارگذاری مدارک' : 'Document Upload'}
                     </legend>
-                    <p className="mb-3 text-sm text-muted-foreground">
-                      {isRtl
-                        ? 'روزنامه رسمی یا مدارک ثبت شرکت (اختیاری)'
-                        : 'Official gazette or registration documents (optional)'}
+                    <p className="mb-2 text-sm text-muted-foreground">
+                      {t('onboarding.documents.optional', locale)}
                     </p>
 
                     {uploading && (
@@ -1204,12 +1250,26 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         {t('onboarding.documents.error', locale)}
                       </p>
                     )}
-                    <p id="document-upload-rules" className="mb-2 text-sm text-muted-foreground">
-                      {t('onboarding.documents.limit', locale)}
-                    </p>
-                    <div className="flex items-center justify-center w-full">
-                      <button
+                    <div
+                      className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-lg border border-dashed bg-muted/25 px-3 py-3 sm:px-4"
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        void uploadDocuments(Array.from(event.dataTransfer.files));
+                      }}
+                    >
+                      <div
+                        id="document-upload-rules"
+                        className="space-y-0.5 text-sm text-muted-foreground"
+                      >
+                        <p>{t('onboarding.documents.limit', locale)}</p>
+                        <p className="hidden text-xs sm:block pointer-coarse:hidden">
+                          {t('onboarding.documents.dropHint', locale)}
+                        </p>
+                      </div>
+                      <Button
                         type="button"
+                        variant="outline"
                         onClick={() => documentInput.current?.click()}
                         disabled={locked || uploading}
                         aria-describedby={
@@ -1217,21 +1277,10 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             ? 'document-upload-rules document-upload-error'
                             : 'document-upload-rules'
                         }
-                        onDragOver={(event) => event.preventDefault()}
-                        onDrop={(event) => {
-                          event.preventDefault();
-                          void uploadDocuments(Array.from(event.dataTransfer.files));
-                        }}
-                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted/50 transition-colors"
                       >
-                        <UploadIcon
-                          aria-hidden="true"
-                          className="mb-2 size-8 text-muted-foreground"
-                        />
-                        <span className="text-sm text-muted-foreground">
-                          {t('onboarding.documents.choose', locale)}
-                        </span>
-                      </button>
+                        <UploadIcon aria-hidden="true" />
+                        {t('onboarding.documents.choose', locale)}
+                      </Button>
                       <input
                         ref={documentInput}
                         id="document-upload"
@@ -1245,22 +1294,39 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     </div>
 
                     {documents.length > 0 && (
-                      <ul className="mt-3 space-y-1">
+                      <ul className="mt-3 divide-y rounded-lg border">
                         {documents.map((doc, idx) => (
                           <li
                             key={`${doc.name}-${idx}`}
-                            className="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2 text-sm"
+                            className="flex items-center justify-between gap-2 px-3 py-1 text-sm"
                           >
-                            <span className="truncate">{doc.name}</span>
-                            <button
+                            <span className="flex min-w-0 items-center gap-2">
+                              <FileText
+                                aria-hidden="true"
+                                className="size-4 shrink-0 text-muted-foreground"
+                              />
+                              <bdi className="min-w-0 truncate" title={doc.name}>
+                                {doc.name}
+                              </bdi>
+                            </span>
+                            <Button
                               type="button"
+                              size="icon"
+                              variant="ghost"
                               onClick={() => removeDocument(idx)}
                               disabled={locked || uploading}
-                              className="text-destructive hover:text-destructive/80 text-xs ml-2"
-                              aria-label={isRtl ? `حذف ${doc.name}` : `Remove ${doc.name}`}
+                              className="text-destructive hover:text-destructive"
+                              aria-label={t('onboarding.documents.remove', locale).replace(
+                                '{name}',
+                                doc.name
+                              )}
+                              title={t('onboarding.documents.remove', locale).replace(
+                                '{name}',
+                                doc.name
+                              )}
                             >
-                              {isRtl ? 'حذف' : 'Remove'}
-                            </button>
+                              <Trash2 aria-hidden="true" />
+                            </Button>
                           </li>
                         ))}
                       </ul>
@@ -1282,11 +1348,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     ...Object.entries(values)
                       .filter(([field]) => field !== 'documentKeys')
                       .map(([field, value]) => ({
-                        step: /(?:ProvinceId|CityId|FullAddress|PostalCode)$/.test(field)
-                          ? 3
-                          : field.startsWith('representative')
-                            ? 1
+                        step: field.startsWith('representative')
+                          ? 1
+                          : field.startsWith('official')
+                            ? 3
                             : 2,
+                        fullWidth: field.endsWith('FullAddress'),
                         label: t(`onboarding.legal.${field}`, locale),
                         value:
                           field === 'companyTypeId'
@@ -1309,6 +1376,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       })),
                     {
                       step: 4,
+                      fullWidth: true,
                       label: t('onboarding.wizard.documents', locale),
                       value: documents.map((document) => document.name).join('\n'),
                     },

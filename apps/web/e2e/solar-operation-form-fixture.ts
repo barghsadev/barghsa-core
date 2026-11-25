@@ -1,3 +1,4 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
 import type { Page, Route } from '@playwright/test';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { setupCatalogueForms } from './catalogue-form-fixture';
@@ -157,6 +158,10 @@ export async function setupSolarOperationForms(page: Page, locale: 'en' | 'fa', 
   await page.route('**/api/admin/solar/postal-guidance', (route) =>
     route.fulfill({ json: solarGuidance })
   );
+  await routePostalRecords(page, () => [
+    { ...solarPostal(), tracking_revision: state.tracking.revision },
+    { ...solarPostal(olderSolar), tracking_revision: 0 },
+  ]);
   await page.route('**/api/admin/solar/postal-queue?*', (route) =>
     route.fulfill({
       json: {

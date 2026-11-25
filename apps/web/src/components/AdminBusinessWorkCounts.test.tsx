@@ -82,12 +82,11 @@ it('links unresolved refunds and flags failed work for the permitted staff roles
     failedJobs: 2,
     deadLetterNotifications: 3,
   });
-  const financeLinks = container.querySelectorAll('a[href="/admin/contracts#refund-obligations"]');
+  const financeLinks = container.querySelectorAll('a[href="/admin/contracts/refunds"]');
   expect(financeLinks).toHaveLength(2);
-  expect(financeLinks[0]?.textContent).toContain('Failed refunds');
-  expect(financeLinks[0]?.textContent).toContain('1');
-  expect(financeLinks[1]?.textContent).toContain('Unresolved refunds');
-  expect(financeLinks[1]?.textContent).toContain('4');
+  expect(Array.from(financeLinks, (link) => link.textContent)).toEqual(
+    expect.arrayContaining(['Failed refundsNeeds attention1', 'Unresolved refunds4'])
+  );
   expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
     'Failed background jobsNeeds attention2'
   );
@@ -122,7 +121,7 @@ it('hides finance widgets when the server withholds their counts', async () => {
     failedJobs: null,
     deadLetterNotifications: null,
   });
-  expect(container.querySelector('a[href="/admin/contracts#refund-obligations"]')).toBeNull();
+  expect(container.querySelector('a[href="/admin/contracts/refunds"]')).toBeNull();
   expect(container.querySelector('a[href="/admin/failed-jobs"]')).toBeNull();
   expect(container.querySelector('a[href="/admin/electricity-orders"]')).toBeTruthy();
 });

@@ -98,6 +98,12 @@ it('renders unfiltered staff history and retries invalid response data without r
   expect(host.textContent).toContain(staffText('admin.staff.audit.unchanged', 'en'));
   expect(requests[0]).not.toContain('userId');
   history = null;
+  await click('Filters');
+  const range = document.querySelector<HTMLSelectElement>('[role="dialog"] select')!;
+  await act(async () => {
+    range.value = 'today';
+    range.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await click('Apply filters');
   expect(host.querySelector('[role="alert"]')).not.toBeNull();
   expect(host.textContent).not.toContain('operator-without-username');

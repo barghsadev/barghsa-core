@@ -4,22 +4,21 @@ import {
   AvatarFallback,
   AvatarImage,
   Button,
-  Checkbox,
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
   Label,
 } from '@barghsa/ui';
+import { ImagePlus, Trash2, Undo2, X } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/conversation-identity';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { sendToast, toast } from '../lib/toast-api.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { isConversationPhoto, uploadConversationPhoto } from '../lib/branding-logo-upload.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 
 type Identity = {
   displayName: string | null;
@@ -77,19 +76,22 @@ function matchesIdentity(saved: Identity, command: IdentityCommand) {
 export function ConversationIdentityDialog({
   locale,
   onClose,
+  presentation = 'dialog',
 }: {
   locale: Locale;
   onClose: () => void;
+  presentation?: 'dialog' | 'page';
 }) {
   const id = useId();
   const nameInput = useRef<HTMLInputElement | null>(null);
   const photoInput = useRef<HTMLInputElement | null>(null);
+  const choosePhoto = useRef<HTMLButtonElement | null>(null);
   const checkButton = useRef<HTMLButtonElement | null>(null);
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [name, setName] = useState('');
   const [shareInActivity, setShareInActivity] = useState(false);
   const [shareInPaymentActivity, setShareInPaymentActivity] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [photo, setPhoto] = useState<{ file: File; preview: string | null } | null>(null);
   const [removePhoto, setRemovePhoto] = useState(false);
   const [pending, setPending] = useState(false);
   const [unconfirmed, setUnconfirmed] = useState<IdentityCommand | null>(null);
@@ -98,6 +100,12 @@ export function ConversationIdentityDialog({
   const controller = useRef<AbortController | null>(null);
   const submitting = useRef(false);
   const uploaded = useRef<{ file: File; key: string } | null>(null);
+  const file = photo?.file;
+  useEffect(() => {
+    const preview = photo?.preview;
+    if (!preview) return;
+    return () => URL.revokeObjectURL(preview);
+  }, [photo]);
   useEffect(() => {
     const abort = new AbortController();
     controller.current = abort;
@@ -130,7 +138,7 @@ export function ConversationIdentityDialog({
       setName('');
       setShareInActivity(false);
       setShareInPaymentActivity(false);
-      setFile(null);
+      setPhoto(null);
       setRemovePhoto(false);
       uploaded.current = null;
       setIdentity(null);
@@ -248,9 +256,276 @@ export function ConversationIdentityDialog({
     }
   }
   const text = (key: string) => t(`conversationIdentity.${key}`, locale);
-  const avatar = !removePhoto && !file ? identity?.avatarUrl : null;
+  const savedPhoto = identity?.avatarUrl;
+  const avatar = photo
+    ? photo.preview
+    : !removePhoto && savedPhoto && /^https?:\/\//i.test(savedPhoto)
+      ? savedPhoto
+      : null;
+  const hasName = name.trim().length > 0;
   const locked = pending || unconfirmed !== null;
+  const onPage = presentation === 'page';
+  const direction = locale === 'fa' ? 'rtl' : 'ltr';
   const errorId = `${id}-error`;
+  const notice = error && (
+    <p id={errorId} role="alert" className="text-sm text-destructive">
+      {text(error)}
+    </p>
+  );
+  const sharing = [
+    {
+      key: 'activity',
+      field: 'shareInActivity',
+      checked: shareInActivity,
+      update: setShareInActivity,
+    },
+    {
+      key: 'paymentActivity',
+      field: 'shareInPaymentActivity',
+      checked: shareInPaymentActivity,
+      update: setShareInPaymentActivity,
+    },
+  ] as const;
+  const content = !identity ? (
+    <div className="space-y-3 px-4 py-4 sm:px-6">
+      {error ? (
+        <>
+          {notice}
+          {error !== 'denied' && (
+            <Button type="button" onClick={() => setAttempt((value) => value + 1)}>
+              {text('retry')}
+            </Button>
+          )}
+        </>
+      ) : (
+        <p role="status">{text('loading')}</p>
+      )}
+    </div>
+  ) : (
+    <form
+      aria-label={text('title')}
+      aria-busy={pending || undefined}
+      onSubmit={(event) => {
+        event.preventDefault();
+        void save();
+      }}
+      className="flex min-h-0 flex-col"
+    >
+      <div className="min-h-0 space-y-4 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
+        <div className="space-y-1.5">
+          <Label htmlFor={`${id}-name`}>{text('name')}</Label>
+          <input
+            id={`${id}-name`}
+            ref={nameInput}
+            className="h-11 w-full min-w-0 rounded-lg border border-input bg-card px-3 text-base outline-none focus-visible:border-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-60 aria-invalid:border-destructive md:text-sm"
+            dir="auto"
+            value={name}
+            maxLength={80}
+            disabled={locked}
+            aria-invalid={error === 'nameError' || undefined}
+            aria-describedby={`${id}-name-help${error === 'nameError' ? ` ${errorId}` : ''}`}
+            onChange={(event) => {
+              setName(event.target.value);
+              if (error === 'nameError') setError(null);
+              if (!event.target.value.trim()) {
+                setShareInActivity(false);
+                setShareInPaymentActivity(false);
+              }
+            }}
+          />
+          <p id={`${id}-name-help`} className="text-xs text-muted-foreground">
+            {text('nameHelp')}
+          </p>
+          {error === 'nameError' && notice}
+        </div>
+
+        <div className="min-w-0 space-y-2 rounded-lg border px-3 py-2.5">
+          <div className="flex min-w-0 items-center gap-3">
+            <Avatar aria-hidden="true" className="size-12">
+              {avatar && <AvatarImage src={avatar} alt="" referrerPolicy="no-referrer" />}
+              <AvatarFallback>
+                {Array.from(name.trim() || text('fallback'))
+                  .slice(0, 2)
+                  .join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <Label htmlFor={`${id}-photo`}>{text('photo')}</Label>
+              <p
+                role="status"
+                dir="auto"
+                className="mt-1 text-xs text-muted-foreground [overflow-wrap:anywhere]"
+              >
+                {file
+                  ? file.name
+                  : text(
+                      removePhoto ? 'photoRemovalPending' : savedPhoto ? 'photoSaved' : 'photoEmpty'
+                    )}
+              </p>
+            </div>
+            <input
+              id={`${id}-photo`}
+              ref={photoInput}
+              hidden
+              type="file"
+              accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
+              disabled={locked}
+              onChange={(event) => {
+                const selected = event.target.files?.[0];
+                event.target.value = '';
+                if (!selected) return;
+                if (!isConversationPhoto(selected)) {
+                  setError('photoError');
+                  return;
+                }
+                setError(null);
+                setPhoto({
+                  file: selected,
+                  preview:
+                    typeof URL.createObjectURL === 'function'
+                      ? URL.createObjectURL(selected)
+                      : null,
+                });
+                uploaded.current = null;
+              }}
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              ref={choosePhoto}
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={locked}
+              aria-describedby={`${id}-photo-help${error === 'photoError' ? ` ${errorId}` : ''}`}
+              onClick={() => photoInput.current?.click()}
+            >
+              <ImagePlus aria-hidden="true" />
+              {text('choosePhoto')}
+            </Button>
+            {file ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={locked}
+                onClick={() => {
+                  setPhoto(null);
+                  uploaded.current = null;
+                  if (error === 'photoError') setError(null);
+                  choosePhoto.current?.focus();
+                }}
+              >
+                <X aria-hidden="true" />
+                {text('discardPhoto')}
+              </Button>
+            ) : removePhoto ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={locked}
+                onClick={() => {
+                  setRemovePhoto(false);
+                  choosePhoto.current?.focus();
+                }}
+              >
+                <Undo2 aria-hidden="true" />
+                {text('undoPhotoRemoval')}
+              </Button>
+            ) : identity.avatarUploadKey ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={locked}
+                onClick={() => {
+                  setRemovePhoto(true);
+                  choosePhoto.current?.focus();
+                }}
+              >
+                <Trash2 aria-hidden="true" />
+                {text('remove')}
+              </Button>
+            ) : null}
+          </div>
+          <p id={`${id}-photo-help`} className="text-xs text-muted-foreground">
+            {text('photoHelp')}
+          </p>
+          {error === 'photoError' && notice}
+        </div>
+
+        <fieldset disabled={locked || !hasName} className="min-w-0 space-y-2">
+          <legend className="text-sm font-semibold">{text('sharingTitle')}</legend>
+          <p className="text-xs text-muted-foreground">
+            {text(hasName ? 'sharingHelp' : 'sharingNameRequired')}
+          </p>
+          <div className="divide-y rounded-lg border bg-muted/35">
+            {sharing.map(({ key, field, checked, update }) => {
+              const optionId = `${id}-${field}`;
+              return (
+                <label
+                  key={key}
+                  className="flex min-h-11 cursor-pointer items-start gap-2.5 px-3 py-2.5"
+                >
+                  <input
+                    type="checkbox"
+                    id={optionId}
+                    name={field}
+                    checked={checked}
+                    aria-labelledby={`${optionId}-label`}
+                    aria-describedby={`${optionId}-help`}
+                    className="mt-0.5 size-4 shrink-0 accent-primary"
+                    onChange={(event) => update(event.currentTarget.checked)}
+                  />
+                  <span className="min-w-0 space-y-1">
+                    <span id={`${optionId}-label`} className="block text-sm font-medium">
+                      {text(key)}
+                    </span>
+                    <span id={`${optionId}-help`} className="block text-xs text-muted-foreground">
+                      {text(`${key}Help`)}
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+        {error !== 'nameError' && error !== 'photoError' && notice}
+      </div>
+      <RecordEditorActions className="shrink-0">
+        <Button type="button" variant="ghost" disabled={pending} onClick={onClose}>
+          {text('cancel')}
+        </Button>
+        {unconfirmed ? (
+          <Button
+            ref={checkButton}
+            type="button"
+            disabled={pending}
+            onClick={() => void checkSaved()}
+          >
+            {text(pending ? 'loading' : 'checkSaved')}
+          </Button>
+        ) : (
+          <Button type="submit" disabled={pending}>
+            {text(pending ? 'saving' : 'saveAction')}
+          </Button>
+        )}
+      </RecordEditorActions>
+    </form>
+  );
+
+  if (onPage)
+    return (
+      <section dir={direction} className="mx-auto min-w-0 max-w-2xl space-y-4">
+        <header className="space-y-1">
+          <h1 className="text-2xl font-semibold">{text('title')}</h1>
+          <p className="text-sm text-muted-foreground">{text('description')}</p>
+        </header>
+        <div className={recordEditorSurface}>{content}</div>
+      </section>
+    );
+
   return (
     <Dialog
       open
@@ -259,191 +534,16 @@ export function ConversationIdentityDialog({
       }}
     >
       <DialogContent
-        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        dir={direction}
         closeLabel={text('cancel')}
         showCloseButton={!pending}
-        className="sm:max-w-md max-h-[90vh] overflow-y-auto"
+        className="max-h-[90dvh] grid-rows-[auto_minmax(0,1fr)] gap-0 overflow-hidden p-0 sm:max-w-lg"
       >
-        <DialogHeader>
+        <DialogHeader className="border-b px-4 py-4 pe-12 sm:px-6 sm:pe-12">
           <DialogTitle>{text('title')}</DialogTitle>
           <DialogDescription>{text('description')}</DialogDescription>
         </DialogHeader>
-        {!identity ? (
-          <div className="space-y-3">
-            {error ? (
-              <>
-                <p role="alert">{text(error === 'denied' ? 'denied' : 'load')}</p>
-                {error !== 'denied' && (
-                  <Button onClick={() => setAttempt((value) => value + 1)}>{text('retry')}</Button>
-                )}
-              </>
-            ) : (
-              <p role="status">{text('loading')}</p>
-            )}
-          </div>
-        ) : (
-          <form
-            aria-busy={pending || undefined}
-            onSubmit={(event) => {
-              event.preventDefault();
-              void save();
-            }}
-            className="space-y-4"
-          >
-            <div className="space-y-2">
-              <Label htmlFor={`${id}-name`}>{text('name')}</Label>
-              <Input
-                id={`${id}-name`}
-                ref={nameInput}
-                dir="auto"
-                value={name}
-                maxLength={80}
-                disabled={locked}
-                aria-invalid={error === 'nameError' || undefined}
-                aria-describedby={`${id}-name-help${error === 'nameError' ? ` ${errorId}` : ''}`}
-                onChange={(event) => {
-                  setName(event.target.value);
-                  if (error === 'nameError') setError(null);
-                  if (!event.target.value.trim()) {
-                    setShareInActivity(false);
-                    setShareInPaymentActivity(false);
-                  }
-                }}
-              />
-              <p id={`${id}-name-help`} className="text-xs text-muted-foreground">
-                {text('nameHelp')}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="relative flex items-start gap-2">
-                <Checkbox
-                  id={`${id}-activity`}
-                  name="shareInActivity"
-                  checked={shareInActivity}
-                  disabled={locked || !name.trim()}
-                  aria-describedby={`${id}-activity-help`}
-                  onCheckedChange={(checked) => setShareInActivity(checked === true)}
-                />
-                <Label htmlFor={`${id}-activity`} className="leading-5">
-                  {text('activity')}
-                </Label>
-              </div>
-              <p id={`${id}-activity-help`} className="text-xs text-muted-foreground">
-                {text('activityHelp')}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="relative flex items-start gap-2">
-                <Checkbox
-                  id={`${id}-payment-activity`}
-                  name="shareInPaymentActivity"
-                  checked={shareInPaymentActivity}
-                  disabled={locked || !name.trim()}
-                  aria-describedby={`${id}-payment-activity-help`}
-                  onCheckedChange={(checked) => setShareInPaymentActivity(checked === true)}
-                />
-                <Label htmlFor={`${id}-payment-activity`} className="leading-5">
-                  {text('paymentActivity')}
-                </Label>
-              </div>
-              <p id={`${id}-payment-activity-help`} className="text-xs text-muted-foreground">
-                {text('paymentActivityHelp')}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`${id}-photo`}>{text('photo')}</Label>
-              <div className="flex items-center gap-3">
-                <Avatar aria-hidden="true">
-                  {avatar && /^https?:\/\//i.test(avatar) && (
-                    <AvatarImage src={avatar} alt="" referrerPolicy="no-referrer" />
-                  )}
-                  <AvatarFallback>
-                    {Array.from(name.trim() || text('fallback'))
-                      .slice(0, 2)
-                      .join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <Input
-                  id={`${id}-photo`}
-                  ref={photoInput}
-                  hidden
-                  type="file"
-                  accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
-                  disabled={locked}
-                  onChange={(event) => {
-                    const selected = event.target.files?.[0];
-                    event.target.value = '';
-                    if (!selected) return;
-                    if (!isConversationPhoto(selected)) {
-                      setError('photoError');
-                      return;
-                    }
-                    setError(null);
-                    setFile(selected);
-                    uploaded.current = null;
-                    setRemovePhoto(false);
-                  }}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={locked}
-                  className="flex-1"
-                  aria-describedby={`${id}-photo-help${error === 'photoError' ? ` ${errorId}` : ''}`}
-                  onClick={() => photoInput.current?.click()}
-                >
-                  {text('choosePhoto')}
-                </Button>
-              </div>
-              <p id={`${id}-photo-help`} className="text-xs text-muted-foreground">
-                {text('photoHelp')}
-              </p>
-              {file && (
-                <p dir="auto" className="break-all text-sm">
-                  {file.name}
-                </p>
-              )}
-              {(file || (!removePhoto && identity.avatarUploadKey)) && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={locked}
-                  onClick={() => {
-                    setFile(null);
-                    uploaded.current = null;
-                    setRemovePhoto(true);
-                  }}
-                >
-                  {text('remove')}
-                </Button>
-              )}
-            </div>
-            {error && (
-              <p id={errorId} role="alert" className="text-sm text-destructive">
-                {text(error)}
-              </p>
-            )}
-            <DialogFooter>
-              <Button type="button" variant="outline" disabled={pending} onClick={onClose}>
-                {text('cancel')}
-              </Button>
-              {unconfirmed ? (
-                <Button
-                  ref={checkButton}
-                  type="button"
-                  disabled={pending}
-                  onClick={() => void checkSaved()}
-                >
-                  {text(pending ? 'loading' : 'checkSaved')}
-                </Button>
-              ) : (
-                <Button type="submit" disabled={pending}>
-                  {text(pending ? 'saving' : 'saveAction')}
-                </Button>
-              )}
-            </DialogFooter>
-          </form>
-        )}
+        {content}
       </DialogContent>
     </Dialog>
   );

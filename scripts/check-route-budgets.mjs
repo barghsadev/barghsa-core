@@ -40,9 +40,11 @@ export async function measureRoute(
     for (const dependency of entry.imports ?? []) visit(dependency);
     if (key !== 'index.html')
       for (const dependency of entry.dynamicImports ?? []) {
+        const target = manifest[dependency];
         if (
           dependency !== 'src/components/RegistrationTermsDialog.tsx' &&
-          !deferred.has(dependency)
+          !deferred.has(dependency) &&
+          !(target?.isDynamicEntry && deferred.has(`chunk:${target.name}`))
         )
           visit(dependency);
       }

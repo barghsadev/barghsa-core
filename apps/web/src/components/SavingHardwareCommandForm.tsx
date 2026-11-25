@@ -1,10 +1,12 @@
+import { CompactFieldFeedback } from './CompactFieldFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import { Button, Input, FinancialReviewSummary } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { Alert, Button, FinancialReviewSummary, NativeSelect, Textarea } from '@barghsa/ui';
+import { t } from '@barghsa/i18n/workspace';
 import type {
   SavingHardwareAmendmentReview,
   SavingHardwareUpgradeCancellationReview,
@@ -59,6 +61,7 @@ export function SavingHardwareCommandForm(
 function OwnedSavingHardwareCommandForm({
   order,
   upgrade,
+  dedicated = false,
   owner,
   scope,
   currentScope,
@@ -73,6 +76,7 @@ function OwnedSavingHardwareCommandForm({
 }: {
   order: SavingHardwareSource;
   upgrade?: SavingHardwareUpgrade;
+  dedicated?: boolean;
   owner: RefObject<SavingHardwareOwner | null>;
   scope: string;
   currentScope: RefObject<string>;
@@ -377,102 +381,175 @@ function OwnedSavingHardwareCommandForm({
   }
   const frozen = !!captured.current || pending.current || uncertain;
   const command = captured.current;
+  const selectedId = form.watch('hardwareProductId');
+  const selected = order.hardwareOptions.find((option) => option.id === selectedId);
+  const delta = selected ? BigInt(selected.priceDeltaIrR) : 0n;
+  const priceImpact = !selected
+    ? formCopy('hardwareHelp')
+    : delta === 0n
+      ? formCopy('samePrice')
+      : `${delta < 0n ? formCopy('expectedCredit') : copy('hardwareAdditionalCharge')} · ${numbers.money((delta < 0n ? -delta : delta).toString())}`;
   return (
     <div
-      className="space-y-3 rounded-md border p-4"
+      className="space-y-3"
       data-testid={
         cancellation ? `saving-upgrade-cancel-form-${upgrade.id}` : 'saving-staff-hardware-form'
       }
     >
-      {!cancellation && <h3 className="font-semibold">{copy('staffAmendHardware')}</h3>}
-      <p className="text-sm text-muted-foreground">
-        {!cancellation && copy('staffAmendHardwareHelp')}
-      </p>
       <Form {...form}>
         <form
           noValidate
-          className="space-y-3"
+          className={recordEditorSurface}
+          aria-label={copy(cancellation ? 'staffUpgradeCancellationTitle' : 'staffAmendHardware')}
           onSubmit={(event) => {
             event.preventDefault();
             prepare();
           }}
         >
-          {!cancellation && (
+          <div className="space-y-4 px-4 py-4 sm:px-6">
+            {!dedicated && (
+              <h3 className="font-semibold">
+                {copy(cancellation ? 'staffUpgradeCancellationTitle' : 'staffAmendHardware')}
+              </h3>
+            )}
+            {dedicated && (
+              <dl className="flex flex-wrap justify-between gap-3 rounded-lg bg-muted/50 px-3 py-2 text-sm">
+                <div className="min-w-0">
+                  <dt className="text-muted-foreground">
+                    {formCopy(cancellation ? 'pendingDevice' : 'currentDevice')}
+                  </dt>
+                  <dd className="wrap-anywhere font-medium" dir="auto">
+                    {(upgrade?.hardwareTitle ?? order.hardwareTitle)[locale]}
+                  </dd>
+                </div>
+                {upgrade && (
+                  <div>
+                    <dt className="text-muted-foreground">{copy('hardwareAdditionalCharge')}</dt>
+                    <dd>
+                      <bdi className="font-semibold">{numbers.money(upgrade.priceDeltaIrR)}</bdi>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            )}
+            {!cancellation && (
+              <FormField
+                control={form.control}
+                name="hardwareProductId"
+                render={({ field }) => (
+                  <FormItem id="saving-amend-hardware" className="min-w-0">
+                    <FormLabel>
+                      {dedicated ? formCopy('replacementDevice') : copy('stepHardware')}
+                    </FormLabel>
+                    <FormControl>
+                      <NativeSelect
+                        {...field}
+                        aria-required="true"
+                        disabled={frozen}
+                        className="w-full rounded-lg bg-background"
+                      >
+                        <option value="">{copy('chooseHardware')}</option>
+                        {order.hardwareOptions.map((hardware) => (
+                          <option key={hardware.id} value={hardware.id}>
+                            {hardware.title[locale]}
+                          </option>
+                        ))}
+                      </NativeSelect>
+                    </FormControl>
+                    <FormDescription className="text-sm" aria-live="polite">
+                      <span
+                        className={
+                          selected && dedicated ? 'font-medium text-foreground' : undefined
+                        }
+                      >
+                        {priceImpact}
+                      </span>
+                      {dedicated && delta !== 0n && (
+                        <span className="block text-xs">
+                          {formCopy(delta > 0n ? 'chargeOutcome' : 'creditOutcome')}
+                        </span>
+                      )}
+                    </FormDescription>
+                    <FormMessage reserveSpace className="min-h-4 text-xs" />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
-              name="hardwareProductId"
-              render={({ field }) => (
-                <FormItem id="saving-amend-hardware">
-                  <FormLabel>{copy('stepHardware')}</FormLabel>
+              name="reason"
+              render={({ field, fieldState }) => (
+                <FormItem
+                  id={
+                    upgrade ? `saving-upgrade-cancel-${upgrade.id}` : 'saving-amend-hardware-reason'
+                  }
+                >
+                  <FormLabel>
+                    {dedicated && cancellation
+                      ? formCopy('cancellationReason')
+                      : copy('staffAmendReason')}
+                  </FormLabel>
+                  {dedicated && (
+                    <p id="saving-hardware-reason-prompt" className="text-sm text-muted-foreground">
+                      {formCopy(cancellation ? 'cancelPrompt' : 'changePrompt')}
+                    </p>
+                  )}
                   <FormControl>
-                    <select
+                    <Textarea
                       {...field}
                       aria-required="true"
                       disabled={frozen}
-                      className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    >
-                      <option value="">{copy('chooseHardware')}</option>
-                      {order.hardwareOptions.map((hardware) => (
-                        <option key={hardware.id} value={hardware.id}>
-                          {hardware.title[locale]}
-                          {BigInt(hardware.priceDeltaIrR) < 0n
-                            ? ` · ${copy('hardwareCreditIssued')}: ${numbers.money((-BigInt(hardware.priceDeltaIrR)).toString())}`
-                            : BigInt(hardware.priceDeltaIrR) > 0n
-                              ? ` · ${copy('hardwareAdditionalCharge')}: ${numbers.money(hardware.priceDeltaIrR)}`
-                              : ''}
-                        </option>
-                      ))}
-                    </select>
+                      rows={2}
+                      dir="auto"
+                      aria-describedby={dedicated ? 'saving-hardware-reason-prompt' : undefined}
+                      className="max-h-44 min-h-14 bg-background"
+                      placeholder={
+                        dedicated
+                          ? undefined
+                          : formCopy(
+                              cancellation ? 'cancellationReasonExample' : 'hardwareReasonExample'
+                            )
+                      }
+                    />
                   </FormControl>
-                  <FormDescription>{formCopy('hardwareHelp')}</FormDescription>
-                  <FormMessage reserveSpace />
+                  <CompactFieldFeedback
+                    help={formCopy(cancellation ? 'cancellationReasonHelp' : 'hardwareReasonHelp')}
+                    validationMessage={messages.reason}
+                    invalid={!!fieldState.error?.message}
+                  />
                 </FormItem>
               )}
             />
-          )}
-          <FormField
-            control={form.control}
-            name="reason"
-            render={({ field }) => (
-              <FormItem
-                id={
-                  upgrade ? `saving-upgrade-cancel-${upgrade.id}` : 'saving-amend-hardware-reason'
-                }
-              >
-                <FormLabel>{copy('staffAmendReason')}</FormLabel>
-                <FormControl>
-                  <Input {...field} aria-required="true" disabled={frozen} />
-                </FormControl>
-                <FormDescription>
-                  {formCopy(cancellation ? 'cancellationReasonHelp' : 'hardwareReasonHelp')}
-                </FormDescription>
-                <FormMessage reserveSpace />
-              </FormItem>
+            {!dedicated && !cancellation && (
+              <p className="text-sm text-muted-foreground">{copy('staffAmendHardwareHelp')}</p>
             )}
-          />
-          <Button
-            type="submit"
-            variant="outline"
-            disabled={frozen || busy || blocked()}
-            aria-busy={busy || undefined}
-          >
-            {busy && (
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-              />
+            {error && <Alert variant="destructive">{copy('staffReviewError')}</Alert>}
+            {form.formState.errors.root?.validation && (
+              <p role="alert">{formCopy('validationUnavailable')}</p>
             )}
-            {copy(cancellation ? 'hardwareUpgradeCancel' : 'staffAmendHardware')}
-          </Button>
-          {busy && <p role="status">{formCopy('checking')}</p>}
-          {error && <p role="alert">{copy('staffReviewError')}</p>}
-          {form.formState.errors.root?.validation && (
-            <p role="alert">{formCopy('validationUnavailable')}</p>
+          </div>
+          <RecordEditorActions>
+            <Button
+              type="submit"
+              variant={cancellation ? 'destructive' : 'default'}
+              disabled={frozen || busy || blocked()}
+              loading={busy}
+            >
+              {copy(cancellation ? 'hardwareUpgradeCancel' : 'staffAmendHardware')}
+            </Button>
+          </RecordEditorActions>
+          {busy && (
+            <p className="sr-only" role="status">
+              {formCopy('checking')}
+            </p>
           )}
         </form>
       </Form>
       {uncertain && (
-        <div role="alert" className="space-y-2">
+        <div
+          role="alert"
+          className="flex flex-wrap items-center justify-between gap-2 border-t px-4 py-3 text-sm"
+        >
           <p>{formCopy('uncertain')}</p>
           <Button
             type="button"
@@ -492,6 +569,7 @@ function OwnedSavingHardwareCommandForm({
       {action && command && live(command, action) && (
         <TeamActionDialog
           action={action}
+          focusSummary
           summary={
             review ? (
               review.kind === 'hardware' ? (
@@ -538,6 +616,28 @@ function OwnedSavingHardwareCommandForm({
   );
 }
 
+function hardwareReviewContextRows(
+  data: SavingHardwareAmendmentReview['data'] | SavingHardwareUpgradeCancellationReview['data'],
+  copy: (key: string) => string,
+  money: ReturnType<typeof useFinancialFormatting>
+) {
+  return [
+    { id: 'customer', label: copy('customer'), value: data.customerName },
+    { id: 'profile', label: copy('staffReviewProfile'), value: data.profileName },
+    { id: 'bill', label: copy('staffBill'), value: data.billIdentifier },
+    {
+      id: 'address',
+      label: copy('staffAddress'),
+      value: String(data.addressSnapshot.full_address ?? ''),
+    },
+    {
+      id: 'contract',
+      label: copy('staffReviewContractVersion'),
+      value: money.number(data.versionNumber),
+    },
+  ];
+}
+
 function HardwareReviewSummary({
   hardwareReview,
 }: {
@@ -550,31 +650,7 @@ function HardwareReviewSummary({
     <FinancialReviewSummary
       title={copy('staffHardwareReviewTitle')}
       rows={[
-        {
-          id: 'customer',
-          label: copy('customer'),
-          value: hardwareReview.data.customerName,
-        },
-        {
-          id: 'profile',
-          label: copy('staffReviewProfile'),
-          value: hardwareReview.data.profileName,
-        },
-        {
-          id: 'bill',
-          label: copy('staffBill'),
-          value: hardwareReview.data.billIdentifier,
-        },
-        {
-          id: 'address',
-          label: copy('staffAddress'),
-          value: String(hardwareReview.data.addressSnapshot.full_address ?? ''),
-        },
-        {
-          id: 'contract',
-          label: copy('staffReviewContractVersion'),
-          value: money.number(hardwareReview.data.versionNumber),
-        },
+        ...hardwareReviewContextRows(hardwareReview.data, copy, money),
         {
           id: 'invoice',
           label: copy('staffInvoice'),
@@ -672,31 +748,7 @@ function UpgradeCancellationReviewSummary({
     <FinancialReviewSummary
       title={copy('staffUpgradeCancellationTitle')}
       rows={[
-        {
-          id: 'customer',
-          label: copy('customer'),
-          value: upgradeCancellationReview.data.customerName,
-        },
-        {
-          id: 'profile',
-          label: copy('staffReviewProfile'),
-          value: upgradeCancellationReview.data.profileName,
-        },
-        {
-          id: 'bill',
-          label: copy('staffBill'),
-          value: upgradeCancellationReview.data.billIdentifier,
-        },
-        {
-          id: 'address',
-          label: copy('staffAddress'),
-          value: String(upgradeCancellationReview.data.addressSnapshot.full_address ?? ''),
-        },
-        {
-          id: 'contract',
-          label: copy('staffReviewContractVersion'),
-          value: money.number(upgradeCancellationReview.data.versionNumber),
-        },
+        ...hardwareReviewContextRows(upgradeCancellationReview.data, copy, money),
         {
           id: 'previous-hardware',
           label: copy('staffHardwareCurrent'),

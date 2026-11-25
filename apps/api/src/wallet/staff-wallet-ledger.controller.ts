@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { getDbPool } from '@barghsa/db';
+import { BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
@@ -33,9 +34,20 @@ export class StaffWalletLedgerController {
     status: 200,
     schema: {
       type: 'object',
-      required: ['profileId', 'transactions', 'nextCursor'],
+      required: ['profileId', 'balance', 'transactions', 'nextCursor'],
       properties: {
         profileId: { type: 'string', format: 'uuid' },
+        balance: {
+          type: 'object',
+          nullable: true,
+          required: ['posted', 'reserved', 'available', 'updatedAt'],
+          properties: {
+            posted: { type: 'string', pattern: '^-?[0-9]+$' },
+            reserved: { type: 'string', pattern: '^-?[0-9]+$' },
+            available: { type: 'string', pattern: '^-?[0-9]+$' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
         nextCursor: { type: 'string', nullable: true },
         transactions: {
           type: 'array',
@@ -50,6 +62,11 @@ export class StaffWalletLedgerController {
               refId: { type: 'string', nullable: true },
               description: { type: 'string', nullable: true },
               createdAt: { type: 'string', format: 'date-time' },
+              staffSource: {
+                type: 'string',
+                enum: ['bank_receipt', 'online', 'invoice', 'ledger'],
+              },
+              receiptId: { type: 'string', format: 'uuid' },
             },
           },
         },
@@ -75,12 +92,39 @@ export class StaffWalletLedgerController {
         )
       ).rows[0];
       if (context?.operating_context !== 'staff') throw new ForbiddenException();
-      if (!(await client.query('SELECT id FROM profiles WHERE id=$1', [profileId])).rows.length)
-        throw new NotFoundException();
-      const page = await readWalletHistory(client, profileId, query, 'reconciliation');
+      const row = (
+        await client.query<{
+          posted: string | null;
+          reserved: string | null;
+          available: string | null;
+          updated_at: Date | null;
+        }>(
+          `SELECT w.posted_balance::text AS posted, w.reserved_balance::text AS reserved,
+                  (w.posted_balance - w.reserved_balance)::text AS available, w.updated_at
+           FROM profiles p LEFT JOIN wallets w ON w.profile_id=p.id WHERE p.id=$1`,
+          [profileId]
+        )
+      ).rows[0];
+      if (!row) throw new NotFoundException();
+      const balance =
+        row.posted !== null && row.reserved !== null && row.available !== null && row.updated_at
+          ? {
+              posted: row.posted,
+              reserved: row.reserved,
+              available: row.available,
+              updatedAt: row.updated_at.toISOString(),
+            }
+          : null;
+      const page = await readWalletHistory(
+        client,
+        profileId,
+        query,
+        'reconciliation',
+        hasStaffPermission(req, BANK_RECEIPT_CONFIRM_PERMISSION)
+      );
       await requireCurrentSession(client, req.session);
       await client.query('COMMIT');
-      return { profileId, ...page };
+      return { profileId, balance, ...page };
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;

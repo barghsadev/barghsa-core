@@ -132,6 +132,10 @@ for (const staff of [false, true])
       status = 200;
       await act(async () => button(host, 'Try again').click());
       await act(async () => button(host, documentRow.originalName).click());
+      await vi.waitFor(async () => {
+        await act(async () => {});
+        expect(host.querySelector('[aria-label="View details"]')).not.toBeNull();
+      });
       if (staff) await change(host, '#document-review-reason', 'Staff draft');
       await act(async () => button(host, 'Load more').click());
       const failed = calls.at(-1)!;

@@ -1,3 +1,4 @@
+import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
@@ -59,10 +60,19 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(zones).toHaveAttribute('aria-required', 'true');
     const search = main.getByRole('searchbox');
     await expect(search).not.toHaveAttribute('aria-required', 'true');
-    await search.fill('Europe/Istanbul');
+    await search.fill(' New York ');
+    await expect(zones.getByRole('option', { name: /America\/New_York/ })).toHaveCount(1);
+    await search.fill(fa ? 'استانبول' : 'Europe/Istanbul');
+    await expect(zones.getByRole('option', { name: /Europe\/Istanbul/ })).toHaveCount(1);
     await zones.focus();
     await zones.press('ArrowDown');
     await expect(zones).toHaveValue('Europe/Istanbul');
+    await expect(
+      main.getByRole('region', { name: tPreferenceSettingsForms('timezonePreview', locale) })
+    ).toContainText('Europe/Istanbul');
+    await expect(main.getByText(fa ? 'منطقه زمانی ذخیره‌شده' : 'Saved time zone')).toContainText(
+      'Asia/Tehran'
+    );
     await save.click();
     await expect(
       page.getByText(fa ? 'خطا در ذخیره تنظیمات منطقه زمانی' : 'Failed to save timezone settings', {

@@ -80,7 +80,8 @@ it('shows the current dashboard profile, verification warning and agent invitati
     accountId
   );
 
-  const heading = await view.findByRole('heading', { name: 'Welcome, Current customer' });
+  const heading = await view.findByRole('heading', { name: 'Home' });
+  expect(await view.findByText('Current customer')).toBeDefined();
   const warning = (await view.findByText('Your profile is not verified')).closest<HTMLElement>(
     '[role="alert"]'
   );
@@ -94,7 +95,7 @@ it('shows the current dashboard profile, verification warning and agent invitati
 
   fireEvent.click(within(warning!).getByRole('button', { name: 'Dismiss' }));
   expect(view.queryByText('Your profile is not verified')).toBeNull();
-  expect(view.getByRole('heading', { name: 'Welcome, Current customer' })).toBe(heading);
+  expect(view.getByRole('heading', { name: 'Home' })).toBe(heading);
   expect(invitationRegion.getByText(invitationText)).toBe(invite);
   expect(fetcher.mock.calls.map(([path]) => path)).toEqual(
     expect.arrayContaining([

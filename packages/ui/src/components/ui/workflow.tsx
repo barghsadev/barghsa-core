@@ -142,21 +142,38 @@ export interface ProgressStep {
   number?: string;
 }
 /** Read-only progress. Navigation and validation stay with the owning workflow. */
-export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label: string }) {
+export function ProgressStepper({
+  steps,
+  label,
+  compactOnMobile = false,
+}: {
+  steps: ProgressStep[];
+  label: string;
+  compactOnMobile?: boolean;
+}) {
   return (
-    <ol data-slot="progress-stepper" aria-label={label} className="flex flex-col sm:flex-row">
+    <ol
+      data-slot="progress-stepper"
+      aria-label={label}
+      className={cn('flex sm:flex-row', compactOnMobile ? 'flex-row' : 'flex-col')}
+    >
       {steps.map((step, index) => (
         <li
           key={step.id}
           aria-current={step.state === 'current' ? 'step' : undefined}
           data-state={step.state}
-          className="relative flex min-w-0 flex-1 items-start gap-3 pb-5 last:pb-0 sm:flex-col sm:gap-2 sm:pb-0 sm:pe-4 sm:last:pe-0"
+          className={cn(
+            'relative flex min-w-0 flex-1 items-start gap-3 pb-5 last:pb-0 sm:flex-col sm:gap-2 sm:pb-0 sm:pe-4 sm:last:pe-0',
+            compactOnMobile && 'max-sm:pb-0 max-sm:last:flex-none'
+          )}
         >
           {index < steps.length - 1 && (
             <span
               aria-hidden="true"
               className={cn(
                 'absolute start-4 top-8 bottom-0 w-px sm:start-8 sm:top-4 sm:-end-4 sm:bottom-auto sm:h-px sm:w-auto',
+                compactOnMobile &&
+                  'max-sm:start-7 max-sm:top-3.5 max-sm:end-0 max-sm:bottom-auto max-sm:h-px max-sm:w-auto',
                 step.state === 'complete' ? 'bg-success' : 'bg-border'
               )}
             />
@@ -165,6 +182,7 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
             aria-hidden="true"
             className={cn(
               'relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full border',
+              compactOnMobile && 'max-sm:size-7 max-sm:text-xs',
               step.state === 'complete'
                 ? 'border-success/20 bg-success-soft text-success'
                 : step.state === 'current'
@@ -183,7 +201,12 @@ export function ProgressStepper({ steps, label }: { steps: ProgressStep[]; label
               <Circle className="size-3" />
             )}
           </span>
-          <span className="relative z-10 min-w-0 pt-1 text-sm sm:pt-0">
+          <span
+            className={cn(
+              'relative z-10 min-w-0 pt-1 text-sm sm:pt-0',
+              compactOnMobile && 'max-sm:sr-only'
+            )}
+          >
             <span
               className={cn('block', step.state === 'current' ? 'font-semibold' : 'font-medium')}
             >
@@ -268,20 +291,48 @@ export function FinancialReviewSummary({
   rows,
   total,
   notice,
+  heading: Heading = 'h3',
+  compact = false,
+  totalFirst = false,
 }: {
   title: string;
   rows: { id: string; label: string; value: ReactNode }[];
   total: { label: string; value: ReactNode };
   notice?: ReactNode;
+  heading?: 'h2' | 'h3';
+  compact?: boolean;
+  totalFirst?: boolean;
 }) {
+  const totalRow = (
+    <dl
+      className={cn(
+        totalFirst ? 'border-b' : 'border-t',
+        'bg-muted px-5 py-4',
+        compact && 'px-4 py-2.5'
+      )}
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <dt className="text-sm font-semibold">{total.label}</dt>
+        <dd className="break-words text-xl font-semibold tabular-nums">
+          <bdi>{total.value}</bdi>
+        </dd>
+      </div>
+    </dl>
+  );
   return (
     <section aria-label={title} className="overflow-hidden rounded-xl border bg-card">
-      <h3 className="border-b px-5 py-4 text-sm font-semibold">{title}</h3>
-      <dl className="divide-y divide-border px-5">
+      <Heading className={cn('border-b px-5 py-4 text-sm font-semibold', compact && 'px-4 py-2.5')}>
+        {title}
+      </Heading>
+      {totalFirst && totalRow}
+      <dl className={cn('divide-y divide-border px-5', compact && 'px-4')}>
         {rows.map((row) => (
           <div
             key={row.id}
-            className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3 text-sm"
+            className={cn(
+              'flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3 text-sm',
+              compact && 'py-2'
+            )}
           >
             <dt className="text-foreground">{row.label}</dt>
             <dd className="min-w-0 break-words text-end font-medium tabular-nums">
@@ -290,15 +341,12 @@ export function FinancialReviewSummary({
           </div>
         ))}
       </dl>
-      <dl className="border-t bg-muted px-5 py-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <dt className="text-sm font-semibold">{total.label}</dt>
-          <dd className="break-words text-xl font-semibold tabular-nums">
-            <bdi>{total.value}</bdi>
-          </dd>
+      {!totalFirst && totalRow}
+      {notice ? (
+        <div className={cn('border-t px-5 py-3 text-xs text-foreground', compact && 'px-4 py-2.5')}>
+          {notice}
         </div>
-      </dl>
-      {notice ? <div className="border-t px-5 py-3 text-xs text-foreground">{notice}</div> : null}
+      ) : null}
     </section>
   );
 }

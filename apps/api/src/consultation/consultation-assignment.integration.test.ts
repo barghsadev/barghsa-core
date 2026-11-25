@@ -149,14 +149,14 @@ it('routes each new request once, preserves simultaneous replay, and exposes the
   const notification = (
     await http.pool.query(
       'SELECT recipient_user_id AS user_id,operating_context,link_route AS link FROM in_app_notifications WHERE link_route=$1',
-      [`/admin/consultations?requestId=${first.requestId}`]
+      [`/admin/consultations/${first.requestId}`]
     )
   ).rows;
   expect(notification).toEqual([
     {
       user_id: 'alpha',
       operating_context: 'staff',
-      link: `/admin/consultations?requestId=${first.requestId}`,
+      link: `/admin/consultations/${first.requestId}`,
     },
   ]);
   const detail = await fetch(`${http.base}/api/consultations/requests/${first.requestId}`, {

@@ -309,6 +309,58 @@ it('pages draft order options within the selected profile and excludes cancelled
       .orders
   ).toEqual([]);
 });
+it('lists only eligible invoice references for a current draft and its order', async () => {
+  const draft = await input();
+  const order = randomUUID();
+  const product = (
+    await http.pool.query(
+      "INSERT INTO products(type,title) VALUES('hardware',$1::jsonb) RETURNING id",
+      [JSON.stringify({ en: 'Contract invoice lookup', fa: 'انتخاب صورتحساب قرارداد' })]
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,status,
+       snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+     SELECT $1, p.user_id, p.id, $3, 'electricity','PENDING','p','c','address','1234567890'
+     FROM profiles p
+     WHERE p.id=$2`,
+    [order, draft.profileId, product]
+  );
+  const response = await send('', 'POST', { ...draft, orderId: order });
+  expect(response.status, http.logs()).toBe(201);
+  const row = (await response.json()) as ContractDto;
+  const other = await create({ ...(await input()), profileId: draft.profileId });
+  const path = `/${row.id}/activation/invoice-options?versionId=${row.currentVersionId}`;
+  expect((await send(path, 'GET', undefined, 'contract-support')).status).toBe(403);
+  expect((await send(path.replace(row.currentVersionId, randomUUID()))).status).toBe(404);
+  expect((await send(path + '&before=no')).status).toBe(400);
+  const direct = randomUUID(),
+    orderInvoice = randomUUID();
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,order_id,contract_id,state,total_amount) VALUES
+     ($1,$3,NULL,$4,'Unpaid',9007199254740999),
+     ($2,$3,$5,NULL,'Unpaid',100),
+     (gen_random_uuid(),$3,NULL,$4,'Cancelled',100),
+     (gen_random_uuid(),$3,$5,$6,'Unpaid',100)`,
+    [direct, orderInvoice, draft.profileId, row.id, order, other.id]
+  );
+  const result = await send(path);
+  expect(result.status, http.logs()).toBe(200);
+  expect(await result.json()).toEqual({
+    contractId: row.id,
+    versionId: row.currentVersionId,
+    profileId: draft.profileId,
+    invoices: [direct, orderInvoice]
+      .sort()
+      .reverse()
+      .map((id) => ({ id, createdAt: expect.any(String) })),
+    nextBefore: null,
+  });
+  const earlier = await send(path + '&before=' + [direct, orderInvoice].sort().at(-1));
+  expect((await earlier.json()).invoices).toEqual([
+    { id: [direct, orderInvoice].sort()[0], createdAt: expect.any(String) },
+  ]);
+});
 it('reads an exact cancellation financial snapshot without changing the contract or refunds', async () => {
   const row = await create();
   const invoiceId = randomUUID(),

@@ -81,7 +81,9 @@ function OwnedKnowledgeAssistantLauncher({ locale, pathname }: LauncherProps) {
       <button
         ref={trigger}
         type="button"
-        className="fixed bottom-[calc(var(--mobile-navigation-height,0px)+1.25rem)] end-5 z-40 flex min-h-12 items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none"
+        data-assistant-launcher=""
+        className="fixed bottom-[calc(var(--mobile-navigation-height,0px)+1rem)] end-4 z-40 flex size-12 items-center justify-center gap-2 rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-lg ring-1 ring-primary/20 transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none sm:end-6 sm:w-auto sm:px-4 lg:bottom-6"
+        aria-label={t('assistant.open', locale)}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => {
@@ -90,7 +92,7 @@ function OwnedKnowledgeAssistantLauncher({ locale, pathname }: LauncherProps) {
         }}
       >
         <BookOpenText className="size-5" aria-hidden="true" />
-        {t('assistant.open', locale)}
+        <span className="hidden sm:inline">{t('assistant.open', locale)}</span>
       </button>
       {opened && (
         <Suspense

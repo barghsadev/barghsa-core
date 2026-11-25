@@ -1,4 +1,8 @@
-import { suggestionLines } from './solar-document-form.js';
+import {
+  normalizeGuidanceItems,
+  type SolarGuidanceDraft,
+  type SolarGuidanceItem,
+} from './solar-document-form.js';
 export interface ShipmentDraft {
   courier: string;
   trackingNumber: string;
@@ -22,19 +26,18 @@ export interface PostalGuidance {
   en: string;
   destinationAddress: string;
   contactDetails: string;
-  originals: Array<{ fa: string; en: string }>;
+  originals: SolarGuidanceItem[];
 }
-export interface PostalGuidanceDraft extends Omit<PostalGuidance, 'originals'> {
-  originalsFa: string;
-  originalsEn: string;
+export interface PostalGuidanceDraft extends SolarGuidanceDraft {
+  destinationAddress: string;
+  contactDetails: string;
 }
 export const emptyPostalGuidance: PostalGuidanceDraft = {
   fa: '',
   en: '',
   destinationAddress: '',
   contactDetails: '',
-  originalsFa: '',
-  originalsEn: '',
+  items: [],
 };
 export function utcCalendarDay(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -52,18 +55,12 @@ export function shipmentBody(draft: ShipmentDraft): ShipmentBody {
   };
 }
 export function postalGuidanceBody(draft: PostalGuidanceDraft): PostalGuidance {
-  const fa = suggestionLines(draft.originalsFa),
-    en = suggestionLines(draft.originalsEn);
   return {
     fa: draft.fa.trim(),
     en: draft.en.trim(),
     destinationAddress: draft.destinationAddress.trim(),
     contactDetails: draft.contactDetails.trim(),
-    originals: fa.map((text, index) => {
-      const translation = en[index];
-      if (translation === undefined) throw new Error('Unpaired originals');
-      return { fa: text, en: translation };
-    }),
+    originals: normalizeGuidanceItems(draft.items),
   };
 }
 export function postalGuidanceDraft(value: PostalGuidance): PostalGuidanceDraft {
@@ -72,8 +69,7 @@ export function postalGuidanceDraft(value: PostalGuidance): PostalGuidanceDraft 
     en: value.en,
     destinationAddress: value.destinationAddress,
     contactDetails: value.contactDetails,
-    originalsFa: value.originals.map((item) => item.fa).join('\n'),
-    originalsEn: value.originals.map((item) => item.en).join('\n'),
+    items: value.originals,
   };
 }
 const record = (value: unknown): value is Record<string, unknown> =>

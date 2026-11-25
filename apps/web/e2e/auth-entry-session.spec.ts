@@ -104,7 +104,11 @@ for (const [area, locale] of [
     await expect(link).toBeVisible();
     expired = true;
     await link.click();
-    await expect(page).toHaveURL(/\/login$/);
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname === '/login' &&
+        url.searchParams.get('returnTo') === (area === 'staff' ? '/admin/users' : '/wallet')
+    );
     expect(deniedReads).toBeGreaterThan(0);
     const notice = page.getByRole('alert').filter({
       hasText:
@@ -322,7 +326,10 @@ for (const locale of ['fa', 'en'] as const) {
       await expect(page.getByText(current, { exact: true })).toBeVisible();
       await expect(trigger).toHaveCount(0);
       await previousPage.reload();
-      await expect(previousPage).toHaveURL(/\/login$/);
+      await expect(previousPage).toHaveURL(
+        (url) =>
+          url.pathname === '/login' && url.searchParams.get('returnTo') === '/settings/security'
+      );
       await expect(previousPage.locator('#username')).toBeVisible();
       await expect(previousPage.getByText(current, { exact: true })).toHaveCount(0);
       await page.reload();

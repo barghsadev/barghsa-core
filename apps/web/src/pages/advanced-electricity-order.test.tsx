@@ -22,7 +22,7 @@ const wizardNavigate = async (options: {
   params?: unknown;
   replace?: boolean;
 }) => {
-  if (options.to === '/electricity/advanced') {
+  if (options.to === '/electricity/orders/new/advanced') {
     window.history[options.replace ? 'replaceState' : 'pushState'](
       {},
       '',
@@ -99,7 +99,7 @@ let quoteErrorDetails: Array<{
 
 beforeEach(() => {
   draftRevision = null;
-  window.history.replaceState({}, '', '/electricity/advanced');
+  window.history.replaceState({}, '', '/electricity/orders/new/advanced');
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   navigateMock.mockReset();
@@ -530,7 +530,7 @@ it('saves the address step before opening address settings', async () => {
     gift.dispatchEvent(new Event('input', { bubbles: true }));
   });
   const locations = {
-    current: { pathname: '/electricity/advanced' },
+    current: { pathname: '/electricity/orders/new/advanced' },
     next: { pathname: '/settings/addresses' },
   };
   expect(blockerConfig.current!.shouldBlockFn(locations)).toBe(true);
@@ -551,8 +551,8 @@ it('saves the address step before opening address settings', async () => {
   await approveVisibleConfirmation();
   await act(async () => addAddress()?.click());
   expect(navigateMock).toHaveBeenCalledWith({
-    to: '/settings/addresses',
-    search: { returnTo: '/electricity/advanced' },
+    to: '/settings/addresses/new',
+    search: { returnTo: '/electricity/orders/new/advanced' },
   });
 });
 

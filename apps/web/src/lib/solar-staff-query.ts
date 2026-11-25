@@ -28,12 +28,16 @@ export function solarPostalSearch(raw: Record<string, unknown>): Record<string, 
   const lane = solarPostalQueryOptions.filters.lane!(raw.lane);
   return {
     lane: lane === 'needs_staff' ? undefined : lane,
-    cursor: staffOrderId(raw.cursor) || undefined,
+    cursor: staffOrderId(raw.cursor).toLowerCase() || undefined,
   };
 }
-export function solarDocumentsSearch(raw: Record<string, unknown>): Record<string, unknown> {
+export type SolarDocumentSearch = {
+  requests_cursor?: string | undefined;
+  files_cursor?: string | undefined;
+};
+export function solarDocumentsSearch(raw: Record<string, unknown>): SolarDocumentSearch {
   return {
-    requests_cursor: staffOrderId(raw.requests_cursor) || undefined,
-    files_cursor: staffOrderId(raw.files_cursor) || undefined,
+    requests_cursor: staffOrderId(raw.requests_cursor).toLowerCase() || undefined,
+    files_cursor: staffOrderId(raw.files_cursor).toLowerCase() || undefined,
   };
 }

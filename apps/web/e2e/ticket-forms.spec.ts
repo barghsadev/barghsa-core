@@ -102,13 +102,27 @@ async function lockedCompanions(
     closure: state.closureWrites,
     stepUp: state.stepUpWrites,
   };
-  for (const id of ['ticket-search', 'ticket-filter', 'ticket-sort'])
-    await expect(page.locator('#' + id)).toBeDisabled();
+  const back = page.locator('[data-slot=tickets-page]').getByRole('link', {
+    name: new RegExp(
+      `^(${tTicketForms('backToTickets', locale)}|${tTicketForms('backToStaffQueue', locale)})$`
+    ),
+  });
+  if (await back.count()) {
+    const location = page.url();
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await back.dispatchEvent('click');
+    await expect(page).toHaveURL(location);
+    await expect(page.locator('[data-slot=list-toolbar]')).toHaveCount(0);
+  }
   const queueRefresh = page
     .locator('[data-slot=list-toolbar]')
     .getByRole('button', { name: t('tickets.refresh', locale), exact: true });
-  await expect(queueRefresh).toBeDisabled();
-  await queueRefresh.dispatchEvent('click');
+  if (await queueRefresh.count()) {
+    for (const id of ['ticket-search', 'ticket-filter', 'ticket-sort'])
+      await expect(page.locator('#' + id)).toBeDisabled();
+    await expect(queueRefresh).toBeDisabled();
+    await queueRefresh.dispatchEvent('click');
+  }
   const other = page.getByRole('button', { name: 'Other ticket source', exact: true });
   if (await other.count()) {
     await expect(other).toBeDisabled();
@@ -190,6 +204,103 @@ for (const [locale, theme] of [
   ['fa', 'dark'],
 ] as const) {
   const text = (key: string) => t(`tickets.${key}`, locale);
+  test(`new ticket attachments can be added, corrected and sent in order (${locale})`, async ({
+    page,
+  }) => {
+    const { state } = await setupTicketForms(page, locale, false);
+    await page.goto('/tickets/new');
+    const intake = form(page, 'ticket-intake-form');
+    await intake.locator('#ticket-subject').fill('Payment evidence');
+    await intake.locator('#ticket-body').fill('Please check these payment records.');
+    const picker = intake.locator('#ticket-files');
+    const rows = intake.locator('[data-slot=dynamic-field-array] [role=listitem] bdi');
+    await picker.setInputFiles(pdf('invoice.pdf'));
+    await picker.setInputFiles(pdf('wrong.pdf'));
+    await expect(rows).toHaveText(['invoice.pdf', 'wrong.pdf']);
+    const preview = intake.getByRole('button', {
+      name: `${documentText('preview', locale)}: wrong.pdf`,
+      exact: true,
+    });
+    await preview.click();
+    await expect(preview).toHaveAttribute('aria-expanded', 'true');
+    await intake
+      .getByRole('button', { name: `${text('removeFile')} wrong.pdf`, exact: true })
+      .click();
+    await expect(preview).toHaveCount(0);
+
+    const dropped = await page.evaluateHandle(() => {
+      const transfer = new DataTransfer();
+      transfer.items.add(new File(['%PDF-1.4\n'], 'payment.pdf', { type: 'application/pdf' }));
+      return transfer;
+    });
+    await intake.locator('div.border-dashed').dispatchEvent('drop', { dataTransfer: dropped });
+    await expect(rows).toHaveText(['invoice.pdf', 'payment.pdf']);
+    await picker.setInputFiles({
+      name: 'notes.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('Test'),
+    });
+    await expect(
+      intake.getByRole('alert').filter({ hasText: tTicketForms('filesInvalid', locale) })
+    ).toBeVisible();
+    await expect(picker).toHaveAttribute('aria-describedby', /ticket-files-message/);
+    await expect(rows).toHaveText(['invoice.pdf', 'payment.pdf']);
+    const move = intake.getByRole('button', {
+      name: documentText('moveFileUp', locale).replace('{name}', 'payment.pdf'),
+      exact: true,
+    });
+    await move.press('Enter');
+    await expect(rows).toHaveText(['payment.pdf', 'invoice.pdf']);
+    await expect(picker).not.toHaveAttribute('aria-invalid', 'true');
+    expect(state.uploadRequests).toHaveLength(0);
+
+    await submit(intake).click();
+    await expect(intake).toHaveCount(0);
+    expect(state.uploadedNames).toEqual(['payment.pdf', 'invoice.pdf']);
+    expect(state.writes.at(-1)?.body.attachments).toEqual(state.verifiedKeys);
+  });
+
+  test(`ticket profile stays usable while its related records load (${locale})`, async ({
+    page,
+  }) => {
+    const fixture = await setupTicketForms(page, locale, false);
+    const { state } = fixture;
+    await page.goto('/tickets/new');
+    const intake = form(page, 'ticket-intake-form');
+    await intake.locator('#ticket-subject').fill('Private request in progress');
+    const profile = intake.locator('#ticket-profile');
+    const record = intake.locator('#ticket-record');
+    await expect(profile).toBeEnabled();
+    state.holdOptions = true;
+    await profile.focus();
+    await profile.selectOption(profileId);
+    await expect.poll(() => Boolean(state.heldOptions)).toBe(true);
+    await expect(profile).toBeFocused();
+    await expect(profile).toHaveValue(profileId);
+    await expect(record).toBeDisabled();
+    await expect(record.locator('..')).toHaveCSS('opacity', '1');
+    await expect(record.locator('option')).toHaveText(tTicketForms('recordsLoading', locale));
+    await expect(submit(intake)).toBeDisabled();
+
+    state.holdOptions = false;
+    await profile.selectOption(otherProfileId);
+    await expect(record.locator('option')).toHaveText(tTicketForms('recordsEmpty', locale));
+    await fixture.releaseOldOptionsDenied();
+    await expect(profile).toHaveValue(otherProfileId);
+    await expect(intake.locator('#ticket-subject')).toHaveValue('Private request in progress');
+
+    state.optionsMode = 'failed';
+    await profile.selectOption(profileId);
+    await expect(record.locator('option')).toHaveText(tTicketForms('recordsUnavailable', locale));
+    await expect(profile).toBeEnabled();
+    await expect(submit(intake)).toBeDisabled();
+    state.optionsMode = 'success';
+    await profile.selectOption('');
+    await expect(record).toHaveCount(0);
+    await expect(submit(intake)).toBeEnabled();
+    expect(state.writes).toHaveLength(0);
+  });
+
   test(`customer intake and public replies retain captured commands, ordered files and current privacy (${locale}, ${theme})`, async ({
     page,
   }, testInfo) => {
@@ -197,7 +308,7 @@ for (const [locale, theme] of [
       { state } = fixture;
     const releaseSchema = await holdFirstSchema(page);
     await page.goto('/tickets');
-    await page.getByRole('button', { name: text('create'), exact: true }).click();
+    await page.getByRole('link', { name: text('create'), exact: true }).click();
     const intake = form(page, 'ticket-intake-form');
     await expect(intake).toBeVisible();
     await checkRoutePresentation(page, testInfo, locale);
@@ -221,8 +332,10 @@ for (const [locale, theme] of [
     await intake.locator('#ticket-category').selectOption('orders');
     await intake.locator('#ticket-profile').selectOption(profileId);
     await intake.locator('#ticket-record').selectOption(`contract:${relatedId}`);
+    await expect(intake.locator('#ticket-record option:checked')).toContainText('10482');
     await intake.locator('#ticket-profile').selectOption(otherProfileId);
     await expect(intake.locator('#ticket-record')).toHaveValue('');
+    await expect(intake.locator('#ticket-record')).not.toContainText('10482');
     await intake.locator('#ticket-profile').selectOption(profileId);
     await intake.locator('#ticket-record').selectOption(`contract:${relatedId}`);
     await intake
@@ -279,7 +392,7 @@ for (const [locale, theme] of [
     state.modes.create = 'success';
     await retry(page, locale).click();
     await expect(
-      page.getByRole('heading', { name: 'Ticket form journey', level: 2 })
+      page.getByRole('heading', { name: 'Ticket form journey', level: 1 })
     ).toBeVisible();
     await expect(intake).toBeHidden();
     await expect(success).toHaveCount(1);
@@ -357,8 +470,13 @@ for (const [locale, theme] of [
     await crop(page, conversation, testInfo.outputPath(`ticket-customer-outcome-${locale}.png`));
     await quality(page, reply, '[data-slot=ticket-reply-input]');
     // A real profile epoch invalidates old local work before an obsolete denied options reply.
-    await page.getByRole('button', { name: text('create'), exact: true }).click();
+    await page
+      .locator('[data-slot=tickets-page]')
+      .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
+      .click();
+    await page.getByRole('link', { name: text('create'), exact: true }).click();
     await intake.locator('#ticket-subject').fill('Old private draft');
+    await expect(intake.locator('#ticket-profile')).toBeEnabled();
     state.holdOptions = true;
     await intake.locator('#ticket-profile').selectOption(profileId);
     await expect.poll(() => !!state.heldOptions).toBe(true);
@@ -368,8 +486,7 @@ for (const [locale, theme] of [
       channel.postMessage({ type: 'profile-changed' });
       channel.close();
     });
-    await expect(intake).toBeHidden();
-    await page.getByRole('button', { name: text('create'), exact: true }).click();
+    await expect(intake.locator('#ticket-subject')).toHaveValue('');
     await intake.locator('#ticket-subject').fill('Fresh authorized draft');
     await fixture.releaseOldOptionsDenied();
     await expect(intake.locator('#ticket-subject')).toHaveValue('Fresh authorized draft');
@@ -392,7 +509,7 @@ for (const [locale, theme] of [
       { state } = fixture;
     const releaseSchema = await holdFirstSchema(page);
     await page.goto('/admin/tickets');
-    await page.getByRole('button', { name: 'Ticket form journey', exact: true }).click();
+    await page.getByRole('link', { name: 'Ticket form journey', exact: true }).click();
     const status = form(page, 'ticket-status-form'),
       assignment = form(page, 'ticket-assignment-form'),
       reply = form(page, 'ticket-reply-input');

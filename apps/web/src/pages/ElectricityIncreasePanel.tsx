@@ -5,8 +5,8 @@ import { queryKeys } from '../lib/query-keys.js';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n/workspace';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { t } from '@barghsa/i18n/electricity-increase-customer';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import {
   LoadingStatus,
@@ -61,11 +61,17 @@ export function ElectricityIncreasePanel({
   versionId,
   profileId,
   formatTimestamp,
+  requestAction,
+  requestNavigation,
+  onRequestComplete,
 }: {
   contractId: string;
   versionId: string;
   profileId: string;
   formatTimestamp?: (value: string) => string;
+  requestAction?: ReactNode;
+  requestNavigation?: (blocked: () => boolean, disabled: boolean) => ReactNode;
+  onRequestComplete?: () => void;
 }) {
   const locale = useLocale();
   const actor = useAccountUser();
@@ -326,7 +332,8 @@ export function ElectricityIncreasePanel({
       if (current.kind === 'request') form.reset({ requestedKwh: '' });
       setAgreed(false);
       toast.success(confirmationText('recorded', locale));
-      refresh();
+      if (current.kind === 'request' && onRequestComplete) onRequestComplete();
+      else refresh();
     } catch {
       if (current === attempt.current && current.generation === generation.current) {
         current.uncertain = true;
@@ -443,229 +450,194 @@ export function ElectricityIncreasePanel({
       }
     }
   }
-  if (!loading && !error && data && !data.canRequest && !data.request) return null;
+  if (!onRequestComplete && !loading && !error && data && !data.canRequest && !data.request)
+    return null;
   return (
-    <Card>
-      <CardContent className="space-y-3 pt-6 text-sm">
-        <h2 className="font-semibold">{t('electricity.increase.title', locale)}</h2>
-        {loading ? (
-          <LoadingStatus>{t('electricity.increase.loading', locale)}</LoadingStatus>
-        ) : null}
-        {error === 'load' ? (
-          <Button
-            data-testid="electricity-increase-refresh"
-            variant="outline"
-            onClick={refresh}
-            disabled={saving || !!captured}
-          >
-            {t('electricity.increase.retry', locale)}
-          </Button>
-        ) : null}
-        {data?.request ? (
-          <div className="space-y-2">
-            <p>
-              {t('electricity.increase.requested', locale)}:{' '}
-              {numbers.irrDigits(data.request.requestedKwh)} kWh
-            </p>
-            <p>{t(`electricity.increase.status.${data.request.status}`, locale)}</p>
-            {data.request.reviewReason ? (
-              <p>
-                {t('electricity.increase.reason', locale)}: {data.request.reviewReason}
-              </p>
-            ) : null}
-            {data.request.amendmentDocument ? (
-              <section
-                className="rounded-md border p-3"
-                aria-label={t('electricity.increase.amendment', locale)}
-              >
-                <h3 className="font-semibold">{t('electricity.increase.amendment', locale)}</h3>
-                <p>
-                  {t('electricity.increase.increment', locale)}:{' '}
-                  {numbers.irrDigits(data.request.amendmentDocument.incrementalKwh)} kWh
-                </p>
-                <p>
-                  {t('electricity.increase.earliest', locale)}:{' '}
-                  {timestamp(data.request.amendmentDocument.earliestEffectiveFrom)}
-                </p>
-                <p>
-                  {t('electricity.increase.end', locale)}:{' '}
-                  {timestamp(data.request.amendmentDocument.periodEnd)}
-                </p>
-                <p>{t('electricity.increase.priceRule', locale)}</p>
-                <p>{t('electricity.increase.activationRule', locale)}</p>
-                <p className="break-all text-xs text-muted-foreground">
-                  SHA-256: {data.request.amendmentSha256}
-                </p>
-              </section>
-            ) : null}
-            {data.request.status === 'awaiting_signature' && data.quote && confirmedReview ? (
-              <div className="space-y-3">
-                <>
-                  <FinancialReviewSummary
-                    title={t('electricity.increase.reviewTitle', locale)}
-                    rows={[
-                      {
-                        id: 'contract',
-                        label: t('electricity.increase.contractId', locale),
-                        value: confirmedReview.data.contractId,
-                      },
-                      {
-                        id: 'invoice',
-                        label: t('electricity.increase.originalInvoice', locale),
-                        value: confirmedReview.data.originalInvoiceId,
-                      },
-                      {
-                        id: 'paid',
-                        label: t('electricity.increase.paidBasis', locale),
-                        value: `${numbers.irrDigits(confirmedReview.data.originalInvoiceIrR)} IRR`,
-                      },
-                      {
-                        id: 'quantity',
-                        label: t('electricity.increase.increment', locale),
-                        value: `${numbers.irrDigits(confirmedReview.data.incrementalKwh)} kWh`,
-                      },
-                      {
-                        id: 'period',
-                        label: t('electricity.increase.period', locale),
-                        value: `${timestamp(confirmedReview.data.periodStart)} – ${timestamp(confirmedReview.data.periodEnd)}`,
-                      },
-                      {
-                        id: 'effective',
-                        label: t('electricity.increase.earliest', locale),
-                        value: timestamp(confirmedReview.data.effectiveFrom),
-                      },
-                      {
-                        id: 'eligible',
-                        label: t('electricity.increase.priceBegins', locale),
-                        value: timestamp(confirmedReview.data.eligibleFrom),
-                      },
-                      {
-                        id: 'base',
-                        label: t('electricity.increase.baseShare', locale),
-                        value: `${numbers.irrDigits(confirmedReview.data.baseShareIrR)} IRR`,
-                      },
-                      ...confirmedReview.data.priceAdjustments.map((component, index) => ({
-                        id: `price-${index}`,
-                        label: `${t('electricity.increase.priceChange', locale)} ${index + 1} · ${component.invoiceId}`,
-                        value: `${numbers.irrDigits(component.increaseShareIrR)} IRR`,
-                      })),
-                    ]}
-                    total={{
-                      label: t('electricity.increase.adjustment', locale),
-                      value: `${numbers.irrDigits(confirmedReview.data.adjustmentIrR)} IRR`,
-                    }}
-                    notice={t('electricity.increase.activationRule', locale)}
-                  />
-                  <OrderWalletBalance
-                    profileId={profileId}
-                    total={confirmedReview.data.adjustmentIrR}
-                    scopeKey={JSON.stringify([scopeKey, confirmedReview.hash])}
-                  />
-                </>
-                <label className="flex items-start gap-2">
-                  <input
-                    type="checkbox"
-                    checked={agreed}
-                    disabled={saving || !!captured}
-                    onChange={(event) => {
-                      if (scope.current === scopeKey && !pending.current && !attempt.current)
-                        setAgreed(event.target.checked);
-                    }}
-                  />
-                  <span>{t('electricity.increase.agree', locale)}</span>
-                </label>
-                <Button
-                  type="button"
-                  loading={saving}
-                  disabled={!agreed || saving || !!captured}
-                  onClick={() => void sign()}
-                >
-                  {t('electricity.increase.sign', locale)}
-                </Button>
-              </div>
-            ) : null}
-            {data.request.status === 'awaiting_signature' && data.quote && !confirmedReview ? (
-              <p role="alert">{t('electricity.increase.reviewUnavailable', locale)}</p>
-            ) : null}
-            {data.request.adjustmentInvoiceId ? (
-              <p>
-                <a
-                  className="text-primary underline"
-                  href={`/invoices/${encodeURIComponent(data.request.adjustmentInvoiceId)}`}
-                >
-                  {t(
-                    data.request.adjustmentInvoiceState === 'Cancelled'
-                      ? 'electricity.increase.cancelledInvoice'
-                      : 'electricity.increase.payInvoice',
-                    locale
-                  )}
-                </a>
-              </p>
-            ) : null}
-            {data.request.status === 'expired' &&
-            data.request.adjustmentInvoiceState === 'Cancelled' ? (
-              <p>{t('electricity.increase.noPaymentDue', locale)}</p>
-            ) : null}
-            {data.request.financialFollowUp ? (
-              <p role="status">{t('electricity.increase.financeFollowUp', locale)}</p>
-            ) : null}
-            {error === 'stepup' ? (
-              <p role="alert">
-                {t('electricity.increase.stepup', locale)}{' '}
-                <a className="underline" href="/settings/security">
-                  {t('electricity.increase.security', locale)}
-                </a>
-              </p>
-            ) : null}
-            {error === 'save' && !captured ? (
-              <p role="alert">
-                {t('electricity.increase.signFailed', locale)}{' '}
-                <button type="button" className="underline" onClick={refresh}>
-                  {t('electricity.increase.retry', locale)}
-                </button>
-              </p>
-            ) : null}
-          </div>
-        ) : null}
-        {data?.canRequest ? (
-          <Form {...form}>
-            <form
-              noValidate
-              data-testid="electricity-increase-form"
-              onSubmit={(event) => void submit(event)}
-              className="space-y-3"
+    <>
+      {onRequestComplete && (
+        <header className="space-y-2" data-toast-anchor>
+          {requestNavigation?.(() => pending.current || !!attempt.current, saving || !!captured)}
+          <h1 className="text-2xl font-semibold">{t('electricity.increase.title', locale)}</h1>
+        </header>
+      )}
+      <Card size="sm">
+        <CardContent className="space-y-3 text-sm">
+          {!onRequestComplete && (
+            <h2 className="text-base font-semibold">{t('electricity.increase.title', locale)}</h2>
+          )}
+          {loading ? (
+            <LoadingStatus>{t('electricity.increase.loading', locale)}</LoadingStatus>
+          ) : null}
+          {error === 'load' ? (
+            <Button
+              data-testid="electricity-increase-refresh"
+              variant="outline"
+              onClick={refresh}
+              disabled={saving || !!captured}
             >
+              {t('electricity.increase.retry', locale)}
+            </Button>
+          ) : null}
+          {onRequestComplete &&
+            !loading &&
+            error !== 'load' &&
+            (!data?.canRequest || data.request) && (
+              <p role="status">{copy('requestUnavailable')}</p>
+            )}
+          {!onRequestComplete && data?.request ? (
+            <div className="space-y-2">
               <p>
-                {t('electricity.increase.limit', locale)}: {numbers.irrDigits(maximum)} kWh
+                {t('electricity.increase.requested', locale)}:{' '}
+                {numbers.irrDigits(data.request.requestedKwh)} kWh
               </p>
-              <FormField
-                control={form.control}
-                name="requestedKwh"
-                render={({ field }) => (
-                  <FormItem id="electricity-increase-kwh">
-                    <FormLabel>{t('electricity.increase.quantity', locale)}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        aria-required="true"
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={21}
-                        disabled={!!captured}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      {t('electricity.increase.future', locale)} {copy('preserved')}
-                    </FormDescription>
-                    <div className="grid">
-                      <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                        {copy('quantityRange')}
-                      </p>
-                      <FormMessage className="col-start-1 row-start-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+              <p>{t(`electricity.increase.status.${data.request.status}`, locale)}</p>
+              {data.request.reviewReason ? (
+                <p>
+                  {t('electricity.increase.reason', locale)}: {data.request.reviewReason}
+                </p>
+              ) : null}
+              {data.request.amendmentDocument ? (
+                <section
+                  className="rounded-md border p-3"
+                  aria-label={t('electricity.increase.amendment', locale)}
+                >
+                  <h3 className="font-semibold">{t('electricity.increase.amendment', locale)}</h3>
+                  <p>
+                    {t('electricity.increase.increment', locale)}:{' '}
+                    {numbers.irrDigits(data.request.amendmentDocument.incrementalKwh)} kWh
+                  </p>
+                  <p>
+                    {t('electricity.increase.earliest', locale)}:{' '}
+                    {timestamp(data.request.amendmentDocument.earliestEffectiveFrom)}
+                  </p>
+                  <p>
+                    {t('electricity.increase.end', locale)}:{' '}
+                    {timestamp(data.request.amendmentDocument.periodEnd)}
+                  </p>
+                  <p>{t('electricity.increase.priceRule', locale)}</p>
+                  <p>{t('electricity.increase.activationRule', locale)}</p>
+                  {data.request.amendmentSha256 && (
+                    <details className="mt-2 text-xs text-muted-foreground">
+                      <summary className="cursor-pointer">{copy('documentFingerprint')}</summary>
+                      <bdi dir="ltr" className="block break-all">
+                        SHA-256: {data.request.amendmentSha256}
+                      </bdi>
+                    </details>
+                  )}
+                </section>
+              ) : null}
+              {data.request.status === 'awaiting_signature' && data.quote && confirmedReview ? (
+                <div className="space-y-3">
+                  <>
+                    <FinancialReviewSummary
+                      title={t('electricity.increase.reviewTitle', locale)}
+                      rows={[
+                        {
+                          id: 'contract',
+                          label: t('electricity.increase.contractId', locale),
+                          value: confirmedReview.data.contractId,
+                        },
+                        {
+                          id: 'invoice',
+                          label: t('electricity.increase.originalInvoice', locale),
+                          value: confirmedReview.data.originalInvoiceId,
+                        },
+                        {
+                          id: 'paid',
+                          label: t('electricity.increase.paidBasis', locale),
+                          value: `${numbers.irrDigits(confirmedReview.data.originalInvoiceIrR)} IRR`,
+                        },
+                        {
+                          id: 'quantity',
+                          label: t('electricity.increase.increment', locale),
+                          value: `${numbers.irrDigits(confirmedReview.data.incrementalKwh)} kWh`,
+                        },
+                        {
+                          id: 'period',
+                          label: t('electricity.increase.period', locale),
+                          value: `${timestamp(confirmedReview.data.periodStart)} – ${timestamp(confirmedReview.data.periodEnd)}`,
+                        },
+                        {
+                          id: 'effective',
+                          label: t('electricity.increase.earliest', locale),
+                          value: timestamp(confirmedReview.data.effectiveFrom),
+                        },
+                        {
+                          id: 'eligible',
+                          label: t('electricity.increase.priceBegins', locale),
+                          value: timestamp(confirmedReview.data.eligibleFrom),
+                        },
+                        {
+                          id: 'base',
+                          label: t('electricity.increase.baseShare', locale),
+                          value: `${numbers.irrDigits(confirmedReview.data.baseShareIrR)} IRR`,
+                        },
+                        ...confirmedReview.data.priceAdjustments.map((component, index) => ({
+                          id: `price-${index}`,
+                          label: `${t('electricity.increase.priceChange', locale)} ${index + 1} · ${component.invoiceId}`,
+                          value: `${numbers.irrDigits(component.increaseShareIrR)} IRR`,
+                        })),
+                      ]}
+                      total={{
+                        label: t('electricity.increase.adjustment', locale),
+                        value: `${numbers.irrDigits(confirmedReview.data.adjustmentIrR)} IRR`,
+                      }}
+                      notice={t('electricity.increase.activationRule', locale)}
+                    />
+                    <OrderWalletBalance
+                      profileId={profileId}
+                      total={confirmedReview.data.adjustmentIrR}
+                      scopeKey={JSON.stringify([scopeKey, confirmedReview.hash])}
+                    />
+                  </>
+                  <label className="touch-label flex items-start gap-2 rounded-lg bg-muted/35 px-3 py-2.5">
+                    <input
+                      type="checkbox"
+                      className="mt-0.5 size-4 shrink-0 accent-primary"
+                      checked={agreed}
+                      disabled={saving || !!captured}
+                      onChange={(event) => {
+                        if (scope.current === scopeKey && !pending.current && !attempt.current)
+                          setAgreed(event.target.checked);
+                      }}
+                    />
+                    <span>{t('electricity.increase.agree', locale)}</span>
+                  </label>
+                  <Button
+                    type="button"
+                    loading={saving}
+                    disabled={!agreed || saving || !!captured}
+                    onClick={() => void sign()}
+                  >
+                    {t('electricity.increase.sign', locale)}
+                  </Button>
+                </div>
+              ) : null}
+              {data.request.status === 'awaiting_signature' && data.quote && !confirmedReview ? (
+                <p role="alert">{t('electricity.increase.reviewUnavailable', locale)}</p>
+              ) : null}
+              {data.request.adjustmentInvoiceId ? (
+                <p>
+                  <a
+                    className="text-primary underline"
+                    href={`/invoices/${encodeURIComponent(data.request.adjustmentInvoiceId)}`}
+                  >
+                    {t(
+                      data.request.adjustmentInvoiceState === 'Cancelled'
+                        ? 'electricity.increase.cancelledInvoice'
+                        : 'electricity.increase.payInvoice',
+                      locale
+                    )}
+                  </a>
+                </p>
+              ) : null}
+              {data.request.status === 'expired' &&
+              data.request.adjustmentInvoiceState === 'Cancelled' ? (
+                <p>{t('electricity.increase.noPaymentDue', locale)}</p>
+              ) : null}
+              {data.request.financialFollowUp ? (
+                <p role="status">{t('electricity.increase.financeFollowUp', locale)}</p>
+              ) : null}
               {error === 'stepup' ? (
                 <p role="alert">
                   {t('electricity.increase.stepup', locale)}{' '}
@@ -674,41 +646,119 @@ export function ElectricityIncreasePanel({
                   </a>
                 </p>
               ) : null}
-              {(error === 'save' && !captured) || form.formState.errors.root ? (
+              {error === 'save' && !captured ? (
                 <p role="alert">
-                  {form.formState.errors.root?.validation?.message ??
-                    t('electricity.increase.failed', locale)}
+                  {t('electricity.increase.signFailed', locale)}{' '}
+                  <button type="button" className="underline" onClick={refresh}>
+                    {t('electricity.increase.retry', locale)}
+                  </button>
                 </p>
               ) : null}
-              <Button type="submit" loading={saving} disabled={saving || !!captured}>
-                {t('electricity.increase.submit', locale)}
+            </div>
+          ) : null}
+          {data?.canRequest && !data.request
+            ? (requestAction ?? (
+                <Form {...form}>
+                  <form
+                    noValidate
+                    data-testid="electricity-increase-form"
+                    onSubmit={(event) => void submit(event)}
+                    className="space-y-3"
+                  >
+                    <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/50 px-3 py-2.5">
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t('electricity.increase.currentTotal', locale)}
+                        </dt>
+                        <dd className="font-semibold wrap-anywhere">
+                          <bdi dir="ltr">{numbers.irrDigits(data.originalKwh)} kWh</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t('electricity.increase.limit', locale)}
+                        </dt>
+                        <dd className="font-semibold wrap-anywhere">
+                          <bdi dir="ltr">{numbers.irrDigits(maximum)} kWh</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                    <FormField
+                      control={form.control}
+                      name="requestedKwh"
+                      render={({ field }) => (
+                        <FormItem id="electricity-increase-kwh">
+                          <FormLabel>{t('electricity.increase.quantity', locale)}</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              aria-required="true"
+                              type="text"
+                              dir="ltr"
+                              className="sm:max-w-xs"
+                              inputMode="numeric"
+                              maxLength={21}
+                              disabled={!!captured}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            {t('electricity.increase.future', locale)}
+                            <span className="sr-only"> {copy('preserved')}</span>
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {error === 'stepup' ? (
+                      <p role="alert">
+                        {t('electricity.increase.stepup', locale)}{' '}
+                        <a
+                          className="underline"
+                          href="/settings/security"
+                          target={onRequestComplete ? '_blank' : undefined}
+                          rel={onRequestComplete ? 'noopener' : undefined}
+                        >
+                          {t('electricity.increase.security', locale)}
+                        </a>
+                      </p>
+                    ) : null}
+                    {(error === 'save' && !captured) || form.formState.errors.root ? (
+                      <p role="alert">
+                        {form.formState.errors.root?.validation?.message ??
+                          t('electricity.increase.failed', locale)}
+                      </p>
+                    ) : null}
+                    <Button type="submit" loading={saving} disabled={saving || !!captured}>
+                      {t('electricity.increase.submit', locale)}
+                    </Button>
+                  </form>
+                </Form>
+              ))
+            : null}
+          {captured && acceptedScope === scopeKey ? (
+            <div className="space-y-2">
+              {unconfirmed ? (
+                <p role="alert">
+                  {copy(captured.kind === 'sign' ? 'signingUncertain' : 'uncertain')}
+                </p>
+              ) : null}
+              <Button
+                type="button"
+                variant="outline"
+                data-testid={
+                  captured.kind === 'sign'
+                    ? 'electricity-increase-sign-retry'
+                    : 'electricity-increase-retry'
+                }
+                disabled={saving}
+                onClick={() => void retryCaptured()}
+              >
+                {copy('retryCaptured')}
               </Button>
-            </form>
-          </Form>
-        ) : null}
-        {captured && acceptedScope === scopeKey ? (
-          <div className="space-y-2">
-            {unconfirmed ? (
-              <p role="alert">
-                {copy(captured.kind === 'sign' ? 'signingUncertain' : 'uncertain')}
-              </p>
-            ) : null}
-            <Button
-              type="button"
-              variant="outline"
-              data-testid={
-                captured.kind === 'sign'
-                  ? 'electricity-increase-sign-retry'
-                  : 'electricity-increase-retry'
-              }
-              disabled={saving}
-              onClick={() => void retryCaptured()}
-            >
-              {copy('retryCaptured')}
-            </Button>
-          </div>
-        ) : null}
-      </CardContent>
-    </Card>
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
+    </>
   );
 }

@@ -40,9 +40,13 @@ vi.mock('../components/TeamActionDialog.js', () => ({
   },
 }));
 vi.mock('../components/KnowledgeBaseDocumentPicker.js', () => ({
-  KnowledgeBaseDocumentPicker: ({ onAttach }: { onAttach: (key: string) => void }) => {
+  KnowledgeBaseDocumentPicker: ({
+    onAttach,
+  }: {
+    onAttach: (document: { storageKey: string; fileName: string }) => void;
+  }) => {
     const [search, setSearch] = useState('');
-    captured.attach = onAttach;
+    captured.attach = (key) => onAttach({ storageKey: key, fileName: `${key}.txt` });
     return <input id="picker-search" value={search} onChange={(e) => setSearch(e.target.value)} />;
   },
 }));
@@ -113,13 +117,14 @@ const queryRows = [
     metadata: { fileName: 'Guide.txt' },
   },
 ];
+const documentSource = { ...kd, sourceType: 'document' as const, sourceConfig: {} };
 it('knowledge list and detail are read once each and recovery preserves query and picker work', async () => {
   let fail = false;
   const requests = mock((path) =>
     path.endsWith('/query')
       ? response(queryRows)
       : path.endsWith(kb.id)
-        ? response(kd)
+        ? response(documentSource)
         : response([kb], fail ? 503 : 200)
   );
   await render(Knowledge);
@@ -147,7 +152,7 @@ it('fresh document-picker callbacks work after a changed document set while olde
   mock((path) =>
     path.endsWith(kb.id)
       ? response({
-          ...kd,
+          ...documentSource,
           documents: attached
             ? [
                 {
@@ -342,7 +347,7 @@ it('permission denial invalidates older independent catalogue reads', async () =
 it('an old document upload callback cannot attach after changing selected scope', async () => {
   mock((path) =>
     path.endsWith(kb.id)
-      ? response(kd)
+      ? response(documentSource)
       : path.endsWith('/kb-groups')
         ? response([kg])
         : response([kb])
@@ -390,7 +395,9 @@ it('policy catalogue retry preserves complete rule drafts and exact frozen save'
   mock(() => response([policy], fail ? 503 : 200));
   await render(Policies);
   await click('Edit');
-  await fill('#policy-items', 'energy\nbilling');
+  await fill('#policy-items', 'energy');
+  await click('Add item');
+  await fill('#policy-items-2', 'billing');
   fail = true;
   await click('Refresh');
   await fill('#policy-description', 'Keep explanation');

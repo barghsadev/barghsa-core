@@ -1,25 +1,29 @@
 import type { GreenElectricityConfig } from '@barghsa/shared/finance';
 import { boundedCatalogueInteger, record } from './catalogue-form.js';
+import { normalizeProfileDigits } from './profile-digits.js';
 export const electricityModes = ['simpleOrder', 'advancedOrder'] as const;
 export interface GreenDraft {
   simpleEnabled: boolean;
   simpleThreshold: string;
-  simpleShare: number;
+  simpleShare: string;
   advancedEnabled: boolean;
   advancedThreshold: string;
-  advancedShare: number;
+  advancedShare: string;
 }
 export const greenDefaults: GreenDraft = {
   simpleEnabled: true,
   simpleThreshold: '1000',
-  simpleShare: 4,
+  simpleShare: '4',
   advancedEnabled: false,
   advancedThreshold: '1000',
-  advancedShare: 4,
+  advancedShare: '4',
 };
 export interface GreenSafety {
   simpleOrder: { blocked: boolean; reasons: string[] };
   advancedOrder: { blocked: boolean; reasons: string[] };
+}
+function validGreenShare(share: unknown): share is number {
+  return typeof share === 'number' && Number.isFinite(share) && share >= 0 && share <= 100;
 }
 export function validGreenConfig(value: unknown): value is GreenElectricityConfig {
   return (
@@ -31,10 +35,7 @@ export function validGreenConfig(value: unknown): value is GreenElectricityConfi
         typeof row.mandatoryGreenEnabled === 'boolean' &&
         Number.isSafeInteger(row.averagePowerThresholdKw) &&
         Number(row.averagePowerThresholdKw) >= 0 &&
-        typeof row.mandatoryGreenSharePercent === 'number' &&
-        Number.isFinite(row.mandatoryGreenSharePercent) &&
-        row.mandatoryGreenSharePercent >= 0 &&
-        row.mandatoryGreenSharePercent <= 100
+        validGreenShare(row.mandatoryGreenSharePercent)
       );
     })
   );
@@ -56,14 +57,31 @@ export function validGreenSafety(value: unknown): value is GreenSafety {
     })
   );
 }
+export function greenShareValue(raw: string): number | null {
+  const text = normalizeProfileDigits(raw).trim().replace('٫', '.');
+  if (!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(text)) return null;
+  const share = Number(text);
+  return validGreenShare(share) ? share : null;
+}
+
+export function greenShareText(share: number): string {
+  const text = String(share);
+  const negativeExponent = text.indexOf('e-');
+  if (negativeExponent === -1) return text;
+  // Keep small saved values editable as decimals without rounding them.
+  const exponent = Number(text.slice(negativeExponent + 2));
+  const digits = text.slice(0, negativeExponent).replace('.', '');
+  return `0.${'0'.repeat(exponent - 1)}${digits}`;
+}
+
 export function greenValues(value: GreenElectricityConfig): GreenDraft {
   return {
     simpleEnabled: value.simpleOrder.mandatoryGreenEnabled,
     simpleThreshold: String(value.simpleOrder.averagePowerThresholdKw),
-    simpleShare: value.simpleOrder.mandatoryGreenSharePercent,
+    simpleShare: greenShareText(value.simpleOrder.mandatoryGreenSharePercent),
     advancedEnabled: value.advancedOrder.mandatoryGreenEnabled,
     advancedThreshold: String(value.advancedOrder.averagePowerThresholdKw),
-    advancedShare: value.advancedOrder.mandatoryGreenSharePercent,
+    advancedShare: greenShareText(value.advancedOrder.mandatoryGreenSharePercent),
   };
 }
 export function greenBody(value: GreenDraft): GreenElectricityConfig {
@@ -75,7 +93,7 @@ export function greenBody(value: GreenDraft): GreenElectricityConfig {
         0,
         Number.MAX_SAFE_INTEGER
       )!,
-      mandatoryGreenSharePercent: value.simpleShare,
+      mandatoryGreenSharePercent: greenShareValue(value.simpleShare)!,
     },
     advancedOrder: {
       mandatoryGreenEnabled: value.advancedEnabled,
@@ -84,7 +102,7 @@ export function greenBody(value: GreenDraft): GreenElectricityConfig {
         0,
         Number.MAX_SAFE_INTEGER
       )!,
-      mandatoryGreenSharePercent: value.advancedShare,
+      mandatoryGreenSharePercent: greenShareValue(value.advancedShare)!,
     },
   };
 }

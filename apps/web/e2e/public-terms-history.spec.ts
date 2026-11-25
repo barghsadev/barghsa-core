@@ -29,7 +29,7 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({
         json: {
           ...version,
-          content: `Published content ${version.versionId}`,
+          content: `Published content ${version.versionId}\n\n## Payment\n\nPayment terms.\n\n## Support\n\nService support.`,
           updatedAt: version.publishedAt,
         },
       });
@@ -69,8 +69,19 @@ for (const locale of ['en', 'fa'] as const)
     await expect(history.getByRole('link', { name: 'v1', exact: true })).toBeVisible();
     expect(reads).toEqual(['first', ids[1], ids[1]]);
     await history.getByRole('link', { name: 'v1', exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`version=${ids[0]}`));
+    await expect(page).toHaveURL(new RegExp(`/terms/${ids[0]}`));
     await expect(page.getByText('Published content v1', { exact: true })).toBeVisible();
+    const contents = page.getByRole('navigation', { name: t('tos.page.contents', locale) });
+    await contents.getByRole('link', { name: 'Support', exact: true }).click();
+    await expect(page).toHaveURL(/#clause-2$/);
+    await expect(page.getByRole('heading', { name: 'Support', exact: true })).toHaveAttribute(
+      'id',
+      'clause-2'
+    );
+    await page.emulateMedia({ media: 'print' });
+    await expect(contents).toBeHidden();
+    await expect(page.getByText('Published content v1', { exact: true })).toBeVisible();
+    await page.emulateMedia({ media: 'screen' });
     expect(writes).toEqual([]);
     expect(
       (

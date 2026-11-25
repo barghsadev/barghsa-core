@@ -112,27 +112,33 @@ test('staff can prepare a versioned maintenance change', async ({ page }) => {
     })
   );
   let submitted: Record<string, unknown> | null = null;
+  let current = settings[0]!;
   await page.route('**/api/admin/maintenance', (route) => route.fulfill({ json: settings }));
   await page.route('**/api/admin/maintenance/electricity_checkout', (route) => {
+    if (route.request().method() === 'GET')
+      return route.fulfill({ json: { ...current, canEdit: true } });
     submitted = route.request().postDataJSON() as Record<string, unknown>;
-    return route.fulfill({
-      json: {
-        ...settings[0],
-        active: false,
-        reason: null,
-        owner: null,
-        estimatedUntil: null,
-        version: 2,
-      },
-    });
+    current = {
+      ...current,
+      active: false,
+      reason: null,
+      owner: null,
+      estimatedUntil: null,
+      version: 2,
+    };
+    return route.fulfill({ json: current });
   });
   await page.goto('/admin/maintenance');
   await expect(page.getByRole('heading', { name: 'توقف موقت خدمات' })).toBeVisible();
-  await expect(page.getByText('Operations')).toBeVisible();
   await expect(page.locator('time[datetime="2099-01-01T00:00:00.000Z"]')).toBeVisible();
-  await page.getByRole('button', { name: 'مدیریت' }).first().click();
+  await page.getByRole('main').getByRole('link', { name: 'ثبت سفارش برق', exact: true }).click();
+  await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
+  await expect(page.getByText('Operations')).toBeVisible();
+  await page.getByRole('link', { name: 'مدیریت', exact: true }).click();
   await page.getByRole('checkbox', { name: 'متوقف‌شده' }).uncheck();
   await page.getByRole('button', { name: 'ذخیره تغییر' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'تأیید' }).click();
   await expect.poll(() => submitted).toMatchObject({ active: false, expectedVersion: 1 });
+  await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
+  await expect(page.getByRole('main')).toContainText('در دسترس');
 });

@@ -1,7 +1,7 @@
 import { cn } from '@barghsa/ui';
 
 export const dashboardMetricLink =
-  'flex min-h-11 min-w-0 items-center justify-between gap-2 px-2 py-2 hover:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring';
+  'flex min-h-11 min-w-0 items-center justify-between gap-2 px-2 py-1 hover:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring';
 
 export function DashboardMetricRow({
   label,

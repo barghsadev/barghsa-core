@@ -40,7 +40,7 @@ export function Topbar({
     </>
   );
   return (
-    <header className="shell-topbar" data-toast-anchor>
+    <header className="shell-topbar" data-area={area} data-toast-anchor>
       {!isWide && (
         <Link to="/app" aria-label={shellText('workspace', locale)} className="shell-topbar-brand">
           <BrandMark compact={!isWide} />
@@ -53,6 +53,7 @@ export function Topbar({
         <ProfileMenu
           area={area}
           locale={locale}
+          compact={!isWide}
           onOpen={onAccountOpen}
           profileBadge={!isWide ? profileBadge : undefined}
           preferences={

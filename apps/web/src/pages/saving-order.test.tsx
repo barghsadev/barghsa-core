@@ -47,7 +47,7 @@ afterEach(() => {
 });
 
 it.each(['en', 'fa'] as const)(
-  'moves from an available plan to its compatible hardware in %s',
+  'prefills the sole plan and address and requires an explicit equipment choice in %s',
   async (locale) => {
     document.documentElement.lang = locale;
     vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -128,7 +128,19 @@ it.each(['en', 'fa'] as const)(
             })
           );
         if (url === '/api/profiles/profile-1/addresses')
-          return new Response(JSON.stringify({ addresses: [] }));
+          return Response.json({
+            addresses: [
+              {
+                id: 'address-1',
+                profileId: 'profile-1',
+                provinceId: 'province-1',
+                cityId: 'city-1',
+                fullAddress: 'Installation address',
+                postalCode: '1234567890',
+                mainAddress: false,
+              },
+            ],
+          });
         throw new Error(`Unexpected ${url}`);
       })
     );
@@ -144,24 +156,24 @@ it.each(['en', 'fa'] as const)(
         )
       );
       expect(container.textContent).toContain(locale === 'fa' ? 'طرح خانه' : 'Home plan');
-      await act(async () =>
-        (container.querySelector('input[value="plan-1"]') as HTMLInputElement).click()
+      expect(container.querySelector<HTMLInputElement>('input[value="plan-1"]')?.checked).toBe(
+        true
+      );
+      expect(fetch).not.toHaveBeenCalledWith(
+        '/api/saving/orders/draft?profileId=profile-1',
+        expect.objectContaining({ method: 'PUT' })
       );
       const next = Array.from(container.querySelectorAll('button')).find(
         (button) => button.textContent === (locale === 'fa' ? 'ادامه' : 'Continue')
       );
-      expect(next?.disabled).toBe(false);
-      await act(async () => next?.click());
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/saving/orders/draft?profileId=profile-1',
-        expect.objectContaining({ method: 'PUT' })
-      );
+      expect(next?.disabled).toBe(true);
       expect(container.textContent).toContain(locale === 'fa' ? 'دستگاه' : 'Device');
       const hardware = (id: string) =>
         container.querySelector<HTMLInputElement>(`input[value="${id}"]`)!;
       expect(hardware('depleted-device').disabled).toBe(true);
       expect(hardware('retired-device').disabled).toBe(true);
       expect(hardware('stocked-device').disabled).toBe(false);
+      expect(container.querySelector('input[name="hardwareId"]:checked')).toBeNull();
       expect(hardware('depleted-device').closest('label')?.textContent).toContain(
         tSaving('outOfStock', locale)
       );
@@ -169,26 +181,36 @@ it.each(['en', 'fa'] as const)(
         tSaving('inStock', locale)
       );
 
-      expect(container.textContent).toContain(
-        locale === 'fa'
-          ? 'موجودی پس از تأیید کارشناس مشخص می‌شود.'
-          : 'Availability is subject to staff confirmation.'
-      );
-      expect(container.textContent).toContain(
-        locale === 'fa' ? 'انتخاب این دستگاه را تأیید می‌کنم' : 'I confirm this equipment choice'
+      expect(hardware('device-1').closest('label')?.textContent).toContain(
+        tSaving('stockPending', locale)
       );
       await act(async () => {
         (container.querySelector('input[value="device-1"]') as HTMLInputElement).click();
-        (container.querySelector('input[type="checkbox"]') as HTMLInputElement).click();
       });
+      const confirm = container.querySelector<HTMLInputElement>('input[name="hardwareConfirmed"]')!;
+      expect(confirm.closest('label')?.textContent).toContain(tSaving('confirmHardware', locale));
+      expect(confirm.checked).toBe(false);
+      expect(next?.disabled).toBe(true);
+      await act(async () => confirm.click());
+      expect(next?.disabled).toBe(false);
       failNextSave = true;
       await act(async () => next?.click());
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/saving/orders/draft?profileId=profile-1',
+        expect.objectContaining({ method: 'PUT' })
+      );
       expect(container.textContent).toContain(
         locale === 'fa' ? 'اطلاعات واردشده باقی مانده است' : 'Your entries are still here'
       );
       expect((container.querySelector('input[value="device-1"]') as HTMLInputElement).checked).toBe(
         true
       );
+      failNextSave = false;
+      await act(async () => next?.click());
+      expect(
+        container.querySelector<HTMLInputElement>('input[name="addressId"][value="address-1"]')
+          ?.checked
+      ).toBe(true);
     } finally {
       await act(async () => root.unmount());
       container.remove();
@@ -312,11 +334,13 @@ for (const locale of ['en', 'fa'] as const)
         )!;
       async function value(selector: string, next: string) {
         await act(async () => {
-          const element = container.querySelector<HTMLInputElement | HTMLSelectElement>(selector)!;
-          Object.getOwnPropertyDescriptor(
-            element.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype,
-            'value'
-          )!.set!.call(element, next);
+          const element = container.querySelector<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+          >(selector)!;
+          Object.getOwnPropertyDescriptor(Object.getPrototypeOf(element), 'value')!.set!.call(
+            element,
+            next
+          );
           element.dispatchEvent(
             new Event(element.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })
           );
@@ -333,15 +357,14 @@ for (const locale of ['en', 'fa'] as const)
         await act(async () =>
           container.querySelector<HTMLInputElement>(`input[value="${planId}"]`)!.click()
         );
-        await act(async () => button(tSaving('next', locale)).click());
         await act(async () => {
           container.querySelector<HTMLInputElement>(`input[value="${hardwareId}"]`)!.click();
           container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click();
         });
         await act(async () => button(tSaving('next', locale)).click());
         await value('input[name=billIdentifier]', '12345678');
-        await vi.waitFor(() => expect(button(tSaving('next', locale)).disabled).toBe(false));
-        await act(async () => button(tSaving('next', locale)).click());
+        const review = () => button(tSaving('stepReview', locale));
+        expect(review().disabled).toBe(true);
         await act(async () => button(tSaving('newAddress', locale)).click());
         await vi.waitFor(() =>
           expect(
@@ -355,13 +378,13 @@ for (const locale of ['en', 'fa'] as const)
           )
         );
         await value('#saving-address-city', cityId);
-        await value('input[name=fullAddress]', address.fullAddress);
+        await value('#saving-address-full', address.fullAddress);
         await value('input[name=postalCode]', address.postalCode);
         await act(async () => button(tSaving('saveAddress', locale)).click());
         await vi.waitFor(() => expect(writes).toHaveLength(1));
         expect(writes[0]!.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
         expect(
-          container.querySelector<HTMLInputElement>('input[name=fullAddress]')!.matches(':disabled')
+          container.querySelector<HTMLTextAreaElement>('#saving-address-full')!.matches(':disabled')
         ).toBe(true);
         await act(async () => button(tSaving('retryAddress', locale)).click());
         await vi.waitFor(() => expect(writes).toHaveLength(2));
@@ -371,13 +394,9 @@ for (const locale of ['en', 'fa'] as const)
             container.querySelector<HTMLInputElement>(`input[value="${address.id}"]`)?.checked
           ).toBe(true)
         );
-        expect(container.querySelector('input[name=fullAddress]')).toBeNull();
-        expect(button(tSaving('next', locale)).disabled).toBe(false);
-        await act(async () => button(tSaving('next', locale)).click());
-        await act(async () =>
-          container.querySelector<HTMLInputElement>('input[name=agreementAccepted]')!.click()
-        );
-        await act(async () => button(tSaving('next', locale)).click());
+        expect(container.querySelector('#saving-address-full')).toBeNull();
+        await vi.waitFor(() => expect(review().disabled).toBe(false));
+        await act(async () => review().click());
         await vi.waitFor(() => expect(container.textContent).toContain('300000 IRR'));
         expect(container.textContent).toContain('Updated quoted installation site');
         expect(container.textContent).toContain('9876543210');

@@ -11,6 +11,7 @@ import {
 import { isAuthEntryPath } from '../../entry-routes.js';
 import { rememberEntryLocale } from '../lib/entry-locale.js';
 import { rememberSessionEnded } from '../lib/session-ended-notice.js';
+import { authReturnPath, authReturnSearch, rememberOnboardingReturn } from '../lib/auth-return.js';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 // Auth entry routes hand off to the application before any customer workspace mounts.
@@ -54,15 +55,20 @@ export const Route = createRootRoute({
     if (isAuthEntryPath(location.pathname)) {
       const session = await readSessionContext(abortController.signal);
       if (session !== null) {
-        if (authEntry) return { appSession: null, isStaff: false, handoffToApp: true };
-        throw redirect({ to: '/app', replace: true });
+        const destination = authReturnSearch(location.search).returnTo ?? '/app';
+        if (authEntry) return { appSession: null, isStaff: false, handoffToApp: destination };
+        throw redirect({ href: destination, replace: true });
       }
     }
     if (location.pathname === '/app' || location.pathname.startsWith('/app/')) {
       const session = await readSessionContext(abortController.signal);
       if (session === null) {
         rememberSessionEnded(preload);
-        throw redirect({ to: '/login', replace: true });
+        throw redirect({
+          to: '/login',
+          search: { returnTo: authReturnPath(location.pathname) },
+          replace: true,
+        });
       }
       const isStaff = session.operatingContext === 'staff';
       if (!isStaff) {
@@ -73,9 +79,16 @@ export const Route = createRootRoute({
         );
         if (available === null) {
           rememberSessionEnded(preload);
-          throw redirect({ to: '/login', replace: true });
+          throw redirect({
+            to: '/login',
+            search: { returnTo: authReturnPath(location.pathname) },
+            replace: true,
+          });
         }
-        if (!available) throw redirect({ to: '/onboarding', replace: true });
+        if (!available) {
+          if (!preload) rememberOnboardingReturn(session.userId ?? null, location.pathname);
+          throw redirect({ to: '/onboarding', replace: true });
+        }
       }
       return { appSession: session, isStaff };
     }
@@ -99,21 +112,6 @@ function RouteShell({ children }: { children: ReactNode }) {
  */
 const AUTH_ROUTE_PREFIXES = ['/login', '/register', '/forgot-password', '/activate'];
 
-/**
- * Routes explicitly excluded from the profile check.
- */
-const EXCLUDED_ROUTES = new Set(['/', '/onboarding', '/tickets', '/support', '/terms']);
-function needsProfile(pathname: string, isStaff: boolean): boolean {
-  return (
-    !isStaff &&
-    !AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
-    !EXCLUDED_ROUTES.has(pathname) &&
-    !pathname.startsWith('/onboarding/') &&
-    pathname !== '/admin' &&
-    !pathname.startsWith('/admin/')
-  );
-}
-
 function AuthEntryRoot() {
   const { handoffToApp } = Route.useRouteContext();
   // Leave the auth bundle after the root mounts so an early session response
@@ -121,7 +119,7 @@ function AuthEntryRoot() {
   useEffect(() => {
     if (!handoffToApp) return;
     rememberEntryLocale();
-    window.location.replace('/app');
+    window.location.replace(handoffToApp);
   }, [handoffToApp]);
   if (handoffToApp)
     return (
@@ -138,26 +136,30 @@ function RootComponent() {
   useEffect(() => {
     if (profileRevision > 0) void router.invalidate();
   }, [profileRevision, router]);
-  const { pathname } = useLocation();
+  const pathname = useLocation({ select: (location) => location.pathname });
   const matches = useMatches();
-  const accountId =
-    matches
-      .map(
-        (match) => match.context as { userId?: unknown; appSession?: { userId?: unknown } | null }
-      )
-      .map((context) => context.userId ?? context.appSession?.userId)
-      .find((id): id is string => typeof id === 'string' && !!id.trim()) ?? null;
-  const isStaff = matches.some(
-    (match) => (match.context as { isStaff?: unknown }).isStaff === true
-  );
+  let accountId: string | null = null;
+  let isStaff = false;
+  for (const match of matches) {
+    const context = match.context as {
+      userId?: unknown;
+      appSession?: { userId?: unknown } | null;
+      isStaff?: unknown;
+    };
+    const id = context.userId ?? context.appSession?.userId;
+    if (accountId === null && typeof id === 'string' && id.trim()) accountId = id;
+    if (context.isStaff === true) isStaff = true;
+  }
+  const section = pathname.split('/', 2)[1];
   const showCustomerBanner =
     !authEntry &&
     !isStaff &&
     !AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
     pathname !== '/support' &&
-    pathname !== '/terms' &&
-    pathname !== '/admin' &&
-    !pathname.startsWith('/admin/');
+    section !== 'terms' &&
+    section !== 'admin';
+  const showProfileGate =
+    showCustomerBanner && pathname !== '/' && section !== 'tickets' && section !== 'onboarding';
 
   return (
     <UiDirectionProvider>
@@ -167,7 +169,7 @@ function RootComponent() {
             <VerificationBanner accountId={accountId} />
           </Suspense>
         )}
-        {!authEntry && needsProfile(pathname, isStaff) && (
+        {showProfileGate && (
           <Suspense fallback={null}>
             <ProfileAvailabilityGuard
               accountId={accountId}
@@ -179,9 +181,9 @@ function RootComponent() {
         )}
         <Outlet />
         <ApplicationToaster />
-        {process.env.NODE_ENV === 'development' && !import.meta.env.VITE_E2E && (
-          <TanStackRouterDevtools />
-        )}
+        {process.env.NODE_ENV === 'development' &&
+          import.meta.env.VITE_SHOW_DEVTOOLS === '1' &&
+          !import.meta.env.VITE_E2E && <TanStackRouterDevtools />}
       </BrandThemeProvider>
     </UiDirectionProvider>
   );

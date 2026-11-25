@@ -14,7 +14,7 @@ import { Badge, Button, Popover, PopoverContent, PopoverTitle, PopoverTrigger } 
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useOwnedProfileRead } from '../hooks/useOwnedProfileRead.js';
 import { useSettingsCommand } from '../hooks/useSettingsCommand.js';
-import { settingsContext, type SettingsProfileSummary } from '../lib/settings-form.js';
+import { settingsContext, type SettingsProfileSummary } from '../lib/settings-profile-directory.js';
 import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
 
 import { profileName, ProfileAvatar, ProfileTypeBadge } from './ProfileIdentity.js';

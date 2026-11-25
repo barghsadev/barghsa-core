@@ -1,13 +1,13 @@
 import { QueryProvider } from '../test/query-provider.js';
 import { NavigationProvider } from '../hooks/useNavigation.js';
 import { getProfileContextRevision } from '../lib/profile-context.js';
-import { Route as CustomerRoute } from '../routes/_app/contracts.js';
+import { Route as CustomerRoute } from '../routes/_app/contracts.index.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import AdminLayout from './AdminLayout.js';
 import { DashboardLayout } from './DashboardLayout.js';
-import { Route as ContractsRoute } from '../routes/admin/contracts.js';
+import { Route as ContractsRoute } from '../routes/admin/contracts.index.js';
 import { createMemoryHistory, createRouter } from '@tanstack/react-router';
 import { routeTree } from '../routeTree.gen.js';
 
@@ -58,8 +58,20 @@ it('makes the implemented document workspaces reachable from both existing shell
       routeTree,
       history: createMemoryHistory({ initialEntries: ['/contracts'] }),
     });
-    expect(router.matchRoutes('/contracts').at(-1)?.routeId).toBe('/_app/contracts');
-    expect(router.matchRoutes('/admin/contracts').at(-1)?.routeId).toBe('/admin/contracts');
+    expect(router.matchRoutes('/contracts').at(-1)?.routeId).toBe('/_app/contracts/');
+    expect(
+      router.matchRoutes('/contracts/40000000-0000-4000-8000-000000000001').at(-1)?.routeId
+    ).toBe('/_app/contracts/$contractId/{-$action}');
+    expect(
+      router.matchRoutes('/contracts/40000000-0000-4000-8000-000000000001/cancel').at(-1)?.params
+        .action
+    ).toBe('cancel');
+    expect(
+      router
+        .matchRoutes('/admin/contracts/40000000-0000-4000-8000-000000000001/amendments/new')
+        .at(-1)?.params.item
+    ).toBe('new');
+    expect(router.matchRoutes('/admin/contracts').at(-1)?.routeId).toBe('/admin/contracts/');
     vi.spyOn(ContractsRoute, 'useSearch').mockReturnValue({
       contractNumber: '9223372036854775807',
     });

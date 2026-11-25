@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Field, FieldLabel } from './field';
-import { Input } from './input';
+import { ListSearchInput } from './list-toolbar';
 import { useFilterApply } from './filter-apply-context';
 
 export function TextFilter({
@@ -31,12 +31,14 @@ export function TextFilter({
   }, [draft, value, deferred]);
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <Input
+      <FieldLabel htmlFor={id} data-slot="list-search-label">
+        {label}
+      </FieldLabel>
+      <ListSearchInput
         id={id}
-        type="search"
+        label={label}
         value={draft.text}
-        placeholder={placeholder}
+        placeholder={placeholder ?? label}
         maxLength={maxLength}
         onChange={(event) => setDraft({ external: value, text: event.target.value })}
       />

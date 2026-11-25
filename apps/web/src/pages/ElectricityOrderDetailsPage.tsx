@@ -1,3 +1,11 @@
+import { electricityCancellationText } from '@barghsa/i18n/electricity-cancellation-customer';
+import {
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+  StickyRecordEditorActions,
+} from '../components/StickyRecordEditorActions.js';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
@@ -13,6 +21,7 @@ import { historyContextText } from '../lib/history-context.js';
 import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { t as increaseText } from '@barghsa/i18n/electricity-increase-customer';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { contractText } from '@barghsa/i18n/contracts';
 import {
@@ -31,6 +40,7 @@ import {
   FinancialReviewSummary,
   Input,
   Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import {
   Form,
@@ -63,11 +73,10 @@ import {
   type ElectricityAddressDraft,
 } from '../lib/electricity-correction-form.js';
 import { withCsrf } from '../lib/csrf.js';
-import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
-import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
+import { OrderDiscussionSection } from '../components/OrderDiscussionSection.js';
 import {
   commercialStatusTone,
   financialStatusTone,
@@ -84,6 +93,9 @@ const ContractActivationPanel = lazy(() =>
   import('../components/ContractActivationPanel.js').then((module) => ({
     default: module.ContractActivationPanel,
   }))
+);
+const ElectricityIncreasePanel = lazy(
+  () => import('../components/ContractQuantityIncreasePanel.js')
 );
 
 interface ElectricityOrderDetail {
@@ -224,16 +236,18 @@ const refundKeys: Record<string, string> = {
   completed: 'electricity.order.refund.completed',
 };
 
-function nextActionHref(detail: ElectricityOrderDetail): string | null {
-  switch (detail.nextAction) {
+function nextActionHref(detail: ElectricityOrderDetail, action: string): string | null {
+  switch (action) {
     case 'pay_invoice':
     case 'await_payment_review':
     case 'await_refund':
       return `/invoices/${encodeURIComponent(detail.invoiceId)}`;
     case 'accept_contract':
-      return `/contracts?contractId=${encodeURIComponent(detail.contractId)}`;
+      return `/contracts/${encodeURIComponent(detail.contractId)}`;
     case 'resubmit_changes':
-      return '#electricity-order-correction';
+      return detail.electricityStatus === 'changes_requested'
+        ? `/electricity/orders/${encodeURIComponent(detail.orderId)}/edit`
+        : null;
     case 'continue_order':
       return '/electricity/order';
     default:
@@ -262,7 +276,19 @@ function cancellable(detail: ElectricityOrderDetail) {
   return ['awaiting_staff_review', 'changes_requested'].includes(detail.electricityStatus);
 }
 
-export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
+export function ElectricityOrderDetailsPage({
+  orderId,
+  edit = false,
+  cancel = false,
+  onCorrectionComplete,
+  onIncreaseRequestComplete,
+}: {
+  orderId: string;
+  edit?: boolean;
+  cancel?: boolean;
+  onCorrectionComplete?: () => void;
+  onIncreaseRequestComplete?: () => void;
+}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -340,6 +366,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const correctionTransport = useRef<AbortController | null>(null);
   const [unconfirmedCorrection, setUnconfirmedCorrection] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
+  const cancelReasonId = useId();
   const [cancelKey, setCancelKey] = useState(() => crypto.randomUUID());
   const [cancelling, setCancelling] = useState(false);
   const [cancelReviewLoading, setCancelReviewLoading] = useState(false);
@@ -385,6 +412,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     setAcceptedScope(null);
     setLoading(true);
     setRetry((value) => value + 1);
+  }
+
+  function completeCorrection() {
+    if (onCorrectionComplete) onCorrectionComplete();
+    else reloadDetail();
   }
 
   useEffect(() => {
@@ -583,7 +615,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       correctionLock.release('address');
       correctionForm.reset({ ...correctionForm.getValues(), responseNote: '' });
       toast.success(confirmationText('recorded', locale));
-      reloadDetail();
+      completeCorrection();
     } catch {
       if (attempt === capturedCorrection.current && attempt.generation === generation.current) {
         setUnconfirmedCorrection(true);
@@ -814,8 +846,18 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     }
   }
 
-  const nextActionLink = detail ? nextActionHref(detail) : null;
+  const nextAction =
+    detail?.electricityStatus === 'changes_requested' ? 'resubmit_changes' : detail?.nextAction;
+  const nextActionLink =
+    detail && nextAction && !(nextAction === 'resubmit_changes' && cancellationActivity.current)
+      ? nextActionHref(detail, nextAction)
+      : null;
   const latestEvent = detail?.timeline?.at(-1);
+  const requestedChange = edit
+    ? detail?.timeline
+        ?.filter((event) => event.event === 'electricity.order_review.request-changes')
+        .at(-1)?.reason
+    : null;
   const terminalOrder =
     detail !== null && ['rejected', 'cancelled'].includes(detail.electricityStatus);
   const canOpenContract =
@@ -830,30 +872,76 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     ].includes(detail.contractState);
   const refundRemaining = detail ? BigInt(detail.paidIrR) - BigInt(detail.refundedIrR) : 0n;
   const actionOwner =
-    detail?.nextAction === 'none'
+    nextAction === 'none'
       ? 'none'
       : ['pay_invoice', 'accept_contract', 'resubmit_changes', 'continue_order'].includes(
-            detail?.nextAction ?? ''
+            nextAction ?? ''
           )
         ? 'customer'
         : 'staff';
+  const increaseRoute = onIncreaseRequestComplete !== undefined;
+  const showingIncreaseForm =
+    increaseRoute && !loading && !error && detail?.contractState === 'Active';
+  const orderActionPage = edit || increaseRoute || cancel;
+  const cancellationLocked = () => cancelTransport.current !== null || cancelRecovery !== null;
   return (
     <div
-      className="container mx-auto max-w-2xl space-y-6 px-4 py-8"
+      className={`mx-auto w-full max-w-2xl min-w-0 ${orderActionPage ? 'space-y-4' : 'space-y-6 px-4 py-8'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <header data-toast-anchor>
-        <Link
-          to="/electricity/orders"
-          className="touch-action text-sm text-primary underline underline-offset-4"
-        >
-          {t('electricity.order.detail.back', locale)}
-        </Link>
-        <h1 className="text-2xl font-bold">{t('electricity.order.detail.title', locale)}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t('electricity.order.detail.description', locale)}
-        </p>
-      </header>
+      {edit && <RecordCommandGuard blocked={() => !!correctionLock.owner} />}
+      {cancel && <RecordCommandGuard blocked={cancellationLocked} />}
+      {!showingIncreaseForm && (
+        <header data-toast-anchor className="space-y-2">
+          {orderActionPage ? (
+            <Link
+              to="/electricity/orders/$orderId"
+              params={{ orderId }}
+              disabled={!!correctionLock.owner || (cancel && cancellationLocked())}
+              className="touch-action text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
+            >
+              {cancel
+                ? electricityCancellationText('cancelBackToOrder', locale)
+                : t('electricity.order.detail.title', locale)}
+            </Link>
+          ) : (
+            <Link
+              to="/electricity/orders"
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {t('electricity.order.detail.back', locale)}
+            </Link>
+          )}
+          <h1 className="text-2xl font-bold">
+            {increaseRoute
+              ? increaseText('electricity.increase.title', locale)
+              : t(
+                  cancel
+                    ? 'electricity.order.detail.cancel'
+                    : edit
+                      ? 'electricity.order.correction.title'
+                      : 'electricity.order.detail.title',
+                  locale
+                )}
+          </h1>
+          {!orderActionPage && (
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <p className="text-muted-foreground">
+                {t('electricity.order.detail.description', locale)}
+              </p>
+              {!loading && !error && detail && cancellable(detail) && (
+                <Link
+                  to="/electricity/orders/$orderId/cancel"
+                  params={{ orderId }}
+                  className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                >
+                  {t('electricity.order.detail.cancel', locale)}
+                </Link>
+              )}
+            </div>
+          )}
+        </header>
+      )}
       {time.notice}
       {loading ? (
         <LoadingStatus>{t('electricity.order.detailLoading', locale)}</LoadingStatus>
@@ -864,6 +952,306 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           <p>{t('electricity.order.detailFailed', locale)}</p>
           <Button onClick={() => reloadDetail()}>{t('electricity.order.retry', locale)}</Button>
         </div>
+      ) : cancel ? (
+        cancellable(detail) ? (
+          <form
+            className={recordEditorSurface}
+            onSubmit={cancelOrder}
+            aria-busy={cancelReviewLoading}
+          >
+            <div className="space-y-4 px-4 py-4 sm:px-6">
+              <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1.5 rounded-lg bg-muted/45 p-3 text-sm">
+                <div className="min-w-0">
+                  <dt className="text-muted-foreground">
+                    {electricityCancellationText('cancelReviewProfile', locale)}
+                  </dt>
+                  <dd className="wrap-anywhere font-medium" dir="auto">
+                    {detail.profileName || detail.profileId}
+                  </dd>
+                </div>
+                <div className="text-end">
+                  <dt className="text-muted-foreground">
+                    {t('electricity.order.quantity', locale)}
+                  </dt>
+                  <dd className="font-medium">
+                    <bdi>{detail.totalKwh} kWh</bdi>
+                  </dd>
+                </div>
+                <div className="col-span-full min-w-0 border-t border-border/65 pt-2">
+                  <dt className="text-muted-foreground">
+                    {electricityCancellationText('cancelReviewPeriod', locale)}
+                  </dt>
+                  <dd className="font-medium">
+                    {time.format(detail.periodStart, {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })}
+                    {' – '}
+                    {time.format(new Date(new Date(detail.periodEnd).getTime() - 1), {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })}
+                  </dd>
+                </div>
+              </dl>
+              <div className="space-y-1.5">
+                <label htmlFor={cancelReasonId} className="block text-sm font-medium">
+                  {t('electricity.order.detail.cancelReason', locale)}
+                </label>
+                <p id={`${cancelReasonId}-hint`} className="text-sm text-muted-foreground">
+                  {electricityCancellationText('cancelReasonHint', locale)}
+                </p>
+                <Textarea
+                  id={cancelReasonId}
+                  className="min-h-0"
+                  rows={2}
+                  dir="auto"
+                  required
+                  aria-required="true"
+                  aria-describedby={`${cancelReasonId}-hint`}
+                  maxLength={1000}
+                  value={cancelReason}
+                  readOnly={cancelReviewLoading || !!cancelReview}
+                  onChange={(event) => setCancelReason(event.target.value)}
+                />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {electricityCancellationText('cancelPreviewHint', locale)}
+              </p>
+              {cancelError ? (
+                <p role="alert" className="text-sm text-destructive">
+                  {electricityCancellationText(
+                    cancelError === 'stepup' ? 'cancelStepUp' : 'cancelFailed',
+                    locale
+                  )}
+                  {cancelError === 'stepup' ? (
+                    <Link to="/settings/security" className="ms-2 underline">
+                      {t('electricity.order.detail.security', locale)}
+                    </Link>
+                  ) : null}
+                </p>
+              ) : null}
+            </div>
+            <RecordEditorActions>
+              <Button
+                type="submit"
+                disabled={
+                  cancelling || cancelReviewLoading || !!cancelReview || !cancelReason.trim()
+                }
+              >
+                {electricityCancellationText(
+                  cancelReviewLoading ? 'cancelReviewLoading' : 'cancelReviewAction',
+                  locale
+                )}
+              </Button>
+            </RecordEditorActions>
+          </form>
+        ) : (
+          <p role="status" className="rounded-lg border bg-card px-4 py-3 text-sm">
+            {detail.electricityStatus === 'cancelled'
+              ? t('electricity.order.status.cancelled', locale)
+              : electricityCancellationText('cancelUnavailable', locale)}
+          </p>
+        )
+      ) : onIncreaseRequestComplete ? (
+        detail.contractState === 'Active' ? (
+          <Suspense
+            fallback={
+              <LoadingStatus>{increaseText('electricity.increase.loading', locale)}</LoadingStatus>
+            }
+          >
+            <ElectricityIncreasePanel
+              contractId={detail.contractId}
+              profileId={detail.profileId}
+              versionId={detail.versionId}
+              formatTimestamp={time.format}
+              onRequestComplete={onIncreaseRequestComplete}
+              requestNavigation={(blocked, disabled) => (
+                <>
+                  <RecordCommandGuard blocked={blocked} />
+                  <Link
+                    to="/electricity/orders/$orderId"
+                    params={{ orderId }}
+                    disabled={disabled}
+                    className="touch-action text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
+                  >
+                    {increaseText('electricity.increaseForm.backToOrder', locale)}
+                  </Link>
+                </>
+              )}
+            />
+          </Suspense>
+        ) : (
+          <p role="status">{increaseText('electricity.increaseForm.requestUnavailable', locale)}</p>
+        )
+      ) : edit ? (
+        detail.electricityStatus === 'changes_requested' ? (
+          <>
+            {typeof requestedChange === 'string' && requestedChange.trim() && (
+              <section className="space-y-1.5 rounded-lg border border-warning/25 bg-warning-soft px-4 py-3">
+                <h2 className="text-sm font-semibold">
+                  {t('electricity.order.timeline.changes', locale)}
+                </h2>
+                <p className="whitespace-pre-wrap wrap-anywhere text-sm" dir="auto">
+                  {requestedChange}
+                </p>
+              </section>
+            )}
+            <p className="text-sm">
+              <a
+                href="#electricity-order-revision"
+                className="touch-action text-primary underline underline-offset-4"
+              >
+                {t('electricity.order.revision.title', locale)}
+              </a>
+            </p>
+            <section id="electricity-order-correction" className="min-w-0 space-y-3">
+              <Form {...correctionForm}>
+                <form
+                  noValidate
+                  data-testid="electricity-address-correction-form"
+                  className={recordEditorFormSurface}
+                  onFocus={keepRecordFieldVisible}
+                  onSubmit={(event) => void resubmitCorrection(event)}
+                >
+                  <div className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-5">
+                    <h2 className="text-base font-semibold">
+                      {t('electricity.correctionForm.addressOnly', locale)}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {t('electricity.order.correction.description', locale)}
+                    </p>
+                  </div>
+                  <div className="grid gap-3 px-4 py-4 sm:grid-cols-[minmax(0,2fr)_minmax(10rem,1fr)] sm:px-5">
+                    {(['fullAddress', 'postalCode', 'responseNote'] as const).map((name) => (
+                      <FormField
+                        key={name}
+                        control={correctionForm.control}
+                        name={name}
+                        render={({ field }) => (
+                          <FormItem
+                            className={name === 'responseNote' ? 'sm:col-span-2' : undefined}
+                            id={
+                              name === 'fullAddress'
+                                ? 'correction-address'
+                                : name === 'postalCode'
+                                  ? 'correction-postal'
+                                  : 'correction-note'
+                            }
+                          >
+                            <FormLabel>
+                              {t(
+                                name === 'fullAddress'
+                                  ? 'electricity.order.deliveryAddress'
+                                  : name === 'postalCode'
+                                    ? 'electricity.order.correction.postalCode'
+                                    : 'electricity.order.correction.responseNote',
+                                locale
+                              )}
+                            </FormLabel>
+                            <FormControl>
+                              {name === 'responseNote' ? (
+                                <Textarea
+                                  {...field}
+                                  aria-required="true"
+                                  rows={2}
+                                  dir="auto"
+                                  className="max-h-36 min-h-14"
+                                  maxLength={1000}
+                                  disabled={!!correctionLock.owner}
+                                />
+                              ) : (
+                                <Input
+                                  {...field}
+                                  aria-required="true"
+                                  maxLength={name === 'fullAddress' ? 500 : 10}
+                                  inputMode={name === 'postalCode' ? 'numeric' : 'text'}
+                                  dir={name === 'postalCode' ? 'ltr' : 'auto'}
+                                  disabled={!!correctionLock.owner}
+                                />
+                              )}
+                            </FormControl>
+                            <FormDescription
+                              className={name === 'fullAddress' ? 'sr-only' : undefined}
+                            >
+                              {t(
+                                name === 'postalCode'
+                                  ? 'electricity.correctionForm.postalInvalid'
+                                  : name === 'responseNote'
+                                    ? 'electricity.correctionForm.responseHelp'
+                                    : 'electricity.correctionForm.help',
+                                locale
+                              )}
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                    {correctionError || correctionForm.formState.errors.root ? (
+                      <p role="alert" className="text-sm text-destructive sm:col-span-2">
+                        {unconfirmedCorrection
+                          ? t('electricity.correctionForm.uncertain', locale)
+                          : (correctionForm.formState.errors.root?.validation?.message ??
+                            t('electricity.order.correction.error', locale))}
+                      </p>
+                    ) : null}
+                    {correctionLock.owner === 'revision' ? (
+                      <p role="status" className="sm:col-span-2">
+                        {t('electricity.correctionForm.busy', locale)}
+                      </p>
+                    ) : null}
+                  </div>
+                  <StickyRecordEditorActions>
+                    <Button
+                      type="submit"
+                      loading={savingCorrection}
+                      disabled={!!correctionLock.owner}
+                    >
+                      {t('electricity.order.correction.submit', locale)}
+                    </Button>
+                    {unconfirmedCorrection ? (
+                      <Button
+                        type="button"
+                        data-testid="electricity-address-correction-retry"
+                        variant="outline"
+                        disabled={savingCorrection}
+                        onClick={() => void retryCorrection()}
+                      >
+                        {t('electricity.correctionForm.retry', locale)}
+                      </Button>
+                    ) : null}
+                  </StickyRecordEditorActions>
+                </form>
+              </Form>
+              <div
+                id="electricity-order-revision"
+                tabIndex={-1}
+                className="min-w-0 rounded-xl focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                <Suspense
+                  fallback={
+                    <LoadingStatus>
+                      {t('electricity.correctionForm.loadingRevision', locale)}
+                    </LoadingStatus>
+                  }
+                >
+                  <ElectricityOrderRevisionForm
+                    key={JSON.stringify([scopeKey, detail.profileId, detail.versionId])}
+                    order={detail}
+                    onComplete={completeCorrection}
+                    coordination={correctionLock}
+                    onDenied={withdraw}
+                  />
+                </Suspense>
+              </div>
+            </section>
+          </>
+        ) : (
+          <p role="status">{t('electricity.correctionForm.noLongerEditable', locale)}</p>
+        )
       ) : (
         <>
           <WorkflowStatusBanner
@@ -881,7 +1269,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               locale
             )}
             nextAction={t(
-              actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none',
+              actionKeys[nextAction ?? ''] ?? 'electricity.order.nextAction.none',
               locale
             )}
             owner={actionOwner}
@@ -1101,12 +1489,29 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             scopeKey={JSON.stringify([scopeKey, detail.orderId, detail.versionId])}
           />
           {detail.contractState === 'Active' ? (
-            <ElectricityIncreasePanel
-              contractId={detail.contractId}
-              profileId={detail.profileId}
-              versionId={detail.versionId}
-              formatTimestamp={time.format}
-            />
+            <Suspense
+              fallback={
+                <LoadingStatus>
+                  {increaseText('electricity.increase.loading', locale)}
+                </LoadingStatus>
+              }
+            >
+              <ElectricityIncreasePanel
+                contractId={detail.contractId}
+                profileId={detail.profileId}
+                versionId={detail.versionId}
+                formatTimestamp={time.format}
+                requestAction={
+                  <Link
+                    to="/electricity/orders/$orderId/increases/new"
+                    params={{ orderId }}
+                    className={buttonVariants({ variant: 'outline' })}
+                  >
+                    {increaseText('electricity.increaseForm.openRequest', locale)}
+                  </Link>
+                }
+              />
+            </Suspense>
           ) : null}
           <ElectricityPriceAdjustmentsPanel
             contractId={detail.contractId}
@@ -1116,7 +1521,8 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           />
           <Card>
             <CardContent className="pt-6">
-              <ElectricityOrderComments
+              <OrderDiscussionSection
+                kind="electricity"
                 orderId={orderId}
                 profileId={detail.profileId}
                 sourceVersion={detail.versionId}
@@ -1165,191 +1571,19 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 </p>
               ) : null}
               <Link
-                to="/tickets"
+                to="/tickets/new"
+                search={{ relatedType: 'order', relatedId: detail.orderId }}
                 className="touch-action text-primary underline underline-offset-4"
               >
                 {t('electricity.order.detail.help', locale)}
               </Link>
             </CardContent>
           </Card>
-          {cancellable(detail) ? (
-            <Card>
-              <CardContent className="pt-6">
-                <form onSubmit={(event) => void cancelOrder(event)} className="space-y-3">
-                  <label className="block text-sm">
-                    {t('electricity.order.detail.cancelReason', locale)}
-                    <textarea
-                      className="mt-1 w-full rounded-md border bg-background p-2"
-                      required
-                      aria-required="true"
-                      maxLength={1000}
-                      value={cancelReason}
-                      onChange={(event) => setCancelReason(event.target.value)}
-                    />
-                  </label>
-                  {cancelError ? (
-                    <p role="alert" className="text-destructive">
-                      {t(
-                        cancelError === 'stepup'
-                          ? 'electricity.order.detail.cancelStepUp'
-                          : 'electricity.order.detail.cancelFailed',
-                        locale
-                      )}
-                      {cancelError === 'stepup' ? (
-                        <Link to="/settings/security" className="ms-2 underline">
-                          {t('electricity.order.detail.security', locale)}
-                        </Link>
-                      ) : null}
-                    </p>
-                  ) : null}
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    disabled={
-                      !!correctionLock.owner ||
-                      cancelling ||
-                      cancelReviewLoading ||
-                      !cancelReason.trim()
-                    }
-                  >
-                    {t(
-                      cancelReviewLoading
-                        ? 'electricity.order.detail.cancelReviewLoading'
-                        : 'electricity.order.detail.cancel',
-                      locale
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          ) : null}
-          {detail.electricityStatus === 'changes_requested' ? (
-            <Card id="electricity-order-correction">
-              <CardContent className="pt-6">
-                <h2 className="font-semibold">{t('electricity.order.correction.title', locale)}</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {t('electricity.order.correction.description', locale)}
-                </p>
-                <Form {...correctionForm}>
-                  <form
-                    noValidate
-                    data-testid="electricity-address-correction-form"
-                    className="mt-4 space-y-3"
-                    onSubmit={(event) => void resubmitCorrection(event)}
-                  >
-                    {(['fullAddress', 'postalCode', 'responseNote'] as const).map((name) => (
-                      <FormField
-                        key={name}
-                        control={correctionForm.control}
-                        name={name}
-                        render={({ field }) => (
-                          <FormItem
-                            id={
-                              name === 'fullAddress'
-                                ? 'correction-address'
-                                : name === 'postalCode'
-                                  ? 'correction-postal'
-                                  : 'correction-note'
-                            }
-                          >
-                            <FormLabel>
-                              {t(
-                                name === 'fullAddress'
-                                  ? 'electricity.order.deliveryAddress'
-                                  : name === 'postalCode'
-                                    ? 'electricity.order.correction.postalCode'
-                                    : 'electricity.order.correction.responseNote',
-                                locale
-                              )}
-                            </FormLabel>
-                            <FormControl>
-                              {name === 'responseNote' ? (
-                                <Textarea
-                                  {...field}
-                                  aria-required="true"
-                                  maxLength={1000}
-                                  disabled={!!correctionLock.owner}
-                                />
-                              ) : (
-                                <Input
-                                  {...field}
-                                  aria-required="true"
-                                  maxLength={name === 'fullAddress' ? 500 : 10}
-                                  inputMode={name === 'postalCode' ? 'numeric' : 'text'}
-                                  disabled={!!correctionLock.owner}
-                                />
-                              )}
-                            </FormControl>
-                            <FormDescription>
-                              {t('electricity.correctionForm.help', locale)}
-                            </FormDescription>
-                            <div className="grid">
-                              <p
-                                aria-hidden="true"
-                                className="invisible col-start-1 row-start-1 text-sm"
-                              >
-                                {correctionMessages[name]}
-                              </p>
-                              <FormMessage className="col-start-1 row-start-1" />
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                    {correctionError || correctionForm.formState.errors.root ? (
-                      <p role="alert" className="text-destructive">
-                        {unconfirmedCorrection
-                          ? t('electricity.correctionForm.uncertain', locale)
-                          : (correctionForm.formState.errors.root?.validation?.message ??
-                            t('electricity.order.correction.error', locale))}
-                      </p>
-                    ) : null}
-                    {correctionLock.owner === 'revision' ? (
-                      <p role="status">{t('electricity.correctionForm.busy', locale)}</p>
-                    ) : null}
-                    <Button
-                      type="submit"
-                      loading={savingCorrection}
-                      disabled={!!correctionLock.owner}
-                    >
-                      {t('electricity.order.correction.submit', locale)}
-                    </Button>
-                    {unconfirmedCorrection ? (
-                      <Button
-                        type="button"
-                        data-testid="electricity-address-correction-retry"
-                        variant="outline"
-                        disabled={savingCorrection}
-                        onClick={() => void retryCorrection()}
-                      >
-                        {t('electricity.correctionForm.retry', locale)}
-                      </Button>
-                    ) : null}
-                  </form>
-                </Form>
-                <Suspense
-                  fallback={
-                    <LoadingStatus>
-                      {t('electricity.correctionForm.loadingRevision', locale)}
-                    </LoadingStatus>
-                  }
-                >
-                  <ElectricityOrderRevisionForm
-                    key={JSON.stringify([scopeKey, detail.profileId, detail.versionId])}
-                    order={detail}
-                    onComplete={() => reloadDetail()}
-                    coordination={correctionLock}
-                    onDenied={withdraw}
-                  />
-                </Suspense>
-              </CardContent>
-            </Card>
-          ) : null}
           <div className="flex flex-wrap gap-3">
             {canOpenContract ? (
               <Link
-                to="/contracts"
-                search={{ contractId: detail.contractId }}
+                to="/contracts/$contractId/{-$action}"
+                params={{ contractId: detail.contractId }}
                 className="touch-action max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
               >
                 {t('electricity.order.success.contract', locale)}: <bdi>{detail.contractId}</bdi>
@@ -1395,22 +1629,22 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             initialFocus={cancelFocus}
           >
             <DialogHeader>
-              <DialogTitle>{t('electricity.order.detail.cancelReviewTitle', locale)}</DialogTitle>
+              <DialogTitle>{electricityCancellationText('cancelReviewTitle', locale)}</DialogTitle>
               <DialogDescription>
-                {t('electricity.order.detail.cancelConfirm', locale)}
+                {electricityCancellationText('cancelConfirm', locale)}
               </DialogDescription>
             </DialogHeader>
             <FinancialReviewSummary
-              title={t('electricity.order.detail.cancelReviewTitle', locale)}
+              title={electricityCancellationText('cancelReviewTitle', locale)}
               rows={[
                 {
                   id: 'profile',
-                  label: t('electricity.order.detail.cancelReviewProfile', locale),
+                  label: electricityCancellationText('cancelReviewProfile', locale),
                   value: cancelReview.data.profileName,
                 },
                 {
                   id: 'period',
-                  label: t('electricity.order.detail.cancelReviewPeriod', locale),
+                  label: electricityCancellationText('cancelReviewPeriod', locale),
                   value: `${time.format(cancelReview.data.periodStart, { year: 'numeric', month: '2-digit', day: '2-digit' })} – ${time.format(new Date(new Date(cancelReview.data.periodEnd).getTime() - 1), { year: 'numeric', month: '2-digit', day: '2-digit' })}`,
                 },
                 {
@@ -1429,15 +1663,15 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                           {numbers.money(line.unitPriceIrR)}
                         </span>
                         <span className="block">
-                          {t('electricity.order.detail.cancelReviewDiscount', locale)}:{' '}
+                          {electricityCancellationText('cancelReviewDiscount', locale)}:{' '}
                           {numbers.money(line.discountIrR)}
                         </span>
                         <span className="block">
-                          {t('electricity.order.detail.cancelReviewNet', locale)}:{' '}
+                          {electricityCancellationText('cancelReviewNet', locale)}:{' '}
                           {numbers.money(line.netIrR)}
                         </span>
                         <span className="block">
-                          {t('electricity.order.detail.cancelReviewVat', locale)}:{' '}
+                          {electricityCancellationText('cancelReviewVat', locale)}:{' '}
                           {numbers.money(line.vatIrR)}
                         </span>
                       </span>
@@ -1446,19 +1680,19 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 ),
                 {
                   id: 'invoice',
-                  label: t('electricity.order.detail.cancelReviewInvoice', locale),
+                  label: electricityCancellationText('cancelReviewInvoice', locale),
                   value: t(`invoices.state.${cancelReview.data.invoiceState}`, locale),
                 },
                 {
                   id: 'paid',
-                  label: t('electricity.order.detail.cancelReviewPaid', locale),
+                  label: electricityCancellationText('cancelReviewPaid', locale),
                   value: numbers.money(cancelReview.data.paidAmount),
                 },
                 {
                   id: 'outcome',
-                  label: t('electricity.order.detail.cancelReviewOutcome', locale),
-                  value: t(
-                    `electricity.order.detail.cancelOutcome.${cancelReview.data.outcome}`,
+                  label: electricityCancellationText('cancelReviewOutcome', locale),
+                  value: electricityCancellationText(
+                    `cancelOutcome.${cancelReview.data.outcome}`,
                     locale
                   ),
                 },
@@ -1475,14 +1709,14 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   ? [
                       {
                         id: 'gift-code',
-                        label: t('electricity.order.detail.cancelReviewGiftCode', locale),
-                        value: t('electricity.order.detail.cancelReviewGiftCodeRelease', locale),
+                        label: electricityCancellationText('cancelReviewGiftCode', locale),
+                        value: electricityCancellationText('cancelReviewGiftCodeRelease', locale),
                       },
                     ]
                   : []),
               ]}
               total={{
-                label: t('electricity.order.detail.cancelReviewTotal', locale),
+                label: electricityCancellationText('cancelReviewTotal', locale),
                 value: numbers.money(cancelReview.data.invoiceTotal),
               }}
               notice={
@@ -1505,11 +1739,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <Link
                   className="underline"
                   to={cancelError === 'stepup' ? '/settings/security' : '/tickets'}
+                  target="_blank"
+                  rel="noopener"
                 >
-                  {t(
-                    cancelError === 'stepup'
-                      ? 'electricity.order.detail.security'
-                      : 'electricity.order.detail.help',
+                  {electricityCancellationText(
+                    cancelError === 'stepup' ? 'cancelRecoverySecurity' : 'cancelRecoveryHelp',
                     locale
                   )}
                 </Link>
@@ -1528,7 +1762,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               >
                 {cancelRecovery
                   ? confirmationText('checkStatus', locale)
-                  : t('electricity.order.detail.cancelReviewBack', locale)}
+                  : electricityCancellationText('cancelReviewBack', locale)}
               </Button>
               <Button
                 variant="destructive"

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
+import { authReturnSearch } from '../lib/auth-return.js';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { loginFormText } from '@barghsa/i18n/login-forms';
 import { Button, Input, Alert, AlertDescription } from '@barghsa/ui';
@@ -23,7 +24,10 @@ import { emptyLogin, type LoginStage } from '../lib/login-form.js';
 import { toast } from '../lib/toast-api.js';
 import { rememberAuthSuccess } from '../lib/auth-entry-feedback.js';
 import { clearSessionEndedNotice, hasSessionEndedNotice } from '../lib/session-ended-notice.js';
-export const Route = createFileRoute('/login')({ component: LoginPage });
+export const Route = createFileRoute('/login')({
+  validateSearch: authReturnSearch,
+  component: LoginPage,
+});
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
   'AUTH:LOGIN:INVALID_CREDENTIALS': 'auth.login.error.invalidCredentials',
   'RATE_LIMIT:EXCEEDED': 'auth.register.error.rateLimited',
@@ -42,6 +46,7 @@ function LoginPage() {
   const router = useRouter(),
     locale = useLocale(),
     numbers = useNumberFormatting(locale);
+  const { returnTo } = useSearch({ from: '/login' });
   const [stage, setStage] = useState<LoginStage>('credentials');
   const [sessionEnded] = useState(hasSessionEndedNotice);
   const sessionNotice = useRef<HTMLParagraphElement>(null);
@@ -68,9 +73,11 @@ function LoginPage() {
     }
   }, [sessionEnded]);
   useEffect(() => {
+    if (stage !== 'otp') return;
+    setNow(Date.now());
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [stage]);
   useEffect(
     () => () => {
       if (expiryRedirect.current !== null) clearTimeout(expiryRedirect.current);
@@ -96,7 +103,7 @@ function LoginPage() {
     otpRef.current?.reset();
     rememberAuthSuccess(message);
     toast.success(message);
-    await router.navigate({ to: '/app', replace: true });
+    await router.navigate({ to: returnTo ?? '/app', replace: true });
   }
   function submit(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -297,7 +304,11 @@ function LoginPage() {
   const edit = (field: { onChange: (value: unknown) => void }, value: unknown) => {
     if (model.canEdit()) field.onChange(value);
   };
-  const passwordControl = (name: 'password' | 'newPassword', id: string, label: string) => (
+  const passwordControl = (
+    name: 'password' | 'newPassword' | 'confirmation',
+    id: string,
+    label: string
+  ) => (
     <FormField
       control={form.control}
       name={name}
@@ -312,13 +323,25 @@ function LoginPage() {
             name={field.name}
             locale={locale}
             label={label}
+            labelAction={
+              name === 'password' ? (
+                <Link
+                  to="/forgot-password"
+                  search={{ returnTo }}
+                  onClick={(event) => {
+                    if (model.busy) event.preventDefault();
+                  }}
+                  className="touch-action text-sm font-medium text-primary underline underline-offset-4"
+                  aria-label={t('auth.register.forgotPasswordLabel', locale)}
+                >
+                  {t('auth.register.forgotPasswordLink', locale)}
+                </Link>
+              ) : undefined
+            }
             value={field.value}
             onChange={(value) => edit(field, value)}
             disabled={model.locked}
             error={fieldState.error?.message ?? null}
-            errorPlaceholder={
-              name === 'password' ? loginFormText('passwordRequired', locale) : undefined
-            }
             showStrength={name === 'newPassword'}
             autoComplete={name === 'password' ? 'current-password' : 'new-password'}
             autoFocus={name === 'newPassword'}
@@ -327,6 +350,7 @@ function LoginPage() {
       )}
     />
   );
+  const [codePrefix, codeSuffix] = t('auth.login.otpSentTo', locale).split('{destination}');
   return (
     <AuthLayout
       locale={locale}
@@ -351,6 +375,7 @@ function LoginPage() {
             {t('auth.login.registerLink', locale)}{' '}
             <Link
               to="/register"
+              search={{ returnTo }}
               onClick={(event) => {
                 if (model.busy) event.preventDefault();
               }}
@@ -363,8 +388,8 @@ function LoginPage() {
         )
       }
     >
-      <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-        <div className={'space-y-1.5' + (stage === 'otp' ? ' text-center' : '')}>
+      <div className="space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+        <div className="space-y-1.5">
           <h1 className="tracking-tight">
             {t(
               stage === 'credentials'
@@ -375,14 +400,20 @@ function LoginPage() {
               locale
             )}
           </h1>
+          {stage === 'credentials' && returnTo && (
+            <p className="text-sm text-muted-foreground">{loginFormText('returnToTask', locale)}</p>
+          )}
           {stage !== 'credentials' && (
             <p className="text-sm text-muted-foreground">
-              {stage === 'change'
-                ? t('auth.login.forceChangeDescription', locale)
-                : t('auth.login.otpSentTo', locale).replace(
-                    '{destination}',
-                    challenge?.destination ?? ''
-                  )}
+              {stage === 'change' ? (
+                t('auth.login.forceChangeDescription', locale)
+              ) : (
+                <>
+                  {codePrefix}
+                  <bdi className="font-medium text-foreground">{challenge?.destination ?? ''}</bdi>
+                  {codeSuffix}
+                </>
+              )}
             </p>
           )}
         </div>
@@ -400,7 +431,7 @@ function LoginPage() {
           <form
             key={`${stage}|${model.draftKey}`}
             ref={model.feedback.element}
-            className="space-y-4"
+            className="space-y-3.5"
             noValidate
             aria-busy={model.busy}
             onSubmit={submit}
@@ -427,6 +458,8 @@ function LoginPage() {
                           aria-required="true"
                           dir="ltr"
                           autoComplete="username"
+                          autoCapitalize="none"
+                          spellCheck={false}
                           maxLength={255}
                           placeholder={t('auth.register.usernamePlaceholder', locale)}
                           disabled={model.locked}
@@ -459,29 +492,11 @@ function LoginPage() {
                   'new-password',
                   t('auth.register.newPasswordLabel', locale)
                 )}
-                <FormField
-                  control={form.control}
-                  name="confirmation"
-                  render={({ field }) => (
-                    <FormItem id="confirm-password">
-                      <FormLabel>{t('auth.register.confirmPasswordLabel', locale)}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          aria-required="true"
-                          autoComplete="new-password"
-                          disabled={model.locked}
-                          onChange={(event) => edit(field, event)}
-                          onBlur={() => {
-                            if (model.canEdit()) field.onBlur();
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {passwordControl(
+                  'confirmation',
+                  'confirm-password',
+                  t('auth.register.confirmPasswordLabel', locale)
+                )}
               </>
             ) : (
               <>
@@ -516,7 +531,7 @@ function LoginPage() {
                   name="trustDevice"
                   render={({ field }) => (
                     <FormItem id="trust-device">
-                      <div className="flex items-center gap-2">
+                      <FormLabel className="touch-action flex items-center gap-2 rounded-lg bg-muted/45 px-2.5 py-2 text-sm leading-relaxed">
                         <FormControl>
                           <input
                             type="checkbox"
@@ -528,10 +543,8 @@ function LoginPage() {
                             disabled={model.locked}
                           />
                         </FormControl>
-                        <FormLabel className="touch-action text-sm text-muted-foreground">
-                          {t('auth.login.trustDevice', locale)}
-                        </FormLabel>
-                      </div>
+                        {t('auth.login.trustDevice', locale)}
+                      </FormLabel>
                     </FormItem>
                   )}
                 />
@@ -568,31 +581,17 @@ function LoginPage() {
                 locale
               )}
             </Button>
-            {stage === 'credentials' && (
-              <div className="text-center">
-                <Link
-                  to="/forgot-password"
-                  onClick={(event) => {
-                    if (model.busy) event.preventDefault();
-                  }}
-                  className="touch-action text-sm font-medium text-primary underline underline-offset-4"
-                  aria-label={t('auth.register.forgotPasswordLabel', locale)}
-                >
-                  {t('auth.register.forgotPasswordLink', locale)}
-                </Link>
-              </div>
-            )}
             {stage === 'otp' && (
               <>
                 {attemptCooldown > 0 && (
-                  <p role="status">
+                  <p role="status" className="text-sm text-muted-foreground">
                     {t('auth.otp.resendTimer', locale).replace(
                       '{seconds}',
                       numbers.number(attemptCooldown, { useGrouping: false })
                     )}
                   </p>
                 )}
-                <div className="text-center">
+                <div className="flex justify-end">
                   {cooldown === 0 ? (
                     <Button
                       type="button"

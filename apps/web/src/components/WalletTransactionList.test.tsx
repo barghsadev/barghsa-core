@@ -115,7 +115,7 @@ describe('WalletTransactionList', () => {
       '/api/admin/reconciliation/wallets/profile-a/transactions?sort=desc&limit=25'
     );
     expect(
-      host.querySelector(`a[href="/admin/invoices?invoiceId=${invoice}"]`)?.textContent
+      host.querySelector(`a[href="/admin/invoices/${invoice}"]`)?.textContent
     ).toContain(invoice);
     expect(host.querySelector('a[href^="/invoices/"]')).toBeNull();
     expect(host.textContent).toContain('-9,007,199,254,740,993');

@@ -107,9 +107,6 @@ function LegacyWorkspaceCompanion({ name }: { name: string }) {
     </form>
   );
 }
-vi.mock('./ContractRefundQueue.js', () => ({
-  ContractRefundQueue: () => <LegacyWorkspaceCompanion name="refund" />,
-}));
 vi.mock('./ContractCancellationRequestQueue.js', () => ({
   ContractCancellationRequestQueue: () => <LegacyWorkspaceCompanion name="cancellation-request" />,
 }));
@@ -602,11 +599,11 @@ it('claims the actual outer workspace synchronously before another row or filter
   );
   await render(<ContractsWorkspace staff />);
   await click(`${en.electricity} · ${en.version} 2`);
-  const companions = ['refund', 'cancellation-request', 'activation-rules'];
+  const companions = ['cancellation-request', 'activation-rules'];
   await act(async () => {
     for (const name of companions) button(`Legacy ${name} refresh`).click();
   });
-  expect(harness.legacyCalls).toBe(3);
+  expect(harness.legacyCalls).toBe(companions.length);
   await act(async () => {
     button('Claim immediately').click();
     for (const name of companions) {
@@ -627,7 +624,7 @@ it('claims the actual outer workspace synchronously before another row or filter
   expect(button(`${en.electricity} · ${en.version} 3`).disabled).toBe(true);
   expect(button(en.apply).disabled).toBe(true);
   expect(button(en.refresh).disabled).toBe(true);
-  expect(harness.legacyCalls).toBe(3);
+  expect(harness.legacyCalls).toBe(companions.length);
   for (const name of companions)
     expect(button(`Legacy ${name} refresh`).matches(':disabled')).toBe(true);
   await click('Release preparation');
@@ -639,7 +636,7 @@ it('claims the actual outer workspace synchronously before another row or filter
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     }
   });
-  expect(harness.legacyCalls).toBe(6);
+  expect(harness.legacyCalls).toBe(companions.length * 2);
 });
 
 it('resumes an interrupted actual query-bound More page after read-only preparation releases its owner', async () => {

@@ -69,7 +69,7 @@ export const fa: I18nDictionary = {
   'auth.register.passwordStrengthStrong': 'قوی',
   'auth.register.passwordRequirements': 'حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک و عدد',
   'auth.register.emailPlaceholder': 'example@email.com',
-  'auth.register.usernamePlaceholder': 'ایمیل یا شماره موبایل',
+  'auth.register.usernamePlaceholder': 'name@example.com / ۰۹۱۲۰۰۰۰۰۰۰',
   'auth.register.invalidEmail': 'ایمیل نامعتبر است',
   'auth.register.invalidMobile': 'شماره موبایل نامعتبر است',
   'auth.register.invalidUsername': 'نام کاربری نامعتبر است',
@@ -181,7 +181,8 @@ export const fa: I18nDictionary = {
   'auth.support.subtitle':
     'اگر دیگر به ایمیل یا شماره تلفن ثبت‌نامی خود دسترسی ندارید، ما اینجا هستیم تا کمک کنیم.',
   'auth.support.steps':
-    'بازیابی حساب نیاز به تأیید هویت و بررسی کامل تاریخچه حساب دارد. تیم پشتیبانی شما را در این فرآیند راهنمایی خواهد کرد.',
+    'پشتیبانی هویت شما را بررسی می‌کند. پس از تکمیل بازیابی، با ایمیل یا شماره موبایل جدید وارد شوید.',
+  'auth.support.contactLink': 'تماس با پشتیبانی',
   'auth.support.contactEmail': 'با ما تماس بگیرید:',
   'auth.support.contactPhone': 'شماره دفتر:',
   'auth.support.contactMobile': 'شماره موبایل:',
@@ -269,7 +270,7 @@ export const englishMessages = {
   'auth.register.passwordRequirements':
     'Minimum 8 characters, must include uppercase, lowercase, and a digit',
   'auth.register.emailPlaceholder': 'example@email.com',
-  'auth.register.usernamePlaceholder': 'Email or Mobile number',
+  'auth.register.usernamePlaceholder': 'name@example.com / 09120000000',
   'auth.register.invalidEmail': 'Invalid email address',
   'auth.register.invalidMobile': 'Invalid mobile number',
   'auth.register.invalidUsername': 'Invalid username',
@@ -376,7 +377,8 @@ export const englishMessages = {
   'auth.support.subtitle':
     "If you no longer have access to your registered email or phone number, we're here to help.",
   'auth.support.steps':
-    'Account recovery requires identity verification and a full audit history. Our support team will guide you through the process.',
+    'Support verifies your identity. When recovery is complete, sign in with your new email or mobile number.',
+  'auth.support.contactLink': 'Contact support',
   'auth.support.contactEmail': 'Contact us at:',
   'auth.support.contactPhone': 'Office phone:',
   'auth.support.contactMobile': 'Mobile phone:',

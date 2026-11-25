@@ -1,6 +1,7 @@
 import { readWithDeadline } from '../../lib/server-query-client.js';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
+import { authReturnSearch } from '../../lib/auth-return.js';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { registrationFormText } from '@barghsa/i18n/registration-forms';
 import { Button, Checkbox, Input, Alert, AlertDescription } from '@barghsa/ui';
@@ -28,7 +29,10 @@ function loadPasswordField() {
 
 const PasswordField = lazy(loadPasswordField);
 const RegistrationTermsDialog = lazy(() => import('../../components/RegistrationTermsDialog.js'));
-export const Route = createFileRoute('/register/')({ component: RegisterPage });
+export const Route = createFileRoute('/register/')({
+  validateSearch: authReturnSearch,
+  component: RegisterPage,
+});
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
   'AUTH:REGISTER:INVALID_USERNAME': 'auth.register.error.invalidUsername',
   'AUTH:REGISTER:WEAK_PASSWORD': 'auth.register.error.weakPassword',
@@ -49,6 +53,7 @@ function RegisterPage() {
   const router = useRouter(),
     locale = useLocale(),
     numbers = useNumberFormatting(locale);
+  const { returnTo } = useSearch({ from: '/register/' });
   const [loadedTerms, setLoadedTerms] = useState<(RegistrationTerms & { locale: Locale }) | null>(
     null
   );
@@ -63,7 +68,10 @@ function RegisterPage() {
     username = form.watch('username');
   const normalized = normalizeUsername(username);
   const touched = !!form.formState.touchedFields.username || form.formState.isSubmitted;
-  const revealPassword = touched && !!normalized.type && !form.formState.errors.username;
+  const revealPassword =
+    (touched || form.formState.dirtyFields.username) &&
+    !!normalized.type &&
+    !form.formState.errors.username;
   useEffect(() => {
     const controller = new AbortController();
     setLoadedTerms(null);
@@ -103,6 +111,7 @@ function RegisterPage() {
             {t('auth.register.loginLink', locale)}{' '}
             <Link
               to="/login"
+              search={{ returnTo }}
               className="touch-action font-medium text-foreground underline underline-offset-4 hover:decoration-2"
               onClick={(event) => {
                 if (model.busy) event.preventDefault();
@@ -115,6 +124,7 @@ function RegisterPage() {
           <p className="text-center text-sm">
             <Link
               to="/forgot-password"
+              search={{ returnTo }}
               className="touch-action text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               onClick={(event) => {
                 if (model.busy) event.preventDefault();
@@ -128,7 +138,7 @@ function RegisterPage() {
       }
     >
       <>
-        <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+        <div className="space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
           <div className="space-y-2">
             <h1 className="tracking-tight">{t('auth.register.title', locale)}</h1>
             <p className="text-sm leading-relaxed text-muted-foreground">
@@ -139,7 +149,7 @@ function RegisterPage() {
             <form
               key={model.draftKey}
               ref={model.feedback.element}
-              className="space-y-4"
+              className="space-y-3.5"
               noValidate
               aria-busy={model.busy}
               onSubmit={(event) => {
@@ -198,6 +208,7 @@ function RegisterPage() {
                       to: '/register/verify',
                       search: {
                         challengeId,
+                        returnTo,
                         destination: maskDestination(normalizeUsername(values.username).normalized),
                       },
                     });
@@ -224,9 +235,12 @@ function RegisterPage() {
                       <Input
                         {...field}
                         type="text"
+                        dir="ltr"
                         aria-required="true"
                         autoComplete="username"
                         onFocus={() => void loadPasswordField().catch(() => {})}
+                        autoCapitalize="none"
+                        spellCheck={false}
                         maxLength={255}
                         placeholder={t('auth.register.usernamePlaceholder', locale)}
                         disabled={model.locked}
@@ -285,7 +299,7 @@ function RegisterPage() {
                 name="tos"
                 render={({ field }) => (
                   <FormItem id="tos">
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-start gap-2.5 rounded-lg bg-muted/45 px-2.5 py-2.5">
                       <FormControl>
                         <Checkbox
                           aria-labelledby="tos-label"
@@ -309,7 +323,7 @@ function RegisterPage() {
                           ref={termsTrigger}
                           href={
                             terms
-                              ? `/terms?lang=${locale}&version=${encodeURIComponent(terms.id)}`
+                              ? `/terms/${encodeURIComponent(terms.id)}?lang=${locale}`
                               : undefined
                           }
                           target="_blank"

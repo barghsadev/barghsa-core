@@ -79,20 +79,19 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await crmShell(page, locale);
-    let failQueue = false,
-      failDetail = false,
+    let failDetail = false,
       changedEvidence = false,
       denied = false,
       queueReads = 0,
       detailReads = 0;
     await page.route('**/api/crm/verification-cases?*', (route) => {
       queueReads++;
-      return route.fulfill({ status: denied ? 403 : failQueue ? 503 : 200, json: crmQueue });
+      return route.fulfill({ status: 200, json: crmQueue });
     });
     await page.route(`**/api/crm/verification-cases/${crmCaseId}`, (route) => {
       detailReads++;
       return route.fulfill({
-        status: failDetail ? 503 : 200,
+        status: denied ? 403 : failDetail ? 503 : 200,
         json: changedEvidence
           ? { ...crmCaseDetail, evidenceUrls: ['verification-evidence/replaced'] }
           : crmCaseDetail,
@@ -107,7 +106,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/crm/corrections');
-    await page.getByRole('button', { name: label('crm.corrections.details'), exact: true }).click();
+    await page.getByRole('link', { name: label('crm.corrections.details'), exact: true }).click();
     await page.locator('#case-notes').fill('Keep explanation');
     await page.getByRole('button', { name: label('crm.corrections.save'), exact: true }).click();
     const dialog = page.getByRole('dialog');
@@ -116,18 +115,11 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await expect(dialog).toContainText('Keep explanation');
-    failQueue = true;
-    await dialog
-      .getByRole('button', { name: label('crm.corrections.queueRetry'), exact: true })
-      .click();
-    await expect(confirm).toBeDisabled();
     const detailBefore = detailReads;
-    failQueue = false;
-    await dialog
-      .getByRole('button', { name: label('crm.corrections.queueRetry'), exact: true })
-      .click();
+    await expect(
+      dialog.getByRole('button', { name: label('crm.corrections.queueRetry'), exact: true })
+    ).toHaveCount(0);
     await expect(confirm).toBeEnabled();
-    expect(detailReads).toBe(detailBefore);
     failDetail = true;
     await dialog
       .getByRole('button', { name: label('crm.corrections.detailRetry'), exact: true })
@@ -140,6 +132,7 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(confirm).toBeEnabled();
     expect(queueReads).toBe(queueBefore);
+    expect(detailReads).toBe(detailBefore + 2);
     await inspect(page, 'review', locale, info.project.name);
     changedEvidence = true;
     await dialog
@@ -153,7 +146,6 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(bodies).toEqual([{ decision: 'Rejected', reviewerNotes: 'Keep explanation' }]);
-    await page.getByRole('button', { name: label('crm.corrections.details'), exact: true }).click();
     await expect(page.locator('#case-notes')).toBeVisible();
     denied = true;
     await page.getByRole('button', { name: label('crm.list.refresh'), exact: true }).click();
@@ -199,7 +191,7 @@ for (const locale of ['en', 'fa'] as const) {
         json: { success: true, id: crmCaseId, profileId: crmProfileId, status: 'Open' },
       });
     });
-    await page.goto(`/admin/crm/corrections?profileId=${crmProfileId}`);
+    await page.goto(`/admin/crm/profiles/${crmProfileId}/corrections/new`);
     await page.locator('#correction-field').selectOption('last_name');
     await page.locator('#correction-value').fill('New name');
     await page.locator('#correction-reason').fill('Checked document');
@@ -221,6 +213,7 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(upload).toBeEnabled();
     expect(queueReads).toBe(queueBefore);
+    expect(queueReads).toBe(0);
     expect(
       await page
         .locator('#correction-files')

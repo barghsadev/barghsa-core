@@ -11,6 +11,7 @@ import {
 } from '../test/staff-directory-fixtures.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { STAFF_ASSIGNMENT_WORK_TYPES } from '@barghsa/shared/admin';
+import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
 import { ruleField } from '../lib/staff-team-form.js';
 type SchemaModule = typeof import('../lib/catalogue-form-schemas.js');
 interface Command {
@@ -201,7 +202,7 @@ for (const kind of ['team', 'rules'] as const)
     if (kind === 'team') {
       expect(input('#staff-team-name').value).toBe('Draft team');
       expect(input('#staff-team-name').matches(':disabled')).toBe(true);
-      await click('Reset team draft');
+      await click(tStaffTeams('admin.teams.resetTeam', 'en'));
       expect(input('#staff-team-name').value).toBe('Server team');
     } else {
       expect(input('#team-ticket').value).toBe(staffTeamId);
@@ -227,7 +228,9 @@ for (const kind of ['team', 'rules'] as const)
     await click(kind === 'team' ? 'Refresh team list' : 'Refresh assignment rules');
     await submit(kind);
     expect(host.querySelector('[data-testid=confirmation]')).toBeNull();
-    await click(kind === 'team' ? 'Reset team draft' : 'Reset to current rules');
+    await click(
+      tStaffTeams(kind === 'team' ? 'admin.teams.resetTeam' : 'admin.teams.resetRules', 'en')
+    );
     if (kind === 'team') expect(input('#staff-team-name').value).toBe('');
     else expect(input('#team-ticket').value).toBe('');
   });
@@ -337,7 +340,7 @@ it('conflicting candidate reads keep the draft and selected lead, but block conf
   await fill('#staff-team-search', 'Conflicting read');
   await vi.waitFor(async () => {
     await act(async () => {});
-    expect(host.textContent).toContain('Staff could not be loaded');
+    expect(host.textContent).toContain(tStaffTeams('admin.teams.memberError', 'en'));
   });
   await submit('team');
   expect(host.querySelector('[data-testid=confirmation]')).toBeNull();

@@ -11,26 +11,31 @@ for (const locale of ['en', 'fa'] as const) {
     await crmShell(page, locale);
     const row = termsVersion();
     const text = adminTosText(locale);
-    await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [row] }));
-    await page.goto('/admin/tos');
-    const history = page.getByRole('list', { name: text.history, exact: true });
-    await history.getByRole('button', { name: text.edit, exact: true }).click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('editing') === row.id);
+    let collectionReads = 0;
+    await page.route('**/api/admin/tos/versions', (route) => {
+      collectionReads++;
+      return route.fulfill({ json: [row] });
+    });
+    await page.route(`**/api/admin/tos/versions/${row.id}`, (route) =>
+      route.fulfill({ json: row })
+    );
+    const path = `/admin/tos/versions/${row.id}`;
+    await page.goto(`/admin/tos?viewing=${row.id}`);
+    const main = page.getByRole('main');
+    await expect(page).toHaveURL(path);
+    await expect(main.getByRole('heading', { level: 1 })).toContainText(row.versionId);
+    await main.getByRole('link', { name: text.editDraft, exact: true }).click();
+    await expect(page).toHaveURL(path + '/edit');
     const english = page.getByRole('textbox', { name: text.english, exact: true });
     await expect(english).toContainText(row.contentEn);
-    await history.getByRole('button', { name: text.view, exact: true }).click();
-    await expect(page).toHaveURL(
-      (url) =>
-        url.searchParams.get('editing') === row.id && url.searchParams.get('viewing') === row.id
-    );
-    await expect(page.getByRole('dialog')).toBeVisible();
     await page.reload();
-    await expect(page.getByRole('dialog')).toBeVisible();
-    await page.goBack();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(english).toContainText(row.contentEn);
     await page.goBack();
+    await expect(main.getByRole('heading', { level: 1 })).toContainText(row.versionId);
     await expect(english).toHaveCount(0);
+    expect(collectionReads).toBe(0);
+    await main.getByRole('link', { name: text.history, exact: true }).click();
+    await expect(page.getByRole('list', { name: text.history, exact: true })).toBeVisible();
   });
 }
 
@@ -101,7 +106,7 @@ for (const domain of ['templates', 'terms'] as const)
             : page.getByRole('list', { name: nt('catalogue'), exact: true });
         await expect(history).toBeVisible();
         await history
-          .getByRole('button', {
+          .getByRole('link', {
             name: domain === 'templates' ? nt('edit') : tos.edit,
             exact: true,
           })
@@ -177,7 +182,10 @@ for (const domain of ['templates', 'terms'] as const)
           })
           .click();
         if (domain === 'terms') {
-          await history.getByRole('button', { name: tos.publish, exact: true }).click();
+          await page
+            .getByRole('main')
+            .getByRole('link', { name: tos.publish, exact: true })
+            .click();
           const preview = page.getByRole('region', { name: tos.publishTitle, exact: true });
           await expect(
             preview.getByRole('button', { name: tos.publish, exact: true })
@@ -195,11 +203,20 @@ for (const domain of ['templates', 'terms'] as const)
           nextRevision = true;
           await page.getByRole('button', { name: refresh, exact: true }).click();
           await expect(preview).toHaveCount(0);
+          await page
+            .getByRole('main')
+            .getByRole('link', { name: tos.history, exact: true })
+            .click();
+        } else {
+          await page
+            .getByRole('main')
+            .getByRole('link', { name: nt('title'), exact: true })
+            .click();
         }
         const keyboardTarget =
           domain === 'terms'
-            ? history.getByRole('button', { name: tos.view, exact: true })
-            : history.getByRole('button', { name: nt('edit'), exact: true });
+            ? history.getByRole('link', { name: tos.view, exact: true })
+            : history.getByRole('link', { name: nt('edit'), exact: true });
         await keyboardTarget.focus();
         await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
         await expect(keyboardTarget).toBeFocused();

@@ -82,12 +82,15 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/catalogue');
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*dark)/);
       const edit = () =>
-        page.getByRole('button', {
+        page.getByRole('link', {
           name: `${label('edit')} ${catalogueProduct().title[locale]}`,
           exact: true,
         });
       await edit().click();
       const title = page.locator('#catalogue-titleEn');
+      await expect(page.getByRole('button', { name: label('save'), exact: true })).toBeInViewport({
+        ratio: 0.99,
+      });
       await title.fill(' ');
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await expect(title).toBeFocused();
@@ -121,7 +124,10 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await confirm().click();
       await expect(dialog).toBeHidden();
-      await expect(page.getByRole('status').filter({ hasText: label('saved') })).toBeVisible();
+      await expect(page).toHaveURL(`/admin/catalogue/consultation/${id}`);
+      await expect(
+        page.locator('[data-sonner-toast]').filter({ hasText: label('saved') })
+      ).toBeVisible();
       expect(writes).toEqual(
         Array(3).fill({
           title: { fa: catalogueProduct().title.fa, en: 'Updated product' },
@@ -129,8 +135,7 @@ for (const locale of ['en', 'fa'] as const)
           categories: [],
         })
       );
-      await edit().click();
-      await page.getByRole('button', { name: label('addPrice'), exact: true }).click();
+      await page.getByRole('link', { name: label('addPrice'), exact: true }).click();
       const price = page.locator('#catalogue-price');
       await price.fill('1e3');
       await page.getByRole('button', { name: label('savePrice'), exact: true }).click();
@@ -149,7 +154,7 @@ for (const locale of ['en', 'fa'] as const)
       await confirm().click();
       await expect(dialog).toBeHidden();
       expect(writes.slice(3)).toEqual(Array(2).fill({ price: '9007199254740993' }));
-      await edit().click();
+      await page.getByRole('link', { name: label('editProduct'), exact: true }).click();
       await title.fill('Draft before denial');
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -168,12 +173,10 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         page.locator('form').filter({ hasNot: page.locator('#product-search') })
       ).toHaveCount(0);
-      await expect(
-        page
-          .getByRole('form', { name: label('listFilters'), exact: true })
-          .getByLabel(label('search'), { exact: true })
-      ).toBeDisabled();
-      await expect(page.locator('[data-slot="list-content"]')).not.toContainText('Sample product');
+      await expect(page.getByRole('form', { name: label('listFilters'), exact: true })).toHaveCount(
+        0
+      );
+      await expect(page.getByRole('main')).not.toContainText('Sample product');
     });
   }
 for (const locale of ['en', 'fa'] as const)
@@ -186,7 +189,7 @@ for (const locale of ['en', 'fa'] as const)
     );
     const label = (key: string) => tCatalogue(key, locale);
     await page.goto('/admin/catalogue');
-    await page.getByRole('button', { name: label('add'), exact: true }).click();
+    await page.getByRole('link', { name: label('add'), exact: true }).click();
     await page.locator('#catalogue-titleFa').fill('محصول');
     await page.locator('#catalogue-titleEn').fill('Keep draft');
     await page.getByRole('button', { name: label('save'), exact: true }).click();
@@ -214,7 +217,7 @@ test('catalogue delayed validator blocks duplicate submits and ignores a changed
     route.fulfill({ json: { ...catalogueReferences, vatOverride: changed } })
   );
   await page.goto('/admin/catalogue');
-  await page.getByRole('button', { name: 'Edit Sample product' }).click();
+  await page.getByRole('link', { name: 'Edit Sample product' }).click();
   await page.locator('#catalogue-titleEn').fill(' ');
   await page.getByRole('button', { name: 'Save product', exact: true }).click();
   await expect(page.locator('#catalogue-titleEn')).toBeDisabled();
@@ -263,8 +266,9 @@ test('catalogue scheduled prices reject DST gaps, invalidate changed zones and v
     });
   });
   await page.goto('/admin/catalogue');
-  await page.getByRole('button', { name: 'Edit Sample product' }).click();
-  await page.getByRole('button', { name: 'Add price version', exact: true }).click();
+  await page.getByRole('link', { name: 'Sample product', exact: true }).click();
+  await page.getByRole('link', { name: 'Add price version', exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Apply after confirmation' })).toBeChecked();
   await page.locator('#catalogue-price').fill('۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳');
   await page.getByLabel('Use a specific effective date').check();
   await page.getByRole('button', { name: 'Save price', exact: true }).click();

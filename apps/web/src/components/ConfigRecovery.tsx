@@ -80,6 +80,7 @@ export default function ConfigRecovery<T>({
   activationRisk,
   requiresOtp,
   errorMessages,
+  showRevisions = false,
 }: {
   path: string;
   valid: Validator<T>;
@@ -93,6 +94,7 @@ export default function ConfigRecovery<T>({
   activationRisk?: (value: T) => TeamAction['risk'];
   requiresOtp?: boolean;
   errorMessages?: TeamAction['errorMessages'];
+  showRevisions?: boolean;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -132,6 +134,9 @@ export default function ConfigRecovery<T>({
       aria-label={label('recoveryTitle')}
       className="space-y-4 rounded-lg border bg-card p-4 text-card-foreground"
     >
+      {showRevisions && baseVersion > 0 && (
+        <p className="text-sm font-medium">{revisionLabel('recoveryCurrent', baseVersion)}</p>
+      )}
       {unconfirmed && <Alert variant="destructive">{label('unverified')}</Alert>}
       {draft && (
         <div className="space-y-3 rounded-md bg-muted p-3">
@@ -170,8 +175,13 @@ export default function ConfigRecovery<T>({
       )}
       <ul className="divide-y">
         {items.map((revision) => (
-          <li key={revision.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
-            <span>{revisionLabel('recoveryRevision', revision.version)}</span>
+          <li key={revision.id} className="flex flex-wrap items-start justify-between gap-3 py-3">
+            <div className={showRevisions ? 'min-w-0 flex-1 space-y-2' : undefined}>
+              <p className={showRevisions ? 'font-medium' : undefined}>
+                {revisionLabel('recoveryRevision', revision.version)}
+              </p>
+              {showRevisions && renderValues(revision.config, label)}
+            </div>
             <Button
               type="button"
               variant="outline"

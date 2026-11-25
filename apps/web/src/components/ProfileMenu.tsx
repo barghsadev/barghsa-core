@@ -1,6 +1,5 @@
-import { lazy, Suspense, useState, useRef, type ReactNode } from 'react';
-import { Link } from '@tanstack/react-router';
-import { LogOut, Settings, UserRound } from 'lucide-react';
+import { lazy, Suspense, useState, type ReactNode } from 'react';
+import { UserRound } from 'lucide-react';
 import {
   LoadingStatus,
   AvatarNameFallback,
@@ -12,11 +11,10 @@ import {
   SizedAvatar,
 } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
-import { t } from '@barghsa/i18n/workspace';
 import { useAsyncData } from '../hooks/useAsyncData.js';
 import { parseSessionContext } from '../lib/session-role.js';
-import { withCsrf } from '../lib/csrf.js';
 
+const ProfileMenuActions = lazy(() => import('./ProfileMenuActions.js'));
 const OperatingContextSwitch = lazy(() =>
   import('./OperatingContextSwitch.js').then((module) => ({
     default: module.OperatingContextSwitch,
@@ -36,12 +34,14 @@ async function readAccount(response: Response) {
 export function ProfileMenu({
   area,
   locale,
+  compact = false,
   preferences,
   profileBadge,
   onOpen,
 }: {
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
+  compact?: boolean;
   preferences?: ReactNode;
   profileBadge?: ReactNode;
   onOpen?: () => void;
@@ -50,36 +50,12 @@ export function ProfileMenu({
   const [open, setOpen] = useState(false);
   const [opened, setOpened] = useState(false);
   const [identityOpen, setIdentityOpen] = useState(false);
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState(false);
-  const submitting = useRef(false);
   const user = account.status === 'ready' ? account.data : null;
-  async function logout() {
-    if (submitting.current) return;
-    submitting.current = true;
-    setPending(true);
-    setError(false);
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf(),
-      });
-      if (!response.ok) throw new Error('Logout failed');
-      window.location.assign('/login');
-    } catch {
-      submitting.current = false;
-      setPending(false);
-      setError(true);
-    }
-  }
   const accountLoading = (
     <LoadingStatus className="text-sm text-muted-foreground">
       {shellText('accountLoading', locale)}
     </LoadingStatus>
   );
-  const linkClass =
-    'flex min-h-11 items-center gap-2 rounded-md px-3 py-2 text-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
   return (
     <>
       <Popover
@@ -96,9 +72,15 @@ export function ProfileMenu({
         <PopoverTrigger
           render={
             <Button
-              variant={area === 'admin' ? 'outline' : 'ghost'}
-              size="default"
-              className={area === 'admin' ? 'min-h-11 gap-2 rounded-full px-2.5' : undefined}
+              variant={area === 'admin' && !compact ? 'outline' : 'ghost'}
+              size={area === 'admin' && compact ? 'icon' : 'default'}
+              className={
+                area === 'admin'
+                  ? compact
+                    ? 'rounded-full'
+                    : 'min-h-11 gap-2 rounded-full px-2.5'
+                  : undefined
+              }
               aria-label={shellText('accountMenu', locale)}
             />
           }
@@ -118,7 +100,7 @@ export function ProfileMenu({
               dir={locale === 'fa' ? 'rtl' : 'ltr'}
               className={
                 area === 'admin'
-                  ? 'whitespace-nowrap text-xs font-semibold'
+                  ? 'whitespace-nowrap text-xs font-semibold max-lg:sr-only'
                   : 'whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold'
               }
             >
@@ -163,51 +145,22 @@ export function ProfileMenu({
               </>
             )}
           </div>
-          {/* The context row and the actions below it must appear together. */}
           <Suspense fallback={account.status === 'loading' ? null : accountLoading}>
             <div className="space-y-2 border-t pt-3">
               {opened && <OperatingContextSwitch area={area} locale={locale} session={user} />}
               {preferences}
             </div>
-            <nav aria-label={shellText('account', locale)} className="space-y-1 border-t pt-3">
-              <Button
-                variant="ghost"
-                className="w-full justify-start"
-                onClick={() => {
+            {opened && (
+              <ProfileMenuActions
+                area={area}
+                locale={locale}
+                onClose={() => setOpen(false)}
+                onIdentity={() => {
                   setOpen(false);
                   setIdentityOpen(true);
                 }}
-              >
-                <UserRound aria-hidden="true" />
-                {t('conversationIdentity.title', locale)}
-              </Button>
-              <Link
-                to={area === 'admin' ? '/settings/username' : '/settings/profile'}
-                className={linkClass}
-                onClick={() => setOpen(false)}
-              >
-                <UserRound className="size-4" aria-hidden="true" />
-                {shellText('myProfile', locale)}
-              </Link>
-              <Link to="/settings" className={linkClass} onClick={() => setOpen(false)}>
-                <Settings className="size-4" aria-hidden="true" />
-                {shellText('settings', locale)}
-              </Link>
-            </nav>
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {shellText('logoutError', locale)}
-              </p>
+              />
             )}
-            <Button
-              variant="outline"
-              disabled={pending}
-              onClick={() => void logout()}
-              className="justify-start"
-            >
-              <LogOut aria-hidden="true" />
-              {shellText(pending ? 'logoutPending' : 'logout', locale)}
-            </Button>
           </Suspense>
         </PopoverContent>
       </Popover>

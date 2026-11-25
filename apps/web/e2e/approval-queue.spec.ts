@@ -3,6 +3,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import { scanCriticalDialog } from './critical-accessibility';
 import { t } from '@barghsa/i18n/app';
 import { t as approvalText } from '@barghsa/i18n/admin-ui';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
 const id = '11111111-1111-4111-8111-111111111111';
 const request = {
   id,
@@ -43,7 +44,54 @@ async function shell(page: Page, locale = 'en') {
     route.fulfill({ json: { thresholdIrR: 100000 } })
   );
 }
+async function openRequest(page: Page, locale: 'fa' | 'en') {
+  await page
+    .getByRole('link', {
+      name: `${approvalText('admin.approvals.openRequest', locale)} · ${id}`,
+      exact: true,
+    })
+    .click();
+  await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${id}$`));
+}
 for (const locale of ['fa', 'en'] as const) {
+  test(`empty approval queue shows which other status has requests (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const reads: URLSearchParams[] = [];
+    await page.route(/\/api\/admin\/approval-requests\?/, (route) => {
+      const query = new URL(route.request().url()).searchParams;
+      reads.push(query);
+      const status = query.get('status');
+      return route.fulfill({ json: status === 'approved' ? [{ ...request, status }] : [] });
+    });
+    await page.goto('/admin/approval-requests');
+    const result = page.locator('[data-slot=queue-empty-state]');
+    const viewStatus = (status: 'approved' | 'rejected') =>
+      workspaceText('listStatus.view', locale).replace(
+        '{status}',
+        approvalText(`admin.approvals.${status}`, locale)
+      );
+    const approved = result.getByRole('button', { name: viewStatus('approved'), exact: true });
+    await expect(approved).toBeVisible();
+    await expect(
+      result.getByRole('button', { name: viewStatus('rejected'), exact: true })
+    ).toHaveCount(0);
+    const checkedStatuses = new Set(
+      reads.filter((query) => query.get('limit') === '1').map((query) => query.get('status'))
+    );
+    expect(checkedStatuses).toEqual(new Set(['approved', 'rejected']));
+    await approved.click();
+    await expect(page).toHaveURL((url) => url.searchParams.get('status') === 'approved');
+    await expect(
+      page.getByRole('link', {
+        name: `${approvalText('admin.approvals.openRequest', locale)} · ${id}`,
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(result).toHaveCount(0);
+  });
+
   test(
     `staff approval review dialog is accessible (${locale})`,
     { tag: '@a11y-critical' },
@@ -53,6 +101,9 @@ for (const locale of ['fa', 'en'] as const) {
       await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
         route.fulfill({ json: [{ ...request, amountIrR: amount }] })
       );
+      await page.route(`**/api/admin/approval-requests/${id}`, (route) =>
+        route.fulfill({ json: { ...request, amountIrR: amount } })
+      );
       const writes: string[] = [];
       await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) => {
         writes.push(route.request().method());
@@ -60,6 +111,7 @@ for (const locale of ['fa', 'en'] as const) {
       });
       await page.goto('/admin/approval-requests');
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      await openRequest(page, locale);
       const title = approvalText('admin.approvals.approve', locale);
       const trigger = page.getByRole('button', { name: title, exact: true });
       await trigger.press('Enter');
@@ -87,6 +139,9 @@ for (const locale of ['fa', 'en'] as const) {
     await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
       route.fulfill({ json: resolved ? [] : [request] })
     );
+    await page.route(`**/api/admin/approval-requests/${id}`, (route) =>
+      route.fulfill({ json: resolved ? { ...request, status: 'approved' } : request })
+    );
     await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) => {
       actions.push(route.request().url());
       if (!verified) return route.fulfill({ status: 403, json: { requiresStepUp: true } });
@@ -98,6 +153,7 @@ for (const locale of ['fa', 'en'] as const) {
       return route.fulfill({ json: { verified: true } });
     });
     await page.goto('/admin/approval-requests');
+    await openRequest(page, locale);
     await expect(
       page.locator('dd').filter({
         hasText: new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
@@ -141,12 +197,17 @@ test('rejection requires a reason and conflict never reports success', async ({ 
   await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
     route.fulfill({ json: [request] })
   );
+  await page.route(`**/api/admin/approval-requests/${id}`, (route) =>
+    route.fulfill({ json: request })
+  );
   await page.route(`**/api/admin/approval-requests/${id}/reject`, (route) => {
     expect(route.request().postDataJSON()).toEqual({ reason: 'Evidence does not match' });
     return route.fulfill({ status: 409, json: {} });
   });
   await page.goto('/admin/approval-requests');
-  await expect(page.getByRole('button', { name: 'Reject', exact: true })).toBeEnabled();
+  await openRequest(page, 'en');
+  await page.getByRole('link', { name: 'Reject', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${id}/reject$`));
   await page.getByRole('button', { name: 'Reject', exact: true }).click();
   await expect(page.getByLabel('Reason for rejection')).toBeFocused();
   await expect(page.getByLabel('Reason for rejection')).toHaveAttribute('aria-invalid', 'true');
@@ -172,12 +233,16 @@ test('pagination and history expose no decision controls', async ({ page }) => {
     return route.fulfill({
       json:
         url.searchParams.get('offset') === '0'
-          ? Array.from({ length: 26 }, (_, n) => ({ ...request, id: `${id}-${n}` }))
+          ? Array.from({ length: 26 }, (_, n) => ({
+              ...request,
+              id: `11111111-1111-4111-8111-${String(n).padStart(12, '0')}`,
+            }))
           : [],
     });
   });
   await page.goto('/admin/approval-requests');
-  await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(25);
+  await expect(page.getByRole('link', { name: /^Open request/ })).toHaveCount(25);
+  await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'Next', exact: true }).click();
   await expect(page.getByText('No requests in this queue.')).toBeVisible();
   await page.getByLabel('Status', { exact: true }).selectOption('approved');
@@ -205,12 +270,12 @@ test('a refund approval link loads its exact request beyond the queue page', asy
   });
   await page.goto(`/admin/approval-requests?requestId=${id}`);
   await expect(page.getByText('Selected request')).toBeVisible();
-  await expect(page.getByText(id)).toHaveCount(2);
+  await expect(page.getByText(id, { exact: true })).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toBeVisible();
   await expect(page.getByText('External bank refunds')).toBeVisible();
   await expect(
     page.getByRole('link', { name: 'Continue refund in invoice workspace' })
-  ).toHaveAttribute('href', `/admin/invoices?invoiceId=${invoiceId}#external-refunds-panel`);
+  ).toHaveAttribute('href', `/admin/invoices/${invoiceId}/refunds/bank`);
   await expect(page.getByLabel('Status', { exact: true })).toHaveCount(0);
   expect(requests).not.toContain('queue');
   await page.getByRole('button', { name: 'Approve', exact: true }).click();
@@ -229,13 +294,18 @@ test('a refund approval link loads its exact request beyond the queue page', asy
   );
   await dialog.getByRole('button', { name: 'Cancel' }).click();
   await page.getByRole('link', { name: 'Continue refund in invoice workspace' }).click();
-  await expect(page).toHaveURL(
-    new RegExp(`/admin/invoices\\?invoiceId=${invoiceId}#external-refunds-panel$`)
-  );
+  await expect(page).toHaveURL(new RegExp(`/admin/invoices/${invoiceId}/refunds/bank$`));
   await expect(page.getByRole('region', { name: 'External bank refunds' })).toBeVisible();
   await page.goBack();
   await page.getByRole('link', { name: 'Back to approval queue' }).click();
-  await expect(page.getByText('No requests in this queue.')).toBeVisible();
+  await expect(
+    page.getByText(
+      workspaceText('listStatus.none', 'en').replace(
+        '{status}',
+        approvalText('admin.approvals.pending', 'en')
+      )
+    )
+  ).toBeVisible();
   expect(requests).toContain('queue');
 });
 test('wallet refund approval confirms its destination in Persian', async ({ page }) => {
@@ -285,8 +355,24 @@ test('an obsolete pending response cannot replace selected history', async ({ pa
   await page.goto('/admin/approval-requests');
   await arrived;
   await page.getByLabel('Status', { exact: true }).selectOption('rejected');
-  await expect(page.getByText('No requests in this queue.')).toBeVisible();
+  await expect(
+    page.getByText(
+      workspaceText('listStatus.none', 'en').replace(
+        '{status}',
+        approvalText('admin.approvals.rejected', 'en')
+      )
+    )
+  ).toBeVisible();
   release();
+  await expect(
+    page.locator('[data-slot=queue-empty-state]').getByRole('button', {
+      name: workspaceText('listStatus.view', 'en').replace(
+        '{status}',
+        approvalText('admin.approvals.pending', 'en')
+      ),
+      exact: true,
+    })
+  ).toBeVisible();
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(0);
 });
 
@@ -308,6 +394,9 @@ for (const locale of ['fa', 'en'] as const)
     await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
       route.fulfill({ json: [adjustment] })
     );
+    await page.route(`**/api/admin/approval-requests/${id}`, (route) =>
+      route.fulfill({ json: adjustment })
+    );
     await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) =>
       route.fulfill({
         json: {
@@ -318,6 +407,7 @@ for (const locale of ['fa', 'en'] as const)
       })
     );
     await page.goto('/admin/approval-requests');
+    await openRequest(page, locale);
     const signed = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'IRR',

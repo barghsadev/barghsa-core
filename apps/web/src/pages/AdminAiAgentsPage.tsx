@@ -1,3 +1,5 @@
+import { Pencil as TablePencilIcon, Trash2 as TableTrash2Icon } from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -5,7 +7,7 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
-import type { RecordAddress } from '../hooks/useRecordAddress.js';
+import { Link } from '@tanstack/react-router';
 import {
   useEffect,
   useLayoutEffect,
@@ -26,9 +28,15 @@ import {
   Input,
   Label,
   ListPage,
-  Separator,
+  ListRefreshButton,
+  NativeSelect,
+  Textarea,
   SizedAvatar,
+  Badge,
+  buttonVariants,
 } from '@barghsa/ui';
+import { toast } from '../lib/toast-api.js';
+import { AgentServingSurfaces } from '../components/AgentServingSurfaces.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
@@ -40,6 +48,13 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
     default: module.TeamActionDialog,
@@ -69,7 +84,23 @@ import {
   matchesAgentReceipt,
   matchesAgentDetail,
 } from '../lib/ai-agent-form.js';
-export default function AdminAiAgentsPage({ selection }: { selection?: RecordAddress } = {}) {
+type AgentActions = { showRecord: (id: string, replace?: boolean) => void; showList: () => void };
+type AgentWorkspace =
+  | { view: 'list'; agentId?: never }
+  | ({ view: 'create'; agentId?: never } & AgentActions)
+  | ({ view: 'edit' | 'detail'; agentId: string } & AgentActions);
+const agentRoute = (agentId: string, action?: 'edit') => ({
+  to: '/admin/agents/$agentId/{-$action}' as const,
+  params: { agentId, action },
+});
+const agentDependencyRoutes = {
+  kbs: '/admin/knowledge-bases/$recordId/{-$action}',
+  kbGroups: '/admin/knowledge-bases/groups/$recordId/{-$action}',
+  policies: '/admin/policies/$recordId/{-$action}',
+  policyGroups: '/admin/policies/groups/$recordId/{-$action}',
+} as const;
+
+export default function AdminAiAgentsPage({ workspace }: { workspace?: AgentWorkspace } = {}) {
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
   return (
@@ -77,7 +108,7 @@ export default function AdminAiAgentsPage({ selection }: { selection?: RecordAdd
       key={JSON.stringify([actor, contextRevision])}
       actor={actor}
       contextRevision={contextRevision}
-      {...(selection ? { selection } : {})}
+      {...(workspace ? { workspace } : {})}
     />
   );
 }
@@ -85,11 +116,11 @@ export default function AdminAiAgentsPage({ selection }: { selection?: RecordAdd
 function OwnedAiAgentsPage({
   actor,
   contextRevision,
-  selection,
+  workspace,
 }: {
   actor: string | null;
   contextRevision: number;
-  selection?: RecordAddress;
+  workspace?: AgentWorkspace;
 }) {
   const client = useQueryClient();
   const reader = useId();
@@ -97,12 +128,13 @@ function OwnedAiAgentsPage({
   const locale = useLocale(),
     label = (key: string) => t(`admin.agents.${key}`, locale);
   const numbers = useNumberFormatting(locale);
+  const isList = !workspace || workspace.view === 'list';
+  const showDetails = workspace?.view === 'detail';
+  const requested = workspace?.view === 'create' ? 'new' : workspace?.agentId;
+  const heading = useRef<HTMLHeadingElement>(null);
   const [rows, setRows] = useState<Agent[]>([]),
     [options, setOptions] = useState<Options | null>(null),
     [editor, setEditor] = useState<string | null>(null);
-  const address = useRef<string | null>(null);
-  const requested = selection?.id;
-  const onSelect = selection?.set;
   const copy = (key: Parameters<typeof aiAgentFormText>[0]) => aiAgentFormText(key, locale);
   const messages: Record<keyof Draft, string> = {
     title: copy('title'),
@@ -172,17 +204,18 @@ function OwnedAiAgentsPage({
     setPending(value);
   }, []);
   const [revision, setRevision] = useState(0),
-    [loading, setLoading] = useState(true),
+    [loading, setLoading] = useState(isList),
     [error, setError] = useState(false),
     [denied, setDenied] = useState(false),
     [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
   const [optionsRevision, setOptionsRevision] = useState(0),
-    [optionsLoading, setOptionsLoading] = useState(true),
+    [optionsLoading, setOptionsLoading] = useState(!showDetails),
     [optionsError, setOptionsError] = useState(false);
   const [detailRevision, setDetailRevision] = useState(0),
     [detailLoading, setDetailLoading] = useState(false),
-    [detailError, setDetailError] = useState(false);
+    [detailError, setDetailError] = useState(false),
+    [detailMissing, setDetailMissing] = useState(false);
   const requests = useRef(new Set<AbortController>());
   const previousRows = useRef<Agent[]>([]);
   const detailBasis = useRef<string | null>(null);
@@ -208,15 +241,12 @@ function OwnedAiAgentsPage({
     setSaved(false);
     detailBasis.current = null;
     savedDetail.current = null;
+    setDetailMissing(false);
     setChanged(false);
     setUncertain(false);
     uncertainRef.current = false;
     setRecovered(false);
-    if (address.current !== null) {
-      address.current = null;
-      onSelect?.(null, true);
-    }
-  }, [withdraw, setDraft, onSelect]);
+  }, [withdraw, setDraft]);
   function acceptRead(kind: keyof typeof freshReads.current, revision: number) {
     freshReads.current[kind] = revision;
     if (
@@ -245,6 +275,7 @@ function OwnedAiAgentsPage({
     setOptionsError(false);
     setDetailLoading(false);
     setDetailError(false);
+    setDetailMissing(false);
     clearWork();
   }, [clearWork]);
   const read = useCallback(
@@ -282,7 +313,7 @@ function OwnedAiAgentsPage({
           deny();
           throw new Error('Denied');
         }
-        if (!response.ok) throw new Error('Unavailable');
+        if (!response.ok) throw new Error(response.status === 404 ? 'Missing' : 'Unavailable');
         return response.value;
       } finally {
         controller.signal.removeEventListener('abort', cancel);
@@ -299,6 +330,7 @@ function OwnedAiAgentsPage({
     []
   );
   useEffect(() => {
+    if (!isList) return;
     const controller = new AbortController();
     requests.current.add(controller);
     setLoading(true);
@@ -338,8 +370,9 @@ function OwnedAiAgentsPage({
       controller.abort();
       requests.current.delete(controller);
     };
-  }, [revision, read, withdraw]);
+  }, [isList, revision, read, withdraw]);
   useEffect(() => {
+    if (showDetails) return;
     const controller = new AbortController();
     requests.current.add(controller);
     setOptionsLoading(true);
@@ -358,6 +391,7 @@ function OwnedAiAgentsPage({
         }
         setOptions(data);
         acceptRead('options', optionsRevision);
+        if (!isList && requested === 'new') setDenied(false);
       } catch {
         if (!controller.signal.aborted) setOptionsError(true);
       } finally {
@@ -368,7 +402,7 @@ function OwnedAiAgentsPage({
       controller.abort();
       requests.current.delete(controller);
     };
-  }, [optionsRevision, read, withdraw]);
+  }, [isList, showDetails, requested, optionsRevision, read, withdraw]);
   useEffect(() => {
     if (!editor || editor === 'new') {
       setDetailLoading(false);
@@ -379,6 +413,7 @@ function OwnedAiAgentsPage({
     requests.current.add(controller);
     setDetailLoading(true);
     setDetailError(false);
+    setDetailMissing(false);
     void (async () => {
       try {
         const data = await read(`/api/admin/agents/${encodeURIComponent(editor)}`, controller);
@@ -386,14 +421,26 @@ function OwnedAiAgentsPage({
         if (!validDetail(data, editor)) throw new Error('Invalid detail');
         const nextBasis = detailSnapshot(data);
         savedDetail.current = data;
+        if (!isList) {
+          previousRows.current = [data];
+          setRows([data]);
+          setDenied(false);
+        }
         acceptRead('detail', detailRevision);
         if (detailBasis.current && detailBasis.current !== nextBasis) {
           withdraw();
           setChanged(true);
-        } else if (!detailBasis.current) setDraft(agentDraftFor(data));
+        } else if (!detailBasis.current && !showDetails) setDraft(agentDraftFor(data));
         detailBasis.current = nextBasis;
-      } catch {
-        if (!controller.signal.aborted) setDetailError(true);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        if (!isList && error instanceof Error && error.message === 'Missing') {
+          clearWork();
+          previousRows.current = [];
+          setRows([]);
+          setDenied(false);
+          setDetailMissing(true);
+        } else setDetailError(true);
       } finally {
         if (!controller.signal.aborted) setDetailLoading(false);
       }
@@ -402,8 +449,8 @@ function OwnedAiAgentsPage({
       controller.abort();
       requests.current.delete(controller);
     };
-  }, [editor, detailRevision, read, withdraw, setDraft]);
-  function chooseEditor(value: string | null, publish = true) {
+  }, [isList, showDetails, editor, detailRevision, read, withdraw, setDraft, clearWork]);
+  function chooseEditor(value: string | null) {
     withdraw();
     detailBasis.current = null;
     savedDetail.current = null;
@@ -412,16 +459,21 @@ function OwnedAiAgentsPage({
     setSaved(false);
     setDetailError(false);
     setChanged(false);
-    if (address.current !== value) {
-      address.current = value;
-      if (publish) onSelect?.(value);
-    }
+    setDetailMissing(false);
   }
   useLayoutEffect(() => {
-    if (requested !== undefined && requested !== address.current) chooseEditor(requested, false);
+    if (requested) chooseEditor(requested);
+    if (!isList) heading.current?.focus({ preventScroll: true });
   }, [requested]);
   const unavailable =
-    denied || loading || error || optionsLoading || optionsError || detailLoading || detailError;
+    denied ||
+    loading ||
+    error ||
+    optionsLoading ||
+    optionsError ||
+    detailLoading ||
+    detailError ||
+    detailMissing;
   const disabled = unavailable || changed || uncertain;
   const busy = form.pending || !!action;
   const choices = options ?? emptyOptions;
@@ -429,14 +481,15 @@ function OwnedAiAgentsPage({
   const refresh = () => {
     if (networkPending.current) return;
     if (validating.current) withdraw();
+    if (requested && !editor) chooseEditor(requested);
     setRevision((v) => v + 1);
     setOptionsRevision((v) => v + 1);
     setDetailRevision((v) => v + 1);
   };
   function unconfirmed() {
     requiredReads.current = {
-      list: revision + 1,
-      options: optionsRevision + 1,
+      list: isList ? revision + 1 : freshReads.current.list,
+      options: showDetails ? freshReads.current.options : optionsRevision + 1,
       detail: editor && editor !== 'new' ? detailRevision + 1 : freshReads.current.detail,
     };
     uncertainRef.current = true;
@@ -517,7 +570,9 @@ function OwnedAiAgentsPage({
     if (
       actionRef.current ||
       validating.current ||
-      (method === 'DELETE' ? denied || loading || error || changed || uncertain : disabled)
+      (method === 'DELETE'
+        ? denied || loading || error || detailLoading || detailError || changed || uncertain
+        : disabled)
     )
       return;
     commandGeneration.current = generation.current;
@@ -582,13 +637,103 @@ function OwnedAiAgentsPage({
       }
     }
   }
+  const detail = !isList && requested !== 'new' ? savedDetail.current : null;
+  const deleteDisabled =
+    denied || loading || error || detailLoading || detailError || changed || uncertain;
+  const closeEditor = () => {
+    if (workspace && workspace.view !== 'list') {
+      if (workspace.agentId) workspace.showRecord(workspace.agentId);
+      else workspace.showList();
+    } else chooseEditor(null);
+  };
+  const agentActions = (row: Agent) => (
+    <>
+      {workspace && !disabled && !busy ? (
+        <Link
+          {...agentRoute(row.id, 'edit')}
+          className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+          aria-label={`${label('edit')} ${row.title}`}
+          data-table-action-tooltip={label('edit')}
+        >
+          <TableActionIcon icon={TablePencilIcon}>{label('edit')}</TableActionIcon>
+        </Link>
+      ) : (
+        <Button
+          variant="outline"
+          disabled={disabled || busy}
+          aria-label={`${label('edit')} ${row.title}`}
+          onClick={() => chooseEditor(row.id)}
+          data-table-action-tooltip={label('edit')}
+        >
+          <TableActionIcon icon={TablePencilIcon}>{label('edit')}</TableActionIcon>
+        </Button>
+      )}
+      <Button
+        variant="outline"
+        disabled={deleteDisabled || busy}
+        aria-label={`${label('delete')} ${row.title}`}
+        onClick={() => {
+          commandRow.current = row;
+          propose(
+            `/api/admin/agents/${row.id}`,
+            'DELETE',
+            label('delete'),
+            `${row.title}. ${label('confirmDelete')}`
+          );
+        }}
+        data-table-action-tooltip={label('delete')}
+      >
+        <TableActionIcon icon={TableTrash2Icon}>{label('delete')}</TableActionIcon>
+      </Button>
+    </>
+  );
+  const isEditor = workspace?.view === 'create' || workspace?.view === 'edit';
+  const refreshButton = (
+    <ListRefreshButton
+      label={label('refresh')}
+      disabled={loading || optionsLoading || detailLoading || pending}
+      onClick={refresh}
+    />
+  );
   return (
     <div
-      className="mx-auto min-w-0 flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
+      className={`mx-auto flex w-full min-w-0 flex-col gap-4 p-4 md:px-8 ${isEditor ? 'max-w-3xl' : 'max-w-5xl md:py-8'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
-      {!denied && <StaffKnowledgeAssistant locale={locale} />}
+      <header className="flex min-w-0 items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {!isList && (
+            <Link to="/admin/agents" className="inline-flex text-sm text-primary hover:underline">
+              {label('title')}
+            </Link>
+          )}
+          <h1
+            ref={heading}
+            data-slot="editor-heading"
+            tabIndex={isList ? undefined : -1}
+            className="text-2xl font-semibold outline-none! [overflow-wrap:anywhere]"
+          >
+            {isEditor ? (
+              workspace.view === 'create' ? (
+                label('add')
+              ) : (
+                copy('editAgent')
+              )
+            ) : detail ? (
+              <bdi>{detail.title}</bdi>
+            ) : (
+              label(isList ? 'title' : 'editor')
+            )}
+          </h1>
+          {isEditor && detail && (
+            <p className="text-sm text-muted-foreground">
+              <bdi>{detail.title}</bdi>
+            </p>
+          )}
+        </div>
+        {isEditor && refreshButton}
+      </header>
+      {isList && !denied && <StaffKnowledgeAssistant locale={locale} />}
       {(changed || uncertain) && (
         <>
           <Alert variant="destructive">{copy(uncertain ? 'uncertain' : 'changed')}</Alert>
@@ -603,15 +748,7 @@ function OwnedAiAgentsPage({
         </>
       )}
       <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            variant="outline"
-            disabled={loading || optionsLoading || detailLoading || pending}
-            onClick={refresh}
-          >
-            {label('refresh')}
-          </Button>
-        </ListPage.Toolbar>
+        {!isEditor && <ListPage.Toolbar>{refreshButton}</ListPage.Toolbar>}
         {denied ? (
           <p role="alert">{label('denied')}</p>
         ) : (
@@ -635,12 +772,20 @@ function OwnedAiAgentsPage({
                 </Button>
               </div>
             )}
-            <Button
-              disabled={loading || error || changed || uncertain || busy}
-              onClick={() => chooseEditor('new')}
-            >
-              {label('add')}
-            </Button>
+            {detailMissing && <Alert variant="destructive">{label('missing')}</Alert>}
+            {workspace?.view === 'list' && !(loading || error || changed || uncertain || busy) && (
+              <Link {...agentRoute('new')} className={buttonVariants({ className: 'min-h-11' })}>
+                {label('add')}
+              </Link>
+            )}
+            {!workspace && (
+              <Button
+                disabled={loading || error || changed || uncertain || busy}
+                onClick={() => chooseEditor('new')}
+              >
+                {label('add')}
+              </Button>
+            )}
 
             {draft && (
               <form
@@ -648,134 +793,176 @@ function OwnedAiAgentsPage({
                 noValidate
                 aria-busy={form.pending || undefined}
                 onSubmit={(event) => void save(event)}
-                className="flex flex-col gap-4 border-y py-5"
+                className={recordEditorSurface}
               >
                 {catalogueRootMessage(form.errors) && (
-                  <Alert variant="destructive">{catalogueRootMessage(form.errors)}</Alert>
+                  <Alert variant="destructive" className="m-4">
+                    {catalogueRootMessage(form.errors)}
+                  </Alert>
                 )}
-                <fieldset disabled={busy} className="min-w-0 space-y-4">
+                <fieldset disabled={busy} className="min-w-0">
                   <legend className="sr-only">{label('editor')}</legend>
-                  {(
-                    [
-                      ['title', 'name', 'agent-title', 120],
-                      ['description', 'description', 'agent-description', 2000],
-                      ['systemPrompt', 'systemPrompt', 'agent-system-prompt', 8000],
-                    ] as const
-                  ).map(([key, labelKey, id, max]) => (
-                    <div key={key} className="flex flex-col gap-2">
-                      <Label htmlFor={id}>{label(labelKey)}</Label>
-                      {key === 'title' ? (
+                  <RecordEditorSection title={copy('basics')}>
+                    <div className={recordEditorGrid}>
+                      <div className={recordEditorField}>
+                        <Label htmlFor="agent-title">{label('name')}</Label>
                         <Input
-                          {...form.bind(key)}
-                          id={id}
+                          {...form.bind('title')}
+                          id="agent-title"
                           required
                           aria-required="true"
-                          maxLength={max}
-                          value={draft[key]}
+                          maxLength={120}
+                          value={draft.title}
                           dir="auto"
-                          onChange={(event) => form.field(key)[1](event.target.value)}
-                        />
-                      ) : key === 'systemPrompt' ? (
-                        <AgentPromptTextarea
-                          {...form.bind(key)}
-                          id={id}
-                          maxLength={max}
-                          value={draft[key]}
-                          dir="auto"
-                          aria-describedby={
-                            form.errors[key]
-                              ? `${form.errorId(key)} agent-prompt-help`
-                              : 'agent-prompt-help'
-                          }
-                          onChange={(event) => form.field(key)[1](event.target.value)}
-                        />
-                      ) : (
-                        <textarea
-                          {...form.bind(key)}
-                          id={id}
-                          className="min-h-24 rounded-md border bg-background p-3"
-                          maxLength={max}
-                          value={draft[key]}
-                          dir="auto"
-                          onChange={(event) => form.field(key)[1](event.target.value)}
-                        />
-                      )}
-                      {key === 'systemPrompt' && (
-                        <p id="agent-prompt-help" className="text-sm text-foreground">
-                          {copy('promptHelp')}
-                        </p>
-                      )}
-                      <CatalogueFieldFeedback
-                        id={form.errorId(key)}
-                        error={form.errors[key]}
-                        message={messages[key]}
-                      />
-                    </div>
-                  ))}
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <Label htmlFor="agent-model">{label('model')}</Label>
-                    <select
-                      {...form.bind('modelId')}
-                      id="agent-model"
-                      className="max-w-full rounded-md border bg-background p-2"
-                      required
-                      aria-required="true"
-                      value={draft.modelId}
-                      onChange={(event) => form.field('modelId')[1](event.target.value)}
-                    >
-                      <option value="">{label('chooseModel')}</option>
-                      {draft.modelId && !choices.models.some((m) => m.id === draft.modelId) && (
-                        <option value={draft.modelId}>
-                          {label('unavailable')} ({draft.modelId})
-                        </option>
-                      )}
-                      {choices.models.map((model) => (
-                        <option key={model.id} value={model.id}>
-                          {model.title}
-                        </option>
-                      ))}
-                    </select>
-                    <CatalogueFieldFeedback
-                      id={form.errorId('modelId')}
-                      error={form.errors.modelId}
-                      message={messages.modelId}
-                    />
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    {(
-                      [
-                        ['temperature', 'agent-temperature', 0, 2, 'any'],
-                        ['maxTokens', 'agent-max-tokens', 1, 8192, '1'],
-                      ] as const
-                    ).map(([key, id, min, max, step]) => (
-                      <div key={key} className="flex flex-col gap-2">
-                        <Label htmlFor={id}>{label(key)}</Label>
-                        <Input
-                          {...form.bind(key)}
-                          id={id}
-                          type="number"
-                          dir="ltr"
-                          min={min}
-                          max={max}
-                          step={step}
-                          placeholder={label('modelDefault')}
-                          value={draft[key]}
-                          onChange={(event) => form.field(key)[1](event.target.value)}
+                          onChange={(event) => form.field('title')[1](event.target.value)}
                         />
                         <CatalogueFieldFeedback
-                          id={form.errorId(key)}
-                          error={form.errors[key]}
-                          message={messages[key]}
+                          compact
+                          id={form.errorId('title')}
+                          error={form.errors.title}
+                          message={messages.title}
                         />
                       </div>
-                    ))}
-                    <div className="flex flex-col gap-2">
+                      <div className={recordEditorField}>
+                        <Label htmlFor="agent-model">{label('model')}</Label>
+                        <NativeSelect
+                          {...form.bind('modelId')}
+                          id="agent-model"
+                          className="w-full"
+                          required
+                          aria-required="true"
+                          value={draft.modelId}
+                          onChange={(event) => form.field('modelId')[1](event.target.value)}
+                        >
+                          <option value="">{label('chooseModel')}</option>
+                          {draft.modelId && !choices.models.some((m) => m.id === draft.modelId) && (
+                            <option value={draft.modelId}>
+                              {label('unavailable')} ({draft.modelId})
+                            </option>
+                          )}
+                          {choices.models.map((model) => (
+                            <option key={model.id} value={model.id}>
+                              {model.title}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                        <CatalogueFieldFeedback
+                          compact
+                          id={form.errorId('modelId')}
+                          error={form.errors.modelId}
+                          message={messages.modelId}
+                        />
+                      </div>
+                    </div>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="agent-description">{label('description')}</Label>
+                      <Textarea
+                        {...form.bind('description')}
+                        id="agent-description"
+                        maxLength={2000}
+                        value={draft.description}
+                        placeholder={copy('descriptionPlaceholder')}
+                        dir="auto"
+                        rows={2}
+                        className="max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]"
+                        onChange={(event) => form.field('description')[1](event.target.value)}
+                      />
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('description')}
+                        error={form.errors.description}
+                        message={messages.description}
+                      />
+                    </div>
+                    <label className="flex min-h-8 w-fit cursor-pointer items-center gap-2 font-medium">
+                      <input
+                        {...form.bind('enabled')}
+                        id="agent-enabled"
+                        className="size-4 accent-primary"
+                        type="checkbox"
+                        checked={draft.enabled}
+                        onChange={(event) => form.field('enabled')[1](event.target.checked)}
+                      />
+                      {label('enabled')}
+                    </label>
+                    {form.errors.enabled && (
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('enabled')}
+                        error={form.errors.enabled}
+                        message={messages.enabled}
+                      />
+                    )}
+                  </RecordEditorSection>
+                  <RecordEditorSection title={copy('instructions')}>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="agent-system-prompt">{label('systemPrompt')}</Label>
+                      <AgentPromptTextarea
+                        {...form.bind('systemPrompt')}
+                        id="agent-system-prompt"
+                        maxLength={8000}
+                        value={draft.systemPrompt}
+                        dir="auto"
+                        rows={4}
+                        placeholder={copy('promptPlaceholder')}
+                        aria-describedby={
+                          form.errors.systemPrompt
+                            ? `${form.errorId('systemPrompt')} agent-prompt-help`
+                            : 'agent-prompt-help'
+                        }
+                        onChange={(event) => form.field('systemPrompt')[1](event.target.value)}
+                      />
+                      <p id="agent-prompt-help" className="text-xs text-muted-foreground">
+                        {copy('promptHelp')}
+                      </p>
+                      <CatalogueFieldFeedback
+                        compact
+                        id={form.errorId('systemPrompt')}
+                        error={form.errors.systemPrompt}
+                        message={messages.systemPrompt}
+                      />
+                    </div>
+                  </RecordEditorSection>
+                  <RecordEditorSection title={copy('responseSettings')}>
+                    <div className={recordEditorGrid}>
+                      {(
+                        [
+                          ['temperature', 'agent-temperature', 0, 2, 'any'],
+                          ['maxTokens', 'agent-max-tokens', 1, 8192, '1'],
+                        ] as const
+                      ).map(([key, id, min, max, step]) => (
+                        <div key={key} className={recordEditorField}>
+                          <Label htmlFor={id}>{label(key)}</Label>
+                          <Input
+                            {...form.bind(key)}
+                            id={id}
+                            type="number"
+                            dir="ltr"
+                            min={min}
+                            max={max}
+                            step={step}
+                            placeholder={label('modelDefault')}
+                            value={draft[key]}
+                            onChange={(event) => form.field(key)[1](event.target.value)}
+                          />
+                          <CatalogueFieldFeedback
+                            compact
+                            id={form.errorId(key)}
+                            error={form.errors[key]}
+                            message={messages[key]}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </RecordEditorSection>
+                  <RecordEditorSection title={copy('sources')} description={label('selectionHelp')}>
+                    <div className={`${recordEditorField} sm:max-w-[50%]`}>
                       <Label htmlFor="agent-link-mode">{label('linkMode')}</Label>
-                      <select
+                      <NativeSelect
                         {...form.bind('linkMode')}
                         id="agent-link-mode"
                         aria-required="true"
-                        className="max-w-full rounded-md border bg-background p-2"
+                        className="w-full"
                         value={draft.linkMode}
                         onChange={(event) =>
                           form.field('linkMode')[1](event.target.value as Draft['linkMode'])
@@ -783,182 +970,218 @@ function OwnedAiAgentsPage({
                       >
                         <option value="any_kb">{label('anyKb')}</option>
                         <option value="all_kbs">{label('allKbs')}</option>
-                      </select>
+                      </NativeSelect>
                       <CatalogueFieldFeedback
+                        compact
                         id={form.errorId('linkMode')}
                         error={form.errors.linkMode}
                         message={messages.linkMode}
                       />
                     </div>
-                  </div>
-                  <label className="flex items-center gap-2">
-                    <input
-                      {...form.bind('enabled')}
-                      id="agent-enabled"
-                      type="checkbox"
-                      checked={draft.enabled}
-                      onChange={(event) => form.field('enabled')[1](event.target.checked)}
-                    />
-                    {label('enabled')}
-                  </label>
-                  <CatalogueFieldFeedback
-                    id={form.errorId('enabled')}
-                    error={form.errors.enabled}
-                    message={messages.enabled}
-                  />
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    {sets.map(([field, source]) => (
-                      <fieldset
-                        key={field}
-                        ref={groupRefs[field]}
-                        tabIndex={-1}
-                        aria-invalid={!!form.errors[field] || undefined}
-                        aria-describedby={form.errors[field] ? form.errorId(field) : undefined}
-                        className="min-w-0 rounded-md border p-4 outline-none focus-visible:ring-2 focus-visible:ring-foreground"
-                      >
-                        <legend className="px-1 font-semibold">{label(source)}</legend>
-                        <p className="mb-3 text-sm text-muted-foreground">
-                          {label('selectionHelp')}
-                        </p>
-                        {!choices[source].length && <p>{label('noChoices')}</p>}
-                        <div className="flex max-h-60 flex-col gap-3 overflow-y-auto">
-                          {[
-                            ...choices[source],
-                            ...draft[field]
-                              .filter((id) => !choices[source].some((item) => item.id === id))
-                              .map((id) => ({ id, title: `${label('unavailable')} (${id})` })),
-                          ].map((item) => (
-                            <label key={item.id} className="flex items-start gap-2">
-                              <input
-                                type="checkbox"
-                                className="mt-1"
-                                checked={draft[field].includes(item.id)}
-                                disabled={
-                                  optionsLoading ||
-                                  optionsError ||
-                                  (!draft[field].includes(item.id) && draft[field].length >= 200)
-                                }
-                                onChange={(event) =>
-                                  form.field(field)[1](
-                                    event.target.checked
-                                      ? [...draft[field], item.id]
-                                      : draft[field].filter((id) => id !== item.id)
-                                  )
-                                }
-                              />
-                              <span className="min-w-0 break-words">{item.title}</span>
-                            </label>
-                          ))}
-                        </div>
-                        <CatalogueFieldFeedback
-                          id={form.errorId(field)}
-                          error={form.errors[field]}
-                          message={messages[field]}
-                        />
-                      </fieldset>
-                    ))}
-                  </div>
+                    <div className={recordEditorGrid}>
+                      {sets.map(([field, source]) => (
+                        <fieldset
+                          key={field}
+                          ref={groupRefs[field]}
+                          tabIndex={-1}
+                          aria-invalid={!!form.errors[field] || undefined}
+                          aria-describedby={form.errors[field] ? form.errorId(field) : undefined}
+                          className="min-w-0 rounded-lg border px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+                        >
+                          <legend className="px-1 font-semibold">{label(source)}</legend>
+                          {!choices[source].length && !draft[field].length && (
+                            <p className="text-sm text-muted-foreground">{label('noChoices')}</p>
+                          )}
+                          <div className="flex max-h-60 flex-col gap-3 overflow-y-auto">
+                            {[
+                              ...choices[source],
+                              ...draft[field]
+                                .filter((id) => !choices[source].some((item) => item.id === id))
+                                .map((id) => ({ id, title: `${label('unavailable')} (${id})` })),
+                            ].map((item) => (
+                              <label key={item.id} className="flex items-start gap-2">
+                                <input
+                                  type="checkbox"
+                                  className="mt-1"
+                                  checked={draft[field].includes(item.id)}
+                                  disabled={
+                                    optionsLoading ||
+                                    optionsError ||
+                                    (!draft[field].includes(item.id) && draft[field].length >= 200)
+                                  }
+                                  onChange={(event) =>
+                                    form.field(field)[1](
+                                      event.target.checked
+                                        ? [...draft[field], item.id]
+                                        : draft[field].filter((id) => id !== item.id)
+                                    )
+                                  }
+                                />
+                                <span className="min-w-0 break-words">{item.title}</span>
+                              </label>
+                            ))}
+                          </div>
+                          <CatalogueFieldFeedback
+                            compact
+                            id={form.errorId(field)}
+                            error={form.errors[field]}
+                            message={messages[field]}
+                          />
+                        </fieldset>
+                      ))}
+                    </div>
+                  </RecordEditorSection>
                 </fieldset>
-                <Separator aria-hidden="true" />
-                <div className="flex gap-2">
+                <RecordEditorActions>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={pending || uncertain}
+                    onClick={closeEditor}
+                  >
+                    {label('cancel')}
+                  </Button>
                   <CatalogueSaveButton
                     label={label('save')}
                     pending={form.pending}
                     disabled={saveDisabled || busy}
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={pending || uncertain}
-                    onClick={() => chooseEditor(null)}
-                  >
-                    {label('cancel')}
-                  </Button>
-                </div>
+                </RecordEditorActions>
               </form>
             )}
-            <ListPage.Content
-              loading={loading}
-              error={error}
-              empty={!rows.length}
-              retainContent={rows.length > 0}
-              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
-              errorView={
-                <div role="alert">
-                  <p>{label('error')}</p>
-                  <Button disabled={pending} onClick={() => setRevision((v) => v + 1)}>
-                    {label('retry')}
-                  </Button>
-                </div>
-              }
-              emptyView={<p>{label('empty')}</p>}
-            >
-              <CatalogueRecordTable
-                rows={rows}
-                locale={locale}
-                caption={label('title')}
-                nameLabel={label('name')}
-                detailsLabel={copy('tableDetails')}
-                actionsLabel={copy('tableActions')}
-                renderDetails={(row) => (
-                  <div className="space-y-2 text-sm">
-                    <SizedAvatar size="sm" aria-hidden="true">
-                      <AvatarNameFallback name={row.title} />
-                    </SizedAvatar>
-                    <p className="break-words text-sm">
-                      {label('model')}: {row.modelTitle}
-                    </p>
-                    <span className="text-sm">{label(row.enabled ? 'enabled' : 'disabled')}</span>
-                    <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
-                      <div className="flex gap-2">
-                        <dt>{copy('linkedKbs')}</dt>
-                        <dd>{row.kbCount === undefined ? '—' : numbers.number(row.kbCount)}</dd>
-                      </div>
-                      <div className="flex gap-2">
-                        <dt>{copy('linkedPolicies')}</dt>
+            {showDetails && detail && (
+              <div className="space-y-4">
+                <section className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant={detail.enabled ? 'default' : 'secondary'}>
+                      {label(detail.enabled ? 'enabled' : 'disabled')}
+                    </Badge>
+                    {detail.description && (
+                      <p
+                        dir="auto"
+                        className="whitespace-pre-wrap [overflow-wrap:anywhere] text-sm text-muted-foreground"
+                      >
+                        {detail.description}
+                      </p>
+                    )}
+                  </div>
+                  <dl className="grid gap-4 border-y py-4 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-muted-foreground">{label('model')}</dt>
+                      <dd className="[overflow-wrap:anywhere]">
+                        <Link
+                          to="/admin/ai-models/$modelId/{-$action}"
+                          params={{ modelId: detail.modelId, action: undefined }}
+                          className="text-primary underline-offset-4 hover:underline"
+                        >
+                          <bdi>{detail.modelTitle}</bdi>
+                        </Link>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{label('linkMode')}</dt>
+                      <dd>{label(detail.linkMode === 'any_kb' ? 'anyKb' : 'allKbs')}</dd>
+                    </div>
+                    {sets.map(([, source]) => (
+                      <div key={source}>
+                        <dt className="text-muted-foreground">{label(source)}</dt>
                         <dd>
-                          {row.policyCount === undefined ? '—' : numbers.number(row.policyCount)}
+                          {detail[source].length ? (
+                            <ul className="list-inside list-disc [overflow-wrap:anywhere]">
+                              {detail[source].map((entry) => (
+                                <li key={entry.id}>
+                                  <Link
+                                    to={agentDependencyRoutes[source]}
+                                    params={{ recordId: entry.id, action: undefined }}
+                                    className="text-primary underline-offset-4 hover:underline"
+                                  >
+                                    <bdi>{entry.title}</bdi>
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            '—'
+                          )}
                         </dd>
                       </div>
-                    </dl>
+                    ))}
+                  </dl>
+                  <div className="flex flex-wrap gap-2">{agentActions(detail)}</div>
+                </section>
+                <AgentServingSurfaces agentId={detail.id} locale={locale} />
+              </div>
+            )}
+            {isList && (
+              <ListPage.Content
+                loading={loading}
+                error={error}
+                empty={!rows.length}
+                retainContent={rows.length > 0}
+                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                errorView={
+                  <div role="alert">
+                    <p>{label('error')}</p>
+                    <Button disabled={pending} onClick={() => setRevision((v) => v + 1)}>
+                      {label('retry')}
+                    </Button>
                   </div>
-                )}
-                renderActions={(row) => (
-                  <>
-                    <Button
-                      variant="outline"
-                      disabled={disabled || busy}
-                      aria-label={`${label('edit')} ${row.title}`}
-                      onClick={() => chooseEditor(row.id)}
-                    >
-                      {label('edit')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={loading || error || changed || uncertain || busy}
-                      aria-label={`${label('delete')} ${row.title}`}
-                      onClick={() => {
-                        commandRow.current = row;
-                        propose(
-                          `/api/admin/agents/${row.id}`,
-                          'DELETE',
-                          label('delete'),
-                          `${row.title}. ${label('confirmDelete')}`
-                        );
-                      }}
-                    >
-                      {label('delete')}
-                    </Button>
-                  </>
-                )}
+                }
+                emptyView={<p>{label('empty')}</p>}
+              >
+                <CatalogueRecordTable
+                  rows={rows}
+                  locale={locale}
+                  caption={label('title')}
+                  nameLabel={label('name')}
+                  detailsLabel={copy('tableDetails')}
+                  actionsLabel={copy('tableActions')}
+                  {...(workspace && {
+                    renderTitle: (row: Agent) => (
+                      <Link
+                        {...agentRoute(row.id)}
+                        className="text-primary underline-offset-4 hover:underline"
+                      >
+                        <bdi>{row.title}</bdi>
+                      </Link>
+                    ),
+                  })}
+                  renderDetails={(row) => (
+                    <div className="space-y-2 text-sm">
+                      <SizedAvatar size="sm" aria-hidden="true">
+                        <AvatarNameFallback name={row.title} />
+                      </SizedAvatar>
+                      <p className="break-words text-sm">
+                        {label('model')}: {row.modelTitle}
+                      </p>
+                      <span className="text-sm">{label(row.enabled ? 'enabled' : 'disabled')}</span>
+                      <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                        <div className="flex gap-2">
+                          <dt>{copy('linkedKbs')}</dt>
+                          <dd>{row.kbCount === undefined ? '—' : numbers.number(row.kbCount)}</dd>
+                        </div>
+                        <div className="flex gap-2">
+                          <dt>{copy('linkedPolicies')}</dt>
+                          <dd>
+                            {row.policyCount === undefined ? '—' : numbers.number(row.policyCount)}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  )}
+                  renderActions={agentActions}
+                />
+              </ListPage.Content>
+            )}
+
+            {(isList || showDetails) && (
+              <AdminAgentTestChat
+                agents={rows}
+                locale={locale}
+                disabled={denied || loading || error}
+                onDenied={deny}
               />
-            </ListPage.Content>
-            <AdminAgentTestChat
-              agents={rows}
-              locale={locale}
-              disabled={denied || loading || error}
-              onDenied={deny}
-            />
+            )}
           </>
         )}
       </ListPage>
@@ -968,7 +1191,7 @@ function OwnedAiAgentsPage({
             action={action}
             confirmationDisabled={
               action.method === 'DELETE'
-                ? denied || loading || error || changed || uncertain
+                ? deleteDisabled
                 : disabled || saveDisabled || !draft || !eligible(draft, choices)
             }
             summary={recovery}
@@ -1003,14 +1226,20 @@ function OwnedAiAgentsPage({
                 } finally {
                   requests.current.delete(controller);
                 }
+                if (workspace && workspace.view !== 'list') {
+                  toast.success(label('saved'));
+                  workspace.showRecord(value.id, true);
+                  return;
+                }
+              }
+              if (command.method === 'DELETE' && showDetails && workspace) {
+                toast.success(label('saved'));
+                workspace.showList();
+                return;
               }
               if (command.method !== 'DELETE' || command.path.endsWith(`/${work.current.editor}`)) {
                 setEditor(null);
                 setDraft(null);
-                if (address.current !== null) {
-                  address.current = null;
-                  onSelect?.(null, true);
-                }
                 detailBasis.current = null;
                 savedDetail.current = null;
               }

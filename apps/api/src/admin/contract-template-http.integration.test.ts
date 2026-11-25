@@ -17,11 +17,20 @@ const { cleanupStorageObjects } = requireWorker('./dist/storage/cleanup.js') as 
   ): Promise<{ deleted: number; failed: number }>;
 };
 let cleanupProvider: StorageProvider;
-const objects = new Set<string>();
+const objects = new Map<string, Buffer>();
 const storage = createServer(async (req, res) => {
-  for await (const chunk of req) void chunk;
-  if (req.method === 'PUT') objects.add(new URL(req.url!, 'http://localhost').pathname);
-  if (req.method === 'DELETE') objects.delete(new URL(req.url!, 'http://localhost').pathname);
+  const path = new URL(req.url!, 'http://localhost').pathname;
+  const chunks: Buffer[] = [];
+  for await (const chunk of req) chunks.push(Buffer.from(chunk));
+  if (req.method === 'PUT') objects.set(path, Buffer.concat(chunks));
+  if (req.method === 'DELETE') objects.delete(path);
+  if (req.method === 'GET') {
+    const body = objects.get(path);
+    if (!body) return void res.writeHead(404).end();
+    return void res
+      .writeHead(200, { 'content-type': 'text/plain', 'content-length': body.length })
+      .end(body);
+  }
   res.writeHead(200).end();
 });
 beforeAll(async () => {
@@ -98,6 +107,28 @@ function mutation(action: 'create' | 'update' | 'delete' | 'upload', deleteBody?
     }
   );
 }
+it('reads the saved version text with current staff authority', async () => {
+  expect((await mutation('upload')).status).toBe(201);
+  const version = `${http.base}/api/admin/contract-templates/${templateId}/versions`;
+  const response = await fetch(version + '/1/preview', { headers });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    templateId,
+    versionNumber: 1,
+    fileName: 'contract.txt',
+    text: 'Dear {{customerName}}',
+    truncated: false,
+  });
+  expect((await fetch(version + '/2/preview', { headers })).status).toBe(404);
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='template-admin'");
+  try {
+    expect((await fetch(version + '/1/preview', { headers })).status).toBe(403);
+  } finally {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('template-admin','template-editor') ON CONFLICT DO NOTHING"
+    );
+  }
+});
 it.each(['create', 'update', 'delete', 'upload'] as const)(
   'rolls back template %s on audit failure',
   async (action) => {

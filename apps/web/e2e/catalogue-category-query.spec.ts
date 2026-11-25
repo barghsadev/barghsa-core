@@ -73,27 +73,24 @@ for (const locale of ['en', 'fa'] as const) {
         route.fulfill({ json: { ...group, members: [] } })
       );
       await page.goto(`/admin/${route}?kind=${kind}`);
-      await page
-        .getByRole('button', { name: `${word('edit')} ${group.title}`, exact: true })
-        .click();
+      await page.getByRole('link', { name: `${word('edit')} ${group.title}`, exact: true }).click();
       const title = page.locator(knowledge ? '#kb-title' : '#policy-title');
-      await expect(page).toHaveURL((url) => url.searchParams.get('editing') === group.id);
+      const recordPath = `/admin/${route}/groups/${group.id}`;
+      await expect(page).toHaveURL(`${recordPath}/edit`);
       await expect(title).toHaveValue(group.title);
-      await page
-        .getByRole('button', { name: `${word('open')} ${group.title}`, exact: true })
-        .click();
-      await expect(page).toHaveURL((url) => url.searchParams.get('viewing') === group.id);
+      await page.reload();
+      await expect(title).toHaveValue(group.title);
+      await page.getByRole('button', { name: word('cancel'), exact: true }).click();
+      await expect(page).toHaveURL(recordPath);
       const detail = page.getByRole('region', {
         name: knowledge ? group.title : word('members'),
         exact: true,
       });
       await expect(detail).toBeVisible();
-      await page.reload();
-      await expect(title).toHaveValue(group.title);
+      await expect(title).toHaveCount(0);
+      await page.goto(`/admin/${route}?kind=${kind}&viewing=${group.id}`);
+      await expect(page).toHaveURL(recordPath);
       await expect(detail).toBeVisible();
-      await page.goBack();
-      await expect(detail).toHaveCount(0);
-      await expect(title).toHaveValue(group.title);
     });
   }
 }
@@ -165,11 +162,41 @@ for (const locale of ['en', 'fa'] as const)
           if (product)
             return r.fulfill({
               json: catalogueDetail(
-                (new URL(page.url()).searchParams.get('type') || 'consultation') as CatalogueType
+                (new URL(page.url()).pathname.split('/')[3] || 'consultation') as CatalogueType
               ),
             });
           return r.fulfill({ status: 404, json: {} });
         });
+        if (product) {
+          const categoryPath = '/admin/catalogue/electricity';
+          await page.goto('/admin/catalogue?type=electricity');
+          await expect(page).toHaveURL(categoryPath);
+          await expect(category('electricity')).toHaveAttribute('aria-selected', 'true');
+          const row = catalogueProduct('electricity');
+          await page
+            .getByRole('link', { name: `${word('edit')} ${row.title[locale]}`, exact: true })
+            .click();
+          await expect(page).toHaveURL(`${categoryPath}/${row.id}/edit`);
+          await expect(input).toHaveValue(row.title.en);
+          await input.fill('LOCAL-DRAFT');
+          expect(page.url()).not.toContain('LOCAL-DRAFT');
+          const collectionReads = reads.length;
+          await page.reload();
+          await expect(input).toHaveValue(row.title.en);
+          expect(reads).toHaveLength(collectionReads);
+          await page
+            .getByRole('main')
+            .getByRole('link', { name: word('electricity'), exact: true })
+            .click();
+          await expect(page).toHaveURL(categoryPath);
+          await category('consultation').click();
+          await expect(page).toHaveURL('/admin/catalogue/consultation');
+          await expect(category('consultation')).toBeFocused();
+          await page.goBack();
+          await expect(page).toHaveURL(categoryPath);
+          expect(writes).toHaveLength(0);
+          return;
+        }
         await page.goto(`/admin/${route}?${key}=${selected}`);
         await expect(category(selected)).toHaveAttribute(
           product ? 'aria-selected' : 'aria-pressed',
@@ -192,7 +219,7 @@ for (const locale of ['en', 'fa'] as const)
               })
               .click();
           } else {
-            await page.getByRole('button', { name: word('addGroup'), exact: true }).click();
+            await page.getByRole('link', { name: word('addGroup'), exact: true }).click();
           }
           await expect(input).toBeVisible();
           await input.fill('LOCAL-DRAFT');
@@ -222,12 +249,14 @@ for (const locale of ['en', 'fa'] as const)
             .at(-1)
         ).toBe(failed);
         await expect(input).toHaveValue('LOCAL-DRAFT');
+        await expect(page).toHaveURL(`/admin/${route}/groups/new`);
         await page.reload();
+        await expect(input).toHaveValue('');
+        await page.getByRole('button', { name: word('cancel'), exact: true }).click();
+        await expect(page).toHaveURL(`/admin/${route}?kind=${selected}`);
         await expect(
           page.locator('[data-slot="list-content"]').getByRole('button').first()
         ).toBeVisible();
-        if (product) await expect(input).toHaveValue(catalogueProduct('electricity').title.en);
-        else await expect(input).toHaveCount(0);
         expect(new URL(page.url()).searchParams.get(key)).toBe(selected);
         await category(fallback).click();
         await expect(category(fallback)).toHaveAttribute(
@@ -269,15 +298,9 @@ for (const locale of ['en', 'fa'] as const)
         await page.goBack();
         await expect(page.getByRole('dialog')).toHaveCount(0);
         await expect(input).toHaveCount(0);
-        if (product) {
-          await expect(category(selected)).toHaveAttribute('aria-selected', 'true');
-          await expect(page).toHaveURL((url) => !url.searchParams.has('selected'));
-          await page.goBack();
-        }
-        await expect(category(fallback)).toHaveAttribute(
-          product ? 'aria-selected' : 'aria-pressed',
-          'true'
-        );
+        await expect(category(selected)).toHaveAttribute('aria-pressed', 'true');
+        await category(fallback).click();
+        await expect(category(fallback)).toHaveAttribute('aria-pressed', 'true');
         expect(writes).toEqual([]);
         denied = true;
         await page.getByRole('button', { name: word('refresh'), exact: true }).click();

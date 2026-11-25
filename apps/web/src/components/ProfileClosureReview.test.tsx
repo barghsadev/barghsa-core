@@ -1,6 +1,7 @@
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { getByText } from '@testing-library/dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ProfileClosureReview } from './ProfileClosureReview.js';
 import { useTicketCommand } from '../hooks/useTicketCommand.js';
@@ -62,7 +63,8 @@ it('shows blockers and retained records without offering approval', async () => 
   );
   await render();
   expect(container.textContent).toContain('Unpaid invoices');
-  expect(container.textContent).toContain('Invoices: 1');
+  const retainedInvoice = getByText(container, 'Invoices', { exact: true }).closest('dt');
+  expect(retainedInvoice?.nextElementSibling?.textContent).toBe('1');
   expect(container.textContent).toContain('Resolve the blockers');
   expect(container.textContent).not.toContain('Approve and close profile');
 });

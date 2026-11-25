@@ -20,7 +20,7 @@ type History = {
   reason: string | null;
   created_at: string;
 };
-type Intake = { profileId: string; productId: string; submissionKey: string };
+type Intake = { profileId: string; productId: string; submissionKey: string; brief?: string };
 type Command = { id: string; path: string; body: Record<string, unknown> };
 const invalid = (route: Route, fields: string[]) =>
   route.fulfill({

@@ -318,10 +318,19 @@ export class ElectricityPriceAdjustmentService {
     });
   }
 
-  async staff(contractId: string, client: PoolClient) {
+  async staff(contractId: string, client: PoolClient, adjustmentId?: string) {
     const profileId = await this.profileId(contractId, client);
     const contract = await this.contract(client, contractId, profileId);
-    const adjustments = await this.rows(client, contractId);
+    const adjustments = adjustmentId
+      ? (
+          await client.query(`${publicSelect} AND a.contract_id=$1 AND a.id=$2`, [
+            contractId,
+            adjustmentId,
+          ])
+        ).rows
+      : await this.rows(client, contractId);
+    if (adjustmentId && !adjustments.length)
+      throw new NotFoundException('Electricity price adjustment not found');
     const openIncrease =
       (
         await client.query<{ open: boolean }>(

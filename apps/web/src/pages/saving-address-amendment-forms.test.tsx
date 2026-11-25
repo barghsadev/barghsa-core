@@ -134,10 +134,7 @@ async function fill(id: string, value: string) {
   const input = host.querySelector<HTMLInputElement | HTMLSelectElement>(`#${id}`)!;
   expect(input, id).not.toBeNull();
   await act(async () => {
-    Object.getOwnPropertyDescriptor(
-      input.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype,
-      'value'
-    )!.set!.call(input, value);
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value')!.set!.call(input, value);
     input.dispatchEvent(
       new Event(input.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })
     );

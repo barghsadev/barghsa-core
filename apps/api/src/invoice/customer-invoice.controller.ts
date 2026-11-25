@@ -275,6 +275,28 @@ export class CustomerInvoiceController {
     return this.service.getForUser(req.session.userId, invoiceId, req.session);
   }
 
+  @Get(':invoiceId/bank-receipts/:receiptId')
+  @Header('Cache-Control', 'private, no-store')
+  @RateLimit({ namespace: 'invoices:receipt-detail:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Get one bank receipt and its review history for the active profile' })
+  @ApiParam({ name: 'invoiceId', format: 'uuid' })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'Receipt details and customer-visible review history.' })
+  @ApiResponse({ status: 400, description: 'Invalid invoice or receipt ID.' })
+  @ApiResponse({
+    status: 404,
+    description: 'Receipt unavailable on this invoice for the active profile.',
+  })
+  receipt(
+    @Req() req: AuthenticatedRequest,
+    @Param('invoiceId') invoiceId: string,
+    @Param('receiptId') receiptId: string
+  ) {
+    assertUuid(invoiceId, 'invoiceId');
+    assertUuid(receiptId, 'receiptId');
+    return this.service.receiptForUser(req.session.userId, invoiceId, receiptId, req.session);
+  }
+
   @Get(':invoiceId/bank-receipts/:receiptId/preview')
   @Header('Cache-Control', 'private, no-store')
   @Header('X-Content-Type-Options', 'nosniff')

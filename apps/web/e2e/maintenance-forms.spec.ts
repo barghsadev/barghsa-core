@@ -68,6 +68,12 @@ async function setup(page: Page, locale: 'en' | 'fa', initial?: Partial<Maintena
           ],
     })
   );
+  let canEdit = true;
+  let detailReads = 0;
+  await page.route('**/api/admin/maintenance/electricity_checkout', (route) => {
+    detailReads++;
+    return route.fulfill({ status, json: malformed ? {} : { ...current, canEdit } });
+  });
   const word = (key: string) => tMaintenance(key, locale);
   const confirm = () =>
     page.getByRole('dialog').getByRole('button', { name: t('team.confirm', locale), exact: true });
@@ -78,13 +84,10 @@ async function setup(page: Page, locale: 'en' | 'fa', initial?: Partial<Maintena
   };
   await page.goto('/admin/maintenance');
   await expect(page.getByRole('heading', { name: word('adminTitle'), exact: true })).toBeVisible();
-  await expect(
-    page.getByRole('button', { name: word('manage'), exact: true }).first()
-  ).toBeEnabled();
   await page
-    .getByRole('button', { name: word('manage'), exact: true })
-    .first()
+    .getByRole('link', { name: `${word('manage')} · ${word('electricity_checkout')}`, exact: true })
     .click();
+  await expect(page.getByRole('heading', { name: word('editSetting'), exact: true })).toBeVisible();
   return {
     word,
     confirm,
@@ -93,6 +96,10 @@ async function setup(page: Page, locale: 'en' | 'fa', initial?: Partial<Maintena
       current = value;
     },
     row: () => current,
+    reads: () => detailReads,
+    allowEdit: (value: boolean) => {
+      canEdit = value;
+    },
     read: (value: number, bad = false) => {
       status = value;
       malformed = bad;
@@ -113,7 +120,7 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
     if (inDialog) await dialog.scrollIntoViewIfNeeded();
     else
       await page
-        .getByRole('heading', { name: tMaintenance('adminTitle', 'fa'), exact: true })
+        .getByRole('heading', { name: tMaintenance('electricity_checkout', 'fa'), exact: true })
         .scrollIntoViewIfNeeded();
     const path = info.outputPath(`${name}-fa.png`);
     if (inDialog) await dialog.screenshot({ path });
@@ -121,7 +128,10 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
       await page
         .locator('section')
         .filter({
-          has: page.getByRole('heading', { name: tMaintenance('adminTitle', 'fa'), exact: true }),
+          has: page.getByRole('heading', {
+            name: tMaintenance('electricity_checkout', 'fa'),
+            exact: true,
+          }),
         })
         .screenshot({ path });
   }
@@ -130,13 +140,21 @@ for (const locale of ['en', 'fa'] as const) {
   test(`maintenance settings reopen the same capability after refresh (${locale})`, async ({
     page,
   }) => {
-    const { word, row } = await setup(page, locale);
-    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === row().capability);
+    const { word, row, reads, allowEdit } = await setup(page, locale);
+    await expect(page).toHaveURL(`/admin/maintenance/${row().capability}/edit`);
+    expect(reads()).toBe(1);
     const owner = page.getByRole('textbox', { name: word('owner'), exact: true });
     await owner.fill('Temporary reviewer');
     await page.reload();
     await expect(owner).toHaveValue(row().owner ?? '');
     await page.goBack();
+    await expect(owner).toHaveCount(0);
+    await page.goto(`/admin/maintenance?selected=${row().capability}`);
+    await expect(page).toHaveURL(`/admin/maintenance/${row().capability}/edit`);
+    await expect(owner).toHaveValue(row().owner ?? '');
+    allowEdit(false);
+    await page.reload();
+    await expect(page.getByRole('alert')).toContainText(word('readOnly'));
     await expect(owner).toHaveCount(0);
   });
 
@@ -186,6 +204,7 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ status: 201, json: locale === 'fa' ? {} : recovery });
     });
     await page.route('**/api/admin/maintenance/electricity_checkout', (route) => {
+      if (route.request().method() === 'GET') return route.fallback();
       activations.push(route.request().postDataJSON());
       const next = { ...source.setting, version: 4 };
       save(next);
@@ -219,9 +238,7 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page, locale, info, 'maintenance-recovery-draft');
     await page.getByRole('button', { name: word('activateRecovery'), exact: true }).click();
     await confirmPause();
-    await expect(
-      page.getByTestId('admin-settings-layout').getByText(word('saved'), { exact: true })
-    ).toBeVisible();
+    await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
     expect(activations).toEqual([
       {
         active: true,
@@ -246,6 +263,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByLabel(word('privateReasonEn'), { exact: true }).fill(privateReason.en);
     const writes: unknown[] = [];
     await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
+      if (route.request().method() === 'GET') return route.fallback();
       writes.push(route.request().postDataJSON());
       const next = {
         ...row(),
@@ -269,10 +287,8 @@ for (const locale of ['en', 'fa'] as const) {
       ]);
     await expect(dialog).toHaveCount(0);
     await expect(page.getByText(privateReason.en, { exact: true })).toHaveCount(0);
-    await page
-      .getByRole('button', { name: word('manage'), exact: true })
-      .first()
-      .click();
+    await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
+    await page.getByRole('link', { name: word('manage'), exact: true }).click();
     await expect(visibility).not.toBeChecked();
     await expect(page.getByLabel(word('privateReasonEn'), { exact: true })).toHaveValue('');
   });
@@ -297,6 +313,7 @@ for (const locale of ['en', 'fa'] as const) {
       release = resolve;
     });
     await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
+      if (route.request().method() === 'GET') return route.fallback();
       const body = route.request().postDataJSON();
       writes.push(body);
       await pending;
@@ -343,9 +360,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText('A new customer message', { exact: true })).toBeVisible();
     await expect(dialog.getByText('Asia/Tehran', { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: word('manage'), includeHidden: true }).first()
-    ).toBeDisabled();
+    await expect(page.locator('main button[type=submit]')).toBeDisabled();
     await inspect(page, locale, info, 'confirmation');
     await confirmPause();
     await expect.poll(() => writes.length).toBe(1);
@@ -362,14 +377,7 @@ for (const locale of ['en', 'fa'] as const) {
       expectedVersion: 1,
     });
     release();
-    await expect(
-      page
-        .getByTestId('admin-settings-layout')
-        .getByRole('status')
-        .filter({
-          hasText: word('saved'),
-        })
-    ).toHaveText(word('saved'));
+    await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
     await expect(fa).toHaveCount(0);
   });
   test(`maintenance preserves server feedback and requires review after an unknown save (${locale})`, async ({
@@ -378,6 +386,7 @@ for (const locale of ['en', 'fa'] as const) {
     const { word, confirm, confirmPause, row, save, read } = await setup(page, locale);
     const writes: Record<string, unknown>[] = [];
     await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
+      if (route.request().method() === 'GET') return route.fallback();
       const body = route.request().postDataJSON();
       writes.push(body);
       if (writes.length === 1)
@@ -431,14 +440,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page.getByLabel(word(key), { exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
-    await expect(
-      page
-        .getByTestId('admin-settings-layout')
-        .getByRole('status')
-        .filter({
-          hasText: word('saved'),
-        })
-    ).toHaveText(word('saved'));
+    await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
     expect(writes[2]).toEqual({
       active: false,
       reason: null,
@@ -489,6 +491,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     const writes: unknown[] = [];
     await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
+      if (route.request().method() === 'GET') return route.fallback();
       const body = route.request().postDataJSON();
       writes.push(body);
       const next = { ...row(), ...body, version: body.expectedVersion + 1 };
@@ -534,12 +537,12 @@ for (const locale of ['en', 'fa'] as const) {
     const { word } = await setup(page, locale);
     let reads = 0;
     let writes = 0;
-    await page.route('**/api/admin/maintenance', (route) => {
-      if (++reads > 1) return route.fallback();
-    });
     await page.route('**/api/admin/maintenance/electricity_checkout', (route) => {
-      writes++;
-      return route.fulfill({ status: 500 });
+      if (route.request().method() !== 'GET') {
+        writes++;
+        return route.fulfill({ status: 500 });
+      }
+      if (++reads > 1) return route.fallback();
     });
     const owner = page.getByLabel(word('owner'), { exact: true });
     const refresh = page.getByRole('button', { name: word('refresh'), exact: true });

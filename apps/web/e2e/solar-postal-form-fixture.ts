@@ -1,3 +1,4 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
 import type { Page, Route } from '@playwright/test';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { fullNavigation } from './navigation-fixture';
@@ -10,6 +11,10 @@ import {
 } from '../src/test/solar-staff-fixtures';
 
 export const postalReceipt = '84000000-0000-4000-8000-000000000004';
+export const postalSiteAddress = {
+  en: '24 Bahar Street, Tehran',
+  fa: 'تهران، خیابان بهار، پلاک ۲۴',
+};
 export const postalGuidance = {
   fa: 'راهنمای ارسال اصل مدارک',
   en: 'Original postal guidance',
@@ -154,6 +159,7 @@ export async function setupSolarPostalForms(
           request: {
             ...solarPostal(id),
             status: 'waiting_for_postal_submission',
+            site_address: postalSiteAddress[locale],
             grid_type: 'off_grid',
             property_form: 'villa',
             structural_frame: 'concrete',
@@ -223,6 +229,17 @@ export async function setupSolarPostalForms(
       json:
         state.guidanceMode === 'mismatch' ? { ...body, contactDetails: 'Different receipt' } : body,
     });
+  });
+  await routePostalRecords(page, () => {
+    state.queueReads++;
+    return [
+      { ...solarPostal(), postal_status: state.firstPostalStatus },
+      {
+        ...solarPostal(olderSolar),
+        request_status: state.finalClosed ? 'cancelled' : state.finalStatus,
+        postal_status: 'received',
+      },
+    ];
   });
   await page.route('**/api/admin/solar/postal-queue?*', (route) => {
     state.queueReads++;

@@ -1,15 +1,20 @@
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
+import { Check, ChevronDown, LoaderCircle, Minus, Search } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import {
   LoadingStatus,
   Alert,
   Button,
   DataTable,
+  Input,
   Label,
   ListPage,
+  ListRefreshButton,
   NativeSelect,
   TextCell,
+  buttonVariants,
 } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -22,12 +27,13 @@ import {
   type EffectivePermissions,
 } from '../lib/staff-permissions.js';
 import { EffectivePermissionsView } from '../components/EffectivePermissionsView.js';
+import { StaffAccountSearch, type StaffAccountOption } from '../components/StaffAccountSearch.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import {
   CatalogueFieldFeedback,
-  CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import { recordEditorSurface } from '../components/RecordEditorLayout.js';
 
 /**
  * Staff role management page (T-09.05.01).
@@ -69,10 +75,22 @@ function validRoles(value: unknown): value is StaffRole[] {
   );
 }
 
-export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding } = {}) {
+interface RolesPageProps {
+  queries?: ListQueryBinding;
+  variant?: 'catalogue' | 'compare' | 'effective';
+  roleId?: string;
+}
+
+export default function AdminRolesPage({ queries, variant, roleId }: RolesPageProps = {}) {
   const read = useStaffQueryRead('profiles');
   const locale = useLocale();
-  const { numberStyle } = useNumberFormatting(locale);
+  const { numberStyle, number } = useNumberFormatting(locale);
+  const word = (key: string) => t(`admin.roles.${key}`, locale);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const accountHeading = useRef<HTMLHeadingElement>(null);
+  const standaloneLookup = variant === 'effective';
+  const catalogue = variant === 'catalogue';
+  const comparison = variant === 'compare' || (!variant && !roleId);
   const roleText = (id: string, field: 'name' | 'description', fallback: string) => {
     const key = `admin.staff.role.${id}.${field}`;
     const translated = t(key, locale);
@@ -84,7 +102,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
     return translated === key ? group : translated;
   };
   const [roles, setRoles] = useState<StaffRole[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!standaloneLookup);
   const [isError, setIsError] = useState(false);
   const [reload, setReload] = useState(0);
   const [forbidden, setForbidden] = useState(false);
@@ -99,6 +117,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
     ),
   ]);
   const selectedGroup = catalogueGroups.find((group) => group.group === module);
+  const selectedRole = roleId ? roles?.find((role) => role.roleId === roleId) : undefined;
   const lookupForm = useWizardForm<{ staffUserId: string }>(
     async () =>
       (await import('../lib/staff-access-form-schemas.js')).staffLookupSchema(
@@ -118,8 +137,12 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
       lookupForm.form.setFocus('staffUserId');
   }, [lookupForm.pending, lookupForm.errors, lookupForm.form]);
   const [effective, setEffective] = useState<EffectivePermissions | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<StaffAccountOption | null>(null);
   const [permLoading, setPermLoading] = useState(false);
   const [permError, setPermError] = useState<string | null>(null);
+  useEffect(() => {
+    if (effective && effective.userId === selectedAccount?.userId) accountHeading.current?.focus();
+  }, [effective, selectedAccount]);
 
   const deny = useCallback(() => {
     catalogueRequest.current?.abort();
@@ -130,6 +153,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
     lookupForm.form.reset({ staffUserId: '' });
     setModule('');
     setEffective(null);
+    setSelectedAccount(null);
     setPermError(null);
     setPermLoading(false);
     setIsError(false);
@@ -137,6 +161,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
   }, []);
 
   useEffect(() => {
+    if (standaloneLookup) return;
     lookupRequest.current?.abort();
     lookupOwner.current = null;
     setPermLoading(false);
@@ -160,30 +185,16 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
       }
     })();
     return () => request.abort();
-  }, [reload, deny, read]);
+  }, [reload, deny, read, standaloneLookup]);
 
   useEffect(() => () => lookupRequest.current?.abort(), []);
+  useEffect(() => {
+    if (roleId || (variant && variant !== 'catalogue'))
+      heading.current?.focus({ preventScroll: true });
+  }, [roleId, variant]);
 
-  const lookupEffective = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      if (lookupOwner.current || forbidden || isLoading || isError || !roles) return;
-      const owner = {};
-      lookupOwner.current = owner;
-      lookupForm.setValidationPending(true);
-      let valid = false;
-      try {
-        valid = await lookupForm.form.trigger();
-      } finally {
-        lookupForm.setValidationPending(false);
-      }
-      if (lookupOwner.current !== owner) return;
-      if (!valid) {
-        lookupOwner.current = null;
-        invalidFocus.current = staffUserId;
-        return;
-      }
-      const id = staffUserId.trim();
+  const readEffective = useCallback(
+    async (id: string, owner: object) => {
       lookupRequest.current?.abort();
       const request = new AbortController();
       lookupRequest.current = request;
@@ -214,17 +225,61 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
         if (!request.signal.aborted) setPermLoading(false);
       }
     },
-    [staffUserId, forbidden, isLoading, isError, roles, deny, lookupForm, read, reload]
+    [deny, read, reload]
   );
+
+  const lookupEffective = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      if (lookupOwner.current || forbidden || isLoading || isError || (!roles && !standaloneLookup))
+        return;
+      const owner = {};
+      lookupOwner.current = owner;
+      lookupForm.setValidationPending(true);
+      let valid = false;
+      try {
+        valid = await lookupForm.form.trigger();
+      } finally {
+        lookupForm.setValidationPending(false);
+      }
+      if (lookupOwner.current !== owner) return;
+      if (!valid) {
+        lookupOwner.current = null;
+        invalidFocus.current = staffUserId;
+        return;
+      }
+      setSelectedAccount(null);
+      await readEffective(staffUserId.trim(), owner);
+    },
+    [staffUserId, forbidden, isLoading, isError, roles, lookupForm, readEffective, standaloneLookup]
+  );
+
+  function inspectAccount(account: StaffAccountOption) {
+    if (lookupOwner.current || forbidden) return;
+    const owner = {};
+    lookupOwner.current = owner;
+    setSelectedAccount(account);
+    void readEffective(account.userId, owner);
+  }
 
   const roleIdentity = (role: StaffRole) => (
     <div className="min-w-0 [overflow-wrap:anywhere]">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <h2 className="font-medium">
-          <TextCell value={roleText(role.roleId, 'name', role.name)} />
+          {catalogue && !isLoading && !isError ? (
+            <Link
+              to="/admin/roles/$roleId"
+              params={{ roleId: role.roleId }}
+              className="touch-action text-primary underline underline-offset-4"
+            >
+              <TextCell value={roleText(role.roleId, 'name', role.name)} />
+            </Link>
+          ) : (
+            <TextCell value={roleText(role.roleId, 'name', role.name)} />
+          )}
         </h2>
         {role.predefined && (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap bg-muted">
             {t('admin.roles.predefined', locale)}
           </span>
         )}
@@ -245,26 +300,45 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
         ) : (
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             {groups.map((g) => (
-              <fieldset key={g.group}>
-                <legend className="text-xs font-semibold text-muted-foreground">
+              <fieldset key={g.group} className="min-w-0">
+                <legend
+                  className={
+                    comparison && selectedGroup
+                      ? 'sr-only'
+                      : 'text-xs font-semibold text-muted-foreground'
+                  }
+                >
                   {groupName(g.group)}
                 </legend>
                 <ul className="mt-1 space-y-0.5">
-                  {g.permissions.map((p) => (
-                    <li key={p} className="text-xs">
-                      <label className="flex items-start gap-2">
+                  {g.permissions.map((permission) => {
+                    const granted =
+                      role.permissions.includes('*') || role.permissions.includes(permission);
+                    const label = permission === '*' ? word('all.permissions') : permission;
+                    return (
+                      <li key={permission} className="flex items-start gap-2 text-xs">
                         <input
                           type="checkbox"
-                          checked={role.permissions.includes('*') || role.permissions.includes(p)}
+                          aria-label={label}
+                          checked={granted}
                           disabled
-                          className="mt-0.5 shrink-0"
+                          className={comparison ? 'sr-only' : 'mt-0.5 shrink-0'}
                         />
-                        <bdi dir="ltr" className="font-mono break-all">
-                          {p === '*' ? t('admin.roles.all.permissions', locale) : p}
+                        {comparison &&
+                          (granted ? (
+                            <Check aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                          ) : (
+                            <Minus
+                              aria-hidden="true"
+                              className="size-4 shrink-0 text-muted-foreground"
+                            />
+                          ))}
+                        <bdi aria-hidden="true" dir="auto" className="font-mono wrap-anywhere">
+                          {label}
                         </bdi>
-                      </label>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               </fieldset>
             ))}
@@ -273,169 +347,363 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
       </>
     );
   };
+  const roleCount = (role: StaffRole) => (
+    <span className="text-sm font-medium">
+      {role.permissions.includes('*')
+        ? word('all.permissions')
+        : number(new Set(role.permissions).size)}
+    </span>
+  );
+  const idForm = (
+    <form noValidate onSubmit={lookupEffective} className="max-w-xl space-y-1.5">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <Label htmlFor="staffUserId">{t('admin.roles.effective.userId', locale)}</Label>
+        {standaloneLookup && (
+          <Link
+            to="/admin/users"
+            search={{}}
+            className="touch-action text-sm text-primary underline underline-offset-4"
+          >
+            {t('admin.roles.effective.staffDirectory', locale)}
+          </Link>
+        )}
+      </div>
+      <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <Input
+          id="staffUserId"
+          {...lookupForm.bind('staffUserId')}
+          type="text"
+          disabled={lookupForm.pending}
+          value={staffUserId}
+          onChange={(e) => {
+            lookupRequest.current?.abort();
+            lookupOwner.current = null;
+            setStaffUserId(e.target.value);
+            setEffective(null);
+            setSelectedAccount(null);
+            setPermError(null);
+            setPermLoading(false);
+          }}
+          spellCheck={false}
+          autoCapitalize="none"
+          dir="ltr"
+        />
+        <Button
+          type="submit"
+          aria-busy={lookupForm.pending || permLoading || undefined}
+          disabled={
+            lookupForm.pending ||
+            permLoading ||
+            isLoading ||
+            isError ||
+            (!roles && !standaloneLookup)
+          }
+        >
+          {lookupForm.pending || permLoading ? (
+            <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" />
+          ) : (
+            <Search aria-hidden="true" />
+          )}
+          {t('admin.roles.effective.lookup', locale)}
+        </Button>
+      </div>
+      <CatalogueFieldFeedback
+        compact
+        id={lookupForm.errorId('staffUserId')}
+        error={lookupForm.errors.staffUserId}
+        message={t('admin.roles.effective.invalidUserId', locale)}
+      />
+    </form>
+  );
   return (
-    <div className="min-w-0 space-y-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header>
-        <h1 className="text-2xl font-semibold">{t('admin.roles.title', locale)}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t('admin.roles.subtitle', locale)}</p>
+    <div
+      className={roleId || standaloneLookup ? 'mx-auto max-w-4xl space-y-6' : 'min-w-0 space-y-6'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      <header className="space-y-3">
+        {(roleId || (variant && !catalogue)) && (
+          <Link
+            to="/admin/roles"
+            className="touch-action text-sm text-primary underline underline-offset-4"
+          >
+            {word('backToRoles')}
+          </Link>
+        )}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1
+            ref={heading}
+            tabIndex={-1}
+            className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+          >
+            {variant === 'compare'
+              ? word('compare.title')
+              : standaloneLookup
+                ? word('effective.title')
+                : roleId
+                  ? selectedRole
+                    ? roleText(selectedRole.roleId, 'name', selectedRole.name)
+                    : word('roleDetails')
+                  : word('title')}
+          </h1>
+          {catalogue && (
+            <div className="flex flex-wrap gap-2">
+              <Link
+                to="/admin/roles/effective"
+                className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              >
+                {word('effective.title')}
+              </Link>
+              <Link to="/admin/roles/compare" className={buttonVariants({ className: 'min-h-11' })}>
+                {word('compare.title')}
+              </Link>
+            </div>
+          )}
+        </div>
+        {!roleId && !standaloneLookup && (
+          <p
+            id={comparison ? 'role-module-help' : undefined}
+            className="text-sm text-muted-foreground"
+          >
+            {word(comparison ? 'compare.help' : 'subtitle')}
+          </p>
+        )}
       </header>
 
       <ListPage>
-        <ListPage.Toolbar>
-          {!forbidden && roles && (
-            <div className="space-y-1">
-              <Label htmlFor="role-module">{t('admin.roles.compare.module', locale)}</Label>
-              <NativeSelect
-                id="role-module"
-                className="w-full"
-                value={selectedGroup?.group ?? ''}
-                onChange={(event) =>
-                  queries
-                    ? queries.setQuery({ filters: { module: event.target.value } })
-                    : setModule(event.target.value)
-                }
-              >
-                <option value="">{t('admin.roles.compare.all', locale)}</option>
-                {catalogueGroups.map((group) => (
-                  <option key={group.group} value={group.group}>
-                    {groupName(group.group)}
-                  </option>
-                ))}
-              </NativeSelect>
-              <p className="text-sm text-muted-foreground">
-                {t('admin.roles.compare.help', locale)}
-              </p>
+        {!standaloneLookup && (
+          <ListPage.Toolbar>
+            <div className={`flex w-full items-end gap-2 ${comparison ? 'max-w-sm' : ''}`}>
+              {comparison && !forbidden && roles && (
+                <div className="min-w-0 flex-1 space-y-1">
+                  <Label htmlFor="role-module">{word('compare.module')}</Label>
+                  <NativeSelect
+                    id="role-module"
+                    aria-describedby="role-module-help"
+                    className="w-full"
+                    value={selectedGroup?.group ?? ''}
+                    onChange={(event) =>
+                      queries
+                        ? queries.setQuery({ filters: { module: event.target.value } })
+                        : setModule(event.target.value)
+                    }
+                  >
+                    <option value="">{word('compare.all')}</option>
+                    {catalogueGroups.map((group) => (
+                      <option key={group.group} value={group.group}>
+                        {groupName(group.group)}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </div>
+              )}
+              <ListRefreshButton
+                label={t('admin.jobs.refresh', locale)}
+                refreshing={isLoading}
+                className={comparison ? undefined : 'ms-auto'}
+                onClick={() => setReload((v) => v + 1)}
+              />
             </div>
-          )}
-
-          <Button variant="outline" disabled={isLoading} onClick={() => setReload((v) => v + 1)}>
-            {t('admin.jobs.refresh', locale)}
-          </Button>
-        </ListPage.Toolbar>
+            {selectedGroup && comparison && !forbidden && (
+              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground sm:pb-3">
+                <li className="flex items-center gap-1.5">
+                  <Check aria-hidden="true" className="size-4 text-primary" />
+                  {word('compare.granted')}
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <Minus aria-hidden="true" className="size-4" />
+                  {word('compare.notGranted')}
+                </li>
+              </ul>
+            )}
+          </ListPage.Toolbar>
+        )}
         {forbidden ? (
           <p role="alert">{t('admin.roles.forbidden', locale)}</p>
         ) : (
           <>
-            <ListPage.Content
-              loading={isLoading}
-              error={isError}
-              empty={roles?.length === 0}
-              retainContent={roles !== null && roles.length > 0}
-              loadingView={<LoadingStatus>{t('admin.roles.loading', locale)}</LoadingStatus>}
-              errorView={
-                <div role="alert" className="space-y-2">
-                  <p>{t('admin.roles.load.failed', locale)}</p>
-                  <Button onClick={() => setReload((v) => v + 1)}>
-                    {t('admin.roles.retry', locale)}
-                  </Button>
-                </div>
-              }
-              emptyView={<p>{t('admin.roles.empty', locale)}</p>}
-            >
-              <DataTable
-                locale={locale}
-                numerals={
-                  numberStyle === 'western'
-                    ? 'latn'
-                    : numberStyle === 'persian'
-                      ? 'arabext'
-                      : locale === 'fa'
-                        ? 'arabext'
-                        : 'latn'
-                }
-                data={roles ?? []}
-                keyExtractor={(role) => role.roleId}
-                caption={t('admin.roles.catalogue', locale)}
-                scrollLabel={t('admin.roles.catalogue', locale)}
-                sortable={false}
-                className="max-h-[32rem] bg-card"
-                tableClassName="min-w-[44rem]"
-                columns={[
-                  {
-                    id: 'role',
-                    header: t('admin.roles.role', locale),
-                    cell: roleIdentity,
-                    rowHeader: true,
-                    cellClassName: 'p-4 align-top',
-                  },
-                  {
-                    id: 'permissions',
-                    header: t('admin.roles.permissions', locale),
-                    cell: rolePermissions,
-                    cellClassName: 'p-4 align-top',
-                  },
-                ]}
-                renderCard={(role) => (
-                  <div className="min-w-0 space-y-4 [overflow-wrap:anywhere]">
-                    {roleIdentity(role)}
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        {t('admin.roles.permissions', locale)}
-                      </p>
-                      {rolePermissions(role)}
-                    </div>
+            {!standaloneLookup && (
+              <ListPage.Content
+                loading={isLoading}
+                error={isError}
+                empty={roleId ? !!roles && !selectedRole : roles?.length === 0}
+                retainContent={roles !== null && roles.length > 0}
+                loadingView={<LoadingStatus>{t('admin.roles.loading', locale)}</LoadingStatus>}
+                errorView={
+                  <div role="alert" className="space-y-2">
+                    <p>{t('admin.roles.load.failed', locale)}</p>
+                    <Button onClick={() => setReload((v) => v + 1)}>
+                      {t('admin.roles.retry', locale)}
+                    </Button>
                   </div>
+                }
+                emptyView={<p>{word(roleId ? 'roleUnavailable' : 'empty')}</p>}
+              >
+                {roleId && selectedRole ? (
+                  <section className="space-y-4 rounded-xl border bg-card p-5">
+                    <header className="space-y-1">
+                      {selectedRole.predefined && (
+                        <p className="text-sm font-medium text-muted-foreground">
+                          {word('predefined')}
+                        </p>
+                      )}
+                      <p>
+                        {roleText(selectedRole.roleId, 'description', selectedRole.description)}
+                      </p>
+                    </header>
+                    <h2 className="text-lg font-semibold">{word('permissions')}</h2>
+                    {rolePermissions(selectedRole)}
+                  </section>
+                ) : (
+                  !roleId && (
+                    <DataTable
+                      locale={locale}
+                      numerals={
+                        numberStyle === 'western'
+                          ? 'latn'
+                          : numberStyle === 'persian'
+                            ? 'arabext'
+                            : locale === 'fa'
+                              ? 'arabext'
+                              : 'latn'
+                      }
+                      data={roles ?? []}
+                      keyExtractor={(role) => role.roleId}
+                      caption={t('admin.roles.catalogue', locale)}
+                      scrollLabel={t('admin.roles.catalogue', locale)}
+                      sortable={false}
+                      className="max-h-[32rem] bg-card"
+                      tableClassName="min-w-[44rem]"
+                      columns={[
+                        {
+                          id: 'role',
+                          header: t('admin.roles.role', locale),
+                          cell: roleIdentity,
+                          rowHeader: true,
+                          cellClassName: 'p-4 align-top',
+                        },
+                        {
+                          id: 'permissions',
+                          header: selectedGroup
+                            ? groupName(selectedGroup.group)
+                            : word('permissions'),
+                          cell: catalogue ? roleCount : rolePermissions,
+                          cellClassName: 'p-4 align-top',
+                        },
+                      ]}
+                      renderCard={(role) => (
+                        <div className="min-w-0 space-y-2 [overflow-wrap:anywhere]">
+                          {roleIdentity(role)}
+                          <div className="space-y-2">
+                            {!comparison && (
+                              <p className="text-sm font-medium text-muted-foreground">
+                                {word('permissions')}
+                              </p>
+                            )}
+                            {catalogue ? roleCount(role) : rolePermissions(role)}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  )
                 )}
-              />
-            </ListPage.Content>
+              </ListPage.Content>
+            )}
 
             {/* Effective permissions lookup */}
-            <section className="bg-card rounded-lg shadow-sm border p-6">
-              <h2 className="text-lg font-semibold">{t('admin.roles.effective.title', locale)}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t('admin.roles.effective.subtitle', locale)}
-              </p>
-              <form
-                noValidate
-                onSubmit={lookupEffective}
-                className="mt-4 flex flex-wrap items-end gap-3"
-              >
-                <div className="basis-full min-w-0 max-w-md sm:basis-0 sm:flex-1">
-                  <label htmlFor="staffUserId" className="block text-sm font-medium mb-1">
-                    {t('admin.roles.effective.userId', locale)}
-                  </label>
-                  <input
-                    id="staffUserId"
-                    {...lookupForm.bind('staffUserId')}
-                    type="text"
-                    disabled={lookupForm.pending}
-                    value={staffUserId}
-                    onChange={(e) => {
-                      lookupRequest.current?.abort();
-                      lookupOwner.current = null;
-                      setStaffUserId(e.target.value);
-                      setEffective(null);
-                      setPermError(null);
-                      setPermLoading(false);
-                    }}
-                    placeholder={t('admin.roles.effective.userId.placeholder', locale)}
-                    dir="ltr"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                  <CatalogueFieldFeedback
-                    id={lookupForm.errorId('staffUserId')}
-                    error={lookupForm.errors.staffUserId}
-                    message={t('admin.roles.effective.invalidUserId', locale)}
-                  />
+            {((!variant && !roleId) || standaloneLookup) && (
+              <section className={recordEditorSurface}>
+                <div className="space-y-3 p-4 sm:p-5">
+                  {!standaloneLookup && (
+                    <h2 className="text-lg font-semibold">
+                      {t('admin.roles.effective.title', locale)}
+                    </h2>
+                  )}
+                  {!standaloneLookup && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('admin.roles.effective.subtitle', locale)}
+                    </p>
+                  )}
+                  {standaloneLookup ? (
+                    <>
+                      <StaffAccountSearch
+                        copy={word}
+                        disabled={lookupForm.pending || permLoading}
+                        onSelect={inspectAccount}
+                        onSessionEnded={deny}
+                      />
+                      <details className="group border-t pt-2">
+                        <summary
+                          data-permission-id-toggle
+                          className="flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                        >
+                          <ChevronDown
+                            aria-hidden="true"
+                            className="size-4 group-open:rotate-180"
+                          />
+                          {word('lookup.byId')}
+                        </summary>
+                        <div className="pt-2">{idForm}</div>
+                      </details>
+                    </>
+                  ) : (
+                    idForm
+                  )}
+                  {catalogueRootMessage(lookupForm.errors) && (
+                    <Alert variant="destructive">{catalogueRootMessage(lookupForm.errors)}</Alert>
+                  )}
+
+                  {permError && !selectedAccount && (
+                    <p role="alert" className="mt-3 text-sm text-destructive">
+                      {t(permError, locale)}
+                    </p>
+                  )}
+
+                  {(effective || selectedAccount) && (
+                    <div className="space-y-3 border-t pt-4">
+                      {selectedAccount && (
+                        <div className="min-w-0 rounded-lg bg-muted/50 px-3 py-2 [overflow-wrap:anywhere]">
+                          <p className="text-xs text-muted-foreground">{word('lookup.selected')}</p>
+                          <h2
+                            ref={accountHeading}
+                            tabIndex={-1}
+                            className="text-base font-semibold"
+                          >
+                            <bdi>{selectedAccount.name || selectedAccount.username}</bdi>
+                          </h2>
+                          {selectedAccount.name && (
+                            <bdi className="text-xs text-muted-foreground">
+                              {selectedAccount.username}
+                            </bdi>
+                          )}
+                        </div>
+                      )}
+                      {effective ? (
+                        <EffectivePermissionsView
+                          data={effective}
+                          headingLevel={standaloneLookup && !selectedAccount ? 'h2' : 'h3'}
+                        />
+                      ) : selectedAccount && permError ? (
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p role="alert" className="text-sm text-destructive">
+                            {t(permError, locale)}
+                          </p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => inspectAccount(selectedAccount)}
+                          >
+                            {word('retry')}
+                          </Button>
+                        </div>
+                      ) : (
+                        <LoadingStatus>{word('effective.loading')}</LoadingStatus>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <CatalogueSaveButton
-                  label={t('admin.roles.effective.lookup', locale)}
-                  pending={lookupForm.pending || permLoading}
-                  disabled={lookupForm.pending || permLoading || isLoading || isError || !roles}
-                />
-              </form>
-              {catalogueRootMessage(lookupForm.errors) && (
-                <Alert variant="destructive">{catalogueRootMessage(lookupForm.errors)}</Alert>
-              )}
-
-              {permError && (
-                <p role="alert" className="mt-3 text-sm text-destructive">
-                  {t(permError, locale)}
-                </p>
-              )}
-
-              {effective && <EffectivePermissionsView data={effective} />}
-            </section>
+              </section>
+            )}
           </>
         )}
       </ListPage>

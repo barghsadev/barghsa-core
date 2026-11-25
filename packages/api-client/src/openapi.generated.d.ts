@@ -2007,6 +2007,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/contract-templates/{id}/versions/{version}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read a bounded plain-text preview of a saved contract template version */
+        get: operations["ContractTemplateController_previewVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/contracts": {
         parameters: {
             query?: never;
@@ -2069,6 +2086,23 @@ export interface paths {
         };
         /** Read exact-version activation prerequisites without changing contract state */
         get: operations["StaffContractActivationController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/contracts/{id}/activation/invoice-options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List eligible invoice references for the current contract draft */
+        get: operations["ContractController_invoiceOptions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2360,6 +2394,23 @@ export interface paths {
         };
         /** Read one independently loaded staff dashboard widget */
         get: operations["BusinessWorkCountsController_widgetCounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/work-queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview assigned, unassigned urgent and overdue support work */
+        get: operations["BusinessWorkCountsController_workQueue"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3800,7 +3851,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Read maintenance for one service */
+        get: operations["AdminMaintenanceController_setting"];
         /**
          * Activate or deactivate maintenance for one capability
          * @description A reviewed recovery may include rollbackDraftId for the current capability and version.
@@ -3856,6 +3908,23 @@ export interface paths {
         };
         /** List email complaint correction tasks */
         get: operations["CustomerCorrectionsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/notifications/customer-corrections/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read an email complaint correction task */
+        get: operations["CustomerCorrectionsController_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5009,6 +5078,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/solar/requests/{id}/postal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the shipment and postal review status for one solar request */
+        get: operations["StaffSolarPostalController_shipmentState"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/solar/requests/{id}/postal/confirm-received": {
         parameters: {
             query?: never;
@@ -5221,12 +5307,30 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get one staff team */
+        get: operations["AdminController_getStaffTeam"];
         /** Update a staff team (admin) */
         put: operations["AdminController_updateStaffTeam"];
         post?: never;
         /** Delete a staff team (admin) */
         delete: operations["AdminController_deleteStaffTeam"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/staff/accounts/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one staff account */
+        get: operations["AdminController_getStaffAccount"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -5241,6 +5345,23 @@ export interface paths {
         };
         /** Staff permission audit timeline (role changes) */
         get: operations["AdminController_listStaffAudit"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/staff/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Find staff accounts by name or username */
+        get: operations["AdminController_searchStaffAccounts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5550,6 +5671,23 @@ export interface paths {
             cookie?: never;
         };
         get: operations["UploadPolicyController_limits"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/upload-policies/{category}/versions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read one version of an upload policy in its category */
+        get: operations["UploadPolicyController_getVersion"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6520,6 +6658,23 @@ export interface paths {
         put?: never;
         /** Submit a consultation request without creating an invoice */
         post: operations["ConsultationRequestController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/consultations/requests/submissions/{submissionKey}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read a consultation submission receipt for the current submitter */
+        get: operations["ConsultationRequestController_receipt"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -7894,6 +8049,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/invoices/{invoiceId}/bank-receipts/{receiptId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one bank receipt and its review history for the active profile */
+        get: operations["CustomerInvoiceController_receipt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/invoices/{invoiceId}/bank-receipts/{receiptId}/attachment": {
         parameters: {
             query?: never;
@@ -8527,6 +8699,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/profiles/{profileId}/addresses/access": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Check access to manage saved addresses on a profile */
+        get: operations["ProfilesController_addressAccess"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/profiles/{profileId}/addresses/{addressId}": {
         parameters: {
             query?: never;
@@ -8534,7 +8723,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get one saved address for a profile */
+        get: operations["ProfilesController_addressDetail"];
         /** Update an address */
         put: operations["ProfilesController_updateAddress"];
         post?: never;
@@ -9480,6 +9670,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/staff/electricity/contracts/{id}/price-adjustments/{adjustmentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read one price adjustment and invoice evidence for its contract */
+        get: operations["StaffElectricityPriceAdjustmentController_record"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/staff/electricity/increase-requests": {
         parameters: {
             query?: never;
@@ -9489,6 +9696,23 @@ export interface paths {
         };
         /** List pending or expired electricity quantity increase requests */
         get: operations["StaffElectricityIncreaseController_queue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/electricity/increase-requests/{requestId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read one electricity quantity increase request and its billing state */
+        get: operations["StaffElectricityIncreaseController_staffRecord"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10439,6 +10663,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/staff/solar/requests/{id}/postal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the shipment and postal review status for one solar request */
+        get: operations["SolarStaffPostalController_shipmentState"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/staff/solar/requests/{id}/postal/confirm-received": {
         parameters: {
             query?: never;
@@ -10948,6 +11189,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tickets/{id}/replies/seen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Mark a customer’s displayed public ticket replies as read */
+        patch: operations["TicketsController_markRepliesSeen"];
+        trace?: never;
+    };
     "/api/tickets/{id}/status": {
         parameters: {
             query?: never;
@@ -11383,6 +11641,23 @@ export interface paths {
         };
         /** Fetch the current unread notification count */
         get: operations["NotificationCenterController_unreadCount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one private notification without changing its read state */
+        get: operations["NotificationCenterController_findOne"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13059,6 +13334,16 @@ export interface operations {
     ConfigAuditController_list: {
         parameters: {
             query: {
+                /** @description Authorization denials only. Read one event without filters or pagination. */
+                eventId?: unknown;
+                /** @description Authorization denials only. Last UTC date (YYYY-MM-DD). */
+                through?: unknown;
+                /** @description Authorization denials only. First UTC date (YYYY-MM-DD). */
+                from?: unknown;
+                /** @description Authorization denials only. Exact action. */
+                action?: unknown;
+                /** @description Authorization denials only. Exact actor ID. */
+                actor?: unknown;
                 cursor?: string;
                 scope: "branding" | "otp" | "service-response-targets" | "authorization";
             };
@@ -18866,6 +19151,41 @@ export interface operations {
             };
         };
     };
+    ContractTemplateController_previewVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                version: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The selected template version and its text preview. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Template or version not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Stored version could not be read. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     ContractController_list: {
         parameters: {
             query?: {
@@ -19047,6 +19367,45 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    ContractController_invoiceOptions: {
+        parameters: {
+            query: {
+                before?: string;
+                versionId: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        contractId: string;
+                        invoices: {
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: uuid */
+                            id: string;
+                        }[];
+                        /** Format: uuid */
+                        nextBefore: string | null;
+                        /** Format: uuid */
+                        profileId: string;
+                        /** Format: uuid */
+                        versionId: string;
+                    };
+                };
             };
         };
     };
@@ -19568,6 +19927,23 @@ export interface operations {
             path: {
                 widget: "queue" | "work" | "failures";
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessWorkCountsController_workQueue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -20111,6 +20487,8 @@ export interface operations {
             query: {
                 invoiceId: string;
                 before?: string;
+                /** @description Filter to a single refund on this invoice, without a cursor. */
+                refundId?: string;
             };
             header?: never;
             path?: never;
@@ -22474,6 +22852,26 @@ export interface operations {
             };
         };
     };
+    AdminMaintenanceController_setting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                capability: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Maintenance setting and version */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminMaintenanceController_update: {
         parameters: {
             query?: never;
@@ -22602,6 +23000,35 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>[];
                 };
+            };
+        };
+    };
+    CustomerCorrectionsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Correction task */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Correction task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -23288,7 +23715,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Unexpected request body or template is not a draft */
+            /** @description Invalid publish request, draft content, or missing email subject */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -24095,6 +24522,13 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        balance: {
+                            available: string;
+                            posted: string;
+                            reserved: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        } | null;
                         nextCursor: string | null;
                         /** Format: uuid */
                         profileId: string;
@@ -24105,7 +24539,11 @@ export interface operations {
                             description: string | null;
                             /** Format: uuid */
                             id: string;
+                            /** Format: uuid */
+                            receiptId?: string;
                             refId: string | null;
+                            /** @enum {string} */
+                            staffSource?: "bank_receipt" | "online" | "invoice" | "ledger";
                             state: string;
                             type: string;
                         }[];
@@ -24988,6 +25426,25 @@ export interface operations {
             };
         };
     };
+    StaffSolarPostalController_shipmentState: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     StaffSolarPostalController_received: {
         parameters: {
             query?: never;
@@ -25419,6 +25876,43 @@ export interface operations {
             };
         };
     };
+    AdminController_getStaffTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Staff team UUID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff team with members */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Staff team access is required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Staff team not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminController_updateStaffTeam: {
         parameters: {
             query?: never;
@@ -25556,6 +26050,43 @@ export interface operations {
             };
         };
     };
+    AdminController_getStaffAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Staff account ID */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Staff account summary */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Staff directory access is required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Staff account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminController_listStaffAudit: {
         parameters: {
             query?: {
@@ -25599,6 +26130,26 @@ export interface operations {
             };
             /** @description Admin role required */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_searchStaffAccounts: {
+        parameters: {
+            query: {
+                /** @description Staff name or username, 2–100 characters */
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -26287,6 +26838,48 @@ export interface operations {
             };
         };
     };
+    UploadPolicyController_getVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                category: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The requested upload policy version. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid category or policy ID. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Upload policy permission required. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No matching policy version in this category. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     UploadPolicyController_end: {
         parameters: {
             query?: never;
@@ -26745,6 +27338,8 @@ export interface operations {
             query: {
                 invoiceId: string;
                 before?: string;
+                /** @description Filter to a single refund on this invoice, without a cursor. */
+                refundId?: string;
             };
             header?: never;
             path?: never;
@@ -28561,6 +29156,7 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
+                    brief?: string;
                     /** Format: uuid */
                     productId: string;
                     /** Format: uuid */
@@ -28576,6 +29172,37 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    ConsultationRequestController_receipt: {
+        parameters: {
+            query: {
+                profileId: string;
+                productId: string;
+            };
+            header?: never;
+            path: {
+                submissionKey: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        receipt: {
+                            /** Format: uuid */
+                            requestId: string;
+                            /** @enum {string} */
+                            status: "submitted";
+                        } | null;
+                    };
+                };
             };
         };
     };
@@ -31662,6 +32289,41 @@ export interface operations {
             };
         };
     };
+    CustomerInvoiceController_receipt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invoiceId: string;
+                receiptId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Receipt details and customer-visible review history. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid invoice or receipt ID. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Receipt unavailable on this invoice for the active profile. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     CustomerInvoiceController_receiptAttachment: {
         parameters: {
             query?: never;
@@ -33334,6 +33996,61 @@ export interface operations {
                 content?: never;
             };
             /** @description Profile not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ProfilesController_addressAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Address management access for this profile. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Profile unavailable for address management. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ProfilesController_addressDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profileId: string;
+                addressId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Address details. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Profile or address unavailable. */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -35280,6 +35997,26 @@ export interface operations {
             };
         };
     };
+    StaffElectricityPriceAdjustmentController_record: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                adjustmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     StaffElectricityIncreaseController_queue: {
         parameters: {
             query?: {
@@ -35288,6 +36025,25 @@ export interface operations {
             };
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    StaffElectricityIncreaseController_staffRecord: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -36900,6 +37656,25 @@ export interface operations {
             };
         };
     };
+    SolarStaffPostalController_shipmentState: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     SolarStaffPostalController_received: {
         parameters: {
             query?: never;
@@ -37820,6 +38595,8 @@ export interface operations {
             query: {
                 profileId: string;
                 recordPage: string;
+                relatedType: string;
+                relatedId: string;
             };
             header?: never;
             path?: never;
@@ -37999,6 +38776,26 @@ export interface operations {
                 content: {
                     "image/png": string;
                 };
+            };
+        };
+    };
+    TicketsController_markRepliesSeen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Matching unread replies marked as read. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -38982,6 +39779,40 @@ export interface operations {
         responses: {
             /** @description { unread_count } */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NotificationCenterController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notification and its current read state. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid notification identifier. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Notification not found. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

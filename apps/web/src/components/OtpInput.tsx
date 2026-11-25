@@ -1,4 +1,13 @@
-import { useRef, useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
+import {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  forwardRef,
+  useId,
+  useImperativeHandle,
+} from 'react';
+import { cn } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/auth';
 
 const DIGIT_COUNT = 6;
@@ -45,6 +54,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
   },
   ref
 ) {
+  const labelId = useId();
   const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(''));
   const [shaking, setShaking] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(DIGIT_COUNT).fill(null));
@@ -199,14 +209,18 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
   ]);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
+      <p id={labelId} className="text-sm font-medium">
+        {t('auth.otp.inputLabel', locale)}
+      </p>
       <div
-        className={`flex items-center justify-center gap-1 sm:gap-3 ${
-          shaking ? 'animate-shake' : ''
-        }`}
+        className={cn(
+          'grid max-w-[19rem] grid-cols-6 gap-1.5 sm:gap-2',
+          shaking && 'motion-safe:animate-shake'
+        )}
         dir="ltr"
         role="group"
-        aria-label={t('auth.otp.inputLabel', locale)}
+        aria-labelledby={labelId}
       >
         {digits.map((digit, i) => (
           <input
@@ -218,7 +232,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
             }}
             type="text"
             inputMode="numeric"
-            autoComplete="one-time-code"
+            autoComplete={i === 0 ? 'one-time-code' : 'off'}
             maxLength={DIGIT_COUNT - i} // Allow paste of remaining digits
             value={digit}
             onChange={(e) => handleChange(i, e.target.value)}
@@ -230,22 +244,16 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
             aria-invalid={id ? !!error : undefined}
             aria-describedby={id && error ? `${id}-error` : undefined}
             aria-label={`${t('auth.otp.digitLabel', locale)} ${i + 1}`}
-            className={`w-11 h-12 sm:w-12 sm:h-13 text-center text-lg font-semibold border-b-2 rounded-none bg-transparent outline-none transition-colors ${
-              error
-                ? 'border-destructive text-destructive'
-                : digit
-                  ? 'border-ring text-foreground'
-                  : 'border-input text-foreground'
-            } ${disabled ? 'opacity-50 cursor-not-allowed' : 'focus:border-ring focus:border-b-3'}`}
+            className={cn(
+              'h-11 w-full min-w-0 rounded-lg border border-input bg-background text-center text-lg font-semibold text-foreground tabular-nums outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60',
+              digit && 'bg-muted/45',
+              error && 'border-destructive text-destructive'
+            )}
           />
         ))}
       </div>
       {error && (
-        <p
-          id={id ? `${id}-error` : undefined}
-          className="text-center text-sm text-destructive animate-fade-in"
-          role="alert"
-        >
+        <p id={id ? `${id}-error` : undefined} className="text-sm text-destructive" role="alert">
           {error}
         </p>
       )}

@@ -363,6 +363,29 @@ it.each(['profile', 'target', 'mode', 'fingerprint', 'payment', 'wizard'] as con
     expect(fetcher.mock.calls.some(([u]) => String(u).endsWith('/draft-terminal'))).toBe(false);
   }
 );
+it('keeps a queue refresh error visible when the decision form closes', async () => {
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(json(queue))
+    .mockResolvedValueOnce(new Response('{}', { status: 503 }));
+  vi.stubGlobal('fetch', fetcher);
+  await open();
+  const reject = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === 'Reject draft'
+  )!;
+  await act(async () => reject.click());
+  const reload = container.querySelector<HTMLButtonElement>('button[title="Reload"]')!;
+  await act(async () => reload.click());
+  await vi.waitFor(() => expect(reject.disabled).toBe(true));
+  const close = container.querySelector<HTMLButtonElement>(
+    'button[aria-label="Close decision form"]'
+  )!;
+  await act(async () => close.click());
+  expect(container.querySelector('textarea')).toBeNull();
+  expect(container.querySelector('[role=alert]')?.textContent).toContain(
+    'Could not load or review the draft'
+  );
+});
 it('withdraws a pending preview when the current actor changes', async () => {
   let resolve!: (r: Response) => void;
   const delayed = new Promise<Response>((r) => {

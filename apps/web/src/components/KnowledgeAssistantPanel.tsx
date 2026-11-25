@@ -4,10 +4,18 @@ import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useId, useRef, useState } from 'react';
-import { BookOpenText } from 'lucide-react';
+import { BookOpenText, MessageSquareText, Wallet } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@barghsa/ui';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  buttonVariants,
+} from '@barghsa/ui';
+import { serviceFeedback } from '@barghsa/i18n/service-feedback';
 import { Link } from '@tanstack/react-router';
 import { withCsrf } from '../lib/csrf.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -112,7 +120,7 @@ function OwnedKnowledgeAssistantPanel({
   const generation = useRef(0);
   const input = useRef<HTMLTextAreaElement>(null);
   const promptDisclosure = useRef<HTMLDetailsElement>(null);
-  const end = useRef<HTMLDivElement>(null);
+  const transcript = useRef<HTMLDivElement>(null);
   const controller = useRef<AbortController | null>(null);
   const label = (key: string) => t(`assistant.${key}`, locale);
   const accountTime = useAccountTime(locale);
@@ -149,7 +157,8 @@ function OwnedKnowledgeAssistantPanel({
     };
   }, [profileId, slotKey, reset]);
   useEffect(() => {
-    if (open) end.current?.scrollIntoView({ block: 'end' });
+    const log = transcript.current;
+    if (open && log) log.scrollTop = log.scrollHeight;
   }, [open, turns, busy, error]);
 
   async function send(payload: PendingRequest, newQuestion = false) {
@@ -403,10 +412,13 @@ function OwnedKnowledgeAssistantPanel({
     />
   );
 
+  const messageError = serverMessageError ? { message: copy('question') } : form.errors.message;
+  const lastAnswer = turns.at(-1)?.answer;
   const conversation = (
     <>
       <div
-        className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-6"
+        ref={transcript}
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-5"
         role="log"
         aria-live="polite"
       >
@@ -552,13 +564,12 @@ function OwnedKnowledgeAssistantPanel({
             )}
           </div>
         )}
-        <div ref={end} />
       </div>
 
       <form
         noValidate
         aria-busy={busy || form.pending}
-        className="space-y-3 border-t bg-card px-5 py-4"
+        className="shrink-0 space-y-2 border-t bg-card px-4 py-3 sm:px-5"
         onSubmit={(event) => {
           event.preventDefault();
           void submit();
@@ -593,7 +604,7 @@ function OwnedKnowledgeAssistantPanel({
             },
             id: 'knowledge-question',
             value: draft,
-            placeholder: label('input'),
+            placeholder: copy('questionExample'),
             disabled: denied || busy || form.pending || !!retry,
             onChange: (event) => {
               setDraft(event.target.value);
@@ -603,32 +614,35 @@ function OwnedKnowledgeAssistantPanel({
             },
           }}
           feedback={
-            <CatalogueFieldFeedback
-              id={form.errorId('message')}
-              error={serverMessageError ? { message: copy('question') } : form.errors.message}
-              message={copy('question')}
-            />
+            messageError && (
+              <CatalogueFieldFeedback
+                compact
+                id={form.errorId('message')}
+                error={messageError}
+                message={copy('question')}
+              />
+            )
           }
           footer={
-            <p className="text-xs text-muted-foreground">
-              {turns.at(-1)?.answer
-                ? label('remaining').replace(
-                    '{count}',
-                    numbers.number(turns.at(-1)!.answer!.remainingQuota)
-                  )
-                : null}
-            </p>
+            lastAnswer && (
+              <p className="text-xs text-muted-foreground">
+                {label('remaining').replace('{count}', numbers.number(lastAnswer.remainingQuota))}
+              </p>
+            )
           }
         >
-          {turns.length > 0 && promptChips}
-          <button
-            type="button"
-            disabled={denied || busy || form.pending || !!retry}
-            className="text-start text-sm font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
-            onClick={() => void showAccountStatus()}
-          >
-            {label('account.action')}
-          </button>
+          <div className="flex flex-wrap items-start justify-between gap-x-3">
+            <button
+              type="button"
+              disabled={denied || busy || form.pending || !!retry}
+              className="inline-flex min-h-9 items-center gap-1.5 text-start text-xs font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50 sm:text-sm pointer-coarse:min-h-[45px]"
+              onClick={() => void showAccountStatus()}
+            >
+              <Wallet className="size-4" aria-hidden="true" />
+              {label('account.action')}
+            </button>
+            {turns.length > 0 && promptChips}
+          </div>
         </ChatInput>
       </form>
     </>
@@ -636,19 +650,24 @@ function OwnedKnowledgeAssistantPanel({
   if (embedded)
     return (
       <section
-        className="flex h-[calc(100dvh-12rem)] min-h-[32rem] max-h-[56rem] flex-col overflow-hidden rounded-2xl border bg-card shadow-sm"
+        className="flex h-[calc(100dvh-12rem)] min-h-[35rem] max-h-[56rem] flex-col overflow-hidden rounded-xl border bg-card shadow-sm"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         aria-label={label('title')}
       >
-        <header className="border-b bg-muted/35 px-5 py-5">
-          <div className="mb-2 flex items-center gap-2 text-primary">
-            <BookOpenText className="size-5" aria-hidden="true" />
-            <span className="text-xs font-semibold tracking-wide">
-              {label(slotKey === 'legal_entity_chatbot' ? 'legal' : 'individual')}
-            </span>
+        <header className="shrink-0 border-b bg-muted/25 px-4 py-3 sm:px-5">
+          <div className="flex flex-wrap items-center justify-between gap-x-3">
+            <h1 className="flex items-center gap-2 text-lg font-semibold">
+              <BookOpenText className="size-4 shrink-0 text-primary" aria-hidden="true" />
+              {label('title')}
+            </h1>
+            <Link to="/tickets/new" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+              <MessageSquareText aria-hidden="true" />
+              {serviceFeedback('support', locale)}
+            </Link>
           </div>
-          <h1 className="text-xl font-semibold">{label('title')}</h1>
-          <p className="max-w-prose text-sm leading-6 text-muted-foreground">{label('scope')}</p>
+          <p className="mt-1 max-w-prose text-sm leading-relaxed text-muted-foreground">
+            {label('scope')}
+          </p>
         </header>
         {conversation}
       </section>
@@ -661,15 +680,14 @@ function OwnedKnowledgeAssistantPanel({
         closeLabel={label('close')}
         className="w-full gap-0 sm:max-w-lg"
       >
-        <SheetHeader className="border-b bg-muted/35 px-5 py-5 pe-14">
-          <div className="mb-2 flex items-center gap-2 text-primary">
-            <BookOpenText className="size-5" aria-hidden="true" />
-            <span className="text-xs font-semibold tracking-wide">
-              {label(slotKey === 'legal_entity_chatbot' ? 'legal' : 'individual')}
-            </span>
-          </div>
-          <SheetTitle className="text-lg font-semibold">{label('title')}</SheetTitle>
-          <SheetDescription className="max-w-prose leading-6">{label('scope')}</SheetDescription>
+        <SheetHeader className="shrink-0 gap-1 border-b bg-muted/25 px-4 py-3 pe-14 sm:px-5 sm:pe-14">
+          <SheetTitle className="flex items-center gap-2 text-lg font-semibold">
+            <BookOpenText className="size-4 shrink-0 text-primary" aria-hidden="true" />
+            {label('title')}
+          </SheetTitle>
+          <SheetDescription className="max-w-prose leading-relaxed">
+            {label('scope')}
+          </SheetDescription>
         </SheetHeader>
         {conversation}
       </SheetContent>

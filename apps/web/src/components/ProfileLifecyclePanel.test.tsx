@@ -132,7 +132,7 @@ it('retries only the saved export ticket after a confirmed request and links its
   expect(submitted[0]?.type).toBe('export');
   expect(submitted[0]?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
   expect(exports).toBe(2);
-  expect(container.querySelector(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeTruthy();
+  expect(container.querySelector(`a[href="/tickets/${ticketId}"]`)).toBeTruthy();
 });
 
 it('shows live export progress beside its support request', async () => {
@@ -174,7 +174,7 @@ it('shows live export progress beside its support request', async () => {
     await Promise.resolve();
   });
   expect(container.textContent).toContain('Queued');
-  expect(container.querySelector(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeTruthy();
+  expect(container.querySelector(`a[href="/tickets/${ticketId}"]`)).toBeTruthy();
 });
 
 it('holds the original create key, locale and type across an unknown response and language change', async () => {

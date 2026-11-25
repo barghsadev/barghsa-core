@@ -27,9 +27,18 @@ import {
 import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
 import { ContractDraftChoices } from './ContractDraftChoices.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
+import { RecordEditorSection, recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from './StickyRecordEditorActions.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 export default function DraftForm({
   existing,
   amendment,
+  recordPage = false,
   onSaved,
   coordination,
   onLocked,
@@ -37,6 +46,7 @@ export default function DraftForm({
 }: {
   existing?: ExistingContractDraft | undefined;
   amendment: boolean;
+  recordPage?: boolean;
   onSaved: (id: string) => void;
   coordination?: ContractFormCoordination | undefined;
   onLocked?: ((locked: boolean) => void) | undefined;
@@ -45,6 +55,7 @@ export default function DraftForm({
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale),
     copy = (key: string) => tContractAuthoring(key, locale);
+  const numbers = useNumberFormatting(locale);
   const actor = useAccountUser(),
     profileRevision = useProfileContextRevision();
   const original = existing?.version.content ?? {},
@@ -189,7 +200,8 @@ export default function DraftForm({
       | 'commercialValueAmountIrr'
       | 'commercialValueDescription',
     label: string,
-    help?: string
+    help?: string,
+    example?: string
   ) {
     const required = !existing || (name !== 'title' && name !== 'text');
     return (
@@ -197,7 +209,7 @@ export default function DraftForm({
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem id={'contract-draft-' + name}>
+          <FormItem id={'contract-draft-' + name} className={recordEditorField}>
             <FormLabel>{word(label)}</FormLabel>
             <FormControl>
               {name === 'title' || name === 'commercialValueAmountIrr' ? (
@@ -217,7 +229,10 @@ export default function DraftForm({
                 <Textarea
                   {...field}
                   aria-required={required || undefined}
-                  rows={name === 'text' ? 8 : 3}
+                  dir="auto"
+                  rows={name === 'text' ? 5 : 2}
+                  className={`resize-y placeholder-shown:[direction:inherit] ${name === 'text' ? 'min-h-24 max-h-72' : 'min-h-14'}`}
+                  placeholder={example ? copy(example) : undefined}
                   disabled={
                     command.frozen ||
                     (name === 'text' &&
@@ -242,38 +257,46 @@ export default function DraftForm({
     );
   return (
     <>
+      {recordPage && <RecordCommandGuard blocked={command.navigationBlocked} />}
       <Form {...form}>
         <form
           data-testid="contract-draft-form"
           noValidate
           onSubmit={(event) => void save(event)}
-          className="flex flex-col gap-4 rounded-xl border p-4"
+          className={recordEditorFormSurface}
+          onFocus={keepRecordFieldVisible}
           aria-label={word(amendment ? 'amendmentCreate' : existing ? 'draftEdit' : 'draftCreate')}
         >
-          <p className="text-sm text-muted-foreground">
-            {word(amendment ? 'amendmentCreateNotice' : 'draftSaveNotice')}
-          </p>
           {existing ? (
-            <>
-              <p>{word(amendment ? 'amendmentBaseNotice' : 'draftPreserveNotice')}</p>
-              {((original.title !== undefined && typeof original.title !== 'string') ||
-                (original.text !== undefined && typeof original.text !== 'string')) && (
-                <p>{word('draftStructuredNotice')}</p>
-              )}
-            </>
+            <RecordEditorSection
+              title={copy('sourceContract')}
+              description={word(amendment ? 'amendmentBaseNotice' : 'draftPreserveNotice')}
+            >
+              <dl className={recordEditorGrid}>
+                <div>
+                  <dt className="text-sm text-muted-foreground">{word('contractNumber')}</dt>
+                  <dd className="break-all font-medium">
+                    <bdi>{existing.contract.contractNumber || existing.contract.id}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted-foreground">{word('version')}</dt>
+                  <dd className="font-medium">{numbers.number(existing.version.versionNumber)}</dd>
+                </div>
+              </dl>
+            </RecordEditorSection>
           ) : (
-            <>
+            <RecordEditorSection title={copy('customerAndService')}>
               <FormField
                 control={form.control}
                 name="profileId"
                 render={({ field }) => (
                   <FormItem id="contract-draft-profile">
-                    <FormLabel>{word('draftProfile')}</FormLabel>
                     <FormControl>
                       <ContractDraftChoices
                         {...field}
                         aria-required="true"
-                        labelled
+                        label={<FormLabel>{word('draftProfile')}</FormLabel>}
                         disabled={command.frozen}
                         coordination={coordination}
                         blocked={command.blocked}
@@ -297,118 +320,144 @@ export default function DraftForm({
                   </FormItem>
                 )}
               />
+              <div className={recordEditorGrid}>
+                <FormField
+                  control={form.control}
+                  name="serviceType"
+                  render={({ field }) => (
+                    <FormItem id="contract-draft-service">
+                      <FormLabel>{word('serviceType')}</FormLabel>
+                      <FormControl>
+                        <NativeSelect
+                          {...field}
+                          className="w-full"
+                          aria-required="true"
+                          disabled={command.frozen}
+                          onChange={(event) => {
+                            if (command.blocked()) return;
+                            field.onChange(event);
+                            form.setValue('orderId', '');
+                            orders.current = [];
+                          }}
+                        >
+                          {['electricity', 'savings', 'solar'].map((value) => (
+                            <option key={value} value={value}>
+                              {word(value)}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {values.profileId && (
+                  <FormField
+                    control={form.control}
+                    name="orderId"
+                    render={({ field }) => (
+                      <FormItem id="contract-draft-order">
+                        <FormControl>
+                          <ContractDraftChoices
+                            {...field}
+                            key={values.profileId + ':' + values.serviceType}
+                            profileId={values.profileId}
+                            serviceType={values.serviceType}
+                            label={<FormLabel>{word('draftOrder')}</FormLabel>}
+                            disabled={command.frozen}
+                            coordination={coordination}
+                            blocked={command.blocked}
+                            onDenied={() => {
+                              form.reset();
+                              profiles.current = [];
+                              orders.current = [];
+                            }}
+                            onOptions={(ids) => {
+                              orders.current = ids;
+                            }}
+                            onChange={(id) => {
+                              if (!command.blocked()) field.onChange(id);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </div>
+            </RecordEditorSection>
+          )}
+          <RecordEditorSection title={copy('termsSection')}>
+            {((original.title !== undefined && typeof original.title !== 'string') ||
+              (original.text !== undefined && typeof original.text !== 'string')) && (
+              <p className="text-sm text-muted-foreground">{word('draftStructuredNotice')}</p>
+            )}
+            {textField('title', 'titleField')}
+            {textField('text', 'draftTerms', undefined, 'termsExample')}
+          </RecordEditorSection>
+          <RecordEditorSection
+            title={copy('contractValue')}
+            description={word('commercialValueNotice')}
+          >
+            <div
+              className={values.commercialValueKind === 'fixed' ? recordEditorGrid : 'space-y-2.5'}
+            >
               <FormField
                 control={form.control}
-                name="serviceType"
+                name="commercialValueKind"
                 render={({ field }) => (
-                  <FormItem id="contract-draft-service">
-                    <FormLabel>{word('serviceType')}</FormLabel>
+                  <FormItem id="contract-draft-value-kind">
+                    <FormLabel>{word('statedContractValue')}</FormLabel>
                     <FormControl>
-                      <NativeSelect
-                        {...field}
-                        aria-required="true"
-                        disabled={command.frozen}
-                        onChange={(event) => {
-                          if (command.blocked()) return;
-                          field.onChange(event);
-                          form.setValue('orderId', '');
-                          orders.current = [];
-                        }}
-                      >
-                        {['electricity', 'savings', 'solar'].map((value) => (
-                          <option key={value} value={value}>
-                            {word(value)}
+                      <NativeSelect {...field} className="w-full" disabled={command.frozen}>
+                        {values.commercialValueKind === 'unsupported' && (
+                          <option value="unsupported" disabled>
+                            {word('unsupportedContractValue')}
                           </option>
-                        ))}
+                        )}
+                        <option value="unstated">{word('noValue')}</option>
+                        <option value="fixed">{word('fixedContractValue')}</option>
+                        <option value="variable">{word('variableContractValue')}</option>
                       </NativeSelect>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {values.profileId && (
-                <FormField
-                  control={form.control}
-                  name="orderId"
-                  render={({ field }) => (
-                    <FormItem id="contract-draft-order">
-                      <FormLabel>{word('draftOrder')}</FormLabel>
-                      <FormControl>
-                        <ContractDraftChoices
-                          {...field}
-                          key={values.profileId + ':' + values.serviceType}
-                          profileId={values.profileId}
-                          serviceType={values.serviceType}
-                          labelled
-                          disabled={command.frozen}
-                          coordination={coordination}
-                          blocked={command.blocked}
-                          onDenied={() => {
-                            form.reset();
-                            profiles.current = [];
-                            orders.current = [];
-                          }}
-                          onOptions={(ids) => {
-                            orders.current = ids;
-                          }}
-                          onChange={(id) => {
-                            if (!command.blocked()) field.onChange(id);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-            </>
-          )}
-          <p className="text-sm text-muted-foreground">{word('commercialValueNotice')}</p>
-          {textField('title', 'titleField')}
-          {textField('text', 'draftTerms')}
-          <FormField
-            control={form.control}
-            name="commercialValueKind"
-            render={({ field }) => (
-              <FormItem id="contract-draft-value-kind">
-                <FormLabel>{word('statedContractValue')}</FormLabel>
-                <FormControl>
-                  <NativeSelect {...field} disabled={command.frozen}>
-                    {values.commercialValueKind === 'unsupported' && (
-                      <option value="unsupported" disabled>
-                        {word('unsupportedContractValue')}
-                      </option>
-                    )}
-                    <option value="unstated">{word('noValue')}</option>
-                    <option value="fixed">{word('fixedContractValue')}</option>
-                    <option value="variable">{word('variableContractValue')}</option>
-                  </NativeSelect>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              {values.commercialValueKind === 'fixed' &&
+                textField('commercialValueAmountIrr', 'fixedContractAmount', 'amountHelp')}
+              {values.commercialValueKind === 'variable' &&
+                textField(
+                  'commercialValueDescription',
+                  'variableContractDescription',
+                  'descriptionHelp',
+                  'variableExample'
+                )}
+            </div>
+          </RecordEditorSection>
+          <RecordEditorSection
+            title={copy('reviewSection')}
+            description={word(
+              amendment
+                ? 'amendmentCreateNotice'
+                : existing?.contract.state === 'ChangesRequested'
+                  ? 'contextResubmitNotice'
+                  : 'draftSaveNotice'
             )}
-          />
-          {values.commercialValueKind === 'fixed' &&
-            textField('commercialValueAmountIrr', 'fixedContractAmount', 'amountHelp')}
-          {values.commercialValueKind === 'variable' &&
-            textField(
-              'commercialValueDescription',
-              'variableContractDescription',
-              'descriptionHelp'
-            )}
-          {textField('changeDescription', 'contextReason', 'reasonHelp')}
-          {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
-          {existing?.contract.state === 'ChangesRequested' && !amendment && (
-            <p>{word('contextResubmitNotice')}</p>
-          )}
-          <Button
-            type="submit"
-            className="self-start"
-            loading={command.preparing}
-            disabled={!changed || command.locked || !!coordination?.blocked()}
           >
-            {word(amendment ? 'amendmentReview' : 'draftReview')}
-          </Button>
+            {textField('changeDescription', 'contextReason', 'reasonHelp', 'reasonExample')}
+            {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
+          </RecordEditorSection>
+          <StickyRecordEditorActions>
+            <Button
+              type="submit"
+              loading={command.preparing}
+              disabled={!changed || command.locked || !!coordination?.blocked()}
+            >
+              {word(amendment ? 'amendmentReview' : 'draftReview')}
+            </Button>
+          </StickyRecordEditorActions>
         </form>
       </Form>
       {command.failed && (

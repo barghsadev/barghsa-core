@@ -374,7 +374,10 @@ export class VerificationCaseController {
       );
     }
 
-    return result;
+    return {
+      ...result,
+      viewer: { userId: req.session.userId, canReview: hasStaffPermission(req, 'crm:verify') },
+    };
   }
 
   /**

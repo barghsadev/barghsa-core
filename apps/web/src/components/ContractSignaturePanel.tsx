@@ -1,11 +1,19 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
+import { Link } from '@tanstack/react-router';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Alert, AlertDescription, Button, NativeSelect, PageLoading } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  ListRefreshButton,
+  NativeSelect,
+  PageLoading,
+  buttonVariants,
+} from '@barghsa/ui';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,6 +46,8 @@ import {
   type SignatureRecordDraft,
 } from '../lib/contract-review-signature-form.js';
 import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
+import { CompactFieldFeedback } from './CompactFieldFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 import type { TeamAction } from './TeamActionDialog.js';
 
 function documentsPath(
@@ -80,6 +90,7 @@ export function ContractSignaturePanel({
   onDenied,
   coordination,
   source,
+  navigation,
 }: {
   id: string;
   versionId: string;
@@ -90,6 +101,11 @@ export function ContractSignaturePanel({
   onDenied?: () => void;
   coordination?: ContractFormCoordination;
   source?: ContractSigningSource;
+  navigation?: {
+    search: Record<string, unknown>;
+    operation?: 'request' | 'record';
+    recordInSummary?: boolean;
+  };
 }) {
   const locale = useLocale(),
     time = useAccountTime(),
@@ -97,6 +113,9 @@ export function ContractSignaturePanel({
     profileRevision = useProfileContextRevision();
   const word = (key: string) => contractText(key, locale),
     copy = (key: string) => tContractReviewSignature(key, locale);
+  const operation = navigation?.operation;
+  const requestFormVisible = !navigation || operation === 'request';
+  const recordFormVisible = !navigation || operation === 'record';
   const scopeKey = JSON.stringify([
     actor,
     profileRevision,
@@ -108,6 +127,8 @@ export function ContractSignaturePanel({
     source?.version.versionNumber,
     source?.version.content,
     source?.version.publishedAt,
+    operation,
+    !!navigation,
   ]);
   const readContract = useOwnedContractRead(actor, profileRevision, profileId, scopeKey);
   const scope = useRef(scopeKey),
@@ -132,6 +153,7 @@ export function ContractSignaturePanel({
   const [error, setError] = useState(false),
     [moreError, setMoreError] = useState(false),
     [action, setAction] = useState<TeamAction | null>(null);
+  const [completed, setCompleted] = useState(false);
   const [uncertain, setUncertain] = useState(false),
     [preparing, setPreparing] = useState(false),
     preparingRef = useRef(false);
@@ -206,6 +228,7 @@ export function ContractSignaturePanel({
     setNext(null);
     setAction(null);
     setUncertain(false);
+    setCompleted(false);
     setLoading(false);
     setError(true);
     requestForm.reset({ originalDocumentId: '' });
@@ -228,6 +251,7 @@ export function ContractSignaturePanel({
     command.current = null;
     setAction(null);
     setUncertain(false);
+    setCompleted(false);
     requestForm.reset({ originalDocumentId: '' });
     recordForm.reset({ signedDocumentId: '', acknowledged: false });
     preparingRef.current = false;
@@ -271,7 +295,7 @@ export function ContractSignaturePanel({
         if (!view || view.contractId !== id || view.versionId !== versionId)
           throw new Error('signature');
         const page =
-          view.canRequest || view.canRecord
+          (requestFormVisible && view.canRequest) || (recordFormVisible && view.canRecord)
             ? signatureDocumentPage(
                 await readContract<unknown>(documentsPath(id, versionId, profileId, staff), {
                   signal: abort.signal,
@@ -423,7 +447,8 @@ export function ContractSignaturePanel({
       !actor ||
       !shown ||
       !view ||
-      (request ? !view.canRequest : !view.canRecord)
+      completed ||
+      (request ? !requestFormVisible || !view.canRequest : !recordFormVisible || !view.canRecord)
     )
       return;
     if (callbacks.current.coordination && !callbacks.current.coordination.acquire(owner.current))
@@ -503,7 +528,10 @@ export function ContractSignaturePanel({
       const captured: Command = {
         action: {
           title: word(request ? 'prepareSignature' : 'recordSignature'),
-          description: word('signatureNotice') + ' ' + selected.originalName,
+          description:
+            (request ? copy('signatureRequestHelp') : word('signatureNotice')) +
+            ' ' +
+            selected.originalName,
           path:
             contractBase(staff) + '/' + id + '/' + (request ? 'signature-request' : 'signature'),
           method: 'POST',
@@ -543,25 +571,86 @@ export function ContractSignaturePanel({
     locked = !!captured;
   const originals = data ? signingDocuments(documents, data, profileId, true) : [],
     signed = data ? signingDocuments(documents, data, profileId, false) : [];
+  const requestLinkVisible = navigation && !operation && data?.canRequest;
+  const recordLinkVisible =
+    navigation &&
+    !navigation.recordInSummary &&
+    (!operation || (completed && operation === 'request')) &&
+    data?.canRecord;
+  const recordLocation = staff
+    ? ({
+        to: '/admin/contracts/$contractId/{-$action}/{-$item}',
+        params: { contractId: id, action: undefined, item: undefined },
+      } as const)
+    : ({
+        to: '/contracts/$contractId/{-$action}',
+        params: { contractId: id, action: undefined },
+      } as const);
+  const signatureLink = (request: boolean) => (
+    <Link
+      {...(staff
+        ? {
+            to: '/admin/contracts/$contractId/{-$action}/{-$item}' as const,
+            params: {
+              contractId: id,
+              action: request ? 'signature-request' : 'record-signature',
+              item: versionId,
+            },
+          }
+        : {
+            to: '/contracts/$contractId/$operation/$versionId' as const,
+            params: { contractId: id, operation: 'record-signature', versionId },
+          })}
+      search={navigation?.search ?? {}}
+      className={buttonVariants({
+        size: 'sm',
+        variant: request && data?.canRecord ? 'outline' : 'default',
+      })}
+      aria-disabled={locked || preparing || coordination?.blocked() || undefined}
+      onClick={(event) => {
+        if (blocked()) event.preventDefault();
+      }}
+    >
+      {word(request ? 'prepareSignature' : 'recordSignature')}
+    </Link>
+  );
+  function fileDetails(doc: BusinessDocument | undefined) {
+    if (!operation || !doc) return null;
+    return (
+      <p className="rounded-md bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+        {doc.detectedMime && (
+          <>
+            <bdi>{doc.detectedMime.split('/').at(-1)?.toUpperCase()}</bdi> ·{' '}
+          </>
+        )}
+        {copy('selectedFileDate').replace(
+          '{date}',
+          time.format(doc.createdAt, { dateStyle: 'medium' })
+        )}
+      </p>
+    );
+  }
   return (
     <section
       id="contract-signature"
-      className="flex flex-col gap-4 rounded-lg border p-4"
+      className="flex min-w-0 scroll-mt-28 flex-col gap-3 rounded-xl border bg-card p-4 sm:p-5"
       aria-label={word('signatureTitle')}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-semibold">{word('signatureTitle')}</h3>
-        <Button
-          variant="ghost"
+      <header className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          {!operation && <h3 className="text-base font-semibold">{word('signatureTitle')}</h3>}
+          <p className="text-sm text-muted-foreground">
+            {operation === 'request' ? copy('signatureRequestHelp') : word('signatureNotice')}
+          </p>
+        </div>
+        <ListRefreshButton
+          label={word('refresh')}
           disabled={locked || preparing || coordination?.blocked()}
           onClick={() => {
             if (!blocked()) setReload((value) => value + 1);
           }}
-        >
-          {word('refresh')}
-        </Button>
-      </div>
-      <p className="text-sm text-muted-foreground">{word('signatureNotice')}</p>
+        />
+      </header>
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{word('error')}</AlertDescription>
@@ -572,151 +661,219 @@ export function ContractSignaturePanel({
       ) : (
         <>
           {data.request ? (
-            <div>
-              <p>
-                {word('signatureRequest')} {data.request.requestNumber.toLocaleString(locale)}:{' '}
-                {data.request.originalName}
-              </p>
-              <p className="text-sm">
-                {time.format(data.request.requestedAt)}:{' '}
-                {documentText(data.request.documentState, locale)}
+            <div className="grid gap-1 rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <p className="font-medium">
+                  {word('signatureRequest')} {data.request.requestNumber.toLocaleString(locale)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {documentText(data.request.documentState, locale)} ·{' '}
+                  <bdi>{time.format(data.request.requestedAt)}</bdi>
+                </p>
+              </div>
+              <p className="wrap-anywhere">
+                <bdi>{data.request.originalName}</bdi>
               </p>
             </div>
           ) : (
-            <p>{word('noSignatureRequest')}</p>
+            <p className="text-sm text-muted-foreground">{word('noSignatureRequest')}</p>
           )}
           {data.signature ? (
-            <div role="status">
-              <p>
-                {word('signatureRecorded')}: {data.signature.originalName}
+            <div role="status" className="space-y-1 rounded-lg border px-3 py-2.5 text-sm">
+              <p className="font-medium">{word('signatureRecorded')}</p>
+              <p className="wrap-anywhere">
+                <bdi>{data.signature.originalName}</bdi>
               </p>
-              <p>{time.format(data.signature.recordedAt)}</p>
-              <p>
-                {word('recordedBy')}: {word(data.signature.recordedByType)}
-              </p>
-              <p>
-                {word('uploadedBy')}: {word(data.signature.uploadedByType)}
-              </p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <bdi>{time.format(data.signature.recordedAt)}</bdi>
+                <span>
+                  {word('recordedBy')}: {word(data.signature.recordedByType)}
+                </span>
+                <span>
+                  {word('uploadedBy')}: {word(data.signature.uploadedByType)}
+                </span>
+              </div>
             </div>
           ) : null}
-          {data.canRequest && (
+          {(requestLinkVisible || recordLinkVisible) && (
+            <div className="flex flex-wrap gap-2">
+              {requestLinkVisible && signatureLink(true)}
+              {recordLinkVisible && signatureLink(false)}
+            </div>
+          )}
+          {operation &&
+            !completed &&
+            !(operation === 'request' ? data.canRequest : data.canRecord) && (
+              <p role="status" className="text-sm text-muted-foreground">
+                {copy('signatureActionUnavailable')}
+              </p>
+            )}
+          {requestFormVisible && data.canRequest && !completed && (
             <Form {...requestForm}>
               <form
                 data-testid="contract-signature-request-form"
                 noValidate
                 onSubmit={(event) => void choose(event, true)}
-                className="space-y-3"
+                className={recordEditorSurface}
               >
-                <FormField
-                  control={requestForm.control}
-                  name="originalDocumentId"
-                  render={({ field }) => (
-                    <FormItem id="signature-original">
-                      <FormLabel>{word('approvedOriginal')}</FormLabel>
-                      <FormControl>
-                        <NativeSelect {...field} aria-required="true" disabled={locked}>
-                          <option value="">{word('selectDocument')}</option>
-                          {originals.map((doc) => (
-                            <option key={doc.id} value={doc.id}>
-                              {doc.originalName}
-                            </option>
-                          ))}
-                        </NativeSelect>
-                      </FormControl>
-                      <FormDescription>{copy('documentHelp')}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
+                <div className="space-y-2.5 px-4 py-3.5 sm:px-6">
+                  <FormField
+                    control={requestForm.control}
+                    name="originalDocumentId"
+                    render={({ field, fieldState }) => (
+                      <FormItem id="signature-original">
+                        <FormLabel>{word('approvedOriginal')}</FormLabel>
+                        <FormControl>
+                          <NativeSelect
+                            {...field}
+                            className="w-full"
+                            aria-required="true"
+                            disabled={locked}
+                          >
+                            <option value="">{word('selectDocument')}</option>
+                            {originals.map((doc) => (
+                              <option key={doc.id} value={doc.id}>
+                                {doc.originalName}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                        </FormControl>
+                        {fileDetails(originals.find((doc) => doc.id === field.value))}
+                        <CompactFieldFeedback
+                          help={copy(originals.length ? 'documentHelp' : 'noOriginal')}
+                          validationMessage={copy('documentInvalid')}
+                          invalid={fieldState.invalid}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                  {requestForm.formState.errors.root && (
+                    <p role="alert">{copy('validationUnavailable')}</p>
                   )}
-                />
-                {requestForm.formState.errors.root && (
-                  <p role="alert">{copy('validationUnavailable')}</p>
-                )}
-                <Button
-                  type="submit"
-                  loading={preparing}
-                  disabled={locked || preparing || loading || coordination?.blocked()}
-                >
-                  {word('prepareSignature')}
-                </Button>
+                </div>
+                <RecordEditorActions>
+                  <Button
+                    type="submit"
+                    variant={data.request ? 'outline' : 'default'}
+                    loading={preparing}
+                    disabled={locked || preparing || loading || coordination?.blocked()}
+                  >
+                    {word('prepareSignature')}
+                  </Button>
+                </RecordEditorActions>
               </form>
             </Form>
           )}
-          {data.canRecord && (
+          {recordFormVisible && data.canRecord && !completed && (
             <Form {...recordForm}>
               <form
                 data-testid="contract-signature-record-form"
                 noValidate
                 onSubmit={(event) => void choose(event, false)}
-                className="space-y-3"
+                className={recordEditorSurface}
               >
-                <FormField
-                  control={recordForm.control}
-                  name="signedDocumentId"
-                  render={({ field }) => (
-                    <FormItem id="signature-signed">
-                      <FormLabel>{word('approvedSigned')}</FormLabel>
-                      <FormControl>
-                        <NativeSelect
-                          {...field}
-                          aria-required="true"
-                          disabled={locked}
-                          onChange={(event) => {
-                            field.onChange(event);
-                            recordForm.setValue('acknowledged', false, { shouldDirty: true });
-                          }}
-                        >
-                          <option value="">{word('selectDocument')}</option>
-                          {signed.map((doc) => (
-                            <option key={doc.id} value={doc.id}>
-                              {doc.originalName}
-                            </option>
-                          ))}
-                        </NativeSelect>
-                      </FormControl>
-                      <FormDescription>{copy('documentHelp')}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={recordForm.control}
-                  name="acknowledged"
-                  render={({ field }) => (
-                    <FormItem id="signature-acknowledgement">
-                      <FormLabel className="touch-action">
-                        {word('signatureAcknowledgement')}
-                      </FormLabel>
-                      <FormControl>
-                        <input
-                          type="checkbox"
-                          aria-required="true"
-                          name={field.name}
-                          ref={field.ref}
-                          checked={field.value}
-                          onBlur={field.onBlur}
-                          onChange={(event) => field.onChange(event.target.checked)}
-                          disabled={locked}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {recordForm.formState.errors.root && (
-                  <p role="alert">{copy('validationUnavailable')}</p>
-                )}
-                <Button
-                  type="submit"
-                  loading={preparing}
-                  disabled={locked || preparing || loading || coordination?.blocked()}
+                <div
+                  className={`grid min-w-0 gap-3 px-4 py-3.5 sm:px-6 ${operation ? '' : 'lg:grid-cols-2'}`}
                 >
-                  {word('recordSignature')}
-                </Button>
+                  <FormField
+                    control={recordForm.control}
+                    name="signedDocumentId"
+                    render={({ field, fieldState }) => (
+                      <FormItem id="signature-signed">
+                        <FormLabel>{word('approvedSigned')}</FormLabel>
+                        <FormControl>
+                          <NativeSelect
+                            {...field}
+                            className="w-full"
+                            aria-required="true"
+                            disabled={locked}
+                            onChange={(event) => {
+                              field.onChange(event);
+                              recordForm.setValue('acknowledged', false, { shouldDirty: true });
+                            }}
+                          >
+                            <option value="">{word('selectDocument')}</option>
+                            {signed.map((doc) => (
+                              <option key={doc.id} value={doc.id}>
+                                {doc.originalName}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                        </FormControl>
+                        {fileDetails(signed.find((doc) => doc.id === field.value))}
+                        <CompactFieldFeedback
+                          help={copy(signed.length ? 'documentHelp' : 'noSignedCopy')}
+                          validationMessage={copy('documentInvalid')}
+                          invalid={fieldState.invalid}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={recordForm.control}
+                    name="acknowledged"
+                    render={({ field }) => (
+                      <FormItem id="signature-acknowledgement">
+                        <FormLabel className="touch-label flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg bg-muted/40 px-3 py-2">
+                          <FormControl>
+                            <input
+                              type="checkbox"
+                              aria-required="true"
+                              name={field.name}
+                              ref={field.ref}
+                              checked={field.value}
+                              onBlur={field.onBlur}
+                              onChange={(event) => field.onChange(event.target.checked)}
+                              disabled={locked}
+                              className="size-4 shrink-0 accent-primary"
+                            />
+                          </FormControl>
+                          <span>{word('signatureAcknowledgement')}</span>
+                        </FormLabel>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {recordForm.formState.errors.root && (
+                    <p role="alert" className="col-span-full">
+                      {copy('validationUnavailable')}
+                    </p>
+                  )}
+                </div>
+                <RecordEditorActions>
+                  <Button
+                    type="submit"
+                    loading={preparing}
+                    disabled={locked || preparing || loading || coordination?.blocked()}
+                  >
+                    {word('recordSignature')}
+                  </Button>
+                </RecordEditorActions>
               </form>
             </Form>
           )}
-          {data.canRequest || data.canRecord ? (
-            <p className="text-sm text-muted-foreground">{word('signatureDocumentHint')}</p>
+          {operation && !completed && !locked && !preparing ? (
+            <Link
+              {...recordLocation}
+              search={{ ...navigation?.search, versionId }}
+              hash="contract-documents"
+              className="touch-action inline-flex w-fit items-center text-sm font-medium text-primary underline underline-offset-4"
+              onClick={(event) => {
+                if (blocked()) event.preventDefault();
+              }}
+            >
+              {word('documents')}
+            </Link>
+          ) : !operation && (data.canRequest || data.canRecord) && !locked && !preparing ? (
+            <a
+              href="#contract-documents"
+              className="touch-action inline-flex w-fit items-center text-sm font-medium text-primary underline underline-offset-4"
+              onClick={(event) => {
+                if (blocked()) event.preventDefault();
+              }}
+            >
+              {word('documents')}
+            </a>
           ) : null}
           {moreError ? <p role="alert">{word('error')}</p> : null}
           {next ? (
@@ -783,6 +940,7 @@ export function ContractSignaturePanel({
             command.current = null;
             setAction(null);
             setUncertain(false);
+            if (operation) setCompleted(true);
             release();
             if (captured.request) requestForm.reset({ originalDocumentId: '' });
             else recordForm.reset({ signedDocumentId: '', acknowledged: false });

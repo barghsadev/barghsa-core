@@ -7,7 +7,8 @@ export interface SupportListQuery {
   selected: string | null;
   select: (id: string | null, replace?: boolean) => void;
 }
-export interface ConsultationListQuery extends SupportListQuery {
+export interface ConsultationListQuery
+  extends Pick<SupportListQuery, 'queue'>, Partial<Omit<SupportListQuery, 'queue'>> {
   setFilters: (filters: Record<string, string>) => void;
 }
 export const ticketQueryOptions: ListQueryOptions = {
@@ -51,28 +52,65 @@ export const consultationQueryOptions: ListQueryOptions = {
   },
   pagination: 'cursor',
 };
-export function ticketsSearch(raw: Record<string, unknown>, customer = false) {
+export function staffTicketFilters(raw: Record<string, unknown>) {
   const normalized = writeListQuery(raw, ticketQueryOptions, {});
   return {
     q: normalized.q,
     order: normalized.order,
     status: normalized.status,
     page: normalized.page,
-    ticketId: staffOrderId(raw.ticketId) || undefined,
-    ...(customer ? { scope: raw.scope === 'active' ? ('active' as const) : undefined } : {}),
   };
 }
-export const staffTicketsSearch = (raw: Record<string, unknown>) => ticketsSearch(raw);
-export const customerTicketsSearch = (raw: Record<string, unknown>) => ticketsSearch(raw, true);
-export function consultationSearch(raw: Record<string, unknown>) {
+export function staffTicketsSearch(raw: Record<string, unknown>) {
+  return { ...staffTicketFilters(raw), ticketId: staffOrderId(raw.ticketId) || undefined };
+}
+export function customerTicketsSearch(raw: Record<string, unknown>) {
+  return { ...customerTicketFilters(raw), ticketId: staffOrderId(raw.ticketId) || undefined };
+}
+export function customerTicketFilters(raw: Record<string, unknown>) {
+  return {
+    ...staffTicketFilters(raw),
+    scope: raw.scope === 'active' ? ('active' as const) : undefined,
+  };
+}
+export type CustomerTicketFilters = ReturnType<typeof customerTicketFilters>;
+export type TicketListFilters = ReturnType<typeof staffTicketFilters> &
+  Partial<Pick<CustomerTicketFilters, 'scope'>>;
+export type TicketRelatedRecord = {
+  relatedType: 'order' | 'invoice' | 'contract';
+  relatedId: string;
+};
+export function newTicketSearch(raw: Record<string, unknown>) {
+  return { ...customerTicketFilters(raw), ...ticketRelatedRecord(raw) };
+}
+export function ticketRelatedRecord(raw: Record<string, unknown>): TicketRelatedRecord | undefined {
+  const relatedId = staffOrderId(raw.relatedId);
+  const relatedType = raw.relatedType;
+  if (
+    relatedId &&
+    (relatedType === 'order' || relatedType === 'invoice' || relatedType === 'contract')
+  )
+    return { relatedType, relatedId };
+  return undefined;
+}
+export function consultationFilters(raw: Record<string, unknown>) {
   const normalized = writeListQuery(
-    { ...raw, cursor: staffOrderId(raw.cursor) },
+    { ...raw, cursor: staffOrderId(raw.cursor).toLowerCase() },
     consultationQueryOptions,
     {}
   );
-  return Object.fromEntries([
-    ...Object.keys(consultationQueryOptions.filters).map((key) => [key, normalized[key]]),
-    ['cursor', normalized.cursor],
-    ['requestId', staffOrderId(raw.requestId) || undefined],
-  ]);
+  return {
+    status: normalized.status,
+    assignment: normalized.assignment,
+    priority: normalized.priority,
+    minAgeDays: normalized.minAgeDays,
+    cursor: normalized.cursor,
+  };
 }
+export function consultationSearch(raw: Record<string, unknown>) {
+  return {
+    ...consultationFilters(raw),
+    requestId: staffOrderId(raw.requestId).toLowerCase() || undefined,
+  };
+}
+export type ConsultationFilters = ReturnType<typeof consultationFilters>;

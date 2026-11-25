@@ -54,6 +54,12 @@ const savedAddress = {
   postalCode: '1234567890',
   mainAddress: true,
 };
+const secondaryAddress = {
+  ...savedAddress,
+  id: 'address-2',
+  postalCode: '2345678901',
+  mainAddress: false,
+};
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -61,9 +67,13 @@ afterEach(() => {
   router.listeners.clear();
 });
 
-it.each(['fa', 'en'] as const)(
-  'shows conditional solar intake fields and stages in %s',
-  async (locale) => {
+it.each([
+  { locale: 'fa', hasMainAddress: true },
+  { locale: 'en', hasMainAddress: true },
+  { locale: 'fa', hasMainAddress: false },
+] as const)(
+  'shows conditional solar intake fields in $locale with main address=$hasMainAddress',
+  async ({ locale, hasMainAddress }) => {
     document.documentElement.lang = locale;
     vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     vi.stubGlobal(
@@ -84,7 +94,7 @@ it.each(['fa', 'en'] as const)(
         if (url === '/api/profiles/profile-1/addresses')
           return new Response(
             JSON.stringify({
-              addresses: [savedAddress],
+              addresses: [secondaryAddress, { ...savedAddress, mainAddress: hasMainAddress }],
             })
           );
         throw new Error(`Unexpected ${url}`);
@@ -108,29 +118,44 @@ it.each(['fa', 'en'] as const)(
       );
       expect(container.querySelector('#solar-bill')).toBeNull();
       expect(container.querySelector('#solar-units')).not.toBeNull();
-      expect(container.querySelector('select[name=siteAddressId]')).not.toBeNull();
-      expect(container.querySelector('a[href="/settings/addresses"]')).not.toBeNull();
-      expect(container.querySelector('ol')?.children).toHaveLength(4);
+      const address = container.querySelector<HTMLSelectElement>('select[name=siteAddressId]')!;
+      expect(address.value).toBe(hasMainAddress ? savedAddress.id : '');
+      if (!hasMainAddress) {
+        await act(async () => {
+          address.value = savedAddress.id;
+          address.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      }
+      const postalHint = document.getElementById(address.getAttribute('aria-describedby')!);
+      expect(postalHint?.querySelector('bdi')?.textContent).toBe(savedAddress.postalCode);
+      expect(Array.from(address.options, (option) => option.textContent)).toEqual(
+        expect.arrayContaining([expect.stringContaining(secondaryAddress.postalCode)])
+      );
+      expect(container.querySelector('a[href^="/settings/addresses/new"]')).not.toBeNull();
+      expect(container.querySelector('ol')?.children).toHaveLength(3);
+      expect(container.textContent).toContain(tSolar('uploadAfterRequest', locale));
       const submit = Array.from(container.querySelectorAll('button')).find(
         (button) => button.textContent === (locale === 'fa' ? 'ادامه' : 'Continue')
       )!;
       expect(submit.disabled).toBe(true);
-      const completion = container.querySelector<HTMLInputElement>('#solar-completion')!;
+      const completion = container.querySelector<HTMLButtonElement>('#solar-completion')!;
       await act(async () => {
         completion.focus();
         completion.blur();
       });
       expect(completion.getAttribute('aria-invalid')).toBe('true');
-      const completionError = completion.getAttribute('aria-describedby')!;
-      expect(document.getElementById(completionError)).not.toBeNull();
+      const completionDescriptions = completion.getAttribute('aria-describedby')!.split(' ');
+      expect(completionDescriptions).toHaveLength(2);
+      expect(completionDescriptions).toContain('solar-completion-hint');
+      expect(completionDescriptions.every((id) => document.getElementById(id))).toBe(true);
       await act(async () =>
         (container.querySelector('input[value="non_household"]') as HTMLInputElement).click()
       );
       expect(container.querySelector('#solar-units')).toBeNull();
-      expect(document.getElementById(completionError)).toBeNull();
+      expect(completionDescriptions.every((id) => !document.getElementById(id))).toBe(true);
       expect(container.querySelector('#solar-area')).not.toBeNull();
       const addAddress = container.querySelector<HTMLAnchorElement>(
-        'a[href="/settings/addresses"]'
+        'a[href^="/settings/addresses/new"]'
       );
       expect(addAddress).not.toBeNull();
       await act(async () => {
@@ -179,7 +204,7 @@ it('restores a solar draft before showing the form', async () => {
     siteCategory: 'industrial',
     installationSurface: 'rooftop',
     usableAreaSqm: '250',
-    siteAddressId: 'address-1',
+    siteAddressId: secondaryAddress.id,
     siteRelationship: 'tenant',
     siteDescription: 'Roof survey pending',
     gridType: 'off_grid',
@@ -195,7 +220,7 @@ it('restores a solar draft before showing the form', async () => {
       if (url === '/api/profiles/profile-1/addresses')
         return new Response(
           JSON.stringify({
-            addresses: [savedAddress],
+            addresses: [savedAddress, secondaryAddress],
           })
         );
       if (url === '/api/solar/requests/draft?profileId=profile-1')
@@ -219,6 +244,9 @@ it('restores a solar draft before showing the form', async () => {
     expect(container.querySelector('#solar-area')).not.toBeNull();
     expect((container.querySelector('#solar-area') as HTMLInputElement).value).toBe('250');
     expect(container.textContent).toContain('Roof survey pending');
+    expect(container.querySelector<HTMLSelectElement>('#solar-site-address-id')?.value).toBe(
+      secondaryAddress.id
+    );
     expect(container.querySelector('#solar-bill')).toBeNull();
     expect(container.querySelector('input[type="checkbox"]')).toBeNull();
   } finally {

@@ -101,16 +101,19 @@ for (const locale of ['en', 'fa'] as const)
         await expect(records).toHaveCount(2);
         await expect(content.getByRole('table')).toHaveAccessibleName(caption);
         await expect(
-          content.getByRole('columnheader', { name: copy('commercial'), exact: true })
-        ).toBeVisible();
-        await expect(
-          content.getByRole('columnheader', { name: copy('financial'), exact: true })
+          content.getByRole('columnheader', {
+            name: appText('recordTable.progress', locale),
+            exact: true,
+          })
         ).toBeVisible();
         const inspect = async () => {
           await expect(records.first()).toContainText(rows[0]!.customerName);
           await expect(records.first()).toContainText(correctionOrder);
           expect(western(await records.first().innerText())).toContain(rows[0]!.totalKwh);
           expect(western(await records.first().innerText())).toContain(rows[0]!.totalIrR);
+          for (const status of ['commercial', 'financial']) {
+            await expect(records.first().getByText(copy(status), { exact: true })).toBeVisible();
+          }
           await expect(records.first()).toContainText(copy('commercial.awaiting_staff_review'));
           await expect(records.first()).toContainText(copy('financial.unpaid'));
           await expect(records.nth(1)).toContainText(copy('financial.paid'));
@@ -147,7 +150,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(
           await records
             .first()
-            .getByRole('button')
+            .getByRole('link')
             .evaluate((button) => button.getBoundingClientRect().height)
         ).toBeGreaterThanOrEqual(44);
         if (
@@ -189,26 +192,33 @@ for (const locale of ['en', 'fa'] as const)
         await page.reload();
         await expect(records).toHaveCount(2);
         const commandReads = queueReads;
-        await records.first().getByRole('button').click();
-        const reason = page.locator('textarea[name=reason]');
-        await expect(reason).toHaveCount(1);
-        await reason.fill('  Keep the exact staff draft  ');
+        await records.first().getByRole('link').click();
+        const openChanges = page.getByRole('link', { name: copy('request-changes'), exact: true });
+        await expect(openChanges).toBeVisible();
         const selectedReads = detailReads;
         await checkRoutePresentation(page, info, locale);
         if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
           const summaries = page.locator('main summary:visible');
-          await expect(summaries).toHaveCount(3);
+          await expect(summaries.first()).toBeVisible();
           for (const summary of await summaries.all()) {
             const box = await summary.boundingBox();
             expect(box?.width).toBeGreaterThanOrEqual(44);
             expect(box?.height).toBeGreaterThanOrEqual(44);
           }
         }
+        await openChanges.click();
+        const reason = page.locator('#electricity-review-reason');
+        await expect(reason).toBeVisible();
+        await reason.fill('  Keep the exact staff draft  ');
+        await checkRoutePresentation(page, info, locale);
         await page.setViewportSize({ width: 1280, height: 900 });
         await expect(reason).toHaveValue('  Keep the exact staff draft  ');
         expect(detailReads).toBe(selectedReads);
         expect(queueReads).toBe(commandReads);
-        await expect(records.first().getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+        await expect(page).toHaveURL(
+          `/admin/electricity-orders/${correctionOrder}/decisions/request-changes${lane === 'conversations' ? '?view=conversations' : ''}`
+        );
+        await expect(content).toHaveCount(0);
         await page.getByRole('button', { name: copy('request-changes'), exact: true }).click();
         const dialog = page.getByRole('dialog');
         await expect(dialog).toBeVisible();
@@ -244,6 +254,8 @@ for (const locale of ['en', 'fa'] as const)
         await confirm.click();
         await expect(dialog).toHaveCount(0);
         await expect(refresh).toBeDisabled();
+        const back = page.getByRole('link', { name: copy('backToOrder'), exact: true });
+        await expect(back).toHaveAttribute('aria-disabled', 'true');
         await expect(reason).toHaveValue('  Keep the exact staff draft  ');
         expect(passwords).toEqual([{ password: 'synthetic-only-password' }]);
         expect(writes).toHaveLength(3);

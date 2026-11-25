@@ -27,6 +27,9 @@ for (const locale of ['en', 'fa'])
         json: { ...giftCode(), ...route.request().postDataJSON(), code: 'LOCAL-CODE' },
       });
     });
+    await page.route(`**/api/admin/promotions/gift-codes/${giftCode().id}/stats`, (route) =>
+      route.fulfill({ status: denied ? 403 : 503, json: {} })
+    );
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
@@ -35,7 +38,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'جست‌وجو' : 'Search', exact: true }).click();
-    await page.getByRole('button', { name: fa ? 'افزودن کد' : 'Add code', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن کد' : 'Add code', exact: true }).click();
     await page.getByLabel(fa ? 'کد' : 'Code', { exact: true }).fill('  local-code  ');
     await page
       .getByLabel(fa ? 'مبلغ تخفیف (ریال)' : 'Discount amount (IRR)', { exact: true })
@@ -118,7 +121,7 @@ test('gift windows display account time, preserve untouched instants and convert
     }
   );
   await page.goto('/admin/gift-codes');
-  const edit = page.getByRole('button', { name: 'Edit ACCOUNT-ZONE', exact: true });
+  const edit = page.getByRole('link', { name: 'Edit ACCOUNT-ZONE', exact: true });
   await edit.click();
   await expect(page.locator('#gift-start-time')).toHaveValue('16:04');
   await page.getByLabel('Discount amount (IRR)', { exact: true }).fill('1001');
@@ -130,7 +133,7 @@ test('gift windows display account time, preserve untouched instants and convert
       validFrom: '2026-03-21T12:34:56.789Z',
       validUntil: '2026-10-21T12:34:56.987Z',
     });
-  await edit.click();
+  await page.getByRole('link', { name: 'Edit', exact: true }).click();
   await page.locator('#gift-start-time').fill('10:15');
   await page.getByRole('button', { name: 'Save code', exact: true }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();

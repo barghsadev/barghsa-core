@@ -3,6 +3,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { mockOtpStepUp, completeOtp } from './otp-step-up-fixture';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -30,6 +31,18 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { thresholdIrR: threshold } });
     });
     await page.goto('/admin/approval-requests');
+    await page
+      .getByRole('link', { name: adminText('admin.approvals.thresholdsLink', locale) })
+      .click();
+    await expect(page).toHaveURL(/\/admin\/approval-requests\/thresholds$/);
+    const main = page.getByRole('main');
+    const overview = main.getByTestId('approval-threshold-current');
+    await expect(overview).toContainText((100_000).toLocaleString(locale));
+    await expect(main.locator('form')).toHaveCount(0);
+    await main
+      .getByRole('link', { name: text('admin.receiptThreshold.editTitle', locale) })
+      .click();
+    await expect(page).toHaveURL('/admin/approval-requests/thresholds/edit');
     const panel = page.getByRole('region', {
       name: locale === 'en' ? 'Dual-approval threshold' : 'آستانه تأیید دو نفره',
     });
@@ -70,6 +83,12 @@ for (const locale of ['en', 'fa'] as const) {
     expect(writes).toEqual([]);
     await expect(page.locator('#receipt-threshold')).toBeDisabled();
     const dialog = page.getByRole('dialog');
+    await expect(
+      dialog.getByText(text('admin.receiptThreshold.current', locale), { exact: true })
+    ).toBeVisible();
+    await expect(
+      dialog.getByText(text('admin.receiptThreshold.proposed', locale), { exact: true })
+    ).toBeVisible();
     await completeOtp(dialog, locale);
     await expect(dialog).toHaveCount(0);
     const saved = locale === 'en' ? 'Threshold saved.' : 'آستانه ذخیره شد.';
@@ -91,7 +110,7 @@ test('threshold load failure assumes no value and can retry; denied permission h
           : { json: { thresholdIrR: 0 } }
     )
   );
-  await page.goto('/admin/approval-requests');
+  await page.goto('/admin/approval-requests/thresholds/edit');
   await expect(page.getByRole('alert')).toContainText(
     'Threshold unavailable. No setting has been assumed.'
   );
@@ -165,7 +184,7 @@ for (const locale of ['en', 'fa'] as const) {
         if (mode === 'success') threshold = 250000;
         return route.fulfill({ json: { thresholdIrR: mode === 'mismatch' ? 250001 : 250000 } });
       });
-      await page.goto('/admin/approval-requests');
+      await page.goto('/admin/approval-requests/thresholds/edit');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       const panel = page.getByRole('region', {
         name: text('admin.receiptThreshold.title', locale),
@@ -285,7 +304,7 @@ for (const status of [401, 403]) {
       writes++;
       return route.fulfill({ status, json: { error: { code: ErrorCodes.AUTHZ_FORBIDDEN.code } } });
     });
-    await page.goto('/admin/approval-requests');
+    await page.goto('/admin/approval-requests/thresholds/edit');
     const panel = page.getByRole('region', { name: 'Dual-approval threshold' });
     await panel.getByLabel('Threshold (IRR)').fill('250000');
     await panel.getByRole('button', { name: 'Save threshold' }).click();
@@ -308,7 +327,7 @@ test('failed threshold save never reports success or changes the loaded value', 
     )
   );
   await mockOtpStepUp(page);
-  await page.goto('/admin/approval-requests');
+  await page.goto('/admin/approval-requests/thresholds/edit');
   const field = page.getByLabel('Threshold (IRR)');
   await field.fill('250000');
   await page.getByRole('button', { name: 'Save threshold' }).click();

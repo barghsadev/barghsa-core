@@ -84,9 +84,24 @@ for (const locale of ['en', 'fa'] as const)
                 : {},
           });
         });
-        await page.route(`**/api/admin/${item.kind}/*`, (route) => {
-          if (route.request().method() !== 'GET') writes++;
-          return route.fulfill({ status: 404, json: {} });
+        await page.route(`**/api/admin/${item.kind}/${item.row.id}`, (route) => {
+          if (route.request().method() !== 'GET') {
+            writes++;
+            return route.fulfill({ status: 400, json: {} });
+          }
+          return route.fulfill({
+            status,
+            json:
+              status === 200
+                ? {
+                    ...item.row,
+                    title: `Zeta ${item.kind} <b>literal</b>`,
+                    description: '<script>Literal description</script>',
+                    members: [],
+                    [item.field]: 12,
+                  }
+                : {},
+          });
         });
       }
       const digits = new Intl.NumberFormat(locale === 'fa' ? 'en-US' : 'fa-IR').format(12);
@@ -113,21 +128,18 @@ for (const locale of ['en', 'fa'] as const)
             fullPage: true,
           });
         await first
-          .getByRole('button', { name: `${label('edit')} ${title}`, exact: true })
+          .getByRole('link', { name: `${label('edit')} ${title}`, exact: true })
           .press('Enter');
         const draft = page.locator(item.titleInput);
         await expect(draft).toHaveValue(title);
         await draft.fill(`Retained draft ${item.kind}`);
         await page.setViewportSize({ width: 390, height: 844 });
         const cards = page.getByRole('list', { name: label(item.kind), exact: true });
-        await expect(cards).toBeVisible();
+        await expect(cards).toHaveCount(0);
         await expect(page.getByRole('table', { name: label(item.kind), exact: true })).toHaveCount(
           0
         );
         await expect(draft).toHaveValue(`Retained draft ${item.kind}`);
-        await expect(cards.getByRole('listitem').first()).toContainText(
-          `${label(item.fieldLabel)}: ${digits}`
-        );
         expect(
           (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
         ).toEqual([]);
@@ -135,6 +147,14 @@ for (const locale of ['en', 'fa'] as const)
           .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))
           .toBe(true);
         await page.getByRole('button', { name: label('cancel'), exact: true }).click();
+        await expect(draft).toHaveCount(0);
+        await page
+          .getByRole('main')
+          .getByRole('link', { name: label(item.kind), exact: true })
+          .click();
+        await expect(cards.getByRole('listitem').first()).toContainText(
+          `${label(item.fieldLabel)}: ${digits}`
+        );
         await cards
           .getByRole('listitem')
           .first()
@@ -159,7 +179,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(cards).toContainText('Zeta policy-groups');
       status = 200;
       await page.getByRole('button', { name: label('retry'), exact: true }).click();
-      await expect(controls.first()).toBeEnabled();
+      await expect(cards.getByRole('link', { name: /^Zeta/ })).toBeVisible();
       await page.screenshot({ path: info.outputPath('catalogue-table-cards.png'), fullPage: true });
       status = 403;
       await page.getByRole('button', { name: label('refresh'), exact: true }).click();

@@ -1,7 +1,8 @@
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, ListRefreshButton, PageLoading } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -9,6 +10,7 @@ import { useLocale } from '../hooks/useLocale.js';
 
 import type { ContractActivationRule } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 const fields = ['signatureRequired', 'paymentRequired', 'serviceStartRequired'] as const;
 const services = ['electricity', 'savings', 'solar'] as const;
 const rulesPath = '/api/admin/contract-activation-rules';
@@ -57,7 +59,7 @@ export function ContractActivationRules() {
       <Button
         variant="outline"
         aria-expanded={open}
-        aria-controls="contract-activation-rules"
+        aria-controls={open ? 'contract-activation-rules' : undefined}
         onClick={() => setOpen((value) => !value)}
       >
         {word('activationRules')}
@@ -156,17 +158,17 @@ function OwnedRulesEditor() {
       forbiddenMessage: word('denied'),
     });
   }
+  const savedActionRule = data?.rules.find((row) => row.serviceType === action?.serviceType);
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">{word('activationRulesNotice')}</p>
-      <Button
-        className="self-start"
-        variant="ghost"
-        disabled={busy || loading || action !== null}
-        onClick={refresh}
-      >
-        {word('refresh')}
-      </Button>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">{word('activationRulesNotice')}</p>
+        <ListRefreshButton
+          label={word('refresh')}
+          disabled={busy || loading || action !== null}
+          onClick={refresh}
+        />
+      </div>
       {requiredRead !== null && !action && (
         <p role="alert">{confirmationText('unconfirmed', locale)}</p>
       )}
@@ -179,57 +181,75 @@ function OwnedRulesEditor() {
       {data && (
         <>
           {!data.canEdit ? <p>{word('activationRulesReadOnly')}</p> : null}
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-3 xl:grid-cols-3">
             {drafts.map((row) => {
               const saved = data.rules.find((item) => item.serviceType === row.serviceType);
               const changed =
                 saved?.revision === row.revision &&
                 fields.some((field) => row[field] !== saved[field]);
               return (
-                <fieldset
+                <form
                   key={row.serviceType}
-                  disabled={!ready || action !== null}
-                  className="flex flex-col gap-4 rounded-lg border p-4"
+                  className={recordEditorSurface}
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (changed) save(row);
+                  }}
                 >
-                  <legend className="px-1 font-medium">{word(row.serviceType)}</legend>
-                  {fields.map((field) => {
-                    const mandatory =
-                      (row.serviceType === 'solar' && field === 'signatureRequired') ||
-                      (row.serviceType === 'electricity' && field === 'paymentRequired');
-                    return (
-                      <label key={field} className="flex items-start gap-2">
-                        <input
-                          type="checkbox"
-                          className="mt-1 size-4"
-                          checked={row[field]}
-                          disabled={!data.canEdit || mandatory}
-                          onChange={(event) =>
-                            setDrafts((previous) =>
-                              previous.map((item) =>
-                                item.serviceType === row.serviceType
-                                  ? { ...item, [field]: event.target.checked }
-                                  : item
-                              )
-                            )
-                          }
-                        />
-                        <span>
-                          {word('rule.' + field)}
-                          {mandatory ? (
-                            <span className="block text-xs text-muted-foreground">
-                              {word('mandatoryRequirement')}
+                  <fieldset
+                    aria-label={word(row.serviceType)}
+                    disabled={!ready || action !== null}
+                    className="flex h-full min-w-0 flex-col"
+                  >
+                    <h3 className="border-b bg-muted/25 px-4 py-3 text-base font-semibold">
+                      {word(row.serviceType)}
+                    </h3>
+                    <div className="flex flex-1 flex-col divide-y px-4 py-1">
+                      {fields.map((field) => {
+                        const mandatory =
+                          (row.serviceType === 'solar' && field === 'signatureRequired') ||
+                          (row.serviceType === 'electricity' && field === 'paymentRequired');
+                        return (
+                          <label
+                            key={field}
+                            className="touch-label flex min-h-11 items-center gap-2.5 py-2 text-sm has-[:enabled]:cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              className="size-4 shrink-0 accent-primary"
+                              checked={row[field]}
+                              disabled={!data.canEdit || mandatory}
+                              onChange={(event) =>
+                                setDrafts((previous) =>
+                                  previous.map((item) =>
+                                    item.serviceType === row.serviceType
+                                      ? { ...item, [field]: event.target.checked }
+                                      : item
+                                  )
+                                )
+                              }
+                            />
+                            <span className="min-w-0 font-medium">
+                              {word('rule.' + field)}
+                              {mandatory ? (
+                                <span className="block text-xs font-normal text-muted-foreground">
+                                  {word('mandatoryRequirement')}
+                                </span>
+                              ) : null}
                             </span>
-                          ) : null}
-                        </span>
-                      </label>
-                    );
-                  })}
-                  {data.canEdit ? (
-                    <Button disabled={!changed} onClick={() => save(row)}>
-                      {word('saveActivationRules')}
-                    </Button>
-                  ) : null}
-                </fieldset>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    {data.canEdit ? (
+                      <RecordEditorActions className="sm:px-4">
+                        <Button type="submit" disabled={!changed}>
+                          {word('saveActivationRules')}
+                        </Button>
+                      </RecordEditorActions>
+                    ) : null}
+                  </fieldset>
+                </form>
               );
             })}
           </div>
@@ -250,19 +270,45 @@ function OwnedRulesEditor() {
           }}
           confirmationDisabled={!ready || !data?.canEdit}
           summary={
-            requiredRead !== null && (
-              <div className="space-y-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={busy || loading}
-                  onClick={refresh}
-                >
-                  {word('refresh')}
-                </Button>
-                {error && <p role="alert">{word('error')}</p>}
-              </div>
-            )
+            <>
+              {savedActionRule && (
+                <section className="space-y-2 rounded-lg border bg-muted/25 p-3">
+                  <h3 className="text-sm font-medium">
+                    {tContractAuthoring('rulesChanged', locale)}
+                  </h3>
+                  <dl className="space-y-1.5 text-sm">
+                    {fields
+                      .filter((field) => savedActionRule[field] !== action.body[field])
+                      .map((field) => (
+                        <div
+                          key={field}
+                          className="flex flex-wrap items-baseline justify-between gap-1"
+                        >
+                          <dt>{word('rule.' + field)}</dt>
+                          <dd>
+                            {tContractAuthoring('ruleChange', locale)
+                              .replace('{before}', word(savedActionRule[field] ? 'yes' : 'no'))
+                              .replace('{after}', word(action.body[field] ? 'yes' : 'no'))}
+                          </dd>
+                        </div>
+                      ))}
+                  </dl>
+                </section>
+              )}
+              {requiredRead !== null && (
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={busy || loading}
+                    onClick={refresh}
+                  >
+                    {word('refresh')}
+                  </Button>
+                  {error && <p role="alert">{word('error')}</p>}
+                </div>
+              )}
+            </>
           }
           onSuccess={async (result) => {
             if (

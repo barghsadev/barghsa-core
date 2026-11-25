@@ -82,7 +82,9 @@ for (const staff of [false, true])
           return;
         }
         return detailStatus === 200
-          ? route.fulfill({ json: supportTicket })
+          ? route.fulfill({
+              json: { ...supportTicket, ...(staff ? { viewer: supportQueue.viewer } : {}) },
+            })
           : route.fulfill({ status: detailStatus, json: {} });
       });
       await page.route(`**${prefix}/${supportTicket.id}/comments`, (route) => {
@@ -128,7 +130,7 @@ for (const staff of [false, true])
       queueStatus = 200;
       await content.getByRole('button', { name: copy('retry'), exact: true }).click();
       await expect(
-        content.getByRole('button', { name: supportTicket.subject, exact: true })
+        content.getByRole('link', { name: supportTicket.subject, exact: true })
       ).toBeVisible();
       await page.locator('#ticket-filter').selectOption('in_progress');
       await page.locator('#ticket-sort').selectOption('asc');
@@ -141,14 +143,14 @@ for (const staff of [false, true])
       expect(currentQuery.searchParams.get('status')).toBe('in_progress');
       expect(currentQuery.searchParams.get('sortOrder')).toBe('asc');
       if (!staff) expect(currentQuery.searchParams.get('scope')).toBe('active');
-      await content.getByRole('button', { name: supportTicket.subject, exact: true }).click();
+      await content.getByRole('link', { name: supportTicket.subject, exact: true }).click();
       const detailError = main.getByRole('alert').filter({ hasText: copy('detailError') });
       await expect(detailError).toBeVisible();
       const queueCount = queries.length;
       detailStatus = 200;
       await detailError.getByRole('button', { name: copy('retry'), exact: true }).click();
       await expect(
-        main.getByRole('heading', { level: 2, name: supportTicket.subject })
+        main.getByRole('heading', { level: 1, name: supportTicket.subject })
       ).toBeFocused();
       expect(queries.length).toBe(queueCount);
       await expect(main.getByText('Public answer', { exact: true })).toBeVisible();
@@ -166,8 +168,45 @@ for (const staff of [false, true])
         await page.locator('#ticket-assignee').selectOption('other');
         await page.locator('#ticket-status-reason').fill('Awaiting another document');
         await main.getByRole('checkbox', { name: copy('internal'), exact: true }).check();
-      } else {
-        await main.getByRole('button', { name: copy('create'), exact: true }).click();
+      }
+      await page.locator('#ticket-reply').fill('Unsaved reply');
+      await main
+        .getByRole('button', {
+          name: staff ? tTicketForms('saveInternalNote', locale) : copy('send'),
+          exact: true,
+        })
+        .click();
+      // A current owned validation failure leaves this draft and queue controls editable.
+      // Unknown outcomes use the separate explicit-retry stories in ticket-forms.spec.ts.
+      const commandError = page
+        .locator('[data-slot=ticket-reply-input]')
+        .getByText(tTicketForms('replyInvalid', locale), { exact: true });
+      await expect(commandError).toBeVisible();
+      await expect(page.locator('#ticket-reply')).toHaveValue('Unsaved reply');
+      if (staff) {
+        await expect(page.locator('#ticket-team')).toHaveValue(teamId);
+        await expect(page.locator('#ticket-assignee')).toHaveValue('other');
+        await expect(page.locator('#ticket-status-reason')).toHaveValue(
+          'Awaiting another document'
+        );
+        await expect(
+          main.getByRole('checkbox', { name: copy('internal'), exact: true })
+        ).toBeChecked();
+      }
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+      if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
+        await main.locator('section[aria-labelledby="ticket-conversation-heading"]').screenshot({
+          path: `/tmp/barghsa-ticket-thread-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`,
+        });
+      const back = main.getByRole('link', {
+        name: tTicketForms(staff ? 'backToStaffQueue' : 'backToTickets', locale),
+        exact: true,
+      });
+      const subject = content.getByRole('link', { name: supportTicket.subject, exact: true });
+      await back.click();
+      await expect(subject).toBeVisible();
+      if (!staff) {
+        await main.getByRole('link', { name: copy('create'), exact: true }).click();
         await page.locator('#ticket-subject').fill('Creation draft');
         await page.locator('#ticket-body').fill('Creation explanation');
         await page.locator('#ticket-files').setInputFiles({
@@ -180,15 +219,16 @@ for (const staff of [false, true])
         resourceStatus = 200;
         await error.getByRole('button', { name: copy('retry'), exact: true }).click();
         await expect(page.locator('#ticket-profile')).toBeVisible();
+        await expect(page.locator('#ticket-subject')).toHaveValue('Creation draft');
+        await expect(page.locator('#ticket-body')).toHaveValue('Creation explanation');
+        expect(
+          await page
+            .locator('#ticket-files')
+            .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
+        ).toBe('draft.pdf');
+        await back.click();
+        await expect(subject).toBeVisible();
       }
-      await page.locator('#ticket-reply').fill('Unsaved reply');
-      await main.getByRole('button', { name: copy('send'), exact: true }).click();
-      // A current owned validation failure leaves this draft and queue controls editable.
-      // Unknown outcomes use the separate explicit-retry stories in ticket-forms.spec.ts.
-      const commandError = page
-        .locator('[data-slot=ticket-reply-input]')
-        .getByText(tTicketForms('replyInvalid', locale), { exact: true });
-      await expect(commandError).toBeVisible();
       const reads = { detailReads, commentReads, resourceReads };
       holdQueue = true;
       await list
@@ -198,13 +238,12 @@ for (const staff of [false, true])
       await expect.poll(() => !!heldQueue).toBe(true);
       await expect(content).toHaveAttribute('aria-busy', 'true');
       await expect(
-        content.getByRole('button', { name: supportTicket.subject, exact: true })
+        content.getByRole('link', { name: supportTicket.subject, exact: true })
       ).toBeVisible();
-      await expect(page.locator('#ticket-reply')).toHaveValue('Unsaved reply');
+      await expect(page.locator('#ticket-reply')).toHaveCount(0);
       await heldQueue!.fulfill({ status: 503, json: {} });
       holdQueue = false;
       await expect(content.getByRole('alert')).toBeVisible();
-      await expect(commandError).toBeVisible();
       const failedQuery = queries.at(-1)!;
       expect(new URL(failedQuery, 'https://local').searchParams.get('page')).toBe('2');
       await expect(list.locator('[aria-current="page"]')).toHaveCount(1);
@@ -213,27 +252,7 @@ for (const staff of [false, true])
       await expect(content.getByRole('alert')).toHaveCount(0);
       expect(queries.at(-1)).toBe(failedQuery);
       expect({ detailReads, commentReads, resourceReads }).toEqual(reads);
-      await expect(page.locator('#ticket-reply')).toHaveValue('Unsaved reply');
-      await expect(commandError).toBeVisible();
       await expect(list.locator('[aria-current="page"]')).toHaveText((2).toLocaleString(locale));
-      if (staff) {
-        await expect(page.locator('#ticket-team')).toHaveValue(teamId);
-        await expect(page.locator('#ticket-assignee')).toHaveValue('other');
-        await expect(page.locator('#ticket-status-reason')).toHaveValue(
-          'Awaiting another document'
-        );
-        await expect(
-          main.getByRole('checkbox', { name: copy('internal'), exact: true })
-        ).toBeChecked();
-      } else {
-        await expect(page.locator('#ticket-subject')).toHaveValue('Creation draft');
-        await expect(page.locator('#ticket-body')).toHaveValue('Creation explanation');
-        expect(
-          await page
-            .locator('#ticket-files')
-            .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
-        ).toBe('draft.pdf');
-      }
       await list.getByRole('button', { name: t('historyView.table', locale), exact: true }).click();
       const viewport = list.locator('[data-slot="scroll-area-viewport"]');
       await viewport.focus();
@@ -247,10 +266,6 @@ for (const staff of [false, true])
         true
       );
       if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
-        await main.locator('section[aria-labelledby="ticket-conversation-heading"]').screenshot({
-          path: `/tmp/barghsa-ticket-thread-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`,
-        });
-      if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
         await page.screenshot({
           path: `/tmp/barghsa-support-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`,
           fullPage: true,
@@ -262,16 +277,15 @@ for (const staff of [false, true])
       expect(
         queries.slice(-2).map((query) => new URL(query, 'https://local').searchParams.get('page'))
       ).toEqual(['2', '1']);
-      await expect(page.locator('#ticket-reply')).toHaveValue('Unsaved reply');
-      // A queue denial must also reject a late detail read that started before it.
+      // Leaving a pending record read cancels it; its stale response cannot replace a denied queue.
       holdDetail = true;
-      await content.getByRole('button', { name: supportTicket.subject, exact: true }).click();
+      await subject.click();
       await expect.poll(() => !!heldDetail).toBe(true);
       queueStatus = 403;
-      await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
+      await back.click();
       await expect(content.getByRole('alert')).toContainText(copy('forbidden'));
-      await heldDetail!.fulfill({ json: supportTicket });
-      await expect(content.getByRole('button', { name: supportTicket.subject })).toHaveCount(0);
+      await heldDetail!.fulfill({ json: supportTicket }).catch(() => {});
+      await expect(subject).toHaveCount(0);
       await expect(main.locator('article')).toHaveCount(0);
       await expect(page.locator('#ticket-reply')).toHaveCount(0);
       await expect(page.locator('#ticket-subject')).toHaveCount(0);

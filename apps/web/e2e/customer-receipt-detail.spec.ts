@@ -88,6 +88,9 @@ for (const locale of ['en', 'fa'] as const) {
       lines: [],
     };
     let sharePaymentNames = true;
+    let wrongReceipt = false;
+    let lookupDenied = false;
+    let invoiceReads = 0;
     const row = (id: string) => ({
       id,
       amount,
@@ -119,8 +122,9 @@ for (const locale of ['en', 'fa'] as const) {
         },
       ],
     });
-    await page.route(`**/api/invoices/${invoice}`, (route) =>
-      route.fulfill({
+    await page.route(`**/api/invoices/${invoice}`, (route) => {
+      invoiceReads++;
+      return route.fulfill({
         json: {
           viewedInvoiceId: invoice,
           originalInvoiceId: invoice,
@@ -130,7 +134,14 @@ for (const locale of ['en', 'fa'] as const) {
           refunds: [],
           bankReceipts: [row(receipt), row(other)],
         },
-      })
+      });
+    });
+    await page.route(`**/api/invoices/${invoice}/bank-receipts/${receipt}`, (route) =>
+      lookupDenied
+        ? route.fulfill({ status: 404, json: {} })
+        : route.fulfill({
+            json: { invoiceId: invoice, receipt: row(wrongReceipt ? other : receipt) },
+          })
     );
     let requests = 0;
     await page.route(`**/api/invoices/${invoice}/bank-receipts/${receipt}/preview?*`, (route) => {
@@ -144,11 +155,21 @@ for (const locale of ['en', 'fa'] as const) {
       otherRequests++;
       return route.fulfill({ contentType: 'image/png', body: image });
     });
-    await page.goto('/invoices/receipts');
+    await page.goto('/invoices/receipts?statuses=Rejected');
     await page
       .getByRole('main')
-      .locator(`a[href="/invoices/${invoice}#bank-receipt-${receipt}"]`)
+      .locator(`a[href^="/invoices/${invoice}/receipts/${receipt}"]`)
       .click();
+    await expect(page).toHaveURL(
+      (url) => url.pathname === `/invoices/${invoice}/receipts/${receipt}`
+    );
+    expect(invoiceReads).toBe(0);
+    await expect(
+      page.getByRole('main').getByRole('link', {
+        name: t('invoices.receipts.title', locale),
+        exact: true,
+      })
+    ).toHaveAttribute('href', '/invoices/receipts?statuses=Rejected');
     const detail = page.locator(`#bank-receipt-${receipt}`);
     await expect(detail.getByText(copy('previewUnavailable'), { exact: true })).toBeVisible();
     await expect(
@@ -197,10 +218,7 @@ for (const locale of ['en', 'fa'] as const) {
       .toBe(1);
     await expect(detail.getByText(copy('previewUnavailable'), { exact: true })).toHaveCount(0);
     expect(otherRequests).toBe(0);
-    expect(
-      (await new AxeBuilder({ page }).include('[data-testid="invoice-activity"]').analyze())
-        .violations
-    ).toEqual([]);
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     await page.setViewportSize({ width: 390, height: 844 });
     await preview.scrollIntoViewIfNeeded();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -209,13 +227,27 @@ for (const locale of ['en', 'fa'] as const) {
     await page.screenshot({
       path: test.info().outputPath(`receipt-detail-${locale}.png`),
     });
-    await page.locator(`#bank-receipt-${other} summary`).click();
-    await expect.poll(() => otherRequests).toBe(1);
     sharePaymentNames = false;
     await page.reload();
     await expect(timeline.locator('bdi').nth(0)).toHaveText(copy('actor.customer'));
     await expect(timeline.locator('bdi').nth(2)).toHaveText(copy('actor.staff'));
     await expect(timeline).not.toContainText('Reviewer <img src=x>');
     await expect(timeline).toContainText('Recorded mismatch <img src=x>');
+    wrongReceipt = true;
+    await page.reload();
+    await expect(page.getByRole('main').getByRole('alert')).toContainText(
+      t('invoices.receipts.detailError', locale)
+    );
+    await expect(timeline).toHaveCount(0);
+    expect(otherRequests).toBe(0);
+    lookupDenied = true;
+    await page.reload();
+    await expect(page.getByRole('main').getByRole('alert')).toContainText(
+      t('invoices.receipts.detailUnavailable', locale)
+    );
+    await expect(timeline).toHaveCount(0);
+    expect(invoiceReads).toBe(0);
+    await page.goto(`/invoices/${invoice}#bank-receipt-${other}`);
+    await expect.poll(() => otherRequests).toBe(1);
   });
 }

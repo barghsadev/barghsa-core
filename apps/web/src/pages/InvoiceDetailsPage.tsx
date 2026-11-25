@@ -2,20 +2,26 @@ import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { LoadingStatus } from '@barghsa/ui';
+import { LoadingStatus, buttonVariants } from '@barghsa/ui';
 import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { InvoicePaymentSummary } from '../components/InvoicePaymentSummary.js';
+import { Suspense, useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
+import {
+  InvoicePaymentSummary,
+  invoicePaymentProgress,
+} from '../components/InvoicePaymentSummary.js';
+import { Currency } from '../components/Currency.js';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { invoiceReceiptPageMessages } from '@barghsa/i18n/receipt-editor';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
 import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { contractText } from '@barghsa/i18n/contracts';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import {
   InvoiceRequestError,
   fetchInvoiceDetails,
@@ -24,10 +30,11 @@ import {
   type CustomerInvoiceDetails,
   type CustomerInvoiceNode,
 } from '../lib/customer-invoices.js';
-import { InvoiceBankReceiptUploadForm } from './InvoiceBankReceiptUploadForm.js';
+import type { InvoiceBankReceiptUploadFormProps } from './InvoiceBankReceiptUploadForm.js';
 
 interface InvoiceDetailsPageProps {
   invoiceId: string;
+  ReceiptForm?: ComponentType<InvoiceBankReceiptUploadFormProps>;
 }
 
 function isInvoiceUnavailable(error: unknown) {
@@ -41,10 +48,10 @@ function isInvoiceUnavailable(error: unknown) {
  * replacement or adjustment, each with the staff-supplied explanation of
  * the change. RTL-aware, profile-scoped via the details API.
  */
-export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
+export function InvoiceDetailsPage({ invoiceId, ReceiptForm }: InvoiceDetailsPageProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  const scope = JSON.stringify([actor, revision, invoiceId]);
+  const scope = JSON.stringify([actor, revision, invoiceId, !!ReceiptForm]);
   return (
     <OwnedInvoiceDetails
       key={scope}
@@ -52,6 +59,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       actor={actor}
       revision={revision}
       scope={scope}
+      {...(ReceiptForm ? { ReceiptForm } : {})}
     />
   );
 }
@@ -61,6 +69,7 @@ function OwnedInvoiceDetails({
   actor,
   revision,
   scope,
+  ReceiptForm,
 }: InvoiceDetailsPageProps & {
   actor: string | null;
   revision: number;
@@ -69,6 +78,10 @@ function OwnedInvoiceDetails({
   const time = useAccountTime();
   const locale = useLocale();
   const isRtl = locale === 'fa';
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (ReceiptForm) heading.current?.focus({ preventScroll: true });
+  }, [ReceiptForm, invoiceId]);
   const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null);
   const [error, setError] = useState<'unavailable' | 'load' | null>(null);
   const [loading, setLoading] = useState(true);
@@ -121,23 +134,40 @@ function OwnedInvoiceDetails({
       });
     return () => controller.abort();
   }, [readDetails, reload, revision]);
+  const receiptCopy = invoiceReceiptPageMessages[locale];
+  const backLabel = ReceiptForm ? receiptCopy.back : t('invoices.details.back', locale);
+  const backContents = (
+    <>
+      <ArrowRightIcon className={`size-4 ${isRtl ? '' : 'rotate-180'}`} aria-hidden="true" />
+      {backLabel}
+    </>
+  );
+  const canSubmitReceipt = details && canCustomerSubmitInvoiceBankReceipt(details.invoice);
+  const backClass =
+    'touch-action inline-flex items-center gap-2 text-sm text-foreground underline underline-offset-4';
 
   return (
     <div
-      className="mx-auto max-w-3xl space-y-6 rounded-lg bg-background p-4 text-foreground"
+      className={
+        ReceiptForm
+          ? 'mx-auto max-w-3xl space-y-3'
+          : 'mx-auto max-w-3xl space-y-6 rounded-lg bg-background p-4 text-foreground'
+      }
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {time.notice}
-      <nav aria-label={t('invoices.details.back', locale)}>
-        <Link
-          to="/invoices"
-          className="touch-action inline-flex items-center gap-2 text-sm text-foreground underline underline-offset-4"
-        >
-          <ArrowRightIcon className={`h-4 w-4 ${isRtl ? '' : 'rotate-180'}`} aria-hidden="true" />
-          {t('invoices.details.back', locale)}
-        </Link>
+      <nav aria-label={backLabel}>
+        {ReceiptForm ? (
+          <Link to="/invoices/$invoiceId" params={{ invoiceId }} className={backClass}>
+            {backContents}
+          </Link>
+        ) : (
+          <Link to="/invoices" className={backClass}>
+            {backContents}
+          </Link>
+        )}
       </nav>
-      {details?.consultationId && (
+      {!ReceiptForm && details?.consultationId && (
         <Link
           className="touch-action text-sm text-primary underline"
           to="/consultations/$requestId"
@@ -146,7 +176,7 @@ function OwnedInvoiceDetails({
           {tConsultation('backToRequest', locale)}
         </Link>
       )}
-      {details?.electricityOrderId && (
+      {!ReceiptForm && details?.electricityOrderId && (
         <Link
           className="touch-action text-sm text-primary underline"
           to="/electricity/orders/$orderId"
@@ -155,7 +185,7 @@ function OwnedInvoiceDetails({
           {t('invoices.details.backToElectricityOrder', locale)}
         </Link>
       )}
-      {details?.savingOrderId && (
+      {!ReceiptForm && details?.savingOrderId && (
         <Link
           className="touch-action text-sm text-primary underline"
           to="/savings/orders/$orderId"
@@ -164,7 +194,7 @@ function OwnedInvoiceDetails({
           {t('invoices.details.backToSavingOrder', locale)}
         </Link>
       )}
-      {details?.solarRequestId && (
+      {!ReceiptForm && details?.solarRequestId && (
         <Link
           className="touch-action text-sm text-primary underline"
           to="/solar/requests/$requestId"
@@ -174,14 +204,52 @@ function OwnedInvoiceDetails({
         </Link>
       )}
 
-      <header className="flex items-center gap-2">
-        <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-        <h1 className="text-2xl font-bold text-foreground">
-          {t('invoices.details.title', locale)}
-        </h1>
-      </header>
+      {ReceiptForm ? (
+        <header className="space-y-1">
+          <h1
+            ref={heading}
+            tabIndex={-1}
+            id="invoice-receipt-heading"
+            className="text-xl font-semibold outline-none"
+          >
+            {t('invoices.details.receiptTitle', locale)}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {t('invoices.details.receiptSubtitle', locale)}
+          </p>
+        </header>
+      ) : (
+        <header className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
+            <h1 className="text-2xl font-bold text-foreground">
+              {t('invoices.details.title', locale)}
+            </h1>
+          </div>
+          {details && !error && (
+            <div className="flex flex-wrap items-center gap-3">
+              {canSubmitReceipt && (
+                <Link
+                  to="/invoices/$invoiceId/receipts/new"
+                  params={{ invoiceId: details.viewedInvoiceId }}
+                  className={buttonVariants({ className: 'min-h-11' })}
+                >
+                  {t('invoices.details.receiptTitle', locale)}
+                </Link>
+              )}
+              <Link
+                className="text-sm font-medium text-primary underline underline-offset-4"
+                to="/tickets/new"
+                search={{ relatedType: 'invoice', relatedId: details.viewedInvoiceId }}
+              >
+                {tTicketForms('getHelp', locale)}
+              </Link>
+            </div>
+          )}
+        </header>
+      )}
 
-      {details?.contractId && (
+      {!ReceiptForm && details?.contractId && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
           {details.contractState && (
             <p>
@@ -191,8 +259,8 @@ function OwnedInvoiceDetails({
           )}
           <Link
             className="text-primary underline"
-            to="/contracts"
-            search={{ contractId: details.contractId }}
+            to="/contracts/$contractId/{-$action}"
+            params={{ contractId: details.contractId }}
           >
             {t('invoices.details.openContract', locale)}
           </Link>
@@ -220,6 +288,19 @@ function OwnedInvoiceDetails({
             </button>
           )}
         </p>
+      ) : details && ReceiptForm ? (
+        canSubmitReceipt ? (
+          <InvoiceReceiptEditor
+            details={details}
+            ReceiptForm={ReceiptForm}
+            onRefreshDetails={refreshDetails}
+            formatTimestamp={time.format}
+          />
+        ) : (
+          <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+            {receiptCopy.unavailable}
+          </p>
+        )
       ) : details ? (
         <InvoiceDetailsBody
           key={details.viewedInvoiceId}
@@ -242,23 +323,6 @@ function InvoiceDetailsBody({
   onRefreshDetails: () => Promise<void>;
 }) {
   const locale = useLocale();
-  const [refreshFailed, setRefreshFailed] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const refreshPending = useRef(false);
-  const refreshReceiptHistory = async () => {
-    if (refreshPending.current) return;
-    refreshPending.current = true;
-    setRefreshing(true);
-    try {
-      await onRefreshDetails();
-      setRefreshFailed(false);
-    } catch {
-      setRefreshFailed(true);
-    } finally {
-      refreshPending.current = false;
-      setRefreshing(false);
-    }
-  };
   const viewed = details.invoice;
   const original = details.chain.find((node) => node.invoiceId === details.originalInvoiceId);
   const linked = details.chain.filter((node) => node.invoiceId !== details.originalInvoiceId);
@@ -302,6 +366,66 @@ function InvoiceDetailsBody({
         />
       ))}
 
+      <InvoicePaymentSummary invoice={viewed} onRefreshDetails={onRefreshDetails} />
+      <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />
+    </section>
+  );
+}
+
+function InvoiceReceiptEditor({
+  details,
+  ReceiptForm,
+  onRefreshDetails,
+  formatTimestamp,
+}: {
+  details: CustomerInvoiceDetails;
+  ReceiptForm: ComponentType<InvoiceBankReceiptUploadFormProps>;
+  onRefreshDetails: () => Promise<void>;
+  formatTimestamp: (value: string | null) => string;
+}) {
+  const locale = useLocale();
+  const invoice = details.invoice;
+  const progress = invoicePaymentProgress(invoice.totalAmount, invoice.paidAmount);
+  const [showActivity, setShowActivity] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshPending = useRef(false);
+  const refreshReceiptHistory = async () => {
+    if (refreshPending.current) return;
+    refreshPending.current = true;
+    setShowActivity(true);
+    setRefreshing(true);
+    try {
+      await onRefreshDetails();
+      setRefreshFailed(false);
+    } catch {
+      setRefreshFailed(true);
+    } finally {
+      refreshPending.current = false;
+      setRefreshing(false);
+    }
+  };
+  return (
+    <section aria-labelledby="invoice-receipt-heading" className="space-y-3">
+      <dl className="grid gap-3 rounded-lg border bg-card px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="min-w-0">
+          <dt className="text-muted-foreground">{t('invoices.details.reference', locale)}</dt>
+          <dd className="font-medium">
+            <bdi className="break-all">{invoice.invoiceId}</bdi>
+          </dd>
+        </div>
+        {progress && (
+          <div>
+            <dt className="text-muted-foreground">{t('invoices.payment.remaining', locale)}</dt>
+            <dd className="font-semibold">
+              <Currency amount={progress.remainingAmount} variant="small" locale={locale} />
+            </dd>
+          </div>
+        )}
+      </dl>
+      <Suspense fallback={<LoadingStatus>{t('invoices.receipts.loading', locale)}</LoadingStatus>}>
+        <ReceiptForm invoiceId={invoice.invoiceId} onSubmitted={refreshReceiptHistory} recordPage />
+      </Suspense>
       {refreshing && (
         <LoadingStatus className="text-sm text-muted-foreground">
           {t('invoices.receipts.loading', locale)}
@@ -320,17 +444,7 @@ function InvoiceDetailsBody({
           </button>
         </div>
       )}
-      <InvoicePaymentSummary invoice={viewed} onRefreshDetails={onRefreshDetails} />
-      <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />
-      {canCustomerSubmitInvoiceBankReceipt({
-        state: viewed.state,
-        adjustmentKind: viewed.adjustmentKind,
-      }) ? (
-        <InvoiceBankReceiptUploadForm
-          invoiceId={viewed.invoiceId}
-          onSubmitted={refreshReceiptHistory}
-        />
-      ) : null}
+      {showActivity && <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />}
     </section>
   );
 }

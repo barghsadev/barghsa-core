@@ -180,7 +180,7 @@ for (const locale of ['en', 'fa'] as const) {
       expect(await page.evaluate(() => document.documentElement.lang)).toBe(locale);
     }
     isStaff = true;
-    await page.goto('/admin/wallet-receipts');
+    await page.goto('/admin/wallet-receipts/settings/edit');
     const input = page.getByTestId('wallet-top-up-limit-input');
     const displayedLimit = page.getByTestId('wallet-top-up-limit-current');
     await expect(displayedLimit).toContainText(locale === 'fa' ? '2,000,000,000' : '۲٬۰۰۰٬۰۰۰٬۰۰۰');

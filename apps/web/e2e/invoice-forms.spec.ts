@@ -114,9 +114,9 @@ for (const locale of ['fa', 'en'] as const)
       await page.goto('/admin/invoices');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       const panel = page.locator('#manual-invoice-panel');
-      await expect(panel.getByRole('button', { name: m('new'), exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: m('new'), exact: true })).toBeVisible();
       expect(editorLoads).toBe(0);
-      await panel.getByRole('button', { name: m('new'), exact: true }).click();
+      await page.getByRole('link', { name: m('new'), exact: true }).click();
       const customer = panel.getByRole('combobox'),
         issue = panel.getByRole('button', { name: m('issue'), exact: true });
       await expect(customer.locator('option[value="' + profileId + '"]')).toHaveCount(1);
@@ -170,6 +170,10 @@ for (const locale of ['fa', 'en'] as const)
       await expect(price.first()).toHaveValue('۵۰');
       await expect(price.nth(1)).toHaveValue('۴۰');
       await price.first().fill('۶۰');
+      // Check contrast with the sticky summary at the end of the scroll area.
+      await page.locator('main').evaluate((main) => {
+        main.scrollTop = main.scrollHeight;
+      });
       const scan = await new AxeBuilder({ page })
         .include('#manual-invoice-panel')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -237,17 +241,21 @@ for (const locale of ['fa', 'en'] as const)
           ),
         });
       });
-      await page.goto('/admin/invoices');
+      await page.goto('/admin/invoices#invoice-corrections-panel');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
-      const panel = page.locator('#invoice-corrections-panel'),
-        lookup = panel.getByLabel(c('invoiceId'), { exact: true });
-      const load = panel.getByRole('button', { name: c('load'), exact: true });
-      await load.click();
+      const locator = page.locator('form').filter({ has: page.locator('#tools-invoice-id') });
+      const lookup = locator.locator('#tools-invoice-id');
+      const open = locator.locator('button[type=submit]');
+      await expect(locator.locator('select')).toHaveValue('correction');
+      await open.click();
       await expect(lookup).toBeFocused();
       await expect(lookup).toHaveAttribute('aria-invalid', 'true');
       expect(reads).toBe(0);
       await lookup.fill(originalId);
-      await load.click();
+      await open.click();
+      await expect(page).toHaveURL(`/admin/invoices/${originalId}/correction`);
+      const panel = page.locator('#invoice-corrections-panel');
+      const load = panel.getByRole('button', { name: c('load'), exact: true });
       const reason = panel.getByLabel(c('reason'), { exact: true });
       await expect(reason).toBeVisible();
       const issue = panel.getByRole('button', { name: c('replacementIssue'), exact: true });
@@ -274,8 +282,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(price).toHaveAttribute('aria-invalid', 'true');
       await expect(price).toHaveValue('۵۰');
       await expect(description).toHaveValue('  Retained line  ');
-      await lookup.fill(nextId);
-      await load.click();
+      await page.goto(`/admin/invoices/${nextId}/correction`);
       await expect(reason).toHaveValue('');
       await expect(description).toHaveCount(0);
       const amount = panel.getByLabel(c('amount'), { exact: true }),
@@ -292,6 +299,10 @@ for (const locale of ['fa', 'en'] as const)
         reason: 'Credit explanation',
         amount: '-25',
       });
+      await panel
+        .locator('header p')
+        .first()
+        .evaluate((element) => element.scrollIntoView({ block: 'center' }));
       const scan = await new AxeBuilder({ page })
         .include('#invoice-corrections-panel')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -309,7 +320,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(panel.getByRole('alert')).toContainText(c('denied'));
       await expect(reason).toHaveCount(0);
       await expect(amount).toHaveCount(0);
-      await expect(lookup).toHaveValue('');
+      await expect(panel.locator('#correction-invoice-id')).toHaveCount(0);
     });
   }
 for (const locale of ['fa', 'en'] as const)
@@ -343,7 +354,7 @@ for (const locale of ['fa', 'en'] as const)
     await page.goto('/admin/invoices');
     const m = (key: string) => manualText('admin.manualInvoice.' + key, locale);
     const manual = page.locator('#manual-invoice-panel');
-    await manual.getByRole('button', { name: m('new'), exact: true }).click();
+    await page.getByRole('link', { name: m('new'), exact: true }).click();
     const customer = manual.getByRole('combobox');
     await expect(customer.locator('option[value="' + profileId + '"]')).toHaveCount(1);
     await customer.selectOption(profileId);
@@ -354,13 +365,8 @@ for (const locale of ['fa', 'en'] as const)
     await expect(manual.getByRole('alert')).toContainText(m('validationUnavailable'));
     await expect(price).toHaveValue('۴۰');
     await expect(customer).toHaveValue(profileId);
+    await page.goto(`/admin/invoices/${originalId}/correction`);
     const correction = page.locator('#invoice-corrections-panel');
-    await correction
-      .getByLabel(correctionText('invoiceId', locale)!, { exact: true })
-      .fill(originalId);
-    await correction
-      .getByRole('button', { name: correctionText('load', locale)!, exact: true })
-      .click();
     await expect(correction.getByRole('alert')).toContainText(m('validationUnavailable'));
     expect(blocked).toBeGreaterThan(0);
     expect(profileReads).toBe(1);

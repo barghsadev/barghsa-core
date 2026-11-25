@@ -43,9 +43,11 @@ afterEach(async () => {
   host.remove();
   vi.unstubAllGlobals();
 });
-async function render(key = 'threshold') {
+async function render(key = 'threshold', view: 'edit' | 'history' = 'edit') {
   await act(async () =>
-    root.render(<QueryProvider>{<DualApprovalThresholdPanel key={key} />}</QueryProvider>)
+    root.render(
+      <QueryProvider>{<DualApprovalThresholdPanel key={key} view={view} />}</QueryProvider>
+    )
   );
 }
 function field() {
@@ -114,16 +116,24 @@ it('loads history on request and requires OTP to draft and restore a disabling t
     Array.from(host.querySelectorAll('button')).find((node) => node.textContent === text);
   await render();
   expect(get).toHaveBeenCalledTimes(1);
-  await act(async () => button(t('admin.receiptThreshold.recoveryTitle', 'en'))!.click());
+  await render('history', 'history');
+  expect(host.querySelector('form')).toBeNull();
+  const currentAmount = () =>
+    host
+      .querySelector('[data-testid=approval-threshold-current] dd')
+      ?.textContent?.replace(/\D/g, '');
   const stageText = tServiceSettings('recovery.recoveryStage', 'en').replace('{version}', '1');
   await vi.waitFor(() => expect(button(stageText)).toBeDefined());
+  expect(host.querySelector('#dual-approval-threshold-recovery')?.textContent).toContain(
+    'Active version 2'
+  );
   await act(async () => button(stageText)!.click());
   expect(harness.confirmation?.action).toMatchObject({
     path: `${path}/rollback-draft`,
     requiresOtp: true,
     body: { sourceId, expectedVersion: 2 },
   });
-  expect(field().value).toBe('125000');
+  expect(currentAmount()).toBe('125000');
   hasDraft = true;
   await act(async () => harness.confirmation!.onSuccess(draft));
   const activateText = tServiceSettings('recovery.recoveryActivate', 'en');
@@ -140,7 +150,7 @@ it('loads history on request and requires OTP to draft and restore a disabling t
   await act(async () =>
     harness.confirmation!.onSuccess({ config: { thresholdIrR: 0 }, version: 3, draftId: draft.id })
   );
-  await vi.waitFor(() => expect(field().value).toBe('0'));
+  await vi.waitFor(() => expect(currentAmount()).toBe('0'));
 });
 
 it.each(['', ' ', '-10', '1e3', '12.5', '12,5', '9007199254740992', 'NaN'])(

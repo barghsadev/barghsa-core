@@ -304,6 +304,21 @@ beforeAll(async () => {
   expect((await advanceDocuments(requestId)).status, http.logs()).toBe(200);
 }, 90_000);
 
+it('returns one postal record only to current staff with order access', async () => {
+  const path = `admin/solar/requests/${requestId}/postal`;
+  const opened = await send('postal-reviewer', path, 'GET');
+  expect(opened.status, http.logs()).toBe(200);
+  expect(await opened.json()).toMatchObject({
+    id: requestId,
+    profile_id: profileId,
+    request_status: 'waiting_for_postal_submission',
+  });
+  expect((await send('postal-buyer', path, 'GET')).status).toBe(403);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${randomUUID()}/postal`, 'GET')).status
+  ).toBe(404);
+});
+
 it('returns only owned form fields while rejected bodies leave workflow, config, audit and notification state intact', async () => {
   const shipmentPath = `solar/requests/${requestId}/postal/shipment`;
   const postalBase = `admin/solar/requests/${requestId}/postal`;

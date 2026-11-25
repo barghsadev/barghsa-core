@@ -38,7 +38,7 @@ const cases = [
   },
   {
     kind: 'consultation',
-    path: '/consultations',
+    path: '/consultations/new',
     api: '/api/consultations/products',
     copy: tConsultation,
     refresh: 'refreshProducts',
@@ -122,14 +122,9 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       const list = main.locator('[data-slot="list-page"]').first();
       const content = list.locator('[data-slot="list-content"]');
       const electricityOrderLabel = t('electricity.catalogue.createDraft', locale);
-      const electricityOrder = content.getByRole('link', { name: electricityOrderLabel });
+      const electricityOrder = main.getByRole('link', { name: electricityOrderLabel });
       await expect(content.getByRole('alert')).toBeVisible();
-      if (kind === 'consultation')
-        await expect(
-          main.getByText(browseConsultationHistory.requests[0]!.product_snapshot.title[locale], {
-            exact: true,
-          })
-        ).toBeVisible();
+      if (kind === 'consultation') expect(historyReads).toBe(0);
       const initialProfiles = profileReads,
         initialHistories = historyReads;
       status = 200;
@@ -164,7 +159,7 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
         ).toHaveCount(0);
       if (kind === 'electricity') {
         await expect(electricityOrder).toHaveCount(0);
-        await expect(content.getByRole('button', { name: electricityOrderLabel })).toBeDisabled();
+        await expect(main.getByRole('button', { name: electricityOrderLabel })).toBeDisabled();
       }
       if (kind === 'consultation')
         await expect(
@@ -239,6 +234,10 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
         await expect(
           main.getByRole('checkbox', { name: tConsultation('confirm', locale), exact: true })
         ).toHaveCount(0);
+        expect(historyReads).toBe(0);
+        await main
+          .getByRole('link', { name: tConsultation('myRequests', locale), exact: true })
+          .click();
         await expect(
           main.getByText(browseConsultationHistory.requests[0]!.product_snapshot.title[locale], {
             exact: true,

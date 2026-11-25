@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 test.use({ viewport: { width: 390, height: 844 } });
 async function mockUnknownApi(page: Page, locale: string) {
   await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
@@ -51,16 +52,23 @@ for (const locale of ['en', 'fa'])
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await page
-      .getByRole('button', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
+      .getByRole('link', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local draft');
     const audience = page.getByLabel(fa ? 'مخاطب پایگاه دانش' : 'Knowledge-base audience');
     await expect(audience).toHaveValue('admin');
     await audience.selectOption('public');
     await page.getByLabel(fa ? 'نوع منبع' : 'Source type').selectOption('url');
+    const firstAddress = page.getByLabel(
+      fa ? 'نشانی امن منبع (HTTPS)' : 'Secure source address (HTTPS)',
+      { exact: true }
+    );
+    await firstAddress.fill('https://example.org/guide');
     await page
-      .getByLabel(fa ? 'نشانی امن منبع (HTTPS)' : 'Secure source address (HTTPS)')
-      .fill('https://example.org/guide\nhttps://example.org/faq');
+      .getByRole('button', { name: fa ? 'افزودن نشانی' : 'Add address', exact: true })
+      .click();
+    await expect(page.locator('#kb-source-url-2')).toBeFocused();
+    await page.locator('#kb-source-url-2').fill('https://example.org/faq');
     await page.getByLabel(fa ? 'اندازه بخش (نویسه)' : 'Chunk size (characters)').fill('600');
     await page.getByLabel(fa ? 'همپوشانی بخش‌ها' : 'Chunk overlap').fill('60');
     await page.getByLabel(fa ? 'مدل بردارسازی' : 'Embedding model').fill('embed-1536');
@@ -142,16 +150,33 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: 404, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
-    await page.getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations` }).click();
-    await page.getByLabel(fa ? 'آزمایش جستجو' : 'Test search').fill('meter charge');
+    await page.getByRole('link', { name: `${fa ? 'باز کردن' : 'Open'} Operations` }).click();
+    await page
+      .getByRole('link', { name: fa ? 'پردازش و جست‌وجو' : 'Indexing and search', exact: true })
+      .click();
+    await page
+      .getByRole('button', { name: fa ? 'پردازش دوباره' : 'Reprocess', exact: true })
+      .click();
+    const indexReview = page.getByRole('dialog');
+    await expect(indexReview).toContainText(kb.title);
+    await expect(indexReview).toContainText(
+      knowledgePolicyFormText('indexStatus', fa ? 'fa' : 'en')
+    );
+    await indexReview.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
+    await expect(indexReview).toHaveCount(0);
+    const query = page.getByRole('searchbox', {
+      name: fa ? 'آزمایش جستجو' : 'Test search',
+      exact: true,
+    });
+    await query.fill('meter charge');
     await page.getByRole('button', { name: fa ? 'جستجو' : 'Search', exact: true }).click();
     await expect(page.getByText('Meter charge guidance')).toBeVisible();
     await expect(page.getByText('Guide.txt', { exact: false })).toBeVisible();
-    await page
-      .getByRole('button', { name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups' })
-      .click();
-    await page.getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Staff knowledge` }).click();
-    await page.getByLabel(fa ? 'آزمایش جستجو' : 'Test search').fill('meter charge');
+    const search = page.getByRole('region', { name: fa ? 'آزمایش جستجو' : 'Test search' });
+    await expect(search.getByRole('listitem')).toHaveCount(1);
+    await page.goto('/admin/knowledge-bases?kind=kb-groups');
+    await page.getByRole('link', { name: `${fa ? 'باز کردن' : 'Open'} Staff knowledge` }).click();
+    await query.fill('meter charge');
     await page.getByRole('button', { name: fa ? 'جستجو' : 'Search', exact: true }).click();
     await expect(page.getByText('Meter charge guidance')).toBeVisible();
     expect(queries).toEqual([
@@ -253,8 +278,9 @@ for (const locale of ['en', 'fa'])
     await page.goto('/admin/knowledge-bases');
     await expect(page.locator('main')).toContainText(fa ? '1' : '۱');
     await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
+      .getByRole('link', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
       .click();
+    await page.getByRole('link', { name: fa ? 'اسناد' : 'Documents', exact: true }).click();
     await expect(page.getByText('Guide.pdf', { exact: true })).toBeVisible();
     await expect(
       page.getByText(fa ? 'در انتظار پردازش' : 'Awaiting processing', { exact: true })
@@ -286,14 +312,9 @@ for (const locale of ['en', 'fa'])
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByText('Guide.pdf', { exact: true })).toBeVisible();
+    await page.goto('/admin/knowledge-bases?kind=kb-groups');
     await page
-      .getByRole('button', {
-        name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups',
-        exact: true,
-      })
-      .click();
-    await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Staff knowledge`, exact: true })
+      .getByRole('link', { name: `${fa ? 'باز کردن' : 'Open'} Staff knowledge`, exact: true })
       .click();
     await page
       .getByLabel(fa ? 'انتخاب پایگاه دانش' : 'Choose a knowledge base', { exact: true })
@@ -428,9 +449,13 @@ for (const locale of ['en', 'fa']) {
       });
       await page.goto('/admin/knowledge-bases');
       await page
-        .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
+        .getByRole('link', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
         .click();
-      await page.getByLabel(fa ? 'سند جدید' : 'New document', { exact: true }).setInputFiles({
+      await page.getByRole('link', { name: fa ? 'اسناد' : 'Documents', exact: true }).click();
+      const fileInput = page.getByLabel(knowledgePolicyFormText('chooseFile', fa ? 'fa' : 'en'), {
+        exact: true,
+      });
+      await fileInput.setInputFiles({
         name: 'new-guide.pdf',
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-test'),
@@ -443,7 +468,7 @@ for (const locale of ['en', 'fa']) {
       );
       expect(attachments).toBe(0);
       await expect(
-        page.getByLabel(fa ? 'سند جدید' : 'New document', { exact: true })
+        page.getByLabel(knowledgePolicyFormText('changeFile', fa ? 'fa' : 'en'), { exact: true })
       ).not.toBeEmpty();
       broken = false;
       await page

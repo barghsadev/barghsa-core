@@ -5,12 +5,22 @@ import {
   securityRateLimitPolicyKeys,
   type SecurityRateLimitPolicy,
 } from '@barghsa/shared/rate-limit';
-import { Alert, Button, Input, Label, LoadingStatus, Textarea } from '@barghsa/ui';
+import {
+  Alert,
+  Button,
+  Input,
+  Label,
+  ListRefreshButton,
+  LoadingStatus,
+  NativeSelect,
+  Textarea,
+} from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
 import { CommandFeedback } from './CommandFeedback.js';
 import { SettingsFormSection } from './SettingsFormSection.js';
+import { recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 const path = '/api/admin/config/security-rate-limits';
@@ -212,6 +222,12 @@ export default function SecurityRateLimitPanel({
       onSubmit={submit}
       actions={
         <>
+          <ListRefreshButton
+            label={text('reload')}
+            onClick={state.refresh}
+            refreshing={state.resource.loading}
+            disabled={pending}
+          />
           <Button
             ref={save}
             type="submit"
@@ -223,14 +239,6 @@ export default function SecurityRateLimitPanel({
             }
           >
             {text('rateLimitSave')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={state.refresh}
-            disabled={state.resource.loading || pending}
-          >
-            {text('reload')}
           </Button>
         </>
       }
@@ -256,130 +264,167 @@ export default function SecurityRateLimitPanel({
       )}
       <CommandFeedback message={saved ? text('rateLimitSaved') : null} />
       {policy && (
-        <fieldset className="space-y-3 min-w-0" disabled={blocked || !!action || showRecovery}>
+        <fieldset
+          className="m-0 min-w-0 space-y-3 border-0 p-0"
+          disabled={blocked || !!action || showRecovery}
+        >
           <legend className="sr-only">{text('rateLimitTitle')}</legend>
-          <Label htmlFor="security-rate-action">{text('rateLimitAction')}</Label>
-          <select
-            id="security-rate-action"
-            className="touch-action w-full rounded border bg-background px-2"
-            value={selected}
-            onChange={(event) => {
-              select(event.target.value as Policy['policy']);
-              reset();
-            }}
-          >
-            {securityRateLimitPolicyKeys.map((key) => (
-              <option key={key} value={key}>
-                {text(key)}
-              </option>
-            ))}
-          </select>
-          <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 text-sm">
-            <dt>{text('rateLimitWindow')}</dt>
-            <dd>{numbers.number(policy.windowMs / 60_000)}</dd>
-            <dt>{text('rateLimitVersion')}</dt>
-            <dd>{numbers.number(policy.version)}</dd>
+          <div className={recordEditorField}>
+            <Label htmlFor="security-rate-action">{text('rateLimitAction')}</Label>
+            <NativeSelect
+              id="security-rate-action"
+              className="w-full"
+              value={selected}
+              onChange={(event) => {
+                select(event.target.value as Policy['policy']);
+                reset();
+              }}
+            >
+              {securityRateLimitPolicyKeys.map((key) => (
+                <option key={key} value={key}>
+                  {text(key)}
+                </option>
+              ))}
+            </NativeSelect>
+          </div>
+          <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+            <div>
+              <dt className="text-muted-foreground">{text('rateLimitWindow')}</dt>
+              <dd className="font-medium tabular-nums">
+                {numbers.number(policy.windowMs / 60_000)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{text('rateLimitVersion')}</dt>
+              <dd className="font-medium tabular-nums">{numbers.number(policy.version)}</dd>
+            </div>
           </dl>
-          <Label htmlFor="security-rate-value">{text('rateLimitValue')}</Label>
-          <Input
-            id="security-rate-value"
-            type="number"
-            min={1}
-            max={policy.ceiling}
-            step={1}
-            required
-            aria-describedby="security-rate-range"
-            value={limit ?? String(policy.limit)}
-            onChange={(event) => {
-              setDraft({ ...draft, limit: event.target.value });
-              setSaved(false);
-            }}
-          />
-          <p id="security-rate-range" className="text-sm text-muted-foreground">
-            {text('otpRange')
-              .replace('{min}', numbers.number(1))
-              .replace('{max}', numbers.number(policy.ceiling))}
-          </p>
-          <Label htmlFor="security-rate-emergency">{text('rateLimitEmergency')}</Label>
-          <select
-            id="security-rate-emergency"
-            className="touch-action w-full rounded border bg-background px-2"
-            value={operation}
-            onChange={(event) => {
-              setDraft({
-                ...draft,
-                operation: event.target.value as EmergencyOperation['operation'],
-              });
-              setSaved(false);
-            }}
-          >
-            <option value="keep">{text('rateLimitKeep')}</option>
-            <option value="set" disabled={nextLimit <= 1}>
-              {text('rateLimitSet')}
-            </option>
-            {emergency && <option value="clear">{text('rateLimitClear')}</option>}
-          </select>
-          {emergency && (
-            <dl className="space-y-1 text-sm break-words">
-              <dt>{text('rateLimitEmergencyValue')}</dt>
-              <dd>{numbers.number(emergency.limit)}</dd>
-              <dt>{text('rateLimitOwner')}</dt>
-              <dd>
-                <bdi>{emergency.owner}</bdi>
-              </dd>
-              <dt>{text('rateLimitExpiry')}</dt>
-              <dd>
-                <time dateTime={emergency.expiresAt}>
-                  {expiryFormatter.format(Date.parse(emergency.expiresAt))}
-                </time>
-                {!emergency.active && ` · ${text('rateLimitExpired')}`}
-              </dd>
-              <dt>{text('rateLimitReason')}</dt>
-              <dd dir="auto">{emergency.reason}</dd>
-            </dl>
-          )}
-          {operation === 'set' && (
-            <>
-              <Label htmlFor="security-rate-emergency-value">
-                {text('rateLimitEmergencyValue')}
-              </Label>
+          <div className={recordEditorField}>
+            <Label htmlFor="security-rate-value">{text('rateLimitValue')}</Label>
+            <div className="flex min-w-0 items-center gap-3">
               <Input
-                id="security-rate-emergency-value"
+                id="security-rate-value"
+                className="w-28 min-w-0"
+                dir="ltr"
                 type="number"
                 min={1}
-                max={nextLimit - 1}
+                max={policy.ceiling}
                 step={1}
                 required
-                value={emergencyLimit}
-                onChange={(event) => setDraft({ ...draft, emergencyLimit: event.target.value })}
+                aria-describedby="security-rate-range security-rate-current"
+                value={limit ?? String(policy.limit)}
+                onChange={(event) => {
+                  setDraft({ ...draft, limit: event.target.value });
+                  setSaved(false);
+                }}
               />
-              <Label htmlFor="security-rate-emergency-minutes">{text('rateLimitMinutes')}</Label>
-              <Input
-                id="security-rate-emergency-minutes"
-                type="number"
-                min={5}
-                max={1440}
-                step={1}
-                required
-                value={minutes}
-                onChange={(event) => setDraft({ ...draft, minutes: event.target.value })}
-              />
-            </>
-          )}
-          {operation !== 'keep' && (
-            <>
-              <Label htmlFor="security-rate-reason">{text('rateLimitReason')}</Label>
-              <Textarea
-                id="security-rate-reason"
-                required
-                minLength={10}
-                maxLength={300}
-                dir="auto"
-                value={reason}
-                onChange={(event) => setDraft({ ...draft, reason: event.target.value })}
-              />
-            </>
-          )}
+              <p
+                id="security-rate-current"
+                className="min-w-0 border-s ps-3 text-sm text-muted-foreground"
+              >
+                {text('rateLimitCurrent').replace('{count}', numbers.number(policy.limit))}
+              </p>
+            </div>
+            <p id="security-rate-range" className="text-sm text-muted-foreground">
+              {text('otpRange')
+                .replace('{min}', numbers.number(1))
+                .replace('{max}', numbers.number(policy.ceiling))}
+            </p>
+          </div>
+          <div className="space-y-2 rounded-lg border bg-muted/35 p-3">
+            <div className={recordEditorField}>
+              <Label htmlFor="security-rate-emergency">{text('rateLimitEmergency')}</Label>
+              <NativeSelect
+                id="security-rate-emergency"
+                className="w-full"
+                value={operation}
+                onChange={(event) => {
+                  setDraft({
+                    ...draft,
+                    operation: event.target.value as EmergencyOperation['operation'],
+                  });
+                  setSaved(false);
+                }}
+              >
+                <option value="keep">{text('rateLimitKeep')}</option>
+                <option value="set" disabled={nextLimit <= 1}>
+                  {text('rateLimitSet')}
+                </option>
+                {emergency && <option value="clear">{text('rateLimitClear')}</option>}
+              </NativeSelect>
+            </div>
+            {emergency && (
+              <dl className="space-y-1 text-sm break-words">
+                <dt>{text('rateLimitEmergencyValue')}</dt>
+                <dd>{numbers.number(emergency.limit)}</dd>
+                <dt>{text('rateLimitOwner')}</dt>
+                <dd>
+                  <bdi>{emergency.owner}</bdi>
+                </dd>
+                <dt>{text('rateLimitExpiry')}</dt>
+                <dd>
+                  <time dateTime={emergency.expiresAt}>
+                    {expiryFormatter.format(Date.parse(emergency.expiresAt))}
+                  </time>
+                  {!emergency.active && ` · ${text('rateLimitExpired')}`}
+                </dd>
+                <dt>{text('rateLimitReason')}</dt>
+                <dd dir="auto">{emergency.reason}</dd>
+              </dl>
+            )}
+            {operation === 'set' && (
+              <div className={recordEditorGrid}>
+                <div className={recordEditorField}>
+                  <Label htmlFor="security-rate-emergency-value">
+                    {text('rateLimitEmergencyValue')}
+                  </Label>
+                  <Input
+                    id="security-rate-emergency-value"
+                    dir="ltr"
+                    type="number"
+                    min={1}
+                    max={nextLimit - 1}
+                    step={1}
+                    required
+                    value={emergencyLimit}
+                    onChange={(event) => setDraft({ ...draft, emergencyLimit: event.target.value })}
+                  />
+                </div>
+                <div className={recordEditorField}>
+                  <Label htmlFor="security-rate-emergency-minutes">
+                    {text('rateLimitMinutes')}
+                  </Label>
+                  <Input
+                    id="security-rate-emergency-minutes"
+                    dir="ltr"
+                    type="number"
+                    min={5}
+                    max={1440}
+                    step={1}
+                    required
+                    value={minutes}
+                    onChange={(event) => setDraft({ ...draft, minutes: event.target.value })}
+                  />
+                </div>
+              </div>
+            )}
+            {operation !== 'keep' && (
+              <div className={recordEditorField}>
+                <Label htmlFor="security-rate-reason">{text('rateLimitReason')}</Label>
+                <Textarea
+                  id="security-rate-reason"
+                  required
+                  minLength={10}
+                  maxLength={300}
+                  dir="auto"
+                  rows={2}
+                  placeholder={text('rateLimitReasonExample')}
+                  value={reason}
+                  onChange={(event) => setDraft({ ...draft, reason: event.target.value })}
+                />
+              </div>
+            )}
+          </div>
         </fieldset>
       )}
       {policy && (

@@ -68,7 +68,7 @@ export function useOwnedContractRead(
             /^\/api\/(?:admin\/)?contracts\/[^/]+\/(?:activation|signature|acceptance-review|cancellation-status|cancellation-requests)$/.test(
               url.pathname
             ) ||
-            /^\/api\/admin\/contracts\/[^/]+\/(?:cancellation-preview|cancellations)$/.test(
+            /^\/api\/admin\/contracts\/[^/]+\/(?:cancellation-preview|cancellations|activation\/invoice-options)$/.test(
               url.pathname
             ) ||
             (documents &&

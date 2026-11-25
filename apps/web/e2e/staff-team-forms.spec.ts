@@ -38,11 +38,11 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({ json: staffRoutingRules })
     );
     await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: listedTeam });
       writes.push(route.request().postDataJSON());
       return route.fulfill({ status: 409, json: {} });
     });
-    await page.goto('/admin/staff-teams');
-    await page.getByRole('button', { name: text('edit'), exact: true }).click();
+    await page.goto(`/admin/staff-teams/${staffTeamId}/edit`);
     const form = page.locator('form').filter({ has: page.locator('#staff-team-name') });
     const description = form.locator('#staff-team-description');
     const save = form.getByRole('button', { name: text('saveTeam'), exact: true });
@@ -90,6 +90,7 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: staffRoutingRules })
       );
       await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) => {
+        if (route.request().method() === 'GET') return route.fulfill({ json: saved });
         const body = route.request().postDataJSON();
         writes.push(body);
         if (!verified)
@@ -109,23 +110,18 @@ for (const locale of ['en', 'fa'] as const)
         verified = true;
         return route.fulfill({ json: { verified: true } });
       });
-      await page.goto('/admin/staff-teams');
-      await page.getByRole('button', { name: text('edit'), exact: true }).click();
+      await page.goto(`/admin/staff-teams/${staffTeamId}/edit`);
+      await expect(page.locator('#staff-team-name')).toHaveValue(staffTeam.name);
+      await expect
+        .poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark')))
+        .toBe(dark);
       await checkRoutePresentation(page, test.info(), locale);
       const viewport = page.viewportSize()!;
       await page.setViewportSize({ width: 320, height: 844 });
-      for (const field of ['#staff-team-lead', '#team-ticket']) {
+      for (const field of ['#staff-team-lead', '#staff-team-name']) {
         const control = page.locator(field);
         await expect(control).toBeVisible();
         expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-      }
-      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
-        const member = page.getByRole('checkbox', { name: staffMember.name, exact: true });
-        const label = member.locator('..');
-        await expect(label).toBeVisible();
-        const { width, height } = (await label.boundingBox())!;
-        expect(width).toBeGreaterThanOrEqual(44);
-        expect(height).toBeGreaterThanOrEqual(44);
       }
       await page.setViewportSize(viewport);
       const form = page.locator('form').filter({ has: page.locator('#staff-team-name') });
@@ -143,15 +139,34 @@ for (const locale of ['en', 'fa'] as const)
       await expect(tags).toBeFocused();
       await expect(tags).toHaveAttribute('aria-invalid', 'true');
       await expect(page.locator('#staff-team-lead')).toHaveValue(staffMember.id);
-      const box = form.getByRole('checkbox', { name: staffMember.name, exact: true });
-      await box.uncheck();
+      const search = form.locator('#staff-team-search');
+      const add = form.getByRole('button', {
+        name: text('addMember').replace('{name}', staffMember.name),
+        exact: true,
+      });
+      const remove = form.getByRole('button', {
+        name: `${text('remove')} ${staffMember.name}`,
+        exact: true,
+      });
+      await expect(add).toHaveCount(0);
+      await remove.press('Enter');
       await expect(page.locator('#staff-team-lead')).toHaveValue('');
-      await box.check();
+      await expect(search).toBeFocused();
+      await expect(add).toBeVisible();
+      const { width, height } = (await add.boundingBox())!;
+      expect(width).toBeGreaterThanOrEqual(44);
+      expect(height).toBeGreaterThanOrEqual(44);
+      await add.press('Enter');
+      await expect(add).toHaveCount(0);
+      await expect(search).toBeFocused();
+      await search.press('Enter');
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      expect(writes).toEqual([]);
       await page.locator('#staff-team-lead').selectOption(staffMember.id);
       await tags.fill(' finance, billing ');
       await save.click();
       let dialog = page.getByRole('dialog');
-      await expect(page.locator('#team-ticket')).toBeDisabled();
+      await expect(page.locator('#team-ticket')).toHaveCount(0);
       await dialog.locator('button[type=submit]').click();
       await dialog.locator('input[type=password]').fill('synthetic-password');
       await dialog.locator('button[type=submit]').click();
@@ -172,7 +187,8 @@ for (const locale of ['en', 'fa'] as const)
         leadUserId: staffMember.id,
         memberUserIds: [staffMember.id],
       });
-      await page.getByRole('button', { name: text('edit'), exact: true }).click();
+      await expect(tags).toHaveValue('finance, billing');
+      await page.reload();
       await expect(tags).toHaveValue('finance, billing');
       await page.evaluate(async () => {
         const animations = [...document.querySelectorAll('[data-sonner-toast]')].flatMap((notice) =>
@@ -224,12 +240,10 @@ for (const locale of ['en', 'fa'] as const)
         rules = body;
         return route.fulfill({ json: rules });
       });
-      await page.goto('/admin/staff-teams');
-      await page
-        .locator('li')
-        .filter({ has: page.getByRole('heading', { name: staffTeam.name, exact: true }) })
-        .getByRole('button', { name: text('edit'), exact: true })
-        .click();
+      await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) =>
+        route.fulfill({ json: team })
+      );
+      await page.goto(`/admin/staff-teams/${staffTeamId}/edit`);
       await page.locator('#staff-team-name').fill('Retained team');
       team = { ...team, name: 'Concurrent team' };
       await page.getByRole('button', { name: text('refresh'), exact: true }).click();
@@ -237,11 +251,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#staff-team-name')).toBeDisabled();
       await page.getByRole('button', { name: text('resetTeam'), exact: true }).click();
       await expect(page.locator('#staff-team-name')).toHaveValue('Concurrent team');
+      await page.goto('/admin/staff-teams/assignment');
       await page.locator('#team-consultation').selectOption(staffTeamId);
       await page
         .getByRole('group', { name: text('consultation'), exact: true })
-        .getByRole('button', { name: text('addFallback'), exact: true })
-        .click();
+        .getByRole('combobox', { name: text('addFallback'), exact: true })
+        .selectOption(alternate);
       await page.locator('#fallback-strategy-consultation-2').selectOption('expertise');
       const save = page.getByRole('button', { name: text('saveRules'), exact: true });
       await save.click();
@@ -334,6 +349,10 @@ for (const locale of ['en', 'fa'] as const) {
       teams = [{ ...staffTeam, ...body }];
     });
     await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) => {
+      if (route.request().method() === 'GET') {
+        const [team] = teams;
+        return route.fulfill(team ? { json: team } : { status: 404, json: {} });
+      }
       expect(route.request().method()).toBe('DELETE');
       writes.push('delete');
       teams = [];
@@ -344,7 +363,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/config/assignment-rules', (route) =>
       route.fulfill({ json: staffRoutingRules })
     );
-    await page.goto('/admin/staff-teams');
+    await page.goto('/admin/staff-teams/new');
     const input = page.locator('#staff-team-name');
     const save = page.getByRole('button', { name: text('saveTeam'), exact: true });
     const dialog = page.getByRole('dialog');
@@ -352,7 +371,12 @@ for (const locale of ['en', 'fa'] as const) {
     const refresh = dialog.getByRole('button', { name: text('refresh'), exact: true });
     const unverified = dialog.getByRole('alert').filter({ hasText: text('unverified') });
     await input.fill(name);
-    await page.getByRole('checkbox', { name: staffMember.name, exact: true }).check();
+    await page
+      .getByRole('button', {
+        name: text('addMember').replace('{name}', staffMember.name),
+        exact: true,
+      })
+      .click();
     await save.click();
     await confirm.click();
     await expect.poll(() => writes).toEqual(['create']);
@@ -362,13 +386,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(confirm).toBeDisabled();
     await refresh.click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name, exact: true })).toBeVisible();
     await expect(input).toHaveValue(name);
     await expect(save).toBeDisabled();
     await expect(page.getByText(text('saved'), { exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: text('resetTeam'), exact: true }).click();
     await expect(input).toHaveValue('');
 
+    await page.getByRole('link', { name, exact: true }).click();
     await page.getByRole('button', { name: text('delete'), exact: true }).click();
     await expect(confirm).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'destructive');

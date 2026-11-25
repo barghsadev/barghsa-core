@@ -247,6 +247,23 @@ export function useCustomerServiceHistory<T extends object>({
     if (status === 'denied') reset();
     setRevision((value) => value + 1);
   };
+  const alternativeParams = new URLSearchParams(params);
+  alternativeParams.delete('status');
+  alternativeParams.delete('statuses');
+  const statusProbe =
+    status === 'ready' &&
+    profileId &&
+    !before &&
+    !history.items.length &&
+    (params.has('status') || params.has('statuses'))
+      ? {
+          path: `${endpoint}${alternativeParams.size ? `?${alternativeParams}` : ''}`,
+          hasResults: (body: unknown) =>
+            record(body) &&
+            Array.isArray(body[itemsKey]) &&
+            (body[itemsKey] as T[]).some((item) => record(item) && Boolean(identify(item))),
+        }
+      : null;
   return {
     items: status === 'denied' ? [] : history.items,
     nextBefore: status === 'denied' ? null : history.nextBefore,
@@ -262,6 +279,7 @@ export function useCustomerServiceHistory<T extends object>({
     error:
       status === 'denied' ? ('denied' as const) : status === 'error' ? ('load' as const) : null,
     noProfile: profileStatus === 'ready' && profile.noProfile,
+    statusProbe,
     retry,
   };
 }

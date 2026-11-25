@@ -324,11 +324,25 @@ export async function setupSettingsForms(
       json: { addresses: state.activeProfileId === profileId ? state.addresses : [] },
     });
   });
+  await page.route('**/api/profiles/*/addresses/access', (route) => {
+    const path = new URL(route.request().url()).pathname;
+    state.reads.push(path);
+    const id = path.split('/').at(-3);
+    return id !== state.activeProfileId || state.denied
+      ? route.fulfill({ status: 403, json: {} })
+      : route.fulfill({ json: { profileId: id, canEdit: true } });
+  });
   await page.route(/\/api\/profiles\/[0-9a-f-]+\/addresses\/[0-9a-f-]+$/, (route) => {
     if (route.request().method() === 'PUT') return write(route, 'edit');
     const path = new URL(route.request().url()).pathname;
-    state.companionWrites.push(path);
     const target = state.addresses.find((item) => item.id === path.split('/').at(-1));
+    if (route.request().method() === 'GET') {
+      state.reads.push(path);
+      return !target || state.denied || state.activeProfileId !== target.profileId
+        ? route.fulfill({ status: 404, json: {} })
+        : route.fulfill({ json: target });
+    }
+    state.companionWrites.push(path);
     if (target?.mainAddress)
       return route.fulfill({
         status: 400,

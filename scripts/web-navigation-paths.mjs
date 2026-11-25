@@ -4,9 +4,15 @@ const routeSource = readFileSync(
   new URL('../apps/web/src/routeTree.gen.ts', import.meta.url),
   'utf8'
 );
-const routeInterface = routeSource.match(/export interface FileRoutesByFullPath \{([^}]+)\}/);
-const routes = [...(routeInterface?.[1].matchAll(/^ +'([^']+)':/gm) ?? [])].map((match) =>
-  segments(match[1])
+const routeInterface = routeSource.match(/^export interface FileRoutesByFullPath \{([\s\S]*?)^\}/m);
+const routes = [...(routeInterface?.[1].matchAll(/^ +'([^']+)':/gm) ?? [])].flatMap((match) =>
+  segments(match[1]).reduce(
+    (paths, part) =>
+      part.startsWith('{-$') && part.endsWith('}')
+        ? [...paths, ...paths.map((path) => [...path, part.slice(2, -1)])]
+        : paths.map((path) => [...path, part]),
+    [[]]
+  )
 );
 if (!routes.some((route) => route.length === 0)) {
   throw new Error('Could not read registered paths from the generated web router');

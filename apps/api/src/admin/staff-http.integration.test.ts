@@ -43,6 +43,30 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 
+it('reads one staff account and excludes customer accounts', async () => {
+  const customerId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'fixture-only')",
+    [customerId, `${customerId}@example.test`]
+  );
+  const account = (id: string) => `${http.base}/api/admin/staff/accounts/${id}`;
+  const response = await fetch(account('bootstrap'), { headers: adminHeaders });
+  expect(response.status).toBe(200);
+  expect(response.headers.get('cache-control')).toContain('no-store');
+  expect(await response.json()).toMatchObject({
+    userId: 'bootstrap',
+    username: 'admin@example.test',
+    isAdmin: true,
+    status: 'active',
+  });
+  expect((await fetch(account('bootstrap'))).status).toBe(401);
+  expect((await fetch(account('bootstrap'), { headers: await session(customerId) })).status).toBe(
+    403
+  );
+  expect((await fetch(account(customerId), { headers: adminHeaders })).status).toBe(404);
+  expect((await fetch(account(randomUUID()), { headers: adminHeaders })).status).toBe(404);
+});
+
 it('lets staff creators select initial roles without granting role-management access', async () => {
   const userId = randomUUID();
   const roleId = `creator-${randomUUID()}`;
@@ -706,4 +730,54 @@ it('does not expose temporary credentials on staff readback and rejects secondar
     await fetch(`${http.base}/api/admin/staff`, { headers: adminHeaders })
   ).json();
   expect(JSON.stringify(list)).not.toMatch(/temporaryPassword|password_hash|activation_token/);
+});
+
+it('searches staff by name or username with a bounded, private directory response', async () => {
+  const staffId = randomUUID();
+  const customerId = randomUUID();
+  const marker = randomUUID().slice(0, 8);
+  const username = `staff-${marker}@example.test`;
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'fixture-only',true), ($3,$4,'fixture-only',false)",
+    [staffId, username, customerId, `customer-${marker}@example.test`]
+  );
+  await http.pool.query(
+    `INSERT INTO profiles(user_id,profile_type,is_default,first_name,last_name)
+     VALUES ($1,'INDIVIDUAL',true,'Sara',$3), ($2,'INDIVIDUAL',true,'Sara',$3)`,
+    [staffId, customerId, marker]
+  );
+  const search = (query: string) =>
+    `${http.base}/api/admin/staff/search?q=${encodeURIComponent(query)}`;
+  const expected = {
+    items: [{ userId: staffId, username, name: `Sara ${marker}` }],
+    hasMore: false,
+  };
+  const byName = await fetch(search(`  sArA ${marker}  `), { headers: adminHeaders });
+  expect(byName.status, await byName.clone().text()).toBe(200);
+  expect(byName.headers.get('cache-control')).toContain('no-store');
+  expect(await byName.json()).toEqual(expected);
+  expect(
+    await (await fetch(search(username.toUpperCase()), { headers: adminHeaders })).json()
+  ).toEqual(expected);
+  expect(await (await fetch(search(`%${marker}`), { headers: adminHeaders })).json()).toEqual({
+    items: [],
+    hasMore: false,
+  });
+  expect((await fetch(search(marker))).status).toBe(401);
+  expect((await fetch(search(marker), { headers: await session(customerId) })).status).toBe(403);
+  expect((await fetch(search('a'), { headers: adminHeaders })).status).toBe(400);
+  expect((await fetch(search('a'.repeat(101)), { headers: adminHeaders })).status).toBe(400);
+
+  await http.pool.query(
+    `INSERT INTO users(user_id,username,password_hash,is_staff)
+     SELECT gen_random_uuid(), $1 || '-' || n || '@example.test', 'fixture-only', true
+     FROM generate_series(1,12) AS n`,
+    [marker]
+  );
+  const matches = await (await fetch(search(marker), { headers: adminHeaders })).json();
+  expect(matches).toMatchObject({ hasMore: true });
+  expect(matches.items).toHaveLength(10);
+  expect(matches.items.every((account: { userId: string }) => account.userId !== customerId)).toBe(
+    true
+  );
 });

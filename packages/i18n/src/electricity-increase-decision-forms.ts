@@ -32,6 +32,30 @@ export function t(key: string, locale: Locale = 'fa'): string {
 }
 export const adminFA: I18nDictionary = {
   'admin.electricityIncreases.title': 'درخواست‌های افزایش برق',
+  'admin.electricityIncreases.recordTitle': 'درخواست افزایش برق',
+  'admin.electricityIncreases.backToQueue': 'بازگشت به صف درخواست‌های افزایش',
+  'admin.electricityIncreases.backToRequest': 'بازگشت به درخواست',
+  'admin.electricityIncreases.requestReferences': 'شناسه‌های درخواست، قرارداد و سفارش',
+  'admin.electricityIncreases.prepareApproval': 'تأیید درخواست',
+  'admin.electricityIncreases.previewApproval': 'پیش‌نمایش تأیید',
+  'admin.electricityIncreases.previewRejection': 'پیش‌نمایش رد درخواست',
+  'admin.electricityIncreases.approvalRecorded':
+    'درخواست تأیید شد. الحاقیه در انتظار امضای مشتری است.',
+  'admin.electricityIncreases.rejectionRecorded': 'درخواست رد شد و دلیل رد ثبت شد.',
+  'admin.electricityIncreases.decisionUnavailable': 'بررسی این درخواست پایان یافته است.',
+  'admin.electricityIncreases.openRecord': 'مشاهده درخواست',
+  'admin.electricityIncreases.recordNotFound': 'این درخواست در دسترس نیست.',
+  'admin.electricityIncreases.readOnlyRecord': 'برای ثبت تصمیم، دسترسی ویرایش قرارداد لازم است.',
+  'admin.electricityIncreases.requestState.pending': 'در انتظار بررسی',
+  'admin.electricityIncreases.requestState.awaiting_signature': 'در انتظار امضای الحاقیه',
+  'admin.electricityIncreases.requestState.awaiting_payment': 'در انتظار پرداخت',
+  'admin.electricityIncreases.requestState.awaiting_effective_date': 'در انتظار تاریخ اجرا',
+  'admin.electricityIncreases.requestState.effective': 'اعمال‌شده',
+  'admin.electricityIncreases.requestState.expired': 'منقضی‌شده',
+  'admin.electricityIncreases.requestState.rejected': 'ردشده',
+  'admin.electricityIncreases.reviewedAt': 'زمان بررسی',
+  'admin.electricityIncreases.reviewReason': 'دلیل تصمیم',
+  'admin.electricityIncreases.adjustmentAmount': 'مبلغ تعدیل',
   'admin.electricityIncreases.description': 'درخواست‌های افزایش مقدار قرارداد فعال را بررسی کنید.',
   'admin.electricityIncreases.refresh': 'تازه‌سازی',
   'admin.electricityIncreases.retry': 'تلاش دوباره',
@@ -49,7 +73,7 @@ export const adminFA: I18nDictionary = {
   'admin.electricityIncreases.actions': 'عملیات',
   'admin.electricityIncreases.reviewRequest': 'بررسی درخواست',
   'admin.electricityIncreases.finance': 'پیگیری مالی',
-  'admin.electricityIncreases.dateZone': 'زمان ورودی به تقویم میلادی در منطقه زمانی حساب',
+  'admin.electricityIncreases.dateZone': 'منطقه زمانی حساب',
   'admin.electricityIncreases.pendingTab': 'در انتظار بررسی',
   'admin.electricityIncreases.expiredTab': 'منقضی‌شده',
   'admin.electricityIncreases.invoiceState': 'وضعیت فاکتور تعدیل',
@@ -82,7 +106,7 @@ export const adminFA: I18nDictionary = {
   'admin.electricityIncreases.approvalReason': 'دلیل تأیید',
   'admin.electricityIncreases.approveDate': 'تاریخ شروع پیشنهادی (اختیاری)',
   'admin.electricityIncreases.approveDateHelp':
-    'خالی بگذارید تا تاریخ دقیق در پیش‌نمایش تعیین شود. فقط تحویل آینده واجد شرایط است.',
+    'در صورت خالی‌بودن، تاریخ شروع در پیش‌نمایش مشخص می‌شود.',
   'admin.electricityIncreases.approve': 'تأیید و صدور الحاقیه',
   'admin.electricityIncreases.approveConfirm':
     'الحاقیه با شرایط ثبت‌شده صادر و برای مشتری نمایش داده شود؟',
@@ -108,6 +132,32 @@ export const adminFA: I18nDictionary = {
 };
 export const adminEN: I18nDictionary = {
   'admin.electricityIncreases.title': 'Electricity increase requests',
+  'admin.electricityIncreases.recordTitle': 'Electricity increase request',
+  'admin.electricityIncreases.backToQueue': 'Back to increase requests',
+  'admin.electricityIncreases.backToRequest': 'Back to request',
+  'admin.electricityIncreases.requestReferences': 'Request, contract, and order references',
+  'admin.electricityIncreases.prepareApproval': 'Approve request',
+  'admin.electricityIncreases.previewApproval': 'Preview approval',
+  'admin.electricityIncreases.previewRejection': 'Preview rejection',
+  'admin.electricityIncreases.approvalRecorded':
+    'Request approved. The amendment awaits the customer’s signature.',
+  'admin.electricityIncreases.rejectionRecorded':
+    'The request was declined and the reason was recorded.',
+  'admin.electricityIncreases.decisionUnavailable': 'This request has already been reviewed.',
+  'admin.electricityIncreases.openRecord': 'View request',
+  'admin.electricityIncreases.recordNotFound': 'This request is unavailable.',
+  'admin.electricityIncreases.readOnlyRecord':
+    'Contract edit access is required to record a decision.',
+  'admin.electricityIncreases.requestState.pending': 'Awaiting review',
+  'admin.electricityIncreases.requestState.awaiting_signature': 'Awaiting amendment signature',
+  'admin.electricityIncreases.requestState.awaiting_payment': 'Awaiting payment',
+  'admin.electricityIncreases.requestState.awaiting_effective_date': 'Awaiting effective date',
+  'admin.electricityIncreases.requestState.effective': 'Applied',
+  'admin.electricityIncreases.requestState.expired': 'Expired',
+  'admin.electricityIncreases.requestState.rejected': 'Rejected',
+  'admin.electricityIncreases.reviewedAt': 'Reviewed at',
+  'admin.electricityIncreases.reviewReason': 'Decision reason',
+  'admin.electricityIncreases.adjustmentAmount': 'Adjustment amount',
   'admin.electricityIncreases.description':
     'Review requests to increase an active contract’s quantity.',
   'admin.electricityIncreases.refresh': 'Refresh',
@@ -126,7 +176,7 @@ export const adminEN: I18nDictionary = {
   'admin.electricityIncreases.actions': 'Actions',
   'admin.electricityIncreases.reviewRequest': 'Review request',
   'admin.electricityIncreases.finance': 'Financial follow-up',
-  'admin.electricityIncreases.dateZone': 'Gregorian input in the account timezone',
+  'admin.electricityIncreases.dateZone': 'Account timezone',
   'admin.electricityIncreases.pendingTab': 'Pending review',
   'admin.electricityIncreases.expiredTab': 'Expired',
   'admin.electricityIncreases.invoiceState': 'Adjustment invoice state',
@@ -159,7 +209,7 @@ export const adminEN: I18nDictionary = {
   'admin.electricityIncreases.approvalReason': 'Approval reason',
   'admin.electricityIncreases.approveDate': 'Proposed start date (optional)',
   'admin.electricityIncreases.approveDateHelp':
-    'Leave blank to choose an exact date in the preview. Only future delivery is eligible.',
+    'Leave blank to use the start date shown in the preview.',
   'admin.electricityIncreases.approve': 'Approve and issue amendment',
   'admin.electricityIncreases.approveConfirm':
     'Issue the amendment with these terms and show it to the customer?',
@@ -186,4 +236,33 @@ export const adminEN: I18nDictionary = {
 };
 export function adminText(key: string, locale: Locale = 'fa'): string {
   return lookup(locale === 'fa' ? adminFA : adminEN, key) ?? lookup(adminEN, key) ?? key;
+}
+
+const editorMessages = {
+  fa: {
+    approvalDetails: 'جزئیات تأیید',
+    declineDetails: 'جزئیات رد درخواست',
+    approvalEffect:
+      'با تأیید درخواست، الحاقیه برای امضای مشتری ارسال می‌شود. مبلغ تعدیل هنگام امضا محاسبه می‌شود.',
+    declineEffect: 'مقدار قرارداد ثابت می‌ماند.',
+    approvalReasonUse: 'دلیل تأیید در الحاقیه و سابقه تصمیم ثبت می‌شود.',
+    declineReasonUse: 'دلیل رد برای مشتری ارسال می‌شود.',
+    approvalExample: 'مثلاً ظرفیت تأمین برای دوره باقی‌مانده کافی است.',
+    declineExample: 'مثلاً افزایش درخواستی از ظرفیت قابل‌تأمین بیشتر است.',
+  },
+  en: {
+    approvalDetails: 'Approval details',
+    declineDetails: 'Decline details',
+    approvalEffect:
+      'Approval sends an amendment to the customer for signature. The adjustment is calculated at signing.',
+    declineEffect: 'The contracted quantity stays the same.',
+    approvalReasonUse: 'Saved with the decision and the amendment.',
+    declineReasonUse: 'The customer receives this reason.',
+    approvalExample: 'For example, supply capacity is available for the remaining term.',
+    declineExample: 'For example, the requested increase exceeds available supply.',
+  },
+} as const;
+
+export function editorText(key: keyof typeof editorMessages.en, locale: Locale) {
+  return editorMessages[locale][key];
 }

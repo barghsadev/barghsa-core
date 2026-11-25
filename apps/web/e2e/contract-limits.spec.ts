@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { electricityLimits } from '../src/test/contract-settings-fixtures';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 for (const locale of ['en', 'fa'])
   test(`contract limits recover from failures without losing the proposal (${locale})`, async ({
     page,
@@ -36,11 +37,11 @@ for (const locale of ['en', 'fa'])
       verified = route.request().postDataJSON().password === 'correct';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
-    await page.goto('/admin/contract-limits');
+    await page.goto('/admin/contract-limits/edit');
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
-    const lead = page.getByLabel(fa ? 'حداقل فاصله تا شروع (روز)' : 'Minimum lead time (days)', {
+    const lead = page.getByLabel(tWorkspace('admin.contractLimits.leadTimeDays', locale), {
       exact: true,
     });
     await lead.fill('-1');

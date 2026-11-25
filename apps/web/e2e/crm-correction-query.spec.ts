@@ -1,7 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t as crmText } from '@barghsa/i18n/crm';
 import { t as appText } from '@barghsa/i18n/app';
-import type { Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import {
@@ -47,7 +46,7 @@ for (const profile of [false, true])
       let failed = true,
         total = 41,
         profileReads = 0;
-      let write: Route | undefined;
+      const writes: unknown[] = [];
       const requests: string[] = [];
       await page.route(`**/api/crm/profiles/${crmProfileId}`, (r) => {
         profileReads++;
@@ -75,24 +74,23 @@ for (const profile of [false, true])
         r.fulfill({ json: { ...crmCaseDetail, requestedValue: 'Page 2' } })
       );
       await page.route(`**/api/crm/verification-cases/${crmCaseId}/status`, (r) => {
-        write = r;
+        writes.push(r.request().postDataJSON());
+        return r.fulfill({
+          json: { success: true, id: crmCaseId, profileId: crmProfileId, status: 'Approved' },
+        });
       });
       const path = '/admin/crm/corrections',
-        context = profile ? `&profileId=${crmProfileId}&fieldName=last_name` : '';
+        context = profile ? `&profileId=${crmProfileId}` : '';
       const params = () => new URL(page.url()).searchParams;
       const copy = (key: string) => crmText(`crm.corrections.${key}`, locale);
       await page.goto(path + '?status=Under%20Review' + context);
       const main = page.getByRole('main');
       await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
       if (profile) {
-        await expect(page.locator('#correction-field')).toHaveValue('last_name');
-        await page.locator('#correction-value').fill('PRIVATE VALUE');
-        await page.locator('#correction-reason').fill('PRIVATE REASON');
-        await page.locator('#correction-files').setInputFiles({
-          name: 'evidence.pdf',
-          mimeType: 'application/pdf',
-          buffer: Buffer.from('evidence'),
-        });
+        await expect(
+          page.getByRole('link', { name: copy('request'), exact: true })
+        ).toHaveAttribute('href', `/admin/crm/profiles/${crmProfileId}/corrections/new`);
+        await expect(page.locator('#correction-field')).toHaveCount(0);
       }
       await main
         .getByRole('button', { name: crmText('crm.list.next', locale), exact: true })
@@ -106,52 +104,30 @@ for (const profile of [false, true])
       await main.getByRole('button', { name: copy('queueRetry'), exact: true }).click();
       await expect(main.getByText('Page 2', { exact: true })).toBeVisible();
       expect(requests.at(-1)).toBe(retryQuery);
-      if (profile) {
-        await expect(page.locator('#correction-value')).toHaveValue('PRIVATE VALUE');
-        expect(
-          await page
-            .locator('#correction-files')
-            .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
-        ).toBe('evidence.pdf');
-        expect(profileReads).toBe(1);
-      }
-      await main.getByRole('button', { name: copy('details'), exact: true }).click();
+      expect(profileReads).toBe(0);
+      await main.getByRole('link', { name: copy('details'), exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/admin/crm/corrections/${crmCaseId}\\?`));
+      await expect(page.locator('#case-status')).toHaveCount(0);
       await page.locator('#case-notes').fill('PRIVATE NOTES');
       await main.getByRole('button', { name: copy('save'), exact: true }).click();
       await page
         .getByRole('dialog')
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
-      await expect.poll(() => !!write).toBe(true);
-      const abandoned = page.waitForEvent(
-        'requestfailed',
-        (request) => request.method() === 'PUT' && request.url() === write!.request().url()
-      );
-      await page.goBack();
-      await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(page.locator('#case-notes')).toHaveCount(0);
-      expect((await abandoned).failure()?.errorText).toBeTruthy();
-      await page.evaluate(
-        () =>
-          new Promise<void>((resolve) =>
-            requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-          )
-      );
-      expect(params().get('page')).toBeNull();
-      await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
-      await page.goForward();
-      await expect(main.getByText('Page 2', { exact: true })).toBeVisible();
+      expect(writes).toEqual([{ decision: 'Approved', reviewerNotes: 'PRIVATE NOTES' }]);
+      expect(page.url()).not.toContain('PRIVATE');
       await page.reload();
+      await expect(main.getByText('Page 2', { exact: true })).toBeVisible();
+      await expect(page.locator('#case-notes')).toHaveValue('');
+      await page.getByRole('link', { name: copy('backToQueue'), exact: true }).click();
       await expect(main.getByText('Page 2', { exact: true })).toBeVisible();
       expect(new URLSearchParams(requests.at(-1)).get('offset')).toBe('20');
       await page.locator('#case-status').selectOption('Approved');
       await expect.poll(() => params().get('status')).toBe('Approved');
       expect(params().get('page')).toBeNull();
       await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
-      expect([...params().keys()].sort()).toEqual(
-        profile ? ['fieldName', 'profileId', 'status'] : ['status']
-      );
+      expect([...params().keys()].sort()).toEqual(profile ? ['profileId', 'status'] : ['status']);
       await page.reload();
       await expect(page.locator('#case-status')).toHaveValue('Approved');
       await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
@@ -169,9 +145,7 @@ for (const profile of [false, true])
         });
       total = 1;
       await page.goto(
-        path +
-          '?page=7&status=Rejected' +
-          (profile ? `&profileId=${crmProfileId}&fieldName=last_name` : '')
+        path + '?page=7&status=Rejected' + (profile ? `&profileId=${crmProfileId}` : '')
       );
       await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
       expect(params().get('page')).toBeNull();

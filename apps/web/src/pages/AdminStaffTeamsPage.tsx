@@ -1,9 +1,28 @@
+import {
+  ChevronDown,
+  Pencil as TablePencilIcon,
+  Plus,
+  Search,
+  Trash2 as TableTrash2Icon,
+  X,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import {
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+} from '../components/RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
-import { useRecordAddress, type RecordAddress } from '../hooks/useRecordAddress.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link, useBlocker } from '@tanstack/react-router';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import {
@@ -14,8 +33,11 @@ import {
   Input,
   Label,
   ListPage,
+  ListRefreshButton,
   NativeSelect,
   TextCell,
+  Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import {
   DEFAULT_STAFF_ASSIGNMENT_RULES,
@@ -60,7 +82,17 @@ import {
   type RoutingDraft,
 } from '../lib/staff-team-form.js';
 
-export default function AdminStaffTeamsPage({ selection }: { selection?: RecordAddress } = {}) {
+type TeamsMode = 'directory' | 'detail' | 'create' | 'edit' | 'assignment';
+
+function TeamNavigationGuard({ active }: { active: boolean }) {
+  useBlocker({ shouldBlockFn: () => active, enableBeforeUnload: () => active });
+  return null;
+}
+
+export default function AdminStaffTeamsPage({
+  mode,
+  teamId,
+}: { mode?: TeamsMode; teamId?: string } = {}) {
   const locale = useLocale();
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -68,6 +100,9 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
   const teamRequest = useRef<AbortController | null>(null);
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.teams.${key}`, locale);
+  const catalogue = !mode || mode === 'directory';
+  const showEditor = !mode || mode === 'create' || mode === 'edit';
+  const showRouting = !mode || mode === 'assignment';
   const unavailableMember = loadingText('recordUnavailable', locale);
   const [teams, setTeams] = useState<Team[]>([]);
   const [known, setKnown] = useState<Record<string, Member>>({});
@@ -142,8 +177,11 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     [error, setError] = useState(false),
     [saved, setSaved] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
+  const [missing, setMissing] = useState(false);
+  const [createdTeam, setCreatedTeam] = useState<Team | null>(null);
   const [search, setSearch] = useState(''),
     [members, setMembers] = useState<Member[]>([]);
+  const memberSearch = useRef<HTMLInputElement>(null);
   const [memberLoading, setMemberLoading] = useState(false),
     [memberError, setMemberError] = useState(false),
     [hasMore, setHasMore] = useState(false);
@@ -169,7 +207,11 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
   actionRef.current = action;
   knownRef.current = known;
   const memberScope = JSON.stringify([search, editing, memberRevision]);
-  const visibleMembers = memberScope === acceptedMemberScope ? members : [];
+  const matchingMembers =
+    memberScope === acceptedMemberScope
+      ? members.filter((member) => member.eligible !== false)
+      : [];
+  const visibleMembers = matchingMembers.filter((member) => !draft.members.includes(member.id));
   function clearAction() {
     ++workGeneration.current;
     actionRef.current = null;
@@ -198,6 +240,7 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     setRulesLoading(false);
     clearAction();
     setTeams([]);
+    setCreatedTeam(null);
     teamSnapshot.current = [];
     setRules(structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES));
     setTeamStale(false);
@@ -211,7 +254,6 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     rulesSnapshot.current = null;
     editedTeam.current = null;
     setEditing(null);
-    selectTeam(null, true);
     resetTeam(emptyTeamDraft());
     setMembers([]);
     setKnown({});
@@ -261,17 +303,22 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
       'aria-describedby': binding['aria-describedby'],
     };
   }
-  function feedback(kind: 'team' | 'rules', field: keyof TeamDraft | keyof RoutingDraft) {
+  function feedback(
+    kind: 'team' | 'rules',
+    field: keyof TeamDraft | keyof RoutingDraft,
+    reserveSpace = true
+  ) {
     const form = kind === 'team' ? teamForm : routingForm;
     const message =
       kind === 'team'
         ? teamForm.form.getFieldState(field as keyof TeamDraft).error?.message
         : routingForm.form.getFieldState(field as keyof RoutingDraft).error?.message;
+    if (!message && !reserveSpace) return null;
     return (
       <p
         id={form.errorId(field as never)}
         aria-hidden={!message || undefined}
-        className={`min-h-5 text-sm text-destructive ${message ? '' : 'invisible'}`}
+        className={`min-h-4 text-xs text-destructive ${message ? '' : 'invisible'}`}
       >
         {message || '\u00a0'}
       </p>
@@ -295,7 +342,9 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     setLoading(true);
     setError(false);
     try {
-      const path = '/api/admin/staff-teams';
+      const path = teamId
+        ? `/api/admin/staff-teams/${encodeURIComponent(teamId)}`
+        : '/api/admin/staff-teams';
       const key = queryKeys.catalogue.list(
         {
           context: 'staff',
@@ -308,9 +357,12 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
       const data = await read(key, controller.signal, async (signal) => {
         const response = await fetch(path, { credentials: 'include', signal });
         if ([401, 403].includes(response.status)) return null;
+        if (teamId && response.status === 404) return [];
         if (!response.ok) throw new Error('Teams unavailable');
-        const value: unknown = await response.json();
-        if (!validTeams(value)) throw new Error('Invalid teams');
+        const json: unknown = await response.json();
+        const value = teamId ? [json] : json;
+        if (!validTeams(value) || (teamId && value[0]?.id !== teamId))
+          throw new Error('Invalid teams');
         return value;
       });
       if (current !== generation.current || owner !== denialGeneration.current) return;
@@ -318,13 +370,20 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
         denyAccess();
         return;
       }
+      setMissing(!!teamId && data.length === 0);
       const selected = editedTeam.current;
+      if (mode === 'edit' && !selected && data[0]) edit(data[0]);
       const fresh = selected ? data.find((team) => team.id === selected.id) : null;
       if (selected && (!fresh || teamBasis(fresh) !== teamBasis(selected))) {
         clearAction();
-        if (teamDirty.current || !fresh) setTeamStale(true);
+        if (teamId && !fresh) {
+          editedTeam.current = null;
+          setEditing(null);
+          resetTeam(emptyTeamDraft());
+          setKnown({});
+        } else if (teamDirty.current || !fresh) setTeamStale(true);
         else resetTeam(teamValues(fresh));
-        editedTeam.current = fresh ?? selected;
+        if (fresh || !teamId) editedTeam.current = fresh ?? selected;
         if (fresh) setMemberRevision((value) => value + 1);
         setSaved(false);
       }
@@ -346,11 +405,15 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
         teamRecovery.current = null;
         setTeamUncertain(false);
         if (actionRef.current === recovering) clearAction();
-        if (
-          recovering.method === 'POST' &&
-          data.some((team) => team.name === (recovering.body as ReturnType<typeof teamBody>).name)
-        )
-          setTeamStale(true);
+        if (recovering.method === 'POST') {
+          const match = data.find(
+            (team) => team.name === (recovering.body as ReturnType<typeof teamBody>).name
+          );
+          if (match) {
+            setTeamStale(true);
+            if (mode === 'create') setCreatedTeam(match);
+          }
+        }
       }
       setTeams(data);
     } catch {
@@ -359,7 +422,7 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
       if (current === generation.current && owner === denialGeneration.current) setLoading(false);
       if (teamRequest.current === controller) teamRequest.current = null;
     }
-  }, [accountId, profileRevision, read]);
+  }, [accountId, profileRevision, read, teamId, mode]);
   useEffect(() => {
     void load();
     return () => {
@@ -368,6 +431,7 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     };
   }, [load]);
   useEffect(() => {
+    if (!showRouting) return;
     const controller = new AbortController(),
       owner = denialGeneration.current,
       recovering = rulesRecovery.current;
@@ -419,16 +483,21 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
       }
     })();
     return () => controller.abort();
-  }, [rulesRevision]);
+  }, [rulesRevision, showRouting]);
   useEffect(() => {
-    if (deniedRef.current) return;
+    const needsMembers = showEditor || mode === 'detail';
+    if (!needsMembers || (teamId && !teams.length) || deniedRef.current) return;
     const controller = new AbortController(),
       owner = denialGeneration.current;
     setMemberLoading(true);
     setMemberError(false);
     const timer = setTimeout(async () => {
       try {
-        const params = new URLSearchParams({ q: search, ...(editing ? { teamId: editing } : {}) });
+        const memberTeamId = teamId ?? editing;
+        const params = new URLSearchParams({
+          q: search,
+          ...(memberTeamId ? { teamId: memberTeamId } : {}),
+        });
         const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
           const response = await fetch(`/api/admin/staff-teams/members?${params}`, {
             credentials: 'include',
@@ -446,10 +515,11 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
         if (controller.signal.aborted || owner !== denialGeneration.current || deniedRef.current)
           return;
         // The server reports persisted membership separately from the search results.
-        const team = editedTeam.current;
+        const team = memberTeamId
+          ? teamSnapshot.current.find((item) => item.id === memberTeamId)
+          : null;
         if (
           team &&
-          team.id === editing &&
           (data.selected.length !== team.memberUserIds.length ||
             data.selected.some((member) => !team.memberUserIds.includes(member.id)))
         )
@@ -482,15 +552,8 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
       clearTimeout(timer);
       controller.abort();
     };
-  }, [search, editing, memberRevision]);
-  const selectTeam = useRecordAddress(
-    selection,
-    teams,
-    (team) => team.id,
-    !loading && !error && !denied,
-    (team) => edit(team ?? undefined, false)
-  );
-  function edit(team?: Team, publish = true) {
+  }, [search, editing, memberRevision, showEditor, mode, teamId, !!teams.length]);
+  function edit(team?: Team) {
     clearAction();
     editedTeam.current = team ?? null;
     setEditing(team?.id ?? null);
@@ -498,8 +561,7 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     setTeamStale(false);
     setSearch('');
     setSaved(false);
-    if (publish) selectTeam(team?.id ?? null);
-    if (publish || team) formHeading.current?.focus();
+    formHeading.current?.focus();
   }
   function toggleMember(id: string, checked: boolean) {
     setDraft((previous) => ({
@@ -518,6 +580,8 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
       !loading &&
       !error &&
       !denied &&
+      !missing &&
+      (mode !== 'edit' || editing === teamId) &&
       memberScope === acceptedMemberScope &&
       !memberLoading &&
       !memberError &&
@@ -605,455 +669,790 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
     }
   }
   const actionGeneration = workGeneration.current;
+  const record = teamId ? teams[0] : undefined;
+  const heading =
+    mode === 'assignment'
+      ? label('rules')
+      : mode === 'create'
+        ? label('new')
+        : mode === 'edit'
+          ? label('edit')
+          : mode === 'detail'
+            ? (record?.name ?? label('team'))
+            : label('title');
+  function askToDelete(team: Team) {
+    setSaved(false);
+    const next: TeamAction = {
+      title: label('delete'),
+      description: `${team.name}. ${label('deleteNote')}`,
+      path: `/api/admin/staff-teams/${team.id}`,
+      method: 'DELETE',
+      responseDeadline: true,
+      forbiddenMessage: label('forbidden'),
+    };
+    actionRef.current = next;
+    setAction(next);
+  }
+  const editorRoute = mode === 'create' || mode === 'edit' || mode === 'assignment';
   return (
-    <section className="mx-auto max-w-4xl min-w-0 space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header>
-        <h1 className="text-2xl font-semibold">{label('title')}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
+    <section
+      className={`mx-auto min-w-0 space-y-4 ${editorRoute ? 'max-w-3xl' : 'max-w-4xl'}`}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {mode && <TeamNavigationGuard active={writePending || pending} />}
+      <header className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {!catalogue && (
+            <Link
+              to="/admin/staff-teams"
+              className="text-sm text-primary underline underline-offset-4"
+            >
+              {label('title')}
+            </Link>
+          )}
+          <h1 className="text-2xl font-semibold">{heading}</h1>
+          {catalogue && (
+            <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
+          )}
+          {mode === 'edit' && record && (
+            <Link
+              to="/admin/staff-teams/$teamId"
+              params={{ teamId: record.id }}
+              className="mt-2 inline-block text-sm text-primary underline underline-offset-4"
+            >
+              <bdi>{record.name}</bdi>
+            </Link>
+          )}
+        </div>
+        {editorRoute && (
+          <ListRefreshButton
+            label={label(mode === 'assignment' ? 'refreshRules' : 'refresh')}
+            ref={mode === 'assignment' ? rulesRefresh : teamRefresh}
+            disabled={loading || pending || (mode === 'assignment' && rulesLoading)}
+            onClick={() => {
+              void load();
+              if (mode === 'assignment') setRulesRevision((v) => v + 1);
+            }}
+          />
+        )}
+        {mode === 'directory' && !loading && !error && !denied && (
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/admin/staff-teams/assignment"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {label('rules')}
+            </Link>
+            <Link to="/admin/staff-teams/new" className={buttonVariants()}>
+              {label('new')}
+            </Link>
+          </div>
+        )}
       </header>
       <CommandFeedback message={saved ? label('saved') : null} />
-      <ListPage>
-        <ListPage.Toolbar>
-          <h2 className="text-lg font-semibold">{label('teams')}</h2>
-          <Button
-            ref={teamRefresh}
-            variant="outline"
-            disabled={loading || pending}
-            onClick={() => void load()}
-          >
-            {label('refresh')}
-          </Button>
-        </ListPage.Toolbar>
-        <ListPage.Content
-          loading={loading}
-          error={error || denied}
-          empty={!teams.length}
-          retainContent={!!teams.length && !denied}
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
-          errorView={
-            <div role="alert">
-              <p>{label(denied ? 'forbidden' : 'error')}</p>
-              {!denied && (
-                <Button variant="outline" onClick={() => void load()}>
-                  {label('retry')}
-                </Button>
-              )}
-            </div>
-          }
-          emptyView={<p>{label('empty')}</p>}
+      {createdTeam && (
+        <Link
+          className="inline-block text-primary underline underline-offset-4"
+          to="/admin/staff-teams/$teamId"
+          params={{ teamId: createdTeam.id }}
         >
-          <OperationalQueueTable
-            locale={locale}
-            rows={teams}
-            caption={label('catalogue')}
-            scrollLabel={label('catalogue')}
-            nameHeader={label('name')}
-            renderName={(team) => <TextCell value={team.name} />}
-            fields={[
-              {
-                id: 'description',
-                label: label('teamDescription'),
-                render: (team) => <TextCell value={team.description} />,
-              },
-              {
-                id: 'members',
-                label: label('memberCount'),
-                render: (team) => <bdi>{numbers.number(team.memberUserIds.length)}</bdi>,
-              },
-              {
-                id: 'lead',
-                label: label('lead'),
-                render: (team) => (
-                  <TextCell
-                    value={team.leadUserId ? known[team.leadUserId]?.name || team.leadUserId : null}
-                  />
-                ),
-              },
-              {
-                id: 'tags',
-                label: label('tags'),
-                render: (team) => <TextCell value={team.skillTags.join(', ') || null} />,
-              },
-              {
-                id: 'status',
-                label: label('status'),
-                render: (team) => (
-                  <Badge variant={team.isActive ? 'secondary' : 'outline'}>
-                    {label(team.isActive ? 'active' : 'inactive')}
-                  </Badge>
-                ),
-              },
-            ]}
-            actionHeader={label('actions')}
-            renderActions={(team) => (
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  className="min-h-11"
-                  disabled={disabled || teamUncertain}
-                  onClick={() => edit(team)}
-                >
-                  {label('edit')}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="min-h-11"
-                  disabled={disabled || teamUncertain}
-                  onClick={() => {
-                    setSaved(false);
-                    const next: TeamAction = {
-                      title: label('delete'),
-                      description: `${team.name}. ${label('deleteNote')}`,
-                      path: `/api/admin/staff-teams/${team.id}`,
-                      method: 'DELETE',
-                      responseDeadline: true,
-                      forbiddenMessage: label('forbidden'),
-                    };
-                    actionRef.current = next;
-                    setAction(next);
-                  }}
-                >
-                  {label('delete')}
-                </Button>
-              </div>
-            )}
+          <bdi>{createdTeam.name}</bdi>
+        </Link>
+      )}
+      <ListPage>
+        {!editorRoute && (
+          <ListPage.Toolbar>
+            {!mode && <h2 className="text-lg font-semibold">{label('teams')}</h2>}
+            <ListRefreshButton
+              label={label('refresh')}
+              ref={teamRefresh}
+              disabled={loading || pending}
+              onClick={() => void load()}
+            />
+          </ListPage.Toolbar>
+        )}
+        {catalogue ? (
+          <ListPage.Content
             loading={loading}
-            emptyMessage={label('empty')}
-            tableClassName="min-w-[56rem]"
-          />
-        </ListPage.Content>
+            error={error || denied}
+            empty={!teams.length}
+            retainContent={!!teams.length && !denied}
+            loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+            errorView={
+              <div role="alert">
+                <p>{label(denied ? 'forbidden' : 'error')}</p>
+                {!denied && (
+                  <Button variant="outline" onClick={() => void load()}>
+                    {label('retry')}
+                  </Button>
+                )}
+              </div>
+            }
+            emptyView={<p>{label('empty')}</p>}
+          >
+            <OperationalQueueTable
+              locale={locale}
+              rows={teams}
+              caption={label('catalogue')}
+              scrollLabel={label('catalogue')}
+              nameHeader={label('name')}
+              renderName={(team) =>
+                mode === 'directory' ? (
+                  <Link
+                    className="text-primary underline underline-offset-4"
+                    to="/admin/staff-teams/$teamId"
+                    params={{ teamId: team.id }}
+                  >
+                    <TextCell value={team.name} />
+                  </Link>
+                ) : (
+                  <TextCell value={team.name} />
+                )
+              }
+              fields={[
+                {
+                  id: 'description',
+                  label: label('teamDescription'),
+                  render: (team) => <TextCell value={team.description} />,
+                },
+                {
+                  id: 'members',
+                  label: label('memberCount'),
+                  render: (team) => <bdi>{numbers.number(team.memberUserIds.length)}</bdi>,
+                },
+                ...(!mode
+                  ? [
+                      {
+                        id: 'lead',
+                        label: label('lead'),
+                        render: (team: Team) => (
+                          <TextCell
+                            value={
+                              team.leadUserId
+                                ? known[team.leadUserId]?.name || team.leadUserId
+                                : null
+                            }
+                          />
+                        ),
+                      },
+                    ]
+                  : []),
+                {
+                  id: 'tags',
+                  label: label('tags'),
+                  render: (team) => <TextCell value={team.skillTags.join(', ') || null} />,
+                },
+                {
+                  id: 'status',
+                  label: label('status'),
+                  render: (team) => (
+                    <Badge variant={team.isActive ? 'secondary' : 'outline'}>
+                      {label(team.isActive ? 'active' : 'inactive')}
+                    </Badge>
+                  ),
+                },
+              ]}
+              actionHeader={label('actions')}
+              cardHeading={mode ? 'h2' : 'h3'}
+              {...(!mode
+                ? {
+                    renderActions: (team: Team) => (
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          className="min-h-11"
+                          disabled={disabled || teamUncertain}
+                          onClick={() => edit(team)}
+                          data-table-action-tooltip={label('edit')}
+                        >
+                          <TableActionIcon icon={TablePencilIcon}>{label('edit')}</TableActionIcon>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="min-h-11"
+                          disabled={disabled || teamUncertain}
+                          onClick={() => askToDelete(team)}
+                          data-table-action-tooltip={label('delete')}
+                        >
+                          <TableActionIcon icon={TableTrash2Icon}>
+                            {label('delete')}
+                          </TableActionIcon>
+                        </Button>
+                      </div>
+                    ),
+                  }
+                : {})}
+              loading={loading}
+              emptyMessage={label('empty')}
+              tableClassName="min-w-[56rem]"
+            />
+          </ListPage.Content>
+        ) : (
+          <>
+            {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+            {(missing || denied || error) && (
+              <Alert variant="destructive" className="space-y-2">
+                <p>{missing ? unavailableMember : label(denied ? 'forbidden' : 'error')}</p>
+                {error && !denied && (
+                  <Button variant="outline" onClick={() => void load()}>
+                    {label('retry')}
+                  </Button>
+                )}
+              </Alert>
+            )}
+            {mode === 'detail' && record && !denied && (
+              <section className="space-y-5 rounded-lg border bg-card p-4 sm:p-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant={record.isActive ? 'secondary' : 'outline'}>
+                    {label(record.isActive ? 'active' : 'inactive')}
+                  </Badge>
+                  {record.description && (
+                    <p className="text-sm">
+                      <TextCell value={record.description} />
+                    </p>
+                  )}
+                </div>
+                <dl className="grid gap-4 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt className="font-medium text-muted-foreground">{label('lead')}</dt>
+                    <dd>
+                      <TextCell
+                        value={
+                          record.leadUserId
+                            ? (known[record.leadUserId]?.name ?? unknownMember)
+                            : label('noLead')
+                        }
+                      />
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium text-muted-foreground">{label('tags')}</dt>
+                    <dd>
+                      <TextCell value={record.skillTags.join(', ') || null} />
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <dt className="font-medium text-muted-foreground">
+                      {label('memberCount')}{' '}
+                      <bdi>{numbers.number(record.memberUserIds.length)}</bdi>
+                    </dt>
+                    <dd>
+                      {record.memberUserIds.length > 0 && (
+                        <ul className="mt-2 space-y-1">
+                          {record.memberUserIds.map((id) => (
+                            <li key={id}>
+                              <TextCell value={known[id]?.name ?? unknownMember} />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {memberError && (
+                        <Button
+                          variant="outline"
+                          onClick={() => setMemberRevision((value) => value + 1)}
+                        >
+                          {label('retry')}
+                        </Button>
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    to="/admin/staff-teams/$teamId/edit"
+                    params={{ teamId: record.id }}
+                    className={buttonVariants()}
+                  >
+                    {label('edit')}
+                  </Link>
+                  <Button
+                    variant="outline"
+                    disabled={disabled || teamUncertain}
+                    onClick={() => askToDelete(record)}
+                  >
+                    {label('delete')}
+                  </Button>
+                </div>
+                {teamUncertain && <Alert variant="destructive">{label('unverified')}</Alert>}
+              </section>
+            )}
+          </>
+        )}
         {!denied && (
           <>
-            <form
-              noValidate
-              aria-busy={pending || undefined}
-              onSubmit={(event) => void submit(event, 'team')}
-              className="space-y-4 rounded-lg border bg-card text-card-foreground p-4"
-            >
-              <h2 ref={formHeading} tabIndex={-1} className="text-lg font-semibold">
-                {label(editing ? 'edit' : 'new')}
-              </h2>
-              {teamStale && <Alert variant="destructive">{label('staleTeam')}</Alert>}
-              {teamUncertain && <Alert variant="destructive">{label('unverified')}</Alert>}
-              {catalogueRootMessage(teamForm.errors) && (
-                <Alert variant="destructive">{catalogueRootMessage(teamForm.errors)}</Alert>
-              )}
-              <fieldset
-                disabled={!!action || pending || teamStale || teamUncertain}
-                className="min-w-0 space-y-3"
+            {showEditor && (mode !== 'edit' || !!record) && (
+              <form
+                noValidate
+                aria-busy={pending || undefined}
+                onSubmit={(event) => void submit(event, 'team')}
+                className={recordEditorFormSurface}
+                onFocus={keepRecordFieldVisible}
+                aria-label={label(editing ? 'edit' : 'new')}
               >
-                <div>
-                  <Label htmlFor="staff-team-name">{label('name')}</Label>
-                  <Input
-                    id="staff-team-name"
-                    {...teamForm.bind('name')}
-                    value={draft.name}
-                    onChange={(event) => setDraft({ ...draft, name: event.target.value })}
-                  />
-                  {feedback('team', 'name')}
-                </div>
-                <div>
-                  <Label htmlFor="staff-team-description">{label('teamDescription')}</Label>
-                  <textarea
-                    id="staff-team-description"
-                    {...teamForm.bind('description')}
-                    className="block w-full rounded border p-2"
-                    value={draft.description}
-                    onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-                  />
-                  {feedback('team', 'description')}
-                </div>
-                <div>
-                  <Label htmlFor="staff-team-tags">{label('tags')}</Label>
-                  <Input
-                    id="staff-team-tags"
-                    {...teamForm.bind('tags')}
-                    aria-describedby={`staff-team-tags-help ${teamForm.errorId('tags')}`}
-                    value={draft.tags}
-                    onChange={(event) => setDraft({ ...draft, tags: event.target.value })}
-                  />
-                  <p id="staff-team-tags-help" className="text-sm text-muted-foreground">
-                    {label('tagsHelp')}
-                  </p>
-                  {feedback('team', 'tags')}
-                </div>
-                <div>
-                  <Label htmlFor="staff-team-search">{label('search')}</Label>
-                  <Input
-                    id="staff-team-search"
-                    maxLength={100}
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                  />
-                </div>
-                {memberLoading ? (
-                  <LoadingStatus>{label('loading')}</LoadingStatus>
-                ) : memberError ? (
-                  <div role="alert">
-                    <p>{label('memberError')}</p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setMemberRevision((v) => v + 1)}
-                    >
-                      {label('memberRetry')}
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <fieldset
-                      {...teamForm.bind('members')}
-                      ref={membersRef}
-                      tabIndex={-1}
-                      className="max-h-52 overflow-auto space-y-2"
-                    >
-                      <legend>{label('members')}</legend>
-                      {visibleMembers.map((member) => (
-                        <label key={member.id} className="touch-label flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={draft.members.includes(member.id)}
-                            disabled={
-                              !draft.members.includes(member.id) &&
-                              (draft.members.length >= 200 || member.eligible === false)
-                            }
-                            onChange={(event) => toggleMember(member.id, event.target.checked)}
-                          />
-                          {member.name}
-                        </label>
-                      ))}
-                    </fieldset>
-                    {hasMore && <p className="text-sm">{label('more')}</p>}
-                  </>
-                )}
-                {feedback('team', 'members')}
-                <ul aria-label={label('selected')} className="flex flex-wrap gap-2">
-                  {draft.members.map((id) => (
-                    <li key={id} className="rounded border p-2 text-sm">
-                      {known[id]?.name ?? unknownMember}{' '}
-                      {known[id]?.eligible === false && label('inactive')}{' '}
-                      <button
-                        type="button"
-                        className="underline"
-                        onClick={() => toggleMember(id, false)}
-                      >
-                        {label('remove')}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <div>
-                  <Label htmlFor="staff-team-lead">{label('lead')}</Label>
-                  <NativeSelect
-                    id="staff-team-lead"
-                    {...teamForm.bind('leadUserId')}
-                    className="w-full"
-                    value={draft.leadUserId ?? ''}
-                    onChange={(event) =>
-                      setDraft({ ...draft, leadUserId: event.target.value || null })
-                    }
+                {!mode && (
+                  <h2
+                    ref={formHeading}
+                    tabIndex={-1}
+                    className="px-4 pt-4 text-lg font-semibold sm:px-6"
                   >
-                    <option value="">{label('noLead')}</option>
-                    {draft.members.map((id) => (
-                      <option key={id} value={id} disabled={known[id]?.eligible === false}>
-                        {known[id]?.name ?? unknownMember}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                  <p className="text-sm text-muted-foreground">{label('leadHelp')}</p>
-                  {feedback('team', 'leadUserId')}
-                </div>
-              </fieldset>
-              <div className="flex flex-wrap gap-2">
-                <CatalogueSaveButton
-                  label={label(teamForm.pending ? 'working' : 'saveTeam')}
-                  pending={teamForm.pending}
-                  disabled={disabled || !live.current.teamReady}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={disabled || teamUncertain}
-                  onClick={() => {
-                    const current = editing ? teams.find((team) => team.id === editing) : null;
-                    if (current) {
-                      clearAction();
-                      editedTeam.current = current;
-                      resetTeam(teamValues(current));
-                      setTeamStale(false);
-                      setSaved(false);
-                    } else edit();
-                  }}
+                    {label(editing ? 'edit' : 'new')}
+                  </h2>
+                )}
+                {teamStale && (
+                  <Alert variant="destructive" className="m-4">
+                    {label('staleTeam')}
+                  </Alert>
+                )}
+                {teamUncertain && (
+                  <Alert variant="destructive" className="m-4">
+                    {label('unverified')}
+                  </Alert>
+                )}
+                {catalogueRootMessage(teamForm.errors) && (
+                  <Alert variant="destructive" className="m-4">
+                    {catalogueRootMessage(teamForm.errors)}
+                  </Alert>
+                )}
+                <fieldset
+                  disabled={!!action || pending || teamStale || teamUncertain}
+                  className="min-w-0"
                 >
-                  {label('resetTeam')}
-                </Button>
-                {editing && (
+                  <legend className="sr-only">{label(editing ? 'edit' : 'new')}</legend>
+                  <div className="grid min-w-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+                    <div className="min-w-0 border-b md:border-e md:border-b-0">
+                      <RecordEditorSection title={label('teamDetails')}>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="staff-team-name">{label('name')}</Label>
+                          <Input
+                            id="staff-team-name"
+                            dir="auto"
+                            required
+                            {...teamForm.bind('name')}
+                            value={draft.name}
+                            onChange={(event) => setDraft({ ...draft, name: event.target.value })}
+                          />
+                          {feedback('team', 'name')}
+                        </div>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="staff-team-description">{label('teamDescription')}</Label>
+                          <Textarea
+                            id="staff-team-description"
+                            {...teamForm.bind('description')}
+                            rows={2}
+                            dir="auto"
+                            className="max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]"
+                            placeholder={label('descriptionExample')}
+                            value={draft.description}
+                            onChange={(event) =>
+                              setDraft({ ...draft, description: event.target.value })
+                            }
+                          />
+                          {feedback('team', 'description')}
+                        </div>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="staff-team-tags">{label('tags')}</Label>
+                          <Input
+                            id="staff-team-tags"
+                            dir="auto"
+                            placeholder="support, order"
+                            {...teamForm.bind('tags')}
+                            aria-describedby={`staff-team-tags-help ${teamForm.errorId('tags')}`}
+                            value={draft.tags}
+                            onChange={(event) => setDraft({ ...draft, tags: event.target.value })}
+                          />
+                          <p id="staff-team-tags-help" className="text-xs text-muted-foreground">
+                            {label('tagsHelp')}
+                          </p>
+                          {feedback('team', 'tags')}
+                        </div>
+                      </RecordEditorSection>
+                    </div>
+                    <RecordEditorSection title={label('membership')}>
+                      <div className="space-y-2 rounded-lg border bg-muted/20 p-2.5">
+                        <p
+                          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                          aria-live="polite"
+                        >
+                          {label('selected')}
+                          <bdi className="rounded-md bg-muted px-1.5 py-0.5 tabular-nums">
+                            {numbers.number(draft.members.length)}
+                          </bdi>
+                        </p>
+                        {draft.members.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">{label('emptySelection')}</p>
+                        ) : (
+                          // eslint-disable-next-line jsx-a11y/no-redundant-roles -- Safari drops unmarked list semantics.
+                          <ul
+                            role="list"
+                            aria-label={label('selected')}
+                            className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto"
+                          >
+                            {draft.members.map((id) => (
+                              <li
+                                key={id}
+                                className="flex max-w-full min-w-0 items-center gap-1 rounded-md border bg-card ps-2 text-sm"
+                              >
+                                <span className="min-w-0 [overflow-wrap:anywhere]" dir="auto">
+                                  {known[id]?.name ?? unknownMember}
+                                  {known[id]?.eligible === false ? ` · ${label('inactive')}` : ''}
+                                </span>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon-sm"
+                                  aria-label={`${label('remove')} ${known[id]?.name ?? unknownMember}`}
+                                  title={label('remove')}
+                                  onClick={(event) => {
+                                    if (event.detail === 0) memberSearch.current?.focus();
+                                    toggleMember(id, false);
+                                  }}
+                                >
+                                  <X aria-hidden="true" />
+                                </Button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        <div className={recordEditorField}>
+                          <Label htmlFor="staff-team-lead">{label('lead')}</Label>
+                          <NativeSelect
+                            id="staff-team-lead"
+                            {...teamForm.bind('leadUserId')}
+                            aria-describedby={[
+                              'staff-team-lead-help',
+                              teamForm.bind('leadUserId')['aria-describedby'],
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                            className="w-full"
+                            value={draft.leadUserId ?? ''}
+                            disabled={draft.members.length === 0}
+                            onChange={(event) =>
+                              setDraft({ ...draft, leadUserId: event.target.value || null })
+                            }
+                          >
+                            <option value="">{label('noLead')}</option>
+                            {draft.members.map((id) => (
+                              <option key={id} value={id} disabled={known[id]?.eligible === false}>
+                                {known[id]?.name ?? unknownMember}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                          <p id="staff-team-lead-help" className="text-xs text-muted-foreground">
+                            {label('leadHelp')}
+                          </p>
+                          {feedback('team', 'leadUserId', false)}
+                        </div>
+                      </div>
+                      <div className={recordEditorField}>
+                        <Label htmlFor="staff-team-search">{label('search')}</Label>
+                        <div className="relative">
+                          <Search
+                            aria-hidden="true"
+                            className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                          />
+                          <Input
+                            id="staff-team-search"
+                            ref={memberSearch}
+                            type="search"
+                            className="ps-9"
+                            maxLength={100}
+                            value={search}
+                            onChange={(event) => setSearch(event.target.value)}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter' && !event.nativeEvent.isComposing)
+                                event.preventDefault();
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {memberLoading ? (
+                        <LoadingStatus>{label('loading')}</LoadingStatus>
+                      ) : memberError ? (
+                        <div role="alert">
+                          <p>{label('memberError')}</p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setMemberRevision((v) => v + 1)}
+                          >
+                            {label('memberRetry')}
+                          </Button>
+                        </div>
+                      ) : (
+                        <>
+                          <fieldset
+                            {...teamForm.bind('members')}
+                            ref={membersRef}
+                            tabIndex={-1}
+                            className="min-w-0 rounded-lg border bg-muted/20 px-1.5 pb-1.5"
+                          >
+                            <legend className="ms-1 px-1 text-xs font-medium text-muted-foreground">
+                              {label('members')}
+                            </legend>
+                            {visibleMembers.length === 0 && (
+                              <p role="status" className="p-2 text-sm text-muted-foreground">
+                                {label(
+                                  matchingMembers.length ? 'matchesSelected' : 'noMatchingMembers'
+                                )}
+                              </p>
+                            )}
+                            <div className="max-h-52 space-y-1 overflow-y-auto">
+                              {visibleMembers.map((member) => (
+                                <Button
+                                  key={member.id}
+                                  type="button"
+                                  variant="ghost"
+                                  className="h-auto min-h-11 w-full justify-between rounded-md px-2 text-start font-normal whitespace-normal"
+                                  aria-label={label('addMember').replace('{name}', member.name)}
+                                  disabled={draft.members.length >= 200}
+                                  onClick={(event) => {
+                                    if (event.detail === 0) memberSearch.current?.focus();
+                                    toggleMember(member.id, true);
+                                  }}
+                                >
+                                  <bdi className="min-w-0 [overflow-wrap:anywhere]">
+                                    {member.name}
+                                  </bdi>
+                                  <Plus className="size-4 text-primary" aria-hidden="true" />
+                                </Button>
+                              ))}
+                            </div>
+                          </fieldset>
+                          {hasMore && (
+                            <p className="text-xs text-muted-foreground">{label('more')}</p>
+                          )}
+                        </>
+                      )}
+                      {feedback('team', 'members', false)}
+                    </RecordEditorSection>
+                  </div>
+                </fieldset>
+                <StickyRecordEditorActions>
                   <Button
                     type="button"
                     variant="outline"
                     disabled={disabled || teamUncertain}
-                    onClick={() => edit()}
+                    onClick={() => {
+                      const current = editing ? teams.find((team) => team.id === editing) : null;
+                      if (current) {
+                        clearAction();
+                        editedTeam.current = current;
+                        resetTeam(teamValues(current));
+                        setTeamStale(false);
+                        setSaved(false);
+                      } else edit();
+                    }}
                   >
-                    {label('new')}
+                    {label('resetTeam')}
                   </Button>
-                )}
-              </div>
-            </form>
-            <form
-              className="space-y-4 rounded-lg border bg-card text-card-foreground p-4"
-              noValidate
-              aria-busy={pending || undefined}
-              onSubmit={(event) => void submit(event, 'rules')}
-            >
-              <h2 className="text-lg font-semibold">{label('rules')}</h2>
-              <p className="text-sm text-muted-foreground">{label('expertiseHelp')}</p>
-              {rulesLoading && <LoadingStatus>{label('rulesLoading')}</LoadingStatus>}
-              {rulesError && (
-                <div role="alert">
-                  <p>{label('rulesError')}</p>
+                  {editing && !mode && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={disabled || teamUncertain}
+                      onClick={() => edit()}
+                    >
+                      {label('new')}
+                    </Button>
+                  )}
+                  <CatalogueSaveButton
+                    label={label(teamForm.pending ? 'working' : 'saveTeam')}
+                    pending={teamForm.pending}
+                    disabled={disabled || !live.current.teamReady}
+                  />
+                </StickyRecordEditorActions>
+              </form>
+            )}
+            {showRouting && (
+              <form
+                className={recordEditorFormSurface}
+                onFocus={keepRecordFieldVisible}
+                aria-label={label('rules')}
+                noValidate
+                aria-busy={pending || undefined}
+                onSubmit={(event) => void submit(event, 'rules')}
+              >
+                <div className="space-y-2 border-b bg-muted/20 px-4 py-3 sm:px-6">
+                  {!mode && <h2 className="text-lg font-semibold">{label('rules')}</h2>}
+                  <div className="flex min-w-0 items-start gap-2">
+                    <div className="min-w-0 flex-1 space-y-1 pt-1">
+                      <p className="text-sm text-muted-foreground">{label('newWorkHelp')}</p>
+                      <details className="group text-sm">
+                        <summary className="inline-flex min-h-10 cursor-pointer list-none items-center gap-1 font-medium text-primary hover:underline [&::-webkit-details-marker]:hidden">
+                          {label('routingHelp')}
+                          <ChevronDown
+                            aria-hidden="true"
+                            className="size-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+                          />
+                        </summary>
+                        <div className="max-w-prose space-y-2 pb-1 text-muted-foreground">
+                          <p>{label('fallbackHelp')}</p>
+                          <p>{label('expertiseHelp')}</p>
+                        </div>
+                      </details>
+                    </div>
+                    {!mode && (
+                      <ListRefreshButton
+                        ref={rulesRefresh}
+                        label={label('refreshRules')}
+                        disabled={rulesLoading || pending}
+                        onClick={() => setRulesRevision((v) => v + 1)}
+                      />
+                    )}
+                  </div>
+                  {rulesLoading && <LoadingStatus>{label('rulesLoading')}</LoadingStatus>}
+                  {rulesError && (
+                    <div role="alert">
+                      <p>{label('rulesError')}</p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setRulesRevision((v) => v + 1)}
+                      >
+                        {label('rulesRetry')}
+                      </Button>
+                    </div>
+                  )}
+                  {rulesStale && <Alert variant="destructive">{label('staleRules')}</Alert>}
+                  {rulesUncertain && <Alert variant="destructive">{label('unverified')}</Alert>}
+                  {catalogueRootMessage(routingForm.errors) && (
+                    <Alert variant="destructive">{catalogueRootMessage(routingForm.errors)}</Alert>
+                  )}
+                </div>
+                <fieldset
+                  disabled={!!action || pending || rulesStale || rulesUncertain}
+                  className="min-w-0 divide-y"
+                >
+                  {STAFF_ASSIGNMENT_WORK_TYPES.map((type) => (
+                    <div key={type} className="min-w-0 px-4 pb-2 pt-3 sm:px-6">
+                      <fieldset
+                        {...routingBinding(ruleField(type))}
+                        className="min-w-0 space-y-1.5"
+                      >
+                        <legend className="mb-2 text-sm font-semibold">{label(type)}</legend>
+                        <AssignmentFallbackEditor
+                          workType={type}
+                          feedback={{
+                            'aria-invalid':
+                              routingForm.form.getFieldState(ruleField(type)).invalid || undefined,
+                            'aria-describedby': routingForm.errorId(ruleField(type)),
+                          }}
+                          rule={rules[type]}
+                          teams={teams}
+                          label={label}
+                          number={numbers.number}
+                          onChange={(rule) => updateRule(type, rule)}
+                        >
+                          <div className={recordEditorGrid}>
+                            <div className={recordEditorField}>
+                              <Label htmlFor={`team-${type}`}>{label('team')}</Label>
+                              <NativeSelect
+                                id={`team-${type}`}
+                                {...routingForm.bind(`${ruleField(type)}.teamId`)}
+                                aria-invalid={
+                                  routingForm.form.getFieldState(ruleField(type)).invalid ||
+                                  undefined
+                                }
+                                aria-describedby={routingForm.errorId(ruleField(type))}
+                                className="w-full"
+                                value={rules[type].teamId ?? ''}
+                                onChange={(event) =>
+                                  updateRule(
+                                    type,
+                                    event.target.value
+                                      ? { ...rules[type], teamId: event.target.value }
+                                      : { teamId: null, strategy: rules[type].strategy }
+                                  )
+                                }
+                              >
+                                <option value="">{label('manual')}</option>
+                                {teams
+                                  .filter((team) => team.isActive)
+                                  .map((team) => (
+                                    <option
+                                      key={team.id}
+                                      value={team.id}
+                                      disabled={rules[type].fallbacks?.some(
+                                        (choice) => choice.teamId === team.id
+                                      )}
+                                    >
+                                      {team.name}
+                                    </option>
+                                  ))}
+                                {rules[type].teamId &&
+                                  !teams.some(
+                                    (team) => team.id === rules[type].teamId && team.isActive
+                                  ) && (
+                                    <option value={rules[type].teamId!}>
+                                      {label('unavailable')}
+                                    </option>
+                                  )}
+                              </NativeSelect>
+                            </div>
+                            {rules[type].teamId && (
+                              <div className={recordEditorField}>
+                                <Label htmlFor={`strategy-${type}`}>{label('strategy')}</Label>
+                                <NativeSelect
+                                  id={`strategy-${type}`}
+                                  aria-invalid={
+                                    routingForm.form.getFieldState(ruleField(type)).invalid ||
+                                    undefined
+                                  }
+                                  aria-describedby={routingForm.errorId(ruleField(type))}
+                                  className="w-full"
+                                  value={rules[type].strategy}
+                                  onChange={(event) =>
+                                    updateRule(type, {
+                                      ...rules[type],
+                                      strategy: event.target.value as StaffAssignmentStrategy,
+                                    })
+                                  }
+                                >
+                                  {STAFF_ASSIGNMENT_STRATEGIES.map((strategy) => (
+                                    <option key={strategy} value={strategy}>
+                                      {label(strategy)}
+                                    </option>
+                                  ))}
+                                </NativeSelect>
+                              </div>
+                            )}
+                          </div>
+                        </AssignmentFallbackEditor>
+                        {feedback('rules', ruleField(type))}
+                      </fieldset>
+                    </div>
+                  ))}
+                </fieldset>
+                <StickyRecordEditorActions>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setRulesRevision((v) => v + 1)}
+                    disabled={
+                      disabled ||
+                      rulesLoading ||
+                      rulesError ||
+                      rulesUncertain ||
+                      !rulesSnapshot.current
+                    }
+                    onClick={() => {
+                      clearAction();
+                      setRules(rulesSnapshot.current!);
+                      rulesDirty.current = false;
+                      setRulesStale(false);
+                      setSaved(false);
+                    }}
                   >
-                    {label('rulesRetry')}
+                    {label('resetRules')}
                   </Button>
-                </div>
-              )}
-              <Button
-                ref={rulesRefresh}
-                type="button"
-                variant="outline"
-                disabled={rulesLoading || pending}
-                onClick={() => setRulesRevision((v) => v + 1)}
-              >
-                {label('refreshRules')}
-              </Button>
-              {rulesStale && <Alert variant="destructive">{label('staleRules')}</Alert>}
-              {rulesUncertain && <Alert variant="destructive">{label('unverified')}</Alert>}
-              {catalogueRootMessage(routingForm.errors) && (
-                <Alert variant="destructive">{catalogueRootMessage(routingForm.errors)}</Alert>
-              )}
-              <fieldset
-                disabled={!!action || pending || rulesStale || rulesUncertain}
-                className="min-w-0 space-y-4"
-              >
-                {STAFF_ASSIGNMENT_WORK_TYPES.map((type) => (
-                  <fieldset
-                    key={type}
-                    {...routingBinding(ruleField(type))}
-                    className="min-w-0 flex flex-wrap items-end gap-3"
-                  >
-                    <legend className="font-medium">{label(type)}</legend>
-                    <div className="min-w-0 w-full sm:w-fit">
-                      <Label htmlFor={`team-${type}`}>{label('team')}</Label>
-                      <NativeSelect
-                        id={`team-${type}`}
-                        {...routingForm.bind(`${ruleField(type)}.teamId`)}
-                        aria-invalid={
-                          routingForm.form.getFieldState(ruleField(type)).invalid || undefined
-                        }
-                        aria-describedby={routingForm.errorId(ruleField(type))}
-                        className="w-full"
-                        value={rules[type].teamId ?? ''}
-                        onChange={(event) =>
-                          updateRule(
-                            type,
-                            event.target.value
-                              ? { ...rules[type], teamId: event.target.value }
-                              : { teamId: null, strategy: rules[type].strategy }
-                          )
-                        }
-                      >
-                        <option value="">{label('manual')}</option>
-                        {teams
-                          .filter((team) => team.isActive)
-                          .map((team) => (
-                            <option
-                              key={team.id}
-                              value={team.id}
-                              disabled={rules[type].fallbacks?.some(
-                                (choice) => choice.teamId === team.id
-                              )}
-                            >
-                              {team.name}
-                            </option>
-                          ))}
-                        {rules[type].teamId &&
-                          !teams.some(
-                            (team) => team.id === rules[type].teamId && team.isActive
-                          ) && <option value={rules[type].teamId!}>{label('unavailable')}</option>}
-                      </NativeSelect>
-                    </div>
-                    <div className="min-w-0 w-full sm:w-fit">
-                      <Label htmlFor={`strategy-${type}`}>{label('strategy')}</Label>
-                      <NativeSelect
-                        id={`strategy-${type}`}
-                        aria-invalid={
-                          routingForm.form.getFieldState(ruleField(type)).invalid || undefined
-                        }
-                        aria-describedby={routingForm.errorId(ruleField(type))}
-                        className="w-full"
-                        disabled={!rules[type].teamId}
-                        value={rules[type].strategy}
-                        onChange={(event) =>
-                          updateRule(type, {
-                            ...rules[type],
-                            strategy: event.target.value as StaffAssignmentStrategy,
-                          })
-                        }
-                      >
-                        {STAFF_ASSIGNMENT_STRATEGIES.map((strategy) => (
-                          <option key={strategy} value={strategy}>
-                            {label(strategy)}
-                          </option>
-                        ))}
-                      </NativeSelect>
-                    </div>
-                    <div className="w-full">{feedback('rules', ruleField(type))}</div>
-                    <AssignmentFallbackEditor
-                      workType={type}
-                      feedback={{
-                        'aria-invalid':
-                          routingForm.form.getFieldState(ruleField(type)).invalid || undefined,
-                        'aria-describedby': routingForm.errorId(ruleField(type)),
-                      }}
-                      rule={rules[type]}
-                      teams={teams}
-                      label={label}
-                      onChange={(rule) => updateRule(type, rule)}
-                    />
-                  </fieldset>
-                ))}
-              </fieldset>
-              <div className="flex flex-wrap gap-2">
-                <CatalogueSaveButton
-                  label={label(routingForm.pending ? 'working' : 'saveRules')}
-                  pending={routingForm.pending}
-                  disabled={disabled || !live.current.rulesReady}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={
-                    disabled ||
-                    rulesLoading ||
-                    rulesError ||
-                    rulesUncertain ||
-                    !rulesSnapshot.current
-                  }
-                  onClick={() => {
-                    clearAction();
-                    setRules(rulesSnapshot.current!);
-                    rulesDirty.current = false;
-                    setRulesStale(false);
-                    setSaved(false);
-                  }}
-                >
-                  {label('resetRules')}
-                </Button>
-              </div>
-            </form>
+                  <CatalogueSaveButton
+                    label={label(routingForm.pending ? 'working' : 'saveRules')}
+                    pending={routingForm.pending}
+                    disabled={disabled || !live.current.rulesReady}
+                  />
+                </StickyRecordEditorActions>
+              </form>
+            )}
           </>
         )}
       </ListPage>
@@ -1133,18 +1532,23 @@ export default function AdminStaffTeamsPage({ selection }: { selection?: RecordA
                 holdUnconfirmed(action, true);
                 throw new Error('Unverified staff-team acknowledgement');
               }
-              if (
+              if (mode === 'edit' && action.method === 'PUT') {
+                const receipt = result as Team;
+                editedTeam.current = receipt;
+                resetTeam(teamValues(receipt));
+                setTeamStale(false);
+              } else if (
                 action.method !== 'DELETE' ||
                 editedTeam.current?.id === action.path.split('/').at(-1)
               ) {
                 editedTeam.current = null;
                 setEditing(null);
-                selectTeam(null, true);
                 resetTeam(emptyTeamDraft());
                 setTeamStale(false);
               }
               if (action.method !== 'DELETE') {
                 const receipt = result as Team;
+                if (mode === 'create') setCreatedTeam(receipt);
                 teamSnapshot.current = [
                   ...teamSnapshot.current.filter((team) => team.id !== receipt.id),
                   receipt,

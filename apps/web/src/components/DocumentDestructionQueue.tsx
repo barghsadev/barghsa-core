@@ -3,6 +3,8 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import {
   Alert,
   AlertDescription,
@@ -10,15 +12,20 @@ import {
   Field,
   FieldLabel,
   ListPage,
+  ListRefreshButton,
   PageLoading,
   StatusBadge,
   Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentRequestError } from '../lib/documents.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
 
 type Item = {
   id: string;
@@ -35,12 +42,19 @@ type Response = {
   canManage: boolean;
 };
 
-export function DocumentDestructionQueue() {
+type Location = { recordId?: string | undefined; search: Record<string, unknown> };
+
+export function DocumentDestructionQueue({ location }: { location?: Location } = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedDocumentDestructionQueue key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedDocumentDestructionQueue
+      key={JSON.stringify([actor, revision, location?.recordId])}
+      location={location}
+    />
+  );
 }
-function OwnedDocumentDestructionQueue() {
+function OwnedDocumentDestructionQueue({ location }: { location?: Location | undefined }) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readDocument = useOwnedDocumentRead(
@@ -59,12 +73,27 @@ function OwnedDocumentDestructionQueue() {
   const [denied, setDenied] = useState(false);
   const accessDenied = useRef(false);
   const [reload, setReload] = useState(0);
-  const [selected, setSelected] = useState<Item | null>(null);
+  const [inlineSelection, setSelected] = useState<Item | null>(null);
+  const listed = location?.recordId
+    ? data?.items.find((item) => item.id === location.recordId)
+    : undefined;
+  const selected = location
+    ? data?.canManage && listed?.status === 'pending_approval'
+      ? listed
+      : null
+    : inlineSelection;
+  const items = location?.recordId ? (listed ? [listed] : []) : (data?.items ?? []);
   const [note, setNote] = useState('');
+  const noteInput = useRef<HTMLTextAreaElement>(null);
+  const selectedId = selected?.id;
   const [invalid, setInvalid] = useState(false);
+  const [recorded, setRecorded] = useState(false);
   const [action, setAction] = useState<
-    (TeamAction & { target: { id: string; documentId: string } }) | null
+    (TeamAction & { target: { id: string; documentId: string }; body: { note: string } }) | null
   >(null);
+  useEffect(() => {
+    if (selectedId && !location) noteInput.current?.focus();
+  }, [selectedId, location]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -81,6 +110,14 @@ function OwnedDocumentDestructionQueue() {
           setDenied(false);
           setData(response);
           setError(false);
+          if (
+            location?.recordId &&
+            (!response.canManage ||
+              !response.items.some(
+                (item) => item.id === location.recordId && item.status === 'pending_approval'
+              ))
+          )
+            setNote('');
         }
       })
       .catch((reason: unknown) => {
@@ -102,26 +139,30 @@ function OwnedDocumentDestructionQueue() {
   }, [reload, readDocument]);
 
   useEffect(() => {
-    if (!selected) return;
+    if (!inlineSelection) return;
     if (
       !data?.canManage ||
       !data.items.some(
         (item) =>
-          item.id === selected.id &&
+          item.id === inlineSelection.id &&
           item.status === 'pending_approval' &&
-          item.documentId === selected.documentId
+          item.documentId === inlineSelection.documentId
       )
     ) {
       setSelected(null);
       setNote('');
       setAction(null);
     }
-  }, [data, selected]);
+  }, [data, inlineSelection]);
 
   function approve(event: FormEvent) {
     event.preventDefault();
     if (
       accessDenied.current ||
+      loading ||
+      error ||
+      action ||
+      recorded ||
       !data?.canManage ||
       !selected ||
       !data.items.some((item) => item.id === selected.id && item.status === 'pending_approval')
@@ -129,6 +170,7 @@ function OwnedDocumentDestructionQueue() {
       return;
     if (note.trim().length < 3) {
       setInvalid(true);
+      noteInput.current?.focus();
       return;
     }
     setInvalid(false);
@@ -158,28 +200,39 @@ function OwnedDocumentDestructionQueue() {
       )[status] ?? status
     );
 
+  const Wrapper = location ? 'section' : 'details';
   return (
-    <details className="rounded-xl border bg-card p-5">
-      <summary className="cursor-pointer font-semibold pointer-coarse:min-h-11 pointer-coarse:py-2">
-        {word('destructionQueue')}
-      </summary>
-      <ListPage className="mt-4" role="region" aria-label={word('destructionQueue')}>
-        <ListPage.Toolbar>
-          <Button
-            type="button"
-            variant="outline"
+    <Wrapper className="group rounded-xl border bg-card">
+      {location && <RecordCommandGuard blocked={() => !!action} />}
+      {!location && (
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-2.5 font-semibold hover:bg-muted/35 [&::-webkit-details-marker]:hidden">
+          {word('destructionQueue')}
+          <ChevronDown
+            aria-hidden="true"
+            className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none"
+          />
+        </summary>
+      )}
+      <ListPage
+        className={`p-4 ${location ? '' : 'border-t'}`}
+        role="region"
+        aria-label={word('destructionQueue')}
+      >
+        <div className="flex items-start justify-between gap-2">
+          <p className="max-w-prose pt-2 text-sm text-muted-foreground">
+            {word('destructionDescription')}
+          </p>
+          <ListRefreshButton
+            label={word('refresh')}
             disabled={loading}
             onClick={() => setReload((value) => value + 1)}
-          >
-            {word('refresh')}
-          </Button>
-        </ListPage.Toolbar>
-        <p className="text-sm text-muted-foreground">{word('destructionDescription')}</p>
+          />
+        </div>
         <ListPage.Content
           loading={loading}
           error={error}
-          empty={!data?.items.length}
-          retainContent={!!data?.items.length && !denied}
+          empty={!items.length}
+          retainContent={!!items.length && !denied}
           loadingView={<PageLoading label={word('loading')} />}
           errorView={
             <Alert variant="destructive">
@@ -197,9 +250,13 @@ function OwnedDocumentDestructionQueue() {
               )}
             </Alert>
           }
-          emptyView={<p className="text-sm text-muted-foreground">{word('destructionEmpty')}</p>}
+          emptyView={
+            <p className="text-sm text-muted-foreground">
+              {word(location?.recordId ? 'destructionUnavailable' : 'destructionEmpty')}
+            </p>
+          }
         >
-          {data?.counts.length ? (
+          {!location?.recordId && data?.counts.length ? (
             <div className="flex flex-wrap gap-2" aria-label={word('destructionQueue')}>
               {data.counts.map((count) => (
                 <StatusBadge
@@ -209,78 +266,176 @@ function OwnedDocumentDestructionQueue() {
               ))}
             </div>
           ) : null}
-          {data?.items.length ? (
+          {items.length ? (
             <ul className="divide-y">
-              {data.items.map((item) => (
+              {items.map((item) => (
                 <li key={item.id} className="space-y-2 py-3 text-sm first:pt-0">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <strong>{word(item.businessRecordType)}</strong>
                     <StatusBadge label={statusText(item.status)} />
                   </div>
-                  <p className="break-all text-muted-foreground">{item.documentId}</p>
+                  <p className="text-muted-foreground [overflow-wrap:anywhere]">
+                    <bdi>{item.documentId}</bdi>
+                  </p>
                   <p className="text-muted-foreground">
                     {word('destructionDeadline')}: {time.format(item.retentionDeadline)}
                   </p>
-                  {item.lastError ? <p role="status">{word('destructionFailed')}</p> : null}
-                  {data.canManage && item.status === 'pending_approval' ? (
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSelected(item);
-                        setNote('');
-                        setInvalid(false);
+                  {location?.recordId && staffOrderId(item.documentId) && (
+                    <Link
+                      to="/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}"
+                      params={{
+                        documentId: item.documentId,
+                        section: undefined,
+                        action: undefined,
+                        holdId: undefined,
                       }}
+                      search={{ ...location.search, profileId: undefined }}
+                      className="inline-flex min-h-10 items-center font-medium text-primary underline underline-offset-4"
                     >
-                      {word('destructionApprove')}
-                    </Button>
+                      {word('reviewDestructionDocument')}
+                    </Link>
+                  )}
+                  {item.lastError ? <p role="status">{word('destructionFailed')}</p> : null}
+                  {data?.canManage && item.status === 'pending_approval' && !location?.recordId ? (
+                    location ? (
+                      <Link
+                        to="/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}"
+                        params={{
+                          documentId: 'governance',
+                          section: 'destruction',
+                          action: item.id,
+                        }}
+                        search={location.search}
+                        className={buttonVariants({ variant: 'outline' })}
+                      >
+                        {word('destructionApprove')}
+                      </Link>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        aria-expanded={selectedId === item.id}
+                        onClick={() => {
+                          if (selectedId === item.id) {
+                            noteInput.current?.focus();
+                            return;
+                          }
+                          setSelected(item);
+                          setNote('');
+                          setInvalid(false);
+                        }}
+                      >
+                        {word('destructionApprove')}
+                      </Button>
+                    )
                   ) : null}
                 </li>
               ))}
             </ul>
           ) : null}
         </ListPage.Content>
-        {selected && data?.canManage ? (
-          <form noValidate onSubmit={approve} className="space-y-3 border-t pt-4">
-            <p className="text-sm">{word('destructionWarning')}</p>
-            <p className="break-all text-sm text-muted-foreground">{selected.documentId}</p>
-            <Field data-invalid={invalid || undefined}>
-              <FieldLabel htmlFor="destruction-note">{word('destructionApprovalNote')}</FieldLabel>
-              <Textarea
-                id="destruction-note"
-                value={note}
-                maxLength={1000}
-                onChange={(event) => {
-                  setNote(event.target.value);
-                  if (event.target.value.trim().length >= 3) setInvalid(false);
-                }}
-                required
-                aria-required="true"
-                aria-invalid={invalid || undefined}
-                aria-describedby={invalid ? 'destruction-note-error' : undefined}
-              />
-              {invalid && (
-                <p id="destruction-note-error" role="alert" className="text-sm text-destructive">
-                  {word('legalReasonLength')}
+        {recorded && location && (
+          <p role="status" className="rounded-lg bg-success-soft p-3 text-sm text-success">
+            {word('destructionApprovalRecorded')}
+          </p>
+        )}
+        {selected && data?.canManage && !recorded ? (
+          <form noValidate onSubmit={approve} className={recordEditorSurface}>
+            <div className="space-y-2 border-b bg-muted/25 px-4 py-3 sm:px-6">
+              <h2 className="text-base font-semibold">
+                {word(location ? 'destructionReviewDetails' : 'destructionApprove')}
+              </h2>
+              <p className="max-w-prose text-sm text-muted-foreground">
+                {word('destructionWarning')}
+              </p>
+              {!location && (
+                <p className="text-xs text-muted-foreground [overflow-wrap:anywhere]">
+                  <bdi>{selected.documentId}</bdi>
                 </p>
               )}
-            </Field>
-            <div className="flex gap-2">
-              <Button type="submit">{word('destructionApprove')}</Button>
-              <Button type="button" variant="outline" onClick={() => setSelected(null)}>
-                {word('cancel')}
-              </Button>
             </div>
+            <div className="px-4 py-3 sm:px-6">
+              <Field className="max-w-prose gap-1.5" data-invalid={invalid || undefined}>
+                <FieldLabel htmlFor="destruction-note">
+                  {word('destructionApprovalNote')}
+                </FieldLabel>
+                <Textarea
+                  id="destruction-note"
+                  ref={noteInput}
+                  value={note}
+                  maxLength={1000}
+                  rows={2}
+                  dir="auto"
+                  className={`min-h-14 resize-y ${locale === 'fa' ? 'placeholder:text-right' : 'placeholder:text-left'}`}
+                  placeholder={word('destructionExample')}
+                  onChange={(event) => {
+                    setNote(event.target.value);
+                    if (event.target.value.trim().length >= 3) setInvalid(false);
+                  }}
+                  required
+                  aria-required="true"
+                  aria-invalid={invalid || undefined}
+                  aria-describedby={invalid ? 'destruction-note-error' : undefined}
+                />
+                {invalid && (
+                  <p id="destruction-note-error" role="alert" className="text-sm text-destructive">
+                    {word('legalReasonLength')}
+                  </p>
+                )}
+              </Field>
+            </div>
+            <RecordEditorActions>
+              {!location && (
+                <Button type="button" variant="ghost" onClick={() => setSelected(null)}>
+                  {word('cancel')}
+                </Button>
+              )}
+              <Button
+                type="submit"
+                variant={location ? 'destructive' : 'default'}
+                disabled={loading || error || !!action}
+              >
+                {word(location ? 'destructionReview' : 'destructionApprove')}
+              </Button>
+            </RecordEditorActions>
           </form>
         ) : null}
       </ListPage>
       {action ? (
         <TeamActionDialog
           action={action}
+          summary={
+            location && (
+              <dl className="space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+                <div>
+                  <dt className="text-muted-foreground">{word('record')}</dt>
+                  <dd>
+                    <bdi className="wrap-anywhere">{action.target.documentId}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{word('destructionApprovalNote')}</dt>
+                  <dd dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                    {action.body.note}
+                  </dd>
+                </div>
+              </dl>
+            )
+          }
           onClose={() => setAction(null)}
+          onDenied={() => {
+            accessDenied.current = true;
+            setDenied(true);
+            setError(true);
+            setData(null);
+            setSelected(null);
+            setNote('');
+            setAction(null);
+          }}
           onUnconfirmed={() => {
             if (accessDenied.current) return;
             setAction(null);
             setSelected(null);
+            setNote('');
             setData(null);
             setReload((value) => value + 1);
           }}
@@ -295,11 +450,12 @@ function OwnedDocumentDestructionQueue() {
             )
               throw new Error('Destruction approval receipt mismatch');
             setSelected(null);
+            if (location) setRecorded(true);
             setReload((value) => value + 1);
-            return confirmationText('recorded', locale);
+            return location ? undefined : confirmationText('recorded', locale);
           }}
         />
       ) : null}
-    </details>
+    </Wrapper>
   );
 }

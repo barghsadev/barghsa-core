@@ -10,7 +10,15 @@ import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
-import { LoadingStatus, Alert, Button } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  Button,
+  Input,
+  Label,
+  NativeSelect,
+  ListRefreshButton,
+} from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import type { Locale } from '@barghsa/i18n/app';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -29,6 +37,13 @@ import {
   windowInvalidFields,
   type WindowDraft,
 } from '../lib/notification-form.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 import { responseRecord } from '../lib/content-catalogues.js';
 
 const TIMEZONE_OPTIONS = [
@@ -43,10 +58,13 @@ const TIMEZONE_OPTIONS = [
 export default function DeliveryWindowConfigPanel({
   uiLocale,
   onSessionEnded,
+  headingLevel = 2,
 }: {
   uiLocale: Locale;
   onSessionEnded?: () => void;
+  headingLevel?: 1 | 2;
 }) {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const profileRevision = useProfileContextRevision();
   const label = (key: string) => t(`admin.notifications.window.${key}`, uiLocale);
   const messages = {
@@ -266,6 +284,7 @@ export default function DeliveryWindowConfigPanel({
   }
   const feedback = (name: keyof WindowDraft) => (
     <CatalogueFieldFeedback
+      compact
       id={editor.errorId(name)}
       error={editor.errors[name]}
       message={messages[name]}
@@ -273,23 +292,24 @@ export default function DeliveryWindowConfigPanel({
   );
   const busy = saving || editor.pending || !!command;
   return (
-    <section
-      aria-labelledby="delivery-window-title"
-      className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
-    >
-      <h2 id="delivery-window-title" className="text-lg font-semibold">
-        {label('title')}
-      </h2>
-      <p className="text-sm text-muted-foreground">{label('description')}</p>
-      <Button
-        type="button"
-        variant="outline"
-        ref={refreshButton}
-        disabled={resource.loading || protectedBusy}
-        onClick={() => (scope.denied ? scope.recover() : refresh())}
-      >
-        {notificationFormText('refresh', uiLocale)}
-      </Button>
+    <section aria-labelledby="delivery-window-title" className="min-w-0 space-y-4">
+      <header className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1 space-y-1">
+          <Heading
+            id="delivery-window-title"
+            className={headingLevel === 1 ? 'text-2xl font-semibold' : 'text-lg font-semibold'}
+          >
+            {label('title')}
+          </Heading>
+          <p className="text-sm text-muted-foreground">{label('description')}</p>
+        </div>
+        <ListRefreshButton
+          label={notificationFormText('refresh', uiLocale)}
+          ref={refreshButton}
+          disabled={resource.loading || protectedBusy}
+          onClick={() => (scope.denied ? scope.recover() : refresh())}
+        />
+      </header>
       {resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {resource.error && <Alert variant="destructive">{label('loadFailed')}</Alert>}
       {scope.denied && (
@@ -321,75 +341,83 @@ export default function DeliveryWindowConfigPanel({
         </Button>
       )}
       {!scope.denied && (
-        <form onSubmit={submit} noValidate>
-          {error && <Alert variant="destructive">{error}</Alert>}
+        <form
+          onSubmit={submit}
+          noValidate
+          className={recordEditorSurface}
+          aria-label={label('title')}
+        >
+          {error && (
+            <Alert variant="destructive" className="m-4">
+              {error}
+            </Alert>
+          )}
           {catalogueRootMessage(editor.errors) && (
-            <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
+            <Alert variant="destructive" className="m-4">
+              {catalogueRootMessage(editor.errors)}
+            </Alert>
           )}
-          <fieldset disabled={!ready || busy} className="space-y-4">
+          <fieldset disabled={!ready || busy} className="min-w-0">
             <legend className="sr-only">{label('title')}</legend>
-            <div>
-              <label htmlFor="delivery-window-timezone" className="block text-sm font-medium mb-1">
-                {label('timezone')}
-              </label>
-              <select
-                id="delivery-window-timezone"
-                {...editor.bind('timezone')}
-                value={editor.values.timezone}
-                onChange={(e) => {
-                  setSaved(false);
-                  editor.field('timezone')[1](e.target.value);
-                }}
-                className="w-full border border-input rounded px-3 py-2 bg-background"
-              >
-                {!TIMEZONE_OPTIONS.includes(editor.values.timezone) && (
-                  <option value={editor.values.timezone}>{editor.values.timezone}</option>
-                )}
-                {TIMEZONE_OPTIONS.map((tz) => (
-                  <option key={tz} value={tz}>
-                    {tz}
-                  </option>
+            <RecordEditorSection title={notificationFormText('windowHours', uiLocale)}>
+              <div className={recordEditorField}>
+                <Label htmlFor="delivery-window-timezone">{label('timezone')}</Label>
+                <NativeSelect
+                  id="delivery-window-timezone"
+                  dir="ltr"
+                  {...editor.bind('timezone')}
+                  value={editor.values.timezone}
+                  onChange={(e) => {
+                    setSaved(false);
+                    editor.field('timezone')[1](e.target.value);
+                  }}
+                  className="w-full [direction:ltr]"
+                >
+                  {!TIMEZONE_OPTIONS.includes(editor.values.timezone) && (
+                    <option value={editor.values.timezone}>{editor.values.timezone}</option>
+                  )}
+                  {TIMEZONE_OPTIONS.map((tz) => (
+                    <option key={tz} value={tz}>
+                      {tz}
+                    </option>
+                  ))}
+                </NativeSelect>
+                {feedback('timezone')}
+              </div>
+              <div className={recordEditorGrid}>
+                {(['startHour', 'endHour'] as const).map((name) => (
+                  <div key={name} className={recordEditorField}>
+                    <Label htmlFor={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}>
+                      {label(name === 'startHour' ? 'start' : 'end')}
+                    </Label>
+                    <Input
+                      id={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}
+                      type="time"
+                      dir="ltr"
+                      step="60"
+                      {...editor.bind(name)}
+                      value={editor.values[name]}
+                      onChange={(e) => {
+                        setSaved(false);
+                        editor.field(name)[1](e.target.value);
+                      }}
+                    />
+                    {feedback(name)}
+                  </div>
                 ))}
-              </select>
-              {feedback('timezone')}
-            </div>
-            <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 gap-4">
-              {(['startHour', 'endHour'] as const).map((name) => (
-                <div key={name} className="min-w-0">
-                  <label
-                    htmlFor={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}
-                    className="block text-sm font-medium mb-1"
-                  >
-                    {label(name === 'startHour' ? 'start' : 'end')}
-                  </label>
-                  <input
-                    id={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}
-                    type="time"
-                    dir="ltr"
-                    step="60"
-                    {...editor.bind(name)}
-                    value={editor.values[name]}
-                    onChange={(e) => {
-                      setSaved(false);
-                      editor.field(name)[1](e.target.value);
-                    }}
-                    className="w-full min-w-0 border border-input rounded px-3 py-2 bg-background"
-                  />
-                  {feedback(name)}
-                </div>
-              ))}
-            </div>
+              </div>
+              {config && (
+                <p className="text-xs text-muted-foreground">
+                  {label('current')}:{' '}
+                  <bdi className="font-mono">
+                    {config.timezone} {formatWindowTime(config.startHour)}–
+                    {formatWindowTime(config.endHour)}
+                  </bdi>
+                </p>
+              )}
+            </RecordEditorSection>
           </fieldset>
-          {config && (
-            <p className="text-xs text-muted-foreground my-3">
-              {label('current')}:{' '}
-              <span className="font-mono">
-                {config.timezone} {formatWindowTime(config.startHour)}–
-                {formatWindowTime(config.endHour)}
-              </span>
-            </p>
-          )}
-          <div className="flex flex-wrap items-center gap-3">
+          <RecordEditorActions>
             <CatalogueSaveButton
               pending={saving || editor.pending}
               disabled={!ready || busy}
@@ -400,7 +428,7 @@ export default function DeliveryWindowConfigPanel({
               className="text-sm text-success"
               message={saved ? label('saved') : null}
             />
-          </div>
+          </RecordEditorActions>
         </form>
       )}
       {command && (

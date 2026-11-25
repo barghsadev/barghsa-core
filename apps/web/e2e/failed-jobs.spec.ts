@@ -4,6 +4,7 @@ import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`job filters and retry failures preserve selection and current permissions (${locale})`, async ({
@@ -40,6 +41,7 @@ for (const locale of ['en', 'fa'])
       failSave = true;
     const queries: URLSearchParams[] = [],
       attempts: unknown[] = [];
+    const recordReads: string[] = [];
     await crmShell(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
@@ -75,6 +77,7 @@ for (const locale of ['en', 'fa'])
       if (route.request().method() !== 'GET') return route.fallback();
       const id = new URL(route.request().url()).pathname.split('/').at(-1);
       const selected = jobs.find((row) => row.id === id);
+      if (selected) recordReads.push(selected.id);
       return selected ? route.fulfill({ json: selected }) : route.fallback();
     });
     await page.route('**/api/auth/step-up', (route) => {
@@ -137,6 +140,24 @@ for (const locale of ['en', 'fa'])
       )
     );
     await expect(page.getByRole('checkbox')).toHaveCount(0);
+    const collectionReads = queries.length;
+    const path = `/admin/failed-jobs/${jobs[0]!.id}`;
+    await page.getByRole('main').locator(`a[href^="${path}"]:visible`).click();
+    await expect(page).toHaveURL((url) => url.pathname === path);
+    await expect(page.getByRole('main').getByText(jobs[0]!.id, { exact: true })).toBeVisible();
+    expect(recordReads).toEqual([jobs[0]!.id]);
+    expect(queries).toHaveLength(collectionReads);
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    await page.reload();
+    await expect(page.getByRole('main').getByText(jobs[0]!.id, { exact: true })).toBeVisible();
+    expect(queries).toHaveLength(collectionReads);
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: t('admin.jobs.title', fa ? 'fa' : 'en'), exact: true })
+      .click();
+    await expect(
+      page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true })
+    ).toBeEnabled();
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
     await expect(
@@ -152,15 +173,17 @@ for (const locale of ['en', 'fa'])
     ).toHaveCount(25);
     await page.locator('#job-type').selectOption('storage_cleanup');
     await expect.poll(() => queries.at(-1)?.get('jobType')).toBe('storage_cleanup');
-    await page
-      .getByRole('button', { name: fa ? 'تلاش‌های پایان‌یافته' : 'Dead letter', exact: true })
-      .click();
+    const status = page.getByRole('combobox', {
+      name: t('admin.jobs.status', locale),
+      exact: true,
+    });
+    await status.selectOption('dead_letter');
     await expect(
       page.locator(
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
       )
     ).toHaveCount(0);
-    await page.getByRole('button', { name: fa ? 'ناموفق' : 'Failed', exact: true }).click();
+    await status.selectOption('failed');
     await expect(
       page.locator(
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
@@ -168,11 +191,26 @@ for (const locale of ['en', 'fa'])
     ).toHaveCount(25);
     canRetry = true;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
+    const bulk = page.getByRole('button', { name: t('admin.jobs.bulk', locale), exact: true });
+    await expect(bulk).toHaveCount(0);
     await page
       .locator(
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
       )
       .nth(0)
+      .getByRole('checkbox')
+      .check();
+    await expect(bulk).toBeEnabled();
+    await page
+      .getByRole('button', { name: t('admin.jobs.clearSelection', locale), exact: true })
+      .click();
+    await expect(bulk).toHaveCount(0);
+    await expect(page.getByRole('checkbox', { checked: true })).toHaveCount(0);
+    await page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+      .first()
       .getByRole('checkbox')
       .check();
     await page
@@ -183,13 +221,35 @@ for (const locale of ['en', 'fa'])
       .getByRole('checkbox')
       .check();
     await page
+      .locator(
+        'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
+      )
+      .last()
+      .scrollIntoViewIfNeeded();
+    await expect(bulk).toBeInViewport({ ratio: 0.99 });
+    await page
       .getByRole('button', { name: fa ? /اجرای دوباره موارد انتخاب‌شده/ : /Retry selected/ })
       .click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+    const selection = dialog.getByRole('list', {
+      name: t('admin.operationalReview.selected', locale),
+    });
+    await expect(selection.getByRole('listitem')).toHaveCount(2);
+    await expect(selection.getByText(jobs[0]!.id, { exact: true })).toHaveCount(1);
+    await expect(selection.getByText(jobs[1]!.id, { exact: true })).toHaveCount(1);
+    await expect(confirm).toBeInViewport({ ratio: 0.99 });
+    const recheck = dialog.getByText(t('admin.operationalReview.checks', locale), { exact: true });
+    const retryAccess = dialog.getByRole('button', { name: t('admin.jobs.accessRetry', locale) });
+    await expect(retryAccess).toHaveCount(0);
+    await recheck.click();
+    await expect(retryAccess).toBeVisible();
+    await recheck.click();
     await expect(dialog).toContainText(fa ? 'پاک‌سازی فایل‌ها' : 'Storage cleanup');
     await confirm.click();
     const password = dialog.locator('input[type="password"]');
+    await expect(password).toBeFocused();
+    await expect(confirm).toBeInViewport({ ratio: 0.99 });
     await password.fill('wrong');
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
