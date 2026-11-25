@@ -50,9 +50,9 @@ class BoardIntegrityTests(unittest.TestCase):
     def setUp(self):
         self.board = copy.deepcopy(read())
 
-    def accept_v051_fixture(self):
+    def fill_launch_prerequisites(self, version):
         releases = self.board['releases']
-        index = next(i for i, release in enumerate(releases) if release['version'] == '0.5.1')
+        index = next(i for i, release in enumerate(releases) if release['version'] == version)
         scope = {release['version'] for release in releases[:index + 1]}
         source = 'kanban/README.md'
         # Each acceptance case starts with its prerequisites satisfied in the fixture alone.
@@ -62,8 +62,12 @@ class BoardIntegrityTests(unittest.TestCase):
                 'checks': ['Fixture prerequisite accepted'],
                 'source_evidence': [{'path': source, 'sha256': sha(ROOT / source)}],
             }
-        releases[index].update(status='accepted', acceptance={'gates': {'fixture': 'verified'}},
-                               published_commit=None, staging_receipt=None, telegram_receipt=None)
+        return releases[index]
+
+    def accept_v051_fixture(self):
+        release = self.fill_launch_prerequisites('0.5.1')
+        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}},
+                       published_commit=None, staging_receipt=None, telegram_receipt=None)
 
     def rejects(self, pattern):
         with self.assertRaisesRegex(ValueError, pattern):
@@ -191,6 +195,7 @@ class BoardIntegrityTests(unittest.TestCase):
         validate(self.board)
 
     def test_ready_reopens_expired_approval_at_the_scope_boundary(self):
+        self.fill_launch_prerequisites('0.3.0')
         task = next(t for t in self.board['tasks'] if t['release'] == '0.3.0' and t['status'] == 'done')
         exception = record(task=task['key'], approved_at='2024-10-11T08:00:00Z',
                            expires_at='2024-10-12T08:00:00Z')
