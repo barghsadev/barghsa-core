@@ -595,21 +595,24 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
       )}
       {(busy || read.loading) && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {data && (
-        <article className="space-y-6 rounded-lg border bg-card p-4 [overflow-wrap:anywhere] sm:p-6">
-          <header className="flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-1">
+        <article className="space-y-4 rounded-lg border bg-card p-4 [overflow-wrap:anywhere] sm:p-6">
+          <header className="flex items-start justify-between gap-2">
+            <div className="min-w-0 space-y-1">
               <Badge variant={data.state === 'rejected' ? 'outline' : 'secondary'}>
                 {text(`state.${data.state}`)}
               </Badge>
               <p className="text-sm">
-                <span className="text-muted-foreground">{text('caseId')} </span>
-                <bdi dir="ltr">{data.id}</bdi>
+                <span className="block text-muted-foreground sm:inline">{text('caseId')} </span>
+                <bdi dir="ltr" className="break-all">
+                  {data.id}
+                </bdi>
               </p>
             </div>
             <ListRefreshButton
               label={text('refresh')}
               refreshing={read.loading}
               disabled={!!action}
+              className="shrink-0"
               onClick={read.retry}
             />
           </header>
@@ -654,12 +657,12 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
           </dl>
           <details
             key={JSON.stringify([data.oldLogin, data.newLogin, data.challengeId])}
-            className="rounded-md border p-3 text-sm"
+            className="rounded-md border text-sm"
           >
-            <summary className="cursor-pointer font-medium pointer-coarse:min-h-11 pointer-coarse:py-2">
+            <summary className="cursor-pointer rounded-md px-3 py-2.5 font-medium pointer-coarse:min-h-11 pointer-coarse:py-3">
               {text('showContactDetails')}
             </summary>
-            <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+            <dl className="grid gap-3 px-3 pb-3 sm:grid-cols-2">
               <div>
                 <dt>{text('oldLogin')}</dt>
                 <dd>
