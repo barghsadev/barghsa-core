@@ -620,6 +620,9 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('alert')
           .filter({ hasText: confirmationText('unconfirmed', locale) })
       ).toBeVisible();
+      await expect(
+        page.getByText(confirmationText('unconfirmed', locale), { exact: true })
+      ).toHaveCount(1);
       await expect(review).toBeDisabled();
       await expect(page.locator('#case-notes')).toHaveValue('Evidence checked');
       await page

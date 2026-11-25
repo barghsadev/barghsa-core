@@ -1329,6 +1329,7 @@ function Corrections({
       {action && (
         <TeamActionDialog
           action={action}
+          toastErrors={!reviewing}
           key={workGeneration.current}
           confirmationDisabled={
             denied ||
