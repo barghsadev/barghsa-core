@@ -135,7 +135,7 @@ it.each([
     ).toBeNull();
     await fill('#username', 'Draft@Example.test', true);
     expect(
-      view.getByLabelText(t('auth.register.passwordLabel', locale), { selector: 'input' })
+      await view.findByLabelText(t('auth.register.passwordLabel', locale), { selector: 'input' })
     ).toBe(host.querySelector('#password'));
     expect(state.writes).toEqual([]);
   }

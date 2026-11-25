@@ -71,7 +71,8 @@ async function submit(page: Page) {
   await page.locator('form').evaluate((form: HTMLFormElement) => form.requestSubmit());
 }
 async function capture(page: Page, path: string) {
-  const panel = page.locator('div.space-y-6[dir]');
+  const selector = 'main .auth-form';
+  const panel = page.locator(selector);
   await expect(panel).toBeVisible();
   await expect
     .poll(() =>
@@ -86,7 +87,7 @@ async function capture(page: Page, path: string) {
   expect(
     (
       await new AxeBuilder({ page })
-        .include('div.space-y-6[dir]')
+        .include(selector)
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze()
     ).violations

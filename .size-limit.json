@@ -57,6 +57,13 @@
     "build": "auth"
   },
   {
+    "name": "Registration password field after identifier entry",
+    "phase": "interaction",
+    "entries": ["src/components/PasswordField.tsx"],
+    "limitKB": 32,
+    "build": "auth"
+  },
+  {
     "name": "Password strength on demand",
     "phase": "interaction",
     "entries": ["src/lib/password-strength.ts"],

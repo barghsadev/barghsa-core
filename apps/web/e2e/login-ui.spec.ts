@@ -190,7 +190,9 @@ for (const locale of ['fa', 'en'])
               formBounds.x + formBounds.width <= panelBounds.x + 1
           ).toBe(true);
         } else {
-          await expect(panel).toBeHidden();
+          await expect(panel).toBeVisible();
+          const panelBounds = (await panel.boundingBox())!;
+          expect(panelBounds.y).toBeGreaterThanOrEqual(formBounds.y + formBounds.height - 1);
           expect(formBounds.width).toBeCloseTo(await page.evaluate(() => innerWidth), 0);
         }
         await page.screenshot({
@@ -209,4 +211,42 @@ for (const locale of ['fa', 'en'])
 
 test.beforeEach(async ({ page }) => {
   await mockPublicAuthCsrf(page);
+});
+
+test('auth introduction plays at the new pace and supports manual selection', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('barghsa.locale', 'en');
+    localStorage.setItem('barghsa-locale', 'en');
+  });
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await mockPublicAuthCsrf(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/login');
+  const intro = page.getByRole('complementary', { name: 'Manage your energy in one place.' });
+  const electricity = intro.getByRole('button', { name: 'Electricity', exact: true });
+  const solar = intro.getByRole('button', { name: 'Solar energy', exact: true });
+  await expect(electricity).toHaveAttribute('aria-pressed', 'true');
+  await expect(intro.getByRole('button', { name: 'Pause intro' })).toHaveCount(0);
+  await solar.focus();
+  await page.keyboard.press('Enter');
+  await expect(solar).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    intro.getByRole('heading', { name: 'Plan a solar installation for your site.' })
+  ).toBeVisible();
+
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.clock.install();
+  await intro.getByRole('button', { name: 'Resume intro' }).click();
+  await intro.locator('.auth-intro-scene').scrollIntoViewIfNeeded();
+  await page.clock.runFor(3_400);
+  await expect(intro.getByRole('button', { name: 'Consultation' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  await page.clock.runFor(3_100);
+  await intro.getByRole('button', { name: 'Replay intro' }).click();
+  await expect(electricity).toHaveAttribute('aria-pressed', 'true');
+  await intro.getByRole('button', { name: 'Pause intro' }).click();
+  await page.clock.runFor(3_100);
+  await expect(electricity).toHaveAttribute('aria-pressed', 'true');
 });

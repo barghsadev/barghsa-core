@@ -6,7 +6,6 @@ import { registrationFormText } from '@barghsa/i18n/registration-forms';
 import { Button, Checkbox, Input, Alert, AlertDescription } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
 import { AuthLayout } from '../../components/AuthLayout.js';
-import { PasswordField } from '../../components/PasswordField.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useRegistrationNativeForm } from '../../hooks/useRegistrationNativeForm.js';
@@ -21,6 +20,13 @@ import {
 } from '../../lib/registration-form.js';
 import { maskDestination } from '../../lib/mask-destination.js';
 import { toast } from '../../lib/toast-api.js';
+function loadPasswordField() {
+  return import('../../components/PasswordField.js').then(({ PasswordField }) => ({
+    default: PasswordField,
+  }));
+}
+
+const PasswordField = lazy(loadPasswordField);
 const RegistrationTermsDialog = lazy(() => import('../../components/RegistrationTermsDialog.js'));
 export const Route = createFileRoute('/register/')({ component: RegisterPage });
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
@@ -220,6 +226,7 @@ function RegisterPage() {
                         type="text"
                         aria-required="true"
                         autoComplete="username"
+                        onFocus={() => void loadPasswordField().catch(() => {})}
                         maxLength={255}
                         placeholder={t('auth.register.usernamePlaceholder', locale)}
                         disabled={model.locked}
@@ -255,18 +262,20 @@ function RegisterPage() {
                         if (model.canEdit()) field.onBlur();
                       }}
                     >
-                      <PasswordField
-                        id="password"
-                        name={field.name}
-                        locale={locale}
-                        label={t('auth.register.passwordLabel', locale)}
-                        value={field.value}
-                        error={fieldState.error?.message ?? null}
-                        disabled={model.locked}
-                        onChange={(value) => {
-                          if (model.canEdit()) field.onChange(value);
-                        }}
-                      />
+                      <Suspense fallback={<div className="min-h-16" aria-hidden="true" />}>
+                        <PasswordField
+                          id="password"
+                          name={field.name}
+                          locale={locale}
+                          label={t('auth.register.passwordLabel', locale)}
+                          value={field.value}
+                          error={fieldState.error?.message ?? null}
+                          disabled={model.locked}
+                          onChange={(value) => {
+                            if (model.canEdit()) field.onChange(value);
+                          }}
+                        />
+                      </Suspense>
                     </div>
                   )}
                 />
